@@ -20,11 +20,11 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.Result;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
