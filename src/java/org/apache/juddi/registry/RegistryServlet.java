@@ -34,9 +34,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RegistryServlet extends HttpServlet
 {
-  // xml config file name.
-  private static final String PROPERTY_FILE = "/WEB-INF/juddi.properties";
-
+  // config file property name (used to look up the juddi property file name).
+  private static final String CONFIG_FILE_PROPERTY_NAME = "juddi.propertiesFile";
+  
+  // default config file name. 
+  private static final String DEFAULT_PROPERTY_FILE = "/WEB-INF/juddi.properties";
+  
+  
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(RegistryServlet.class);
   
@@ -58,13 +62,18 @@ public class RegistryServlet extends HttpServlet
     try
     {      
       log.info("jUDDI Starting: Loading resources and initializing subsystems.");
+        
+      // determine the name of the juddi property file to use from web.xml
+      String propFile = config.getInitParameter(CONFIG_FILE_PROPERTY_NAME);
+      if ((propFile == null) || (propFile.trim().length() == 0))
+        propFile = DEFAULT_PROPERTY_FILE;
       
       InputStream is = 
-      	getServletContext().getResourceAsStream(PROPERTY_FILE);
+      	getServletContext().getResourceAsStream(propFile);
     	
       if (is != null)
       {
-        log.info("Resources loaded from: "+PROPERTY_FILE);
+        log.info("Resources loaded from: "+propFile);
 
         // Load jUDDI configuration from the 
         // juddi.properties file found in the 
@@ -74,7 +83,7 @@ public class RegistryServlet extends HttpServlet
       }
       else
       {
-        log.warn("Could not locate jUDDI properties '" + PROPERTY_FILE + 
+        log.warn("Could not locate jUDDI properties '" + propFile + 
         		"'. Using defaults.");
 
         // A juddi.properties file doesn't exist

@@ -19,6 +19,10 @@
     <servlet-name>jUDDIRegistryServlet</servlet-name>
     <display-name>jUDDI Registry Servlet</display-name>
     <servlet-class>org.apache.juddi.registry.RegistryServlet</servlet-class>
+    <init-param>
+      <param-name>juddi.propertiesFile</param-name>
+      <param-value>/WEB-INF/juddi.properties</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
