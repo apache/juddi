@@ -37,7 +37,6 @@ See http://forrest.apache.org/docs/linking.html for more info
   <downloads label="Downloads">
     <releases label="Releases" href="releases.html" description="Releases"/>
     <interim label="Interim Drops" href="interim.html" description="Interim Drops"/>
-    <source label="View Source Code" href="http://cvs.apache.org/viewcvs/ws-juddi/" description="View Source Code"/>
   </downloads>
 
   <related label="Related Projects">
