@@ -106,7 +106,7 @@ public class BusinessListHandler extends AbstractHandler
     BusinessInfos infos = list.getBusinessInfos();
     if (infos != null)
     {
-    handler = maker.lookup(BusinessInfosHandler.TAG_NAME);
+      handler = maker.lookup(BusinessInfosHandler.TAG_NAME);
       handler.marshal(infos,element);
     }
 
