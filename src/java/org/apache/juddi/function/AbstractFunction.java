@@ -40,7 +40,7 @@ public abstract class AbstractFunction implements IFunction
   }
   
   /**
-   * @return
+   * @return RegistryEngine
    */
   public RegistryEngine getRegistry()
   {
