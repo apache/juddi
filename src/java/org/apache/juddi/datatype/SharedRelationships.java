@@ -19,13 +19,12 @@ import java.util.Vector;
 
 /**
  * @author Anou Manavalan
+ * @author Steve Viens (sviens@apache.org)
  */
 public class SharedRelationships implements RegistryObject
 {
   Vector keyedReferenceVector;
-
-  // TODO (anou) need to add direction
-  // <xsd:attribute name="direction" type="uddi:direction" use="required" />
+  String direction;
 
   /**
    *
@@ -42,6 +41,22 @@ public class SharedRelationships implements RegistryObject
     this.keyedReferenceVector = refs;
   }
 
+  /**
+   * @return Returns the direction.
+   */
+  public String getDirection() 
+  {
+    return direction;
+  }
+  
+  /**
+   * @param direction The direction to set.
+   */
+  public void setDirection(String direction) 
+  {
+    this.direction = direction;
+  }
+  
   /**
    *
    */

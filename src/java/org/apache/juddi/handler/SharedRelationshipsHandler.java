@@ -47,7 +47,9 @@ public class SharedRelationshipsHandler extends AbstractHandler
     AbstractHandler handler = null;
 
     // Attributes
-    // {none}
+    String direction = element.getAttribute("direction");
+    if ((direction != null && (direction.trim().length() > 0)))
+      obj.setDirection(direction);
 
     // Text Node Value
     // {none}
@@ -67,6 +69,10 @@ public class SharedRelationshipsHandler extends AbstractHandler
   {
     SharedRelationships relationships = (SharedRelationships)object;
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+
+    String direction = relationships.getDirection();
+    if ((direction != null && (direction.length() > 0)))
+      element.setAttribute("direction",direction);
 
     Vector keyedRefVector = relationships.getKeyedReferenceVector();
     if ((keyedRefVector!=null) && (keyedRefVector.size() > 0))
@@ -96,6 +102,7 @@ public class SharedRelationshipsHandler extends AbstractHandler
     Element child = null;
 
     SharedRelationships relationships = new SharedRelationships();
+    relationships.setDirection("toKey");
     relationships.addKeyedReference(new KeyedReference("sharedRefKeyName","sharedRefKeyValue"));
     relationships.addKeyedReference(new KeyedReference("uuid:8ff45356-acde-4a4c-86bf-f953611d20c6","sharedRefKeyName2","sharedRefKeyValue2"));
 
