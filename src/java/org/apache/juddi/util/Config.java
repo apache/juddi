@@ -156,7 +156,7 @@ public class Config extends Properties
     this.put("juddi.maxNameLength","255");
     this.put("juddi.dataStoreFactory",  "org.apache.juddi.datastore.jdbc.JDBCDataStoreFactory");
     this.put("juddi.auth", "org.apache.juddi.auth.DefaultAuthenticator");
-    this.put("juddi.uuidgen", "org.apache.juddi.uuidgen.QuickUUIDGen");
+    this.put("juddi.uuidgen", "org.apache.juddi.uuidgen.DefaultUUIDGen");
     this.put("juddi.useMonitor", "true");
     this.put("juddi.monitor", "org.apache.juddi.monitor.jdbc.JDBCMonitor");
     this.put("juddi.transport", "org.apache.juddi.transport.axis.AxisTransport");

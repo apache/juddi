@@ -330,6 +330,6 @@ public class DefaultUUIDGen implements UUIDGen
 
     long end = System.currentTimeMillis();
 
-    System.out.println("QuickUUIDGen: Generation of 100 UUID's took "+(end-start)+" milliseconds.");
+    System.out.println("DefaultUUIDGen: Generation of 100 UUID's took "+(end-start)+" milliseconds.");
   }
 }
