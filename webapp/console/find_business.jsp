@@ -10,13 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The <a href="uddiv2api.html#_Toc25137713" target="api">find_business</a> API call returns
-a <a href="uddiv2data.html#_Toc25130802" target="api">businessList</a> message that contains 
-zero or more <a href="uddiv2data.html#_Toc25130802" target="api">businessInfo</a> structures 
+The <a href="uddiv2api.html#_Toc25137713" target="doc">find_business</a> API call returns
+a <a href="uddiv2data.html#_Toc25130802" target="doc">businessList</a> message that contains 
+zero or more <a href="uddiv2data.html#_Toc25130802" target="doc">businessInfo</a> structures 
 matching the criteria specified in the argument list. If an error occurs while processing this 
-API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
-will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
-Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
 was encountered.
 </div>
 

@@ -10,12 +10,12 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The <a href="uddiv2api.html#_Toc25137720" target="api">get_serviceDetail</a> API call is used to 
-request full information about a known <a href="uddiv2data.html#_Toc25130765" target="api">businessService</a>
+The <a href="uddiv2api.html#_Toc25137720" target="doc">get_serviceDetail</a> API call is used to 
+request full information about a known <a href="uddiv2data.html#_Toc25130765" target="doc">businessService</a>
 structure. If an error occurs while processing this 
-API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
-will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
-Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
 was encountered.
 </div>
 

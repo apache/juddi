@@ -10,12 +10,12 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The <a href="uddiv2api.html#_Toc25137714" target="api">find_relatedBusinesses</a> API call returns
-a <a href="uddiv2data.html#_Toc25130808" target="api">relatedBusinessesList</a> message that contains 
-zero or more <a href="uddiv2data.html#_Toc25130808" target="api">relatedBusinessInfo</a> structures matching the criteria specified in the argument list. If 
-an error occurs while processing this API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> 
-element will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
-Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+The <a href="uddiv2api.html#_Toc25137714" target="doc">find_relatedBusinesses</a> API call returns
+a <a href="uddiv2data.html#_Toc25130808" target="doc">relatedBusinessesList</a> message that contains 
+zero or more <a href="uddiv2data.html#_Toc25130808" target="doc">relatedBusinessInfo</a> structures matching the criteria specified in the argument list. If 
+an error occurs while processing this API call, a <a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> 
+element will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
 was encountered.
 </div>
 

@@ -10,14 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The find_binding API call returns a bindingDetail message that contains zero 
-or more bindingTemplate structures matching the criteria specified in the 
-argument list.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating 
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a> or 
-<a href="/uddi_errors#E_unsupported">E_unsupported</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137712" target="doc">find_binding</a> API call returns
+a <a href="uddiv2data.html#_Toc25130796" target="doc">bindingDetail</a> message that contains 
+zero or more <a href="uddiv2data.html#_Toc25130769" target="doc">bindingTemplate</a> structures 
+matching the criteria specified in the argument list. If an error occurs while processing this 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
