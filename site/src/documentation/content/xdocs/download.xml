@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "./dtd/document-v12.dtd">
+<document> 
+  <header> 
+    <title>WebServices - Axis</title> 
+  </header> 
+  <body> 
+    <section>
+      <title>WebServices - Axis - </title>
+<p>
+ <table border="0" width="100%" cellspacing="4">
+   <tr>
+    <!-- RIGHT SIDE INFORMATION -->
+    <td align="left" valign="top">
+                <table border="0" cellspacing="0" cellpadding="2" width="100%">
+ <tr><td bgcolor="#82ADF6">
+   <a name="Download"><b><font size="+2">Downloading the Apache Axis distribution</font></a></b>
+ </td></tr>
+ <tr><td>
+  <blockquote>
+<p>Use the links below to download the Apache Axis distribution from one of
+our mirrors.  <!-- You <strong>must</strong> <a href="#verify">verify the
+integrity</a> of the downloaded files using signatures downloaded from
+our main distribution directory. --> </p>
+<p>Only current recommended releases are available on the main
+distribution site and its mirrors.  Older releases are available from
+the <a href="http://archive.apache.org/dist/ws/">archive download
+site.</a></p>
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+ <tr><td bgcolor="#82ADF6">
+  <font face="arial,helvetica,sanserif">
+   <a name="mirror"><strong>Mirror</strong></a>
+  </font>
+ </td></tr>
+ <tr><td>
+  <blockquote>
+<p>[if-any logo]
+<a href="[link]"><img align="right" src="[logo]" border="0" /></a>[end]
+The currently selected mirror is <b>[preferred]</b>.  If you encounter a
+problem with this mirror, please select another mirror.  If all
+mirrors are failing, there are <i>backup</i> mirrors (at the end of
+the mirrors list) that should be available.</p>
+<form action="[location]" method="get" id="SelectMirror">
+Other mirrors: <select name="Preferred">
+[if-any http]
+  [for http]<option value="[http]">[http]</option>[end]
+[end]  
+[if-any ftp]
+  [for ftp]<option value="[ftp]">[ftp]</option>[end]
+[end]
+[if-any backup]
+  [for backup]<option value="[backup]">[backup] (backup)</option>[end]
+[end]
+</select>
+<input type="submit" value="Change" />     
+</form>
+<p>You may also consult the <a href="http://www.apache.org/mirrors/">complete
+list of mirrors</a>.</p>
+  </blockquote>
+ </td></tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+ <tr><td bgcolor="#82ADF6">
+  <font face="arial,helvetica,sanserif">
+   <a name="apache20"><strong>Apache Axis 
+1.1 is the best available version</strong></a>
+  </font>
+ </td></tr>
+ <tr><td>
+  <blockquote>
+      	  <ul>
+			<li><a href="[preferred]/ws/axis/1_1/axis-1_1-src.tar.gz">
+				Version 1.1 Sources - tar.gz</a></li>
+			<li><a href="[preferred]/ws/axis/1_1/axis-1_1-src.zip">
+				Version 1.1 Sources - zip</a></li>
+			<li><a href="[preferred]/ws/axis/1_1/axis-1_1.tar.gz">
+				Version 1.1 Binary - tar.gz</a></li>
+			<li><a href="[preferred]/ws/axis/1_1/axis-1_1.zip">
+				Version 1.1 Binary - zip</a></li>
+	  	  </ul>
+  </blockquote>
+ </td></tr>
+</table>
+</p>
+    </section>
+  </body>
+</document>

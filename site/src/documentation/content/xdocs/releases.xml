@@ -8,22 +8,53 @@
     <section>      
       <title>Releases</title>      
       <p>
-      <table border="0" width="90%">        
+      <table border="0" width="90%">   
+           
         <tr> 
           <td><b>Name</b></td>
           <td><b>Date</b></td>
           <td><b>Description</b></td>
         </tr>
+
+        <!-- INSTRUCTIONS FOR DISTRIBUTING A jUDDI RELEASE
+        
+             NON-FINAL RELEASES
+             
+               You'll need to deploy releases that don't need to be mirrored 
+               to archive.apache.org and place your files in a new directory
+               named after the version of your release (i.e. 0_9rc1 for version
+               0.9rc1) within the following directory: 
+                
+                 /www/archive.apache.org/dist/ws/juddi 
+          
+               So the files for jUDDI 0.9rc1 would end up here:
+             
+                 /www/archive.apache.org/dist/ws/juddi/0_9rc1
+                      
+               FINAL RELEASES
+             
+                 (to-do)
+             
+        -->
+        
         <!--
         <tr>
-          <td><link href="http://archive.apache.org/dist/ws/juddi/1_0alpha/">1.0alpha</link></td>
-          <td>April 1, 2001</td>
-          <td>Alpha Version 1.0.</td>
+          <td><link href="http://ws.apache.org/juddi/download.cgi">0.9</link> (from mirror)</td>
+          <td>July 1, 2004</td>
+          <td>Final Version 0.9</td>
         </tr>
         -->
+
+        <tr>
+          <td><link href="http://archive.apache.org/dist/ws/juddi/0_9rc1/">0.9rc1</link></td>
+          <td>June 12, 2004</td>
+          <td>Release Candidate 1 for Version 0.9</td>
+        </tr>
+
       </table>
       </p>      
-      <p>For nightly builds, see the <link href="interim.html">Interim Drops</link> page.</p>
+      <p>For nightly builds or nightly snapshots of the CVS tree see 
+       the <link href="interim.html">Interim Drops</link> page.</p>
     </section>
   </body>
 </document>
