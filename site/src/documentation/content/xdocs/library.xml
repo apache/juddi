@@ -17,25 +17,34 @@
     </p>
 
     <section>
-      <title>UDDI Specific Resources</title>        
+      <title>UDDI Specifications, Articles, Tutorials and Best Practices</title>        
       <p><b><link href="http://www.uddi.org/">UDDI.org</link></b></p>
-      <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/contribs.htm#uddiv1">UDDI Version 1.0 Specification</link></b></p>
-      <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv2">UDDI Version 2.0 Specification</link></b></p>
-      <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">UDDI Version 3.0 Specification</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/edu/ws-dw-ws-dwsuddi-i.html">IBM Tutorial: Discovering Web services: UDDI</link></b></p>
-    </section>
 
-    <section>
-      <title>UDDI Articles and Best Practices</title>        
+      <p>
+      <b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/contribs.htm#uddiv1">UDDI Version 1.0 Specification</link></b><br/>
+      <b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv2">UDDI Version 2.0 Specification</link></b><br/>
+      <b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">UDDI Version 3.0 Specification</link></b>
+      </p>
+
+      <p><b><link href="http://www-106.ibm.com/developerworks/edu/ws-dw-ws-dwsuddi-i.html">Tutorial: Discovering Web Services: UDDI</link></b></p>
       <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm">Using WSDL in a UDDI Registry, Version 2.0</link></b></p>
-      <p><b><link href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnuddi/html/runtimeuddi1.asp">Using UDDI at Runtime Part I</link></b></p>
-      <p><b><link href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnuddi/html/runtimeuddi1.asp">Using UDDI at Runtime Part II</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod1/">A new approach to UDDI and WSDL Part 1</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod2.html">A new approach to UDDI and WSDL Part 2</link></b></p>
       <p><b><link href="http://www.sys-con.com/webservices/article.cfm?id=87">Understanding UDDI tModels and Taxonomies</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl/">Understanding WSDL in a UDDI registry, Part 1</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl2/">Understanding WSDL in a UDDI registry, Part 2</link></b></p>
-      <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl3/">Understanding WSDL in a UDDI registry, Part 3</link></b></p>
+      
+      <p>
+      <b><link href="http://msdn.microsoft.com/library/en-us/dnuddi/html/runtimeuddi1.asp">Using UDDI at Runtime Part I</link></b><br/>
+      <b><link href="http://msdn.microsoft.com/library/en-us/dnuddi/html/runtimeuddi2.asp">Using UDDI at Runtime Part II</link></b>
+      </p>
+      
+      <p>
+      <b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod1/">A New Approach to UDDI and WSDL Part 1</link></b><br/>
+      <b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod2.html">A New Approach to UDDI and WSDL Part 2</link></b>
+      </p>
+      
+      <p>
+      <b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl/">Understanding WSDL in a UDDI Registry Part 1</link></b><br/>
+      <b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl2/">Understanding WSDL in a UDDI Registry Part 2</link></b><br/>
+      <b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl3/">Understanding WSDL in a UDDI Registry Part 3</link></b>
+      </p>
     </section>
       
     <section>
