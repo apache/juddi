@@ -76,7 +76,9 @@ public class FindServiceHandler extends AbstractHandler
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.addName((Name)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(i));
+      if (name != null)
+        obj.addName(name);
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,FindQualifiersHandler.TAG_NAME);

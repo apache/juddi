@@ -65,7 +65,9 @@ public class FindPublisherHandler extends AbstractHandler
     if (nodeList.size() > 0)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.setName((Name)handler.unmarshal((Element)nodeList.elementAt(0)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(0));
+      if (name != null)
+        obj.setName(name);    
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,FindQualifiersHandler.TAG_NAME);

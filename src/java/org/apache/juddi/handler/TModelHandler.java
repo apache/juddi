@@ -64,14 +64,18 @@ public class TModelHandler extends AbstractHandler
     if (nodeList.size() > 0)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.setName((Name)handler.unmarshal((Element)nodeList.elementAt(0)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(0));
+      if (name != null)
+        obj.setName(name);    
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,DescriptionHandler.TAG_NAME);
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(DescriptionHandler.TAG_NAME);
-      obj.addDescription((Description)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Description descr = (Description)handler.unmarshal((Element)nodeList.elementAt(i));
+      if (descr != null)
+        obj.addDescription(descr);
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,OverviewDocHandler.TAG_NAME);

@@ -71,34 +71,35 @@ public class FindBusinessHandler extends AbstractHandler
     // {none}
 
     // Child Elements
-
-  nodeList = XMLUtils.getChildElementsByTagName(element,FindQualifiersHandler.TAG_NAME);
-  if (nodeList.size() > 0)
-  {
-    handler = maker.lookup(FindQualifiersHandler.TAG_NAME);
-    obj.setFindQualifiers((FindQualifiers)handler.unmarshal((Element)nodeList.elementAt(0)));
-  }
+    nodeList = XMLUtils.getChildElementsByTagName(element,FindQualifiersHandler.TAG_NAME);
+    if (nodeList.size() > 0)
+    {
+      handler = maker.lookup(FindQualifiersHandler.TAG_NAME);
+      obj.setFindQualifiers((FindQualifiers)handler.unmarshal((Element)nodeList.elementAt(0)));
+    }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,NameHandler.TAG_NAME);
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.addName((Name)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(i));
+      if (name != null)
+        obj.addName(name);
     }
 
-  nodeList = XMLUtils.getChildElementsByTagName(element,IdentifierBagHandler.TAG_NAME);
-  if (nodeList.size() > 0)
-  {
-    handler = maker.lookup(IdentifierBagHandler.TAG_NAME);
-    obj.setIdentifierBag((IdentifierBag)handler.unmarshal((Element)nodeList.elementAt(0)));
-  }
+    nodeList = XMLUtils.getChildElementsByTagName(element,IdentifierBagHandler.TAG_NAME);
+    if (nodeList.size() > 0)
+    {
+      handler = maker.lookup(IdentifierBagHandler.TAG_NAME);
+      obj.setIdentifierBag((IdentifierBag)handler.unmarshal((Element)nodeList.elementAt(0)));
+    }
 
-  nodeList = XMLUtils.getChildElementsByTagName(element,CategoryBagHandler.TAG_NAME);
-  if (nodeList.size() > 0)
-  {
-    handler = maker.lookup(CategoryBagHandler.TAG_NAME);
-    obj.setCategoryBag((CategoryBag)handler.unmarshal((Element)nodeList.elementAt(0)));
-  }
+    nodeList = XMLUtils.getChildElementsByTagName(element,CategoryBagHandler.TAG_NAME);
+    if (nodeList.size() > 0)
+    {
+      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
+      obj.setCategoryBag((CategoryBag)handler.unmarshal((Element)nodeList.elementAt(0)));
+    }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,TModelBagHandler.TAG_NAME);
     if (nodeList.size() > 0)

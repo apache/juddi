@@ -56,7 +56,9 @@ public class TModelInfoHandler extends AbstractHandler
     if (nodeList.size() > 0)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.setName((Name)handler.unmarshal((Element)nodeList.elementAt(0)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(0));
+      if (name != null)
+        obj.setName(name);    
     }
 
     return obj;

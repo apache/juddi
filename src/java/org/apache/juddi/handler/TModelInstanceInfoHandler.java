@@ -56,7 +56,9 @@ public class TModelInstanceInfoHandler extends AbstractHandler
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(DescriptionHandler.TAG_NAME);
-      obj.addDescription((Description)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Description descr = (Description)handler.unmarshal((Element)nodeList.elementAt(i));
+      if (descr != null)
+        obj.addDescription(descr);
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,InstanceDetailsHandler.TAG_NAME);

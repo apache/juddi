@@ -38,20 +38,21 @@ public class DescriptionHandler extends AbstractHandler
   }
 
   public RegistryObject unmarshal(Element element)
-  {
-    Description obj = new Description();
-
+  {   
     // Attributes
     String langCode = element.getAttribute("xml:lang");
-    if ((langCode != null) && (langCode.trim().length() > 0))
-      obj.setLanguageCode(langCode);
 
     // Text Node Value
-    obj.setValue(XMLUtils.getText(element));
+    String descValue = XMLUtils.getText(element);
 
     // Child Elements
     // {none}
 
+    // Only create Description instance if descValue not null and not zero-length
+    Description obj = null;
+    if ((descValue != null) && (descValue.trim().length() > 0)) 
+      obj = new Description(descValue,langCode);
+    
     return obj;
   }
 

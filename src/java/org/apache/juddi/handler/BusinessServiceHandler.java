@@ -68,14 +68,18 @@ public class BusinessServiceHandler extends AbstractHandler
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.addName((Name)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(i));
+      if (name != null)
+        obj.addName(name);
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,DescriptionHandler.TAG_NAME);
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(DescriptionHandler.TAG_NAME);
-      obj.addDescription((Description)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Description descr = (Description)handler.unmarshal((Element)nodeList.elementAt(i));
+      if (descr != null)
+        obj.addDescription(descr);
     }
 
     nodeList = XMLUtils.getChildElementsByTagName(element,BindingTemplatesHandler.TAG_NAME);

@@ -58,7 +58,9 @@ public class ServiceInfoHandler extends AbstractHandler
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      obj.addName((Name)handler.unmarshal((Element)nodeList.elementAt(i)));
+      Name name = (Name )handler.unmarshal((Element)nodeList.elementAt(i));
+      if (name != null)
+        obj.addName(name);
     }
 
     return obj;

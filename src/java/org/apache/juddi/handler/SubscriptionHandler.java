@@ -44,6 +44,8 @@ public class SubscriptionHandler extends AbstractHandler
 
   public RegistryObject unmarshal(Element element)
   {
+    // TODO (UDDI v3) Fill out SubscriptoinHandler.unmarshal()
+      
     Subscription obj = new Subscription();
     Vector nodeList = null;
     AbstractHandler handler = null;
@@ -55,11 +57,6 @@ public class SubscriptionHandler extends AbstractHandler
     // [none]
 
     // Child Elements
-    nodeList = XMLUtils.getChildElementsByTagName(element,NameHandler.TAG_NAME);
-    if (nodeList.size() > 0)
-    {
-      // TODO (UDDI v3) Fill out SubscriptoinHandler.unmarshal()
-    }
 
     return obj;
   }

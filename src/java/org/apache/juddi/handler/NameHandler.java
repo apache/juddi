@@ -39,20 +39,21 @@ public class NameHandler extends AbstractHandler
   }
 
   public RegistryObject unmarshal(Element element)
-  {
-    Name obj = new Name();
-
+  {   
     // Attributes
     String langCode = element.getAttribute("xml:lang");
-    if ((langCode != null) && (langCode.trim().length() > 0))
-      obj.setLanguageCode(langCode);
 
     // Text Node Value
-    obj.setValue(XMLUtils.getText(element));
+    String nameValue = XMLUtils.getText(element);
 
     // Child Elements
     // {none}
 
+    // Only create Name instance if nameValue not null and not zero-length
+    Name obj = null;
+    if ((nameValue != null) && (nameValue.trim().length() > 0)) 
+      obj = new Name(nameValue,langCode);
+    
     return obj;
   }
 
