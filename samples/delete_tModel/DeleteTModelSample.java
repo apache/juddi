@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+import java.util.Properties;
+import java.util.Vector;
+
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
+import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
 
@@ -24,14 +33,56 @@ public class DeleteTModelSample
 {
   public static void main(String[] args)
   {
-    IRegistry regisry = new RegistryProxy();
+    // Option #1 (grabs properties from juddi.properties)
+    //IRegistry registry = new RegistryProxy();
+    
+    // Option #2
+    Properties props = new Properties();
+    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
+    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
+    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
+    IRegistry registry = new RegistryProxy(props);
+
+    String userID = "sviens";
+    String password = "password";
+
+    DispositionReport dispReport = null;
+    Vector resultVector = null;
 
     try
-    {
+    {      
+      System.out.println("delete_tModel Sample");
+      System.out.println("--------------------");
+      System.out.println("userID: "+userID);
+      System.out.println("password: "+password);
+      System.out.println("");
+
+      AuthToken authToken = registry.getAuthToken(userID,password);
+      AuthInfo authInfo = authToken.getAuthInfo();
+      System.out.println("AuthToken: "+authInfo.getValue());
+
+      Vector keyVector = new Vector();
+      for (int i=0; i<args.length; i++)
+      {
+        String key = (String)args[i];
+        keyVector.add(key);
+        System.out.println("Deleting: "+key); 
+      }
+      
+      registry.deleteTModel(authInfo,keyVector);
+      System.out.println("(done)");        
     }
-    catch(Exception ex)
+    catch(RegistryException regex)
     {
-      ex.printStackTrace();
+      dispReport = regex.getDispositionReport();
+      resultVector = dispReport.getResultVector();
+      if (resultVector != null)
+      {
+        Result result = (Result)resultVector.elementAt(0);
+        ErrInfo errInfo = result.getErrInfo();
+        int errNo = result.getErrno();
+        System.out.println("Error Number: "+errNo);
+      }
     }
   }
 }

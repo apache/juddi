@@ -51,8 +51,8 @@ public class SaveTModelSample
 
     try
     {      
-      System.out.println("discard_authToken Sample");
-      System.out.println("------------------------");
+      System.out.println("save_tModel Sample");
+      System.out.println("------------------");
       System.out.println("userID: "+userID);
       System.out.println("password: "+password);
       System.out.println("");
