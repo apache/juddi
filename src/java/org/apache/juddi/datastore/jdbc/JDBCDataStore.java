@@ -1430,29 +1430,39 @@ public class JDBCDataStore implements DataStore
 
     try
     {
-      if ((tModelBag != null) && (tModelBag.size() > 0))
-        keyVector = FindBusinessByTModelKeyQuery.select(tModelBag,keyVector,findQualifiers,connection);
-
       if ((discoveryURLs != null) && (discoveryURLs.size() > 0))
         keyVector = FindBusinessByDiscoveryURLQuery.select(discoveryURLs,keyVector,findQualifiers,connection);
 
-//    TODO (CategoryBag Error)        
-//      if ((categoryBag != null) && (categoryBag.size() > 0))
-//        keyVector = FindBusinessByCategoryQuery.select(categoryBag,keyVector,findQualifiers,connection);
-
       if ((findQualifiers != null) && (findQualifiers.orAllKeys))  
       {
-        // orAllKeys = Use logical "OR" when searching by category 
-        // bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // orAllKeys = Use logical "OR" when searching by categoryBag
+        // or tModelBag. See UDDI v2.04 API Specification - Appendix E.
+            
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+          keyVector = FindBusinessByTModelKeyQuery.select(tModelBag,keyVector,findQualifiers,connection);
+        
         if ((categoryBag != null) && (categoryBag.size() > 0))
           keyVector = FindBusinessByCategoryQuery.select(categoryBag,keyVector,findQualifiers,connection);
       }
       else 
       {
         // Default UDDI v2 behavior: Use logical "AND" when searching 
-        // by category bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // by categoryBagor tModelBag. See Appendix E of the UDDI v2.04 
+        // API Specification.
+
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+        {
+          Vector tModelKeyVector = tModelBag.getTModelKeyVector();
+          if (tModelKeyVector != null)
+          {
+            for (int i=0; i<tModelKeyVector.size(); i++)
+            {
+              String tModelKey = (String)tModelKeyVector.elementAt(i);
+              keyVector = FindBusinessByTModelKeyQuery.select(tModelKey,keyVector,findQualifiers,connection);
+            }
+          }
+        }
+
         if ((categoryBag != null) && (categoryBag.size() > 0))
         {
           Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
@@ -1465,7 +1475,7 @@ public class JDBCDataStore implements DataStore
             }
           }
         }
-      }
+      } // end else
       
       if ((identifierBag != null) && (identifierBag.size() > 0))
         keyVector = FindBusinessByIdentifierQuery.select(identifierBag,keyVector,findQualifiers,connection);
@@ -1498,26 +1508,36 @@ public class JDBCDataStore implements DataStore
       if (businessKey != null)
         keyVector = FindServiceByBusinessKeyQuery.select(businessKey,keyVector,findQualifiers,connection);
             
-      if ((tModelBag != null) && (tModelBag.size() > 0))
-        keyVector = FindServiceByTModelKeyQuery.select(businessKey,tModelBag,keyVector,findQualifiers,connection);
-
-//    TODO (CategoryBag Error)        
-//      if ((categoryBag != null) && (categoryBag.size() > 0))
-//        keyVector = FindServiceByCategoryQuery.select(businessKey,categoryBag,keyVector,findQualifiers,connection);
-
       if ((findQualifiers != null) && (findQualifiers.orAllKeys))  
       {
-        // orAllKeys = Use logical "OR" when searching by category 
-        // bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // orAllKeys = Use logical "OR" when searching by categoryBag
+        // or tModelBag. See UDDI v2.04 API Specification - Appendix E.
+          
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+          keyVector = FindServiceByTModelKeyQuery.select(businessKey,tModelBag,keyVector,findQualifiers,connection);
+
         if ((categoryBag != null) && (categoryBag.size() > 0))
           keyVector = FindServiceByCategoryQuery.select(businessKey,categoryBag,keyVector,findQualifiers,connection);
       }
       else 
       {
         // Default UDDI v2 behavior: Use logical "AND" when searching 
-        // by category bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // by categoryBagor tModelBag. See Appendix E of the UDDI v2.04 
+        // API Specification.
+
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+        {
+          Vector tModelKeyVector = tModelBag.getTModelKeyVector();
+          if (tModelKeyVector != null)
+          {
+            for (int i=0; i<tModelKeyVector.size(); i++)
+            {
+              String tModelKey = (String)tModelKeyVector.elementAt(i);
+              keyVector = FindServiceByTModelKeyQuery.select(businessKey,tModelKey,keyVector,findQualifiers,connection);
+            }
+          }
+        }
+
         if ((categoryBag != null) && (categoryBag.size() > 0))
         {
           Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
@@ -1530,7 +1550,7 @@ public class JDBCDataStore implements DataStore
             }
           }
         }
-      }
+      } // end else
       
       // always perform this query - even when not searching by Name!!!
       keyVector = FindServiceByNameQuery.select(businessKey,nameVector,keyVector,findQualifiers,connection);
@@ -1556,10 +1576,6 @@ public class JDBCDataStore implements DataStore
 
     try
     {
-// TODO (CategoryBag Error)        
-//      if ((categoryBag != null) && (categoryBag.size() > 0))
-//        keyVector = FindTModelByCategoryQuery.select(categoryBag,keyVector,findQualifiers,connection);
-
       if ((findQualifiers != null) && (findQualifiers.orAllKeys))  
       {
         // orAllKeys = Use logical "OR" when searching by category 
@@ -1619,10 +1635,6 @@ public class JDBCDataStore implements DataStore
         
       if ((tModelBag != null) && (tModelBag.size() > 0))
         keyVector = FindBindingByTModelKeyQuery.select(serviceKey,tModelBag,keyVector,findQualifiers,connection);
-
-//    TODO (CategoryBag Error)        
-//      if ((categoryBag != null) && (categoryBag.size() > 0))
-//        keyVector = FindBindingByCategoryQuery.select(serviceKey,categoryBag,keyVector,findQualifiers,connection);
 
       if ((findQualifiers != null) && (findQualifiers.orAllKeys))  
       {

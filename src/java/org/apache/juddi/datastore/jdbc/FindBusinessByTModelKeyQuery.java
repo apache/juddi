@@ -142,6 +142,84 @@ class FindBusinessByTModelKeyQuery
   }
 
   /**
+   * Select ...
+   *
+   * @param tModelKey
+   * @param keysIn
+   * @param qualifiers
+   * @param connection JDBC connection
+   * @throws java.sql.SQLException
+   */
+  public static Vector select(String tModelKey,Vector keysIn,FindQualifiers qualifiers,Connection connection)
+    throws java.sql.SQLException
+  {
+    // if there is a keysIn vector but it doesn't contain
+    // any keys then the previous query has exhausted
+    // all possibilities of a match so skip this call.
+    if ((keysIn != null) && (keysIn.size() == 0))
+      return keysIn;
+
+    Vector keysOut = new Vector();
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+
+    // construct the SQL statement
+    DynamicQuery sql = new DynamicQuery(selectSQL);
+    appendWhere(sql,tModelKey,qualifiers);
+    appendIn(sql,keysIn);
+    appendOrderBy(sql,qualifiers);
+
+    try
+    {
+      log.debug(sql.toString());
+
+      statement = sql.buildPreparedStatement(connection);
+      resultSet = statement.executeQuery();
+
+      while (resultSet.next())
+        keysOut.addElement(resultSet.getString(1));//("BUSINESS_KEY"));
+
+      return keysOut;
+    }
+    finally
+    {
+      try {
+        resultSet.close();
+      }
+      catch (Exception e)
+      {
+        log.warn("An Exception was encountered while attempting to close " +
+          "the Find BusinessEntity ResultSet: "+e.getMessage(),e);
+      }
+
+      try {
+        statement.close();
+      }
+      catch (Exception e)
+      {
+        log.warn("An Exception was encountered while attempting to close " +
+          "the Find BusinessEntity Statement: "+e.getMessage(),e);
+      }
+    }
+  }
+
+  /**
+   *
+   */
+  private static void appendWhere(DynamicQuery sql,String tModelKey,FindQualifiers qualifiers)
+  {
+    sql.append("WHERE I.BINDING_KEY = T.BINDING_KEY ");
+    sql.append("AND T.SERVICE_KEY = S.SERVICE_KEY ");
+    sql.append("AND S.BUSINESS_KEY = B.BUSINESS_KEY ");
+
+    if ((tModelKey != null) && (tModelKey.trim().length() > 0))
+    {
+      sql.append("AND I.TMODEL_KEY = ? ");
+      sql.addValue(tModelKey);
+    }
+  }
+
+  /**
    * Utility method used to construct SQL "IN" statements such as
    * the following SQL example:
    *
