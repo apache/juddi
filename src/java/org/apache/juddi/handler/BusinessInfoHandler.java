@@ -81,7 +81,7 @@ public class BusinessInfoHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     BusinessInfo info = (BusinessInfo)object;
-    Element element = parent.getOwnerDocument().createElement(TAG_NAME);
+    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
     AbstractHandler handler = null;
 
     String businessKey = info.getBusinessKey();

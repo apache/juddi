@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,7 +73,7 @@ public class AddPublisherAssertionsHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     AddPublisherAssertions request = (AddPublisherAssertions)object;
-    Element element = parent.getOwnerDocument().createElement(TAG_NAME);
+    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
 
     String generic = request.getGeneric();
     if (generic != null)

@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,7 +86,7 @@ public class BindingTemplateHandler extends AbstractHandler
       obj.setTModelInstanceDetails((TModelInstanceDetails)handler.unmarshal((Element)nodeList.elementAt(0)));
     }
 
-// TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0     
+// TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0
 //    nodeList = XMLUtils.getChildElementsByTagName(element,CategoryBagHandler.TAG_NAME); // UDDI v3.0
 //    if (nodeList.size() > 0)
 //    {
@@ -100,7 +100,7 @@ public class BindingTemplateHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     BindingTemplate binding = (BindingTemplate)object;
-    Element element = parent.getOwnerDocument().createElement(TAG_NAME);
+    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
     AbstractHandler handler = null;
 
     String serviceKey = binding.getServiceKey();
@@ -140,7 +140,7 @@ public class BindingTemplateHandler extends AbstractHandler
       handler.marshal(tModInstDet,element);
     }
 
-//  TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0     
+//  TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0
 //    CategoryBag categoryBag = binding.getCategoryBag(); // UDDI v3.0
 //    if (categoryBag != null)
 //    {
