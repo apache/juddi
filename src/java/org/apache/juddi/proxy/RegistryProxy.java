@@ -75,9 +75,6 @@ public class RegistryProxy extends AbstractRegistry
   public static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
   public static final String DEFAULT_UDDI_VERSION = "2.0";
   public static final String DEFAULT_UDDI_NAMESPACE = "urn:uddi-org:api_v2";
-  public static final String DEFAULT_HTTP_PROXY_SET = "false";
-  public static final String DEFAULT_HTTP_PROXY_HOST = null;
-  public static final String DEFAULT_HTTP_PROXY_PORT = "0";
   
   // jUDDI Proxy Properties
   private URL inquiryURL;
@@ -88,9 +85,6 @@ public class RegistryProxy extends AbstractRegistry
   private String protocolHandler;
   private String uddiVersion;
   private String uddiNamespace;
-  private boolean httpProxySet;
-  private String httpProxyHost;
-  private int httpProxyPort;
   
   /**
    * Create a new instance of RegistryProxy.  This constructor
@@ -192,24 +186,6 @@ public class RegistryProxy extends AbstractRegistry
       this.setUddiNamespace(uddiNS);
     else
       this.setUddiNamespace(DEFAULT_UDDI_NAMESPACE);
-
-    String proxySet = props.getProperty(HTTP_PROXY_SET_PROPERTY_NAME);
-    if (proxySet != null)
-      this.setHttpProxySet(Boolean.getBoolean(proxySet));
-    else
-      this.setHttpProxySet(Boolean.getBoolean(DEFAULT_HTTP_PROXY_SET));
-      
-    String proxyHost = props.getProperty(HTTP_PROXY_HOST_PROPERTY_NAME);
-    if (proxyHost != null)
-      this.setHttpProxyHost(proxyHost);
-    else
-      this.setHttpProxyHost(DEFAULT_HTTP_PROXY_HOST);
-  
-    String proxyPort = props.getProperty(HTTP_PROXY_PORT_PROPERTY_NAME);
-    if (proxyPort != null)
-      this.setHttpProxyPort(Integer.parseInt(proxyPort));
-    else
-      this.setHttpProxyPort(Integer.parseInt(DEFAULT_HTTP_PROXY_PORT));
 
     String transClass = props.getProperty(TRANSPORT_CLASS_PROPERTY_NAME);
     if (transClass != null)
@@ -345,54 +321,6 @@ public class RegistryProxy extends AbstractRegistry
   {
     this.uddiVersion = uddiVer;
   }
-  
-  /**
-   * @return Returns the httpProxySet.
-   */
-  public boolean isHttpProxySet() 
-  {
-    return httpProxySet;
-  }
-  
-  /**
-   * @param httpProxySet The httpProxySet to set.
-   */
-  public void setHttpProxySet(boolean httpProxySet) 
-  {
-    this.httpProxySet = httpProxySet;
-  }
-
-  /**
-   * @return Returns the httpProxyHost.
-   */
-  public String getHttpProxyHost() 
-  {
-    return httpProxyHost;
-  }
-  
-  /**
-   * @param httpProxyHost The httpProxyHost to set.
-   */
-  public void setHttpProxyHost(String httpProxyHost) 
-  {
-    this.httpProxyHost = httpProxyHost;
-  }
-  
-  /**
-   * @return Returns the httpProxyPort.
-   */
-  public int getHttpProxyPort() 
-  {
-    return httpProxyPort;
-  }
-  
-  /**
-   * @param httpProxyPort The httpProxyPort to set.
-   */
-  public void setHttpProxyPort(int httpProxyPort) 
-  {
-    this.httpProxyPort = httpProxyPort;
-  }
 
   /**
    *
@@ -440,7 +368,7 @@ public class RegistryProxy extends AbstractRegistry
     // A SOAP request is made and a SOAP response
     // is returned.
 
-    Element response = transport.send(request,endPointURL,httpProxySet,httpProxyHost,httpProxyPort);
+    Element response = transport.send(request,endPointURL);
 
     // First, let's make sure that a response
     // (any response) is found in the SOAP Body.

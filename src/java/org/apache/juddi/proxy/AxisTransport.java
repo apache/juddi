@@ -40,21 +40,7 @@ public class AxisTransport implements Transport
 
   public Element send(Element request,URL endpointURL)
     throws RegistryException
-  {
-    return this.send(request,endpointURL,false,null,0);
-  }
-  
-  public Element send(Element request,URL endpointURL,boolean proxySet,String proxyHost,int proxyPort)
-    throws RegistryException
-  {
-    // make sure we're using the correct proxy
-    if (proxySet)
-    {
-      System.setProperty("http.proxySet",String.valueOf(proxySet));
-      System.setProperty("http.proxyHost",proxyHost);
-      System.setProperty("http.proxyPort",String.valueOf(proxyPort));
-    }
-    
+  {    
     Service service = null;
     Call call = null;
     Element response = null;
