@@ -54,17 +54,17 @@ public class RegistryProxy extends AbstractRegistry
   private static final String PROPFILE_NAME = "juddi.properties";
   
   // jUDDI Proxy Property Names
-  public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.inquiryURL";
-  public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.publishURL";
-  public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.adminURL";    
-  public static final String TRANSPORT_CLASS_PROPERTY_NAME = "net.viens.uddi.proxy.transportClass";
-  public static final String SECURITY_PROVIDER_PROPERTY_NAME = "net.viens.uddi.proxy.securityProvider";
-  public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "net.viens.uddi.proxy.protocolHandler";
-  public static final String UDDI_VERSION_PROPERTY_NAME = "net.viens.uddi.proxy.uddiVersion";
-  public static final String UDDI_NAMESPACE_PROPERTY_NAME = "net.viens.uddi.proxy.uddiNamespace";
-  public static final String HTTP_PROXY_SET_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxySet";
-  public static final String HTTP_PROXY_HOST_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxyHost";
-  public static final String HTTP_PROXY_PORT_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxyPort";
+  public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "juddi.proxy.inquiryURL";
+  public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "juddi.proxy.publishURL";
+  public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "juddi.proxy.adminURL";    
+  public static final String TRANSPORT_CLASS_PROPERTY_NAME = "juddi.proxy.transportClass";
+  public static final String SECURITY_PROVIDER_PROPERTY_NAME = "juddi.proxy.securityProvider";
+  public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "juddi.proxy.protocolHandler";
+  public static final String UDDI_VERSION_PROPERTY_NAME = "juddi.proxy.uddiVersion";
+  public static final String UDDI_NAMESPACE_PROPERTY_NAME = "juddi.proxy.uddiNamespace";  
+  public static final String HTTP_PROXY_SET_PROPERTY_NAME = "juddi.httpProxySet";
+  public static final String HTTP_PROXY_HOST_PROPERTY_NAME = "juddi.httpProxyHost";
+  public static final String HTTP_PROXY_PORT_PROPERTY_NAME = "juddi.httpProxyPort";
 
   // jUDDI Proxy Default Property Values
   public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
