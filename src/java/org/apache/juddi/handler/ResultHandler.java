@@ -97,11 +97,11 @@ public class ResultHandler extends AbstractHandler
     Element child = null;
 
     ErrInfo errInfo = new ErrInfo();
-    errInfo.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-    errInfo.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    errInfo.setErrCode("E_accountLimitExceeded");
+    errInfo.setErrMsg("Authentication token information has timed out.");
 
     Result result = new Result();
-    result.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED);
+    result.setErrno(10160);
     result.setErrInfo(errInfo);
 
     System.out.println();
