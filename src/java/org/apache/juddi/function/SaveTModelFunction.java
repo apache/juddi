@@ -159,7 +159,7 @@ public class SaveTModelFunction extends AbstractFunction
   public static void main(String[] args)
   {
     // initialize the registry
-    org.apache.juddi.registry.RegistryEngine reg = org.apache.juddi.registry.RegistryEngine.getInstance();
+    RegistryEngine reg = new RegistryEngine();
     reg.init();
 
     try

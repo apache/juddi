@@ -201,5 +201,22 @@ public class FindPublisherFunction extends AbstractFunction
 
   public static void main(String[] args)
   {
+    // initialize the registry
+    RegistryEngine reg = new RegistryEngine();
+    reg.init();
+
+    try
+    {
+    }
+    catch (Exception ex)
+    {
+      // write execption to the console
+      ex.printStackTrace();
+    }
+    finally
+    {
+      // destroy the registry
+      reg.dispose();
+    }
   }
 }

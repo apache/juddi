@@ -125,7 +125,7 @@ public class GetAuthTokenFunction extends AbstractFunction
   public static void main(String[] args)
   {
     // initialize the registry
-    RegistryEngine reg = RegistryEngine.getInstance();
+    RegistryEngine reg = new RegistryEngine();
     reg.init();
 
     try
