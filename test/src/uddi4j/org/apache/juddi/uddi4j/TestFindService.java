@@ -49,12 +49,10 @@ public class TestFindService extends UDDITestBase
 
   protected TModelDetail _animalProtocol_tModelDetail = null;
   protected BusinessEntity _animalBusinessEntity = null;
+  protected BusinessService _animalBusinessService = null;
   protected boolean initOK=false;
 
 
-  public void testCases() {
-    _testInit();
-  }
 
 
   private boolean _publish_animalProtocol() {
@@ -197,7 +195,10 @@ public class TestFindService extends UDDITestBase
     java.util.Vector servicesVector = new Vector();
     servicesVector.add(busService);
     try {
-      proxy.save_service(token.getAuthInfoString(), servicesVector);
+     ServiceDetail serviceDetail = proxy.save_service(token.getAuthInfoString(), servicesVector);
+     // get the business service to get the key
+     _animalBusinessService = (BusinessService) serviceDetail.getBusinessServiceVector().elementAt(0);
+
     }
     catch(TransportException ex) {
       return ret;
@@ -258,8 +259,42 @@ public class TestFindService extends UDDITestBase
   public void tearDown() {
   }
 
-
-  protected boolean _testInit() {
-    return initOK;
+  protected void _testGetServiceDetail() {
+//    _animalBusinessEntity.
+    try {
+      proxy.get_serviceDetail(_animalBusinessService.getServiceKey());
+    }
+    catch (UDDIException ex) {
+      fail(ex.toString());
+    }
+    catch (TransportException ex) {
+      fail(ex.toString());
+    }
   }
+
+  protected void _testFindService() {
+    // creates the fake NACS #
+    CategoryBag catBag = _createCategoryBag();
+    try {
+      ServiceList list = proxy.find_service("", null, catBag, null, null, 0);
+    }
+    catch(UDDIException ex) {
+      fail(ex.toString());
+    }
+    catch(TransportException ex) {
+      fail(ex.toString());
+    }
+  }
+
+  protected void _testInit() {
+    if (!initOK) {
+      fail("intialization failed");
+    }
+  }
+  public void testCases() {
+    _testInit();
+    _testGetServiceDetail();
+    _testFindService();
+  }
+
 }
