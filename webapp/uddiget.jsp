@@ -114,7 +114,7 @@
 	      		"did not match with any known Business Entities.");
 	
 	      Element element = getElement(object);
-	      XMLUtils.writeXML(element,out);
+	      out.print(XMLUtils.toString(element));
 	    }
 	    	
 	    String serviceKey = request.getParameter("servicekey");
@@ -126,7 +126,7 @@
 	      		"did not match with any known Business Services.");
 	      	
 	      Element element = getElement(object);
-	      XMLUtils.writeXML(element,out);
+	      out.print(XMLUtils.toString(element));
 	    }
 	
 	    String bindingKey = request.getParameter("bindingkey");
@@ -138,7 +138,7 @@
 	      		"specified did not match with any known Binding Templates.");
 	
 	      Element element = getElement(object);
-	      XMLUtils.writeXML(element,out);
+	      out.print(XMLUtils.toString(element));
 	    }
 		
 	    String tModelKey = request.getParameter("tmodelkey");
@@ -150,7 +150,7 @@
 	      		"did not match with any known TModels.");
 	
 	      Element element = getElement(object);
-	      XMLUtils.writeXML(element,out);
+	      out.print(XMLUtils.toString(element));
 	    }
 		}
 		catch(RegistryException regex)
