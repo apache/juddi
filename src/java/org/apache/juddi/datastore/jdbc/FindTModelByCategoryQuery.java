@@ -64,6 +64,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
 import org.apache.juddi.util.jdbc.Transaction;
@@ -170,12 +171,26 @@ class FindTModelByCategoryQuery
             String name = keyedRef.getKeyName();
             String value = keyedRef.getKeyValue();
 
-            if ((name != null) && (value != null))
+	    String tModelKey = keyedRef.getTModelKey();
+            if (tModelKey.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
             {
-              sql.append("(C.KEY_NAME = '").append(name).append("' AND C.KEY_VALUE = '").append(value).append("')");
+              // DO NOT ignore the name .. 
+              if ((name != null) && (value != null))
+              {
+                sql.append("(C.KEY_NAME = '").append(name).append("' AND C.KEY_VALUE = '").append(value).append("')");
 
-              if (i+1 < vectorSize)
-                sql.append(" OR ");
+                if (i+1 < vectorSize)
+                  sql.append(" OR ");
+              }
+            }
+            else {
+              if (value != null)
+              {
+                sql.append("(C.KEY_VALUE = '").append(value).append("')");
+
+                if (i+1 < vectorSize)
+                  sql.append(" OR ");
+              }
             }
           }
 
