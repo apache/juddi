@@ -142,6 +142,12 @@ Copyright:
       classpathref="project.classpath"/>
   	<echo message="saaj.present=${saaj.present}" />
   		
+  	<!-- Libraries from Novell for LDAP implementation  -->
+  	<available property="novell.present"
+      classname="com.novell.ecb.Connection"
+      classpathref="project.classpath"/>
+  	<echo message="novell.present=${novell.present}" />
+  		
   	<!-- Compile Java Source Code -->
   	<javac
         destdir="${classes.dir}"
@@ -150,7 +156,8 @@ Copyright:
         optimize="${compile.optimize}">
       <classpath refid="project.classpath"/>
       <src path="${java.dir}"/>
-      <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>    	    	
+      <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>
+      <exclude name="**/org/apache/juddi/ldap/**" unless="novell.present"/>    	    	
     </javac>
   </target>
   <!-- =================================================================== -->
@@ -165,16 +172,18 @@ Copyright:
     <jar
       jarfile="${build.dir}/${proxy.file}"
       basedir="${classes.dir}"
-      excludes="org/apache/juddi/auth/**,
-                org/apache/juddi/cryptor/**,
-                org/apache/juddi/datastore/**,
-                org/apache/juddi/function/**,
-                org/apache/juddi/monitor/**,
-                org/apache/juddi/registry/**,
-                org/apache/juddi/transport/**,
-                org/apache/juddi/util/jdbc/**,
-                org/apache/juddi/uuidgen/**,
-    	        org/apache/juddi/validator/**"/>
+      includes="org/apache/juddi/AbstractRegistry,
+    	        org/apache/juddi/IRegistry,
+    	        org/apache/juddi/datatype/**,
+    	        org/apache/juddi/error/**,
+                org/apache/juddi/handler/**,
+    	        org/apache/juddi/i18n/**,    	    	
+    	        org/apache/juddi/proxy/**,    	
+    	        org/apache/juddi/util/Config,
+    	        org/apache/juddi/util/Language,
+    	        org/apache/juddi/util/Loader,
+    	        org/apache/juddi/util/Release,    
+    	        org/apache/juddi/util/xml/XMLUtils"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
