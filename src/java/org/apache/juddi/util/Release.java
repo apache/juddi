@@ -26,18 +26,24 @@ import java.util.Date;
  */
 public class Release 
 {
-  private static final String VERSION = "0.9rc4";
+  private static final String REGISTRY_VERSION = "0.9rc4";
+  private static final String UDDI_VERSION = "2.0";
   
   // Made private to avoid instantiation
   private Release()
   {
   }
   
-  public static String getVersion()
+  public static String getRegistryVersion()
   {
-    return VERSION;
+    return REGISTRY_VERSION;
   }
   
+  public static String getUDDIVersion()
+  {
+    return UDDI_VERSION;
+  }
+
   public static String getLastModified()
   {
     String filePath = getClassFileLocation(Release.class);
