@@ -30,7 +30,18 @@ import java.security.Principal;
 /**
  * This is a implementation of jUDDI's Authenticator interface, 
  * that uses the JBoss authentication manager.
- *
+ * 
+ * Usage:
+ * 
+ *   To use this class you must add the following properties
+ *   to the juddi.properties file:
+ * 
+ *    # The JBoss Authenticator 
+ *    juddi.auth=org.apache.juddi.auth.JBossAuthenticator
+ *  
+ *    # The security-domain, defined in $JBOSS/default/conf/login-config.xml 
+ *    juddi.securityDomain=java:/jaas/other
+ *  
  * @author Antoni Reus (areus@ibit.org)
  */
 public class JBossAuthenticator implements Authenticator 
