@@ -196,7 +196,7 @@ public class BusinessService implements RegistryObject
 
   /**
    * Add a category to the categorybag of this business service.
-   * @param keyref The category to add.
+   * @param ref The category to add.
    */
   public void addCategory(KeyedReference ref)
   {

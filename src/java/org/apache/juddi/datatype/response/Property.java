@@ -27,16 +27,17 @@ public class Property implements RegistryObject
   String value;
 
   /**
-   * Constructs a new initialized Addressline instance.
+   * Constructs a new initialized Property instance.
    */
   public Property()
   {
   }
 
   /**
-   * Constructs a new addressline with the given data.
+   * Constructs a new Property with the given data.
    *
-   * @param line The data of the addressline.
+   * @param name The property name/key.
+   * @param value The property data/value.
    */
   public Property(String name,String value)
   {
@@ -55,7 +56,7 @@ public class Property implements RegistryObject
   }
 
   /**
-   * Returns the data of the addressline.
+   * Returns the name/key of the property.
    *
    * @return The name of the property.
    */

@@ -237,10 +237,10 @@ public class Config extends Properties
    * registry.  Loads the juddi.properties file if
    * not already initialized.
    *
-   * @param key Name of the property to be returned.
-   * @param property Value as a string.
+   * @param name Name of the property to be returned.
+   * @param value Property value as a string.
    */
-  public static void setStringProperty(String key, String value)
+  public static void setStringProperty(String name, String value)
   {
     if (config == null)
       config = createConfig();
@@ -250,14 +250,14 @@ public class Config extends Properties
       return;
 
     // no property name/key, just return
-    if (key == null)
+    if (name == null)
       return;
 
     // no property value, attempt removal (otherwise save/replace)
     if (value == null)
-      config.remove(key);
+      config.remove(name);
     else
-      config.setProperty(key, value); // save or replace prop value
+      config.setProperty(name, value); // save or replace prop value
   }
 
   /**

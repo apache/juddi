@@ -145,7 +145,7 @@ public class XMLUtils
    * Write XML data to a Writer
    *
    * @param element XML Element to write
-   * @param stream Writer to write to
+   * @param writer Writer to write to
    */
   public static void writeXML(Element element,Writer writer)
   {

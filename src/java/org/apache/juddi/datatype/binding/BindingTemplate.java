@@ -224,7 +224,7 @@ public class BindingTemplate implements RegistryObject
 
   /**
    * Add a category to the categorybag of this binding template.
-   * @param keyref The category to add.
+   * @param ref The category to add.
    */
   public void addCategory(KeyedReference ref)
   {

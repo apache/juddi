@@ -54,14 +54,14 @@ public class ValidateValuesFunction extends AbstractFunction
 
   /**
    *
-   * @param RegistryObject
+   * @param obj
    * @return RegistryObject
    * @throws RegistryException
    */
-  public RegistryObject execute(RegistryObject regObject)
+  public RegistryObject execute(RegistryObject obj)
     throws RegistryException
   {
-    ValidateValues request = (ValidateValues)regObject;
+    ValidateValues request = (ValidateValues)obj;
     String generic = request.getGeneric();
 
     Vector businessVector = request.getBusinessEntityVector();

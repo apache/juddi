@@ -27,7 +27,7 @@ public interface Validator
 {
   /**
    *
-   * @param object
+   * @param bag
    * @return A DispositionReport containing the validation results
    * @throws RegistryException
    */
@@ -36,7 +36,7 @@ public interface Validator
 
   /**
    *
-   * @param object
+   * @param bag
    * @return A DispositionReport containing the validation results
    * @throws RegistryException
    */
@@ -45,7 +45,7 @@ public interface Validator
 
   /**
    *
-   * @param object
+   * @param ref
    * @return A DispositionReport containing the validation results
    * @throws RegistryException
    */

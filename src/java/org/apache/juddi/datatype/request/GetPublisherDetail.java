@@ -67,37 +67,37 @@ public class GetPublisherDetail implements RegistryObject,Admin
   /**
    * Add a PublisherID to the collection of PublisherIDs
    *
-   * @param key The new PublisherID to add
+   * @param id The new PublisherID to add
    */
-  public void addPublisherID(PublisherID publisherID)
+  public void addPublisherID(PublisherID id)
   {
-    if ((publisherID != null) && (publisherID.getValue() != null))
-      addPublisherID(publisherID.getValue());
+    if ((id != null) && (id.getValue() != null))
+      addPublisherID(id.getValue());
   }
 
   /**
    * Add a PublisherID to the collection of PublisherIDs
    *
-   * @param key The new PublisherID to add
+   * @param id The new PublisherID to add
    */
-  public void addPublisherID(String publisherID)
+  public void addPublisherID(String id)
   {
     // nothing to add so just return
-    if (publisherID == null)
+    if (id == null)
       return;
 
     if (publisherIDVector == null)
       publisherIDVector = new Vector();
-    publisherIDVector.add(publisherID);
+    publisherIDVector.add(id);
   }
 
   /**
    * Sets the PublisherID Vector
    *
-   * @param keys The new collection of PublisherIDs
+   * @param idVector The new collection of PublisherIDs
    */
-  public void setPublisherIDVector(Vector publisherIDs)
+  public void setPublisherIDVector(Vector idVector)
   {
-    this.publisherIDVector = publisherIDs;
+    this.publisherIDVector = idVector;
   }
 }

@@ -67,7 +67,7 @@ public class Contact implements RegistryObject
    * contact", etc.
    *
    * @param name The UseType of the contact.
-   * @param name The Name of the contact.
+   * @param type The Name of the contact.
    */
   public Contact(String name,String type)
   {
