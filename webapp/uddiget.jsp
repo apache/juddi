@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<%@ page contentType="text/xml;charset=ISO-8859-1"
+<%@ page contentType="text/xml;charset=UTF-8"
          session="false"
          import="java.util.Vector,
                  org.w3c.dom.Element,
@@ -17,8 +17,7 @@
                  org.apache.juddi.datatype.response.BindingDetail,
                  org.apache.juddi.registry.RegistryServlet,
                  org.apache.juddi.registry.RegistryEngine,
-                 org.apache.juddi.error.RegistryException"
-                 
+                 org.apache.juddi.error.RegistryException"               
 %>
 <%!
     
