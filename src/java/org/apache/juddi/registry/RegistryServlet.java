@@ -22,9 +22,32 @@ import java.util.Properties;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.IRegistry;
+import org.apache.juddi.datatype.RegistryObject;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.error.BusyException;
+import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.handler.HandlerMaker;
+import org.apache.juddi.handler.IHandler;
+import org.apache.juddi.util.Config;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * This servlet is ONLY used to initialize the jUDDI webapp on
@@ -39,11 +62,16 @@ public class RegistryServlet extends HttpServlet
   
   // default config file name. 
   private static final String DEFAULT_PROPERTY_FILE = "/WEB-INF/juddi.properties";
-  
-  
+   
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(RegistryServlet.class);
   
+  // jUDDI XML Handler maker
+  private static HandlerMaker maker = HandlerMaker.getInstance();
+  
+  // XML Document Builder
+  private static DocumentBuilder docBuilder = null;
+
   // registry singleton instance
   private static RegistryEngine registry = null;
 
@@ -175,8 +203,216 @@ public class RegistryServlet extends HttpServlet
   /**
    *
    */
+  public void doPost(HttpServletRequest req, HttpServletResponse res)
+    throws ServletException, IOException
+  {
+    SOAPMessage soapReq = null;
+    SOAPMessage soapRes = null;
+    String generic = null; // TODO (Steve) References to generic should be renamed to "UDDI Version or UDDI Namespace"
+
+    try 
+    {
+      // Create a MessageFactory, parse the SOAP request
+      // and create the SOAP response
+
+      MessageFactory msgFactory = MessageFactory.newInstance();
+      soapReq = msgFactory.createMessage(null,req.getInputStream());
+      soapRes = msgFactory.createMessage();
+      //soapReq.writeTo(System.out);
+           
+      // Extract the UDDI request
+
+      SOAPBody soapReqBody = soapReq.getSOAPBody();
+      Element uddiReq = (Element)soapReqBody.getFirstChild();      
+      String function = uddiReq.getLocalName();
+      
+      // Grab the generic value - we'll need it in the event
+      // that an exception is thrown.
+
+      generic = uddiReq.getAttribute("generic");
+      if (generic == null)
+        generic = IRegistry.UDDI_V2_GENERIC;
+
+      // Lookup the appropriate xml handler, throw an 
+      // UnsupportedException if one could not be located.
+
+      IHandler requestHandler = maker.lookup(function);
+      if (requestHandler == null)
+        throw new UnsupportedException("The request " +
+          "type is unknown: " +function);
+      
+      // Unmarshal the raw xml into the appropriate jUDDI
+      // request object.
+
+      RegistryObject uddiReqObj = requestHandler.unmarshal(uddiReq);
+      
+      // Grab a reference to the shared jUDDI registry 
+      // instance (make sure it's running) and execute the 
+      // requested UDDI function.
+      
+      RegistryObject uddiResObj = null;      
+      RegistryEngine registry = RegistryServlet.getRegistry();
+      if ((registry != null) && (registry.isAvailable()))
+        uddiResObj = registry.execute(uddiReqObj);
+      else
+        throw new BusyException("The Registry is unavailable");
+      
+      // Lookup the appropriate response handler which will
+      // be used to marshal the UDDI object into the appropriate 
+      // xml format.
+      
+      IHandler responseHandler = maker.lookup(uddiResObj.getClass().getName());
+      if (responseHandler == null)
+        throw new RegistryException(""); // TODO (Steve) need more info in this exception.
+      
+      // Create a new 'temp' XML element to use as a container 
+      // in which to marshal the UDDI response data into.
+        
+      DocumentBuilder docBuilder = getDocumentBuilder();
+      Document document = docBuilder.newDocument();
+      Element element = document.createElement("temp");
+        
+      // Lookup the appropriate response handler and marshal 
+      // the juddi object into the appropriate xml format (we 
+      // only support UDDI v2.0 at this time).  Attach the
+      // results to the body of the SOAP response.
+        
+      responseHandler.marshal(uddiResObj,element);
+      
+      // Grab a reference to the 'temp' element's
+      // only child here (this has the effect of
+      // discarding the temp element) and append 
+      // this child to the soap response body
+        
+      document.appendChild(element.getFirstChild());
+      soapRes.getSOAPBody().addDocument(document);
+    } 
+    catch (RegistryException ex) {             
+      log.error(ex);
+    
+      try {
+        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
+        SOAPBody body = envelope.getBody(); 
+        SOAPFault soapFault = body.addFault();
+        soapFault.setFaultActor(ex.getFaultActor());
+        soapFault.setFaultCode(ex.getFaultCode());
+        soapFault.setFaultString(ex.getFaultString());
+
+        // Store DispositionReport in the SOAP fault node.
+        DispositionReport dispRpt = ex.getDispositionReport();
+        if (dispRpt != null)
+        {
+          dispRpt.setGeneric(generic);
+          dispRpt.setOperator(Config.getOperator());
+        }
+                
+        // Create a new 'temp' XML element to use as a container 
+        // in which to marshal the DispositionReport into.
+          
+        DocumentBuilder docBuilder = getDocumentBuilder();
+        Document document = docBuilder.newDocument();
+        Element dispRptElement = document.createElement("temp");
+
+        // Lookup the DispositionReportHandler and marshal 
+        // the juddi object into the appropriate xml format (we 
+        // only support UDDI v2.0 at this time).  Attach the
+        // results to the body of the SOAP fault.
+          
+        IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
+        dispRptHandler.marshal(dispRpt,dispRptElement);        
+        soapFault.addChildElement((SOAPElement)dispRptElement);
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
+      }
+    } 
+    catch (SOAPException ex) {             
+      log.error(ex);
+
+      try {
+        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
+        SOAPBody body = envelope.getBody(); 
+        SOAPFault soapFault = body.addFault();
+        soapFault.setFaultString(ex.getMessage());        
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
+      }
+    } 
+    catch(Exception ex) {
+      log.error(ex);
+
+      try {
+        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
+        SOAPBody body = envelope.getBody(); 
+        SOAPFault soapFault = body.addFault();
+        soapFault.setFaultString(ex.getMessage());        
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
+      }
+    }
+    finally {
+      try {               
+        res.setContentType("text/xml; charset=utf-8");
+
+        //soapRes.writeTo(System.out);     
+        soapRes.writeTo(res.getOutputStream());     
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
+      }
+    }
+  }
+  
+  /**
+   *
+   */
+  public void doGet(HttpServletRequest req, HttpServletResponse res)
+    throws ServletException, IOException
+  {
+    res.setHeader("Allow","POST");
+    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
+      "method 'GET' is not allowed by the UDDI Inquiry API.");
+  }
+
+  /**
+   *
+   */
   public static RegistryEngine getRegistry()
   {
     return registry;
+  }
+
+  /**
+   *
+   */
+  private DocumentBuilder getDocumentBuilder()
+  {
+    if (docBuilder == null)
+      docBuilder = createDocumentBuilder();    
+    return docBuilder;
+  }
+
+  /**
+   *
+   */
+  private synchronized DocumentBuilder createDocumentBuilder()
+  {
+    if (docBuilder != null)
+      return docBuilder;
+
+    try {
+     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+     //factory.setNamespaceAware(true);
+     //factory.setValidating(true);
+
+     docBuilder = factory.newDocumentBuilder();
+    }
+    catch(ParserConfigurationException pcex) {
+      pcex.printStackTrace();
+    }
+
+    return docBuilder;
   }
 }
