@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.Loader;
 
@@ -42,11 +43,10 @@ public class ConnectionManager
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(ConnectionManager.class);
 
-  // JNDI DataSource property keys and default values
-  private static final String DATASOURCE_KEY = "juddi.dataSource";
-  private static final String DEFAULT_DATASOURCE = "java:comp/env/jdbc/juddiDB";
-
   // DBCP DataSource property keys and default values
+  private static final String USE_CONNECTION_POOL_VALUE_KEY = "juddi.useConnectionPool";
+	private static final boolean DEFAULT_USE_CONNECTION_POOL_VALUE = false;
+	
   private static final String JDBC_DRIVER_KEY = "juddi.jdbcDriver";
   private static final String DEFAULT_JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
@@ -94,15 +94,19 @@ public class ConnectionManager
     if (dataSource != null)
       return dataSource;
 
-    if (Config.useConnectionPool())
+    boolean useInternalConnectionPool = 
+    	Config.getBooleanProperty(USE_CONNECTION_POOL_VALUE_KEY,
+    			DEFAULT_USE_CONNECTION_POOL_VALUE);
+		
+    if (useInternalConnectionPool)
     {
       if (dataSource == null)
-        dataSource = createDataSource(); // use DBCP
+        dataSource = createDataSource(); // use DBCP (jUDDI Managed Connection Pool)
     }
     else
     {
       if (dataSource == null)
-        dataSource = lookupDataSource(); // use JNDI
+        dataSource = lookupDataSource(); // use JNDI (Container Managed Connection Pool)
     }
 
     return dataSource;
@@ -190,7 +194,8 @@ public class ConnectionManager
     try
     {
       String dataSourceName =
-        Config.getStringProperty(DATASOURCE_KEY,DEFAULT_DATASOURCE);
+        Config.getStringProperty(RegistryEngine.PROPNAME_DATASOURCE_NAME,
+        		RegistryEngine.DEFAULT_DATASOURCE_NAME);
 
       log.info("Using JNDI to aquire a JDBC DataSource with " +
         "name: "+dataSourceName);
