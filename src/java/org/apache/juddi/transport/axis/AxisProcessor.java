@@ -34,6 +34,7 @@ import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.monitor.Monitor;
 import org.apache.juddi.monitor.MonitorFactory;
 import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.registry.RegistryServlet;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Document;
