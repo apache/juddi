@@ -75,7 +75,7 @@ class FindTModelByIdentifierQuery
 
     try
     {
-      log.debug("select from TMODEL & TMODEL_IDENTIFIER tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

@@ -78,7 +78,7 @@ class FindServiceByNameQuery
 
     try
     {
-      log.debug("select from BUSINESS_SERVICE & SERVICE_NAME tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
@@ -146,7 +146,7 @@ class FindServiceByNameQuery
           else
           {
             sql.append("(NAME LIKE ?");
-            sql.addValue(text+"%");
+            sql.addValue(text.endsWith("%") ? text : text+"%");
           }
 
           if ((lang != null) && (lang.length() > 0))

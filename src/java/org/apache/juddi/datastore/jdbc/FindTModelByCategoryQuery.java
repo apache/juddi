@@ -76,7 +76,7 @@ class FindTModelByCategoryQuery
 
     try
     {
-      log.debug("select from TMODEL & TMODEL_CATEGORY tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

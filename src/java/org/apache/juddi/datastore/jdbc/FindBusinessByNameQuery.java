@@ -74,10 +74,10 @@ class FindBusinessByNameQuery
     appendWhere(sql,names,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
-
+    
     try
     {
-      log.debug("select from BUSINESS_ENTITY & BUSINESS_NAME tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
       
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
@@ -134,7 +134,7 @@ class FindBusinessByNameQuery
             if (qualifiers == null) // default
             {
               sql.append("(UPPER(NAME) LIKE ?");
-              sql.addValue(text.toUpperCase()+"%");
+              sql.addValue(text.endsWith("%") ? text.toUpperCase() : text.toUpperCase()+"%");
             }
             else if ((qualifiers.caseSensitiveMatch) && (qualifiers.exactNameMatch))
             {
@@ -149,12 +149,12 @@ class FindBusinessByNameQuery
             else if ((qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
             {
               sql.append("(NAME LIKE ?");
-              sql.addValue(text+"%");
+              sql.addValue(text.endsWith("%") ? text : text+"%");
             }
             else if ((!qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
             {
               sql.append("(UPPER(NAME) LIKE ?");
-              sql.addValue(text.toUpperCase()+"%");
+              sql.addValue(text.endsWith("%") ? text.toUpperCase() : text.toUpperCase()+"%");
             }
 
             if ((lang != null) && (lang.length() > 0))

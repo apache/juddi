@@ -76,7 +76,7 @@ class FindPublisherByNameQuery
 
     try
     {
-      log.debug("select from PUBLISHER table:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

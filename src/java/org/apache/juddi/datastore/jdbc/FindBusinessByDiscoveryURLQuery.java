@@ -78,7 +78,7 @@ class FindBusinessByDiscoveryURLQuery
 
     try
     {
-      log.debug("select from BUSINESS_ENTITY & DISCOVERY_URL tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

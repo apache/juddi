@@ -75,7 +75,7 @@ class FindServiceByTModelKeyQuery
 
     try
     {
-      log.debug("select from BUSINESS_SERVICE, BINDING_TEMPLATE & TMODEL_INSTANCE_INFO tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

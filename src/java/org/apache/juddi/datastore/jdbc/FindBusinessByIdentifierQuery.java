@@ -75,7 +75,7 @@ class FindBusinessByIdentifierQuery
 
     try
     {
-      log.debug("select from BUSINESS_ENTITY & BUSINESS_IDENTIFIER tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
 
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();

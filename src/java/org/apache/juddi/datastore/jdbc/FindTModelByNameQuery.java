@@ -72,12 +72,12 @@ class FindTModelByNameQuery
     DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,name,qualifiers);
     appendIn(sql,name,keysIn);
-    appendOrderBy(sql,qualifiers);
-
+    appendOrderBy(sql,qualifiers);                  
+     
     try
     {
-      log.debug("select from TMODEL table:\n\n\t" + sql.toString() + "\n");
-
+      log.debug(sql.toString());
+      
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
@@ -124,7 +124,7 @@ class FindTModelByNameQuery
     else
     {
       sql.append("WHERE M.NAME LIKE ? ");
-      sql.append(name+"% ");
+      sql.addValue(name.endsWith("%") ? name : name+"%");
     }
   }
 

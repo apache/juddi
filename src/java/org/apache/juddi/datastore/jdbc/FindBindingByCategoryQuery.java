@@ -79,7 +79,7 @@ class FindBindingByCategoryQuery
     
     try
     {
-      log.debug("select from BINDING_TEMPLATE & BINDING_CATEGORY tables:\n\n\t" + sql.toString() + "\n");
+      log.debug(sql.toString());
       
       statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();      
