@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
 import org.apache.juddi.datatype.CategoryBag;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.TModelBag;
@@ -30,6 +31,7 @@ import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.datatype.request.FindService;
 import org.apache.juddi.datatype.response.ServiceInfos;
 import org.apache.juddi.datatype.response.ServiceList;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.TooManyOptionsException;
@@ -83,6 +85,31 @@ public class FindServiceFunction extends AbstractFunction
       return list;
     }
 
+    // Validate CategoryBag and (if neccessary) add TModelKey for: uddiorg:general_keywords
+    if (categoryBag != null)
+    {
+      Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+      if (keyedRefVector != null)
+      {
+        int vectorSize = keyedRefVector.size();
+        if (vectorSize > 0)
+        {
+          for (int i=0; i<vectorSize; i++)
+          {
+            KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
+            String key = keyedRef.getTModelKey();
+            
+            // A null or zero-length tModelKey is treated as 
+            // though the tModelKey for uddiorg:general_keywords 
+            // had been specified.
+            //
+            if ((key == null) || (key.trim().length() == 0))
+              keyedRef.setTModelKey(TModel.GENERAL_KEYWORDS_TMODEL_KEY);
+          }
+        }
+      }
+    }            
+    
     // aquire a jUDDI datastore instance
     DataStore dataStore = DataStoreFactory.getDataStore();
 

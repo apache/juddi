@@ -134,15 +134,8 @@ class FindTModelByCategoryQuery
             String name = keyedRef.getKeyName();
             String value = keyedRef.getKeyValue();
             
-            // A null or zero-length tModelKey is treated as 
-            // though the tModelKey for uddiorg:general_keywords 
-            // had been specified.
-            //
-            if ((key == null) || (key.trim().length() == 0))
-              key = TModel.GENERAL_KEYWORDS_TMODEL_KEY;
-            
-            if (key == null)
-              key = "";
+            if (name == null)
+              name = "";
             
             if (value == null)
               value = "";

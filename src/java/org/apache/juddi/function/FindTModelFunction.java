@@ -23,12 +23,14 @@ import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.FindQualifier;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.datatype.request.FindTModel;
 import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.datatype.response.TModelList;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
@@ -59,7 +61,7 @@ public class FindTModelFunction extends AbstractFunction
   {
     FindTModel request = (FindTModel)regObject;
     String generic = request.getGeneric();
-    String name = request.getNameString();
+    String tModelName = request.getNameString();
     CategoryBag categoryBag = request.getCategoryBag();
     IdentifierBag identifierBag = request.getIdentifierBag();
     FindQualifiers qualifiers = request.getFindQualifiers();
@@ -68,7 +70,7 @@ public class FindTModelFunction extends AbstractFunction
     // make sure we need to continue with this request. If
     // no arguments were passed in then we'll simply return
     // an empty TModelList (aka "a zero match result set").
-    if (((name == null)          || (name.length() == 0))    &&
+    if (((tModelName == null)          || (tModelName.length() == 0))    &&
         ((identifierBag == null) || (identifierBag.size() == 0)) &&
         ((categoryBag == null)   || (categoryBag.size() == 0)))
     {
@@ -80,6 +82,31 @@ public class FindTModelFunction extends AbstractFunction
       return list;
     }
 
+    // Validate CategoryBag and (if neccessary) add TModelKey for: uddiorg:general_keywords
+    if (categoryBag != null)
+    {
+      Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+      if (keyedRefVector != null)
+      {
+        int vectorSize = keyedRefVector.size();
+        if (vectorSize > 0)
+        {
+          for (int i=0; i<vectorSize; i++)
+          {
+            KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
+            String key = keyedRef.getTModelKey();
+            
+            // A null or zero-length tModelKey is treated as 
+            // though the tModelKey for uddiorg:general_keywords 
+            // had been specified.
+            //
+            if ((key == null) || (key.trim().length() == 0))
+              keyedRef.setTModelKey(TModel.GENERAL_KEYWORDS_TMODEL_KEY);
+          }
+        }
+      }
+    }            
+    
     // aquire a jUDDI datastore instance
     DataStore dataStore = DataStoreFactory.getDataStore();
 
@@ -89,14 +116,14 @@ public class FindTModelFunction extends AbstractFunction
 
       // validate the 'name' parameters as much as possible up-front before
       // calling into the data layer for relational validation.
-      if (name != null)
+      if (tModelName != null)
       {
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
         int maxNameLength = Config.getMaxNameLengthAllowed();
-        if (name.length() > maxNameLength)
-          throw new NameTooLongException(name+" (max_name="+maxNameLength+")");
+        if (tModelName.length() > maxNameLength)
+          throw new NameTooLongException(tModelName+" (max_name="+maxNameLength+")");
       }
 
       // validate the 'qualifiers' parameter as much as possible up-front before
@@ -131,7 +158,7 @@ public class FindTModelFunction extends AbstractFunction
       boolean truncatedResults = false;
 
       // perform the search for matching technical models (return only keys in requested order)
-      Vector keyVector = dataStore.findTModel(name,categoryBag,identifierBag,qualifiers);
+      Vector keyVector = dataStore.findTModel(tModelName,categoryBag,identifierBag,qualifiers);
       if ((keyVector != null) && (keyVector.size() > 0))
       {
         // if a maxRows value has been specified and it's less than
