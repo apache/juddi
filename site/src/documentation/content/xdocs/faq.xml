@@ -49,7 +49,7 @@ juddi.jdbcRetryInterval = 1000
 <part id="Datasources">
   <title>How do I configure jUDDI to run with Tomcat, MySQL and use a JNDI DataSource?</title>
 <faq id="juddi1">
-<question>
+<question>How do I configure jUDDI to run with Tomcat, MySQL and use a JNDI DataSource? 
 </question>
 <answer>
 <p >A good setup is discussed here <link href="http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138">
@@ -62,7 +62,7 @@ http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138
 <part id="authentication">
 <title>Writing pluggable authentication modules</title>
 <faq id="juddi2">
-<question>
+<question>How do I write a pluggable authentication module?
 </question>
 <answer>
 <p>
@@ -83,7 +83,7 @@ In the example above you'll need to replace "org.apache.juddi.auth.simple.Simple
 <part id="datastores">
 <title>Using a datastore without JDBC</title>
 <faq id="juddi3">
-<question>
+<question>How do I access a datastore without using JDBC
 </question>
 <answer>
 <p >jUDDI is designed to allow different persistence (datastore)
