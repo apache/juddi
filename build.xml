@@ -107,13 +107,6 @@ Copyright:
       	timezone="GMT" />
     </tstamp>
 
-    <!-- create build.time property in 'MM/dd/yyyy hh:mm aa' format -->
-    <tstamp>
-      <format 
-      	property="build.time" 
-      	pattern="MM/dd/yyyy hh:mm aa" />
-    </tstamp>
-
   </target>
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
@@ -144,9 +137,6 @@ Copyright:
   <!-- =================================================================== -->
   <target name="war" depends="jar">
     <mkdir dir="${build.dir}"/>
-    <!-- Create the version & build time #include files -->
-    <echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
-    <echo file="${webapps.dir}/juddi/includes/buildtime.inc" append="false">${build.time}</echo>	
     <!-- Assemble juddi.war file -->
     <war warfile="${build.dir}/${war.file}" webxml="${conf.dir}/web.xml">
       <fileset dir="${webapps.dir}/juddi">
