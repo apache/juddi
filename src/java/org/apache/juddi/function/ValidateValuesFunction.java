@@ -19,10 +19,22 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.datatype.CategoryBag;
+import org.apache.juddi.datatype.IdentifierBag;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.RegistryObject;
+import org.apache.juddi.datatype.binding.BindingTemplate;
+import org.apache.juddi.datatype.binding.BindingTemplates;
+import org.apache.juddi.datatype.business.BusinessEntity;
 import org.apache.juddi.datatype.request.ValidateValues;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.Result;
+import org.apache.juddi.datatype.service.BusinessService;
+import org.apache.juddi.datatype.service.BusinessServices;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -64,7 +76,15 @@ public class ValidateValuesFunction extends AbstractFunction
     if ((tModelVector != null) && (tModelVector.size() > 0))
       validateTModelVector(tModelVector);
 
-    return null;
+    // We don't currently support teh validate_values
+    // function so to keep things moving along let's 
+    // just return a successful DispositionReport.
+    
+    DispositionReport dispRpt = new DispositionReport();
+    dispRpt.setGeneric(generic);
+    dispRpt.setOperator(Config.getOperator());
+    dispRpt.addResult(new Result(Result.E_SUCCESS));
+    return dispRpt;
   }
 
   /**
@@ -72,10 +92,39 @@ public class ValidateValuesFunction extends AbstractFunction
    */
   private RegistryObject validateBusinessVector(Vector businessVector)
   {
-    if (businessVector != null)
+    if (businessVector == null)
       return null;
-    else
-      return null;
+    
+    for (int i=0; i<businessVector.size(); i++)
+    {
+      BusinessEntity business = (BusinessEntity)businessVector.elementAt(i);
+      
+      CategoryBag catBag = business.getCategoryBag();
+      if (catBag != null)
+      {
+        Vector refs = catBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+    
+      IdentifierBag idBag = business.getIdentifierBag();
+      if (idBag != null)
+      {
+        Vector refs = idBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+      
+      BusinessServices services = business.getBusinessServices();
+      if (services != null)
+      {
+        Vector serviceVector = services.getBusinessServiceVector();
+        if (serviceVector != null)
+          validateServiceVector(serviceVector);
+      }
+    }
+    
+    return null;
   }
 
   /**
@@ -83,23 +132,107 @@ public class ValidateValuesFunction extends AbstractFunction
    */
   private RegistryObject validateServiceVector(Vector serviceVector)
   {
-    if (serviceVector != null)
+    if (serviceVector == null)
       return null;
-    else
-      return null;
+    
+    for (int i=0; i<serviceVector.size(); i++)
+    {
+      BusinessService service = (BusinessService)serviceVector.elementAt(i);
+      
+      CategoryBag catBag = service.getCategoryBag();
+      if (catBag != null)
+      {
+        Vector refs = catBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+      
+      BindingTemplates templates = service.getBindingTemplates();
+      if (templates != null)
+      {
+        Vector bindings = templates.getBindingTemplateVector();
+        if (bindings != null)
+          validateBindingVector(bindings);
+      }
+    }
+    
+    return null;
   }
 
   /**
    *
    */
+  private RegistryObject validateBindingVector(Vector bindingVector)
+  {
+    if (bindingVector == null)
+      return null;
+   
+    for (int i=0; i<bindingVector.size(); i++)
+    {
+      BindingTemplate binding = (BindingTemplate)bindingVector.elementAt(i);
+    
+      CategoryBag catBag = binding.getCategoryBag();
+      if (catBag != null)
+      {
+        Vector refs = catBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+    }
+  
+    return null;
+  }
+ 
+  /**
+   *
+   */
   private RegistryObject validateTModelVector(Vector tModelVector)
   {
-    if (tModelVector != null)
+    if (tModelVector == null)
       return null;
-    else
-      return null;
+    
+    for (int i=0; i<tModelVector.size(); i++)
+    {
+      TModel tModel = (TModel)tModelVector.elementAt(i);
+      
+      CategoryBag catBag = tModel.getCategoryBag();
+      if (catBag != null)
+      {
+        Vector refs = catBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+      
+      IdentifierBag idBag = tModel.getIdentifierBag();
+      if (idBag != null)
+      {
+        Vector refs = idBag.getKeyedReferenceVector();
+        if ((refs != null) && (refs.size() > 0))
+          validate(refs);
+      }
+    }
+    
+    return null;
   }
-
+  
+  /**
+   * 
+   * @param args
+   */
+  private RegistryObject validate(Vector refs)
+  {
+    if (refs == null)
+      return null;
+    
+    for (int i=0; i<refs.size(); i++)
+    {
+      KeyedReference ref = (KeyedReference)refs.elementAt(i);
+     
+      // Perform the validation
+    }
+    
+    return null;
+  }
 
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/
