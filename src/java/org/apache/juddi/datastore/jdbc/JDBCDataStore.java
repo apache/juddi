@@ -1262,7 +1262,7 @@ public class JDBCDataStore implements DataStore
         info.setBusinessKey(businessKey);
         info.setNameVector(BusinessNameTable.select(businessKey,connection));
         info.setDescriptionVector(BusinessDescTable.select(businessKey,connection));
-        info.setServiceInfos(fetchServiceInfosByBusinessKey(businessKey,false));
+        info.setServiceInfos(fetchServiceInfosByBusinessKey(businessKey));
       }
       catch(java.sql.SQLException sqlex)
       {
@@ -1276,7 +1276,7 @@ public class JDBCDataStore implements DataStore
   /**
    *
    */
-  private ServiceInfos fetchServiceInfosByBusinessKey(String businessKey,boolean includeBusinessKey)
+  private ServiceInfos fetchServiceInfosByBusinessKey(String businessKey)
     throws org.apache.juddi.error.RegistryException
   {
     Vector serviceInfoVector = new Vector();
@@ -1296,8 +1296,7 @@ public class JDBCDataStore implements DataStore
           // okay, create a new ServiceInfo
           ServiceInfo info = new ServiceInfo();
           info.setServiceKey(serviceKey);
-          if (includeBusinessKey)
-            info.setBusinessKey(businessKey);
+          info.setBusinessKey(businessKey);
           info.setNameVector(ServiceNameTable.select(serviceKey,connection));
 
           // add this ServiceInfo to the ServiceInfo vector

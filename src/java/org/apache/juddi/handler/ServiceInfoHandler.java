@@ -70,13 +70,13 @@ public class ServiceInfoHandler extends AbstractHandler
     Element element = parent.getOwnerDocument().createElement(TAG_NAME);
     AbstractHandler handler = null;
 
-  String serviceKey = info.getServiceKey();
-  if (serviceKey != null)
-    element.setAttribute("serviceKey",serviceKey);
-
-  String businessKey = info.getBusinessKey();
-  if (businessKey != null)
-    element.setAttribute("businessKey",businessKey);
+    // required attribute
+    String serviceKey = info.getServiceKey();
+    element.setAttribute("serviceKey",(serviceKey != null) ? serviceKey : "");
+    
+    // required attribute
+    String businessKey = info.getBusinessKey();
+    element.setAttribute("businessKey",(businessKey != null) ? businessKey : "");
 
     Vector vector = info.getNameVector();
     if ((vector!=null) && (vector.size() > 0))
