@@ -129,7 +129,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
   <!-- =================================================================== -->
-  <target name="war" depends="jar">
+  <target name="war" depends="clean,jar">
     <mkdir dir="${build.dir}"/>
     <war warfile="${build.dir}/${war.file}" webxml="${conf.dir}/web.xml">
       <fileset dir="${webapps.dir}/juddi">
