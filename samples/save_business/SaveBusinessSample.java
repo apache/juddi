@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.error.*;
-import org.apache.juddi.registry.*;
-
 import java.util.Vector;
-import java.io.File;
+
+import org.apache.juddi.datatype.Name;
+import org.apache.juddi.datatype.business.BusinessEntity;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.BusinessDetail;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -32,12 +31,12 @@ public class SaveBusinessSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
       // execute a GetAuthToken request
-      AuthToken authToken = proxy.get_authToken("sviens","password");
+      AuthToken authToken = registry.getAuthToken("sviens","password");
       AuthInfo authInfo = authToken.getAuthInfo();
 
       // generate a Name Vector
@@ -57,7 +56,7 @@ public class SaveBusinessSample
       businessVector.add(businessEntity);
 
       // execute the SaveBusiness request
-      BusinessDetail detail = proxy.save_business(authInfo,businessVector);
+      BusinessDetail detail = registry.saveBusiness(authInfo,businessVector);
 
       System.out.println("businesses saved = "+detail.getBusinessEntityVector().size());
     }

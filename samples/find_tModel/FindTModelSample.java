@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.error.*;
-import org.apache.juddi.registry.*;
-
 import java.util.Vector;
-import java.io.File;
+
+import org.apache.juddi.datatype.response.TModelInfo;
+import org.apache.juddi.datatype.response.TModelInfos;
+import org.apache.juddi.datatype.response.TModelList;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -32,11 +29,11 @@ public class FindTModelSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
-      TModelList list = proxy.find_tModel("uddi-org",null,null,null,0);
+      TModelList list = registry.findTModel("uddi-org",null,null,null,0);
       TModelInfos infos = list.getTModelInfos();
       Vector vector = infos.getTModelInfoVector();
 

@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.error.*;
-import org.apache.juddi.registry.*;
-
 import java.util.Vector;
-import java.io.File;
+
+import org.apache.juddi.datatype.response.PublisherInfo;
+import org.apache.juddi.datatype.response.PublisherInfos;
+import org.apache.juddi.datatype.response.PublisherList;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -43,14 +40,14 @@ public class FindPublisherSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
       /**
        * Retrieve all publishers listed in the registry
        */
-      PublisherList publisherList = proxy.find_publisher("%","%",null,0);
+      PublisherList publisherList = registry.findPublisher("%","%",null,0);
 
       if (publisherList == null) {
         System.err.println("Unable to invoke 'find_publisher'");

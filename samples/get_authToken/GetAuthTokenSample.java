@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.error.*;
-import org.apache.juddi.registry.*;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 import org.apache.juddi.util.Config;
-
-import java.util.Vector;
-import java.io.File;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -33,7 +27,7 @@ public class GetAuthTokenSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     String userID = "sviens";
     String password = "password";
@@ -48,7 +42,7 @@ public class GetAuthTokenSample
       System.out.println("  userID: "+userID);
       System.out.println("  password: "+password);
 
-      authToken = proxy.get_authToken(userID,password);
+      authToken = registry.getAuthToken(userID,password);
       authInfo = authToken.getAuthInfo();
       System.out.println("AuthToken: "+authInfo.getValue());
       System.out.println();
@@ -60,7 +54,7 @@ public class GetAuthTokenSample
       System.out.println("  juddi.userID: "+Config.getStringProperty("juddi.userID",null));
       System.out.println("  juddi.password: "+Config.getStringProperty("juddi.password",null));
 
-      authToken = proxy.get_authToken();
+      authToken = registry.getAuthToken(userID,password);
       authInfo = authToken.getAuthInfo();
       System.out.println("AuthToken: "+authInfo.getValue());
       System.out.println();

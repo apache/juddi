@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.publisher.Publisher;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.datatype.response.AuthToken;
-import org.apache.juddi.error.*;
-import org.apache.juddi.client.*;
-
 import java.util.Vector;
-import java.io.File;
+
+import org.apache.juddi.datatype.publisher.Publisher;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.PublisherDetail;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -34,12 +31,12 @@ public class SavePublisherSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
       // execute a GetAuthToken request
-      AuthToken token = proxy.get_authToken("sviens", "password");
+      AuthToken token = registry.getAuthToken("sviens", "password");
       AuthInfo authInfo = token.getAuthInfo();
 
       // create a publisher
@@ -50,7 +47,7 @@ public class SavePublisherSample
       vector.add(publisher);
 
       // make the request
-      PublisherDetail detail = proxy.save_publisher(authInfo, vector);
+      PublisherDetail detail = registry.savePublisher(authInfo, vector);
 
       System.out.println("publishers saved = " + detail.getPublisherVector().size());
       }

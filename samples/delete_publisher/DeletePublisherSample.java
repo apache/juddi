@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.publisher.Publisher;
-import org.apache.juddi.datatype.publisher.PublisherID;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.error.*;
-import org.apache.juddi.registry.*;
-
 import java.util.Vector;
-import java.io.File;
+
+import org.apache.juddi.datatype.publisher.Publisher;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.PublisherDetail;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -34,13 +30,12 @@ public class DeletePublisherSample
 {
   public static void main(String[] args)
   {
-    RegistryProxy proxy = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
-
       // execute a GetAuthToken request
-      AuthToken token = proxy.get_authToken("juddi", "password");
+      AuthToken token = registry.getAuthToken("juddi", "password");
       AuthInfo authInfo = token.getAuthInfo();
 
       // create a publisher with administrative privileges
@@ -54,19 +49,19 @@ public class DeletePublisherSample
       vector.add(perisher);
 
       // make the request
-      PublisherDetail detail = proxy.save_publisher(authInfo, vector);
+      PublisherDetail detail = registry.savePublisher(authInfo, vector);
 
       System.out.println("publishers saved = " + detail.getPublisherVector().size());
 
       // get an authToken using the publisher with administrative privileges
-      token = proxy.get_authToken("BlueNoteIdentifier", "password");
+      token = registry.getAuthToken("BlueNoteIdentifier", "password");
       authInfo = token.getAuthInfo();
 
       // create a vector of strings containing the
       String publisherID = "removeMe";
       vector = new Vector(1);
       vector.add(publisherID);
-      proxy.delete_publisher(authInfo, vector);
+      registry.deletePublisher(authInfo, vector);
     }
     catch(Exception ex)
     {

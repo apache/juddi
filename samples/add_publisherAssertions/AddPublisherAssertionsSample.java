@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-import org.apache.juddi.client.*;
-import org.apache.juddi.datatype.*;
-import org.apache.juddi.datatype.assertion.PublisherAssertion;
-import org.apache.juddi.datatype.business.*;
-import org.apache.juddi.datatype.request.*;
-import org.apache.juddi.datatype.response.*;
-import org.apache.juddi.datatype.tmodel.TModel;
-import org.apache.juddi.registry.*;
-
 import java.util.Vector;
+
+import org.apache.juddi.datatype.KeyedReference;
+import org.apache.juddi.datatype.Name;
+import org.apache.juddi.datatype.assertion.PublisherAssertion;
+import org.apache.juddi.datatype.business.BusinessEntity;
+import org.apache.juddi.datatype.request.AddPublisherAssertions;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.request.GetAuthToken;
+import org.apache.juddi.datatype.request.SaveBusiness;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.BusinessDetail;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.tmodel.TModel;
+import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.registry.Registry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -33,13 +39,13 @@ public class AddPublisherAssertionsSample
   public static void main(String[] args)
   {
     // initialize the registry
-    RegistryProxy reg = new RegistryProxy();
+    Registry registry = new RegistryProxy();
 
     try
     {
       // create & execute the GetAuthToken1 request
       GetAuthToken authTokenRequest1 = new GetAuthToken("sviens","password");
-      AuthToken authToken1 = (AuthToken)reg.execute(authTokenRequest1);
+      AuthToken authToken1 = (AuthToken)registry.execute(authTokenRequest1);
       AuthInfo authInfo1 = authToken1.getAuthInfo();
 
       // create a couple of business entities
@@ -54,14 +60,14 @@ public class AddPublisherAssertionsSample
       SaveBusiness sbReq1 = new SaveBusiness();
       sbReq1.setAuthInfo(authInfo1);
       sbReq1.setBusinessEntityVector(businessVector1);
-      BusinessDetail detail1 = (BusinessDetail)reg.execute(sbReq1);
+      BusinessDetail detail1 = (BusinessDetail)registry.execute(sbReq1);
       Vector detailVector1 = detail1.getBusinessEntityVector();
       BusinessEntity b1 = (BusinessEntity)detailVector1.elementAt(0);
 
 
       // create & execute the GetAuthToken2 request
       GetAuthToken authTokenRequest2 = new GetAuthToken("sviens","password");
-      AuthToken authToken2 = (AuthToken)reg.execute(authTokenRequest2);
+      AuthToken authToken2 = (AuthToken)registry.execute(authTokenRequest2);
       AuthInfo authInfo2 = authToken2.getAuthInfo();
 
       // create a BusinessEntity
@@ -76,7 +82,7 @@ public class AddPublisherAssertionsSample
       SaveBusiness sbReq2 = new SaveBusiness();
       sbReq2.setAuthInfo(authInfo2);
       sbReq2.setBusinessEntityVector(businessVector2);
-      BusinessDetail detail2 = (BusinessDetail)reg.execute(sbReq2);
+      BusinessDetail detail2 = (BusinessDetail)registry.execute(sbReq2);
       Vector detailVector2 = detail2.getBusinessEntityVector();
       BusinessEntity b2 = (BusinessEntity)detailVector2.elementAt(0);
 
@@ -96,10 +102,10 @@ public class AddPublisherAssertionsSample
       AddPublisherAssertions apaReq = new AddPublisherAssertions();
       apaReq.setAuthInfo(authInfo1);
       apaReq.setPublisherAssertionVector(assertionVector);
-      DispositionReport dspRpt1 = (DispositionReport)reg.execute(apaReq);
+      DispositionReport dspRpt1 = (DispositionReport)registry.execute(apaReq);
       System.out.println("errno: "+dspRpt1.toString());
       System.out.println();
-      DispositionReport dspRpt2 = (DispositionReport)reg.execute(apaReq);
+      DispositionReport dspRpt2 = (DispositionReport)registry.execute(apaReq);
       System.out.println("errno: "+dspRpt2.toString());
     }
     catch (Exception ex)
