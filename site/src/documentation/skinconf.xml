@@ -82,24 +82,24 @@ be used to configure the chosen Forrest skin.
   <!-- Whether to render mailto: links unrecognisable by spam harvesters -->
   <obfuscate-mail-links>true</obfuscate-mail-links>
 
-  <searchsite-domain>mydomain</searchsite-domain>
-  <searchsite-name>MyProject</searchsite-name>
+  <searchsite-domain>ws.apache.org</searchsite-domain>
+  <searchsite-name>juddi</searchsite-name>
 
   <!-- mandatory project logo
        skin: forrest-site renders it at the top -->
-  <project-name>MyProject</project-name>
-  <project-description>MyProject Description</project-description>
-  <project-url>http://myproj.mygroup.org/</project-url>
-  <project-logo>images/project.png</project-logo>
+  <project-name>jUDDI</project-name>
+  <project-description>jUDDI</project-description>
+  <project-url>http://ws.apache.org/juddi</project-url>
+  <project-logo>images/group-logo.gif</project-logo>
   <!-- Alternative static image:
   <project-logo>images/project-logo.gif</project-logo> -->
 
   <!-- optional group logo
        skin: forrest-site renders it at the top-left corner -->
-  <group-name>MyGroup</group-name>
-  <group-description>MyGroup Description</group-description>
-  <group-url>http://mygroup.org</group-url>
-  <group-logo>images/group.png</group-logo>
+  <group-name>Apache Web Services</group-name>
+  <group-description>Apache Web Services</group-description>
+  <group-url>http://ws.apache.org</group-url>
+  <group-logo>images/group-logo.gif</group-logo>
   <!-- Alternative static image:
   <group-logo>images/group-logo.gif</group-logo> -->
 
