@@ -1,8 +1,8 @@
 CREATE/CONFIGURE A DB2/UDB DATABASE FOR jUDDI
 
-jUDDI requires the use of a relational database (RDBMS) or 
-lightweight directory access protocol (LDAP) server to store
-the web services metadata it manages. This document will 
-walk you through the process of setting up a DB2 database 
-as the persistante storage for a jUDDI registry.
+jUDDI requires the use of a relational database (RDBMS) 
+to store the web services metadata it manages. This 
+document will walk you through the process of setting 
+up a DB2 database as the persistent storage for a 
+jUDDI registry.
 

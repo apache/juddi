@@ -1,10 +1,9 @@
 CREATE/CONFIGURE A MYSQL DATABASE FOR jUDDI
 
-jUDDI requires the use of a relational database (RDBMS) or 
-lightweight directory access protocol (LDAP) server to store
-the web services metadata it manages. This document will 
+jUDDI requires the use of a relational database (RDBMS) to 
+store the web services metadata it manages. This document will 
 walk you through the process of setting up a MySQL database 
-as the persistante storage for a jUDDI registry.
+as the persistent storage for a jUDDI registry.
 
 This document assumes that you already have a MySQL server 
 available and running. Visit the following web site to obtain 
