@@ -58,14 +58,14 @@
         jUDDI database using one of the following database schemas.
       </p>
       <p>
-        <link href="dbscripts/juddi_mysql.ddl">MySQL</link>
-        <link href="dbscripts/juddi_db2.ddl">DB2</link>
-        <link href="dbscripts/juddi_hsql.ddl">HSQL</link>
-        <link href="dbscripts/juddi_ase.ddl">Sybase</link>
-        <link href="dbscripts/juddi_postresql.ddl">PostreSQL</link>
-        <link href="dbscripts/juddi_oracle.ddl">Oracle</link>
-        <link href="dbscripts/juddi_totalxml.ddl">TotalXML</link>
-        <link href="dbscripts/juddi_jds.ddl">JDataStore</link> (Borland)
+        <link href="sql/mysql/mysql.html">MySQL</link></br>
+        <link href="sql/db2/db2.html">DB2</link></br>
+        <link href="sql/hsql/hsql.html">HSQL</link> (HypersonicSQL)</br>
+        <link href="sql/sybase/sybase.html">Sybase</link></br>
+        <link href="sql/postgres/postresql.html">PostreSQL</link></br>
+        <link href="sql/oracle/oracle.html">Oracle</link></br>
+        <link href="sql/totalxml/totalxml.html">TotalXML</link></br>
+        <link href="sql/borland/borland.html">JDataStore</link> (Borland)</br>
       </p>
       <p>If a schema for your DBMS is not listed, one simply hasn't been
         created yet. You can use the available schemas as a guide for
