@@ -11,10 +11,10 @@ This file contains an outline of the site's information content.  It is used to:
 - Provide aliases for external URLs in the external-refs section.  Eg, <link
   href="ext:cocoon"> links to http://xml.apache.org/cocoon/
 
-See http://xml.apache.org/forrest/linking.html for more info
+See http://forrest.apache.org/docs/linking.html for more info
 -->
 
-<site label="jUDDI" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+<site label="jUDDI" href="" tab="" xmlns="http://apache.org/forrest/linkmap/1.0">
 
   <juddi label="jUDDI">
     <welcome label="Introduction" href="index.html" description="Introduction"/>

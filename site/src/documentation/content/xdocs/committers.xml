@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.1//EN" "document-v11.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
 <document>
   <header>
     <title>jUDDI Committer Notes</title>
@@ -55,26 +55,26 @@
         Creating a key pair is pretty simple using <link href="http://www.gnupg.org/gph/en/manual.html#AEN26">gpg</link>. Simply invoke gpg and take all the defaults when prompted. You
         will have to provide a passphrase. Be sure to remember the passphrase since you'll need it anytime you use the key pair. The passphrase should itself be sufficiently
         secure; it shouldn't simply be a word in a dictionary, should include a mix of digits and alphanumeric characters, etc.
+       </p>
         <source>
           gpg --gen-key
         </source>
-        </p>
         <p>
         You should also generate a <link href="http://www.gnupg.org/gph/en/manual.html#AEN26">revocation certificate</link>. This allows you to declare the key
         pair invalid publically, if you ever lose your private key, or it becomes compromised.
+      </p>
         <source>
           gpg --output revoke.as --gen-revoke mykey
         </source>
 
-      </p>
       <p>
         The release manager is responsible for signing the binaries. The release manager must have a public key listed in the 'KEYS' file at the root of our source tree.
         The release manager must create a <link href="http://www.gnupg.org/gph/en/manual.html#AEN161">detached signature</link> for each binary. This detached
         signature must be posted along with our binaries, and allow our users to verify the binary's integrity.
+      </p>
         <source>
           gpg --output jUDDI.tar.gzip.asc --detach-sig jUDDI.tar.gzip
         </source>
-      </p>
       <p>All jUDDI committers are encouraged to create public/ private key pairs and place the public half into our 'KEYS'
         file at the root of our source tree. jUDDI committers are also encouraged to verify one another's keys and sign them, to help
         create a web of trust. Verifying a signature and a binary guarantees (in any real sense) the binary was assembled by the person
