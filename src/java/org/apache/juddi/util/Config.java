@@ -25,6 +25,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.registry.RegistryEngine;
 
 /**
  * This class provides read access to key/value pairs loaded
@@ -78,15 +79,26 @@ public class Config extends Properties
    */
   public static String getOperator()
   {
-    return getStringProperty("juddi.operatorName");
+    return getStringProperty(RegistryEngine.PROPNAME_OPERATOR_NAME,
+    					RegistryEngine.DEFAULT_OPERATOR_NAME);    
   }
 
   /**
    *
    */
-  public static int getMaxNameLength()
+  public static String getOperatorURL()
   {
-    return getIntProperty("juddi.maxNameLength", 0);
+    return getStringProperty(RegistryEngine.PROPNAME_OPERATOR_URL,
+    		      RegistryEngine.DEFAULT_OPERATOR_URL);
+  }
+
+  /**
+   *
+   */
+  public static int getMaxNameLengthAllowed()
+  {
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,
+    					RegistryEngine.DEFAULT_MAX_NAME_LENGTH);
   }
 
   /**
@@ -94,25 +106,8 @@ public class Config extends Properties
    */
   public static int getMaxNameElementsAllowed()
   {
-    return getIntProperty("juddi.maxNameElementsAllowed", 0);
-  }
-
-  /**
-   *
-   */
-  public static String getOperatorSiteURL()
-  {
-    return getStringProperty("juddi.operatorSiteURL");
-  }
-
-  /**
-   * Determines if jUDDI should use an instance of it's
-   * supplied org.apache.juddi.util.ConnectionPool or if it should
-   * rather than a JDBC DataStore aquired via a JNDI lookup.
-   */
-  public static boolean useConnectionPool()
-  {
-    return getBooleanProperty("juddi.useConnectionPool", false);
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,
+    					RegistryEngine.DEFAULT_MAX_NAME_ELEMENTS);
   }
 
   /**
@@ -207,8 +202,7 @@ public class Config extends Properties
       catch (MalformedURLException muex)
       {
         log.error(
-          "The " + key + " property value " + "is invalid: " + propValue,
-          muex);
+          "The " + key + " property value is invalid: " + propValue,muex);
       }
     }
 
