@@ -27,7 +27,7 @@ package org.apache.juddi.datatype;
  */
 public class Email implements RegistryObject
 {
-  String emailAddress;
+  String value;
   String useType;
 
   /**
@@ -44,7 +44,7 @@ public class Email implements RegistryObject
    */
   public Email(String email)
   {
-    this.emailAddress = email;
+    this.value = email;
   }
 
   /**
@@ -55,7 +55,7 @@ public class Email implements RegistryObject
    */
   public Email(String email, String type)
   {
-    this.emailAddress = email;
+    this.value = email;
     this.useType = type;
   }
 
@@ -66,7 +66,7 @@ public class Email implements RegistryObject
    */
   public void setValue(String email)
   {
-    this.emailAddress = email;
+    this.value = email;
   }
 
   /**
@@ -76,7 +76,7 @@ public class Email implements RegistryObject
    */
   public String getValue()
   {
-    return this.emailAddress;
+    return this.value;
   }
 
   /**
