@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE juddi:configuration 
+          SYSTEM 
+          "juddi.dtd">
+
+<juddi:configuration 
+	 xmlns:juddi="http://ws.apache.org/juddi/">
+
+	<!-- The UDDI Operator Name -->
+	<operator 
+		name="jUDDI.org"
+		adminEmailAddress="juddi@ws.apache.org"/>
+	
+	<!-- Authentication module to use -->
+	<authenticator class="org.apache.juddi.auth.DefaultAuthenticator">
+	</authenticator>
+
+	<!-- DataStore module currently to use -->
+	<datastore class="org.apache.juddi.datastore.jdbc.JDBCDataStore">
+        <!-- jUDDI DataSource to use -->
+		<param name="DataSource" value="java:comp/env/jdbc/juddiDB"/>
+        <!-- jUDDI JDBC Connection Properties to use
+		<param name="jdbcDriver" value="com.mysql.jdbc.Driver"/>
+		<param name="jdbcURL" value="jdbc:mysql://localhost/juddi"/>
+		<param name="jdbcUser" value="juddi"/>
+		<param name="jdbcPassword" value="juddi"/>
+		<param name="jdbcMaxActive" value="10"/>
+		<param name="jdbcMaxIdle" value="10"/>
+		 -->
+	</datastore>
+	
+	<!-- UUIDGen implementation to use -->
+	<uuidgen class="org.apache.juddi.uuidgen.DefaultUUIDGen">
+	</uuidgen>
+	
+	<!-- Monitor implementation to use -->
+	<monitor class="org.apache.juddi.monitor.jdbc.JDBCMonitor">
+	</monitor>
+
+	<!-- Cryptor implementation to use -->
+	<cryptor class="org.apache.juddi.cryptor.DefaultCryptor">
+	</cryptor>
+	
+	<!-- Validator to use -->
+	<validator class="org.apache.juddi.validator.DefaultValidator">
+	</validator>
+
+	<!-- The max size and max elements allowed in several 
+	     of the FindXxxx and SaveXxxx functions. -->
+	<maxNameLength>255</maxNameLength>
+	<maxNameElementsAllowed>5</maxNameElementsAllowed>
+	<maxBusinessEntitiesPerUser>25</maxBusinessEntitiesPerUser>
+	<maxBusinessServicesPerBusiness>20</maxBusinessServicesPerBusiness>
+	<maxBindingTemplatesPerService>10</maxBindingTemplatesPerService>
+	<maxTModelsPerUser>100</maxTModelsPerUser>
+	<maxRowsLimit>10</maxRowsLimit>
+
+	<!--  HTTP Proxy Configuration -->
+	<http-proxy 
+		enabled="false"
+		host="proxy.viens.net"
+		port="8000"
+		userName="sviens"
+		password="password"/>
+	
+	<!-- jUDDI Proxy Configuration (used by RegistryProxy) -->
+	<uddi-proxy soapTransport="org.apache.juddi.proxy.AxisTransport"
+			inquiryURL="http://localhost:8080/juddi/inquiry"
+			publishURL="http://localhost:8080/juddi/publish"
+			adminURL="http://localhost:8080/juddi/admin">
+		<param name="securityProvider" value="com.sun.net.ssl.internal.ssl.Provider"/>
+		<param name="protocolHandler" value="com.sun.net.ssl.internal.www.protocol"/>		
+	</uddi-proxy>
+
+</juddi:configuration>
+
+

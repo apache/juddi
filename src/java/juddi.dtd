@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Authors: Steve Viens. -->
+
+<!-- Version: 0.9.4 -->
+
+<!-- A configuration element consists of  -->
+
+<!ELEMENT juddi:configuration (operator?,authenticator?,datastore?,
+                               uuidgen?,monitor?,cryptor?,validator?,
+                               maxNameLength?,maxNameElementsAllowed?,
+							   maxBusinessEntitiesPerUser?,
+							   maxBusinessServicesPerBusiness?,
+							   maxBindingTemplatesPerService?,
+							   maxTModelsPerUser?,maxRowsLimit?,
+							   http-proxy?,uddi-proxy?)>
+
+<!--  -->     
+<!--  --> 
+<!--  --> 
+
+<!ATTLIST juddi:configuration
+  xmlns:juddi CDATA #FIXED "http://ws.apache.org/juddi/" 
+>
+
+<!--  -->
+<!ELEMENT operator (param*)>
+<!ATTLIST operator
+  name ID #REQUIRED
+  adminEmailAddress CDATA #IMPLIED
+>
+
+<!--  -->
+<!ELEMENT authenticator (param*)>
+<!ATTLIST authenticator
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT datastore (param*)>
+<!ATTLIST datastore
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT uuidgen (param*)>
+<!ATTLIST uuidgen
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT monitor (param*)>
+<!ATTLIST monitor
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT cryptor (param*)>
+<!ATTLIST cryptor
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT validator (param*)>
+<!ATTLIST validator
+  class CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT maxNameLength (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxNameElementsAllowed (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxBusinessEntitiesPerUser (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxBusinessServicesPerBusiness (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxBindingTemplatesPerService (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxTModelsPerUser (#PCDATA)>
+
+<!--  -->
+<!ELEMENT maxRowsLimit (#PCDATA)>
+
+<!--  -->
+<!ELEMENT uddi-proxy (param*)>
+<!ATTLIST uddi-proxy
+  soapTransport CDATA #REQUIRED
+  inquiryURL CDATA #REQUIRED
+  publishURL CDATA #REQUIRED
+  adminURL CDATA #IMPLIED
+>
+
+<!--  -->
+<!ELEMENT http-proxy EMPTY>
+<!ATTLIST http-proxy
+  enabled CDATA	#REQUIRED
+  host CDATA #REQUIRED
+  port CDATA #REQUIRED
+  userName CDATA #REQUIRED
+  password CDATA #REQUIRED
+>
+
+<!--  -->
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
+>
