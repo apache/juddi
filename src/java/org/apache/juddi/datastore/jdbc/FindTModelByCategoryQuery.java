@@ -132,7 +132,7 @@ class FindTModelByCategoryQuery
             String name = keyedRef.getKeyName();
             String value = keyedRef.getKeyValue();
 
-	    String tModelKey = keyedRef.getTModelKey();
+            String tModelKey = keyedRef.getTModelKey();
             if (tModelKey.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
             {
               // DO NOT ignore the name .. 
