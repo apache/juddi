@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.juddi.IRegistry;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.business.BusinessEntity;
 import org.apache.juddi.datatype.request.AuthInfo;
@@ -27,9 +28,10 @@ import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.Result;
+import org.apache.juddi.datatype.service.BusinessService;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.util.Language;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -45,7 +47,6 @@ public class SaveBusinessSample
   	Properties props = new Properties();
   	props.load(new FileInputStream(args[0]));
   	IRegistry registry = new RegistryProxy(props);
-
 
     // Option #3 (explicitly set the proxy property values)
     //Properties props = new Properties();
@@ -77,10 +78,18 @@ public class SaveBusinessSample
       AuthToken authToken = registry.getAuthToken(userID,password);
       AuthInfo authInfo = authToken.getAuthInfo();
 
+      BusinessService businessService = new BusinessService();
+      businessService.addName(new Name("Real-time Stock Quotes"));
+      
       // generate a BusinessEntity
       BusinessEntity businessEntity = new BusinessEntity();
       businessEntity.setBusinessKey(null);
-      businessEntity.addName(new Name("Sun Microsystems",Language.ENGLISH));
+      businessEntity.addName(new Name("Sun Microsystems"));
+      businessEntity.addBusinessService(businessService);
+      businessEntity.addCategory(new KeyedReference("version","production"));
+      businessEntity.addCategory(new KeyedReference(TModel.OPERATORS_TMODEL_KEY,"frequency","hourly"));
+      businessEntity.addCategory(new KeyedReference(TModel.GENERAL_KEYWORDS_TMODEL_KEY,"version","production"));
+      businessEntity.addCategory(new KeyedReference("","",""));
 
       // generate a BusinessEntity Vector
       Vector businessVector = new Vector();

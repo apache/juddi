@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.juddi.IRegistry;
+import org.apache.juddi.datatype.CategoryBag;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.response.BusinessInfo;
 import org.apache.juddi.datatype.response.BusinessInfos;
@@ -39,19 +42,19 @@ public class FindBusinessSample
     //IRegistry registry = new RegistryProxy();
 
     // Option #2 (import proxy property values from a specified properties file)
-  	//Properties props = new Properties();
-  	//props.load(new FileInputStream(args[0]));
-  	//IRegistry registry = new RegistryProxy(props);
+  	Properties props = new Properties();
+  	props.load(new FileInputStream(args[0]));
+  	IRegistry registry = new RegistryProxy(props);
 
     // Option #3 (explicitly set the proxy property values)
-    Properties props = new Properties();
-    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
-    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
-    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
-    props.setProperty(RegistryProxy.TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
-    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
-    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
-    IRegistry registry = new RegistryProxy(props);
+//    Properties props = new Properties();
+//    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
+//    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
+//    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
+//    props.setProperty(RegistryProxy.TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
+//    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+//    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
+//    IRegistry registry = new RegistryProxy(props);
 
     // Option #4 (Microsoft Test Site)
 //    Properties props = new Properties();
@@ -67,10 +70,10 @@ public class FindBusinessSample
 
     try
     {
-      Vector inNames = new Vector();
-      inNames.add(new Name(args[0]));
+      CategoryBag catBag = new CategoryBag();
+      catBag.addKeyedReference(new KeyedReference("version","production"));
 
-      BusinessList list = registry.findBusiness(inNames,null,null,null,null,null,100);
+      BusinessList list = registry.findBusiness(null,null,null,catBag,null,null,100);
       BusinessInfos infos = list.getBusinessInfos();
 
       Vector businesses = infos.getBusinessInfoVector();
