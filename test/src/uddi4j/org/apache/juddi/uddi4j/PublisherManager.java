@@ -24,7 +24,7 @@ import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.PublisherDetail;
-import org.apache.juddi.registry.IRegistry;
+import org.apache.juddi.IRegistry;
 
 /**
  * @author Steve Viens (sviens@users.sourceforge.net)
