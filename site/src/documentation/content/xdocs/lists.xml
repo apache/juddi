@@ -49,6 +49,16 @@
       <link href="http://sourceforge.net/mail/?group_id=42875">here</link> to
       browse them.
       </p>
+      <p>The archives for the original SourceForge lists have been imported into
+	MARC. Messages posted to the current Apache lists are also being archived at 
+	MARC. New messages posted the Apache lists are also being archived at Apache.
+      </p>
+	<ul>
+	<li>SourceForge and Apache juddi-dev archive at <link href="http://marc.theaimsgroup.com/?l=juddi-dev">http://marc.theaimsgroup.com/?l=juddi-dev</link></li>
+	<li>SourceForge and Apache juddi-user archive at <link href="http://marc.theaimsgroup.com/?l=juddi-user">http://marc.theaimsgroup.com/?l=juddi-user</link></li>
+	<li>Apache juddi-dev archive at <link href="http://nagoya.apache.org/eyebrowse/SummarizeList?listId=179">http://nagoya.apache.org/eyebrowse/SummarizeList?listId=179</link></li>
+	<li>Apache juddi-user archive at <link href="http://nagoya.apache.org/eyebrowse/SummarizeList?listId=197">http://nagoya.apache.org/eyebrowse/SummarizeList?listId=197</link></li>
+	</ul>
       </section>
 
   </body>
