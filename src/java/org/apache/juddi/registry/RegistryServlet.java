@@ -318,8 +318,6 @@ public class RegistryServlet extends HttpServlet
     } 
     catch(Exception ex) // Catch ALL exceptions
     {
-      log.error(ex.getMessage(),ex);
-
       // SOAP Fault values
       String faultCode = null;
       String faultString = null;
@@ -340,6 +338,13 @@ public class RegistryServlet extends HttpServlet
       
       if (ex instanceof RegistryException)
       {
+        // Since we've intercepted a RegistryException type
+        // then we can assume this is a "controlled" event
+        // and simply log the error message without a stack
+        // trace.
+
+        log.error(ex.getMessage());
+
         RegistryException rex = (RegistryException)ex;
         
         faultCode = rex.getFaultCode();  // SOAP Fault faultCode
@@ -376,7 +381,15 @@ public class RegistryServlet extends HttpServlet
         // configuration problem or something that we *should* 
         // be catching and converting to a RegistryException 
         // but are not (yet!).
-          
+            
+        log.error(ex.getMessage(),ex);
+
+        // Because something occured that jUDDI wasn't expecting
+        // let's set default SOAP Fault values.  Since jUDDI
+        // should be catching anything significant let's blame 
+        // jUDDI by placing "Server" in the Fault Code and pass
+        // the Exception message on to the client.
+        
         faultCode = "Server";
         faultString = ex.getMessage();
         faultActor = null;
