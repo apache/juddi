@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+  xmlns:soap="http://apache.org/xsp/soap/3.0"
+  xmlns:xscript="http://apache.org/xsp/xscript/1.0"
+  xmlns:log="http://apache.org/xsp/log/2.0"
+   xmlns:session="http://apache.org/cocoon/session/1.0">
+ <page>
+ 	<soap:call>
+ 		<soap:url><xsp-request:get-parameter name="publishURL"/></soap:url>
+	<save_service generic="2.0" xmlns="urn:uddi-org:api_v2">
+		<authInfo><xsp-request:get-parameter name="authInfo"/></authInfo>
+		<businessService>
+			<xsp:logic>
+				String vBusinessKey = <xsp-request:get-parameter name="businessKey"/> ;
+				<![CDATA[
+				if (vBusinessKey!=null) {
+				]]>
+				<xsp:attribute name="businessKey"><xsp-request:get-parameter name="businessKey"/></xsp:attribute>
+				<![CDATA[
+				}
+			    ]]>
+			</xsp:logic>
+			<xsp:logic>
+				String vServiceKey = <xsp-request:get-parameter name="serviceKey"/> ;
+				<![CDATA[
+				if (vServiceKey!=null) {
+				]]>
+				<xsp:attribute name="ServiceKey"><xsp-request:get-parameter name="serviceKey"/></xsp:attribute>
+				<![CDATA[
+				}
+			    ]]>
+			</xsp:logic>
+			<name><xsp-request:get-parameter name="service_name"/></name>
+			<description><xsp-request:get-parameter name="service_desc"/></description>
+			<bindingTemplates>
+			  <bindingTemplate>
+			     <description>This is the access point of the service.</description>
+			     <accessPoint>
+			     	<xsp:logic>
+			     		<xsp:attribute name="URLType"><xsp-request:get-parameter name="URLType"/></xsp:attribute>
+			     	</xsp:logic>
+				<xsp-request:get-parameter name="URL"/>
+			     </accessPoint>
+			     <tModelInstanceDetails>
+			          <tModelInstanceInfo tModelKey="uuid:9A404640-87BA-11D8-8640-EB3F3CD7B24E">
+			              <description>this is a generic tModel used in the detailed instance part of a service definition</description>
+			           </tModelInstanceInfo>
+                     	     </tModelInstanceDetails>
+			  </bindingTemplate>
+		       </bindingTemplates>
+		       <categoryBag>
+			<xsp:logic>
+			    String vName[] = <xsp-request:get-parameter-values name="keyName" as="array"/>;
+			    String vValue[] =  <xsp-request:get-parameter-values name="keyValue" as="array"/>;
+			    String vtModelKey[] =  <xsp-request:get-parameter-values name="tModelKey" as="array"/>;
+			    String vtModelRemove[] =  <xsp-request:get-parameter-values name="TM_remove" as="array"/>;
+			    String categories="";
+			    int j=0;
+			    int jmax=0;
+			    <![CDATA[
+			    if (vtModelRemove!=null)
+				jmax=vtModelRemove.length;
+			    int i=0;
+			    if (vName!=null && vName.length > 0) { 
+				for(i=0; i < vName.length; i++) { 
+				  for(j=0; j<jmax;j++) 
+				     if (java.lang.Integer.parseInt(vtModelRemove[j])==i+1) break;
+				  if (j==jmax) {
+				 ]]>
+			    		<keyedReference>
+			    			<xsp:attribute name="keyName"><xsp:expr>vName[i]</xsp:expr></xsp:attribute>
+			    			<xsp:attribute name="keyValue"><xsp:expr>vValue[i]</xsp:expr></xsp:attribute>
+			    			<xsp:attribute name="tModelKey"><xsp:expr>vtModelKey[i]</xsp:expr></xsp:attribute>
+			    		</keyedReference>
+			    	<![CDATA[
+			  	}
+			    	}
+			    }]]>    
+			    <!--number><xsp:expr>vName.length</xsp:expr></number-->
+			</xsp:logic>
+			</categoryBag>
+		</businessService>
+	</save_service>
+ 	</soap:call>
+ </page>
+ <session:getxml context="mycontext" path="/"/>
+
+</xsp:page>

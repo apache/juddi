@@ -1,0 +1,68 @@
+<table border="0" cellpadding="3" cellspacing="1" bgcolor="ffffff">
+	<tr>
+		<td bgcolor="#6699CC" class="orangebold">
+			<img src="images/bullet.gif"/>
+			<a href="index" class="nav">Specify UDDI</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/transparent.gif" width="150" height="15"/>
+		</td>
+	</tr>
+	<!-- Business Entity -->
+	<tr>
+		<td bgcolor="#6699CC" class="orangebold">
+			<img src="images/transparent.gif" width="8" height="1"/>Business Entity</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/subbullet.gif"/>
+			<a href="be_input" class="subnav">input</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/subbullet.gif"/>
+			<a href="be_search" class="subnav">search</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/transparent.gif" width="150" height="15"/>
+		</td>
+	</tr>
+	<!-- Business Service -->
+	<tr>
+		<td bgcolor="#6699CC" class="orangebold">
+			<img src="images/transparent.gif" width="8" height="1"/>Business Service</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/subbullet.gif"/>
+			<a href="bs_search" class="subnav">search</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/transparent.gif" width="150" height="15"/>
+		</td>
+	</tr>
+	<!-- TModel -->
+	<tr>
+		<td bgcolor="#6699CC" class="orangebold">
+			<img src="images/transparent.gif" width="8" height="1"/>TModel</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/subbullet.gif"/>
+			<a href="tm_input" class="subnav">input</a>
+		</td>
+	</tr>
+	<tr>
+		<td bgcolor="#6699CC">
+			<img src="images/subbullet.gif"/>
+			<a href="tm_search" class="subnav">search</a>
+		</td>
+	</tr>
+</table>

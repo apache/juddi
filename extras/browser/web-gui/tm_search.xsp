@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+  xmlns:xsp-session-fw="http://apache.org/xsp/session-fw/1.0"
+  xmlns:soap="http://apache.org/xsp/soap/3.0"
+  xmlns:xscript="http://apache.org/xsp/xscript/1.0"
+  xmlns:log="http://apache.org/xsp/log/2.0"
+  xmlns:session="http://apache.org/cocoon/session/1.0"
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0">
+ <content>
+	<soap:call>
+	     <soap:url><xsp-request:get-parameter name="inquiryURL"/></soap:url>
+	     <find_tModel generic="2.0" xmlns="urn:uddi-org:api_v2">
+		<findQualifiers>
+			 <findQualifier>caseSensitiveMatch</findQualifier>
+		    	<findQualifier><xsp-request:get-parameter name="findQualifier"/></findQualifier>
+		 </findQualifiers>
+		 <name><xsp-request:get-parameter name="query_name"/></name>
+		 <categoryBag>
+		<xsp:logic>
+			String vTModelKey[] = <xsp-request:get-parameter-values name="tModelKey" as="array"/> ;
+			String vKeyName[] = <xsp-request:get-parameter-values name="keyName" as="array"/> ;
+			String vKeyValue[] = <xsp-request:get-parameter-values name="keyValue" as="array"/> ;
+			<![CDATA[
+			if (vTModelKey!=null && vTModelKey.length > 0) {
+			    for(int i=0; i < vKeyName.length; i++) { 
+				]]>
+				<keyedReference>
+					<xsp:attribute name="keyName"><xsp:expr>vKeyName[i]</xsp:expr></xsp:attribute>
+					<xsp:attribute name="keyValue"><xsp:expr>vKeyValue[i]</xsp:expr></xsp:attribute>
+					<xsp:attribute name="tModelKey"><xsp:expr>vTModelKey[i]</xsp:expr></xsp:attribute>
+				</keyedReference>
+				<![CDATA[
+				}
+			}
+			]]>
+		</xsp:logic>
+		</categoryBag>
+	     </find_tModel>
+	</soap:call>
+	<session:getxml context="mycontext" path="/"/>
+ </content>
+</xsp:page>

@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<map:pipelines>
+<!-- get authentification token -->
+	<map:pipeline>
+		<map:match pattern="get_auth_token">
+			<map:generate type="serverpages" src="get_auth_token.xsp"/>
+			<map:transform type="session"/>
+			<map:transform src="get_auth_token.xsl"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+<!-- empty path -->
+	<map:pipeline>
+		<map:match pattern="">
+			<map:redirect-to session="true" uri="index"/>
+		</map:match>
+	</map:pipeline>
+<!-- START -->
+	<map:pipeline>
+		<map:match pattern="index">
+			<map:generate src="index.html"/>
+			<map:serialize/>
+		</map:match>
+	</map:pipeline>
+
+<!-- START UDDI -->
+	<map:pipeline>
+		<map:match pattern="start_uddi">
+			<map:aggregate element="page">
+			    <map:part src="start_uddi.xml" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="session"/>
+			<map:transform src="start_uddi.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+<!-- Business Entity -->
+	<map:pipeline>
+		<map:match pattern="be_input">
+			<map:aggregate element="page">
+			    <map:part src="be_input.xml" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="session"/>
+			<map:transform src="be_input.xsl">
+				<map:parameter name="operation" value="create"/>
+				<map:parameter name="headline" value="Business Entity Input"/>
+				<map:parameter name="TModels" value="leer"/>
+			</map:transform>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+
+	<map:pipeline>
+		<map:match pattern="be_publish">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="cinclude"/>
+			<map:transform src="be_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="be_publish_content">
+			<map:generate type="serverpages" src="be_publish.xsp"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_edit">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/be_find_content" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="be_input.xsl">
+  				<map:parameter name="operation" value="update"/>
+				<map:parameter name="headline" value="Business Entity Edit"/>
+				<map:parameter name="TModels" value="list TModels"/>
+			</map:transform>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="be_find_content">
+			<map:generate type="serverpages" src="be_find.xsp"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_search">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/be_search_form" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="be_search.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="be_search_form">
+			<map:generate type="serverpages" src="be_search_form.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_selectTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="be_selectTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_searchresult">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/be_find_query" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<!--map:generate src="be_searchresult.xml"/>
+			<map:transform type="session"/>
+			<map:transform type="cinclude"/-->
+			<map:transform src="be_searchresult.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="be_find_query">
+			<map:generate type="serverpages" src="be_search.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+        <map:match pattern="be_viewrecord">
+            <map:aggregate element="page">
+                <map:part src="cocoon:/be_find_content" strip-root="false"/>
+                <map:part src="pf_header.xml" element="header" strip-root="false"/>
+                <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+              </map:aggregate>
+            <!--map:generate src="be_record.xml"/-->
+            <!--map:transform type="session"/>
+            <map:transform type="cinclude"/-->
+            <map:transform src="be_viewrecord.xsl"/>
+            <map:transform type="session"/>
+            <map:serialize type="html"/>
+        </map:match>
+    </map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/be_find_content" strip-root="false"/>
+                	    <map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="be_addTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="be_publish_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="cocoon:/be_find_content" strip-root="false"/>
+                <!--map:part src="cocoon:/tm_list" strip-root="false"/-->
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+  			<map:transform src="be_publish_addTModel.xsl"/>
+			<map:transform type="cinclude"/>
+			<map:transform src="be_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+  			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+
+<!-- Business Service -->
+	<map:pipeline>
+		<map:match pattern="bs_input">
+			<map:aggregate element="page">
+			    <map:part src="bs_input.xml" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="session"/>
+			<map:transform src="bs_input.xsl">
+				<map:parameter name="operation" value="create"/>
+				<map:parameter name="headline" value="Business Service Input"/>
+				<map:parameter name="TModels" value="leer"/>
+			</map:transform>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_publish">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="cinclude"/>
+			<map:transform src="bs_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="bs_publish_content">
+			<map:generate type="serverpages" src="bs_publish.xsp"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_edit">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/bs_find_content" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="bs_input.xsl">
+  				<map:parameter name="operation" value="update"/>
+				<map:parameter name="headline" value="Business Entity Edit"/>
+				<map:parameter name="TModels" value="list TModels"/>
+			</map:transform>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="bs_find_content">
+			<map:generate type="serverpages" src="bs_find.xsp"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_search">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/bs_search_form" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="bs_search.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="bs_search_form">
+			<map:generate type="serverpages" src="bs_search_form.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_selectTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="bs_selectTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_searchresult">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/bs_find_query" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="bs_searchresult.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_find_query">
+			<map:generate type="serverpages" src="bs_search.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+        <map:match pattern="bs_viewrecord">
+            <map:aggregate element="page">
+                <map:part src="cocoon:/bs_find_content" strip-root="false"/>
+                <map:part src="pf_header.xml" element="header" strip-root="false"/>
+                <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+              </map:aggregate>
+            <!--map:generate src="be_record.xml"/-->
+            <!--map:transform type="session"/>
+            <map:transform type="cinclude"/-->
+            <map:transform src="bs_viewrecord.xsl"/>
+            <map:transform type="session"/>
+            <map:serialize type="html"/>
+        </map:match>
+    </map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_list">
+			<map:generate src="bs_list.xsp" type="serverpages"/>
+			<!--map:transform type="session"/-->
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/bs_find_content" strip-root="false"/>
+               	<map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="bs_addTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="bs_publish_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="cocoon:/bs_find_content" strip-root="false"/>
+                <!--map:part src="cocoon:/tm_list" strip-root="false"/-->
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+  			<map:transform src="bs_publish_addTModel.xsl"/>
+			<map:transform type="cinclude"/>
+			<map:transform src="bs_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+  			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+
+<!-- TModel -->
+	<map:pipeline>
+		<map:match pattern="tm_input">
+			<map:aggregate element="page">
+			    <map:part src="tm_getsession.xml" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="session"/>
+			<map:transform src="tm_input.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_publish">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform type="cinclude"/>
+			<map:transform src="tm_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="tm_publish_content">
+			<map:generate type="serverpages" src="tm_publish.xsp"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_edit">
+			<map:aggregate element="page">
+				<map:part src="cocoon:/tm_find_content" strip-root="false"/>
+				<map:part src="pf_header.xml" element="header" strip-root="false"/>
+				<map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+			</map:aggregate>
+			<map:transform src="tm_input.xsl">
+				<map:parameter name="operation" value="update"/>
+				<map:parameter name="headline" value="Business Entity Edit"/>
+				<map:parameter name="TModels" value="list TModels"/>
+			</map:transform>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="tm_find_content">
+			<map:generate type="serverpages" src="tm_find.xsp"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_search">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_search_form" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="tm_search.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+	<map:pipeline>
+		<map:match pattern="tm_search_form">
+			<map:generate type="serverpages" src="tm_search_form.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_selectTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="tm_selectTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_searchresult">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_find_query" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="tm_searchresult.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_find_query">
+			<map:generate type="serverpages" src="tm_search.xsp" strip-root="false"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_viewrecord">
+			    <map:aggregate element="page">
+				<map:part src="cocoon:/tm_find_content" strip-root="false"/>
+				<map:part src="pf_header.xml" element="header" strip-root="false"/>
+				<map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+			      </map:aggregate>
+			<!--map:generate src="tm_viewrecord.xml"/-->
+			<map:transform type="cinclude"/>
+			<map:transform src="tm_viewrecord.xsl"/>
+			<map:transform type="session"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+
+	<map:pipeline>
+		<map:match pattern="tm_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/tm_find_content" strip-root="false"/>
+                <map:part src="cocoon:/tm_list" strip-root="false"/>
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+			<map:transform src="tm_addTModel.xsl"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="tm_publish_addTModel">
+			<map:aggregate element="page">
+			    <map:part src="cocoon:/get_auth_token" strip-root="false"/>
+			    <map:part src="cocoon:/tm_find_content" strip-root="false"/>
+                <!--map:part src="cocoon:/tm_list" strip-root="false"/-->
+			    <map:part src="pf_header.xml" element="header" strip-root="false"/>
+			    <map:part src="pf_nav.xml" element="nav" strip-root="false"/>
+  			</map:aggregate>
+  			<map:transform src="tm_publish_addTModel.xsl"/>
+			<map:transform type="cinclude"/>
+			<map:transform src="tm_viewrecord.xsl"/>
+  			<map:transform type="session"/>
+  			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline>
+
+
+	<!--map:pipeline>
+		<map:match pattern="tm_list_input">
+			<map:generate src="tm_list.html"/>
+			<map:serialize type="html"/>
+		</map:match>
+	</map:pipeline-->
+
+	<map:pipeline>
+		<map:match pattern="tm_list">
+			<map:generate src="tm_list.xsp" type="serverpages"/>
+			<map:transform type="session"/>
+			<map:serialize type="xml"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="images/*.gif">
+			<map:read mime-type="images/gif" src="images/{1}.gif"/>
+		</map:match>
+	</map:pipeline>
+
+	<map:pipeline>
+		<map:match pattern="*.css">
+			<map:read mime-type="text/css" src="{1}.css"/>
+		</map:match>
+	</map:pipeline>
+
+</map:pipelines>
+</map:sitemap>

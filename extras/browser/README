@@ -1,2 +1,52 @@
-Future home of the jUDDI Browser
-Contributed by Andreas Wombacher
+
+                  jUDDI Web GUI
+
+                     0.8
+  
+
+  What is it?
+  -----------
+
+  The jUDDI Web GUI is a simplified Web based graphical user interface to a UDDI
+  service repository making use of the general UDDI API via Web Services calls. 
+  The GUI is implemented based on Cocoon.
+  
+  The limitations of the provided GUI is that login and password of the UDDI must
+  be the standard values of a jUDDI repository, that is "juddi". Further, the 
+  number of input fields of the Business Entity, Business Service, and tModel has 
+  been limited as much as possible. Finally, the assignment of WSDL documents to 
+  a Business Service is treated slightly different to the specification by adding
+  it as a tModel to the categoryBag of the service.
+
+
+
+  Requirements
+  ------------
+
+  The jUDDI Web GUI is based on Apache Cocoon (http://cocoon.apache.org/2.1/), 
+  thus, requires a complete Cocoon instalation. No further requirements exist.
+
+
+
+  Installation Instructions and Documentation
+  -------------------------------------------
+  
+  Simply copy the web-gui directory of this distribution into the webapps 
+  directory of your Cocoon installation. Afterwards, you can access the 
+  Web GUI via the following link: http://localhost:8888/web-gui/
+  if your Cocoon installation is accessable via http://localhost:8888/
+  The file IPSI_PF_sitemap_v1.vsd contained in this directory contains
+  a sitemap of the web GUI.
+
+
+
+  Licensing and legal issues
+  --------------------------
+
+  The Web GUI is licensed under the Apache Software License, a license of the BSD
+  family, and contains software which is compatible with the BSD licensing style.
+
+  For more information, please read the LICENSE files in this directory.
+
+
+  Have Fun!

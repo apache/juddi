@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xsp:page language="java"
+  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp-request="http://apache.org/xsp/request/2.0"
+  xmlns:soap="http://apache.org/xsp/soap/3.0"
+  xmlns:xscript="http://apache.org/xsp/xscript/1.0"
+  xmlns:log="http://apache.org/xsp/log/2.0"
+  xmlns:session="http://apache.org/cocoon/session/1.0"
+  xmlns:cinclude="http://apache.org/cocoon/include/1.0">
+   <content>
+	<xsp:logic>
+		String vTModelKey = <xsp-request:get-parameter name="tModelKey"/> ;
+		<![CDATA[
+		if (vTModelKey!=null) {
+		]]>
+		<session:mergexml context="mycontext" path="/session/businessEntitySearch/categoryBag">
+			<keyedReference>
+				<xsp:attribute name="tModelKey"><xsp-request:get-parameter name="tModelKey"/></xsp:attribute>
+				<xsp:attribute name="keyName"><xsp-request:get-parameter name="keyName"/></xsp:attribute>
+				<xsp:attribute name="keyValue"><xsp-request:get-parameter name="keyValue"/></xsp:attribute>
+			</keyedReference>
+		</session:mergexml>
+		<![CDATA[
+		}
+		else {
+	    	]]>
+	    	<session:removexml context="mycontext" path="/session/businessEntitySearch/categoryBag"/>
+	    <![CDATA[
+	    	}
+	    ]]>
+	</xsp:logic>
+	<session:getxml context="mycontext" path="/"/>
+   </content>
+</xsp:page>
