@@ -1,4 +1,95 @@
-MySQL / jUDDI version 0.9rc1
+CREATE/CONFIGURE A MYSQL DATABASE FOR jUDDI
 
-Author: Steve Viens
+jUDDI requires the use of a relational database (RDBMS) or 
+lightweight directory access protocol (LDAP) server to store
+the web services metadata it manages. This document will 
+walk you through the process of setting up a MySQL database 
+as the persistante storage for a jUDDI registry.
+
+This document assumes that you already have a MySQL server 
+available and running. Visit the following web site to obtain 
+a copy of MySQL and follow the installation instructions that 
+accompany the version you're installing. Return to these 
+instructions when your MySQL server is up and running.
+
+  http://dev.mysql.com/
+
+Now that you've got your MySQL server up and running the next
+step is to create the jUDDI database, user and tables. To do 
+this your going to pass the "create_database.sql" script to 
+the "mysql" command line tool within a command shell (for 
+windows users this is the "Command Prompt" window) and use 
+the "mysql" command line tool as follows:
+
+  Windows Command Prompt:
+
+    mysql < {path}\create_database.sql
+  
+  Unix, Linux, Cygwin Shell:
+  
+    mysql < {path}/create_database.sql
+
+Where {path} is the the directory path where the 
+create_databas.sql file can be found. It's no coincidence 
+that this is also the directory where the file that you 
+are now reading is located.
+
+Depending on your account priviledges you may be required 
+to supply a user and password when running the above 
+commands this can be done using the optional --user 
+and --password options like this:
+
+  mysql --user=myname --password=mysecret < create_database.sql
+
+A complete overview of the "mysql" command-line tool can 
+be found in section 8.3 of the MySQL Manual which can be 
+viewed online at the following URL: 
+
+  http://dev.mysql.com/doc/mysql/en/index.html
+
+Now that we've got the jUDDI database and tables created 
+it's time to insert some data. You'll notice there are 
+two insert_xxx.sql in the mysql directory.
+
+  insert_publishers.sql
+  
+The "insert_publishers" table contains rows identifying 
+UDDI publisher accounts. You should edit this file and add
+a row for each person that wishes to have access to the 
+UDDI publish functionality in your registry. Follow the 
+example inser for a user named John Doe that's in this 
+file when adding your publishers.
+
+  INSERT INTO PUBLISHER (PUBLISHER_ID,PUBLISHER_NAME,EMAIL_ADDRESS,ENABLED,ADMIN)
+  VALUES ('jdoe','John Doe','john.doe@apache.org','true','true');
+  
+NOTE that while the PUBLISHER table includes several 
+columns not shown above only thoses shown in the example 
+insert statement are used by jUDDI.
+
+Once you've finished editing "insert_publishers.sql"
+invoke the SQL with the "mysql" command line tool as 
+follows:
+
+  From Windows Command Prompt:
+
+    mysql < {path}\insert_publishers.sql
+  
+  From Unix, Linux, Cygwin Shell:
+  
+    mysql < {path}/insert_publishers.sql
+  
+Again, depending on your MySQL installation your account
+priveledges you may need to supply the --user and --password 
+options to the mysql command line tool.
+
+If everything went well your MySQL database is now created
+an account for accessing this database (via JDBC) is also 
+created and the PUBLISHER and TMODEL tables have been loaded
+
+You're now ready to take the next step and configure a JDBC 
+DataSource within your application server to access this MySQL
+database.
+
+Steve Viens
 sviens@apache.org
