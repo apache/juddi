@@ -32,6 +32,7 @@ import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
@@ -43,6 +44,7 @@ import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.BusyException;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.handler.HandlerMaker;
@@ -92,7 +94,7 @@ public class RegistryServlet extends HttpServlet
 
     try
     {      
-      log.info("jUDDI Starting: Loading resources and initializing subsystems.");
+      log.info("Loading jUDDI configuration.");
         
       // determine the name of the juddi property file to use from web.xml
       String propFile = config.getInitParameter(CONFIG_FILE_PROPERTY_NAME);
@@ -180,27 +182,21 @@ public class RegistryServlet extends HttpServlet
       log.error(ioex.getMessage(),ioex);
     }
 
-    log.info("Initializing jUDDI subsystems.");
+    log.info("Initializing jUDDI components.");
     
     registry = new RegistryEngine(props);
     registry.init();
   }
 
   /**
-   * Grab the shared instance of jUDDI's Registry class and
-   * call it's "dispose()" method to notify all sub-components
-   * to stop any background threads and release any external
-   * resources they may have aquired.
+   *
    */
-  public void destroy()
+  public void doGet(HttpServletRequest req, HttpServletResponse res)
+    throws ServletException, IOException
   {
-    super.destroy();
-    
-    log.info("jUDDI Stopping: Cleaning up existing resources.");
-
-    RegistryEngine registry = RegistryServlet.getRegistry();
-    if (registry != null)
-      registry.dispose();
+    res.setHeader("Allow","POST");
+    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
+      "method 'GET' is not allowed by the UDDI Inquiry API.");
   }
 
   /**
@@ -213,40 +209,65 @@ public class RegistryServlet extends HttpServlet
       
     SOAPMessage soapReq = null;
     SOAPMessage soapRes = null;
-    String generic = null;
 
     try 
     {
-      // Create a MessageFactory, parse the SOAP request
-      // and create the SOAP response
+      // Create a MessageFactory, parse the XML found
+      // in the HTTP payload into a SOAP request message 
+      // and create a new SOAP response message.
 
       MessageFactory msgFactory = MessageFactory.newInstance();
       soapReq = msgFactory.createMessage(null,req.getInputStream());
       soapRes = msgFactory.createMessage();
            
-      // Extract the UDDI request
+      // Extract the UDDI request from the SOAPBody
+      // of the SOAP Request message. If a UDDI request
+      // message does not exist within the SOAP Body
+      // then throw a FatalErrorException and indicate
+      // that this is a Client-side (consumer) error.
 
       SOAPBody soapReqBody = soapReq.getSOAPBody();
-      Element uddiReq = (Element)soapReqBody.getFirstChild();      
+      Element uddiReq = (Element)soapReqBody.getFirstChild();
+      if (uddiReq == null)
+        throw new FatalErrorException("A UDDI request was not " +
+          "found in the SOAP message.");
+      
+      // Grab the local name of the UDDI request element
+      // from the UDDI Request. If a value isn't returned 
+      // (either null or an empty String is returned) then 
+      // throw a FatalError exception. This is probably a 
+      // configuration problem related to the XML Parser 
+      // that jUDDI is using.
+      
       String function = uddiReq.getLocalName();
+      if ((function == null) || (function.trim().length() == 0))
+        throw new FatalErrorException("The name of the UDDI request " +
+          "could not be identified.");
       
-      // Grab the generic value - we'll need it in the event
-      // that an exception is thrown.
-
-      // TODO (Steve) We need to throw a UDDI Exception if a generic value is not specified (or if it is specified to be something other than 2.0).
-      
-      generic = uddiReq.getAttribute("generic");
-      if (generic == null)
-        generic = IRegistry.UDDI_V2_GENERIC;
-
-      // Lookup the appropriate xml handler, throw an 
+      // Lookup the appropriate XML handler.  Throw an 
       // UnsupportedException if one could not be located.
 
       IHandler requestHandler = maker.lookup(function);
       if (requestHandler == null)
-        throw new UnsupportedException("The request " +
-          "type is unknown: " +function);
+        throw new UnsupportedException("The UDDI request " +
+          "type specified is unknown: " +function);
       
+      // Grab the generic attribute value.  If one isn't 
+      // specified or the value specified is not "2.0" then 
+      // throw an exception (this value must be specified 
+      // for all UDDI requests and currently only vesion 2.0
+      // UDDI requests are supported).
+
+      String generic = uddiReq.getAttribute("generic");
+      if (generic == null)
+        throw new FatalErrorException("A UDDI generic attribute " +
+          "value was not found for UDDI request: "+function+" (The " +
+          "'generic' attribute must be present)");
+      else if (!generic.equals(IRegistry.UDDI_V2_GENERIC))
+        throw new UnsupportedException("Currently only UDDI v2 " +
+          "requests are supported. The generic attribute value " +
+          "received was: "+generic);
+
       // Unmarshal the raw xml into the appropriate jUDDI
       // request object.
 
@@ -261,7 +282,7 @@ public class RegistryServlet extends HttpServlet
       if ((registry != null) && (registry.isAvailable()))
         uddiResObj = registry.execute(uddiReqObj);
       else
-        throw new BusyException("The Registry is unavailable");
+        throw new BusyException("The Registry is currently unavailable.");
       
       // Lookup the appropriate response handler which will
       // be used to marshal the UDDI object into the appropriate 
@@ -269,7 +290,7 @@ public class RegistryServlet extends HttpServlet
       
       IHandler responseHandler = maker.lookup(uddiResObj.getClass().getName());
       if (responseHandler == null)
-        throw new RegistryException("The response object " +
+        throw new FatalErrorException("The response object " +
           "type is unknown: " +uddiResObj.getClass().getName());
       
       // Create a new 'temp' XML element to use as a container 
@@ -295,13 +316,16 @@ public class RegistryServlet extends HttpServlet
       document.appendChild(element.getFirstChild());
       soapRes.getSOAPBody().addDocument(document);
     } 
-    catch(Exception ex)
+    catch(Exception ex) // Catch ALL exceptions
     {
       log.error(ex.getMessage(),ex);
 
+      // SOAP Fault values
       String faultCode = null;
       String faultString = null;
-      String faultActor = null;      
+      String faultActor = null;
+      
+      // UDDI DispositionReport values
       String errno = null;
       String errCode = null;
       String errMsg = null;
@@ -334,13 +358,13 @@ public class RegistryServlet extends HttpServlet
         
           if (result != null)
           {
-            errno = String.valueOf(result.getErrno());  // UDDI DispositionReport errno
+            errno = String.valueOf(result.getErrno());  // UDDI Result errno
             errInfo = result.getErrInfo();
           
             if (errInfo != null)
             {
-              errCode = errInfo.getErrCode();  // UDDI DispositionReport errCode
-              errMsg = errInfo.getErrMsg();  // UDDI DispositionReport errMsg
+              errCode = errInfo.getErrCode();  // UDDI ErrInfo errCode
+              errMsg = errInfo.getErrMsg();  // UDDI ErrInfo errMsg
             }
           }
         }
@@ -357,6 +381,11 @@ public class RegistryServlet extends HttpServlet
         faultString = ex.getMessage();
         faultActor = null;
           
+        // Let's set default values for the UDDI DispositionReport
+        // here.  While we didn't catch a RegistryException (or 
+        // subclass) but we're going to be friendly and include a
+        // FatalError DispositionReport within the SOAP Fault anyway.
+        
         errno = String.valueOf(Result.E_FATAL_ERROR);
         errCode = Result.E_FATAL_ERROR_CODE;
         errMsg = "An internal UDDI server error has " +
@@ -375,6 +404,9 @@ public class RegistryServlet extends HttpServlet
         soapFault.setFaultString(faultString);
         soapFault.setFaultActor(faultActor);
         
+        // We're always going to include a DispositionReport (for
+        // the hell of it) so that's what we're doing here.
+       
         Detail faultDetail = soapFault.addDetail();
         
         SOAPElement dispRpt = faultDetail.addChildElement("dispositionReport","",IRegistry.UDDI_V2_NAMESPACE);        
@@ -388,21 +420,37 @@ public class RegistryServlet extends HttpServlet
         errInfo.setAttribute("errCode",errCode);
         errInfo.setValue(errMsg);
       } 
-      catch (Exception e) { 
+      catch (Exception e) { // if we end up in here it's just NOT good.
         log.error("A serious error has occured while assembling the SOAP Fault.",e);
+      }
+    }
+    finally 
+    {
+      try {               
+        soapRes.writeTo(System.out);     
+        soapRes.writeTo(res.getOutputStream());     
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
       }
     }
   }
   
   /**
-   *
+   * Grab the shared instance of jUDDI's Registry class and
+   * call it's "dispose()" method to notify all sub-components
+   * to stop any background threads and release any external
+   * resources they may have aquired.
    */
-  public void doGet(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException
+  public void destroy()
   {
-    res.setHeader("Allow","POST");
-    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
-      "method 'GET' is not allowed by the UDDI Inquiry API.");
+    super.destroy();
+    
+    log.info("jUDDI Stopping: Cleaning up existing resources.");
+
+    RegistryEngine registry = RegistryServlet.getRegistry();
+    if (registry != null)
+      registry.dispose();
   }
 
   /**
