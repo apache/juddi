@@ -122,11 +122,6 @@ public class Config extends Properties
     this.put("juddi.monitor", "org.apache.juddi.monitor.jdbc.JDBCMonitor");
     this.put("juddi.transport", "org.apache.juddi.transport.axis.AxisTransport");
     this.put("juddi.useConnectionPool", "false");
-
-    // Load jUDDI Proxy-specific default property values.
-    this.put("juddi.inquiryURL", "http://localhost:8080/juddi/inquiry");
-    this.put("juddi.publishURL", "http://localhost:8080/juddi/publish");
-    this.put("juddi.adminURL", "http://localhost:8080/juddi/admin");
   }
 
   /**
@@ -216,30 +211,6 @@ public class Config extends Properties
   public static String getOperatorSiteURL()
   {
     return getStringProperty("juddi.operatorSiteURL");
-  }
-
-  /**
-   *
-   */
-  public static URL getInquiryURL()
-  {
-    return getURLProperty("juddi.inquiryURL", null);
-  }
-
-  /**
-   *
-   */
-  public static URL getPublishURL()
-  {
-    return getURLProperty("juddi.publishURL", null);
-  }
-
-  /**
-   *
-   */
-  public static URL getAdminURL()
-  {
-    return getURLProperty("juddi.adminURL", null);
   }
 
   /**
@@ -462,25 +433,5 @@ public class Config extends Properties
       String key = (String) keys.next();
       System.out.println(key + ": " + sysProps.getProperty(key));
     }
-    System.out.println("");
-    System.out.println("Inquiry: " + Config.getInquiryURL());
-    System.out.println("Publish: " + Config.getPublishURL());
-    System.out.println("Admin: " + Config.getAdminURL());
-
-    Config.setStringProperty(
-      "juddi.inquiryURL",
-      "http://abc.xyz.com/abcdefghijklmnopqrstuvwxyz");
-
-    sysProps = Config.getProperties();
-    sortedPropsSet = new TreeSet(sysProps.keySet());
-    for (Iterator keys = sortedPropsSet.iterator(); keys.hasNext();)
-    {
-      String key = (String) keys.next();
-      System.out.println(key + ": " + sysProps.getProperty(key));
-    }
-    System.out.println("");
-    System.out.println("Inquiry: " + Config.getInquiryURL());
-    System.out.println("Publish: " + Config.getPublishURL());
-    System.out.println("Admin: " + Config.getAdminURL());
   }
 }
