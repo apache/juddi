@@ -55,7 +55,12 @@
     <section>
       <title>Committers Emeriti (committers that have been inactive for 3 months or more)</title>
       <p>
-        None at this time.
+        <ul class="noindent">
+          <li>
+            <b>Chris Dellario</b>
+            &lt;<a href="mailto:dellario@comcast.net">dellario@comcast.net</a>&gt;
+          </li>
+        </ul>
       </p>
     </section>
 
