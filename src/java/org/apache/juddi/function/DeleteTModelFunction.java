@@ -62,8 +62,7 @@ public class DeleteTModelFunction extends AbstractFunction
     Vector tModelKeyVector = request.getTModelKeyVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -83,12 +82,12 @@ public class DeleteTModelFunction extends AbstractFunction
         // then throw an InvalidKeyPassedException.
         if ((tModelKey == null) || (tModelKey.length() == 0) ||
             (!dataStore.isValidTModelKey(tModelKey)))
-          throw new InvalidKeyPassedException("TModelKey: "+tModelKey);
+          throw new InvalidKeyPassedException(tModelKey);
 
         // check to make sure that 'authorizedName' controls this
         // TModel. If not then throw a UserMismatchException.
         if (!dataStore.isTModelPublisher(tModelKey,publisherID))
-          throw new UserMismatchException("Publisher="+publisherID+" & TModelKey="+tModelKey);
+          throw new UserMismatchException("publisher="+publisherID+" tModelKey="+tModelKey);
 
         // TModel exists and we control it so let's delete it.
         dataStore.deleteTModel(tModelKey);
@@ -105,24 +104,34 @@ public class DeleteTModelFunction extends AbstractFunction
 
       dataStore.commit();
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(UserMismatchException umex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(umex.getMessage());
+      throw (RegistryException)umex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
 
     // didn't encounter an exception so let's create

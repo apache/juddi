@@ -57,8 +57,7 @@ public class GetPublisherAssertionsFunction extends AbstractFunction
     AuthInfo authInfo = request.getAuthInfo();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -82,24 +81,22 @@ public class GetPublisherAssertionsFunction extends AbstractFunction
       assertions.setPublisherAssertionVector(assertionVector);
       return assertions;
     }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

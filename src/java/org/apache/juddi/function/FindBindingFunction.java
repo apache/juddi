@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
+import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.TModelBag;
 import org.apache.juddi.datatype.request.FindBinding;
@@ -59,6 +60,7 @@ public class FindBindingFunction extends AbstractFunction
     FindBinding request = (FindBinding)regObject;
     String generic = request.getGeneric();
     String serviceKey = request.getServiceKey();
+    CategoryBag categoryBag = request.getCategoryBag();
     TModelBag tModelBag = request.getTModelBag();
     FindQualifiers qualifiers = request.getFindQualifiers();
     int maxRows = request.getMaxRows();
@@ -66,7 +68,8 @@ public class FindBindingFunction extends AbstractFunction
     // first make sure we need to continue with this request. If
     // no arguments were passed in then we'll simply return
     // an empty ServiceList (aka "a zero match result set").
-    if ((tModelBag == null) || (tModelBag.size() == 0))
+    if(((categoryBag == null) || (categoryBag.size() == 0)) &&
+      ((tModelBag == null)   || (tModelBag.size() == 0)))
     {
       BindingDetail detail = new BindingDetail();
       detail.setGeneric(generic);
@@ -77,8 +80,7 @@ public class FindBindingFunction extends AbstractFunction
     }
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -86,7 +88,7 @@ public class FindBindingFunction extends AbstractFunction
 
       // a find_binding request MUST include a service_key attribute
       if ((serviceKey == null) || (serviceKey.length() == 0))
-        throw new InvalidKeyPassedException("ServiceKey = "+serviceKey);
+        throw new InvalidKeyPassedException("serviceKey="+serviceKey);
 
       // validate the 'qualifiers' parameter as much as possible up-front before
       // calling into the data layer for relational validation.
@@ -111,7 +113,7 @@ public class FindBindingFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("FindQualifier: "+qValue);
+              throw new UnsupportedException("findQualifier="+qValue);
           }
         }
       }
@@ -120,7 +122,7 @@ public class FindBindingFunction extends AbstractFunction
       boolean truncatedResults = false;
 
       // perform the search for matching binding templates (return only keys in requested order)
-      Vector keyVector = dataStore.findBinding(serviceKey,tModelBag,qualifiers);
+      Vector keyVector = dataStore.findBinding(serviceKey,categoryBag,tModelBag,qualifiers);
       if ((keyVector != null) && (keyVector.size() > 0))
       {
         // if a maxRows value has been specified and it's less than
@@ -151,24 +153,34 @@ public class FindBindingFunction extends AbstractFunction
       detail.setTruncated(truncatedResults);
       return detail;
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(UnsupportedException suppex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(suppex.getMessage());
+      throw (RegistryException)suppex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep UDDIException to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

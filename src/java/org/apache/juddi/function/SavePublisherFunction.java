@@ -58,8 +58,7 @@ public class SavePublisherFunction extends AbstractFunction
     Vector publisherVector = request.getPublisherVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory dataFactory = DataStoreFactory.getFactory();
-    DataStore dataStore = dataFactory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -104,24 +103,22 @@ public class SavePublisherFunction extends AbstractFunction
       detail.setPublisherVector(publisherVector);
       return detail;
     }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      dataFactory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

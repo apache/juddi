@@ -67,12 +67,11 @@ public class SaveTModelFunction extends AbstractFunction
 
     // UploadRegistry functionality is not currently supported.
     if ((uploadRegVector != null) && (uploadRegVector.size() > 0))
-      throw new UnsupportedException("Saving TModels via an" +
+      throw new UnsupportedException("Saving TModels via " +
         "UploadRegistry is not supported.");
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory dataFactory = DataStoreFactory.getFactory();
-    DataStore dataStore = dataFactory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -129,24 +128,40 @@ public class SaveTModelFunction extends AbstractFunction
       detail.setTModelVector(tModelVector);
       return detail;
     }
+    catch(UnsupportedException suppex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(suppex);
+      throw (RegistryException)suppex;
+    }
+    catch(InvalidKeyPassedException ikpex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(ikpex);
+      throw (RegistryException)ikpex;
+    }
+    catch(UserMismatchException umex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(umex);
+      throw (RegistryException)umex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      dataFactory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

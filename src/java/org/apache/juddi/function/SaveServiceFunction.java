@@ -72,8 +72,7 @@ public class SaveServiceFunction extends AbstractFunction
     UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory dataFactory = DataStoreFactory.getFactory();
-    DataStore dataStore = dataFactory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -94,16 +93,16 @@ public class SaveServiceFunction extends AbstractFunction
         // If a BusinessKey wasn't included or it is an invalid BusinessKey then
         // throw an InvalidKeyPassedException
         if ((businessKey == null) || (businessKey.length() == 0) || (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException("BusinessKey: "+businessKey);
+          throw new InvalidKeyPassedException("businessKey="+businessKey);
 
         // Confirm that 'publisherID' controls the BusinessEntity that this
         // BusinessService belongs to.  If not then throw a UserMismatchException.
         if (!dataStore.isBusinessPublisher(businessKey,publisherID))
-          throw new UserMismatchException("BusinessKey: "+serviceKey);
+          throw new UserMismatchException("businessKey="+serviceKey);
 
         // If a ServiceKey was specified then make sure it's a valid one.
         if (((serviceKey != null) && (serviceKey.length() > 0)) && (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException("ServiceKey: "+serviceKey);
+          throw new InvalidKeyPassedException("serviceKey="+serviceKey);
       }
 
       for (int i=0; i<serviceVector.size(); i++)
@@ -135,24 +134,34 @@ public class SaveServiceFunction extends AbstractFunction
       detail.setBusinessServiceVector(serviceVector);
       return detail;
     }
+    catch(InvalidKeyPassedException ikpex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(ikpex);
+      throw (RegistryException)ikpex;
+    }
+    catch(UserMismatchException umex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(umex);
+      throw (RegistryException)umex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      dataFactory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

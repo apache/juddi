@@ -53,7 +53,7 @@ public class Config extends Properties
     this.put("juddi.maxMessageSize","2097152");
     this.put("juddi.maxNameElementsAllowed", "5");
     this.put("juddi.maxNameLength","255");
-    this.put("juddi.dataStoreFactory",  "org.apache.juddi.datastore.jdbc.JDBCDataStoreFactory");
+    this.put("juddi.dataStore","org.apache.juddi.datastore.jdbc.JDBCDataStore");
     this.put("juddi.auth", "org.apache.juddi.auth.DefaultAuthenticator");
     this.put("juddi.uuidgen", "org.apache.juddi.uuidgen.DefaultUUIDGen");
     this.put("juddi.useMonitor", "true");

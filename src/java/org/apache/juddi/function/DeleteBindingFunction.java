@@ -64,8 +64,7 @@ public class DeleteBindingFunction extends AbstractFunction
     Vector bindingKeyVector = request.getBindingKeyVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -85,13 +84,13 @@ public class DeleteBindingFunction extends AbstractFunction
         // If not then throw an InvalidKeyPassedException.
         if ((bindingKey == null) || (bindingKey.length() == 0) ||
             (!dataStore.isValidBindingKey(bindingKey)))
-          throw new InvalidKeyPassedException("BindingKey: "+bindingKey);
+          throw new InvalidKeyPassedException(bindingKey);
 
         // check to make sure that 'authorizedName' controls the
         // business entity that this binding belongs to. If not
         // then throw a UserMismatchException.
         if (!dataStore.isBindingPublisher(bindingKey,publisherID))
-          throw new UserMismatchException("BindingKey: "+bindingKey);
+          throw new UserMismatchException(bindingKey);
       }
 
       // delete the BindingTemplates
@@ -105,24 +104,34 @@ public class DeleteBindingFunction extends AbstractFunction
 
       dataStore.commit();
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(UserMismatchException umex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(umex.getMessage());
+      throw (RegistryException)umex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
 
     // didn't encounter an exception so let's create

@@ -57,8 +57,7 @@ public class GetServiceDetailFunction extends AbstractFunction
     Vector keyVector = request.getServiceKeyVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -71,7 +70,7 @@ public class GetServiceDetailFunction extends AbstractFunction
         // If the a BusinessService doesn't exist hrow an InvalidKeyPassedException.
         if ((serviceKey == null) || (serviceKey.length() == 0) ||
             (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException("ServiceKey: "+serviceKey);
+          throw new InvalidKeyPassedException(serviceKey);
       }
 
       Vector serviceVector = new Vector();
@@ -91,24 +90,28 @@ public class GetServiceDetailFunction extends AbstractFunction
       detail.setBusinessServiceVector(serviceVector);
       return detail;
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

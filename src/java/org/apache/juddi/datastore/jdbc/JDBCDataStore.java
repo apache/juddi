@@ -16,6 +16,7 @@
 package org.apache.juddi.datastore.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -74,11 +75,37 @@ public class JDBCDataStore implements DataStore
   private Transaction transaction = null;
 
   /**
-   *
+   * Create a new JDBCDataStore and aquire a JDBC
+   * connection from the connection pool.
    */
-  JDBCDataStore(Connection conn)
+  public JDBCDataStore()
   {
-    this.connection = conn;
+    try {
+      this.connection = ConnectionManager.aquireConnection();
+    }
+    catch(SQLException sqlex) {
+      log.error("Exception occured while attempting to " +
+        "aquire a JDBC connection: "+sqlex.getMessage());
+    }
+  }
+
+  /**
+   * Release all JDBC connections used by this 
+   * JDBCDataStore back into the connection pool.
+   */
+  public void release()
+  {
+    try {
+      if (connection != null)
+      {
+      	this.connection.close();
+      	this.connection = null;
+      }
+    }
+    catch(SQLException sqlex) {
+      log.error("Exception occured while attempting to " +
+        "close a JDBC connection: "+sqlex.getMessage());
+    }
   }
 
   /**
@@ -99,7 +126,7 @@ public class JDBCDataStore implements DataStore
       this.transaction = new Transaction();
       this.transaction.begin(connection);
     }
-    catch(java.sql.SQLException sqlex) {
+    catch(SQLException sqlex) {
       throw new RegistryException(sqlex);
     }
   }
@@ -113,7 +140,7 @@ public class JDBCDataStore implements DataStore
     try {
       this.transaction.commit();
     }
-    catch(java.sql.SQLException sqlex) {
+    catch(SQLException sqlex) {
       throw new RegistryException(sqlex);
     }
   }
@@ -127,7 +154,7 @@ public class JDBCDataStore implements DataStore
     try {
       this.transaction.rollback();
     }
-    catch(java.sql.SQLException sqlex) {
+    catch(SQLException sqlex) {
       throw new RegistryException(sqlex);
     }
   }
@@ -1447,6 +1474,7 @@ public class JDBCDataStore implements DataStore
    *
    */
   public Vector findBinding(String serviceKey,
+                            CategoryBag categoryBag,
                             TModelBag tModelBag,
                             FindQualifiers findQualifiers)
      throws org.apache.juddi.error.RegistryException
@@ -1457,6 +1485,9 @@ public class JDBCDataStore implements DataStore
     {
       if ((tModelBag != null) && (tModelBag.size() > 0))
         keyVector = FindBindingByTModelKeyQuery.select(serviceKey,tModelBag,keyVector,findQualifiers,connection);
+
+      if ((categoryBag != null) && (categoryBag.size() > 0))
+        keyVector = FindBindingByCategoryQuery.select(serviceKey,categoryBag,keyVector,findQualifiers,connection);
     }
     catch(java.sql.SQLException sqlex)
     {
@@ -1528,8 +1559,6 @@ public class JDBCDataStore implements DataStore
 
           Vector keyedReferences = PublisherAssertionTable.selectRelatedBusinesses(businessKey,relatedKey,connection);
           relatedBizInfo.setSharedRelationships(new SharedRelationships(keyedReferences));
-
-          // TODO (anou) should add the direction info to sharedRelationship
 
           infoVector.addElement(relatedBizInfo);
         }

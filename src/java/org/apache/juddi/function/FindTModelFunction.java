@@ -81,8 +81,7 @@ public class FindTModelFunction extends AbstractFunction
     }
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -97,7 +96,7 @@ public class FindTModelFunction extends AbstractFunction
         // value is configurable in jUDDI.
         int maxNameLength = Config.getMaxNameLength();
         if (name.length() > maxNameLength)
-          throw new NameTooLongException("Name: '"+name+"' (max="+maxNameLength+")");
+          throw new NameTooLongException(name+" (max_name="+maxNameLength+")");
       }
 
       // validate the 'qualifiers' parameter as much as possible up-front before
@@ -123,7 +122,7 @@ public class FindTModelFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("FindQualifier: "+qValue);
+              throw new UnsupportedException("find_qualifier="+qValue);
           }
         }
       }
@@ -168,24 +167,34 @@ public class FindTModelFunction extends AbstractFunction
       list.setTruncated(truncatedResults);
       return list;
     }
+    catch(NameTooLongException ntlex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(ntlex.getMessage());
+      throw (RegistryException)ntlex;
+    }
+    catch(UnsupportedException suppex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(suppex.getMessage());
+      throw (RegistryException)suppex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

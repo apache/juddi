@@ -56,8 +56,7 @@ public class GetBusinessDetailFunction extends AbstractFunction
     Vector businessKeyVector = request.getBusinessKeyVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -67,10 +66,10 @@ public class GetBusinessDetailFunction extends AbstractFunction
       {
         String businessKey = (String)businessKeyVector.elementAt(i);
 
-        // If the a BusinessEntity doesn't exist hrow an InvalidKeyPassedException.
+        // If the a BusinessEntity doesn't exist throw an InvalidKeyPassedException.
         if ((businessKey == null) || (businessKey.length() == 0) ||
             (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException("BusinessKey: "+businessKey);
+          throw new InvalidKeyPassedException(businessKey);
       }
 
       Vector businessVector = new Vector();
@@ -90,24 +89,27 @@ public class GetBusinessDetailFunction extends AbstractFunction
       detail.setBusinessEntityVector(businessVector);
       return detail;
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      dataStore.release();
     }
   }
 

@@ -71,8 +71,7 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
     String generic = request.getGeneric();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -91,32 +90,32 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
         // make sure we've got a 'fromKey'
         String fromKey = assertion.getFromKey();
         if ((fromKey == null) || (fromKey.length() == 0))
-          throw new InvalidKeyPassedException("FromKey: "+fromKey);
+          throw new InvalidKeyPassedException("fromKey: "+fromKey);
 
         // make sure we've got a 'toKey'
         String toKey = assertion.getToKey();
         if ((toKey == null) || (toKey.length() == 0))
-          throw new InvalidKeyPassedException("ToKey: "+toKey);
+          throw new InvalidKeyPassedException("toKey="+toKey);
 
         // make sure we've got a 'KeyedRefernce'
         KeyedReference keyedRef = assertion.getKeyedReference();
         if (keyedRef == null)
-          throw new InvalidKeyPassedException("KeyedRef: "+keyedRef);
+          throw new InvalidKeyPassedException("keyedRef="+keyedRef);
 
         // make sure the 'KeyedRefernce' contains a 'TModelKey'
         String tModelKey = keyedRef.getTModelKey();
         if ((tModelKey == null) || (tModelKey.length() == 0))
-          throw new InvalidKeyPassedException("TModelKey: "+keyedRef);
+          throw new InvalidKeyPassedException("tModelKey="+keyedRef);
 
         // verify that the BusinessEntities or tModel identified by the 'fromKey'
         // really exists. If not then throw an InvalidKeyPassedException.
         if ((!dataStore.isValidBusinessKey(fromKey)) && (!dataStore.isValidTModelKey(fromKey)))
-          throw new InvalidKeyPassedException("FromKey: "+fromKey);
+          throw new InvalidKeyPassedException("fromKey="+fromKey);
 
         // verify that the BusinessEntitys or tModel identified by the 'fromKey'
         // really exists. If not then throw an InvalidKeyPassedException.
         if ((!dataStore.isValidBusinessKey(toKey)) && (!dataStore.isValidTModelKey(toKey)))
-          throw new InvalidKeyPassedException("ToKey: "+toKey);
+          throw new InvalidKeyPassedException("toKey="+toKey);
 
         // verify that the 'publisherID' controls at least one of the
         // BusinessEntities or TModels that are identified in this
@@ -125,30 +124,40 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
             (!dataStore.isBusinessPublisher(toKey,publisherID))   &&
             (!dataStore.isTModelPublisher(fromKey,publisherID))   &&
             (!dataStore.isTModelPublisher(toKey,publisherID)))
-          throw new UserMismatchException("fromKey: "+fromKey+" or toKey: "+toKey);
+          throw new UserMismatchException("fromKey="+fromKey+" toKey="+toKey);
       }
 
       dataStore.saveAssertions(publisherID,assertionVector);
       dataStore.commit();
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(UserMismatchException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
 
     // didn't encounter an exception so let's create

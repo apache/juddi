@@ -58,8 +58,7 @@ public class GetBusinessDetailExtFunction extends AbstractFunction
     Vector businessKeyVector = request.getBusinessKeyVector();
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -73,7 +72,7 @@ public class GetBusinessDetailExtFunction extends AbstractFunction
         // If the a BusinessEntity doesn't exist hrow an InvalidKeyPassedException.
         if ((businessKey == null) || (businessKey.length() == 0) ||
             (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException("BusinessKey: "+businessKey);
+          throw new InvalidKeyPassedException(businessKey);
       }
 
       Vector businessEntityExtVector = new Vector();
@@ -96,24 +95,28 @@ public class GetBusinessDetailExtFunction extends AbstractFunction
       detailExt.setBusinessEntityExtVector(businessEntityExtVector);
       return detailExt;
     }
+    catch(InvalidKeyPassedException keyex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(keyex.getMessage());
+      throw (RegistryException)keyex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 

@@ -40,6 +40,11 @@ import org.apache.juddi.error.RegistryException;
 public interface DataStore
 {
   /**
+   * release this DataStore
+   */
+  void release();
+
+  /**
    * begin transaction
    */
   void beginTrans()
@@ -280,6 +285,7 @@ public interface DataStore
    *
    */
   Vector findBinding(String serviceKey,
+                     CategoryBag categoryBag,
                      TModelBag tModelbag,
                      FindQualifiers findQualifiers)
     throws RegistryException;

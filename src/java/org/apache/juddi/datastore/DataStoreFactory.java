@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.util.Config;
+import org.apache.juddi.util.Loader;
 
 /**
  * Implementation of Factory pattern responsible for instantiating
@@ -31,123 +32,81 @@ import org.apache.juddi.util.Config;
  *
  * @author Steve Viens (sviens@apache.org)
  */
-public abstract class DataStoreFactory
+public class DataStoreFactory
 {
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(DataStoreFactory.class);
 
-  // the shared DataStoreFactory instance
-  private static DataStoreFactory factory = null;
+  // Authenticator property key & default implementation
+  private static final String IMPL_KEY = "juddi.datastore";
+  private static final String DEFAULT_IMPL = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
 
-  /**
-   *
-   */
-  public abstract DataStore acquireDataStore()
-    throws RegistryException;
-
-  /**
-   *
-   */
-  public abstract void releaseDataStore(DataStore datastore)
-    throws RegistryException;
-
-  /**
-   *
-   */
-  public abstract void init();
+  private static Class implClass = null;
   
   /**
+   * Returns a new instance of a DataStore.
    *
+   * @return DataStore
    */
-  public abstract void destroy();
-
-  /**
-   *
-   */
-  public static void initFactory()
+  public static DataStore getDataStore()
   {
-    if (factory != null)
-    {
-      destroyFactory();
-    }
-
-    factory = createInstance();
-  }
-
-  /**
-   * Returns a new instance of the DataStore interface as specified by the
-   * juddi.datastore property in the juddi.properties configuration file.
-   * @return DataStoreFactory
-   */
-  public static DataStoreFactory getFactory()
-  {
-    if (factory == null)
-    {
-      factory = createInstance();
-    }
-
-    return factory;
-  }
-
-  /**
-   *
-   */
-  public static void destroyFactory()
-  {
-    if (factory != null)
-    {
-      factory.destroy();
-    }
-
-    factory = null;
-  }
-
-  /**
-   * Loads and returns a shared instance of the DataStore interface
-   * as specified by the juddi.dataStoreFactory property.
-   */
-  private static synchronized DataStoreFactory createInstance()
-  {
-    if (factory != null)
-      return factory;
-
-    // try to obtain the name of the DataStore implementaion to create
-    String className = Config.getDataStoreFactory();
-
-    // write DataStoreFactory Property to the log for good measure
-    log.debug(className);
-
-    Class factoryClass = null;
+  	DataStore dataStore = null;
+  	
     try
     {
-      // instruct the class loader to load the DataStore implementation
-      factoryClass = java.lang.Class.forName(className);
+    	// make sure we know what class to create
+    	if (implClass == null)
+    		implClass = loadImplClass();
+
+    	// true if a configuration problem exists
+    	if (implClass == null)
+    		throw new RegistryException("The registry is not configured " +
+    				"correctly.");
+    		
+      // try to instantiate a new DataStore
+    	dataStore = (DataStore)implClass.newInstance();
+    }
+    catch(Exception e)
+    {
+      log.error("Exception while attempting to instantiate the " +
+        "implementation of DataStore: " + implClass.getName() +
+        "\n" + e.getMessage());
+      log.error(e);
+    }
+
+    return dataStore;
+  }
+
+  /**
+   * Returns a new instance of a Authenticator.
+   *
+   * @return Authenticator
+   */
+  private static synchronized Class loadImplClass()
+  {
+  	if (implClass != null)
+  		return implClass;
+  	
+    // grab class name of the DataStore implementation to create
+    String className = Config.getStringProperty(IMPL_KEY,DEFAULT_IMPL);
+
+    // write the DataStore implementation name to the log
+    log.debug("DataStore Implementation = " + className);
+
+    try
+    {
+      // Use Loader to locate & load the DataStore implementation
+    	implClass = Loader.getClassForName(className);
     }
     catch(ClassNotFoundException e)
     {
-      log.error("The specified sub class of the DataStoreFactory class was not " +
-        "found in classpath: " + className + " not found.");
+      log.error("The registry is not configured correctly. The specified " +
+      					"DataStore class '" + className + "' was not found in " +
+								"classpath.");
       log.error(e);
     }
-
-    try
-    {
-      // try to instantiate the DataStoreFactory subclass
-      factory = (DataStoreFactory)factoryClass.newInstance();
-    }
-    catch(java.lang.Exception e)
-    {
-      log.error("Exception while attempting to instantiate subclass of " +
-        "DataStoreFactory class: " + factoryClass.getName() + "\n" + e.getMessage());
-      log.error(e);
-    }
-
-    // initialize the newly created
-    // DataStoreFactory instance.
-
-    factory.init();
-
-    return factory;
+    
+    return implClass;
   }
 
 
@@ -158,14 +117,30 @@ public abstract class DataStoreFactory
 
   public static void main(String[] args)
   {
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    if (factory != null)
+    // delecare work variables
+    int connCount = 10;
+    DataStore[] stores = new DataStore[connCount];
+
+    // aquire some connections
+    for (int i=0; i<connCount; i++)
     {
-      System.out.println("Got a DataStoreFactory: "+factory.getClass().getName());
+      stores[i] = (DataStore)DataStoreFactory.getDataStore();
+      if (stores[i] != null)
+        System.out.println("Got a DataStore: "+stores[i].getClass().getName());
+      else
+        System.out.println("Sorry - A DataStore object could not be created.");
     }
-    else
+
+    // release those connections
+    for (int i=0; i<connCount; i++)
     {
-      System.out.println("Sorry - no DataStoreFactory for you.");
+      if (stores[i] != null)
+      {
+        stores[i].release();
+        System.out.println("DataStore "+i+" released.");
+      }
+      else
+        System.out.println("DataStore "+i+" was never successfully created.");
     }
   }
 }

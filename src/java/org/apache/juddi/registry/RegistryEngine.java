@@ -21,7 +21,6 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.datastore.DataStoreFactory;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
@@ -48,7 +47,7 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress";
   public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize";
   public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
-  public static final String PROPNAME_DATASTORE_FACTORY_CLASS_NAME = "juddi.datastore";
+  public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.datastore";
   public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
   public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
 
@@ -60,7 +59,7 @@ public class RegistryEngine extends AbstractRegistry
   public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "admin@juddi.org";
   public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152;
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
-  public static final String DEFAULT_DATASTORE_FACTORY_CLASS_NAME = "org.apache.juddi.datastore.JDBCDataStoreFactory";
+  public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
   public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
   public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
 
@@ -123,10 +122,6 @@ public class RegistryEngine extends AbstractRegistry
   {
     // Turn off registry access
     isAvailable = false;
-
-    // Create, initialize and register
-    // the core jUDDI components.
-    DataStoreFactory.initFactory();
     
     // Grab a reference to the function
     // registry (hmm bad name choice).
@@ -144,9 +139,6 @@ public class RegistryEngine extends AbstractRegistry
   {
     // Turn off registry access
     isAvailable = false;
-
-    // Call each sub-component's dispose methods
-    DataStoreFactory.destroyFactory();
   }
 
   /**
@@ -196,6 +188,7 @@ public class RegistryEngine extends AbstractRegistry
     props.setProperty(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,"admin@juddi.org");    
     props.setProperty(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,"2097152");
     props.setProperty(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,"org.apache.juddi.auth.DefaultAuthenticator");
+    props.setProperty(RegistryEngine.PROPNAME_DATASTORE_CLASS_NAME,"org.apache.juddi.datastore.jdbc.JDBCDataStore");
     props.setProperty(RegistryEngine.PROPNAME_CRYPTOR_CLASS_NAME,"org.apache.juddi.cryptor.DefaultCryptor");
     props.setProperty(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,"org.apache.juddi.uuidgen.DefaultUUIDGen");
     

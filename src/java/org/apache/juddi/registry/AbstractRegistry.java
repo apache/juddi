@@ -54,6 +54,7 @@ import org.apache.juddi.datatype.request.SavePublisher;
 import org.apache.juddi.datatype.request.SaveService;
 import org.apache.juddi.datatype.request.SaveTModel;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
+import org.apache.juddi.datatype.request.ValidateValues;
 import org.apache.juddi.datatype.response.AssertionStatusReport;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.BindingDetail;
@@ -545,4 +546,18 @@ public abstract class AbstractRegistry implements IRegistry
 
     return (PublisherAssertions)execute(request);
   }
+
+  /**
+   * @exception RegistryException;
+   */
+  public DispositionReport validateValues(Vector businessVector,Vector serviceVector,Vector tModelVector)
+    throws RegistryException
+	{
+  	ValidateValues request = new ValidateValues();
+  	request.setBusinessEntityVector(businessVector);
+  	request.setBusinessServiceVector(serviceVector);
+  	request.setTModelVector(tModelVector);
+
+    return (DispositionReport)execute(request);
+	}
 }

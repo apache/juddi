@@ -84,8 +84,7 @@ public class FindServiceFunction extends AbstractFunction
     }
 
     // aquire a jUDDI datastore instance
-    DataStoreFactory factory = DataStoreFactory.getFactory();
-    DataStore dataStore = factory.acquireDataStore();
+    DataStore dataStore = DataStoreFactory.getDataStore();
 
     try
     {
@@ -99,7 +98,7 @@ public class FindServiceFunction extends AbstractFunction
         // dependent).  This value is configurable in jUDDI.
         int maxNames = Config.getMaxNameElementsAllowed();
         if ((nameVector != null) && (nameVector.size() > maxNames))
-          throw new TooManyOptionsException("max = "+maxNames);
+          throw new TooManyOptionsException("max_names= "+maxNames);
 
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
@@ -109,7 +108,7 @@ public class FindServiceFunction extends AbstractFunction
         {
           String name = ((Name)nameVector.elementAt(i)).getValue();
            if (name.length() > maxNameLength)
-            throw new NameTooLongException("name '"+name+"' (max="+maxNameLength+")");
+            throw new NameTooLongException(name+" (max="+maxNameLength+")");
         }
       }
 
@@ -136,7 +135,7 @@ public class FindServiceFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("FindQualifier: "+qValue);
+              throw new UnsupportedException("findQualifier="+qValue);
           }
         }
       }
@@ -181,24 +180,40 @@ public class FindServiceFunction extends AbstractFunction
       list.setTruncated(truncatedResults);
       return list;
     }
+    catch(TooManyOptionsException tmoex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(tmoex.getMessage());
+      throw (RegistryException)tmoex;
+    }
+    catch(NameTooLongException ntlex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(ntlex.getMessage());
+      throw (RegistryException)ntlex;
+    }
+    catch(UnsupportedException suppex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.info(suppex.getMessage());
+      throw (RegistryException)suppex;
+    }
+    catch(RegistryException regex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(regex);
+      throw (RegistryException)regex;
+    }
     catch(Exception ex)
     {
-      // we must rollback for *any* exception
-      try { dataStore.rollback(); }
-      catch(Exception e) { }
-
-      // write to the log
+      try { dataStore.rollback(); } catch(Exception e) { }
       log.error(ex);
-
-      // prep RegistryFault to throw
-      if (ex instanceof RegistryException)
-        throw (RegistryException)ex;
-      else
-        throw new RegistryException(ex);
+      throw new RegistryException(ex);
     }
     finally
     {
-      factory.releaseDataStore(dataStore);
+      if (dataStore != null)
+      	dataStore.release();
     }
   }
 
