@@ -84,8 +84,8 @@ public class ErrInfoHandler extends AbstractHandler
     Element child = null;
 
     ErrInfo errInfo = new ErrInfo();
-    errInfo.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-    errInfo.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    errInfo.setErrCode("E_accountLimitExceeded");
+    errInfo.setErrMsg("Authentication token information has timed out.");
 
     System.out.println();
 
