@@ -104,15 +104,48 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile" depends="init,version">
-    <mkdir dir="${classes.dir}"/>
-    <javac
+  <target name="compile" depends="init">
+    <mkdir dir="${classes.dir}"/>	  	
+	
+  	<!-- Apache Log4J (log4j.jar) -->
+  	<available property="log4j.present"
+      classname="org.apache.log4j.Category"
+      classpathref="project.classpath"/>
+    <echo message="log4j.present=${log4j.present}" />
+  	
+  	<!-- Java Servlet API (servlet-api.jar) -->
+  	<available property="servlet.present"
+      classname="javax.servlet.ServletException"
+      classpathref="project.classpath"/>
+  	<echo message="servlet.present=${servlet.present}" />
+  	  	
+  	<!-- Java API for XML-Based RPC (jaxrpc.jar) -->
+  	<available property="jaxrpc.present"
+      classname="javax.xml.rpc.Service"
+      classpathref="project.classpath"/>
+  	<echo message="jaxrpc.present=${jaxrpc.present}" />
+  	  	
+  	<!-- JBoss (jboss.jar) -->
+  	<available property="jboss.present"
+      classname="org.jboss.security.AuthenticationManager"
+      classpathref="project.classpath"/>
+  	<echo message="jboss.present=${jboss.present}" />
+  	  	
+  	<!-- SOAP with Attachments API for Java (saaj.jar) -->
+  	<available property="saaj.present"
+      classname="javax.xml.soap.SOAPEnvelope"
+      classpathref="project.classpath"/>
+  	<echo message="saaj.present=${saaj.present}" />
+  		
+  	<!-- Compile Java Source Code -->
+  	<javac
         destdir="${classes.dir}"
         debug="${compile.debug}"
         deprecation="${compile.deprecation}"
         optimize="${compile.optimize}">
       <classpath refid="project.classpath"/>
       <src path="${java.dir}"/>
+      <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>    	    	
     </javac>
   </target>
   <!-- =================================================================== -->
