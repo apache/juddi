@@ -273,6 +273,8 @@ Copyright:
   <!-- Running CheckStyle validation of jUDDI Source code                  -->
   <!-- =================================================================== -->
   <target name="checkstyle" depends="init" if="checkstyle.present">
+    <echo message="Checkstyle package is present." />
+    <echo message="Running Checkstyle using: ${conf.dir}/checkstyle.xml" />
     <mkdir dir="${build.dir}"/>
     <taskdef resource="checkstyletask.properties" />
     <checkstyle
