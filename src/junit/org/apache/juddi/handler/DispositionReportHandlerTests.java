@@ -24,7 +24,7 @@ import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.Result;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -72,7 +72,7 @@ public class  DispositionReportHandlerTests extends TestCase
 		result2.setErrInfo(errInfo2);
 
 		DispositionReport object = new  DispositionReport();
-		object.setGeneric(Registry.UDDI_V2_GENERIC);
+		object.setGeneric(IRegistry.UDDI_V2_GENERIC);
 		object.setOperator("jUDDI.org");
 		object.addResult(result);
 		object.addResult(result2);
