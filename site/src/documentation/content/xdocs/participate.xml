@@ -67,6 +67,17 @@
           <link href="http://www.catb.org/~esr/faqs/smart-questions.html">"How to Ask Questions The Smart Way</link>.
           </p>
       </section>
+      <section>
+        <title>jUDDI Wiki</title>
+        <p>Like other Apache projects, jUDDI maintains a wiki, a sort of virtual
+          meeting place for the jUDDI community. This is a resource available
+          to everyone, and you are encouraged to contribute. This is a good resource
+          for 'HowTos' for common configuration issues.
+          <ul>
+            <li> <link href="http://wiki.apache.org/ws/jUDDI">http://wiki.apache.org/ws/jUDDI</link></li>
+          </ul>
+          </p>
+      </section>
 
   </body>
 </document>

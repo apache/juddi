@@ -19,10 +19,10 @@ See http://xml.apache.org/forrest/linking.html for more info
   <juddi label="jUDDI">
     <welcome label="Introduction" href="index.html" description="Introduction"/>
     <news label="News" href="news.html" description="News"/>
-    <faq label="FAQ/Wiki" href="faq.html" description="FAQ"/>
+    <faq label="FAQ" href="faq.html" description="FAQ"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
-    <participate label="Participation" href="participate.html" description="Participation"/>
+    <participate label="Participation/Wiki" href="participate.html" description="Participation"/>
     <reference label="Reference Library" href="library.html" description="Reference Library"/>
     <bugs label="Bugs" href="bugs.html" description="Bug Tracking"/>
   </juddi>
