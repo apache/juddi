@@ -65,7 +65,8 @@ class TModelTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM TMODEL ");
+    sql.append("UPDATE TMODEL ");
+    sql.append("SET DELETED='true' ");
     sql.append("WHERE TMODEL_KEY=?");
     deleteSQL = sql.toString();
 
@@ -90,8 +91,7 @@ class TModelTable
 
     // build verifyOwnershipSQL
     sql = new StringBuffer(200);
-    sql.append("SELECT ");
-    sql.append("* ");
+    sql.append("SELECT * ");
     sql.append("FROM TMODEL ");
     sql.append("WHERE TMODEL_KEY=? ");
     sql.append("AND PUBLISHER_ID=?");
@@ -127,7 +127,7 @@ class TModelTable
       statement.setString(6,overviewURL);
       statement.setTimestamp(7,timeStamp);
 
-      log.debug("insert into TMODEL table:\n\n\t" + insertSQL +
+      log.debug(insertSQL +
         "\n\t TMODEL_KEY=" + tModel.getTModelKey().toString() +
         "\n\t AUTHORIZED_NAME=" + tModel.getAuthorizedName() +
         "\n\t PUBLISHER_ID=" + publisherID +
@@ -166,7 +166,7 @@ class TModelTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,tModelKey.toString());
 
-      log.debug("delete from TMODEL table:\n\n\t" + deleteSQL +
+      log.debug(deleteSQL +
         "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
 
       // execute
@@ -200,7 +200,7 @@ class TModelTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,tModelKey.toString());
 
-      log.debug("select from TMODEL table:\n\n\t" + selectSQL +
+      log.debug(selectSQL +
         "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
 
       resultSet = statement.executeQuery();
@@ -250,7 +250,7 @@ class TModelTable
       statement = connection.prepareStatement(selectByPublisherSQL);
       statement.setString(1,publisherID.toString());
 
-      log.debug("select from TMODEL table:\n\n\t" + selectByPublisherSQL +
+      log.debug(selectByPublisherSQL +
         "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
       // execute the statement
@@ -295,7 +295,7 @@ class TModelTable
       statement.setString(1,tModelKey);
       statement.setString(2,publisherID);
 
-      log.debug("checking ownership of TMODEL:\n\n\t" + verifyOwnershipSQL +
+      log.debug(verifyOwnershipSQL +
         "\n\t TMODEL_KEY=" + tModelKey +
         "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
