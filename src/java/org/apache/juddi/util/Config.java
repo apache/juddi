@@ -15,8 +15,6 @@
  */
 package org.apache.juddi.util;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -36,79 +34,19 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Config extends Properties
 {
-  // private reference to the jUDDI logger
+  // private reference to the log
   private static Log log = LogFactory.getLog(Config.class);
 
-  // jUDDI properties file name
-  private static final String PROPFILE_NAME = "juddi.properties";
-
-  // Config singleton instance
+  // shared instance
   static Config config;
 
   /**
-   * Initialize jUDDI with configuration properties. Default
-   * values are first loaded and then any properties declared
-   * in the 'juddi.properties' file will be loaded. Property
-   * names/values found in 'juddi.properties' will take
-   * precedence.
+   * Default Config Constructor. Creates a new instance
+   * of Config and initializes it with default values. 
    */
   private Config()
   {
     // Load default property values
-    init();
-
-    // Add jUDDI properties from the juddi.properties
-    // file found in the classpath. Duplicate property
-    // values added in init() will be overwritten.
-    try
-    {
-      InputStream stream = Loader.getResourceAsStream(PROPFILE_NAME);
-      if (stream != null)
-      {
-        Properties props = new Properties();
-        props.load(stream);
-        putAll(props);
-      }
-    }
-    catch (IOException ioex)
-    {
-      log.error(
-        "An error occured while loading jUDDI "
-          + "properties from \""
-          + PROPFILE_NAME
-          + "\".",
-        ioex);
-    }
-  }
-
-  /**
-   * Initialize jUDDI with configuration properties. Default
-   * values are first loaded and then any properties found
-   * in the 'props' parameter will override any like-named
-   * default values.
-   */
-  private Config(Properties props)
-  {
-    // Load default property values
-    init();
-
-    // Add jUDDI properties from the Properties instance
-    // passed in. Duplicate property values added in
-    // init() will be overwritten.
-    if (props != null)
-      putAll(props);
-  }
-
-  /**
-   * Adds default jUDDI property values. Called
-   * only from Config() and Config(Properties).
-   */
-  public void init()
-  {
-    // Remove existing property values.
-    this.clear();
-
-    // Load core jUDDI default property values.
     this.put("juddi.operatorName","jUDDI.org");
     this.put("juddi.operatorSiteURL","http://localhost:8080/juddi");
     this.put("juddi.adminEmailAddress", "admin@juddi.org");
@@ -120,8 +58,19 @@ public class Config extends Properties
     this.put("juddi.uuidgen", "org.apache.juddi.uuidgen.DefaultUUIDGen");
     this.put("juddi.useMonitor", "true");
     this.put("juddi.monitor", "org.apache.juddi.monitor.jdbc.JDBCMonitor");
-    this.put("juddi.transport", "org.apache.juddi.transport.axis.AxisTransport");
     this.put("juddi.useConnectionPool", "false");
+  }
+
+  /**
+   * Returns a reference to the singleton Properties instance.
+   *
+   * @return Config A reference to the singleton Properties instance.
+   */
+  public static void addProperties(Properties props)
+  {
+    if (config == null)
+      config = createConfig();
+    config.putAll(props);
   }
 
   /**

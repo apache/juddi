@@ -15,6 +15,8 @@
  */
 package org.apache.juddi.registry;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -26,6 +28,7 @@ import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.function.FunctionMaker;
 import org.apache.juddi.function.IFunction;
 import org.apache.juddi.util.Config;
+import org.apache.juddi.util.Loader;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,8 +38,11 @@ public class RegistryEngine extends AbstractRegistry
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(RegistryEngine.class);
 
-  // jUDDI shared UDDI Function maker
-  private static FunctionMaker maker = FunctionMaker.getInstance();
+  // jUDDI Registry Property File Name
+  private static final String PROPFILE_NAME = "juddi.properties";
+  
+  // jUDDI Function maker
+  private FunctionMaker maker = null;
 
   // registry singleton instance
   private static RegistryEngine registry = null;
@@ -54,6 +60,22 @@ public class RegistryEngine extends AbstractRegistry
   private RegistryEngine()
   {
     super();
+
+    // Add jUDDI properties from the juddi.properties
+    // file found in the classpath. Duplicate property
+    // values added in init() will be overwritten.
+    try {
+      InputStream stream = Loader.getResourceAsStream(PROPFILE_NAME);
+      if (stream != null)
+      {
+        Properties props = new Properties();
+        props.load(stream);
+        Config.addProperties(props);
+      }
+    }
+    catch (IOException ioex) {
+      log.error("An error occured while loading properties from: "+PROPFILE_NAME,ioex);
+    }
   }
 
   /**
@@ -66,6 +88,9 @@ public class RegistryEngine extends AbstractRegistry
   private RegistryEngine(Properties props)
   {
     super();
+
+    if (props != null)
+      Config.addProperties(props);
   }
 
   /**
@@ -101,6 +126,8 @@ public class RegistryEngine extends AbstractRegistry
     // the core jUDDI components.
 
     DataStoreFactory.initFactory();
+    
+    this.maker = FunctionMaker.getInstance();
 
     // turn on registry access
 
