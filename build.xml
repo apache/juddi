@@ -57,7 +57,7 @@ Copyright:
     <property name="jar.file"            value="${name}.jar"/>
     <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
-    <property name="dbscripts.dir"       value="${basedir}/dbscripts"/>
+    <property name="sql.dir"             value="${basedir}/sql"/>
     <property name="docs.dir"            value="${basedir}/docs"/>
     <property name="lib.dir"             value="${basedir}/lib"/>
     <property name="src.dir"             value="${basedir}/src"/>
@@ -379,7 +379,7 @@ Copyright:
     <copy file="release-notes.html" todir="${dist.src.root}"/>
     <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.src.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
-    <copy todir="${dist.src.root}/docs/dbscripts"><fileset dir="${dbscripts.dir}"/></copy>
+    <copy todir="${dist.src.root}/docs/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.src.root}/lib"><fileset dir="${lib.dir}"/></copy>
     <copy todir="${dist.src.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.src.root}/src"><fileset dir="${src.dir}"/></copy>
@@ -406,7 +406,7 @@ Copyright:
     <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
     <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
-    <copy todir="${dist.bin.root}/docs/dbscripts"><fileset dir="${dbscripts.dir}"/></copy>
+    <copy todir="${dist.bin.root}/docs/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.bin.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
     <copy todir="${dist.bin.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
