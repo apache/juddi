@@ -1145,7 +1145,7 @@ public class JDBCDataStore implements DataStore
 
           // fetch the TModel CategoryBag
           Vector catVector = TModelCategoryTable.select(tModelKey,connection);
-          if (catVector != null)
+          if ((catVector != null) && (catVector.size() != 0)) 
           {
             CategoryBag catBag = new CategoryBag();
             catBag.setKeyedReferenceVector(catVector);
@@ -1153,13 +1153,13 @@ public class JDBCDataStore implements DataStore
           }
 
           // fetch the TModel IdentifierBag
-          Vector idVector = TModelIdentifierTable.select(tModelKey,connection);
-          if (idVector != null)
-          {
-            IdentifierBag idBag = new IdentifierBag();
-            idBag.setKeyedReferenceVector(idVector);
-            tModel.setIdentifierBag(idBag);
-          }
+          Vector idVector = TModelIdentifierTable.select(tModelKey,connection); 
+          if ((idVector != null) && (idVector.size() != 0)) 
+          { 
+            IdentifierBag idBag = new IdentifierBag(); 
+            idBag.setKeyedReferenceVector(idVector); 
+            tModel.setIdentifierBag(idBag); 
+          } 
 
           // fetch the TModel OverviewDoc & OverviewDoc Descrptions
           OverviewDoc overDoc = tModel.getOverviewDoc();
