@@ -46,7 +46,7 @@ Copyright:
    $Id$
 
 ==================================================================== -->
-<project default="compile" basedir=".">
+<project default="jar" basedir=".">
   <target name="init">
 
     <!-- load property values from build.properties -->
@@ -172,18 +172,18 @@ Copyright:
     <jar
       jarfile="${build.dir}/${proxy.file}"
       basedir="${classes.dir}"
-      includes="org/apache/juddi/AbstractRegistry,
-    	        org/apache/juddi/IRegistry,
+      includes="org/apache/juddi/AbstractRegistry.class,
+    	        org/apache/juddi/IRegistry.class,
     	        org/apache/juddi/datatype/**,
     	        org/apache/juddi/error/**,
                 org/apache/juddi/handler/**,
     	        org/apache/juddi/i18n/**,    	    	
     	        org/apache/juddi/proxy/**,    	
-    	        org/apache/juddi/util/Config,
-    	        org/apache/juddi/util/Language,
-    	        org/apache/juddi/util/Loader,
-    	        org/apache/juddi/util/Release,    
-    	        org/apache/juddi/util/xml/XMLUtils"/>
+    	        org/apache/juddi/util/Config.class,
+    	        org/apache/juddi/util/Language.class,
+    	        org/apache/juddi/util/Loader.class,
+    	        org/apache/juddi/util/Release.class,    
+    	        org/apache/juddi/util/xml/XMLUtils.class"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
