@@ -125,41 +125,59 @@ class FindServiceByNameQuery
       sql.addValue(businessKey);
     }
 
-    if ((names != null) && (names.size() > 0))
+    if (names != null)
     {
-      sql.append("AND (");
-
       int nameSize = names.size();
-      for (int i=0; i<nameSize; i++)
+      if (nameSize > 0)
       {
-        Name name = (Name)names.elementAt(i);
-        String text = name.getValue();
-        String lang = name.getLanguageCode();
+        sql.append("AND (");
 
-        if ((text != null) && (text.length() > 0))
+        for (int i=0; i<nameSize; i++)
         {
-          if ((qualifiers != null) && (qualifiers.exactNameMatch))
-          {
-            sql.append("(NAME = ?");
-            sql.addValue(text);
-          }
-          else
-          {
-            sql.append("(NAME LIKE ?");
-            sql.addValue(text.endsWith("%") ? text : text+"%");
-          }
+          Name name = (Name)names.elementAt(i);
+          String text = name.getValue();
+          String lang = name.getLanguageCode();
 
-          // If lang is "en" we'll need to match with "en", "en_US" or "en_UK"
-          if ((lang != null) && (lang.length() > 0))
+          if ((text != null) && (text.length() > 0))
           {
-            sql.append(" AND (UPPER(LANG_CODE) LIKE ?)");
-            sql.addValue(lang.toUpperCase()+"%");
+            if (qualifiers == null) // default
+            {
+              sql.append("(UPPER(NAME) LIKE ?");
+              sql.addValue(text.endsWith("%") ? text.toUpperCase() : text.toUpperCase()+"%");
+            }
+            else if ((qualifiers.caseSensitiveMatch) && (qualifiers.exactNameMatch))
+            {
+              sql.append("(NAME = ?");
+              sql.addValue(text);
+            }
+            else if ((!qualifiers.caseSensitiveMatch) && (qualifiers.exactNameMatch))
+            {
+              sql.append("(UPPER(NAME) = ?");
+              sql.addValue(text.toUpperCase());
+            }
+            else if ((qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
+            {
+              sql.append("(NAME LIKE ?");
+              sql.addValue(text.endsWith("%") ? text : text+"%");
+            }
+            else if ((!qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
+            {
+              sql.append("(UPPER(NAME) LIKE ?");
+              sql.addValue(text.endsWith("%") ? text.toUpperCase() : text.toUpperCase()+"%");
+            }
+
+            // If lang is "en" we'll need to match with "en", "en_US" or "en_UK"
+            if ((lang != null) && (lang.length() > 0))
+            {
+              sql.append(" AND (UPPER(LANG_CODE) LIKE ?)");
+              sql.addValue(lang.toUpperCase()+"%");
+            }
+            
+            sql.append(")");
+
+            if (i+1 < nameSize)
+              sql.append(" OR ");
           }
-
-          sql.append(")");
-
-          if (i+1 < nameSize)
-            sql.append(" OR ");
         }
       }
 
