@@ -97,12 +97,14 @@ Copyright:
     <condition property="junit.present" value="true">
       <available classname="junit.framework.TestCase" />
     </condition>
-
+    <echo message="junit.present=${junit.present}" />
+  	
     <!-- classpath search to determine if CheckStyle should be run -->
     <condition property="checkstyle.present" value="true">
       <available classname="com.puppycrawl.tools.checkstyle.Main" />
     </condition>
-
+  	<echo message="checkstyle.present=${checkstyle.present}" />
+  	
   </target>
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
