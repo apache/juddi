@@ -1,4 +1,7 @@
-Sybase ASE / jUDDI version 0.9rc1
+CREATE/CONFIGURE A SYBASE ASE DATABASE FOR jUDDI
 
-Author: Anou Manavalan
-anou_mana@apache.org
+jUDDI requires the use of a relational database (RDBMS) or 
+lightweight directory access protocol (LDAP) server to store
+the web services metadata it manages. This document will 
+walk you through the process of setting up a ASE database 
+as the persistante storage for a jUDDI registry.
