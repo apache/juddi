@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.juddi.datatype.Name;
@@ -23,6 +24,7 @@ import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
+import org.apache.juddi.util.Language;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -31,25 +33,31 @@ public class SaveBusinessSample
 {
   public static void main(String[] args)
   {
-    IRegistry registry = new RegistryProxy();
+    // Option #1 (grabs properties from juddi.properties)
+    //IRegistry registry = new RegistryProxy();
+    
+    // Option #2
+    Properties props = new Properties();
+    props.setProperty("juddi.proxy.adminURL","http://localhost:8080/juddi/admin");
+    props.setProperty("juddi.proxy.inquiryURL","http://localhost:8080/juddi/inquiry");
+    props.setProperty("juddi.proxy.publishURL","http://localhost:8080/juddi/publish");
+    props.setProperty("juddi.proxy.securityProvider","com.sun.net.ssl.internal.ssl.Provider");
+    props.setProperty("juddi.proxy.protocolHandler","com.sun.net.ssl.internal.www.protocol");    
+    IRegistry registry = new RegistryProxy(props);
+
+    String userID = "sviens";
+    String password = "password";
 
     try
     {
       // execute a GetAuthToken request
-      AuthToken authToken = registry.getAuthToken("sviens","password");
+      AuthToken authToken = registry.getAuthToken(userID,password);
       AuthInfo authInfo = authToken.getAuthInfo();
-
-      // generate a Name Vector
-      Vector nameVector = new Vector();
-      nameVector.add(new Name("Fidelity Investments"));
-      nameVector.add(new Name("FISC"));
-      nameVector.add(new Name("FEB"));
-      nameVector.add(new Name("FCAT"));
 
       // generate a BusinessEntity
       BusinessEntity businessEntity = new BusinessEntity();
       businessEntity.setBusinessKey(null);
-      businessEntity.setNameVector(nameVector);
+      businessEntity.addName(new Name("Sun Microsystems",Language.ENGLISH));
 
       // generate a BusinessEntity Vector
       Vector businessVector = new Vector();
