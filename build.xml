@@ -51,7 +51,7 @@ Copyright:
 
     <!-- set project-wide property values -->
     <property name="name"                value="juddi"/>
-    <property name="version"             value="0.8.1"/>
+    <property name="version"             value="0.9b1"/>
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
@@ -95,9 +95,19 @@ Copyright:
       <available classname="com.puppycrawl.tools.checkstyle.Main" />
     </condition>
 
-    <!-- build script 'start-time' -->
+    <!-- create start.time property in 'yyyyMMdd' format -->
     <tstamp>
-      <format property="DATE_STAMP" pattern="yyyyMMdd" timezone="GMT"/>
+      <format 
+      	property="start.time" 
+      	pattern="yyyyMMdd" 
+      	timezone="GMT" />
+    </tstamp>
+
+    <!-- create build.time property in 'MM/dd/yyyy hh:mm aa' format -->
+    <tstamp>
+      <format 
+      	property="build.time" 
+      	pattern="MM/dd/yyyy hh:mm aa" />
     </tstamp>
 
   </target>
@@ -130,6 +140,11 @@ Copyright:
   <!-- =================================================================== -->
   <target name="war" depends="clean,jar">
     <mkdir dir="${build.dir}"/>
+    <!-- Create the version & build time #include files -->
+    <mkdir dir="${webapps.dir}/juddi/includes"/>
+	<echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
+	<echo file="${webapps.dir}/juddi/includes/buildtime.inc" append="false">${build.time}</echo>	
+    <!-- Assemble juddi.war file -->
     <war warfile="${build.dir}/${war.file}" webxml="${conf.dir}/web.xml">
       <fileset dir="${webapps.dir}/juddi">
         <include name="**"/>
@@ -156,6 +171,7 @@ Copyright:
         <include name="${jar.file}"/>
       </lib>
     </war>
+    <!-- Explode the juddi.war file -->
     <mkdir dir="${build.dir}/webapps/juddi"/>
     <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapps/juddi" overwrite="true"/>
   </target>
@@ -411,7 +427,7 @@ Copyright:
   <!-- =================================================================== -->
   <target name="gump" depends="clean,jar">
     <copy file="${build.dir}/${jar.file}"
-      tofile="${build.dir}/${name}-${DATE_STAMP}.jar"/>
+      tofile="${build.dir}/${name}-${start.time}.jar"/>
   </target>
   <!-- =================================================================== -->
   <!-- Versioning                                                          -->
