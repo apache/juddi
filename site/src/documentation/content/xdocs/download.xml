@@ -8,13 +8,13 @@
     <section>
       <title>WebServices - Axis - </title>
 <p>
- <table border="0" width="100%" cellspacing="4">
+ <table width="100%" cellspacing="4">
    <tr>
     <!-- RIGHT SIDE INFORMATION -->
     <td align="left" valign="top">
                 <table border="0" cellspacing="0" cellpadding="2" width="100%">
  <tr><td bgcolor="#82ADF6">
-   <a name="Download"><b><font size="+2">Downloading the Apache Axis distribution</font></a></b>
+   <a name="Download"><strong><font size="+2">Downloading the Apache Axis distribution</font></strong></a>
  </td></tr>
  <tr><td>
   <blockquote>
