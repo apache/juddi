@@ -63,7 +63,7 @@ public class GetSubscriptionResultsFunction extends AbstractFunction
     {
       dataStore.beginTrans();
 
-      // TODO (steve) Implement get_subscriptionResults business logic.
+      // TODO (UDDI v3) Implement get_subscriptionResults business logic.
       
       dataStore.commit();
 

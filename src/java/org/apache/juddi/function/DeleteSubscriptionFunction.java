@@ -71,7 +71,7 @@ public class DeleteSubscriptionFunction extends AbstractFunction
     {
       dataStore.beginTrans();
 
-      // TODO (steve) Implement delete_subscription business logic.
+      // TODO (UDDI v3) Implement delete_subscription business logic.
       
       dataStore.commit();
     }

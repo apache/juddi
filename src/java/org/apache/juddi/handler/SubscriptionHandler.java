@@ -58,7 +58,7 @@ public class SubscriptionHandler extends AbstractHandler
     nodeList = XMLUtils.getChildElementsByTagName(element,NameHandler.TAG_NAME);
     if (nodeList.size() > 0)
     {
-      // TODO (steve) fill out SubscriptoinHandler.unmarshal()
+      // TODO (UDDI v3) Fill out SubscriptoinHandler.unmarshal()
     }
 
     return obj;
@@ -74,7 +74,7 @@ public class SubscriptionHandler extends AbstractHandler
     if (subscriptionKey != null)
       element.setAttribute("subscriptionKey",subscriptionKey);
 
-    // TODO (steve) fill out SubscriptoinHandler.marshal()
+    // TODO (UDDI v3) Fill out SubscriptoinHandler.marshal()
 
     parent.appendChild(element);
   }

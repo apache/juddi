@@ -64,7 +64,7 @@ public class SaveSubscriptionFunction extends AbstractFunction
     {
       dataStore.beginTrans();
 
-      // TODO (steve) Implement save_subscription business logic.
+      // TODO (UDDI v3) Implement save_subscription business logic.
       
       dataStore.commit();
 
