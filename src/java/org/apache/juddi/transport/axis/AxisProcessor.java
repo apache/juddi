@@ -51,22 +51,17 @@ public class AxisProcessor
   // jUDDI XML Handler maker
   private static HandlerMaker maker = HandlerMaker.getInstance();
 
-  // jUDDI Monitor switch
-  private static boolean useMonitor = Config.getBooleanProperty("juddi.useMonitor",false);
-
-
   /**
    * @param soapResponse
    * @param messageContext
    */
   public AxisProcessor(Message soapResponse,MessageContext messageContext)
   {
-    // get a new monitor from the MonitorFactory and
-    // inspect the MessageContext
-
-    Monitor monitor = null;
-    if (useMonitor == true)
-      monitor = MonitorFactory.getMonitor();
+    // get a new monitor from the MonitorFactory
+    
+    Monitor monitor = MonitorFactory.getMonitor();
+    
+    // if monitoring is turned on inspect the MessageContext
 
     if (monitor != null)
       monitor.inspectMessageContext(messageContext);
@@ -171,7 +166,7 @@ public class AxisProcessor
 
       RegistryObject uddiResponse = null;
       
-      RegistryEngine registry = RegistryServlet.getInstance();
+      RegistryEngine registry = RegistryServlet.getRegistry();
       if ((registry != null) && (registry.isAvailable()))
         uddiResponse = registry.execute(uddiRequest);
       else
