@@ -12,8 +12,12 @@
   String targetPage = requestName+".jsp";
   String requestKey = requestName+":request";
   String responseKey = requestName+":response"; 
+  String requestTimeKey = requestName+":time";
   String requestMsg = request.getParameter("soap_request");
   String responseMsg = "";
+  
+  long startTime = 0;
+  long endTime = 0;
 
   if (resetAction != null)
   {
@@ -31,6 +35,9 @@
 		  int port = 8080;
 		  String path = "/juddi/"+requestType;
 
+      // Start the clock
+      startTime = System.currentTimeMillis();
+
 	    // Create a Socket
 	    InetAddress addr = InetAddress.getByName(hostname);
 	    Socket sock = new Socket(addr,port);
@@ -41,6 +48,9 @@
 	    wr.write("Content-Length: " + requestMsg.length() + "\r\n");
 	    wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
 	    wr.write("\r\n");
+
+      // Stop the clock
+      endTime = System.currentTimeMillis();
 			
 	    // Send the HTTP Request
 	    wr.write(requestMsg);
@@ -63,6 +73,7 @@
   
   session.setAttribute(requestKey,requestMsg);
   session.setAttribute(responseKey,responseMsg);
+  session.setAttribute(requestTimeKey,String.valueOf(endTime-startTime));
   
   // Redirect back to the source page
   request.getRequestDispatcher(targetPage).forward(request,response);

@@ -5,7 +5,17 @@
    String requestType = "admin";
    String requestKey = requestName+":request";
    String responseKey = requestName+":response";
+   String requestTimeKey = requestName+":time";
 %>
+
+<h3><%= requestName%></h3>
+<div class="link">
+The find_publisher API call returns a publisherList message that matches the 
+conditions specified in the arguments. 
+If any error occurs in processing this API call, a dispositionReport element 
+will be returned to the caller within a SOAP Fault containing a message
+describing the error in detail. 
+</div>
 
 <form method="post" action="controller.jsp">
 <textarea class=msgs id=soap_request name=soap_request rows=15 cols=75 wrap=off><%
@@ -26,12 +36,26 @@ if (requestMessage != null) {
 </soapenv:Envelope>
 <% } %>
 </textarea>
-<p>
+
+<%
+String requestTime = (String)session.getAttribute(requestTimeKey);
+if (requestTime == null) {
+  requestTime = "0";
+} %>
+<table cellpadding="4" width="100%">
+<tr>
+<td>
 <input type="hidden" name="request_name" value=<%=requestName%>>
 <input type="hidden" name="request_type" value=<%=requestType%>>
-<input type=submit name="submit_button" value="Submit">
-<input type=submit name="reset_button" value="Reset">
-</p>
+<input type="submit" name="submit_button" value="Submit">
+<input type="submit" name="reset_button" value="Reset">
+</td>
+<td align="right">
+Time: <strong><%= requestTime%></strong> milliseconds
+</td>
+</tr>
+</table>
+
 <textarea class=msgs id=soap_response name=soap_response rows=20 cols=75 wrap=off><%
 String responseMessage = (String)session.getAttribute(responseKey);
 if (responseMessage != null) {
