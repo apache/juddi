@@ -19,23 +19,23 @@ import java.util.Vector;
 
 import org.uddi4j.UDDIException;
 import org.uddi4j.datatype.Name;
+import org.uddi4j.datatype.OverviewDoc;
+import org.uddi4j.datatype.binding.AccessPoint;
+import org.uddi4j.datatype.binding.BindingTemplate;
+import org.uddi4j.datatype.binding.BindingTemplates;
+import org.uddi4j.datatype.binding.TModelInstanceDetails;
+import org.uddi4j.datatype.binding.TModelInstanceInfo;
 import org.uddi4j.datatype.business.BusinessEntity;
+import org.uddi4j.datatype.service.BusinessService;
+import org.uddi4j.datatype.tmodel.TModel;
 import org.uddi4j.response.BusinessDetail;
-import org.uddi4j.response.BusinessInfo;
-import org.uddi4j.response.BusinessList;
+import org.uddi4j.response.ServiceDetail;
+import org.uddi4j.response.ServiceList;
+import org.uddi4j.response.TModelDetail;
 import org.uddi4j.transport.TransportException;
-import org.uddi4j.util.FindQualifier;
-import org.uddi4j.util.FindQualifiers;
-import org.uddi4j.*;
-import org.uddi4j.client.*;
-import org.uddi4j.datatype.*;
-import org.uddi4j.datatype.binding.*;
-import org.uddi4j.datatype.business.*;
-import org.uddi4j.datatype.service.*;
-import org.uddi4j.datatype.tmodel.*;
-import org.uddi4j.response.*;
-import org.uddi4j.transport.*;
-import org.uddi4j.util.*;
+import org.uddi4j.util.CategoryBag;
+import org.uddi4j.util.IdentifierBag;
+import org.uddi4j.util.KeyedReference;
 
 
 
