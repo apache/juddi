@@ -25,7 +25,7 @@ Optional dependees:
 
 Most Useful Targets:
  - compile   Compiles and jars all Java classes (default)
- - jar       Builds the jUDDI libraries (juddi.jar & juddi-proxy.jar)
+ - jar       Builds the jUDDI libraries (juddi.jar)
  - javadoc   Builds JavaDoc
  - site      Builds the jUDDI web site
  - test      tests everything via JUnit
@@ -58,7 +58,6 @@ Copyright:
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
-    <property name="proxy.file"          value="${name}-proxy.jar"/>
   	<property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
     <property name="sql.dir"             value="${basedir}/sql"/>
@@ -161,7 +160,7 @@ Copyright:
     </javac>
   </target>
   <!-- =================================================================== -->
-  <!-- Creates the Java libraries (juddi.jar & juddi-proxy.jar)            -->
+  <!-- Creates the Java libraries (juddi.jar)                              -->
   <!-- =================================================================== -->
   <target name="jar" depends="compile">
     <mkdir dir="${build.dir}"/>
@@ -169,21 +168,6 @@ Copyright:
       jarfile="${build.dir}/${jar.file}"
       basedir="${classes.dir}"
       includes="org/apache/juddi/**"/>
-    <jar
-      jarfile="${build.dir}/${proxy.file}"
-      basedir="${classes.dir}"
-      includes="org/apache/juddi/AbstractRegistry.class,
-    	        org/apache/juddi/IRegistry.class,
-    	        org/apache/juddi/datatype/**,
-    	        org/apache/juddi/error/**,
-                org/apache/juddi/handler/**,
-    	        org/apache/juddi/i18n/**,    	    	
-    	        org/apache/juddi/proxy/**,    	
-    	        org/apache/juddi/util/Config.class,
-    	        org/apache/juddi/util/Language.class,
-    	        org/apache/juddi/util/Loader.class,
-    	        org/apache/juddi/util/Release.class,    
-    	        org/apache/juddi/util/xml/XMLUtils.class"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
@@ -250,6 +234,7 @@ Copyright:
            org.apache.juddi.function,
            org.apache.juddi.handler,
            org.apache.juddi.monitor,
+    	   org.apache.juddi.proxy,
            org.apache.juddi.registry,
            org.apache.juddi.transport,
            org.apache.juddi.util,
