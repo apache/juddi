@@ -204,7 +204,8 @@
 <pre>
 <%
     String[] resourceArray = {
-      "log4j.properties"
+      "log4j.xml",
+      "juddi.xml"
     };
     
     for (int i=0; i<resourceArray.length; i++)
