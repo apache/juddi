@@ -89,7 +89,16 @@ jUDDI RELEASE NOTES
      publish and admin) now return HTTP 405 Method Not 
      Allowed error messages according to the HTTP 1.1 
      specification. (see bug# JUDDI-23 for more info)
+ 
+ 20. Added functionality to support retreival of 
+     UDDI artifacts (business entity, business 
+     service, binding template and/or tmodel) via
+     http with calls to:
      
+      http://host:port/juddi/uddiget.jsp?businesskey=
+      http://host:port/juddi/uddiget.jsp?servicekey=
+      http://host:port/juddi/uddiget.jsp?bindingkey=
+      http://host:port/juddi/uddiget.jsp?tmodelkey=    
 
   Changes From 0.7.2 to 0.8.0
 
