@@ -60,8 +60,7 @@ Time: <strong><%= requestTime%></strong> milliseconds
 </tr>
 </table>
 
-<textarea class=msgs id=soap_response name=soap_response rows=25 cols=75 wrap=off>
-<?xml version="1.0" encoding="utf-8"?><%
+<textarea class=msgs id=soap_response name=soap_response rows=25 cols=75 wrap=off><%
 String responseMessage = (String)session.getAttribute(responseKey);
 if (responseMessage != null) {
   out.print(responseMessage);
