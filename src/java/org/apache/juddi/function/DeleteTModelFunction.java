@@ -89,8 +89,8 @@ public class DeleteTModelFunction extends AbstractFunction
         if (!dataStore.isTModelPublisher(tModelKey,publisherID))
           throw new UserMismatchException("publisher="+publisherID+" tModelKey="+tModelKey);
 
-        // TModel exists and we control it so let's delete it.
-        dataStore.deleteTModel(tModelKey);
+        // TModel exists and we control it so let's marke it as deleted.
+        dataStore.markTModelAsDeleted(tModelKey);
       }
 
       // delete the TModels

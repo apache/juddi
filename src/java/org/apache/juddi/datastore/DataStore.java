@@ -233,6 +233,12 @@ public interface DataStore
   /**
    *
    */
+  void markTModelAsDeleted(String tModelKey)
+   throws RegistryException;
+
+  /**
+   *
+   */
   boolean isValidTModelKey(String tModelKey)
     throws RegistryException;
 

@@ -1190,13 +1190,33 @@ public class JDBCDataStore implements DataStore
       if ((tModelKey != null) && (connection != null))
       {
         // delete the dependents of TModel
-        //TModelCategoryTable.delete(tModelKey,connection);
-        //TModelDescTable.delete(tModelKey,connection);
-        //TModelDocDescTable.delete(tModelKey,connection);
-        //TModelIdentifierTable.delete(tModelKey,connection);
+        TModelCategoryTable.delete(tModelKey,connection);
+        TModelDescTable.delete(tModelKey,connection);
+        TModelDocDescTable.delete(tModelKey,connection);
+        TModelIdentifierTable.delete(tModelKey,connection);
 
-        // mark the TModel as deleted (don't actually delete it)
+        // delete the TModel
         TModelTable.delete(tModelKey,connection);
+      }
+    }
+    catch(java.sql.SQLException sqlex)
+    {
+      throw new RegistryException(sqlex);
+    }
+  }
+
+  /**
+   *
+   */
+  public void markTModelAsDeleted(String tModelKey)
+    throws org.apache.juddi.error.RegistryException
+  {
+    try
+    {
+      if ((tModelKey != null) && (connection != null))
+      {
+        // mark the TModel as deleted 
+        TModelTable.markAsDeleted(tModelKey,connection);
       }
     }
     catch(java.sql.SQLException sqlex)

@@ -41,6 +41,7 @@ class TModelTable
 
   static String insertSQL = null;
   static String deleteSQL = null;
+  static String updateSQL = null;
   static String selectSQL = null;
   static String selectByPublisherSQL = null;
   static String verifyOwnershipSQL = null;
@@ -65,10 +66,16 @@ class TModelTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
+    sql.append("DELETE FROM TMODEL ");
+    sql.append("WHERE TMODEL_KEY=?");
+    deleteSQL = sql.toString();
+
+    // build updateSQL
+    sql = new StringBuffer(100);
     sql.append("UPDATE TMODEL ");
     sql.append("SET DELETED='true' ");
     sql.append("WHERE TMODEL_KEY=?");
-    deleteSQL = sql.toString();
+    updateSQL = sql.toString();
 
     // build selectSQL
     sql = new StringBuffer(200);
@@ -172,6 +179,39 @@ class TModelTable
       statement.setString(1,tModelKey.toString());
 
       log.debug(deleteSQL +
+        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+
+      // execute
+      statement.executeUpdate();
+    }
+    finally
+    {
+      try {
+        statement.close();
+      }
+      catch (Exception e) { /* ignored */ }
+    }
+  }
+
+  /**
+   * Update the TMODEL table setting the value of the DELETED column to 'true'.
+   *
+   * @param  tModelKey
+   * @param  connection JDBC connection
+   * @throws java.sql.SQLException
+   */
+  public static void markAsDeleted(String tModelKey,Connection connection)
+    throws java.sql.SQLException
+  {
+    PreparedStatement statement = null;
+
+    try
+    {
+      // prepare the delete
+      statement = connection.prepareStatement(updateSQL);
+      statement.setString(1,tModelKey.toString());
+
+      log.debug(updateSQL +
         "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
 
       // execute
@@ -393,7 +433,8 @@ class TModelTable
         TModelTable.verifyOwnership(tModelKey,"sviens",connection);
 
         // delete that TModel object
-        //TModelTable.delete(tModelKey,connection);
+        TModelTable.delete(tModelKey,connection);
+        //TModelTable.markAsDeleted(tModelKey,connection);
 
         // re-select that TModel object
         tModel = TModelTable.select(tModelKey,connection);
