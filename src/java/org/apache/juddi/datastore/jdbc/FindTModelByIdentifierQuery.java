@@ -126,19 +126,28 @@ class FindTModelByIdentifierQuery
 
           for (int i=0; i<vectorSize; i++)
           {
+            // When determining whether a keyedReference matches 
+            // a passed keyedReference, a match occurs if and only 
+            // if 1) the tModelKeys refer to the same tModel and 2) 
+            // the keyValues are identical. The keyNames are not 
+            // significant. - UDDI Programmers API v2.04, Pg 25
+            //
             KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
-            String name = keyedRef.getKeyName();
+            
+            String key = keyedRef.getTModelKey();
+            if (key == null)
+              key = "";
+            
             String value = keyedRef.getKeyValue();
+            if (value == null)
+              value = "";
 
-            if ((name != null) && (value != null))
-            {
-              sql.append("(I.KEY_NAME = ? AND I.KEY_VALUE = ?)");
-              sql.addValue(name);
-              sql.addValue(value);
+            sql.append("(I.TMODEL_KEY_REF = ? AND I.KEY_VALUE = ?)");
+            sql.addValue(key);
+            sql.addValue(value);
 
-              if (i+1 < vectorSize)
-                sql.append(" OR ");
-            }
+            if (i+1 < vectorSize)
+              sql.append(" OR ");
           }
 
           sql.append(") ");
