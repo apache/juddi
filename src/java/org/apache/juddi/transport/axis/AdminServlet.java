@@ -22,48 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis.transport.http.AxisServlet;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.registry.RegistryEngine;
 
 /**
  * @author Steve Viens (sviens@apache.org)
  */
 public class AdminServlet extends AxisServlet
 {
-  // private reference to the webapp's logger.
-  private static Log log = LogFactory.getLog(AdminServlet.class);
-
-  /**
-   * Grab the shared instance of jUDDI's Registry class
-   * (this will typically create the registry for the first
-   * time) and call it's "init()" method to get all core
-   * components initialized.
-   */
-  public void init()
-  {
-    super.init();
-
-    RegistryEngine registry = RegistryEngine.getInstance();
-    if (registry != null)
-      registry.init();
-  }
-
-  /**
-   * Grab the shared instance of jUDDI's Registry class and
-   * call it's "dispose()" method to notify all sub-components
-   * to stop any background threads and release any external
-   * resources they may have aquired.
-   */
-  public void destroy()
-  {
-    super.destroy();
-
-    RegistryEngine registry = RegistryEngine.getInstance();
-    if (registry != null)
-      registry.dispose();
-  }
-
   /**
    *
    */

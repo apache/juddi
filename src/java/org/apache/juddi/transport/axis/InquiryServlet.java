@@ -34,6 +34,6 @@ public class InquiryServlet extends AxisServlet
    public void doGet(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    req.getRequestDispatcher("/search").forward(req,res);
+    req.getRequestDispatcher("/index.html").forward(req,res);
   }
 }

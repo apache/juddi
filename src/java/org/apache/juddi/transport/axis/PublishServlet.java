@@ -34,6 +34,6 @@ public class PublishServlet extends AxisServlet
    public void doGet(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    req.getRequestDispatcher("manage").forward(req,res);
+    req.getRequestDispatcher("/index.html").forward(req,res);
   }
 }
