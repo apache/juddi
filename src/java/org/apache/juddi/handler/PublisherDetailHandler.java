@@ -20,7 +20,7 @@ import java.util.Vector;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.datatype.response.PublisherDetail;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -87,7 +87,7 @@ public class PublisherDetailHandler extends AbstractHandler
     if (generic != null)
     {
       element.setAttribute("generic",generic);
-      element.setAttribute("xmlns",Registry.JUDDI_V1_NAMESPACE);
+      element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
     }
 
     String operator = detail.getOperator();

@@ -20,7 +20,7 @@ import java.util.Vector;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.business.BusinessEntityExt;
 import org.apache.juddi.datatype.response.BusinessDetailExt;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -87,12 +87,12 @@ public class BusinessDetailExtHandler extends AbstractHandler
     {
       element.setAttribute("generic",generic);
 
-      if (generic.equals(Registry.UDDI_V1_GENERIC))
-        element.setAttribute("xmlns",Registry.UDDI_V1_NAMESPACE);
-      else if (generic.equals(Registry.UDDI_V2_GENERIC))
-        element.setAttribute("xmlns",Registry.UDDI_V2_NAMESPACE);
-      else if (generic.equals(Registry.UDDI_V3_GENERIC))
-        element.setAttribute("xmlns",Registry.UDDI_V3_NAMESPACE);
+      if (generic.equals(IRegistry.UDDI_V1_GENERIC))
+        element.setAttribute("xmlns",IRegistry.UDDI_V1_NAMESPACE);
+      else if (generic.equals(IRegistry.UDDI_V2_GENERIC))
+        element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
+      else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
+        element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
 
     String operator = detail.getOperator();
