@@ -427,7 +427,6 @@ public class RegistryServlet extends HttpServlet
     finally 
     {
       try {               
-        soapRes.writeTo(System.out);     
         soapRes.writeTo(res.getOutputStream());     
       }
       catch(SOAPException sex) {
