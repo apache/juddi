@@ -399,7 +399,6 @@ Copyright:
     <copy todir="${dist.src.root}/lib">
       <fileset dir="${lib.dir}">
         <include name="axis.jar"/>
-        <include name="axis-ant.jar"/>
         <include name="commons-collections.jar"/>
         <include name="commons-dbcp.jar"/>
         <include name="commons-discovery.jar"/>
@@ -454,8 +453,7 @@ Copyright:
   <!-- Invoked only by Gump (see http://gump.apache.org)                   -->
   <!-- =================================================================== -->
   <target name="gump" depends="clean,jar">
-  	<copy 
-      file="${build.dir}/${jar.file}" 
+  	<copy file="${build.dir}/${jar.file}" 
       tofile="${build.dir}/${name}-${DATE_STAMP}.jar"/>
   </target>
   <!-- =================================================================== -->
