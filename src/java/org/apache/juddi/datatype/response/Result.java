@@ -238,7 +238,7 @@ public class Result implements RegistryObject
   // numerical value 20220, from the list of valid exception codes. This has
   // been corrected.
   public static final int E_UNVALIDATABLE = 20220;
-  public static final String E_VUNVALIDATABLE_CODE = "E_unvalidatable";
+  public static final String E_UNVALIDATABLE_CODE = "E_unvalidatable";
   public static final String E_UNVALIDATABLE_MSG = "";
 
   // Signifies that the request could not be carried out because a needed
