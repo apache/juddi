@@ -123,7 +123,10 @@ public class FindTModelFunction extends AbstractFunction
         // value is configurable in jUDDI.
         int maxNameLength = Config.getMaxNameLengthAllowed();
         if (tModelName.length() > maxNameLength)
-          throw new NameTooLongException(tModelName+" (max_name="+maxNameLength+")");
+          throw new NameTooLongException("find_tModel: "+
+              "name="+tModelName+", "+
+              "length="+tModelName.length()+", "+
+              "maxNameLength="+maxNameLength);
       }
 
       // validate the 'qualifiers' parameter as much as possible up-front before
@@ -149,7 +152,8 @@ public class FindTModelFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("find_qualifier="+qValue);
+              throw new UnsupportedException("find_tModel: "+
+                  "findQualifier="+qValue);
           }
         }
       }

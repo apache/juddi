@@ -117,7 +117,8 @@ public class FindBindingFunction extends AbstractFunction
 
       // a find_binding request MUST include a service_key attribute
       if ((serviceKey == null) || (serviceKey.length() == 0))
-        throw new InvalidKeyPassedException("serviceKey="+serviceKey);
+        throw new InvalidKeyPassedException("find_binding: "+
+            "serviceKey="+serviceKey);
 
       // validate the 'qualifiers' parameter as much as possible up-front before
       // calling into the data layer for relational validation.
@@ -142,7 +143,8 @@ public class FindBindingFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("findQualifier="+qValue);
+              throw new UnsupportedException("find_binding: "+
+                  "findQualifier="+qValue);
           }
         }
       }

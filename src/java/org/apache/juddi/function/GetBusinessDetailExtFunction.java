@@ -72,7 +72,8 @@ public class GetBusinessDetailExtFunction extends AbstractFunction
         // If the a BusinessEntity doesn't exist hrow an InvalidKeyPassedException.
         if ((businessKey == null) || (businessKey.length() == 0) ||
             (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException(businessKey);
+          throw new InvalidKeyPassedException("get_businessDetailExt: "+
+              "businessKey="+businessKey);
       }
 
       Vector businessEntityExtVector = new Vector();

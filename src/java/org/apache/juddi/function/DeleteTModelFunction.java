@@ -82,12 +82,15 @@ public class DeleteTModelFunction extends AbstractFunction
         // then throw an InvalidKeyPassedException.
         if ((tModelKey == null) || (tModelKey.length() == 0) ||
             (!dataStore.isValidTModelKey(tModelKey)))
-          throw new InvalidKeyPassedException(tModelKey);
+          throw new InvalidKeyPassedException("delete_tModel: "+
+              "tModelKey="+tModelKey);
 
         // check to make sure that 'authorizedName' controls this
         // TModel. If not then throw a UserMismatchException.
         if (!dataStore.isTModelPublisher(tModelKey,publisherID))
-          throw new UserMismatchException("publisher="+publisherID+" tModelKey="+tModelKey);
+          throw new UserMismatchException("delete_tModel: "+
+              "userID="+publisherID+", "+
+              "tModelKey="+tModelKey);
 
         // TModel exists and we control it so let's marke it as deleted.
         dataStore.markTModelAsDeleted(tModelKey);

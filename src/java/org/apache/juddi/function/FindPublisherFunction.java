@@ -102,7 +102,10 @@ public class FindPublisherFunction extends AbstractFunction
         // value is configurable in jUDDI.
         int maxNameLength = Config.getMaxNameLengthAllowed();
         if (name.length() > maxNameLength)
-          throw new NameTooLongException("Name: '"+name+"' (max="+maxNameLength+")");
+          throw new NameTooLongException("find_publisher: "+
+              "name="+name+", "+
+              "length="+name.length()+", "+
+              "maxNameLength="+maxNameLength);
       }
 
       // validate the 'qualifiers' parameter as much as possible up-front before
@@ -128,7 +131,8 @@ public class FindPublisherFunction extends AbstractFunction
                 (!qValue.equals(FindQualifier.SORT_BY_DATE_DESC)) &&
                 (!qValue.equals(FindQualifier.SERVICE_SUBSET)) &&
                 (!qValue.equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException("FindQualifier: "+qValue);
+              throw new UnsupportedException("find_publisher: "+
+                  "findQualifier="+qValue);
           }
         }
       }

@@ -81,12 +81,15 @@ public class DeleteBusinessFunction extends AbstractFunction
         // check that this business entity really exists.
         // If not then throw an InvalidKeyPassedException.
         if ((!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException(businessKey);
+          throw new InvalidKeyPassedException("delete_business: "+
+              "businessKey="+businessKey);
 
         // check to make sure that 'authorizedName' controls this
         // business entity. If not then throw a UserMismatchException.
         if (!dataStore.isBusinessPublisher(businessKey,publisherID))
-          throw new UserMismatchException(businessKey);
+          throw new UserMismatchException("delete_business: "+
+              "userID="+publisherID+", "+
+              "businessKey="+businessKey);
       }
 
       // delete the BusinessEntities

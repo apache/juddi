@@ -82,8 +82,8 @@ public class SaveBusinessFunction extends AbstractFunction
 
     // UploadRegistry functionality is not currently supported.
     if ((uploadRegVector != null) && (uploadRegVector.size() > 0))
-      throw new UnsupportedException("Saving BusinessEntities via " +
-        "UploadRegistry is not supported.");
+      throw new UnsupportedException("save_business: "+
+          "UploadRegistry is not supported.");
 
     // aquire a jUDDI datastore instance
     DataStore dataStore = DataStoreFactory.getDataStore();
@@ -108,11 +108,14 @@ public class SaveBusinessFunction extends AbstractFunction
 
         // If a BusinessKey was specified then make sure it's a valid one.
         if ((businessKey != null) && (businessKey.length() > 0) && (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException("businessKey="+businessKey);
+          throw new InvalidKeyPassedException("save_business: "+
+              "businessKey="+businessKey);
 
         // If a BusinessKey was specified then make sure 'publisherID' controls it.
         if ((businessKey != null) && (businessKey.length() > 0) && (!dataStore.isBusinessPublisher(businessKey,publisherID)))
-          throw new UserMismatchException("businessKey="+businessKey);
+          throw new UserMismatchException("save_business: "+
+              "userID="+publisherID+", "+
+              "businessKey="+businessKey);
 
         // Normally, a valid tModelKey MUST be specified for the keyedReference 
         // to be valid. However, in the case of a keyedReference that is used in 

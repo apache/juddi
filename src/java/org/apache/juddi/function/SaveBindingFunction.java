@@ -88,16 +88,20 @@ public class SaveBindingFunction extends AbstractFunction
         // Confirm that the 'BusinessService' that this binding belongs to
         // really exists. If not then throw an InvalidKeyPassedException.
        if ((serviceKey == null) || (serviceKey.length() == 0) || (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException("ServiceKey: "+serviceKey);
+          throw new InvalidKeyPassedException("save_binding: "+
+              "serviceKey="+serviceKey);
 
         // Confirm that 'publisherID' controls the BusinessService that this
         // binding template belongs to.  If not then throw a UserMismatchException.
         if (!dataStore.isServicePublisher(serviceKey,publisherID))
-          throw new UserMismatchException("ServiceKey: "+serviceKey);
+          throw new UserMismatchException("save_binding: "+
+              "publisherID="+publisherID+", "+
+              "serviceKey="+serviceKey);
 
         // If a BindingKey was specified then make sure it's a valid one.
         if ((bindingKey != null) && (bindingKey.length() > 0) && (!dataStore.isValidBindingKey(bindingKey)))
-          throw new InvalidKeyPassedException("BindingKey: "+bindingKey);
+          throw new InvalidKeyPassedException("save_binding: "+
+              "bindingKey="+bindingKey);
 
         // Normally, a valid tModelKey MUST be specified for the keyedReference 
         // to be valid. However, in the case of a keyedReference that is used in 

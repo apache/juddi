@@ -70,7 +70,8 @@ public class GetServiceDetailFunction extends AbstractFunction
         // If the a BusinessService doesn't exist hrow an InvalidKeyPassedException.
         if ((serviceKey == null) || (serviceKey.length() == 0) ||
             (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException(serviceKey);
+          throw new InvalidKeyPassedException("get_serviceDetail: "+
+              "serviceKey="+serviceKey);
       }
 
       Vector serviceVector = new Vector();

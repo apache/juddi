@@ -93,11 +93,14 @@ public class SaveTModelFunction extends AbstractFunction
 
         // If a TModelKey was specified then make sure it's a valid one.
         if (((tModelKey != null) && (tModelKey.length() > 0)) && (!dataStore.isValidTModelKey(tModelKey)))
-          throw new InvalidKeyPassedException("TModelKey: "+tModelKey);
+          throw new InvalidKeyPassedException("save_tModel: "+
+              "tModelKey="+tModelKey);
 
         // If a TModelKey was specified then make sure 'publisherID' controls it.
         if (((tModelKey != null) && (tModelKey.length() > 0)) && !dataStore.isTModelPublisher(tModelKey,publisherID))
-          throw new UserMismatchException("TModelKey: "+tModelKey);
+          throw new UserMismatchException("save_tModel: "+
+              "userID="+publisherID+", "+
+              "tModelKey="+tModelKey);
 
         // Normally, a valid tModelKey MUST be specified for the keyedReference 
         // to be valid. However, in the case of a keyedReference that is used in 

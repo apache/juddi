@@ -72,7 +72,8 @@ public class DiscardAuthTokenFunction extends AbstractFunction
 
       String authToken = authInfo.getValue();
       if ((authInfo == null) || (authInfo.getValue() == null))
-        throw new AuthTokenRequiredException("authInfo="+authInfo);
+        throw new AuthTokenRequiredException("discard_authToken: "+
+            "authInfo="+authInfo);
 
       dataStore.retireAuthToken(authToken);
       dataStore.commit();

@@ -72,12 +72,14 @@ public class GetAuthTokenFunction extends AbstractFunction
       // authenticate the requestor's credentials
       String publisherID = authenticator.authenticate(userID,cred);
       if (publisherID == null)
-        throw new UnknownUserException("user ID: "+userID);
+        throw new UnknownUserException("get_authToken: "+
+            "userID="+userID);
 
       // ensure the user has the authority to publish
       Publisher publisher = dataStore.getPublisher(publisherID);
       if (publisher == null)
-        throw new UnknownUserException("user ID: "+userID);
+        throw new UnknownUserException("get_authToken: "+
+            "userID="+userID);
 
       // generate a new token (optionally using publisher info)
       String token = dataStore.generateToken(publisher);

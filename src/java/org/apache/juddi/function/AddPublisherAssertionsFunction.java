@@ -90,32 +90,38 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
         // make sure we've got a 'fromKey'
         String fromKey = assertion.getFromKey();
         if ((fromKey == null) || (fromKey.length() == 0))
-          throw new InvalidKeyPassedException("fromKey="+fromKey);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "fromKey="+fromKey);
 
         // make sure we've got a 'toKey'
         String toKey = assertion.getToKey();
         if ((toKey == null) || (toKey.length() == 0))
-          throw new InvalidKeyPassedException("toKey="+toKey);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "toKey="+toKey);
 
         // make sure we've got a 'KeyedRefernce'
         KeyedReference keyedRef = assertion.getKeyedReference();
         if (keyedRef == null)
-          throw new InvalidKeyPassedException("keyedRef="+keyedRef);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "keyedRef="+keyedRef);
 
         // make sure the 'KeyedRefernce' contains a 'TModelKey'
         String tModelKey = keyedRef.getTModelKey();
         if ((tModelKey == null) || (tModelKey.length() == 0))
-          throw new InvalidKeyPassedException("tModelKey="+keyedRef);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "tModelKey="+keyedRef);
 
         // verify that the BusinessEntities or tModel identified by the 'fromKey'
         // really exists. If not then throw an InvalidKeyPassedException.
         if ((!dataStore.isValidBusinessKey(fromKey)) && (!dataStore.isValidTModelKey(fromKey)))
-          throw new InvalidKeyPassedException("fromKey="+fromKey);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "fromKey="+fromKey);
 
         // verify that the BusinessEntitys or tModel identified by the 'fromKey'
         // really exists. If not then throw an InvalidKeyPassedException.
         if ((!dataStore.isValidBusinessKey(toKey)) && (!dataStore.isValidTModelKey(toKey)))
-          throw new InvalidKeyPassedException("toKey="+toKey);
+          throw new InvalidKeyPassedException("add_publisherAssertion: "+
+              "toKey="+toKey);
 
         // verify that the 'publisherID' controls at least one of the
         // BusinessEntities or TModels that are identified in this
@@ -124,7 +130,10 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
             (!dataStore.isBusinessPublisher(toKey,publisherID))   &&
             (!dataStore.isTModelPublisher(fromKey,publisherID))   &&
             (!dataStore.isTModelPublisher(toKey,publisherID)))
-          throw new UserMismatchException("fromKey="+fromKey+" toKey="+toKey);
+          throw new UserMismatchException("add_publisherAssertion: "+
+              "userID="+publisherID+", "+
+              "fromKey="+fromKey+", "+
+              "toKey="+toKey);
       }
 
       dataStore.saveAssertions(publisherID,assertionVector);

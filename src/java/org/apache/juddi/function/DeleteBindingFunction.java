@@ -84,13 +84,16 @@ public class DeleteBindingFunction extends AbstractFunction
         // If not then throw an InvalidKeyPassedException.
         if ((bindingKey == null) || (bindingKey.length() == 0) ||
             (!dataStore.isValidBindingKey(bindingKey)))
-          throw new InvalidKeyPassedException(bindingKey);
+          throw new InvalidKeyPassedException("delete_binding: "+
+              "bindingKey="+bindingKey);
 
         // check to make sure that 'authorizedName' controls the
         // business entity that this binding belongs to. If not
         // then throw a UserMismatchException.
         if (!dataStore.isBindingPublisher(bindingKey,publisherID))
-          throw new UserMismatchException(bindingKey);
+          throw new UserMismatchException("delete_binding: "+
+              "userID="+publisherID+", "+
+              "bindingKey="+bindingKey);
       }
 
       // delete the BindingTemplates

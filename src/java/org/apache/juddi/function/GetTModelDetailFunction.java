@@ -69,7 +69,8 @@ public class GetTModelDetailFunction extends AbstractFunction
         // If the a TModel doesn't exist hrow an InvalidKeyPassedException.
         if ((tModelKey == null) || (tModelKey.length() == 0) ||
             (!dataStore.isValidTModelKey(tModelKey)))
-          throw new InvalidKeyPassedException(tModelKey);
+          throw new InvalidKeyPassedException("get_tModelDetail: "+
+              "tModelKey="+tModelKey);
       }
 
       Vector tModelVector = new Vector();

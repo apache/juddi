@@ -149,7 +149,9 @@ public class FindBusinessFunction extends AbstractFunction
         // dependent).  This value is configurable in jUDDI.
         int maxNames = Config.getMaxNameElementsAllowed();
         if ((nameVector != null) && (nameVector.size() > maxNames))
-          throw new TooManyOptionsException("max=" + maxNames);
+          throw new TooManyOptionsException("find_business: "+
+              "names="+nameVector.size()+", "+
+              "maxNames=" + maxNames);
 
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
@@ -159,8 +161,10 @@ public class FindBusinessFunction extends AbstractFunction
         {
           String name = ((Name) nameVector.elementAt(i)).getValue();
           if (name.length() > maxNameLength)
-            throw new NameTooLongException(name + 
-                "(max=" + maxNameLength + ")");
+            throw new NameTooLongException("find_business: "+
+                "name="+name+", "+
+                "length="+name.length()+", "+
+                "maxNameLength="+maxNameLength);
         }
       }
 
@@ -188,8 +192,8 @@ public class FindBusinessFunction extends AbstractFunction
               && (!qValue.equals(FindQualifier.SERVICE_SUBSET))
               && (!qValue
                 .equals(FindQualifier.COMBINE_CATEGORY_BAGS)))
-              throw new UnsupportedException(
-                "findQualifier=" + qValue);
+              throw new UnsupportedException("find_business: "+
+                "findQualifier="+qValue);
           }
         }
       }

@@ -82,13 +82,16 @@ public class DeleteServiceFunction extends AbstractFunction
         // If not then throw an InvalidKeyPassedException.
         if ((serviceKey == null) || (serviceKey.length() == 0) ||
             (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException(serviceKey);
+          throw new InvalidKeyPassedException("delete_service: "+
+              "serviceKey="+serviceKey);
 
         // check to make sure that 'authorizedName' controls the
         // business entity that this server belongs to. If not
         // then throw a UserMismatchException.
         if (!dataStore.isServicePublisher(serviceKey,publisherID))
-          throw new UserMismatchException("serviceKey="+serviceKey);
+          throw new UserMismatchException("delete_service: "+
+              "userID="+publisherID+", "+
+              "serviceKey="+serviceKey);
       }
 
       // delete the BusinessServices

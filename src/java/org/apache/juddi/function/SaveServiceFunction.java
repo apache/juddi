@@ -96,16 +96,20 @@ public class SaveServiceFunction extends AbstractFunction
         // If a BusinessKey wasn't included or it is an invalid BusinessKey then
         // throw an InvalidKeyPassedException
         if ((businessKey == null) || (businessKey.length() == 0) || (!dataStore.isValidBusinessKey(businessKey)))
-          throw new InvalidKeyPassedException("businessKey="+businessKey);
+          throw new InvalidKeyPassedException("save_service: "+
+              "businessKey="+businessKey);
 
         // Confirm that 'publisherID' controls the BusinessEntity that this
         // BusinessService belongs to.  If not then throw a UserMismatchException.
         if (!dataStore.isBusinessPublisher(businessKey,publisherID))
-          throw new UserMismatchException("businessKey="+serviceKey);
+          throw new UserMismatchException("save_service: "+
+              "userID="+publisherID+", "+
+              "businessKey="+serviceKey);
 
         // If a ServiceKey was specified then make sure it's a valid one.
         if (((serviceKey != null) && (serviceKey.length() > 0)) && (!dataStore.isValidServiceKey(serviceKey)))
-          throw new InvalidKeyPassedException("serviceKey="+serviceKey);
+          throw new InvalidKeyPassedException("save_service: "+
+              "serviceKey="+serviceKey);
 
         // Normally, a valid tModelKey MUST be specified for the keyedReference 
         // to be valid. However, in the case of a keyedReference that is used in 

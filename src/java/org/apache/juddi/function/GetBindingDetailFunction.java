@@ -65,13 +65,14 @@ public class GetBindingDetailFunction extends AbstractFunction
       for (int i=0; i<keyVector.size(); i++)
       {
         // grab the next key from the vector
-        String key = (String)keyVector.elementAt(i);
+        String bindingKey = (String)keyVector.elementAt(i);
 
         // check that this binding template really exists.
         // If not then throw an InvalidKeyPassedException.
-        if ((key == null) || (key.length() == 0) ||
-            (!dataStore.isValidBindingKey(key)))
-          throw new InvalidKeyPassedException(key);
+        if ((bindingKey == null) || (bindingKey.length() == 0) ||
+            (!dataStore.isValidBindingKey(bindingKey)))
+          throw new InvalidKeyPassedException("get_bindingDetail: "+
+              "bindingKey="+bindingKey);
       }
 
       Vector bindingVector = new Vector();

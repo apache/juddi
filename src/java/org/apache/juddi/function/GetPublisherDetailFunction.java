@@ -69,7 +69,8 @@ public class GetPublisherDetailFunction extends AbstractFunction
         // If the a Publisher doesn't exist hrow an UnknownUserException.
         if ((publisherID == null) || (publisherID.length() == 0) ||
             (dataStore.getPublisher(publisherID) == null))
-          throw new UnknownUserException("PublisherID: "+publisherID);
+          throw new UnknownUserException("get_publisher: "+
+              "userID="+publisherID);
       }
 
       Vector publisherVector = new Vector();
