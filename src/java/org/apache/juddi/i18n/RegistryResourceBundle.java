@@ -32,6 +32,8 @@ public class RegistryResourceBundle
   
   public static String getString(String key)
   {
+    if ((key == null) || (key.trim().length() == 0))
+      return null;    
     return getBundle().getString(key);
   }
   
