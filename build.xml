@@ -5,7 +5,8 @@ Jakarta Ant build script for jUDDI
 
 Prerequisites:
   jakarta-ant          from http://jakarta.apache.org/ant/
-  axis			       from http://ws.apache.org/axis/
+  forrest              from http://xml.apache.org/forrest/
+  axis                 from http://ws.apache.org/axis/
   commons-logging      from http://jakarta.apache.org/commons/logging.html
   servlet              from http://jakarta.apache.org/tomcat/
   jdbc-2.0-stdext      from http://jakarta.apache.org/tomcat/
@@ -26,11 +27,13 @@ Most Useful Targets:
  - compile   Compiles and jars all Java classes (default)
  - jar       Builds the jUDDI library (juddi.jar)
  - javadoc   Builds JavaDoc
+ - site      Builds the jUDDI web site
  - test      tests everything via JUnit
  - war       Builds the jUDDI Web Application (juddi.war)
  - ear       Builds the jUDDI Enterprise Application (juddi.ear)
  - binary    Builds the jUDDI binary distribution
  - source    Builds the jUDDI source distribution
+ - dist      Builds both the binary and source distributions
  - all       builds everything
  - clean     cleans everything
 
@@ -51,22 +54,23 @@ Copyright:
 
     <!-- set project-wide property values -->
     <property name="name"                value="juddi"/>
-    <property name="version"             value="0.9b1"/>
+    <property name="version"             value="0.9rc1"/>
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
     <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
-    <property name="docs.dir"            value="${basedir}/docs"/>
-  	<property name="sql.dir"             value="${basedir}/sql"/>
+    <property name="sql.dir"             value="${basedir}/sql"/>
     <property name="lib.dir"             value="${basedir}/lib"/>
+    <property name="site.dir"            value="${basedir}/site"/>
     <property name="src.dir"             value="${basedir}/src"/>
     <property name="java.dir"            value="${basedir}/src/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
     <property name="webapps.dir"         value="${basedir}/webapps"/>
     <property name="build.dir"           value="${basedir}/build"/>
-  	<property name="classes.dir"         value="${build.dir}/classes"/>
-    <property name="javadoc.dir"         value="${build.dir}/apiDocs"/>
+    <property name="classes.dir"         value="${build.dir}/classes"/>
+    <property name="docs.dir"            value="${build.dir}/docs"/>
+    <property name="javadoc.dir"         value="${docs.dir}/apiDocs"/>
     <property name="dist.src.dir"        value="${build.dir}/dist_src"/>
     <property name="dist.src.root"       value="${dist.src.dir}/${name}_${version}_src"/>
     <property name="dist.bin.dir"        value="${build.dir}/dist_bin"/>
@@ -141,8 +145,8 @@ Copyright:
   <target name="war" depends="jar">
     <mkdir dir="${build.dir}"/>
     <!-- Create the version & build time #include files -->
-	<echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
-	<echo file="${webapps.dir}/juddi/includes/buildtime.inc" append="false">${build.time}</echo>	
+    <echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
+    <echo file="${webapps.dir}/juddi/includes/buildtime.inc" append="false">${build.time}</echo>	
     <!-- Assemble juddi.war file -->
     <war warfile="${build.dir}/${war.file}" webxml="${conf.dir}/web.xml">
       <fileset dir="${webapps.dir}/juddi">
@@ -187,6 +191,16 @@ Copyright:
     </ear>
   </target>
   <!-- =================================================================== -->
+  <!-- Creates the jUDDI web site                                          -->
+  <!-- =================================================================== -->
+  <target name="site" depends="init">
+    <mkdir dir="${docs.dir}"/>
+    <ant antfile="site/build.xml" inheritAll="false"/>
+    <copy todir="${docs.dir}" overwrite="true">
+      <fileset dir="${site.dir}/build/site"/>
+    </copy>
+  </target>
+  <!-- =================================================================== -->
   <!-- Creates the complete set of JavaDoc API                             -->
   <!-- =================================================================== -->
   <target name="javadoc" depends="init">
@@ -224,6 +238,10 @@ Copyright:
       <classpath refid="project.classpath"/>
     </javadoc>
   </target>
+  <!-- =================================================================== -->
+  <!-- Build both the jUDDI web site and JavaDocs                          -->
+  <!-- =================================================================== -->
+  <target name="docs" depends="clean,site,javadoc"/>
   <!-- =================================================================== -->
   <!-- Running CheckStyle validation of jUDDI Source code                  -->
   <!-- =================================================================== -->
@@ -366,7 +384,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Creates the source distribution                                     -->
   <!-- =================================================================== -->
-  <target name="source" depends="javadoc">
+  <target name="source" depends="docs">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dist.src.dir}"/>
     <mkdir dir="${dist.src.root}"/>
@@ -377,8 +395,9 @@ Copyright:
     <copy file="checkstyle.xml" todir="${dist.src.root}"/>
     <copy file="LICENSE" todir="${dist.src.root}"/>
     <copy file="README" todir="${dist.src.root}"/>
-    <copy todir="${dist.src.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
+    <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.src.root}/conf"><fileset dir="${conf.dir}"/></copy>
+    <copy todir="${dist.src.root}/site"><fileset dir="${site.dir}"/></copy>
     <copy todir="${dist.src.root}/src"><fileset dir="${src.dir}"/></copy>
     <copy todir="${dist.src.root}/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.src.root}/webapps"><fileset dir="${webapps.dir}"/></copy>
@@ -390,13 +409,13 @@ Copyright:
         <include name="commons-dbcp.jar"/>
         <include name="commons-discovery.jar"/>
         <include name="commons-logging.jar"/>
-      	<include name="commons-pool.jar"/>
+        <include name="commons-pool.jar"/>
         <include name="log4j-1.2.8.jar"/>
         <include name="wsdl4j.jar"/>
-      	<include name="*.LICENSE"/>
+        <include name="*.LICENSE"/>
       </fileset>
     </copy>
-  	
+
     <!-- loading complete, now package the source distribution up -->
     <zip destfile="${build.dir}/juddi_${version}_src.zip" basedir="${dist.src.dir}"/>
     <tar destfile="${build.dir}/juddi_${version}_src.tar" basedir="${dist.src.dir}"/>
@@ -405,7 +424,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Creates the binary distribution                                     -->
   <!-- =================================================================== -->
-  <target name="binary" depends="ear,javadoc">
+  <target name="binary" depends="ear,site,javadoc">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${dist.bin.dir}"/>
     <mkdir dir="${dist.bin.root}"/>
@@ -416,10 +435,10 @@ Copyright:
     <copy file="${build.dir}/${jar.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
-    <copy todir="${dist.bin.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
+    <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.bin.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.bin.root}/sql"><fileset dir="${sql.dir}"/></copy>
-  	<copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
+    <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
 
     <!-- loading complete, now package the binary distribution up -->
     <zip destfile="${build.dir}/juddi_${version}_bin.zip" basedir="${dist.bin.dir}"/>
@@ -433,7 +452,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Build everything                                                    -->
   <!-- =================================================================== -->
-  <target name="all" depends="clean,jar,test,javadoc,binary,source"/>
+  <target name="all" depends="clean,jar,test,site,javadoc,binary,source"/>
   <!-- =================================================================== -->
   <!-- Build everything                                                    -->
   <!-- =================================================================== -->
@@ -446,11 +465,11 @@ Copyright:
   <!-- Note: Fails safe if krysalis-version is not available...            -->
   <!-- =================================================================== -->
   <target name="version" if="version.available" description="versioning">
-   	<taskdef resource="version" />
-	<!-- For now just log (later store for checking) -->
-   	<version-environment />
-	<!-- Brand a (standalone) version stamp into source... -->
-   	<version-stamp dest="${src.dir}" overWrite="true">
+    <taskdef resource="version" />
+    <!-- For now just log (later store for checking) -->
+    <version-environment />
+    <!-- Brand a (standalone) version stamp into source... -->
+    <version-stamp dest="${src.dir}" overWrite="true">
       <versionMarker versionId="org.apache.juddi" version="${version}">
         <defaultAttributes />
       </versionMarker>
