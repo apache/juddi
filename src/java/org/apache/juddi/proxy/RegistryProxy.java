@@ -407,6 +407,28 @@ public class RegistryProxy extends AbstractRegistry
     return uddiResponse;
   }
 
+
+  /**
+   *
+   * @param uddiRequest
+   * @return
+   * @throws RegistryException
+   */
+  public String execute(String uddiRequest, String urltype)
+    throws RegistryException
+  { 
+    URL endPointURL = null;
+    if(urltype.equalsIgnoreCase("INQUIRY"))
+      endPointURL = this.getInquiryURL();
+    else  endPointURL = this.getPublishURL();
+
+    // A SOAP request is made and a SOAP response
+    // is returned.
+
+    return transport.send(uddiRequest,endPointURL);
+ }
+
+
   /**
    * Returns an implementation of Transport based on the className passed in.
    * If a null value is passed then the default Transport implementation 
