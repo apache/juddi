@@ -17,6 +17,7 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.Description;
 import org.apache.juddi.datatype.IdentifierBag;
@@ -25,7 +26,6 @@ import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.TModelDetail;
 import org.apache.juddi.datatype.tmodel.TModel;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 

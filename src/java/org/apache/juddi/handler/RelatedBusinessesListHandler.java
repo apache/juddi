@@ -17,12 +17,12 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.BusinessKey;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.RelatedBusinessInfo;
 import org.apache.juddi.datatype.response.RelatedBusinessInfos;
 import org.apache.juddi.datatype.response.RelatedBusinessesList;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 

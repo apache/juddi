@@ -17,10 +17,10 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.datatype.response.TModelList;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 

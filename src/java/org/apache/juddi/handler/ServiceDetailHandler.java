@@ -17,6 +17,7 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.Description;
 import org.apache.juddi.datatype.KeyedReference;
@@ -32,7 +33,6 @@ import org.apache.juddi.datatype.binding.TModelInstanceDetails;
 import org.apache.juddi.datatype.binding.TModelInstanceInfo;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.datatype.service.BusinessService;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 

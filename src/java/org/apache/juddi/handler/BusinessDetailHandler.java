@@ -17,6 +17,7 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.Address;
 import org.apache.juddi.datatype.AddressLine;
 import org.apache.juddi.datatype.CategoryBag;
@@ -42,7 +43,6 @@ import org.apache.juddi.datatype.business.Contacts;
 import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.datatype.service.BusinessService;
 import org.apache.juddi.datatype.service.BusinessServices;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 

@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.juddi.AbstractRegistry;
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.Admin;
 import org.apache.juddi.datatype.request.AuthInfo;
@@ -31,8 +33,6 @@ import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
-import org.apache.juddi.registry.AbstractRegistry;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.Loader;
 import org.apache.juddi.util.xml.XMLUtils;
 

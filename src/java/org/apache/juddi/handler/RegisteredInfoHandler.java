@@ -17,6 +17,7 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
+import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.Description;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.RegistryObject;
@@ -26,7 +27,6 @@ import org.apache.juddi.datatype.response.RegisteredInfo;
 import org.apache.juddi.datatype.response.ServiceInfo;
 import org.apache.juddi.datatype.response.TModelInfo;
 import org.apache.juddi.datatype.response.TModelInfos;
-import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
