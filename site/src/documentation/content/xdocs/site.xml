@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://xml.apache.org/cocoon/
+
+See http://xml.apache.org/forrest/linking.html for more info
+-->
+
+<site label="jUDDI" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+
+  <about label="About">
+    <index label="Index" href="index.html" description="jUDDI"/>
+    <index label="FAQ" href="faq.html" description="FAQ"/>
+    <index label="Community" href="lists.html" description="Community"/>
+  </about>
+
+
+  <all>
+    <whole_site_html label="Whole Site HTML" href="site.html"/>
+    <whole_site_html label="Whole Site PDF" href="site.pdf"/>
+  </all>
+
+  <external-refs>
+    <xml.apache.org href="http://xml.apache.org/">
+      <forrest href="forrest/">
+        <validation href="validation.html"/>
+        <webapp href="your-project.html#webapp"/>
+        <document-v11 href="document-v11.html"/>
+      </forrest>
+      <cocoon href="cocoon/"/>
+    </xml.apache.org>
+  </external-refs>
+
+</site>

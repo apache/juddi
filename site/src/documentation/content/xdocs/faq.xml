@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document>
+  <header>
+    <title>jUDDI FAQ</title>
+  </header>
+  <body>
+    <section>
+      <title>JDK Requirements</title>
+        <p>jUDDI 0.7 requires a 1.4.x JDK. You can compile and run with
+        a 1.3.x JDK, if you remove the package org.apache.juddi.auth.crypt from your codebase.
+        </p>
+        </section>
+    <section>
+
+<title>Using an embedded database</title>
+
+<p >You can use the juddi.useConnectionPool property (and other
+related properties) to avoid using the JNDI lookup. Here's a sample setup of
+juddi.properties </p>
+
+<p>Required JDBC DataSource properties<br>
+</br>juddi.dataSource = java:comp/env/jdbc/juddiDB
+
+required JDBC Driver properties
+juddi.useConnectionPool = true<br>
+</br>juddi.jdbcDriver = org.hsqldb.jdbcDriver
+juddi.jdbcURL =
+jdbc:hsqldb:C:/jakarta-tomcat/server/webapps/juddi/WEB-INF/hsql/juddidb
+juddi.jdbcUser = sa
+juddi.jdbcPassword =
+
+# optional JDBC Driver connection pool properties
+juddi.jdbcMinConnections = 3
+juddi.jdbcMaxConnections = 50
+juddi.jdbcMaxWaitTime = 15000
+juddi.jdbcRetryInterval = 1000</p>
+</section>
+<section>
+  <title>How do I configure jUDDI to run with Tomcat, MySQL and use a JNDI DataSource?</title>
+
+<p >A good setup is discussed here <a
+href="http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138" target="_setup">http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138</a></p>
+</section>
+<h3><a name="_Writing_a_pluggable"></a>Writing a pluggable authentication module</h3>
+
+<p >
+You can configure jUDDI to use one of the three Authentication modules supplied or you can write your own Authenticator that integrates jUDDI with your organizations authentication mechanism. All you have to do to create your own Authenticator is:
+</p>
+
+<ul>
+<li>create a class that implements the Authenticator interface (your Authenticator)</li>
+<li>create a class that extends the AuthenticatorFactory abstract class (your Authenticator's Factory)</li>
+<li>specify your AuthenticatorFactory in jUDDI's property file ("juddi.properties").</li>
+</ul>
+
+Example: <b>juddi.authFactory = org.apache.juddi.auth.simple.SimpleAuthenticatorFactory</b>
+<p>
+In the example above you'll need to replace "org.apache.juddi.auth.simple.SimpleAuthenticatorFactory" with the fully qualified name of your AuthenticatorFactory class. Take a look at the SimpleAuthenticator and SimpleAuthenticationFactory classes in the "org.apache.juddi.auth.simple" package for an example
+</p>
+
+
+<h3><a name="_Using_a_datastore"></a>Using a datastore without JDBC</h3>
+
+<p >jUDDI is designed to allow different persistence (datastore)
+implementations to be &quot;plugged-in&quot;. The JDBCDataStore included with
+jUDDI attempts to support as many as the mainstream RDBMS's as possible
+(Oracle, DB2, Sybase, MySQL - even HSQLDB). </p>
+
+<p>If you're interested in using something other than JDBC or if you want to
+take advantages of proprietary features of your RDBMS (i.e. using stored
+procedures to improve performance) then you will need to develop your own
+datastore implementation. To do so you'll need to create implementations of the
+DataStoreFactory and DataStore interfaces in the org.apache.juddi.datastore package
+and make a change to the jUDDI properties file to use your new DataStoreFactory
+implementation (i.e. the judd.dataStoreFactory property) instead of the one
+supplied. </p>
+
+<p>Check out jUDDI's JDBCDataStoreFactory and JDBCDataStore for examples. </p>
+
+<h3><a name="_Can_I_use"></a>Which Application Servers does jUDDI support?</h3>
+
+        <p >jUDDI is known to work with a number of application
+          servers like Tomcat, Sybase EAServer and Borland Enterprise Server 5.2 and 6.0.
+          A Sybase EAServer deployment guide is available <a href="easerver.html" target="_easerver">here</a>.</p>
+        <p ><br />
+          <b><i>jUDDI FAQ Contributors:
+          </i></b> <em>Steve Viens</em>
+          <em>Anou Manavalan</em>
+          <em>Rupesh Ramachandran</em>
+          <em>Andy Cutright</em> </p>
+
+</body>
+</document>

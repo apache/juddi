@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document>
+  <header>
+    <title>jUDDI Community</title>
+  </header>
+  <body>
+
+        <section>
+          <title>Web Services PMC</title>
+
+      <p>jUDDI is now being incubated within the Web Services PMC as part of the
+      to the <a href="http://incubator.apache.org/">Apache Incubator</a>. Part
+      of this transition involves decommissioning the lists formely hosted
+      on SourceForge.net including juddi-announce, juddi-users and juddi-developers.
+        </p>
+        </section>
+
+        <section>
+          <title>jUDDI users</title>
+      <p>The <STRONG>juddi-user@ws.apache.org</STRONG> mailing list
+      is the primary source of support for anyone using jUDDI. Use this list for
+      posting questions (and answers) related to the installation, configuration
+      and use of jUDDI.
+      </p>
+        </section>
+        <section>
+          <title>jUDDI dev</title>
+      <p>The <STRONG>juddi-dev@ws.apache.org</STRONG> mailing list is for
+      discussions about the jUDDI architecture, build process, testing and
+      implementation details.
+      </p>
+              </section>
+        <section>
+          <title>Archives</title>
+
+      <p><STRONG>NOTE:</STRONG> Archives for the original jUDDI lists will continue to
+      be available on SourceForge.net indefinitely. Click
+      <A href="http://sourceforge.net/mail/?group_id=42875" target="_top">here</A> to
+      browse them.
+      </p>
+      </section>
+
+  </body>
+</document>

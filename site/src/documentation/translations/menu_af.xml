@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<catalogue xml:lang="af">
+    <message key="About">Aangaande</message>
+    <message key="Index">Inhoud</message>
+    <message key="Changes">Veranderinge</message>
+    <message key="Todo">Om te doen</message>
+    <message key="Samples">Voorbeelde</message>
+    <message key="Apache document">Apache dokument</message>
+    <message key="Static content">Statise Inhoud</message>
+    <message key="Wiki page">Wiki bladsy</message>
+    <message key="ihtml page">Ihtml bladsy</message>
+    <message key="ehtml page">Ehtml bladsy</message>
+    <message key="FAQ">FAQ</message>
+    <message key="Simplifed Docbook">Vereenvoudigde Docbook</message>
+    <message key="XSP page">XSP bladsy</message>
+</catalogue>
