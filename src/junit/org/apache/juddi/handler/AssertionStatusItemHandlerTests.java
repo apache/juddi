@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author anou_mana@users.sourceforge.net
+ * @author anou_mana@apache.org
  */
 public class AssertionStatusItemHandlerTests extends TestCase
 {
@@ -59,7 +59,7 @@ public class AssertionStatusItemHandlerTests extends TestCase
 		KeysOwned keysOwned = new KeysOwned();
 		keysOwned.setToKey("dfddb58c-4853-4a71-865c-f84509017cc7");
 		keysOwned.setFromKey("fe8af00d-3a2c-4e05-b7ca-95a1259aad4f");
-    
+
 		object.setCompletionStatus(new CompletionStatus(CompletionStatus.COMPLETE));
 		object.setFromKey("986d9a16-5d4d-46cf-9fac-6bb80a7091f6");
 		object.setToKey("dd45a24c-74fc-4e82-80c2-f99cdc76d681");
@@ -69,14 +69,14 @@ public class AssertionStatusItemHandlerTests extends TestCase
 		return object;
 
 	}
-	
+
 	private String getXMLString(Element element)
 	{
 		StringWriter writer = new StringWriter();
 		XMLUtils.writeXML(element,writer);
 
 		String xmlString = writer.toString();
-		
+
 		try
 		{
 			writer.close();
@@ -84,10 +84,10 @@ public class AssertionStatusItemHandlerTests extends TestCase
 		catch(IOException exp)
 		{
 		}
-		
+
 		return xmlString;
 	}
-	
+
 	private Element getMarshalledElement(RegistryObject regObject)
 	{
 		Element parent = XMLUtils.newRootElement();
@@ -95,50 +95,50 @@ public class AssertionStatusItemHandlerTests extends TestCase
 
 		if(regObject == null)
 			regObject = this.getRegistryObject();
-		
+
 		handler.marshal(regObject,parent);
 		child = (Element)parent.getFirstChild();
 		parent.removeChild(child);
 
 		return child;
 	}
-	
+
 	public void testMarshal()
 	{
 		Element child = getMarshalledElement(null);
-		
+
 		String marshalledString = this.getXMLString(child);
-		
+
 		assertNotNull("Marshalled AssertionStatusItem ", marshalledString);
 
 	}
-	
+
 	public void testUnMarshal()
 	{
-				
+
 		Element child = getMarshalledElement(null);
 		RegistryObject regObject = handler.unmarshal(child);
-		
+
 		assertNotNull("UnMarshalled AssertionStatusItem ", regObject);
 
 	}
-	
+
   public void testMarshUnMarshal()
   {
 		Element child = getMarshalledElement(null);
-		
+
 		String marshalledString = this.getXMLString(child);
-		
+
 		assertNotNull("Marshalled AssertionStatusItem ", marshalledString);
-		
+
 		RegistryObject regObject = handler.unmarshal(child);
-		
+
 		child = getMarshalledElement(regObject);
 
 		String unMarshalledString = this.getXMLString(child);
-		
+
 		assertNotNull("Unmarshalled AssertionStatusItem ", unMarshalledString);
-		
+
 		boolean equals = marshalledString.equals(unMarshalledString);
 
 		assertEquals("Expected result: ", marshalledString, unMarshalledString );

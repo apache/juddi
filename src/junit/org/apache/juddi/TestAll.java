@@ -18,7 +18,7 @@ package org.apache.juddi;
 import junit.framework.*;
 
 /**
- * @author Steve Viens (sviens@users.sourceforge.net)
+ * @author Steve Viens (sviens@apache.org)
  */
 public class TestAll extends TestCase
 {

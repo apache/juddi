@@ -27,7 +27,7 @@ import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
 /**
- * @author anou_mana@users.sourceforge.net
+ * @author anou_mana@apache.org
  */
 public class  TModelBagHandlerTests extends TestCase
 {
