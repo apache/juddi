@@ -372,13 +372,37 @@ public class RegistryServlet extends HttpServlet
           }
         }
       }
-      else
+      else if (ex instanceof SOAPException)
       {
-        // All other exceptions (other than RegistryException
-        // and subclasses) are either a result of a jUDDI 
-        // configuration problem or something that we *should* 
-        // be catching and converting to a RegistryException 
-        // but are not (yet!).
+        log.error(ex.getMessage());
+          
+        // Because something occured that jUDDI wasn't expecting
+        // let's set default SOAP Fault values.  Since SOAPExceptions
+        // here are most likely XML validation errors let's blame the
+        // client by placing "Client" in the Fault Code and pass
+        // the Exception message back to the client.
+        
+        faultCode = "Client";
+        faultString = ex.getMessage();
+        faultActor = null;
+        
+        // Let's set default values for the UDDI DispositionReport
+        // here.  While we didn't catch a RegistryException (or 
+        // subclass) we're going to be friendly and include a
+        // FatalError DispositionReport within the message from the 
+        // SAX parsing problem in the SOAP Fault anyway.
+        
+        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errCode = Result.E_FATAL_ERROR_CODE;
+        errMsg = ex.getMessage();
+      }
+      else // anything else
+      {
+        // All other exceptions (other than SOAPException or 
+        // RegistryException and subclasses) are either a result 
+        // of a jUDDI configuration problem or something that 
+        // we *should* be catching and converting to a 
+        // RegistryException but are not (yet!).
             
         log.error(ex.getMessage(),ex);
 
