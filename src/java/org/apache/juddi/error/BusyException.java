@@ -29,7 +29,7 @@ public class BusyException extends RegistryException
    */
   public BusyException(String msg)
   {
-    super(msg);
+    super(Result.E_BUSY_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class AssertionNotFoundException extends RegistryException
 {
   public AssertionNotFoundException(String msg)
   {
-    super(msg);
+    super(Result.E_ASSERTION_NOT_FOUND_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

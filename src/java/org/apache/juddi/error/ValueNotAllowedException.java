@@ -26,7 +26,7 @@ public class ValueNotAllowedException extends RegistryException
 {
   public ValueNotAllowedException(String msg)
   {
-    super(msg);
+    super(Result.E_VALUE_NOT_ALLOWED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

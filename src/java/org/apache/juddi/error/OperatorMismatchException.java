@@ -28,7 +28,7 @@ public class OperatorMismatchException extends RegistryException
 {
   public OperatorMismatchException(String msg)
   {
-    super(msg);
+    super(Result.E_OPERATOR_MISMATCH_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

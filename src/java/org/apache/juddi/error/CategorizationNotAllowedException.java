@@ -28,7 +28,7 @@ public class CategorizationNotAllowedException extends RegistryException
 {
   public CategorizationNotAllowedException(String msg)
   {
-    super(msg);
+    super(Result.E_CATEGORIZATION_NOT_ALLOWED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

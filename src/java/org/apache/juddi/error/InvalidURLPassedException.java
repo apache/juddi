@@ -27,7 +27,7 @@ public class InvalidURLPassedException extends RegistryException
 {
   public InvalidURLPassedException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_URL_PASSED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

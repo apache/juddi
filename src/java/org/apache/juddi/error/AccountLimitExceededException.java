@@ -26,7 +26,7 @@ public class AccountLimitExceededException extends RegistryException
 {
   public AccountLimitExceededException(String msg)
   {
-    super(msg);
+    super(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class LanguageErrorException extends RegistryException
 {
   public LanguageErrorException(String msg)
   {
-    super(msg);
+    super(Result.E_LANGUAGE_ERROR_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

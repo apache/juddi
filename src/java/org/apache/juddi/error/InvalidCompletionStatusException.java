@@ -26,7 +26,7 @@ public class InvalidCompletionStatusException extends RegistryException
 {
   public InvalidCompletionStatusException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_COMPLETION_STATUS_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

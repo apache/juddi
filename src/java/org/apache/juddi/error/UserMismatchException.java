@@ -26,7 +26,7 @@ public class UserMismatchException extends RegistryException
 {
   public UserMismatchException(String msg)
   {
-    super(msg);
+    super(Result.E_USER_MISMATCH_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

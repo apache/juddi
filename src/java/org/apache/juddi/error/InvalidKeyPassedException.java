@@ -26,7 +26,7 @@ public class InvalidKeyPassedException extends RegistryException
 {
   public InvalidKeyPassedException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_KEY_PASSED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class FatalErrorException extends RegistryException
 {
   public FatalErrorException(String msg)
   {
-    super(msg);
+    super(Result.E_FATAL_ERROR_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

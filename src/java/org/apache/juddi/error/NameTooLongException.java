@@ -26,7 +26,7 @@ public class NameTooLongException extends RegistryException
 {
   public NameTooLongException(String msg)
   {
-    super(msg);
+    super(Result.E_NAME_TOO_LONG_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

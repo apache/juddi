@@ -26,7 +26,7 @@ public class AuthTokenRequiredException extends RegistryException
 {
   public AuthTokenRequiredException(String msg)
   {
-    super(msg);
+    super(Result.E_AUTH_TOKEN_REQUIRED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

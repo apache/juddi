@@ -26,7 +26,7 @@ public class AuthTokenExpiredException extends RegistryException
 {
   public AuthTokenExpiredException(String msg)
   {
-    super(msg);
+    super(Result.E_AUTH_TOKEN_EXPIRED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class InvalidValueException extends RegistryException
 {
   public InvalidValueException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_VALUE_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class InvalidProjectionException extends RegistryException
 {
   public InvalidProjectionException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_PROJECTION_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class MessageTooLargeException extends RegistryException
 {
   public MessageTooLargeException(String msg)
   {
-    super(msg);
+    super(Result.E_MESSAGE_TOO_LARGE_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class InvalidCategoryException extends RegistryException
 {
   public InvalidCategoryException(String msg)
   {
-    super(msg);
+    super(Result.E_INVALID_CATEGORY_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

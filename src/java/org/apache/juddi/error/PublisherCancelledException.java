@@ -26,7 +26,7 @@ public class PublisherCancelledException extends RegistryException
 {
   public PublisherCancelledException(String msg)
   {
-    super(msg);
+    super(Result.E_PUBLISHER_CANCELLED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

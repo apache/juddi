@@ -26,7 +26,7 @@ public class SecretUnknownException extends RegistryException
 {
   public SecretUnknownException(String msg)
   {
-    super(msg);
+    super(Result.E_SECRET_UNKNOWN_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

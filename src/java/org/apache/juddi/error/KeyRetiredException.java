@@ -28,7 +28,7 @@ public class KeyRetiredException extends RegistryException
 {
   public KeyRetiredException(String msg)
   {
-    super(msg);
+    super(Result.E_KEY_RETIRED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class RequestDeniedException extends RegistryException
 {
   public RequestDeniedException(String msg)
   {
-    super(msg);
+    super(Result.E_REQUEST_DENIED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class UnrecognizedVersionException extends RegistryException
 {
   public UnrecognizedVersionException(String msg)
   {
-    super(msg);
+    super(Result.E_UNRECOGNIZED_VERSION_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

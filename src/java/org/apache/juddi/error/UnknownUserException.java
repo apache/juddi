@@ -26,7 +26,7 @@ public class UnknownUserException extends RegistryException
 {
   public UnknownUserException(String msg)
   {
-    super(msg);
+    super(Result.E_UNKNOWN_USER_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle

@@ -26,7 +26,7 @@ public class UnsupportedException extends RegistryException
 {
   public UnsupportedException(String msg)
   {
-    super(msg);
+    super(Result.E_UNSUPPORTED_CODE+": "+msg);
 
     // grab the locale specific error
     // message from the ResourceBundle
