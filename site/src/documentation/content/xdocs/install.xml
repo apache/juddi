@@ -20,7 +20,7 @@
         or servlet engine will vary on a product-by-product basis.
       </p>
       <p>Instructions for deploying jUDDI to several application servers have
-        been donated and are available in the <link href="http://wiki.apache.org/ws/HOW_2dTOs">HOW-TO</link>
+        been donated and are available in the <link href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs">HOW-TO</link>
         section of the jUDDI wiki.
       </p>
       <p>jUDDI also requires an external datastore in which to persist the 
