@@ -62,6 +62,7 @@ import org.apache.juddi.uuidgen.UUIDGenFactory;
 
 /**
  * @author Steve Viens (sviens@apache.org)
+ * @author Anil Saldhana (anil@apache.org)
  */
 public class JDBCDataStore implements DataStore
 {
@@ -165,7 +166,7 @@ public class JDBCDataStore implements DataStore
    *
    * @param publisherID
    * @return publisher
-   * @throws UDDIException
+   * @throws RegistryException
    */
   public Publisher getPublisher(String publisherID)
     throws RegistryException
@@ -254,7 +255,7 @@ public class JDBCDataStore implements DataStore
    *
    * @param publisher
    * @return String
-   * @throws UDDIException
+   * @throws RegistryException
    */
   public String generateToken(Publisher publisher)
     throws RegistryException
@@ -1531,6 +1532,21 @@ public class JDBCDataStore implements DataStore
 
       if ((categoryBag != null) && (categoryBag.size() > 0))
         keyVector = FindBindingByCategoryQuery.select(serviceKey,categoryBag,keyVector,findQualifiers,connection);
+
+       /**
+        *  Anil: Only if the serviceKey is passed
+        */
+
+      if((serviceKey != null) && (tModelBag == null) && (categoryBag == null))
+      {
+         Vector bindtempVect= BindingTemplateTable.selectByServiceKey(serviceKey,connection);
+         for(int i=0; bindtempVect != null && i < bindtempVect.size();i++)
+         {
+            BindingTemplate bt = (BindingTemplate)bindtempVect.elementAt(i);
+            if(keyVector == null )  keyVector = new Vector(bindtempVect.size());
+            keyVector.add(bt.getBindingKey());
+         }
+      }
     }
     catch(java.sql.SQLException sqlex)
     {
