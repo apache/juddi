@@ -459,7 +459,13 @@ public class JDBCDataStore implements DataStore
           {
             BusinessService service = (BusinessService)serviceVector.elementAt(j);
             service.setBusinessKey(businessKey);
-            service.setServiceKey(uuidgen.uuidgen());
+
+            // create a new key if serviceKey isn't specified
+            String serviceKey = service.getServiceKey();
+            if ((serviceKey == null) || (serviceKey.length() == 0)) {
+              service.setServiceKey(uuidgen.uuidgen());
+            }
+            
             saveService(service);
           }
         }
@@ -668,7 +674,13 @@ public class JDBCDataStore implements DataStore
         {
           BindingTemplate binding = (BindingTemplate)bindingList.elementAt(i);
           binding.setServiceKey(serviceKey);
-          binding.setBindingKey(uuidgen.uuidgen());
+          
+          // create a new key if bindingKey isn't specified
+          String bindingKey = binding.getBindingKey();
+          if ((bindingKey == null) || (bindingKey.length() == 0)) {
+             binding.setBindingKey(uuidgen.uuidgen());
+          }
+
           saveBinding(binding);
         }
       }
