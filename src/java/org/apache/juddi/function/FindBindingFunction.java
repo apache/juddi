@@ -71,13 +71,9 @@ public class FindBindingFunction extends AbstractFunction
     // first make sure we need to continue with this request. If
     // no arguments were passed in then we'll simply return
     // an empty ServiceList (aka "a zero match result set").
-     /**
-      * NOTE from anil:  This is not correct. If there is a request
-      * to provide BindingTemplate with only the Service Key provided.
-      * You need to provide the list.
-      */
-    /*if(((categoryBag == null) || (categoryBag.size() == 0)) &&
-      ((tModelBag == null)   || (tModelBag.size() == 0)))
+    if(((serviceKey == null) || (serviceKey.length() == 0)) &&
+       ((categoryBag == null) || (categoryBag.size() == 0)) &&
+       ((tModelBag == null)   || (tModelBag.size() == 0)))
     {
       BindingDetail detail = new BindingDetail();
       detail.setGeneric(generic);
@@ -85,7 +81,7 @@ public class FindBindingFunction extends AbstractFunction
       detail.setOperator(Config.getOperator());
       detail.setTruncated(false);
       return detail;
-    } */
+    }
 
     // Validate CategoryBag and (if neccessary) add TModelKey for: uddiorg:general_keywords
     if (categoryBag != null)

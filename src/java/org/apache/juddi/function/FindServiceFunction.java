@@ -73,7 +73,8 @@ public class FindServiceFunction extends AbstractFunction
     // first make sure we need to continue with this request. If
     // no arguments were passed in then we'll simply return
     // an empty ServiceList (aka "a zero match result set").
-    if (((nameVector == null) || (nameVector.size() == 0))  &&
+    if(((businessKey == null) || (businessKey.length() == 0)) &&
+       ((nameVector == null) || (nameVector.size() == 0))  &&
        ((categoryBag == null) || (categoryBag.size() == 0)) &&
        ((tModelBag == null)   || (tModelBag.size() == 0)))
     {
