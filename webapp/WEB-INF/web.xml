@@ -31,13 +31,11 @@
     <display-name>jUDDI Admin Servlet</display-name>
     <servlet-class>org.apache.juddi.transport.axis.AdminServlet</servlet-class>
   </servlet>
-
   <servlet>
     <servlet-name>jUDDIInquiryServlet</servlet-name>
     <display-name>jUDDI Inquiry Servlet</display-name>
     <servlet-class>org.apache.juddi.transport.axis.InquiryServlet</servlet-class>
-  </servlet>  
-  
+  </servlet>    
   <servlet>
     <servlet-name>jUDDIPublishServlet</servlet-name>
     <display-name>jUDDI Publish Servlet</display-name>
@@ -45,15 +43,26 @@
   </servlet>
 
   <servlet-mapping>
+    <servlet-name>jUDDIRegistryServlet</servlet-name>
+    <url-pattern>/v2/inquiry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jUDDIRegistryServlet</servlet-name>
+    <url-pattern>/v2/publish</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>jUDDIRegistryServlet</servlet-name>
+    <url-pattern>/v2/admin</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>jUDDIAdminServlet</servlet-name>
     <url-pattern>/admin</url-pattern>
-  </servlet-mapping>
-  
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>jUDDIInquiryServlet</servlet-name>
     <url-pattern>/inquiry</url-pattern>
-  </servlet-mapping>
-  
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>jUDDIPublishServlet</servlet-name>
     <url-pattern>/publish</url-pattern>
