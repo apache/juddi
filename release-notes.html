@@ -1,0 +1,413 @@
+<html>
+<head>
+<title>jUDDI Release Notes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+body {
+  margin:      0px 10px 10px 10px;
+  font-family: "Trebuchet MS", sans-serif;
+  font-size:   10pt;
+  background:  #FFF;
+  color:       #000;
+}
+
+h1 {
+	font-family: "Trebuchet MS", sans-serif;
+	background: #00005A;
+	font-weight: normal;
+	color: White;
+	padding: 5px 10px;
+	margin: 0px -10px 10px -10px;
+}
+
+h2 {
+	font-family: "Trebuchet MS", sans-serif;
+	color: #00005A;
+}
+
+h3 {
+	font-family: "Trebuchet MS", sans-serif;
+	color: #00005A;
+}
+
+h4 {
+	font-family: "Trebuchet MS", sans-serif;
+	color: #00005A;
+}
+
+.sidebar {
+	border: 1px solid #00005A;
+	background: #EEE;
+	padding: 5px;
+}
+
+pre.code_sample {
+  background: #EEE;
+  padding: 5px;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dl {
+  margin-left: 3em;
+}
+
+td {
+  font-size:   10pt;
+}
+
+DIV.announcement dl {
+  margin-left: 0px;
+}
+
+div.NAV {
+  background: #000;
+  margin: 0px -10px;
+  padding: 2px 10px;
+  color: #CCC;
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+div.NAV A {
+  color: #CCC;
+  text-decoration: none;
+}
+
+div.NAV A:hover {
+  color: #FFF;
+}
+
+.ednote {
+  color: #999;
+  font-style: italic;
+}
+
+.cvs_id {
+  color: #999;
+  font-size: 8pt;
+  border-top: solid 1px #999;
+}
+
+.author {
+  font-size: 14pt;
+  font-style: italic;
+}
+
+var {
+  font-style: italic;
+  color: #900;
+}
+
+div.footer {
+  color: #666699; margin: 0px -10px; padding: 2px 10px; font-size: 8pt; font-weight: normal;
+}
+
+div.footer a {
+  color: #666699; text-decoration: none;
+}
+
+div.footer a:hover {
+  color: #666699; text-decoration: underline;
+}
+-->
+</style>
+</head>
+<body>
+<div class="nav" align="right"><font size="-2"><a href="http://www.juddi.org/" target="_top">jUDDI.org</a></font></div><h1>jUDDI 0.8.0 Release Notes</h1>
+
+<p>This is the 0.8.0 release</a> of the <a href="http://www.juddi.org"> jUDDI Web Services Discovery Toolkit</a>.</p>
+
+<h3>About this release</h3>
+<p>This release... TO-DO</p>
+
+<h3>Changes From 0.8.0 to 0.8.1</h3>
+<pre>
+
+  1. Added CategoryBag support to BindingTemplate
+     per UDDI v3 specification.
+
+  2. Fixed bug# 784297 by replacing use of JDBC
+     Statement with PreparedStatement so that all
+     SQL values are escaped by the JDBC driver.
+
+  3. Table creation scripts (DDL) have been added
+     for PostgreSQL DBMS. Contributed by Glenn
+     Bullock. (http://www.postgresql.org)
+
+  4. Table creation scripts (DDL) have been added
+     for the TotalXML XML Database. Contributed by
+     B. Subrahmanya Nayak (http://www.totalxml.net/)
+
+  5. Fixed bug# 796725, discarded authTokens
+     can be used to update the registry. A new
+     query is added to AuthTokenTable.java;
+     JDBCDataStore.java calls this query to
+     validate the authToken's state.
+
+  6. Replaced jUDDI's internal ConnectionPooling
+     with Jakarta Commons DBCP package. This type
+     of connection pooling is useful when using
+     the jUDDI WebApp (or simply the RegistryEngine)
+     in an environment where JNDI is not available.
+  
+  7. Moved Anou's encryption code into a new 
+     org.apache.juddi.cryptor package (from the
+     org.apache.juddi.auth.crypt package) so that
+     the functionality could be used elsewhere.
+     
+  8. Eliminated the need to subclass AuthenticatorFactory
+     and moved all Authenticator implementations 
+     up into the org.apache.juddi.auth package.
+     
+  9. Renamed SimpleAuthenticator to DefaultAuthenticator
+     to coincide with the "DefaultXxxx" naming 
+     convention used in other packages.
+     
+ 10. Renamed the default UUIDGen implementation 
+     from org.apache.juddi.uuidgen.QuickUUIDGen to 
+     DefaultUUIDGen (it remains in the same package).
+    
+ 11. Renamed the org.apache.juddi.client package to 
+     org.apache.juddi.proxy.
+     
+ 12. Eliminated the unimplemented org.apache.juddi.monitor.http
+     package.
+   
+</pre>
+
+
+<h3>Changes From 0.7.2 to 0.8.0</h3>
+<pre>
+
+  1. The version of Axis included with jUDDI is now
+     Axis 1.1 Final. The 'log4j.properties' file
+     that is bundled within axis.jar has been removed
+     to avoid conflicts with the log4j.properties
+     file in jUDDI's WEB-INF/classes directory.
+
+  2. Log4j is now accessed through Jakarta's
+     commons-logging package.
+
+  3. &lt;env-entry&gt; values for juddi.propsFile
+     and log4j.propsFile are no longer requred.
+     Instead the juddi.properties and
+     log4j.properties files are looked up in
+     the classpath.
+
+     This means that for the jUDDI webapp these
+     files should be located in the WEB-INF/lib
+     directory (they are copied from juddi/conf
+     into this directory the build process).
+
+  4. A jUDDI client has been added bringing
+     jUDDI full-circle back to being a UDDI
+     toolkit (beginnings of one). Take a look
+     at org.apache.juddi.registry.RegistryProxy
+     and also take a look at the contents of
+     the juddi/samples directory.
+
+  5. The beginnings of an admin API has been
+     introduced with the addition of four
+     jUDDI-proprietary API calls (which are
+     still under construction).
+
+         save_publisher
+         get_publisherDetail
+         delete_publisher
+         find_publisher
+
+     This introduced several new classes:
+
+       org.apache.juddidatatype.request.SavePublisher
+       org.apache.juddidatatype.request.GetPublisherDetail
+       org.apache.juddidatatype.request.DeletePublisher
+       org.apache.juddidatatype.request.FindPublisher
+       org.apache.juddidatatype.publisher.PublisherID
+       org.apache.juddidatatype.response.PublisherList
+       org.apache.juddidatatype.response.PublisherDetail
+       org.apache.juddidatatype.response.PublisherInfo
+       org.apache.juddidatatype.response.PublisherInfos
+
+	Handlers for each of the classes above have
+	also been created in the org.apache.juddihandlers
+	package.
+
+
+  6. Added support for the 'generic' attribute
+     to the UDDI Response messages (this was
+     being handled in the AxixRequestHandler).
+     Also updated all associated Handler
+     classes to marshal/unmarshal this value.
+
+  7. The org.apache.juddiregistry.functions package
+     was moved/renamted to org.apache.juddifunctions.
+
+  8. (bug-fix) Added a default constructor to
+     org.apache.juddidatatype.response.PublisherAssertions
+
+  9. (bug-fix) Added support for mashalling &
+     unmarshalling the 'operator' value to
+     org.apache.juddihandler.PublisherAssertionsHandler.
+
+ 10. Expanded the PUBLISHER table to support the
+     new jUDDI Admin API
+
+     *** THIS IS IMPORTANT TO NOTE AS ANY EXISTING
+     jUDDI IMPLEMENTATION WILL NEED TO MAKE THIS
+     CHANGE BEFORE USING THE MOST MOST RECENT JUDDI
+     SOURCE!!!
+
+     The 0.7.0 and 0.7.1 PUBLISHER table:
+
+	  CREATE TABLE PUBLISHER
+	  (
+	    PUBLISHER_ID VARCHAR(20) NOT NULL,
+	    PUBLISHER_NAME VARCHAR(255) NOT NULL,
+	    ADMIN VARCHAR(5) NULL,
+	    PRIMARY KEY (PUBLISHER_ID)
+	  );
+
+     The new PUBLISHER table:
+     (from ddl/juddi_mysql.ddl)
+
+	  CREATE TABLE PUBLISHER
+	  (
+	    PUBLISHER_ID VARCHAR(20) NOT NULL,
+	    PUBLISHER_NAME VARCHAR(255) NOT NULL,
+	    LAST_NAME VARCHAR(150) NULL,
+	    FIRST_NAME VARCHAR(100) NULL,
+	    MIDDLE_INIT VARCHAR(5) NULL,
+	    WORK_PHONE VARCHAR(50) NULL,
+	    MOBILE_PHONE VARCHAR(50) NULL,
+	    PAGER VARCHAR(50) NULL,
+	    EMAIL_ADDRESS VARCHAR(255) NULL,
+	    ADMIN VARCHAR(5) NULL,
+	    ENABLED VARCHAR(5) NULL,
+	    PRIMARY KEY (PUBLISHER_ID)
+	  );
+
+ 11. The following two methods have been removed
+     from the abstract 'Handler' class and all
+     subclasses (lots of them) and any imports
+     that were required by these methods.
+
+      RegistryObject unmarshal(SOAPElement e)
+      void marshal(RegistryObject o,SOAPElement e)
+
+     These were never completely implemented
+     or used by jUDDI.
+
+ 12. Added new 'test' and 'checkstyle' Ant
+     tasks.
+
+ 13. The happyjuddi.jsp page has been updated
+     with several great new 'debugging' features.
+
+ 14. When specifying a JNDI name for a JDBC
+     DataSource in jUDDI's juddi.properties file
+     you must now use a fully qualified name.
+
+      Old way (0.7.2 and earlier):
+
+        juddi.dataSource=jdbc/juddiDB
+
+      New way: (0.8.0 and later):
+
+        juddi.dataSource=java:comp/env/jdbc/juddiDB
+
+ 15. Both getGeneric() and setGeneric() methods were
+     added to the following list of classes in the
+     org.apache.juddidatatype.response package:
+
+	  AssertionStatusReport
+	  AuthToken
+	  BindingDetail
+	  BusinessDetail
+	  BusinessDetailExt
+	  BusinessList
+	  PublisherAssertions
+	  RegisteredInfo
+	  RelatedBusinessList
+	  ServiceDetail
+	  ServiceList
+	  TModelDetail
+	  TModelList
+
+	 The following handler classes from the
+	 the org.apache.juddihandler package were updated
+	 to marshal/unmarshal the new generic value.
+
+	  AssertionStatusReportHandler
+	  AuthTokenHandler
+	  BindingDetailHandler
+	  BusinessDetailHandler
+	  BusinessDetailExtHandler
+	  BusinessListHandler
+	  PublisherAssertionsHandler
+	  RegisteredInfoHandler
+	  RelatedBusinessListHandler
+	  ServiceDetailHandler
+	  ServiceListHandler
+	  TModelDetailHandler
+	  TModelListHandler
+
+   This value was being set in the AxisProcessor
+   (in org.apache.judditransport.axis). All associated
+   unit test methods within the XxxxHandler classes
+   were updated as well.
+</pre>
+
+
+<h3>Changes From 0.7.1 to 0.7.2</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>Changes From 0.7.0 to 0.7.1</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>Changes From 0.6.2 to 0.7.0</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>Changes From 0.6.1 to 0.6.2</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>Changes From 0.6.0 to 0.6.1</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>Changes From 0.5.1 to 0.6.0</h3>
+<pre>
+  TO-DO
+</pre>
+
+
+<h3>More Info</h3>
+
+<p>Please check out the included documentation and the <a href="http://www.juddi.org/faq.html">FAQ</a>
+  for more information.</p>
+<h3>How You Can Help</h3>
+<p>Coding, testing, and helping to answer questions on the juddi-users list are all greatly
+  appreciated. We particularly encourage you to submit improvements to the documentation,
+  however large or small and in any format, to <a href="mailto:juddi-developers@lists.sourceforge.net">juddi-developers@lists.sourceforge.net</a>.</p>
+<p>Thanks for your interest in jUDDI!</p>
+<p>-- The jUDDI Development Team</p>
+<p>&nbsp;</p>
+</body>
+</html>
