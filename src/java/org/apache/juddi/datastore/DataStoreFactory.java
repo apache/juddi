@@ -38,7 +38,7 @@ public class DataStoreFactory
   private static Log log = LogFactory.getLog(DataStoreFactory.class);
 
   // Authenticator property key & default implementation
-  private static final String IMPL_KEY = "juddi.datastore";
+  private static final String IMPL_KEY = "juddi.dataStore";
   private static final String DEFAULT_IMPL = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
 
   private static Class implClass = null;

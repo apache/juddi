@@ -48,7 +48,7 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_DATASOURCE_NAME = "juddi.dataSource";
   
   public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
-  public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.datastore";
+  public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.dataStore";
   public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
   public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
   public static final String PROPNAME_VALIDATOR_CLASS_NAME = "juddi.validator";
