@@ -15,15 +15,18 @@
  */
 package org.apache.juddi.function;
 
+import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
+import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.DiscoveryURL;
 import org.apache.juddi.datatype.DiscoveryURLs;
 import org.apache.juddi.datatype.Email;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.Phone;
 import org.apache.juddi.datatype.RegistryObject;
@@ -36,6 +39,9 @@ import org.apache.juddi.datatype.request.GetAuthToken;
 import org.apache.juddi.datatype.request.SaveBusiness;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.BusinessDetail;
+import org.apache.juddi.datatype.service.BusinessService;
+import org.apache.juddi.datatype.service.BusinessServices;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
@@ -87,16 +93,16 @@ public class SaveBusinessFunction extends AbstractFunction
     {
       dataStore.beginTrans();
 
-      // validate authentication parameters
+      // Validate authentication parameters
       Publisher publisher = getPublisher(authInfo,dataStore);
 
       String publisherID = publisher.getPublisherID();
       String authorizedName = publisher.getName();
 
-      // validate request parameters & execute
+      // Validate request parameters & execute
       for (int i=0; i<businessVector.size(); i++)
       {
-        // move the BusinessEntity into a form we can work with easily
+        // Move the BusinessEntity into a form we can work with easily
         BusinessEntity business = (BusinessEntity)businessVector.elementAt(i);
 
         String businessKey = business.getBusinessKey();
@@ -108,6 +114,39 @@ public class SaveBusinessFunction extends AbstractFunction
         // If a BusinessKey was specified then make sure 'publisherID' controls it.
         if ((businessKey != null) && (businessKey.length() > 0) && (!dataStore.isBusinessPublisher(businessKey,publisherID)))
           throw new UserMismatchException("businessKey="+businessKey);
+
+        // Normally, a valid tModelKey MUST be specified for the keyedReference 
+        // to be valid. However, in the case of a keyedReference that is used in 
+        // a categoryBag, the tModelKey may be omitted or specified as a 
+        // zero-length string to indicate that the taxonomy being used is
+        // uddi-org:general_keywords. When it is omitted in this manner, the UDDI 
+        // registry will insert the proper key during the save_xx operation.
+        // - UDDI Programmers API v2.04 Section 4.3.5.1 Specifying keyedReferences
+        //
+        CategoryBag categoryBag = business.getCategoryBag();
+        if (categoryBag != null)
+        {
+          Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+          if (keyedRefVector != null)
+          {
+            int vectorSize = keyedRefVector.size();
+            if (vectorSize > 0)
+            {
+              for (int j=0; j<vectorSize; j++)
+              {
+                KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(j);
+                String key = keyedRef.getTModelKey();
+                
+                // A null or zero-length tModelKey is treated as 
+                // though the tModelKey for uddiorg:general_keywords 
+                // had been specified.
+                //
+                if ((key == null) || (key.trim().length() == 0))
+                  keyedRef.setTModelKey(TModel.GENERAL_KEYWORDS_TMODEL_KEY);
+              }
+            }
+          }
+        }
       }
 
       for (int i=0; i<businessVector.size(); i++)
@@ -120,25 +159,26 @@ public class SaveBusinessFunction extends AbstractFunction
         // If the new BusinessEntity has a BusinessKey then it must already
         // exists so delete the old one. It a BusinessKey isn't specified then
         // this is a new BusinessEntity so create a new BusinessKey for it.
+        //
         if ((businessKey != null) && (businessKey.length() > 0))
         {
           dataStore.deleteBusiness(businessKey);
         }
         else
         {
-           business.setBusinessKey(uuidgen.uuidgen());
+          business.setBusinessKey(uuidgen.uuidgen());
         }
 
         // check if the business has DiscoveryURL with
         // useType as 'businessEntity' if not create one
         // and add it to the business object.
-
+        //
         addBusinessEntityDiscoveryURL(business);
 
         // Everything checks out so let's save it. First
         // store 'authorizedName' and 'operator' values
         // in each BusinessEntity.
-
+        //
         business.setAuthorizedName(authorizedName);
         business.setOperator(Config.getOperator());
 
@@ -282,8 +322,12 @@ public class SaveBusinessFunction extends AbstractFunction
 
   public static void main(String[] args)
   {
+    // be sure to use the jUDDI-manged pool
+    Properties props = new Properties();
+    props.put("juddi.useConnectionPool","true");
+
     // initialize the registry
-    RegistryEngine reg = new RegistryEngine();
+    RegistryEngine reg = new RegistryEngine(props);
     reg.init();
 
     try
@@ -298,10 +342,23 @@ public class SaveBusinessFunction extends AbstractFunction
       nameVector.add(new Name("IBM"));
       nameVector.add(new Name("Microsoft"));
 
+      // generate a new BusinessService
+      BusinessService service = new BusinessService();
+      service.setNameVector(nameVector);
+      
+      // generate a BusinessService Vector
+      Vector serviceVector = new Vector();
+      serviceVector.add(service);
+      
+      // generate a BusinessServices instance
+      BusinessServices services = new BusinessServices();
+      services.setBusinessServiceVector(serviceVector);
+      
       // generate a BusinessEntity
       BusinessEntity businessEntity = new BusinessEntity();
       businessEntity.setBusinessKey(null);
       businessEntity.setNameVector(nameVector);
+      businessEntity.setBusinessServices(services);
 
       // generate a BusinessEntity Vector
       Vector businessEntityVector = new Vector();
@@ -312,6 +369,8 @@ public class SaveBusinessFunction extends AbstractFunction
       request.setAuthInfo(authInfo);
       request.setBusinessEntityVector(businessEntityVector);
       BusinessDetail detail = (BusinessDetail)reg.execute(request);
+      
+      System.out.println(detail);
     }
     catch (Exception ex)
     {

@@ -21,7 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
+import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.business.BusinessEntity;
@@ -35,6 +37,7 @@ import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.datatype.service.BusinessService;
 import org.apache.juddi.datatype.service.BusinessServices;
+import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
@@ -82,10 +85,10 @@ public class SaveServiceFunction extends AbstractFunction
       Publisher publisher = getPublisher(authInfo,dataStore);
       String publisherID = publisher.getPublisherID();
 
-      // validate request parameters & execute
+      // Validate request parameters & execute
       for (int i=0; i<serviceVector.size(); i++)
       {
-        // move the BusinessService data into a form we can work with easily
+        // Move the BusinessService data into a form we can work with easily
         BusinessService service = (BusinessService)serviceVector.elementAt(i);
         String businessKey = service.getBusinessKey();
         String serviceKey = service.getServiceKey();
@@ -103,6 +106,39 @@ public class SaveServiceFunction extends AbstractFunction
         // If a ServiceKey was specified then make sure it's a valid one.
         if (((serviceKey != null) && (serviceKey.length() > 0)) && (!dataStore.isValidServiceKey(serviceKey)))
           throw new InvalidKeyPassedException("serviceKey="+serviceKey);
+
+        // Normally, a valid tModelKey MUST be specified for the keyedReference 
+        // to be valid. However, in the case of a keyedReference that is used in 
+        // a categoryBag, the tModelKey may be omitted or specified as a 
+        // zero-length string to indicate that the taxonomy being used is
+        // uddi-org:general_keywords. When it is omitted in this manner, the UDDI 
+        // registry will insert the proper key during the save_xx operation.
+        // - UDDI Programmers API v2.04 Section 4.3.5.1 Specifying keyedReferences
+        //
+        CategoryBag categoryBag = service.getCategoryBag();
+        if (categoryBag != null)
+        {
+          Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+          if (keyedRefVector != null)
+          {
+            int vectorSize = keyedRefVector.size();
+            if (vectorSize > 0)
+            {
+              for (int j=0; j<vectorSize; j++)
+              {
+                KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(j);
+                String key = keyedRef.getTModelKey();
+                
+                // A null or zero-length tModelKey is treated as 
+                // though the tModelKey for uddiorg:general_keywords 
+                // had been specified.
+                //
+                if ((key == null) || (key.trim().length() == 0))
+                  keyedRef.setTModelKey(TModel.GENERAL_KEYWORDS_TMODEL_KEY);
+              }
+            }
+          }
+        }
       }
 
       for (int i=0; i<serviceVector.size(); i++)
