@@ -293,8 +293,8 @@ public class SaveBusinessFunction extends AbstractFunction
     {
       // get the DiscoveryURL from the juddi properties file
       StringBuffer siteURL = new StringBuffer();
-      siteURL.append(Config.getOperatorURL());
-      siteURL.append("/uddiget.jsp?businesskey=");
+      siteURL.append(Config.getDiscoveryURL());
+      siteURL.append("businesskey=");
       siteURL.append(business.getBusinessKey());
       
       // add to the business entity

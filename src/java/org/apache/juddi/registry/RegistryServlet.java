@@ -125,8 +125,8 @@ public class RegistryServlet extends HttpServlet
         props.put(RegistryEngine.PROPNAME_OPERATOR_NAME,
                   RegistryEngine.DEFAULT_OPERATOR_NAME);
         
-        props.put(RegistryEngine.PROPNAME_OPERATOR_URL,
-                  RegistryEngine.DEFAULT_OPERATOR_URL);
+        props.put(RegistryEngine.PROPNAME_DISCOVERY_URL,
+                  RegistryEngine.DEFAULT_DISCOVERY_URL);
         
         props.put(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,
                   RegistryEngine.DEFAULT_ADMIN_EMAIL_ADDRESS);

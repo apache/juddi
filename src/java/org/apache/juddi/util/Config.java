@@ -86,10 +86,10 @@ public class Config extends Properties
   /**
    *
    */
-  public static String getOperatorURL()
+  public static String getDiscoveryURL()
   {
-    return getStringProperty(RegistryEngine.PROPNAME_OPERATOR_URL,
-              RegistryEngine.DEFAULT_OPERATOR_URL);
+    return getStringProperty(RegistryEngine.PROPNAME_DISCOVERY_URL,
+              RegistryEngine.DEFAULT_DISCOVERY_URL);
   }
 
   /**

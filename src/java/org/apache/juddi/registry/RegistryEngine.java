@@ -43,7 +43,7 @@ public class RegistryEngine extends AbstractRegistry
   // Registry Property Names
   //
   public static final String PROPNAME_OPERATOR_NAME = "juddi.operatorName";
-  public static final String PROPNAME_OPERATOR_URL = "juddi.operatorURL";
+  public static final String PROPNAME_DISCOVERY_URL = "juddi.discoveryURL";
   public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress"; // unused
   public static final String PROPNAME_DATASOURCE_NAME = "juddi.dataSource";
   
@@ -66,7 +66,7 @@ public class RegistryEngine extends AbstractRegistry
   // Registry Default Property Values
   //
   public static final String DEFAULT_OPERATOR_NAME = "Apache.org";
-  public static final String DEFAULT_OPERATOR_URL = "http://localhost:8080/juddi/";
+  public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8080/juddi/uddiget.jsp?";
   public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "nobody@apache.org"; // unused
   public static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/juddiDB";
   
@@ -207,7 +207,7 @@ public class RegistryEngine extends AbstractRegistry
     props.setProperty(RegistryEngine.PROPNAME_OPERATOR_NAME,"jUDDI.org");
     props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,"5");
     props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,"255");
-    props.setProperty(RegistryEngine.PROPNAME_OPERATOR_URL,"http://localhost/juddi");
+    props.setProperty(RegistryEngine.PROPNAME_DISCOVERY_URL,"http://localhost/juddi");
     props.setProperty(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,"admin@juddi.org");    
     props.setProperty(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,"2097152");
     props.setProperty(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,"org.apache.juddi.auth.DefaultAuthenticator");
