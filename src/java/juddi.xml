@@ -56,14 +56,6 @@
 	<maxTModelsPerUser>100</maxTModelsPerUser>
 	<maxRowsLimit>10</maxRowsLimit>
 
-	<!--  HTTP Proxy Configuration -->
-	<http-proxy 
-		enabled="false"
-		host="proxy.viens.net"
-		port="8000"
-		userName="sviens"
-		password="password"/>
-	
 	<!-- jUDDI Proxy Configuration (used by RegistryProxy) -->
 	<uddi-proxy soapTransport="org.apache.juddi.proxy.AxisTransport"
 			inquiryURL="http://localhost:8080/juddi/inquiry"

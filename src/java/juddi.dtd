@@ -12,8 +12,7 @@
 							   maxBusinessEntitiesPerUser?,
 							   maxBusinessServicesPerBusiness?,
 							   maxBindingTemplatesPerService?,
-							   maxTModelsPerUser?,maxRowsLimit?,
-							   http-proxy?,uddi-proxy?)>
+							   maxTModelsPerUser?,maxRowsLimit?,uddi-proxy?)>
 
 <!--  -->     
 <!--  --> 
@@ -95,16 +94,6 @@
   inquiryURL CDATA #REQUIRED
   publishURL CDATA #REQUIRED
   adminURL CDATA #IMPLIED
->
-
-<!--  -->
-<!ELEMENT http-proxy EMPTY>
-<!ATTLIST http-proxy
-  enabled CDATA	#REQUIRED
-  host CDATA #REQUIRED
-  port CDATA #REQUIRED
-  userName CDATA #REQUIRED
-  password CDATA #REQUIRED
 >
 
 <!--  -->
