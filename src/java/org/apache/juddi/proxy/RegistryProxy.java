@@ -393,14 +393,18 @@ public class RegistryProxy extends AbstractRegistry
   public static void main(String[] args)
     throws RegistryException
   {
-    Properties proxyProps = new Properties();
-    proxyProps.setProperty("1","one");
-    proxyProps.setProperty("2","two");
-    proxyProps.setProperty("3","three");
-    proxyProps.setProperty("4","four");
-    proxyProps.setProperty("5","five");    
+    // Option #1 (grabs properties from juddi.properties file)
+    //IRegistry registry = new RegistryProxy();
     
-    IRegistry registry = new RegistryProxy(proxyProps);    
+    // Option #2 (provides properties in Properties instance)
+    Properties props = new Properties();
+    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
+    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
+    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
+    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
+    IRegistry registry = new RegistryProxy(props);
+    
     AuthToken authToken = registry.getAuthToken("sviens","password");
     AuthInfo authInfo = authToken.getAuthInfo();
 
