@@ -101,13 +101,15 @@ Copyright:
     </condition>
 
     <!-- create start.time property in 'yyyyMMdd' format -->
+    <!--
     <tstamp>
       <format 
       	property="start.time" 
       	pattern="yyyyMMdd" 
       	timezone="GMT" />
     </tstamp>
-
+    -->
+  	
   </target>
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
@@ -451,19 +453,20 @@ Copyright:
    	<delete file="${build.dir}/juddi_${version}_bin.tar" verbose="false"/>
   </target>
   <!-- =================================================================== -->
-  <!-- Creates both the binary and source distributions                    -->
+  <!-- Creates both binary and source distributions                        -->
   <!-- =================================================================== -->
   <target name="dist" depends="clean,source,binary"/>
   <!-- =================================================================== -->
-  <!-- Build everything                                                    -->
+  <!-- Builds everything                                                   -->
   <!-- =================================================================== -->
   <target name="all" depends="clean,jar,test,site,javadoc,binary,source"/>
   <!-- =================================================================== -->
-  <!-- Build everything                                                    -->
+  <!-- Invoked only by Gump (see http://gump.apache.org)                   -->
   <!-- =================================================================== -->
   <target name="gump" depends="clean,jar">
-    <copy file="${build.dir}/${jar.file}"
-      tofile="${build.dir}/${name}-${start.time}.jar"/>
+  	<copy 
+      file="${build.dir}/${jar.file}" 
+      tofile="${build.dir}/${name}-${DATE_STAMP}.jar"/>
   </target>
   <!-- =================================================================== -->
   <!-- Versioning                                                          -->
