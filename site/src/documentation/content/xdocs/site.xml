@@ -17,7 +17,7 @@ See http://xml.apache.org/forrest/linking.html for more info
 <site label="jUDDI" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
 
   <about label="About">
-    <index label="Index" href="index.html" description="jUDDI"/>
+    <index label="Welcome" href="index.html" description="jUDDI"/>
     <index label="FAQ" href="faq.html" description="FAQ"/>
     <index label="Community" href="lists.html" description="Community"/>
     <index label="CVS" href="cvs.html" description="CVS"/>

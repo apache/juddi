@@ -23,6 +23,11 @@
       posting questions (and answers) related to the installation, configuration
       and use of jUDDI.
       </p>
+	<p>	  <link href="mailto:juddi-user-subscribe@ws.apache.org">
+	  Subscribe to juddi-user
+	  </link>
+
+	</p>
         </section>
         <section>
           <title>jUDDI dev</title>
@@ -30,6 +35,11 @@
       discussions about the jUDDI architecture, build process, testing and
       implementation details.
       </p>
+	<p>	  <link href="mailto:juddi-dev-subscribe@ws.apache.org">
+	  Subscribe to juddi-dev
+	  </link>
+
+	</p>
               </section>
         <section>
           <title>Archives</title>
