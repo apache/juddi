@@ -49,21 +49,20 @@ public class  DispositionReportHandlerTests extends HandlerTestCase
 
 	private RegistryObject getRegistryObject()
 	{
+    ErrInfo errInfo = new ErrInfo();
+    errInfo.setErrCode("E_accountLimitExceeded");
+    errInfo.setErrMsg("Authentication token information has timed out.");
 
-		ErrInfo errInfo = new ErrInfo();
-		errInfo.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-		errInfo.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    Result result = new Result();
+    result.setErrno(10160);
+    result.setErrInfo(errInfo);
 
-		Result result = new Result();
-		result.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED);
-		result.setErrInfo(errInfo);
-
-		ErrInfo errInfo2 = new ErrInfo();
-		errInfo2.setErrCode(Result.E_SUCCESS_CODE);
-		errInfo2.setErrMsg(Result.E_SUCCESS_MSG);
+    ErrInfo errInfo2 = new ErrInfo();
+    errInfo2.setErrCode("E_success");
+    errInfo2.setErrMsg(null);
 
 		Result result2 = new Result();
-		result2.setErrno(Result.E_SUCCESS);
+		result2.setErrno(Result.E_SUCCESS_NMBR);
 		result2.setErrInfo(errInfo2);
 
 		DispositionReport object = new  DispositionReport();

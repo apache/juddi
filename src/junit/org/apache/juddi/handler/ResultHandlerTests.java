@@ -48,11 +48,11 @@ public class  ResultHandlerTests extends HandlerTestCase
 	private RegistryObject getRegistryObject()
 	{
 		ErrInfo errInfo = new ErrInfo();
-		errInfo.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-		errInfo.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    errInfo.setErrCode("E_accountLimitExceeded");
+    errInfo.setErrMsg("Authentication token information has timed out.");
 
 		Result object = new Result();
-		object.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED);
+		object.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED_NMBR);
 		object.setErrInfo(errInfo);
 
 		return object;

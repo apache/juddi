@@ -17,7 +17,6 @@ package org.apache.juddi.handler;
 
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.ErrInfo;
-import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -48,8 +47,8 @@ public class  ErrInfoHandlerTests extends HandlerTestCase
 	private RegistryObject getRegistryObject()
 	{
 		ErrInfo object = new  ErrInfo();
-		object.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-		object.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    object.setErrCode("E_accountLimitExceeded");
+    object.setErrMsg("Authentication token information has timed out.");
 
 		return object;
 
