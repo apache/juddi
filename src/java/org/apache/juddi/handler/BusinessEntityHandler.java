@@ -139,7 +139,9 @@ public class BusinessEntityHandler extends AbstractHandler
     String businessKey = business.getBusinessKey();
     if (businessKey != null)
       element.setAttribute("businessKey",businessKey);
-
+    else
+      element.setAttribute("businessKey","");
+    
     String operator = business.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
