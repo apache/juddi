@@ -15,14 +15,17 @@
  */
 package org.apache.juddi.util.xml;
 
+import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jdom.input.DOMBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,12 +71,17 @@ public class XMLUtils
     NodeList children = element.getChildNodes();
     for (int i=0; i<children.getLength(); i++)
     {
-      Node node = children.item(i);
-      
       //System.out.println("node name:       "+node.getNodeName());
       //System.out.println("node local name: "+node.getLocalName());
+        
+      Node node = children.item(i);      
+      String nodeName = node.getNodeName();
+      String localName = node.getLocalName();
       
-      if (node.getNodeType() == Node.ELEMENT_NODE && node.getLocalName().equals(tagName))
+      if ((localName == null) && (nodeName != null))
+          localName = nodeName;
+            
+      if (node.getNodeType() == Node.ELEMENT_NODE && localName.equals(tagName))
         result.addElement(node); // matching element
     }
 
@@ -130,25 +138,16 @@ public class XMLUtils
     return docBuilder;
   }
 
-  /**
-   * Write XML data to an OutputStream
-   *
-   * @param element XML Element to write
-   * @param stream OutputStream to write to
-   */
   public static void writeXML(Element element,OutputStream stream)
   {
-    org.apache.axis.utils.XMLUtils.ElementToStream(element,stream);
-  }
-
-  /**
-   * Write XML data to a Writer
-   *
-   * @param element XML Element to write
-   * @param writer Writer to write to
-   */
-  public static void writeXML(Element element,Writer writer)
-  {
-    org.apache.axis.utils.XMLUtils.ElementToWriter(element,writer);
+      try {
+          DOMBuilder builder = new DOMBuilder();
+          Format format = org.jdom.output.Format.getPrettyFormat();
+          XMLOutputter outputter = new XMLOutputter(format);
+          outputter.output(builder.build(element),System.out);        
+      }
+      catch(IOException ioex) {
+          ioex.printStackTrace();
+      }
   }
 }
