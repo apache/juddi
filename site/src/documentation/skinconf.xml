@@ -77,7 +77,7 @@ be used to configure the chosen Forrest skin.
         This can be used to enable other sites and services to reuse the
         xml format for their uses. Keep this disabled if you don't want other
         sites to easily reuse your pages.-->
-  <disable-xml-link>false</disable-xml-link>
+  <disable-xml-link>true</disable-xml-link>
 
   <!-- Do we want to disable w3c compliance links? -->
   <disable-compliance-links>false</disable-compliance-links>
