@@ -487,13 +487,21 @@ public class JDBCDataStore implements DataStore
         business.setNameVector(BusinessNameTable.select(businessKey,connection));
         business.setDescriptionVector(BusinessDescTable.select(businessKey,connection));
 
-        IdentifierBag identifierBag = new IdentifierBag();
-        identifierBag.setKeyedReferenceVector(BusinessIdentifierTable.select(businessKey,connection));
-        business.setIdentifierBag(identifierBag);
+        Vector idVector = BusinessIdentifierTable.select(businessKey,connection); 
+        if (idVector.size() > 0) 
+        { 
+          IdentifierBag identifierBag = new IdentifierBag(); 
+          identifierBag.setKeyedReferenceVector(idVector); 
+          business.setIdentifierBag(identifierBag); 
+        } 
 
-        CategoryBag categoryBag = new CategoryBag();
-        categoryBag.setKeyedReferenceVector(BusinessCategoryTable.select(businessKey,connection));
-        business.setCategoryBag(categoryBag);
+        Vector catVector = BusinessCategoryTable.select(businessKey,connection); 
+        if (catVector.size() > 0) 
+        { 
+          CategoryBag categoryBag = new CategoryBag(); 
+          categoryBag.setKeyedReferenceVector(catVector); 
+          business.setCategoryBag(categoryBag); 
+        } 
 
         DiscoveryURLs discoveryURLs = new DiscoveryURLs();
         discoveryURLs.setDiscoveryURLVector(DiscoveryURLTable.select(businessKey,connection));
@@ -687,9 +695,13 @@ public class JDBCDataStore implements DataStore
         service.setNameVector(ServiceNameTable.select(serviceKey,connection));
         service.setDescriptionVector(ServiceDescTable.select(serviceKey,connection));
 
-        CategoryBag bag = new CategoryBag();
-        bag.setKeyedReferenceVector(ServiceCategoryTable.select(serviceKey,connection));
-        service.setCategoryBag(bag);
+        Vector catVector = ServiceCategoryTable.select(serviceKey,connection); 
+        if (catVector.size() > 0) 
+        { 
+          CategoryBag bag = new CategoryBag(); 
+          bag.setKeyedReferenceVector(catVector); 
+          service.setCategoryBag(bag); 
+        }
 
         // 'fetch' the BusinessService's BindingTemplate objects
         Vector bindingVector = fetchBindingByServiceKey(serviceKey);
