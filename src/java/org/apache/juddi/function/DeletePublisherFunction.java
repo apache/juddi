@@ -119,7 +119,7 @@ public class DeletePublisherFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
 
     // didn't encounter an exception so let's create

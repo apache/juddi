@@ -240,7 +240,7 @@ public class FindServiceFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

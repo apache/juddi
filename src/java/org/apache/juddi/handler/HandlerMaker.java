@@ -288,7 +288,7 @@ public class HandlerMaker
     handler = new DeleteSubscriptionHandler(this);
     handlers.put(DeleteSubscription.class.getName().toLowerCase(),handler);
     handlers.put(DeleteSubscriptionHandler.TAG_NAME.toLowerCase(),handler);
-	
+  
     handler = new DeleteTModelHandler(this);
     handlers.put(DeleteTModel.class.getName().toLowerCase(),handler);
     handlers.put(DeleteTModelHandler.TAG_NAME.toLowerCase(),handler);
@@ -396,7 +396,7 @@ public class HandlerMaker
     handler = new GetSubscriptionsHandler(this);
     handlers.put(GetSubscriptions.class.getName().toLowerCase(),handler);
     handlers.put(GetSubscriptionsHandler.TAG_NAME.toLowerCase(),handler);
-    	
+      
     handler = new GetTModelDetailHandler(this);
     handlers.put(GetTModelDetail.class.getName().toLowerCase(),handler);
     handlers.put(GetTModelDetailHandler.TAG_NAME.toLowerCase(),handler);
@@ -524,7 +524,7 @@ public class HandlerMaker
     handler = new SaveSubscriptionHandler(this);
     handlers.put(SaveSubscription.class.getName().toLowerCase(),handler);
     handlers.put(SaveSubscriptionHandler.TAG_NAME.toLowerCase(),handler);
-	
+  
     handler = new SaveTModelHandler(this);
     handlers.put(SaveTModel.class.getName().toLowerCase(),handler);
     handlers.put(SaveTModelHandler.TAG_NAME.toLowerCase(),handler);
@@ -564,7 +564,7 @@ public class HandlerMaker
     handler = new SubscriptionKeyHandler(this);
     handlers.put(SubscriptionKey.class.getName().toLowerCase(),handler);
     handlers.put(SubscriptionKeyHandler.TAG_NAME.toLowerCase(),handler);
-	
+  
     handler = new TModelHandler(this);
     handlers.put(TModel.class.getName().toLowerCase(),handler);
     handlers.put(TModelHandler.TAG_NAME.toLowerCase(),handler);

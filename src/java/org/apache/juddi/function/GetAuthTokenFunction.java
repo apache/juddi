@@ -114,9 +114,9 @@ public class GetAuthTokenFunction extends AbstractFunction
       throw new RegistryException(ex);
     }
     finally 
-		{
+    {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

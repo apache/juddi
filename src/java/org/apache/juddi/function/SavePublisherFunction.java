@@ -123,7 +123,7 @@ public class SavePublisherFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

@@ -53,7 +53,7 @@ public class GetSubscriptionsFunction extends AbstractFunction
   public RegistryObject execute(RegistryObject regObject)
     throws RegistryException
   {
-  	GetSubscriptions request = (GetSubscriptions)regObject;
+    GetSubscriptions request = (GetSubscriptions)regObject;
     String generic = request.getGeneric();
 
     // aquire a jUDDI datastore instance
@@ -118,7 +118,7 @@ public class GetSubscriptionsFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
 
   }

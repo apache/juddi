@@ -25,62 +25,62 @@ import org.apache.juddi.datatype.TModelKey;
 
 /**
  * Example:
- * 
+ *
  *    <keyBag>
  *      <deleted>false</deleted>
  *      <serviceKey>uddi:BeerSupplies.com:maltSelectionService</serviceKey>
  *      <serviceKey>uddi:Containers.com:kegs:orderingService</serviceKey>
  *    </keyBag>
- * 
+ *
  * @author Steve Viens (sviens@apache.org)
  */
 public class KeyBag implements RegistryObject
 {
-	boolean deleted;
-	Vector tModelKeyVector;
-	Vector businessKeyVector;
-	Vector serviceKeyVector;
-	Vector bindingKeyVector;
-	
+  boolean deleted;
+  Vector tModelKeyVector;
+  Vector businessKeyVector;
+  Vector serviceKeyVector;
+  Vector bindingKeyVector;
+
   /**
    * default constructor
    */
   public KeyBag()
   {
   }
-  
-	/**
-	 * @return Returns the deleted.
-	 */
-	public boolean isDeleted() 
-	{
-		return deleted;
-	}
-	
-	/**
-	 * @param deleted The deleted to set.
-	 */
-	public void setDeleted(boolean deleted) 
-	{
-		this.deleted = deleted;
-	}
 
-	/**
-	 * @return Returns the bindingKeyVector.
-	 */
-	public Vector getBindingKeyVector() 
-	{
-		return bindingKeyVector;
-	}
-	
-	/**
-	 * @param bindingKeyVector The bindingKeyVector to set.
-	 */
-	public void setBindingKeyVector(Vector bindingKeyVector) 
-	{
-		this.bindingKeyVector = bindingKeyVector;
-	}
-	
+  /**
+   * @return Returns the deleted.
+   */
+  public boolean isDeleted()
+  {
+    return deleted;
+  }
+
+  /**
+   * @param deleted The deleted to set.
+   */
+  public void setDeleted(boolean deleted)
+  {
+    this.deleted = deleted;
+  }
+
+  /**
+   * @return Returns the bindingKeyVector.
+   */
+  public Vector getBindingKeyVector()
+  {
+    return bindingKeyVector;
+  }
+
+  /**
+   * @param bindingKeyVector The bindingKeyVector to set.
+   */
+  public void setBindingKeyVector(Vector bindingKeyVector)
+  {
+    this.bindingKeyVector = bindingKeyVector;
+  }
+
   /**
    *
    */
@@ -101,21 +101,21 @@ public class KeyBag implements RegistryObject
   }
 
   /**
-	 * @return Returns the businessKeyVector.
-	 */
-	public Vector getBusinessKeyVector() 
-	{
-		return businessKeyVector;
-	}
-	
-	/**
-	 * @param businessKeyVector The businessKeyVector to set.
-	 */
-	public void setBusinessKeyVector(Vector businessKeyVector) 
-	{
-		this.businessKeyVector = businessKeyVector;
-	}
-	
+   * @return Returns the businessKeyVector.
+   */
+  public Vector getBusinessKeyVector()
+  {
+    return businessKeyVector;
+  }
+
+  /**
+   * @param businessKeyVector The businessKeyVector to set.
+   */
+  public void setBusinessKeyVector(Vector businessKeyVector)
+  {
+    this.businessKeyVector = businessKeyVector;
+  }
+
   /**
    *
    */
@@ -136,21 +136,21 @@ public class KeyBag implements RegistryObject
   }
 
   /**
-	 * @return Returns the serviceKeyVector.
-	 */
-	public Vector getServiceKeyVector() 
-	{
-		return serviceKeyVector;
-	}
-	
-	/**
-	 * @param serviceKeyVector The serviceKeyVector to set.
-	 */
-	public void setServiceKeyVector(Vector serviceKeyVector) 
-	{
-		this.serviceKeyVector = serviceKeyVector;
-	}
-	
+   * @return Returns the serviceKeyVector.
+   */
+  public Vector getServiceKeyVector()
+  {
+    return serviceKeyVector;
+  }
+
+  /**
+   * @param serviceKeyVector The serviceKeyVector to set.
+   */
+  public void setServiceKeyVector(Vector serviceKeyVector)
+  {
+    this.serviceKeyVector = serviceKeyVector;
+  }
+
   /**
    *
    */
@@ -171,20 +171,20 @@ public class KeyBag implements RegistryObject
   }
 
   /**
-	 * @return Returns the tModelKeyVector.
-	 */
-	public Vector getTModelKeyVector() 
-	{
-		return tModelKeyVector;
-	}
-	
-	/**
-	 * @param modelKeyVector The tModelKeyVector to set.
-	 */
-	public void setTModelKeyVector(Vector modelKeyVector) 
-	{
-		tModelKeyVector = modelKeyVector;
-	}
+   * @return Returns the tModelKeyVector.
+   */
+  public Vector getTModelKeyVector()
+  {
+    return tModelKeyVector;
+  }
+
+  /**
+   * @param modelKeyVector The tModelKeyVector to set.
+   */
+  public void setTModelKeyVector(Vector modelKeyVector)
+  {
+    tModelKeyVector = modelKeyVector;
+  }
 
   /**
    *

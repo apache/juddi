@@ -86,7 +86,7 @@ public class Subscriptions implements RegistryObject
   public void setSubscriptionVector(Vector subscriptions)
   {
     this.subscriptionVector = subscriptions;
-  } 
+  }
 
   /**
    *

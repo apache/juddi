@@ -112,7 +112,7 @@ public class GetBindingDetailFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

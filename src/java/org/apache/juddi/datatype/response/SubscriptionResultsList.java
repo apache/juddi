@@ -32,14 +32,14 @@ import org.apache.juddi.datatype.subscription.Subscription;
  *      <subscriptionFilter>
  *        <find_service xmlns="urn:uddi-org:api_v3" >
  *          <categoryBag>
- *            <keyedReference 
+ *            <keyedReference
  *              tModeKey="uddi:ubr.uddi.org: taxonomy:unspsc"
  *              keyName="Beer"
  *              keyValue="50.20.20.02.00"/>
  *          </categoryBag>
  *        </find_service>
  *      </subscriptionFilter>
- *      <bindingKey> 
+ *      <bindingKey>
  *        BindingKey of the subscribers NotifySubscriptionListener service
  *      </bindingKey>
  *      <notificationInterval>P1D</notificationInterval>
@@ -59,18 +59,18 @@ public class SubscriptionResultsList implements RegistryObject
 {
   String generic;
   String operator;
-  
+
   CoveragePeriod coveragePeriod;
   Subscription subscription;
   KeyBag keyBag;
-  
+
   /**
    * default constructor
    */
   public SubscriptionResultsList()
   {
   }
-  
+
   /**
    *
    * @param genericValue
@@ -101,55 +101,55 @@ public class SubscriptionResultsList implements RegistryObject
    *
    */
   public String getOperator()
- 	{
+  {
     return this.operator;
- 	}
-  
-	/**
-	 * @return Returns the coveragePeriod.
-	 */
-	public CoveragePeriod getCoveragePeriod() 
-	{
-		return coveragePeriod;
-	}
-	
-	/**
-	 * @param coveragePeriod The coveragePeriod to set.
-	 */
-	public void setCoveragePeriod(CoveragePeriod coveragePeriod) 
-	{
-		this.coveragePeriod = coveragePeriod;
-	}
-	
-	/**
-	 * @return Returns the keyBag.
-	 */
-	public KeyBag getKeyBag() 
-	{
-		return keyBag;
-	}
-	
-	/**
-	 * @param keyBag The keyBag to set.
-	 */
-	public void setKeyBag(KeyBag keyBag) 
-	{
-		this.keyBag = keyBag;
-	}
-	
-	/**
-	 * @return Returns the subscription.
-	 */
-	public Subscription getSubscription() 
-	{
-		return subscription;
-	}
-	
-	/**
-	 * @param subscription The subscription to set.
-	 */
-	public void setSubscription(Subscription subscription) 
-	{
-		this.subscription = subscription;
-	}
+  }
+
+  /**
+   * @return Returns the coveragePeriod.
+   */
+  public CoveragePeriod getCoveragePeriod()
+  {
+    return coveragePeriod;
+  }
+
+  /**
+   * @param coveragePeriod The coveragePeriod to set.
+   */
+  public void setCoveragePeriod(CoveragePeriod coveragePeriod)
+  {
+    this.coveragePeriod = coveragePeriod;
+  }
+
+  /**
+   * @return Returns the keyBag.
+   */
+  public KeyBag getKeyBag()
+  {
+    return keyBag;
+  }
+
+  /**
+   * @param keyBag The keyBag to set.
+   */
+  public void setKeyBag(KeyBag keyBag)
+  {
+    this.keyBag = keyBag;
+  }
+
+  /**
+   * @return Returns the subscription.
+   */
+  public Subscription getSubscription()
+  {
+    return subscription;
+  }
+
+  /**
+   * @param subscription The subscription to set.
+   */
+  public void setSubscription(Subscription subscription)
+  {
+    this.subscription = subscription;
+  }
 }

@@ -200,7 +200,7 @@ public class FindPublisherFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

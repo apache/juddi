@@ -19,11 +19,11 @@ import org.apache.juddi.datatype.RegistryObject;
 
 /**
  * Example:
- * 
+ *
  *   <subscriptionFilter>
  *     <find_service xmlns="urn:uddi-org:api_v3" >
  *       <categoryBag>
- *         <keyedReference 
+ *         <keyedReference
  *            tModeKey="uddi:ubr.uddi.org: taxonomy:unspsc"
  *            keyName="Beer"
  *            keyValue="50.20.20.02.00"/>
@@ -35,8 +35,8 @@ import org.apache.juddi.datatype.RegistryObject;
  */
 public class SubscriptionFilter implements RegistryObject
 {
-	RegistryObject request = null;
-	
+  RegistryObject request = null;
+
   /**
    * default constructor
    */
@@ -49,22 +49,22 @@ public class SubscriptionFilter implements RegistryObject
    */
   public SubscriptionFilter(RegistryObject request)
   {
-  	this.request = request;
+    this.request = request;
   }
-   
-	/**
-	 * @return Returns the request.
-	 */
-	public RegistryObject getRequest() 
-	{
-		return request;
-	}
-	
-	/**
-	 * @param request The request to set.
-	 */
-	public void setRequest(RegistryObject request) 
-	{
-		this.request = request;
-	}
+
+  /**
+   * @return Returns the request.
+   */
+  public RegistryObject getRequest()
+  {
+    return request;
+  }
+
+  /**
+   * @param request The request to set.
+   */
+  public void setRequest(RegistryObject request)
+  {
+    this.request = request;
+  }
 }

@@ -72,8 +72,8 @@ class FindTModelByNameQuery
     DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,name,qualifiers);
     appendIn(sql,name,keysIn);
-    appendOrderBy(sql,qualifiers);                  
-     
+    appendOrderBy(sql,qualifiers);
+
     try
     {
       log.debug(sql.toString());
@@ -116,7 +116,7 @@ class FindTModelByNameQuery
     if ((name == null) || (name.length() == 0))
       return;
 
-    // When TModels are deleted they are only marked as 
+    // When TModels are deleted they are only marked as
     // deleted they're not actually removed from the database.
     //
     sql.append("WHERE M.DELETED IS NULL ");
@@ -181,7 +181,7 @@ class FindTModelByNameQuery
     }
     else if (qualifiers.sortByNameAsc || qualifiers.sortByNameDesc)
     {
-      if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc) 
+      if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
       {
         if (qualifiers.sortByNameAsc && qualifiers.sortByDateDesc)
           sql.append("M.NAME ASC,M.LAST_UPDATE DESC");
@@ -191,7 +191,7 @@ class FindTModelByNameQuery
           sql.append("M.NAME DESC,M.LAST_UPDATE DESC");
         else
           sql.append("M.NAME DESC,M.LAST_UPDATE ASC");
-      } 
+      }
       else
       {
         if (qualifiers.sortByNameAsc)
@@ -239,19 +239,19 @@ class FindTModelByNameQuery
     String name = new String("");
 
     Vector keysIn = new Vector();
-		keysIn.add("uuid:327A56F0-3299-4461-BC23-5CD513E95C55");
-		keysIn.add("uuid:4064C064-6D14-4F35-8953-9652106476A9");
-		keysIn.add("uuid:4E49A8D6-D5A2-4FC2-93A0-0411D8D19E88");
-		keysIn.add("uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03");
-		keysIn.add("uuid:8609C81E-EE1F-4D5A-B202-3EB13AD01823");
-		keysIn.add("uuid:A035A07C-F362-44DD-8F95-E2B134BF43B4");
-		keysIn.add("uuid:B1B1BAF5-2329-43E6-AE13-BA8E97195039");
-		keysIn.add("uuid:C0B9FE13-179F-413D-8A5B-5004DB8E5BB2");
-		keysIn.add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
-		keysIn.add("uuid:CD153257-086A-4237-B336-6BDCBDCC6634");
-		keysIn.add("uuid:DB77450D-9FA8-45D4-A7BC-04411D14E384");
-		keysIn.add("uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E");    
-    
+    keysIn.add("uuid:327A56F0-3299-4461-BC23-5CD513E95C55");
+    keysIn.add("uuid:4064C064-6D14-4F35-8953-9652106476A9");
+    keysIn.add("uuid:4E49A8D6-D5A2-4FC2-93A0-0411D8D19E88");
+    keysIn.add("uuid:807A2C6A-EE22-470D-ADC7-E0424A337C03");
+    keysIn.add("uuid:8609C81E-EE1F-4D5A-B202-3EB13AD01823");
+    keysIn.add("uuid:A035A07C-F362-44DD-8F95-E2B134BF43B4");
+    keysIn.add("uuid:B1B1BAF5-2329-43E6-AE13-BA8E97195039");
+    keysIn.add("uuid:C0B9FE13-179F-413D-8A5B-5004DB8E5BB2");
+    keysIn.add("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4");
+    keysIn.add("uuid:CD153257-086A-4237-B336-6BDCBDCC6634");
+    keysIn.add("uuid:DB77450D-9FA8-45D4-A7BC-04411D14E384");
+    keysIn.add("uuid:E59AE320-77A5-11D5-B898-0004AC49CC1E");
+
     Transaction txn = new Transaction();
 
     if (connection != null)
@@ -261,8 +261,8 @@ class FindTModelByNameQuery
         // begin a new transaction
         txn.begin(connection);
 
-        select(name,keysIn,null,connection);				
-				select(name,null,null,connection);
+        select(name,keysIn,null,connection);
+        select(name,null,null,connection);
 
         // commit the transaction
         txn.commit();

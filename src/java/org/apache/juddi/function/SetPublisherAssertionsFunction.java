@@ -97,7 +97,7 @@ public class SetPublisherAssertionsFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

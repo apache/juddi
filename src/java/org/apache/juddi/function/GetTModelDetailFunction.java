@@ -110,7 +110,7 @@ public class GetTModelDetailFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

@@ -71,52 +71,52 @@ public class GetSubscriptionResults implements RegistryObject,Subscribe
   {
     return this.authInfo;
   }
-  
+
   /**
    * @return Returns the chunkToken.
    */
-  public String getChunkToken() 
+  public String getChunkToken()
   {
-  	return chunkToken;
+    return chunkToken;
   }
-  
+
   /**
    * @param chunkToken The chunkToken to set.
    */
-  public void setChunkToken(String chunkToken) 
+  public void setChunkToken(String chunkToken)
   {
-  	this.chunkToken = chunkToken;
+    this.chunkToken = chunkToken;
   }
-  
+
   /**
    * @return Returns the coveragePeriod.
    */
-  public CoveragePeriod getCoveragePeriod() 
+  public CoveragePeriod getCoveragePeriod()
   {
-  	return coveragePeriod;
+    return coveragePeriod;
   }
-  
+
   /**
    * @param coveragePeriod The coveragePeriod to set.
    */
-  public void setCoveragePeriod(CoveragePeriod coveragePeriod) 
+  public void setCoveragePeriod(CoveragePeriod coveragePeriod)
   {
-  	this.coveragePeriod = coveragePeriod;
+    this.coveragePeriod = coveragePeriod;
   }
-  
+
   /**
    * @return Returns the subscriptionKey.
    */
-  public String getSubscriptionKey() 
+  public String getSubscriptionKey()
   {
-  	return subscriptionKey;
+    return subscriptionKey;
   }
-  
+
   /**
    * @param subscriptionKey The subscriptionKey to set.
    */
-  public void setSubscriptionKey(String subscriptionKey) 
+  public void setSubscriptionKey(String subscriptionKey)
   {
-  	this.subscriptionKey = subscriptionKey;
+    this.subscriptionKey = subscriptionKey;
   }
 }

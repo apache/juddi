@@ -110,7 +110,7 @@ public class GetPublisherDetailFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
 
   }

@@ -21,7 +21,7 @@ import org.apache.juddi.datatype.RegistryObject;
 
 /**
  * Example:
- * 
+ *
  *   <coveragePeriod>
  *     <startPoint>20020727T00:00:00</startPoint>
  *     <endPoint>20020728T00:00:00</endPoint>
@@ -31,52 +31,52 @@ import org.apache.juddi.datatype.RegistryObject;
  */
 public class CoveragePeriod implements RegistryObject
 {
-	Date startPoint;
-	Date endPoint;
-	
+  Date startPoint;
+  Date endPoint;
+
   /**
    * default constructor
    */
   public CoveragePeriod()
   {
   }
-  
+
   /**
    * constructor
    */
   public CoveragePeriod(Date startPoint,Date endPoint)
   {
   }
-  
-	/**
-	 * @return Returns the endPoint.
-	 */
-	public Date getEndPoint() 
-	{
-		return endPoint;
-	}
-	
-	/**
-	 * @param endPoint The endPoint to set.
-	 */
-	public void setEndPoint(Date endPoint) 
-	{
-		this.endPoint = endPoint;
-	}
-	
-	/**
-	 * @return Returns the startPoint.
-	 */
-	public Date getStartPoint() 
-	{
-		return startPoint;
-	}
-	
-	/**
-	 * @param startPoint The startPoint to set.
-	 */
-	public void setStartPoint(Date startPoint) 
-	{
-		this.startPoint = startPoint;
-	}
+
+  /**
+   * @return Returns the endPoint.
+   */
+  public Date getEndPoint()
+  {
+    return endPoint;
+  }
+
+  /**
+   * @param endPoint The endPoint to set.
+   */
+  public void setEndPoint(Date endPoint)
+  {
+    this.endPoint = endPoint;
+  }
+
+  /**
+   * @return Returns the startPoint.
+   */
+  public Date getStartPoint()
+  {
+    return startPoint;
+  }
+
+  /**
+   * @param startPoint The startPoint to set.
+   */
+  public void setStartPoint(Date startPoint)
+  {
+    this.startPoint = startPoint;
+  }
 }
