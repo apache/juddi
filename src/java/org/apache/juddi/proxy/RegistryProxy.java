@@ -489,7 +489,7 @@ public class RegistryProxy extends AbstractRegistry
    *
    * @return Transport
    */
-  private Transport getTransport(String className)
+  public Transport getTransport(String className)
   {
     Transport transport = null;
     Class transportClass = null; 
