@@ -398,10 +398,10 @@ public class RegistryServlet extends HttpServlet
         // FatalError DispositionReport within the message from the 
         // SAX parsing problem in the SOAP Fault anyway.
         
-        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
         errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = "E_fatalError";
-        errText = ex.getMessage();
+        errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
+        errText = Result.lookupErrText(Result.E_FATAL_ERROR) + 
+                  " " + ex.getMessage();
       }
       else // anything else
       {
@@ -428,10 +428,10 @@ public class RegistryServlet extends HttpServlet
         // subclass) but we're going to be friendly and include a
         // FatalError DispositionReport within the SOAP Fault anyway.
         
-        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
         errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = "E_fatalError";
-        errText = "An internal UDDI server error has " +
+        errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
+        errText = Result.lookupErrText(Result.E_FATAL_ERROR) +
+                  " An internal UDDI server error has " +
                   "occurred. Please report this error " +
                   "to the UDDI server administrator.";
       }

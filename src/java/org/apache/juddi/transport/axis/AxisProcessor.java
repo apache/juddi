@@ -282,10 +282,10 @@ public class AxisProcessor
         faultString = ex.getMessage();
         faultActor = null;
           
-        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
         errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = "E_fatalError";
-        errText = "An internal UDDI server error has " +
+        errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
+        errText = Result.lookupErrText(Result.E_FATAL_ERROR) +
+                  " An internal UDDI server error has " +
                   "occurred. Please report this error " +
                   "to the UDDI server administrator.";
       }
