@@ -42,7 +42,6 @@ public class PhoneHandler extends AbstractHandler
     Phone obj = new Phone();
 
     // Attributes
-    // Attributes
     String useType = element.getAttribute("useType");
     if ((useType != null) && (useType.trim().length() > 0))
       obj.setUseType(useType);
@@ -65,21 +64,10 @@ public class PhoneHandler extends AbstractHandler
     if ((useType != null) && (useType.trim().length() > 0))
       element.setAttribute("useType",useType);
 
-    String emailValue = phone.getValue();
-    if (emailValue != null)
-      element.appendChild(parent.getOwnerDocument().createTextNode(emailValue));
+    String phoneValue = phone.getValue();
+    if (phoneValue != null)
+      element.appendChild(parent.getOwnerDocument().createTextNode(phoneValue));
 
     parent.appendChild(element);
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String args[])
-    throws Exception
-  {
   }
 }
