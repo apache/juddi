@@ -11,5 +11,12 @@ this directory.
 	----------------------------------
 	saaj.jar
 
+NOTE: This jUDDI release includes a slightly modified 
+version of Apache Axis 1.2rc2 (axis.jar) and the jar 
+files that ship with Axis.  A change which jUDDI requires 
+was to the org.apache.axis.message.MessageElement class after
+the 1.2rc2 release was packaged so I've included that change
+here.
+
 Steve Viens
 sviens@apache.org
