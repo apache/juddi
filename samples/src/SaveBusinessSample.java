@@ -32,6 +32,7 @@ import org.apache.juddi.datatype.service.BusinessService;
 import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
+import org.apache.juddi.util.Language;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -79,7 +80,8 @@ public class SaveBusinessSample
       AuthInfo authInfo = authToken.getAuthInfo();
 
       BusinessService businessService = new BusinessService();
-      businessService.addName(new Name("Real-time Stock Quotes"));
+      businessService.addName(new Name("Real-time Stock Quotes",Language.ENGLISH));
+      //businessService.addName(new Name("Real-time Stock Quotes"));
       
       // generate a BusinessEntity
       BusinessEntity businessEntity = new BusinessEntity();
