@@ -17,6 +17,7 @@ package org.apache.juddi.util.xml;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -144,7 +145,20 @@ public class XMLUtils
           DOMBuilder builder = new DOMBuilder();
           Format format = org.jdom.output.Format.getPrettyFormat();
           XMLOutputter outputter = new XMLOutputter(format);
-          outputter.output(builder.build(element),System.out);        
+          outputter.output(builder.build(element),stream);        
+      }
+      catch(IOException ioex) {
+          ioex.printStackTrace();
+      }
+  }
+
+  public static void writeXML(Element element,Writer writer)
+  {
+      try {
+          DOMBuilder builder = new DOMBuilder();
+          Format format = org.jdom.output.Format.getPrettyFormat();
+          XMLOutputter outputter = new XMLOutputter(format);
+          outputter.output(builder.build(element),writer);        
       }
       catch(IOException ioex) {
           ioex.printStackTrace();
