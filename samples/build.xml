@@ -292,15 +292,6 @@ Copyright:
     </java>
   </target>
   <!-- =================================================================== -->
-  <!-- Executes the get_subscription sample                                -->
-  <!-- =================================================================== -->
-  <target name="get_subscription" depends="compile">
-    <java classname="GetSubscriptionSample" fork="yes">
-      <classpath refid="project.classpath"/>
-      <arg value="${prop.file}"/>
-    </java>
-  </target>
-  <!-- =================================================================== -->
   <!-- Executes the get_subscriptions sample                               -->
   <!-- =================================================================== -->
   <target name="get_subscriptions" depends="compile">
