@@ -17,6 +17,7 @@ package org.apache.juddi.util.xml;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Vector;
 
@@ -164,4 +165,13 @@ public class XMLUtils
           ioex.printStackTrace();
       }
   }
+  
+  public static String toString(Element element)
+  {
+    StringWriter writer = new StringWriter();
+    
+    writeXML(element,writer);
+    
+    return writer.toString();    
+  } 
 }
