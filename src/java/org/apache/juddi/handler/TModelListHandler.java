@@ -84,7 +84,7 @@ public class TModelListHandler extends AbstractHandler
     AbstractHandler handler = null;
 
     String generic = list.getGeneric();
-    if (generic != null)
+    if ((generic != null) && (generic.trim().length() > 0))
     {
       element.setAttribute("generic",generic);
 
@@ -95,8 +95,11 @@ public class TModelListHandler extends AbstractHandler
       else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
         element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
-    else
-      element.setAttribute("generic","");
+    else // Default to UDDI v2 values
+    {
+      element.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
+      element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
+    }
 
     String operator = list.getOperator();
     if (operator != null)

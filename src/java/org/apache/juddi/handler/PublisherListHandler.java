@@ -85,13 +85,16 @@ public class PublisherListHandler extends AbstractHandler
     AbstractHandler handler = null;
 
     String generic = list.getGeneric();
-    if (generic != null)
+    if ((generic != null) && (generic.trim().length() > 0))
     {
       element.setAttribute("generic",generic);
       element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
     }
-    else
-      element.setAttribute("generic","");
+    else // Default to UDDI v2 and jUDDI v1 values
+    {
+      element.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
+      element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
+    }
 
     String operator = list.getOperator();
     if (operator != null)
