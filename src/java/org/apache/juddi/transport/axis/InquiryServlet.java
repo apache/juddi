@@ -34,6 +34,8 @@ public class InquiryServlet extends AxisServlet
    public void doGet(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    req.getRequestDispatcher("/index.html").forward(req,res);
+    res.setHeader("Allow","POST");
+    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
+      "method (GET) is not allowed by the UDDI Inquiry API.");
   }
 }
