@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.Description;
 import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.RegistryObject;
@@ -36,7 +31,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class BindingDetailHandlerTests extends TestCase
+public class BindingDetailHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.BindingDetail.test";
 	private BindingDetailHandler handler = null;
@@ -99,24 +94,6 @@ public class BindingDetailHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

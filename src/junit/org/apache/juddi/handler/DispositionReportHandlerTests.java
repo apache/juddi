@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
@@ -31,7 +26,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class  DispositionReportHandlerTests extends TestCase
+public class  DispositionReportHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.DeletePublisher.test";
 	private  DispositionReportHandler handler = null;
@@ -79,24 +74,6 @@ public class  DispositionReportHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.GetPublisherAssertions;
@@ -29,7 +24,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class  GetPublisherAssertionsHandlerTests extends TestCase
+public class  GetPublisherAssertionsHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.DeletePublisher.test";
 	private  GetPublisherAssertionsHandler handler = null;
@@ -60,24 +55,6 @@ public class  GetPublisherAssertionsHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

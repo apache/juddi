@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.Address;
 import org.apache.juddi.datatype.AddressLine;
 import org.apache.juddi.datatype.CategoryBag;
@@ -49,7 +44,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class BusinessServiceHandlerTests extends TestCase
+public class BusinessServiceHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.BusinessService.test";
 	private BusinessServiceHandler handler = null;
@@ -149,24 +144,6 @@ public class BusinessServiceHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

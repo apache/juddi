@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -28,7 +23,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class  PublisherHandlerTests extends TestCase
+public class  PublisherHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.DeletePublisher.test";
 	private  PublisherHandler handler = null;
@@ -65,24 +60,6 @@ public class  PublisherHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

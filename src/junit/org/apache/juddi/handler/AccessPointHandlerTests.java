@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.binding.AccessPoint;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -28,26 +23,26 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class AccessPointHandlerTests extends TestCase
+public class AccessPointHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.accesspoint.test";
 	private AccessPointHandler handler = null;
 
-  public AccessPointHandlerTests(String arg0)
-  {
-    super(arg0);
-  }
+    public AccessPointHandlerTests(String arg0)
+    {
+        super(arg0);
+    }
 
-  public static void main(String[] args)
-  {
-    junit.textui.TestRunner.run(AccessPointHandlerTests.class);
-  }
+    public static void main(String[] args)
+    {
+        junit.textui.TestRunner.run(AccessPointHandlerTests.class);
+    }
 
-  public void setUp()
-  {
+    public void setUp()
+    {
 		HandlerMaker maker = HandlerMaker.getInstance();
 		handler = (AccessPointHandler)maker.lookup(AccessPointHandler.TAG_NAME);
-  }
+    }
 
 	private RegistryObject getRegistryObject()
 	{
@@ -57,25 +52,6 @@ public class AccessPointHandlerTests extends TestCase
 		object.setURL("http://www.juddi.org/juddi.wsdl");
 
 		return object;
-
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)
@@ -113,8 +89,8 @@ public class AccessPointHandlerTests extends TestCase
 
 	}
 
-  public void testMarshUnMarshal()
-  {
+	public void testMarshUnMarshal()
+	{
 		Element child = getMarshalledElement(null);
 
 		String marshalledString = this.getXMLString(child);
@@ -132,6 +108,5 @@ public class AccessPointHandlerTests extends TestCase
 		boolean equals = marshalledString.equals(unMarshalledString);
 
 		assertEquals("Expected result: ", marshalledString, unMarshalledString );
-  }
-
+	}
 }

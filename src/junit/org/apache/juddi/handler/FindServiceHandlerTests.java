@@ -15,11 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
-
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
@@ -34,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * @author anou_mana@apache.org
  */
-public class  FindServiceHandlerTests extends TestCase
+public class  FindServiceHandlerTests extends HandlerTestCase
 {
 	private static final String TEST_ID = "juddi.handler.DeletePublisher.test";
 	private  FindServiceHandler handler = null;
@@ -78,24 +73,6 @@ public class  FindServiceHandlerTests extends TestCase
 
 		return object;
 
-	}
-
-	private String getXMLString(Element element)
-	{
-		StringWriter writer = new StringWriter();
-		XMLUtils.writeXML(element,writer);
-
-		String xmlString = writer.toString();
-
-		try
-		{
-			writer.close();
-		}
-		catch(IOException exp)
-		{
-		}
-
-		return xmlString;
 	}
 
 	private Element getMarshalledElement(RegistryObject regObject)

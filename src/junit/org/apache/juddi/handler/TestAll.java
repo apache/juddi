@@ -15,7 +15,9 @@
  */
 package org.apache.juddi.handler;
 
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * @author Steve Viens (sviens@apache.org)
