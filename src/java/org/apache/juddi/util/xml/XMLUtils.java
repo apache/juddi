@@ -70,9 +70,12 @@ public class XMLUtils
     {
       Node node = children.item(i);
       
-      //System.out.println("parsing: "+node.getNodeName());
+      //System.out.println("node name:       "+node.getNodeName());
+      //System.out.println("node local name: "+node.getLocalName());
       
-      if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName))
+      // TODO (steve) Verify the use of getLocalName vs getNodeName.
+      if (node.getNodeType() == Node.ELEMENT_NODE && node.getLocalName().equals(tagName))
+      //if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName))
         result.addElement(node); // matching element
     }
 
