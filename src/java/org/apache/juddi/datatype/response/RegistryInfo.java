@@ -19,7 +19,6 @@ import java.util.Properties;
 
 import org.apache.juddi.datatype.RegistryObject;
 
-
 /**
  * @author Steve Viens (sviens@apache.org)
  */
@@ -27,49 +26,49 @@ public class RegistryInfo implements RegistryObject
 {
   String generic;
   String operator;
-	Properties properties;
+  Properties properties;
 
   /**
    * Constructs a new initialized Addressline instance.
    */
   public RegistryInfo()
   {
-  	properties = new Properties();
+    properties = new Properties();
   } 
 
-	/**
-	 *
-	 * @param genericValue
-	 */
-	public void setGeneric(String genericValue)
-	{
-	  this.generic = genericValue;
-	}
+  /**
+   *
+   * @param genericValue
+   */
+  public void setGeneric(String genericValue)
+  {
+    this.generic = genericValue;
+  }
 
-	/**
-	 *
-	 * @return String UDDI generic value.
-	 */
-	public String getGeneric()
-	{
-	  return this.generic;
-	}
+  /**
+   *
+   * @return String UDDI generic value.
+   */
+  public String getGeneric()
+  {
+    return this.generic;
+  }
 
-	/**
-	 *
-	 */
-	public void setOperator(String operator)
-	{
-	  this.operator = operator;
-	}
+  /**
+   *
+   */
+  public void setOperator(String operator)
+  {
+    this.operator = operator;
+  }
 
-	/**
-	 *
-	 */
-	public String getOperator()
-	{
-	  return this.operator;
-	}
+  /**
+   *
+   */
+  public String getOperator()
+  {
+    return this.operator;
+  }
   
   /**
    * @param name The name of the property being added.
@@ -98,10 +97,10 @@ public class RegistryInfo implements RegistryObject
    */
   public void addProperty(Property prop)
   {
-  	if (prop == null)
-  		return;
-  	
-  	properties.put(prop.getName(),prop.getValue());
+    if (prop == null)
+      return;
+    
+    properties.put(prop.getName(),prop.getValue());
   }
   
   /**
@@ -109,6 +108,6 @@ public class RegistryInfo implements RegistryObject
    */
   public Properties getProperties()
   {
-  	return properties;
+    return properties;
   }
 }

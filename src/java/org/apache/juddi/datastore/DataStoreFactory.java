@@ -50,21 +50,21 @@ public class DataStoreFactory
    */
   public static DataStore getDataStore()
   {
-  	DataStore dataStore = null;
-  	
+    DataStore dataStore = null;
+    
     try
     {
-    	// make sure we know what class to create
-    	if (implClass == null)
-    		implClass = loadImplClass();
+      // make sure we know what class to create
+      if (implClass == null)
+        implClass = loadImplClass();
 
-    	// true if a configuration problem exists
-    	if (implClass == null)
-    		throw new RegistryException("The registry is not configured " +
-    				"correctly.");
-    		
+      // true if a configuration problem exists
+      if (implClass == null)
+        throw new RegistryException("The registry is not configured " +
+            "correctly.");
+        
       // try to instantiate a new DataStore
-    	dataStore = (DataStore)implClass.newInstance();
+      dataStore = (DataStore)implClass.newInstance();
     }
     catch(Exception e)
     {
@@ -84,9 +84,9 @@ public class DataStoreFactory
    */
   private static synchronized Class loadImplClass()
   {
-  	if (implClass != null)
-  		return implClass;
-  	
+    if (implClass != null)
+      return implClass;
+    
     // grab class name of the DataStore implementation to create
     String className = Config.getStringProperty(IMPL_KEY,DEFAULT_IMPL);
 
@@ -96,13 +96,13 @@ public class DataStoreFactory
     try
     {
       // Use Loader to locate & load the DataStore implementation
-    	implClass = Loader.getClassForName(className);
+      implClass = Loader.getClassForName(className);
     }
     catch(ClassNotFoundException e)
     {
       log.error("The registry is not configured correctly. The specified " +
-      					"DataStore class '" + className + "' was not found in " +
-								"classpath.");
+                "DataStore class '" + className + "' was not found in " +
+                "classpath.");
       log.error(e);
     }
     

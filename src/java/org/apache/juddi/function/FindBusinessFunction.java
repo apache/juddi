@@ -134,7 +134,7 @@ public class FindBusinessFunction extends AbstractFunction
           String name = ((Name) nameVector.elementAt(i)).getValue();
           if (name.length() > maxNameLength)
             throw new NameTooLongException(name + 
-            		"(max=" + maxNameLength + ")");
+                "(max=" + maxNameLength + ")");
         }
       }
 
@@ -250,7 +250,7 @@ public class FindBusinessFunction extends AbstractFunction
     finally
     {
       if (dataStore != null)
-      	dataStore.release();
+        dataStore.release();
     }
   }
 

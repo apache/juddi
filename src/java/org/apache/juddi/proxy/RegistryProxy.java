@@ -114,7 +114,7 @@ public class RegistryProxy extends AbstractRegistry
         props.load(stream);
     }
     catch (IOException ioex) {
-    	ioex.printStackTrace();
+      ioex.printStackTrace();
     }
 
     this.init(props);
@@ -197,8 +197,8 @@ public class RegistryProxy extends AbstractRegistry
     if (proxySet != null)
       this.setHttpProxySet(Boolean.getBoolean(proxySet));
     else
-    	this.setHttpProxySet(Boolean.getBoolean(DEFAULT_HTTP_PROXY_SET));
-    	
+      this.setHttpProxySet(Boolean.getBoolean(DEFAULT_HTTP_PROXY_SET));
+      
     String proxyHost = props.getProperty(HTTP_PROXY_HOST_PROPERTY_NAME);
     if (proxyHost != null)
       this.setHttpProxyHost(proxyHost);
@@ -215,7 +215,7 @@ public class RegistryProxy extends AbstractRegistry
     if (transClass != null)
       this.setTransport(this.getTransport(transClass));
     else
-    	this.setTransport(this.getTransport(DEFAULT_TRANSPORT_CLASS));
+      this.setTransport(this.getTransport(DEFAULT_TRANSPORT_CLASS));
   }
    
    /**
@@ -351,7 +351,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public boolean isHttpProxySet() 
   {
-  	return httpProxySet;
+    return httpProxySet;
   }
   
   /**
@@ -359,7 +359,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public void setHttpProxySet(boolean httpProxySet) 
   {
-  	this.httpProxySet = httpProxySet;
+    this.httpProxySet = httpProxySet;
   }
 
   /**
@@ -367,7 +367,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public String getHttpProxyHost() 
   {
-  	return httpProxyHost;
+    return httpProxyHost;
   }
   
   /**
@@ -375,7 +375,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public void setHttpProxyHost(String httpProxyHost) 
   {
-  	this.httpProxyHost = httpProxyHost;
+    this.httpProxyHost = httpProxyHost;
   }
   
   /**
@@ -383,7 +383,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public int getHttpProxyPort() 
   {
-  	return httpProxyPort;
+    return httpProxyPort;
   }
   
   /**
@@ -391,7 +391,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public void setHttpProxyPort(int httpProxyPort) 
   {
-  	this.httpProxyPort = httpProxyPort;
+    this.httpProxyPort = httpProxyPort;
   }
 
   /**
@@ -531,10 +531,10 @@ public class RegistryProxy extends AbstractRegistry
     //IRegistry registry = new RegistryProxy();
     
     // Option #2 (import proxy property values from a specified properties file)
-  	//Properties props = new Properties();
-  	//props.load(new FileInputStream("proxy.properties"));
-  	//IRegistry registry = new RegistryProxy(props);
-  	
+    //Properties props = new Properties();
+    //props.load(new FileInputStream("proxy.properties"));
+    //IRegistry registry = new RegistryProxy(props);
+    
     // Option #3 (explicitly set the proxy property values)
     //Properties props = new Properties();
     //props.setProperty(ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/uddi/admin");

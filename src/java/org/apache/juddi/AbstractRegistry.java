@@ -353,10 +353,10 @@ public abstract class AbstractRegistry implements IRegistry
   public BindingDetail getBindingDetail(String bindingKey)
     throws RegistryException
   {
-  	Vector keys = new Vector(1);
-  	keys.addElement(bindingKey);
-  	
-  	return getBindingDetail(keys);
+    Vector keys = new Vector(1);
+    keys.addElement(bindingKey);
+    
+    return getBindingDetail(keys);
   }
 
   /**
@@ -383,8 +383,8 @@ public abstract class AbstractRegistry implements IRegistry
   public BusinessDetail getBusinessDetail(String businessKey)
     throws RegistryException
   {
-  	Vector keys = new Vector(1);
-  	keys.addElement(businessKey);
+    Vector keys = new Vector(1);
+    keys.addElement(businessKey);
 
     return getBusinessDetail(keys);
   }
@@ -413,8 +413,8 @@ public abstract class AbstractRegistry implements IRegistry
   public BusinessDetailExt getBusinessDetailExt(String businessKey)
     throws RegistryException
   {
-  	Vector keys = new Vector(1);
-  	keys.addElement(businessKey);
+    Vector keys = new Vector(1);
+    keys.addElement(businessKey);
 
     return getBusinessDetailExt(keys);
   }
@@ -496,8 +496,8 @@ public abstract class AbstractRegistry implements IRegistry
   public ServiceDetail getServiceDetail(String serviceKey)
     throws RegistryException
   {
-  	Vector keys = new Vector(1);
-  	keys.addElement(serviceKey);
+    Vector keys = new Vector(1);
+    keys.addElement(serviceKey);
 
     return getServiceDetail(keys);
   }
@@ -526,8 +526,8 @@ public abstract class AbstractRegistry implements IRegistry
   public TModelDetail getTModelDetail(String tModelKey)
     throws RegistryException
   {
-  	Vector keys = new Vector(1);
-  	keys.addElement(tModelKey);
+    Vector keys = new Vector(1);
+    keys.addElement(tModelKey);
 
     return getTModelDetail(keys);
   }
@@ -644,12 +644,12 @@ public abstract class AbstractRegistry implements IRegistry
    */
   public DispositionReport validateValues(Vector businessVector,Vector serviceVector,Vector tModelVector)
     throws RegistryException
-	{
-  	ValidateValues request = new ValidateValues();
-  	request.setBusinessEntityVector(businessVector);
-  	request.setBusinessServiceVector(serviceVector);
-  	request.setTModelVector(tModelVector);
+  {
+    ValidateValues request = new ValidateValues();
+    request.setBusinessEntityVector(businessVector);
+    request.setBusinessServiceVector(serviceVector);
+    request.setTModelVector(tModelVector);
 
     return (DispositionReport)execute(request);
-	}
+  }
 }

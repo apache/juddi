@@ -116,9 +116,9 @@ public class ValidatorFactory
         System.out.println("Got a Validation instance: "+validation.getClass().getName());
 
         if (validation.validate(new CategoryBag()))
-        	System.out.println("The objct was successfully validated.");
+          System.out.println("The objct was successfully validated.");
         else
-        	System.out.println("Sorry validation failed.");
+          System.out.println("Sorry validation failed.");
       }
       else
         System.out.println("Couldn't get a Validation instance.");

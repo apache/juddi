@@ -18,7 +18,7 @@ package org.apache.juddi.validator;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
 import org.apache.juddi.datatype.KeyedReference;
-import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.error.RegistryException; 
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -32,7 +32,7 @@ public interface Validator
    * @throws RegistryException
    */
   boolean validate(CategoryBag bag)
-  	throws RegistryException;
+    throws RegistryException;
 
   /**
    *
@@ -41,7 +41,7 @@ public interface Validator
    * @throws RegistryException
    */
   boolean validate(IdentifierBag bag)
-  	throws RegistryException;
+    throws RegistryException;
 
   /**
    *
@@ -50,5 +50,5 @@ public interface Validator
    * @throws RegistryException
    */
   boolean validate(KeyedReference ref)
-  	throws RegistryException;
+    throws RegistryException;
 }

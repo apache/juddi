@@ -22,7 +22,7 @@ import org.apache.juddi.error.AuthTokenExpiredException;
 import org.apache.juddi.error.AuthTokenRequiredException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.registry.RegistryEngine;
-
+ 
 /**
  * @author Steve Viens (sviens@apache.org)
  */
@@ -36,7 +36,7 @@ public abstract class AbstractFunction implements IFunction
    */
   protected AbstractFunction(RegistryEngine registry)
   {
-  	this.registry = registry;
+    this.registry = registry;
   }
   
   /**
@@ -44,7 +44,7 @@ public abstract class AbstractFunction implements IFunction
    */
   public RegistryEngine getRegistry()
   {
-  	return this.registry;
+    return this.registry;
   }
   
   /**

@@ -96,31 +96,31 @@ public class RegistryInfoHandler extends AbstractHandler
   public static void main(String args[])
     throws Exception
   {
-		HandlerMaker maker = HandlerMaker.getInstance();
-		AbstractHandler handler = maker.lookup(RegistryInfoHandler.TAG_NAME);
-		
-		Element parent = XMLUtils.newRootElement();
-		Element child = null;
-		
-		RegistryInfo regInfo = new RegistryInfo();
-		regInfo.addProperty(new Property("first_name","Steve"));
-		regInfo.addProperty(new Property("last_name","Viens"));
-		regInfo.addProperty(new Property("version","1.0b1"));
+    HandlerMaker maker = HandlerMaker.getInstance();
+    AbstractHandler handler = maker.lookup(RegistryInfoHandler.TAG_NAME);
+    
+    Element parent = XMLUtils.newRootElement();
+    Element child = null;
+    
+    RegistryInfo regInfo = new RegistryInfo();
+    regInfo.addProperty(new Property("first_name","Steve"));
+    regInfo.addProperty(new Property("last_name","Viens"));
+    regInfo.addProperty(new Property("version","1.0b1"));
 
-		System.out.println();
-		
-		RegistryObject regObject = regInfo;
-		handler.marshal(regObject,parent);
-		child = (Element)parent.getFirstChild();
-		parent.removeChild(child);
-		XMLUtils.writeXML(child,System.out);
-		
-		System.out.println();
-		
-		regObject = handler.unmarshal(child);
-		handler.marshal(regObject,parent);
-		child = (Element)parent.getFirstChild();
-		parent.removeChild(child);
-		XMLUtils.writeXML(child,System.out);
+    System.out.println();
+    
+    RegistryObject regObject = regInfo;
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+    
+    System.out.println();
+    
+    regObject = handler.unmarshal(child);
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
   }
 }

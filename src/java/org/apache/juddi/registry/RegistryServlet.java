@@ -123,67 +123,67 @@ public class RegistryServlet extends HttpServlet
         // juddi.properties file found in the 
         // WEB-INF directory.
 
-      	props.load(new FileInputStream(propertyFile));
+        props.load(new FileInputStream(propertyFile));
       }
       else
       {
         // A juddi.properties file doesn't exist
-      	// yet so create one in the WEB-INF directory
-      	// populated with default properties.
-      	
+        // yet so create one in the WEB-INF directory
+        // populated with default properties.
+        
         props.put(RegistryEngine.PROPNAME_OPERATOR_NAME,
-        		      RegistryEngine.DEFAULT_OPERATOR_NAME);
+                  RegistryEngine.DEFAULT_OPERATOR_NAME);
         
         props.put(RegistryEngine.PROPNAME_OPERATOR_URL,
-        		      RegistryEngine.DEFAULT_OPERATOR_URL);
+                  RegistryEngine.DEFAULT_OPERATOR_URL);
         
         props.put(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,
-        		      RegistryEngine.DEFAULT_ADMIN_EMAIL_ADDRESS);
+                  RegistryEngine.DEFAULT_ADMIN_EMAIL_ADDRESS);
         
         props.put(RegistryEngine.PROPNAME_DATASOURCE_NAME,
-        		      RegistryEngine.DEFAULT_DATASOURCE_NAME);
+                  RegistryEngine.DEFAULT_DATASOURCE_NAME);
               
         props.put(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_AUTH_CLASS_NAME);
+                  RegistryEngine.DEFAULT_AUTH_CLASS_NAME);
         
         props.put(RegistryEngine.PROPNAME_CRYPTOR_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_CRYPTOR_CLASS_NAME);
+                  RegistryEngine.DEFAULT_CRYPTOR_CLASS_NAME);
         
         props.put(RegistryEngine.PROPNAME_DATASTORE_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_DATASTORE_CLASS_NAME);
+                  RegistryEngine.DEFAULT_DATASTORE_CLASS_NAME);
         
         props.put(RegistryEngine.PROPNAME_MONITOR_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_MONITOR_CLASS_NAME);
+                  RegistryEngine.DEFAULT_MONITOR_CLASS_NAME);
         
         props.put(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_UUIDGEN_CLASS_NAME);
+                  RegistryEngine.DEFAULT_UUIDGEN_CLASS_NAME);
         
         props.put(RegistryEngine.PROPNAME_VALIDATOR_CLASS_NAME,
-        		      RegistryEngine.DEFAULT_VALIDATOR_CLASS_NAME);  
+                  RegistryEngine.DEFAULT_VALIDATOR_CLASS_NAME);  
 
         props.put(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_NAME_ELEMENTS));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_NAME_ELEMENTS));
         
         props.put(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_NAME_LENGTH));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_NAME_LENGTH));
 
         props.put(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_MESSAGE_SIZE));        
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_MESSAGE_SIZE));        
 
         props.put(RegistryEngine.PROPNAME_MAX_BUSINESS_ENTITIES_PER_USER,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_ENTITIES_PER_USER));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_ENTITIES_PER_USER));
         
         props.put(RegistryEngine.PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS));
         
         props.put(RegistryEngine.PROPNAME_MAX_BINDING_TEMPLATES_PER_SERVICE,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_BINDING_TEMPLATES_PER_SERVICE));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_BINDING_TEMPLATES_PER_SERVICE));
         
         props.put(RegistryEngine.PROPNAME_MAX_TMODELS_PER_USER,
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_TMODELS_PER_USER));
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_TMODELS_PER_USER));
         
-        props.put(RegistryEngine.PROPNAME_MAX_ROWS_LIMIT,        		
-        		      Integer.toString(RegistryEngine.DEFAULT_MAX_ROWS_LIMIT));
+        props.put(RegistryEngine.PROPNAME_MAX_ROWS_LIMIT,           
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_ROWS_LIMIT));
         
         // Create a new "juddi.properties" file in
         // the WEB-INF directory.

@@ -260,9 +260,9 @@ public class Result implements RegistryObject
   public static final int E_INVALID_TIME = 40030;
   public static final String E_INVALID_TIME_CODE = "E_invalidTime";
   public static final String E_INVALID_TIME_MSG = "Signifies that the time " +
-		"period, the date/time, or the pair of date/time is invalid. The error " +
-		"structure signifies the condition that occurred and the error text " +
-		"clearly calls out the cause of the problem.";
+    "period, the date/time, or the pair of date/time is invalid. The error " +
+    "structure signifies the condition that occurred and the error text " +
+    "clearly calls out the cause of the problem.";
 
   // Signifies that the UDDI node deems that a result set from an inquiry 
   // is too large, and requests to obtain the results are not honored, even 
@@ -271,9 +271,9 @@ public class Result implements RegistryObject
   public static final int E_RESULT_SET_TOO_LARGE = 40300;
   public static final String E_RESULT_SET_TOO_LARGE_CODE = "E_resultSetTooLarge";
   public static final String E_RESULT_SET_TOO_LARGE_MSG = "Signifies that the " +
-		"UDDI node deems that a result set from an inquiry is too large, and " +
-		"requests to obtain the results are not honored, even using subsets.  " +
-		"The inquiry that triggered this error should be refined and re-issued.";
+    "UDDI node deems that a result set from an inquiry is too large, and " +
+    "requests to obtain the results are not honored, even using subsets.  " +
+    "The inquiry that triggered this error should be refined and re-issued.";
 
   int errno;
   ErrInfo errInfo;

@@ -80,7 +80,7 @@ public class Config extends Properties
   public static String getOperator()
   {
     return getStringProperty(RegistryEngine.PROPNAME_OPERATOR_NAME,
-    					RegistryEngine.DEFAULT_OPERATOR_NAME);    
+              RegistryEngine.DEFAULT_OPERATOR_NAME);    
   }
 
   /**
@@ -89,7 +89,7 @@ public class Config extends Properties
   public static String getOperatorURL()
   {
     return getStringProperty(RegistryEngine.PROPNAME_OPERATOR_URL,
-    		      RegistryEngine.DEFAULT_OPERATOR_URL);
+              RegistryEngine.DEFAULT_OPERATOR_URL);
   }
 
   /**
@@ -98,7 +98,7 @@ public class Config extends Properties
   public static int getMaxNameLengthAllowed()
   {
     return getIntProperty(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,
-    					RegistryEngine.DEFAULT_MAX_NAME_LENGTH);
+              RegistryEngine.DEFAULT_MAX_NAME_LENGTH);
   }
 
   /**
@@ -107,7 +107,7 @@ public class Config extends Properties
   public static int getMaxNameElementsAllowed()
   {
     return getIntProperty(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,
-    					RegistryEngine.DEFAULT_MAX_NAME_ELEMENTS);
+              RegistryEngine.DEFAULT_MAX_NAME_ELEMENTS);
   }
 
   /**

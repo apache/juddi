@@ -124,38 +124,38 @@ class FindBindingByCategoryQuery
       sql.addValue(serviceKey);
     }
     
-	  if(categoryBag != null)
-	  {
-	    Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
-	
-	    if(keyedRefVector != null)
-	    {
-	      int vectorSize = keyedRefVector.size();
-	      if (vectorSize > 0)
-	      {
-	        sql.append("AND (");
-	
-	        for (int i=0; i<vectorSize; i++)
-	        {
-	          KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
-	          String name = keyedRef.getKeyName();
-	          String value = keyedRef.getKeyValue();
-	
-	          if ((name != null) && (value != null))
-	          {
-	            sql.append("(C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
-	            sql.addValue(name);
-	            sql.addValue(value);
-	
-	            if (i+1 < vectorSize)
-	              sql.append(" OR ");
-	          }
-	        }
-	
-	        sql.append(") ");
-	      }
-	    }
-	  }
+    if(categoryBag != null)
+    {
+      Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+  
+      if(keyedRefVector != null)
+      {
+        int vectorSize = keyedRefVector.size();
+        if (vectorSize > 0)
+        {
+          sql.append("AND (");
+  
+          for (int i=0; i<vectorSize; i++)
+          {
+            KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
+            String name = keyedRef.getKeyName();
+            String value = keyedRef.getKeyValue();
+  
+            if ((name != null) && (value != null))
+            {
+              sql.append("(C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
+              sql.addValue(name);
+              sql.addValue(value);
+  
+              if (i+1 < vectorSize)
+                sql.append(" OR ");
+            }
+          }
+  
+          sql.append(") ");
+        }
+      }
+    }
   }
 
   /**

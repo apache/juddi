@@ -36,30 +36,30 @@ public class DynamicQuery
    */
   public DynamicQuery()
   {
-  	this.values = new Vector();
-  	this.sql = new StringBuffer();
+    this.values = new Vector();
+    this.sql = new StringBuffer();
   } 
   
   public DynamicQuery(String sql)
   {
-  	this.values = new Vector();
-  	this.sql = new StringBuffer(sql);
+    this.values = new Vector();
+    this.sql = new StringBuffer(sql);
   }
   
   public void append(String sql)
-	{
-  	this.sql.append(sql);
-	}
+  {
+    this.sql.append(sql);
+  }
   
   public void addValue(Object obj)
   {
-  	this.values.addElement(obj);
+    this.values.addElement(obj);
   }
   
   public PreparedStatement buildPreparedStatement(Connection connection)
-  	throws SQLException
+    throws SQLException
   {
-  	PreparedStatement stmt = connection.prepareStatement(sql.toString());
+    PreparedStatement stmt = connection.prepareStatement(sql.toString());
     for (int i=0; i<values.size(); i++)
       stmt.setObject(i+1,values.elementAt(i));
     
@@ -68,21 +68,21 @@ public class DynamicQuery
   
   public String toString()
   { 
-  	StringBuffer buffer = new StringBuffer(sql.toString());
-  	buffer.append("\n\n");
-  	
+    StringBuffer buffer = new StringBuffer(sql.toString());
+    buffer.append("\n\n");
+    
     for (int i=0; i<values.size(); i++)
     {
-    	Object obj = values.elementAt(i);
-    	
-    	buffer.append(i+1);
-    	buffer.append("\t");
-    	buffer.append(obj.getClass().getName());
-    	buffer.append("\t");
-    	buffer.append(obj.toString());
-    	buffer.append("\n");
+      Object obj = values.elementAt(i);
+      
+      buffer.append(i+1);
+      buffer.append("\t");
+      buffer.append(obj.getClass().getName());
+      buffer.append("\t");
+      buffer.append(obj.toString());
+      buffer.append("\n");
     }
-  	
-  	return buffer.toString();
+    
+    return buffer.toString();
   }
 }

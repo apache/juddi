@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
 import org.apache.juddi.datatype.KeyedReference;
-import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.error.RegistryException; 
 
 /**
  * This is a simple implementation of jUDDI's Validation interface.
@@ -45,7 +45,7 @@ public class DefaultValidator implements Validator
   public boolean validate(CategoryBag bag)
     throws RegistryException
   {
-  	return true;
+    return true;
   }
 
   /**
@@ -54,7 +54,7 @@ public class DefaultValidator implements Validator
   public boolean validate(IdentifierBag bag)
     throws RegistryException
   {
-  	return true;
+    return true;
   }
 
   /**
@@ -63,7 +63,7 @@ public class DefaultValidator implements Validator
   public boolean validate(KeyedReference ref)
     throws RegistryException
   {
-  	return true;
+    return true;
   }
 
 

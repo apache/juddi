@@ -98,8 +98,8 @@ public class JDBCDataStore implements DataStore
     try {
       if (connection != null)
       {
-      	this.connection.close();
-      	this.connection = null;
+        this.connection.close();
+        this.connection = null;
       }
     }
     catch(SQLException sqlex) {

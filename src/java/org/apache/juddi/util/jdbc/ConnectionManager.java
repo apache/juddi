@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
+ 
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
@@ -45,8 +45,8 @@ public class ConnectionManager
 
   // DBCP DataSource property keys and default values
   private static final String USE_CONNECTION_POOL_VALUE_KEY = "juddi.useConnectionPool";
-	private static final boolean DEFAULT_USE_CONNECTION_POOL_VALUE = false;
-	
+  private static final boolean DEFAULT_USE_CONNECTION_POOL_VALUE = false;
+  
   private static final String JDBC_DRIVER_KEY = "juddi.jdbcDriver";
   private static final String DEFAULT_JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
@@ -95,9 +95,9 @@ public class ConnectionManager
       return dataSource;
 
     boolean useInternalConnectionPool = 
-    	Config.getBooleanProperty(USE_CONNECTION_POOL_VALUE_KEY,
-    			DEFAULT_USE_CONNECTION_POOL_VALUE);
-		
+      Config.getBooleanProperty(USE_CONNECTION_POOL_VALUE_KEY,
+          DEFAULT_USE_CONNECTION_POOL_VALUE);
+    
     if (useInternalConnectionPool)
     {
       if (dataSource == null)
@@ -195,7 +195,7 @@ public class ConnectionManager
     {
       String dataSourceName =
         Config.getStringProperty(RegistryEngine.PROPNAME_DATASOURCE_NAME,
-        		RegistryEngine.DEFAULT_DATASOURCE_NAME);
+            RegistryEngine.DEFAULT_DATASOURCE_NAME);
 
       log.info("Using JNDI to aquire a JDBC DataSource with " +
         "name: "+dataSourceName);
