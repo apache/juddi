@@ -51,15 +51,15 @@ import org.apache.juddi.error.RegistryException;
  */
 public interface IRegistry
 {
-  public static final String UDDI_V1_GENERIC = "1.0";
-  public static final String UDDI_V2_GENERIC = "2.0";
-  public static final String UDDI_V3_GENERIC = "3.0";
-  public static final String JUDDI_V1_GENERIC = "1.0";
+  String UDDI_V1_GENERIC = "1.0";
+  String UDDI_V2_GENERIC = "2.0";
+  String UDDI_V3_GENERIC = "3.0";
+  String JUDDI_V1_GENERIC = "1.0";
 
-  public static final String UDDI_V1_NAMESPACE = "urn:uddi-org:api";
-  public static final String UDDI_V2_NAMESPACE = "urn:uddi-org:api_v2";
-  public static final String UDDI_V3_NAMESPACE = "urn:uddi-org:api_v3";
-  public static final String JUDDI_V1_NAMESPACE = "urn:juddi-org:api_v1";
+  String UDDI_V1_NAMESPACE = "urn:uddi-org:api";
+  String UDDI_V2_NAMESPACE = "urn:uddi-org:api_v2";
+  String UDDI_V3_NAMESPACE = "urn:uddi-org:api_v3";
+  String JUDDI_V1_NAMESPACE = "urn:juddi-org:api_v1";
 
   /**
    * "Used to locate specific bindings within a registered
@@ -67,7 +67,7 @@ public interface IRegistry
    *
    * @exception RegistryException
    */
-  public BindingDetail findBinding(String serviceKey,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
+  BindingDetail findBinding(String serviceKey,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
@@ -76,13 +76,13 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BusinessList findBusiness(Vector nameVector,DiscoveryURLs discoveryURLs,IdentifierBag identifierBag,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
+  BusinessList findBusiness(Vector nameVector,DiscoveryURLs discoveryURLs,IdentifierBag identifierBag,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public RelatedBusinessesList findRelatedBusinesses(String businessKey,KeyedReference keyedReference,FindQualifiers findQualifiers,int maxRows)
+  RelatedBusinessesList findRelatedBusinesses(String businessKey,KeyedReference keyedReference,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
@@ -93,7 +93,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public ServiceList findService(String businessKey,Vector nameVector,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
+  ServiceList findService(String businessKey,Vector nameVector,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
@@ -102,7 +102,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public TModelList findTModel(String name,CategoryBag categoryBag,IdentifierBag identifierBag,FindQualifiers findQualifiers,int maxRows)
+  TModelList findTModel(String name,CategoryBag categoryBag,IdentifierBag identifierBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
@@ -111,7 +111,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BindingDetail getBindingDetail(Vector bindingKeys)
+  BindingDetail getBindingDetail(Vector bindingKeys)
     throws RegistryException;
 
   /**
@@ -120,7 +120,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BusinessDetail getBusinessDetail(Vector businessKeyVector)
+  BusinessDetail getBusinessDetail(Vector businessKeyVector)
     throws RegistryException;
 
   /**
@@ -129,7 +129,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BusinessDetailExt getBusinessDetailExt(Vector businessKeyVector)
+  BusinessDetailExt getBusinessDetailExt(Vector businessKeyVector)
     throws RegistryException;
   
   /**
@@ -138,7 +138,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public ServiceDetail getServiceDetail(Vector serviceKeyVector)
+  ServiceDetail getServiceDetail(Vector serviceKeyVector)
     throws RegistryException;
   
   /**
@@ -147,25 +147,25 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public TModelDetail getTModelDetail(Vector tModelKeyVector)
+  TModelDetail getTModelDetail(Vector tModelKeyVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public DispositionReport addPublisherAssertions(AuthInfo authInfo,Vector assertionVector)
+  DispositionReport addPublisherAssertions(AuthInfo authInfo,Vector assertionVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public AssertionStatusReport getAssertionStatusReport(AuthInfo authInfo,String completionStatus)
+  AssertionStatusReport getAssertionStatusReport(AuthInfo authInfo,String completionStatus)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public PublisherAssertions getPublisherAssertions(AuthInfo authInfo)
+  PublisherAssertions getPublisherAssertions(AuthInfo authInfo)
     throws RegistryException;
 
   /**
@@ -174,7 +174,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport deleteBinding(AuthInfo authInfo,Vector bindingKeyVector)
+  DispositionReport deleteBinding(AuthInfo authInfo,Vector bindingKeyVector)
     throws RegistryException;
 
   /**
@@ -182,7 +182,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport deleteBusiness(AuthInfo authInfo,Vector businessKeyVector)
+  DispositionReport deleteBusiness(AuthInfo authInfo,Vector businessKeyVector)
     throws RegistryException;
 
   /**
@@ -191,7 +191,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport deleteService(AuthInfo authInfo,Vector serviceKeyVector)
+  DispositionReport deleteService(AuthInfo authInfo,Vector serviceKeyVector)
     throws RegistryException;
 
   /**
@@ -201,13 +201,13 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport deleteTModel(AuthInfo authInfo,Vector tModelKeyVector)
+  DispositionReport deleteTModel(AuthInfo authInfo,Vector tModelKeyVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public DispositionReport deletePublisherAssertions(AuthInfo authInfo,Vector assertionVector)
+  DispositionReport deletePublisherAssertions(AuthInfo authInfo,Vector assertionVector)
     throws RegistryException;
 
   /**
@@ -216,7 +216,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport discardAuthToken(AuthInfo authInfo)
+  DispositionReport discardAuthToken(AuthInfo authInfo)
     throws RegistryException;
 
   /**
@@ -227,7 +227,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public AuthToken getAuthToken(String userID,String cred)
+  AuthToken getAuthToken(String userID,String cred)
     throws RegistryException;
 
   /**
@@ -236,7 +236,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public RegisteredInfo getRegisteredInfo(AuthInfo authInfo)
+  RegisteredInfo getRegisteredInfo(AuthInfo authInfo)
     throws RegistryException;
 
   /**
@@ -246,7 +246,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BindingDetail saveBinding(AuthInfo authInfo,Vector bindingVector)
+  BindingDetail saveBinding(AuthInfo authInfo,Vector bindingVector)
     throws RegistryException;
 
   /**
@@ -257,7 +257,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public BusinessDetail saveBusiness(AuthInfo authInfo,Vector businessVector)
+  BusinessDetail saveBusiness(AuthInfo authInfo,Vector businessVector)
     throws RegistryException;
 
   /**
@@ -266,7 +266,7 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public ServiceDetail saveService(AuthInfo authInfo,Vector serviceVector)
+  ServiceDetail saveService(AuthInfo authInfo,Vector serviceVector)
     throws RegistryException;
 
   /**
@@ -274,13 +274,13 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public TModelDetail saveTModel(AuthInfo authInfo,Vector tModelVector)
+  TModelDetail saveTModel(AuthInfo authInfo,Vector tModelVector)
     throws RegistryException;;
 
   /**
    * @exception RegistryException;
    */
-  public PublisherAssertions setPublisherAssertions(AuthInfo authInfo,Vector assertionVector)
+  PublisherAssertions setPublisherAssertions(AuthInfo authInfo,Vector assertionVector)
     throws RegistryException;
 
   /**
@@ -288,30 +288,30 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
-  public DispositionReport deletePublisher(AuthInfo authInfo,Vector publisherIDVector)
+  DispositionReport deletePublisher(AuthInfo authInfo,Vector publisherIDVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public PublisherDetail getPublisherDetail(Vector publisherIDVector)
+  PublisherDetail getPublisherDetail(Vector publisherIDVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public PublisherList findPublisher(String publisherID,String name,FindQualifiers findQualifiers,int maxRows)
+  PublisherList findPublisher(String publisherID,String name,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
    * @exception RegistryException;
    */
-  public PublisherDetail savePublisher(AuthInfo authInfo,Vector publisherVector)
+  PublisherDetail savePublisher(AuthInfo authInfo,Vector publisherVector)
     throws RegistryException;
 
   /**
    * @exception RegistryException
    */
-  public abstract RegistryObject execute(RegistryObject request)
+  RegistryObject execute(RegistryObject request)
     throws RegistryException;
 }

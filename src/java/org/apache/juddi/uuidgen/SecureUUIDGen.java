@@ -261,7 +261,7 @@ public class SecureUUIDGen implements UUIDGen
   /***************************************************************************/
 
 
-  public static void main(String argc[])
+  public static void main(String args[])
   {
     SecureUUIDGen generator = new SecureUUIDGen();
 

@@ -39,8 +39,7 @@ public class InitServlet extends HttpServlet
    * time) and call it's "init()" method to get all core
    * components initialized.
    */
-  public void init()
-  	throws ServletException
+  public void init() throws ServletException
   {
     super.init();
     

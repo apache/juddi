@@ -280,7 +280,7 @@ public class DefaultUUIDGen implements UUIDGen
   /***************************************************************************/
 
 
-  public static void main(String argc[])
+  public static void main(String args[])
   {
     DefaultUUIDGen generator = new DefaultUUIDGen();
 

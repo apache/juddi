@@ -67,7 +67,7 @@ public final class Win32UUIDGen implements UUIDGen
   /***************************************************************************/
 
 
-  public static void main(String argc[])
+  public static void main(String args[])
   {
     UUIDGen uuidgen = new Win32UUIDGen();
 
