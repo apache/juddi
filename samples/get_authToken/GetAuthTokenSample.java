@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import java.util.Properties;
+
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.proxy.RegistryProxy;
@@ -26,7 +28,17 @@ public class GetAuthTokenSample
 {
   public static void main(String[] args)
   {
-    IRegistry registry = new RegistryProxy();
+    // Option #1 (grabs properties from juddi.properties)
+    //IRegistry registry = new RegistryProxy();
+    
+    // Option #2
+    Properties props = new Properties();
+    props.setProperty("juddi.proxy.adminURL","http://localhost:8080/juddi/admin");
+    props.setProperty("juddi.proxy.inquiryURL","http://localhost:8080/juddi/inquiry");
+    props.setProperty("juddi.proxy.publishURL","http://localhost:8080/juddi/publish");
+    props.setProperty("juddi.proxy.securityProvider","com.sun.net.ssl.internal.ssl.Provider");
+    props.setProperty("juddi.proxy.protocolHandler","com.sun.net.ssl.internal.www.protocol");    
+    IRegistry registry = new RegistryProxy(props);
 
     String userID = "sviens";
     String password = "password";
