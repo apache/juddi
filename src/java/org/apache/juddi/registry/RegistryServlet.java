@@ -292,48 +292,48 @@ public class RegistryServlet extends HttpServlet
       soapRes.getSOAPBody().addDocument(document);
     } 
     catch (RegistryException ex) {             
-        log.error(ex);
+      log.error(ex);
       
-        try {        
-          SOAPBody body = soapRes.getSOAPBody();
-          SOAPFault soapFault = body.addFault();
-          soapFault.setFaultActor((ex.getFaultActor() == null) ? "" : ex.getFaultActor());
-          soapFault.setFaultString((ex.getFaultString() == null) ? "" : ex.getFaultString());
-          soapFault.setFaultCode((ex.getFaultCode() == null) ? "" : ex.getFaultCode());
+      try {        
+        SOAPBody body = soapRes.getSOAPBody();
+        SOAPFault soapFault = body.addFault();
+        soapFault.setFaultActor((ex.getFaultActor() == null) ? "" : ex.getFaultActor());
+        soapFault.setFaultString((ex.getFaultString() == null) ? "" : ex.getFaultString());
+        soapFault.setFaultCode((ex.getFaultCode() == null) ? "" : ex.getFaultCode());
           
-          // Store DispositionReport in the SOAP fault node.
-          DispositionReport dispRpt = ex.getDispositionReport();
-          if (dispRpt != null)
-          {          
-            dispRpt.setGeneric(generic);
-            dispRpt.setOperator(Config.getOperator());
+        // Store DispositionReport in the SOAP fault node.
+        DispositionReport dispRpt = ex.getDispositionReport();
+        if (dispRpt != null)
+        {          
+          dispRpt.setGeneric(generic);
+          dispRpt.setOperator(Config.getOperator());
 
-            // Create a new 'temp' XML element to use as a container 
-            // in which to marshal the DispositionReport into.
-              
-            DocumentBuilder docBuilder = getDocumentBuilder();
-            Document document = docBuilder.newDocument();
-            Element dispRptElement = document.createElement("temp");
+          // Create a new 'temp' XML element to use as a container 
+          // in which to marshal the DispositionReport into.
+             
+          DocumentBuilder docBuilder = getDocumentBuilder();
+          Document document = docBuilder.newDocument();
+          Element dispRptElement = document.createElement("temp");
 
-            // Lookup the DispositionReportHandler and marshal 
-            // the juddi object into the appropriate xml format (we 
-            // only support UDDI v2.0 at this time).  Attach the
-            // results to the body of the SOAP fault.
+          // Lookup the DispositionReportHandler and marshal 
+          // the juddi object into the appropriate xml format (we 
+          // only support UDDI v2.0 at this time).  Attach the
+          // results to the body of the SOAP fault.
               
-            IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
-            dispRptHandler.marshal(dispRpt,dispRptElement);   
+          IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
+          dispRptHandler.marshal(dispRpt,dispRptElement);   
             
-            // Create the SOAPFault Detail element and insert 
-            // the DispositionReport.
+          // Create the SOAPFault Detail element and insert 
+          // the DispositionReport.
             
-            Detail soapDetail = soapFault.addDetail();
-            soapDetail.appendChild(dispRptElement.getFirstChild());
-          }
+          Detail soapDetail = soapFault.addDetail();
+          soapDetail.appendChild(dispRptElement.getFirstChild());
         }
-        catch(SOAPException sex) {
-          log.error(sex);
-        }
-      } 
+      }
+      catch(SOAPException sex) {
+        log.error(sex);
+      }
+    } 
     catch (SOAPException ex) {             
       log.error(ex);
 
