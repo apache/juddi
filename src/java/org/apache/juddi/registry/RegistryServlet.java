@@ -444,7 +444,7 @@ public class RegistryServlet extends HttpServlet
       try {  
         OutputStream stream = res.getOutputStream();        
         OutputStreamWriter writer = new OutputStreamWriter(stream); 
-        writer.write("<?xml version='1.0' encoding='UTF-8'?>");
+        writer.write("<?xml version='1.0' encoding='UTF-8'?>\n");
         writer.flush();        
         soapRes.writeTo(stream); 
       }
