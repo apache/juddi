@@ -38,7 +38,7 @@ public class Test_save_tModel extends UDDITestBase {
   }
 
   public void setUp() {
-    PublisherManager.createPublisher("tModel_Publisher", "tModel_Publisher");
+    PublisherManager.createPublisher("tModel_Publisher", "tModel_Publisher",config);
   }
 
   public void tearDown() {

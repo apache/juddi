@@ -48,7 +48,7 @@ public class Test_save_binding extends UDDITestBase {
      * create business && service
      */
 
-    if (! PublisherManager.createPublisher("saveBindingPublisher","saveBindingPublisher")) {
+    if (! PublisherManager.createPublisher("saveBindingPublisher","saveBindingPublisher", config)) {
       fail("Unable to create publisher");
       return;
     }
