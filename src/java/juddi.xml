@@ -4,6 +4,7 @@
           "juddi.dtd">
 
 <juddi:configuration 
+	 debug="true"
 	 xmlns:juddi="http://ws.apache.org/juddi/">
 
 	<!-- The UDDI Operator Name -->

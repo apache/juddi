@@ -21,6 +21,7 @@
 
 <!ATTLIST juddi:configuration
   xmlns:juddi CDATA #FIXED "http://ws.apache.org/juddi/" 
+  debug (true|false|null)  "null"
 >
 
 <!--  -->
