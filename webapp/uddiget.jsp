@@ -1,7 +1,6 @@
 <%@ page contentType="text/xml;charset=utf-8"
          session="false"
-         import="java.util.Vector,
-                 org.w3c.dom.Element,
+         import="org.w3c.dom.Element,
                  org.apache.juddi.util.xml.XMLUtils,
                  org.apache.juddi.handler.HandlerMaker,
                  org.apache.juddi.handler.IHandler,
