@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -94,10 +94,10 @@ public class UDDITestBase extends TestCase {
       proxy.setInquiryURL(config.getProperty("inquiryURL"));
       proxy.setPublishURL(config.getProperty("publishURL"));
 
-      PublisherManager.createPublisher("juddi2", "juddi2");
-      PublisherManager.createPublisher("juddi3", "juddi3");
-      PublisherManager.createPublisher("juddi4", "juddi4");
-      PublisherManager.createPublisher("expired", "expired");
+      PublisherManager.createPublisher("juddi2", "juddi2", config);
+      PublisherManager.createPublisher("juddi3", "juddi3", config);
+      PublisherManager.createPublisher("juddi4", "juddi4", config);
+      PublisherManager.createPublisher("expired", "expired", config);
 
       // Pass in userid and password registered at the UDDI site
       token = proxy.get_authToken(config.getProperty("userid"),
