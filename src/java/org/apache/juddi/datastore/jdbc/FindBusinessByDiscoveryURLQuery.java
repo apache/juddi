@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.DiscoveryURLs;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -70,7 +71,7 @@ class FindBusinessByDiscoveryURLQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,discoveryURLs,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -79,7 +80,7 @@ class FindBusinessByDiscoveryURLQuery
     {
       log.debug("select from BUSINESS_ENTITY & DISCOVERY_URL tables:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -112,7 +113,7 @@ class FindBusinessByDiscoveryURLQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,DiscoveryURLs discoveryURLs,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,DiscoveryURLs discoveryURLs,FindQualifiers qualifiers)
   {
     sql.append("WHERE B.BUSINESS_KEY = U.BUSINESS_KEY ");
 
@@ -131,11 +132,15 @@ class FindBusinessByDiscoveryURLQuery
 
         if ((url != null) && (url.length() > 0))
         {
-          sql.append("(U.URL = '").append(url).append("'");
+          sql.append("(U.URL = ?");
+          sql.addValue(url);
 
           if ((useType != null) && (useType.length() > 0))
-            sql.append(" AND U.USE_TYPE = '").append(useType).append("'");
-
+          {
+            sql.append(" AND U.USE_TYPE = ?");
+            sql.addValue(useType);
+          }
+          
           sql.append(")");
 
           if (i+1 < vectorSize)
@@ -156,7 +161,7 @@ class FindBusinessByDiscoveryURLQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -167,7 +172,8 @@ class FindBusinessByDiscoveryURLQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -179,7 +185,7 @@ class FindBusinessByDiscoveryURLQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

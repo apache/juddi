@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -70,7 +71,7 @@ class FindServiceByNameQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,businessKey,names,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -79,7 +80,7 @@ class FindServiceByNameQuery
     {
       log.debug("select from BUSINESS_SERVICE & SERVICE_NAME tables:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -112,14 +113,17 @@ class FindServiceByNameQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,String businessKey,Vector names,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,String businessKey,Vector names,FindQualifiers qualifiers)
   {
     sql.append("WHERE N.SERVICE_KEY = S.SERVICE_KEY ");
 
     // per UDDI v2.0 Programmers API Errata (pg. 14), businessKey is
     // is no longer a required attribute of the find_service server.
-    if((businessKey != null) && (businessKey.length() > 0) )
-      sql.append("AND S.BUSINESS_KEY = '").append(businessKey).append("' ");
+    if((businessKey != null) && (businessKey.length() > 0))
+    {
+      sql.append("AND S.BUSINESS_KEY = ? ");
+      sql.addValue(businessKey);
+    }
 
     if ((names != null) && (names.size() > 0))
     {
@@ -135,12 +139,21 @@ class FindServiceByNameQuery
         if ((text != null) && (text.length() > 0))
         {
           if ((qualifiers != null) && (qualifiers.exactNameMatch))
-            sql.append("(NAME = '").append(text).append("'");
+          {
+            sql.append("(NAME = ?");
+            sql.addValue(text);
+          }
           else
-            sql.append("(NAME LIKE '").append(text).append("%'");
+          {
+            sql.append("(NAME LIKE ?");
+            sql.addValue(text+"%");
+          }
 
           if ((lang != null) && (lang.length() > 0))
-            sql.append(" AND LANG_CODE = '").append(lang).append("'");
+          {
+            sql.append(" AND LANG_CODE = ?");
+            sql.addValue(lang);
+          }
 
           sql.append(")");
 
@@ -162,7 +175,7 @@ class FindServiceByNameQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -173,7 +186,8 @@ class FindServiceByNameQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -185,7 +199,7 @@ class FindServiceByNameQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

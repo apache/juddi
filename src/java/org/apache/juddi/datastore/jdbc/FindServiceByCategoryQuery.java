@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -71,7 +72,7 @@ class FindServiceByCategoryQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,businessKey,categoryBag,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -80,7 +81,7 @@ class FindServiceByCategoryQuery
     {
       log.debug("select from BUSINESS_SERVICE & SERVICE_CATEGORY tables:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -113,42 +114,47 @@ class FindServiceByCategoryQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,String businessKey,CategoryBag categoryBag,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,String businessKey,CategoryBag categoryBag,FindQualifiers qualifiers)
   {
     sql.append("WHERE C.SERVICE_KEY = S.SERVICE_KEY ");
     if(businessKey != null)
-      sql.append("AND S.BUSINESS_KEY = '").append(businessKey).append("' ");
-
-  if(categoryBag != null)
-  {
-    Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
-
-    if(keyedRefVector != null)
     {
-      int vectorSize = keyedRefVector.size();
-      if (vectorSize > 0)
-      {
-        sql.append("AND (");
-
-        for (int i=0; i<vectorSize; i++)
-        {
-          KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
-          String name = keyedRef.getKeyName();
-          String value = keyedRef.getKeyValue();
-
-          if ((name != null) && (value != null))
-          {
-            sql.append("(C.KEY_NAME = '").append(name).append("' AND C.KEY_VALUE = '").append(value).append("')");
-
-            if (i+1 < vectorSize)
-              sql.append(" OR ");
-          }
-        }
-
-        sql.append(") ");
-      }
+      sql.append("AND S.BUSINESS_KEY = ? ");
+      sql.addValue(businessKey);
     }
-  }
+    
+	  if(categoryBag != null)
+	  {
+	    Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
+	
+	    if(keyedRefVector != null)
+	    {
+	      int vectorSize = keyedRefVector.size();
+	      if (vectorSize > 0)
+	      {
+	        sql.append("AND (");
+	
+	        for (int i=0; i<vectorSize; i++)
+	        {
+	          KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
+	          String name = keyedRef.getKeyName();
+	          String value = keyedRef.getKeyValue();
+	
+	          if ((name != null) && (value != null))
+	          {
+	            sql.append("(C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
+	            sql.addValue(name);
+	            sql.addValue(value);
+	
+	            if (i+1 < vectorSize)
+	              sql.append(" OR ");
+	          }
+	        }
+	
+	        sql.append(") ");
+	      }
+	    }
+	  }
   }
 
   /**
@@ -160,7 +166,7 @@ class FindServiceByCategoryQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -171,7 +177,8 @@ class FindServiceByCategoryQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -183,7 +190,7 @@ class FindServiceByCategoryQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

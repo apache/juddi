@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -68,7 +69,7 @@ class FindPublisherByNameQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,name,qualifiers);
     appendIn(sql,name,idsIn);
     appendOrderBy(sql,qualifiers);
@@ -77,7 +78,7 @@ class FindPublisherByNameQuery
     {
       log.debug("select from PUBLISHER table:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -110,15 +111,21 @@ class FindPublisherByNameQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,String name,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,String name,FindQualifiers qualifiers)
   {
     if ((name == null) || (name.length() == 0))
       return;
 
     if ((qualifiers != null) && (qualifiers.exactNameMatch))
-      sql.append("WHERE P.PUBLISHER_NAME = '").append(name).append("' ");
+    {
+      sql.append("WHERE P.PUBLISHER_NAME = ? ");
+      sql.addValue(name);
+    }
     else
-      sql.append("WHERE P.PUBLISHER_NAME LIKE '").append(name).append("%' ");
+    {
+      sql.append("WHERE P.PUBLISHER_NAME LIKE ? ");
+      sql.addValue(name+"%");
+    }
   }
 
   /**
@@ -130,7 +137,7 @@ class FindPublisherByNameQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,String name,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,String name,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -144,7 +151,8 @@ class FindPublisherByNameQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -159,7 +167,7 @@ class FindPublisherByNameQuery
    * the sortByNameXxxx qualifiers are true then sort
    * the result by name in decending order.
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -69,7 +70,7 @@ class FindBusinessByNameQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,names,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -77,8 +78,8 @@ class FindBusinessByNameQuery
     try
     {
       log.debug("select from BUSINESS_ENTITY & BUSINESS_NAME tables:\n\n\t" + sql.toString() + "\n");
-
-      statement = connection.prepareStatement(sql.toString());
+      
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -111,7 +112,7 @@ class FindBusinessByNameQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,Vector names,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,Vector names,FindQualifiers qualifiers)
   {
     sql.append("WHERE B.BUSINESS_KEY = N.BUSINESS_KEY ");
 
@@ -130,35 +131,38 @@ class FindBusinessByNameQuery
 
           if ((text != null) && (text.length() > 0))
           {
-            //if ((qualifiers != null) && (qualifiers.exactNameMatch))
-            //  sql.append("(NAME = '").append(text).append("'");
-            //else
-            //  sql.append("(NAME LIKE '").append(text).append("%'");
-
             if (qualifiers == null) // default
             {
-              sql.append("(UPPER(NAME) LIKE '").append(text.toUpperCase()).append("%'");
+              sql.append("(UPPER(NAME) LIKE ?");
+              sql.addValue(text.toUpperCase()+"%");
             }
             else if ((qualifiers.caseSensitiveMatch) && (qualifiers.exactNameMatch))
             {
-              sql.append("(NAME = '").append(text).append("'");
+              sql.append("(NAME = ?");
+              sql.addValue(text);
             }
             else if ((!qualifiers.caseSensitiveMatch) && (qualifiers.exactNameMatch))
             {
-              sql.append("(UPPER(NAME) = '").append(text.toUpperCase()).append("'");
+              sql.append("(UPPER(NAME) = ?");
+              sql.addValue(text.toUpperCase());
             }
             else if ((qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
             {
-              sql.append("(NAME LIKE '").append(text).append("%'");
+              sql.append("(NAME LIKE ?");
+              sql.addValue(text+"%");
             }
             else if ((!qualifiers.caseSensitiveMatch) && (!qualifiers.exactNameMatch))
             {
-              sql.append("(UPPER(NAME) LIKE '").append(text.toUpperCase()).append("%'");
+              sql.append("(UPPER(NAME) LIKE ?");
+              sql.addValue(text.toUpperCase()+"%");
             }
 
             if ((lang != null) && (lang.length() > 0))
-              sql.append(" AND LANG_CODE = '").append(lang).append("'");
-
+            {
+              sql.append(" AND LANG_CODE = ?");
+              sql.addValue(lang);
+            }
+            
             sql.append(")");
 
             if (i+1 < nameSize)
@@ -180,7 +184,7 @@ class FindBusinessByNameQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -191,7 +195,8 @@ class FindBusinessByNameQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -203,7 +208,7 @@ class FindBusinessByNameQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

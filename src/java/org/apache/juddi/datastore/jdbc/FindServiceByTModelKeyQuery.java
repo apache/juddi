@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.TModelKey;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -67,7 +68,7 @@ class FindServiceByTModelKeyQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,businessKey,tModelBag,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -76,7 +77,7 @@ class FindServiceByTModelKeyQuery
     {
       log.debug("select from BUSINESS_SERVICE, BINDING_TEMPLATE & TMODEL_INSTANCE_INFO tables:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -109,14 +110,17 @@ class FindServiceByTModelKeyQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,String businessKey,TModelBag tModelBag,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,String businessKey,TModelBag tModelBag,FindQualifiers qualifiers)
   {
     sql.append("WHERE I.BINDING_KEY = T.BINDING_KEY ");
     sql.append("AND T.SERVICE_KEY = S.SERVICE_KEY ");
 
     if (businessKey != null)
-      sql.append("AND S.BUSINESS_KEY = '").append(businessKey).append("' ");
-
+    {
+      sql.append("AND S.BUSINESS_KEY = ? ");
+      sql.addValue(businessKey);
+    }
+    
     Vector keyVector = tModelBag.getTModelKeyVector();
 
     int vectorSize = keyVector.size();
@@ -128,8 +132,9 @@ class FindServiceByTModelKeyQuery
       {
         String key = (String)keyVector.elementAt(i);
 
-        sql.append("I.TMODEL_KEY = '").append(key).append("' ");
-
+        sql.append("I.TMODEL_KEY = ? ");
+        sql.addValue(key);
+        
         if (i+1 < vectorSize)
           sql.append(" OR ");
       }
@@ -147,7 +152,7 @@ class FindServiceByTModelKeyQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -158,7 +163,8 @@ class FindServiceByTModelKeyQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -170,7 +176,7 @@ class FindServiceByTModelKeyQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

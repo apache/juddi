@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.TModelBag;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -66,7 +67,7 @@ class FindBindingByTModelKeyQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,serviceKey,tModelBag,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -74,8 +75,8 @@ class FindBindingByTModelKeyQuery
     try
     {
       log.debug("select from BINDING_TEMPLATE & TMODEL_INSTANCE_INFO tables:\n\n\t" + sql.toString() + "\n");
-
-      statement = connection.prepareStatement(sql.toString());
+      
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -108,10 +109,11 @@ class FindBindingByTModelKeyQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,String serviceKey,TModelBag tModelBag,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,String serviceKey,TModelBag tModelBag,FindQualifiers qualifiers)
   {
     sql.append("WHERE I.BINDING_KEY = T.BINDING_KEY ");
-    sql.append("AND T.SERVICE_KEY = '").append(serviceKey).append("' ");
+    sql.append("AND T.SERVICE_KEY = ? ");
+    sql.addValue(serviceKey);
 
     Vector keyVector = tModelBag.getTModelKeyVector();
 
@@ -124,7 +126,8 @@ class FindBindingByTModelKeyQuery
       {
         String key = (String)keyVector.elementAt(i);
 
-        sql.append("I.TMODEL_KEY = '").append(key).append("' ");
+        sql.append("I.TMODEL_KEY = ? ");
+        sql.addValue(key);
 
         if (i+1 < vectorSize)
           sql.append(" OR ");
@@ -143,7 +146,7 @@ class FindBindingByTModelKeyQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -154,8 +157,9 @@ class FindBindingByTModelKeyQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
-
+      sql.append("?");
+      sql.addValue(key);
+      
       if ((i+1) < keyCount)
         sql.append(",");
     }
@@ -166,7 +170,7 @@ class FindBindingByTModelKeyQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 

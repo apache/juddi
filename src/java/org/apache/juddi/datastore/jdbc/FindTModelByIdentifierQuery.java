@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
@@ -67,7 +68,7 @@ class FindTModelByIdentifierQuery
     ResultSet resultSet = null;
 
     // construct the SQL statement
-    StringBuffer sql = new StringBuffer(selectSQL);
+    DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,identifierBag,qualifiers);
     appendIn(sql,keysIn);
     appendOrderBy(sql,qualifiers);
@@ -76,7 +77,7 @@ class FindTModelByIdentifierQuery
     {
       log.debug("select from TMODEL & TMODEL_IDENTIFIER tables:\n\n\t" + sql.toString() + "\n");
 
-      statement = connection.prepareStatement(sql.toString());
+      statement = sql.buildPreparedStatement(connection);
       resultSet = statement.executeQuery();
 
       while (resultSet.next())
@@ -109,7 +110,7 @@ class FindTModelByIdentifierQuery
   /**
    *
    */
-  private static void appendWhere(StringBuffer sql,IdentifierBag identifierBag,FindQualifiers qualifiers)
+  private static void appendWhere(DynamicQuery sql,IdentifierBag identifierBag,FindQualifiers qualifiers)
   {
     sql.append("WHERE M.TMODEL_KEY = I.TMODEL_KEY ");
     if(identifierBag != null)
@@ -131,7 +132,9 @@ class FindTModelByIdentifierQuery
 
             if ((name != null) && (value != null))
             {
-              sql.append("(I.KEY_NAME = '").append(name).append("' AND I.KEY_VALUE = '").append(value).append("')");
+              sql.append("(I.KEY_NAME = ? AND I.KEY_VALUE = ?)");
+              sql.addValue(name);
+              sql.addValue(value);
 
               if (i+1 < vectorSize)
                 sql.append(" OR ");
@@ -153,7 +156,7 @@ class FindTModelByIdentifierQuery
    * @param sql StringBuffer to append the final results to
    * @param keysIn Vector of Strings used to construct the "IN" clause
    */
-  private static void appendIn(StringBuffer sql,Vector keysIn)
+  private static void appendIn(DynamicQuery sql,Vector keysIn)
   {
     if (keysIn == null)
       return;
@@ -164,7 +167,8 @@ class FindTModelByIdentifierQuery
     for (int i=0; i<keyCount; i++)
     {
       String key = (String)keysIn.elementAt(i);
-      sql.append("'").append(key).append("'");
+      sql.append("?");
+      sql.addValue(key);
 
       if ((i+1) < keyCount)
         sql.append(",");
@@ -176,7 +180,7 @@ class FindTModelByIdentifierQuery
   /**
    *
    */
-  private static void appendOrderBy(StringBuffer sql,FindQualifiers qualifiers)
+  private static void appendOrderBy(DynamicQuery sql,FindQualifiers qualifiers)
   {
     sql.append("ORDER BY ");
 
