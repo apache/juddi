@@ -103,13 +103,15 @@ public class BindingTemplateHandler extends AbstractHandler
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
     AbstractHandler handler = null;
 
-    String serviceKey = binding.getServiceKey();
-    if (serviceKey != null)
-      element.setAttribute("serviceKey",serviceKey);
-
     String bindingKey = binding.getBindingKey();
     if (bindingKey != null)
       element.setAttribute("bindingKey",bindingKey);
+    else
+      element.setAttribute("bindingKey","");
+
+    String serviceKey = binding.getServiceKey();
+    if (serviceKey != null)
+      element.setAttribute("serviceKey",serviceKey);
 
     Vector descrVector = binding.getDescriptionVector();
     if ((descrVector!=null) && (descrVector.size() > 0))
@@ -125,14 +127,16 @@ public class BindingTemplateHandler extends AbstractHandler
       handler = maker.lookup(AccessPointHandler.TAG_NAME);
       handler.marshal(accessPoint,element);
     }
-
-    HostingRedirector redirector = binding.getHostingRedirector();
-    if (redirector != null)
+    else // Can never contain both a AccessPoint and a HostingRedirector
     {
-      handler = maker.lookup(HostingRedirectorHandler.TAG_NAME);
-       handler.marshal(redirector,element);
+      HostingRedirector redirector = binding.getHostingRedirector();
+      if (redirector != null)
+      {
+        handler = maker.lookup(HostingRedirectorHandler.TAG_NAME);
+        handler.marshal(redirector,element);
+      }
     }
-
+    
     TModelInstanceDetails tModInstDet = binding.getTModelInstanceDetails();
     if (tModInstDet != null)
     {
