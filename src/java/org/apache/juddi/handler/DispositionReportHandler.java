@@ -132,19 +132,19 @@ public class DispositionReportHandler extends AbstractHandler
     Element child = null;
 
     ErrInfo errInfo = new ErrInfo();
-    errInfo.setErrCode(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE);
-    errInfo.setErrMsg(Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG);
+    errInfo.setErrCode("E_accountLimitExceeded");
+    errInfo.setErrMsg("Authentication token information has timed out.");
 
     Result result = new Result();
-    result.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED);
+    result.setErrno(10160);
     result.setErrInfo(errInfo);
 
     ErrInfo errInfo2 = new ErrInfo();
-    errInfo2.setErrCode(Result.E_SUCCESS_CODE);
-    errInfo2.setErrMsg(Result.E_SUCCESS_MSG);
+    errInfo2.setErrCode("E_success");
+    errInfo2.setErrMsg(null);
 
     Result result2 = new Result();
-    result2.setErrno(Result.E_SUCCESS);
+    result2.setErrno(Result.E_SUCCESS_NMBR);
     result2.setErrInfo(errInfo2);
 
     DispositionReport report = new DispositionReport();
