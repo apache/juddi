@@ -22,7 +22,7 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -31,7 +31,7 @@ public class SaveBusinessSample
 {
   public static void main(String[] args)
   {
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     try
     {

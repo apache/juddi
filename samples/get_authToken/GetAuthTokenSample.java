@@ -17,7 +17,7 @@
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.Config;
 
 /**
@@ -27,7 +27,7 @@ public class GetAuthTokenSample
 {
   public static void main(String[] args)
   {
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     String userID = "sviens";
     String password = "password";

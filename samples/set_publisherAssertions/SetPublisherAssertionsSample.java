@@ -1,5 +1,5 @@
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -25,7 +25,7 @@ public class SetPublisherAssertionsSample
 {
   public static void main(String[] args)
   {
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     try
     {

@@ -29,7 +29,7 @@ import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -39,7 +39,7 @@ public class AddPublisherAssertionsSample
   public static void main(String[] args)
   {
     // initialize the registry
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     try
     {

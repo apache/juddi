@@ -19,7 +19,7 @@ import java.util.Vector;
 import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -28,7 +28,7 @@ public class GetPublisherDetailSample
 {
   public static void main(String[] args)
   {
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     try
     {

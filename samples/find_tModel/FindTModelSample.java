@@ -20,7 +20,7 @@ import org.apache.juddi.datatype.response.TModelInfo;
 import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.datatype.response.TModelList;
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -29,7 +29,7 @@ public class FindTModelSample
 {
   public static void main(String[] args)
   {
-    Registry registry = new RegistryProxy();
+    IRegistry registry = new RegistryProxy();
 
     try
     {

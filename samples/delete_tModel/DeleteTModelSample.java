@@ -15,7 +15,7 @@
  */
 
 import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -24,7 +24,7 @@ public class DeleteTModelSample
 {
   public static void main(String[] args)
   {
-    Registry regisry = new RegistryProxy();
+    IRegistry regisry = new RegistryProxy();
 
     try
     {
