@@ -62,10 +62,15 @@ import org.uddi4j.response.TModelDetail;
 import org.uddi4j.transport.TransportException;
 import org.uddi4j.util.FindQualifier;
 import org.uddi4j.util.FindQualifiers;
+import org.uddi4j.util.CategoryBag;
+import org.uddi4j.util.KeyedReference;
 
 public class TestTModel extends UDDITestBase {
 
-  public void testEmptyFindQualifier() {
+  public void testCases() {
+    _testNoNameQualifier();
+  }
+  public void _testEmptyFindQualifier() {
     Vector tmods = new Vector();
     TModel tModel =  new TModel();
     tModel.setName("AnimalProtocol");
@@ -74,7 +79,7 @@ public class TestTModel extends UDDITestBase {
     tmods.add(tModel);
     try {
       tmodDetail = proxy.save_tModel(token.getAuthInfoString(),tmods);
-      assertTrue(queryEmptyQualifiers()) ;
+      assertTrue(_queryEmptyQualifiers()) ;
     }
     catch (TransportException ex) {
       fail(ex.toString());
@@ -87,12 +92,55 @@ public class TestTModel extends UDDITestBase {
     }
  }
 
-  public boolean queryEmptyQualifiers() {
+  public boolean _queryEmptyQualifiers() {
     FindQualifiers findQualifiers = new FindQualifiers();
     FindQualifier findQualifier = new FindQualifier();
     findQualifiers.add(findQualifier);
     try {
       proxy.find_tModel("AnimalProtocol", null, null, findQualifiers, 5);
+    }
+    catch (UDDIException ex) {
+      return false;
+    }
+    catch (TransportException ex) {
+      return false;
+    }
+    return true;
+  }
+  
+  public boolean _testNoNameQualifier() {
+    
+    Vector tmods = new Vector();
+    TModel tModel =  new TModel();
+    tModel.setName("PuffyProtocol");
+    TModelDetail tmodDetail = null;
+
+    tmods.add(tModel);
+    try {
+      tmodDetail = proxy.save_tModel(token.getAuthInfoString(), tmods);
+      assertTrue(_queryNoNameQualifiers());
+    }
+    catch (TransportException ex) {
+      fail(ex.toString()); 
+    } 
+    catch (UDDIException ex) {
+      fail(ex.toString()); 
+    }
+    finally {
+      cleanupTModels(tmodDetail); 
+    }
+    return true;
+  }
+
+  public boolean _queryNoNameQualifiers() {
+    CategoryBag catBag = new CategoryBag(); 
+// one of the string is supposed to be empty, but i'm not sure which
+// keyName .. keyValue .. tModelKey .. not sure this guy has his stuff right .. 
+    KeyedReference kref = new KeyedReference(TModel.TYPES_TMODEL_KEY,"category", "");
+   // KeyedReference kref = new KeyedReference("", "category", TModel.TYPES_TMODEL_KEY);
+    catBag.add(kref);
+    try {
+      proxy.find_tModel("", catBag, null, null, 5);
     }
     catch (UDDIException ex) {
       return false;
