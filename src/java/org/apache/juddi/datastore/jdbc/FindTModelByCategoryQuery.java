@@ -58,9 +58,10 @@ class FindTModelByCategoryQuery
   public static Vector select(CategoryBag categoryBag,Vector keysIn,FindQualifiers qualifiers,Connection connection)
     throws java.sql.SQLException
   {
-    // if there is a keysIn vector but it doesn't contain
+    // If there is a keysIn vector but it doesn't contain
     // any keys then the previous query has exhausted
     // all possibilities of a match so skip this call.
+    //
     if ((keysIn != null) && (keysIn.size() == 0))
       return keysIn;
 
@@ -115,12 +116,11 @@ class FindTModelByCategoryQuery
   {
     sql.append("WHERE M.TMODEL_KEY = C.TMODEL_KEY ");
 
-    if(categoryBag != null)
+    if (categoryBag != null)
     {
-
       Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
 
-      if(keyedRefVector != null)
+      if (keyedRefVector != null)
       {
         int vectorSize = keyedRefVector.size();
         if (vectorSize > 0)
@@ -130,32 +130,46 @@ class FindTModelByCategoryQuery
           for (int i=0; i<vectorSize; i++)
           {
             KeyedReference keyedRef = (KeyedReference)keyedRefVector.elementAt(i);
+            String key = keyedRef.getTModelKey();
             String name = keyedRef.getKeyName();
             String value = keyedRef.getKeyValue();
-
-            String tModelKey = keyedRef.getTModelKey();
-            if (tModelKey.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
+            
+            // A null or zero-length tModelKey is treated as 
+            // though the tModelKey for uddiorg:general_keywords 
+            // had been specified.
+            //
+            if ((key == null) || (key.trim().length() == 0))
+              key = TModel.GENERAL_KEYWORDS_TMODEL_KEY;
+            
+            if (key == null)
+              key = "";
+            
+            if (value == null)
+              value = "";
+            
+            // If the tModelKey involved is that of uddi-org:general_keywords, 
+            // the keyNames are identical (DO NOT IGNORE keyName). Otherwise 
+            // keyNames are not significant. Omitted keyNames are treated as 
+            // identical to empty (zero length) keyNames.
+            //
+            if (key.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
             {
-              // DO NOT ignore the name .. 
-              if ((name != null) && (value != null))
-              {
-                sql.append("(C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
-                sql.addValue(name);
-                sql.addValue(value);
+              sql.append("(C.TMODEL_KEY_REF = ? AND C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
+              sql.addValue(key);
+              sql.addValue(name);
+              sql.addValue(value);
 
-                if (i+1 < vectorSize)
-                  sql.append(" OR ");
-              }
+              if (i+1 < vectorSize)
+                sql.append(" OR ");
             }
-            else {
-              if (value != null)
-              {
-                sql.append("(C.KEY_VALUE = ?)");
-                sql.addValue(value);
+            else 
+            {
+              sql.append("(C.TMODEL_KEY_REF = ? AND C.KEY_VALUE = ?)");
+              sql.addValue(key);
+              sql.addValue(value);
 
-                if (i+1 < vectorSize)
-                  sql.append(" OR ");
-              }
+              if (i+1 < vectorSize)
+                sql.append(" OR ");       
             }
           }
 
@@ -239,10 +253,10 @@ class FindTModelByCategoryQuery
   {
     CategoryBag categoryBag = new CategoryBag();
     Vector keyedRefVector = new Vector();
-    keyedRefVector.addElement(new KeyedReference("ntis-gov:NAICS:1997","51121"));
-    keyedRefVector.addElement(new KeyedReference("Mining","21"));
-    keyedRefVector.addElement(new KeyedReference("cff049d0-c460-40c2-91c7-aa2261123dc7","Yadda, Yadda, Yadda"));
-    keyedRefVector.addElement(new KeyedReference("1775f0f8-cd47-451d-88da-73ce508836f3","blah, blah, blah"));
+    keyedRefVector.addElement(new KeyedReference("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4","ntis-gov:NAICS:1997","51121"));
+    keyedRefVector.addElement(new KeyedReference("uuid:C1ACF26D-9672-4404-9D70-39B756E62AB4","Mining","21"));
+    keyedRefVector.addElement(new KeyedReference("uuid:DB77450D-9FA8-45D4-A7BC-04411D14E384",null,"abcdefg"));
+    keyedRefVector.addElement(new KeyedReference("uuid:DB77450D-9FA8-45D4-A7BC-04411D14E384","1775f0f8-cd47-451d-88da-73ce508836f3","blah, blah, blah"));
     categoryBag.setKeyedReferenceVector(keyedRefVector);
 
     Vector keysIn = new Vector();
