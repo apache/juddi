@@ -20,6 +20,6 @@ package org.apache.juddi.datatype.request;
  */
 public interface Inquiry
 {
-  // TODO (steve) Implement UDDI v3 the optional inquiry API AuthToken feature
+  // TODO (UDDI v3) Implement the optional inquiry API AuthToken feature
   //public AuthInfo getAuthInfo();
 }

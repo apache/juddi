@@ -20,6 +20,6 @@ package org.apache.juddi.datatype.request;
  */
 public interface Subscribe
 {
-  // TODO (steve) UDDI v3 Inquiry API AuthToken feature
+  // TODO (UDDI v3) Inquiry API AuthToken feature
   //public AuthInfo getAuthInfo();
 }
