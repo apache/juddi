@@ -43,6 +43,10 @@ public class RegistryEngine extends AbstractRegistry
   // Registry Property Names
   //
   public static final String PROPNAME_OPERATOR_NAME = "juddi.operatorName";
+  
+  public static final String PROPNAME_I18N_LANGUAGE_CODE = "juddi.i18n.languageCode";
+  public static final String PROPNAME_I18N_COUNTRY_CODE = "juddi.i18n.countryCode";
+  
   public static final String PROPNAME_DISCOVERY_URL = "juddi.discoveryURL";
   public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress"; // unused
   public static final String PROPNAME_DATASOURCE_NAME = "juddi.dataSource";
@@ -66,6 +70,10 @@ public class RegistryEngine extends AbstractRegistry
   // Registry Default Property Values
   //
   public static final String DEFAULT_OPERATOR_NAME = "Apache.org";
+  
+  public static final String DEFAULT_I18N_LANGUAGE_CODE = "en";
+  public static final String DEFAULT_I18N_COUNTRY_CODE = "US";
+  
   public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8080/juddi/uddiget.jsp?";
   public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "nobody@apache.org"; // unused
   public static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/juddiDB";

@@ -125,6 +125,12 @@ public class RegistryServlet extends HttpServlet
         props.put(RegistryEngine.PROPNAME_OPERATOR_NAME,
                   RegistryEngine.DEFAULT_OPERATOR_NAME);
         
+        props.put(RegistryEngine.PROPNAME_I18N_LANGUAGE_CODE,
+            RegistryEngine.DEFAULT_I18N_LANGUAGE_CODE);
+  
+        props.put(RegistryEngine.PROPNAME_I18N_COUNTRY_CODE,
+            RegistryEngine.DEFAULT_I18N_COUNTRY_CODE);
+  
         props.put(RegistryEngine.PROPNAME_DISCOVERY_URL,
                   RegistryEngine.DEFAULT_DISCOVERY_URL);
         
@@ -392,7 +398,7 @@ public class RegistryServlet extends HttpServlet
         // FatalError DispositionReport within the message from the 
         // SAX parsing problem in the SOAP Fault anyway.
         
-        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errno = String.valueOf(Result.E_FATAL_ERROR_NMBR);
         errCode = Result.E_FATAL_ERROR_CODE;
         errMsg = ex.getMessage();
       }
@@ -421,7 +427,7 @@ public class RegistryServlet extends HttpServlet
         // subclass) but we're going to be friendly and include a
         // FatalError DispositionReport within the SOAP Fault anyway.
         
-        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errno = String.valueOf(Result.E_FATAL_ERROR_NMBR);
         errCode = Result.E_FATAL_ERROR_CODE;
         errMsg = "An internal UDDI server error has " +
                  "occurred. Please report this error " +
