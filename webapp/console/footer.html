@@ -1,0 +1,50 @@
+
+</td>
+<td valign="top">
+<div class="link">
+<strong>Inquiry API</strong><br/>
+<a href="find_binding.jsp" title="The find_binding API call returns a bindingDetail message that contains zero or more bindingTemplate structures matching the criteria specified in the argument list.">find_binding</a><br/>
+<a href="find_business.jsp" title="The find_business API call returns a businessList message that matches the conditions specified in the arguments.">find_business</a><br/>
+<a href="find_relatedBusinesses.jsp" title="The find_relatedBusinesses API call returns a relatedBusinessesList message containing results that match the conditions specified in the arguments.">find_relatedBusinesses</a><br/>
+<a href="find_service.jsp" title="The find_service API call returns a serviceList message that matches the conditions specified in the arguments.">find_service</a><br/>
+<a href="find_tModel.jsp" title="This find_tModel API call is for locating a list of tModel entries that match a set of specific criteria. The response will be a list of abbreviated information about registered tModel data that matches the criteria specified.  This result will be returned in a tModelList message.">find_tModel</a><br/>
+<a href="get_bindingDetail.jsp" title="The get_bindingDetail API call is for requesting the run-time bindingTemplate information for the purpose of invoking a registered business API.">get_bindingDetail</a><br/>
+<a href="get_businessDetail.jsp" title="The get_businessDetail API call returns complete businessEntity information for one or more specified businessEntity registrations matching on the businessKey values specified.">get_businessDetail</a><br/> 
+<a href="get_businessDetailExt.jsp" title="The get_businessDetailExt API call returns extended businessEntity information for one or more specified businessEntity registrations.  This message returns exactly the same information as the get_businessDetail message, but may contain additional attributes if the source is an external registry (e.g. not an Operator Site) that is compatible with this API specification.">get_businessDetailExt</a><br/> 
+<a href="get_serviceDetail.jsp" title="The get_serviceDetail API call is used to request full information about a known businessService structure.">get_serviceDetail</a><br/> 
+<a href="get_tModelDetail.jsp" title="The get_tModelDetail API call is used to request full information about /known tModel data by key.">get_tModelDetail</a>
+<p></p>
+<strong>Publish API</strong><br/>
+<a href="add_publisherAssertions.jsp" title="The add_publisherAssertions API call causes one or more publisherAssertions to be added to an individual publisher?s assertion collection.">add_publisherAssertions</a><br/>
+<a href="delete_binding.jsp" title="The delete_binding API call causes one or more instances of bindingTemplate data to be deleted from the UDDI registry.">delete_binding</a><br/> 
+<a href="delete_business.jsp" title="The delete_business API call is used to remove one or more business registrations (e.g. registered businessEntity data) and all direct contents from a UDDI registry.">delete_business</a><br/> 
+<a href="delete_publisherAssertions.jsp" title="The delete_publisherAssertions API call causes one or more publisherAssertion elements to be removed from a publisher?s assertion collection.">delete_publisherAssertions</a><br/> 
+<a href="delete_service.jsp" title="The delete_service API call is used to remove one or more previously businessService elements from the UDDI registry and from its containing businessEntity parent.">delete_service</a><br/> 
+<a href="delete_tModel.jsp" title="The delete_tModel API call is used to logically delete one or more tModel structures. Logical deletion hides the deleted tModels from find_tModel result sets but does not physically delete it. Deleting an already deleted tModel has no effect.">delete_tModel</a><br/> 
+<a href="discard_authToken.jsp" title="The discard_authToken API call is used to inform an Operator Site that the authentication token is to be discarded, effectively ending the session.  Subsequent calls that use the same authToken will be rejected.  This message is optional for Operator Sites that do not manage session state or that do not support the get_authToken message.">discard_authToken</a><br/> 
+<a href="get_assertionStatusReport.jsp" title="The get_assertionStatusReport API call provides administrative support for determining the status of current and outstanding publisher assertions that involve any of the business registrations managed by the individual publisher account.  Using this message, a publisher can see the status of assertions that they have made, as well as see assertions that others have made that involve businessEntity structures controlled by the calling publisher account.">get_assertionStatusReport</a><br/> 
+<a href="get_authToken.jsp" title="The get_authToken API call is used to obtain an authentication token.  Authentication tokens are opaque values that are required for all other publisher API calls.  This message is not required for Operator Sites that have an external mechanism defined for users to get an authentication token.  This API is provided for implementations that do not have some other method of obtaining an authentication token or certificate, or that choose to use user ID and password based authentication.">get_authToken</a><br/> 
+<a href="get_publisherAssertions.jsp" title="The get_publisherAssertions API call is used to obtain the full set of publisher assertions that is associated with an individual publisher account.">get_publisherAssertions</a><br/> 
+<a href="get_registeredInfo.jsp" title="The get_registeredInfo API call is used to get an abbreviated list of all businessEntity and tModel data that are controlled by the individual associated with the credentials passed.">get_registeredInfo</a><br/> 
+<a href="save_binding.jsp" title="The save_binding API call is used to save or update a complete bindingTemplate element.  This message can be used to add or update one or more bindingTemplate elements as well as the container/contained relationship that each bindingTemplate has with one or more existing businessService elements.">save_binding</a><br/> 
+<a href="save_business.jsp" title="The save_business API call is used to save or update information about a complete businessEntity element.  This API has the broadest scope of all of the save_xx API calls in the publisher API, and can be used to make sweeping changes to the published information for one or more businessEntity elements controlled by an individual.">save_business</a><br/> 
+<a href="save_service.jsp" title="The save_service API call adds or updates one or more businessService elements.">save_service</a><br/> 
+<a href="save_tModel.jsp" title="The save_tModel API call adds or updates one or more registered tModel elements.">save_tModel</a><br/> 
+<a href="set_publisherAssertions.jsp" title="The set_publisherAssertions API call is used to manage all of the tracked relationship assertions associated with an individual publisher account.">set_publisherAssertions</a>
+<p></p>
+<strong>Admin API</strong> (proprietary)<br/>
+<a href="delete_publisher.jsp" title="The delete_publisher API call causes one or more instances of publisher data to be deleted from the jUDDI registry.">delete_publisher</a><br/>
+<a href="find_publisher.jsp" title="The find_publisher API call returns a publisherList message that matches the conditions specified in the arguments.">find_publisher</a><br/> 
+<a href="get_publisherDetail.jsp" title="The get_publisherDetail API call is used to request full information about a known publisher structure.">get_publisherDetail</a><br/> 
+<a href="get_registryInfo.jsp" title="The get_registryInfo API call is used to get a list of properties published by the jUDDI registry such as registry version or the supported UDDI version.">get_registryInfo</a><br/>
+<a href="save_publisher.jsp" title="The save_publisher API call adds or updates one or more publisher elements.">save_publisher</a>
+</div>
+</td>
+</tr>
+</table>
+
+<table width="100%" border="0">
+<tr><td height="50" align="center" valign="bottom" nowrap><div class="footer">&nbsp;</div></td></tr>
+</table>
+</body>
+</html>

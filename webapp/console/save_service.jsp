@@ -1,0 +1,58 @@
+<jsp:include page="header.html" />
+
+<%
+   String requestName = "save_service";
+   String requestType = "publish";
+   String requestKey = requestName+":request";
+   String responseKey = requestName+":response";
+%>
+
+<form method="post" action="controller.jsp">
+<textarea class=msgs id=soap_request name=soap_request rows=15 cols=75 wrap=off><%
+String requestMessage = (String)session.getAttribute(requestKey);
+if (requestMessage != null) {
+  out.print(requestMessage);
+} else { %>
+<?xml version="1.0" encoding="utf-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <save_service generic="2.0" xmlns="urn:uddie-org:api_v2">
+      <authInfo>*****</authInfo>
+      <businessService businessKey="*****" serviceKey="">
+        <name xml:lang="en">*****</name>
+        <description xml:lang="en">*****</description>
+        <bindingTemplates>
+          <bindingTemplate bindingKey="">
+            <accessPoint URLType="http">*****</accessPoint>
+            <tModelInstanceDetails>
+              <tModelInstanceInfo tModelKey="*****">
+                <instanceDetails>
+                  <overviewDoc>
+                    <overviewURL>*****</overviewURL>
+                  </overviewDoc>
+                </instanceDetails>
+              </tModelInstanceInfo>
+            </tModelInstanceDetails>
+          </bindingTemplate>
+        </bindingTemplates>
+      </businessService>
+    </save_service>
+  </soapenv:Body>
+</soapenv:Envelope>
+<% } %>
+</textarea>
+<p>
+<input type="hidden" name="request_name" value=<%=requestName%>>
+<input type="hidden" name="request_type" value=<%=requestType%>>
+<input type=submit name="submit_button" value="Submit">
+<input type=submit name="reset_button" value="Reset">
+</p>
+<textarea class=msgs id=soap_response name=soap_response rows=20 cols=75 wrap=off><%
+String responseMessage = (String)session.getAttribute(responseKey);
+if (responseMessage != null) {
+  out.print(responseMessage);
+} %>
+</textarea>
+</form>
+
+<jsp:include page="footer.html" />
