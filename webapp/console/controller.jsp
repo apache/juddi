@@ -1,79 +1,133 @@
-<%@ page language="java" import="java.util.*,java.io.*,java.net.*" %>
+<%@ page language="java" 
+         import="java.io.BufferedReader,
+                 java.io.InputStreamReader,
+                 java.io.PrintWriter,
+                 java.net.URL,
+                 java.net.URLConnection" %>
 
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%
+  // Access the UDDI registry on localhost
+  final String HTTP_PROXY_HOST = null;
+  final String HTTP_PROXY_PORT = null;
+  final URL INQUIRY_URL = new URL("http://localhost/juddi//inquiry");
+  final URL PUBLISH_URL = new URL("http://localhost/juddi/publish");
+  final URL ADMIN_URL =   new URL("http://localhost/juddi/admin");
+  
+  // Access a remote UDDI registry
+  //final String HTTP_PROXY_HOST = "www-proxy";
+  //final String HTTP_PROXY_PORT = "80";
+  //final URL INQUIRY_URL = new URL("http://www.viens.net/juddi/inquiry");
+  //final URL PUBLISH_URL = new URL("http://www.viens.net/juddi/publish");
+  //final URL ADMIN_URL =   new URL("http://www.viens.net/juddi/admin");
+
+  // Pull input parameters from the HTTP request
   String requestName = request.getParameter("request_name");
   String requestType = request.getParameter("request_type");
   String submitAction = request.getParameter("submit_button");
   String resetAction = request.getParameter("reset_button");
+  String requestMsg = request.getParameter("soap_request");
   
-  String targetPage = requestName+".jsp";
+  // Initialize the Session keys, target page and response message
   String requestKey = requestName+":request";
   String responseKey = requestName+":response"; 
   String requestTimeKey = requestName+":time";
-  String requestMsg = request.getParameter("soap_request");
-  String responseMsg = "";
+  String targetPage = requestName+".jsp";  
+  String responseMsg = null;
   
+  // Initialize the response time variables
   long startTime = 0;
   long endTime = 0;
+  long totalTime = 0;
 
+  // Determine which action the user selected.
   if (resetAction != null)
   {
+    // If user clicked the "Reset" button then initialize 
+    // the request & response values to null.
+
     requestMsg = null;
     responseMsg = null;
   }
   else if (submitAction != null) 
   {
-    // if not "Reset" then the user must have clicked "Submit"
-	  
-	  try 
-	  {
-		  // Assemble the target UDDI request URL
-		  String hostname = "localhost";
-		  int port = 8080;
-		  String path = "/juddi/"+requestType;
+    // If the user didn't select the "Reset" then they 
+    // must have clicked the "Submit" button.
+    
+    requestMsg = requestMsg.toString().trim();
+    
+    try 
+    {
+      // If HTTP proxy values are specified then use them
+      if ((HTTP_PROXY_HOST != null) && (HTTP_PROXY_PORT != null)) {
+        System.setProperty("http.proxyHost",HTTP_PROXY_HOST);      
+        System.setProperty("http.proxyPort",HTTP_PROXY_PORT);
+      }
+      else {
+      // In case they were specified but you no longer need them
+        System.setProperty("http.proxyHost","");      
+        System.setProperty("http.proxyPort","");
+      }
+
+      // Determine which endpoint the request should use
+      URL targetURL = null;
+      if (requestType.equals("publish"))
+        targetURL = PUBLISH_URL;
+      else if (requestType.equals("inquiry"))
+        targetURL = INQUIRY_URL;
+      else if (requestType.equals("admin"))
+        targetURL = ADMIN_URL;
+      
+      // Declare & initialize the UDDI server properties
+      String hostname = targetURL.getHost();
+      int port = targetURL.getPort();
+      String path = targetURL.getPath();
+      
+      // Default to port 80 if one wasn't specified
+      if (port < 0)
+        port = 80;
 
       // Start the clock
       startTime = System.currentTimeMillis();
+      
+      // Create HTTP Connection
+      URLConnection connection = targetURL.openConnection();
+      connection.setDoOutput(true);
+      PrintWriter writer = new PrintWriter(connection.getOutputStream());
 
-	    // Create a Socket
-	    InetAddress addr = InetAddress.getByName(hostname);
-	    Socket sock = new Socket(addr,port);
-			
-	    // Send the HTTP Headers
-	    BufferedWriter  wr = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(),"UTF-8"));
-	    wr.write("POST " + path + " HTTP/1.0\r\n");
-	    wr.write("Content-Length: " + requestMsg.length() + "\r\n");
-	    wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
-	    wr.write("\r\n");
+      // Send the HTTP Request
+      writer.write(requestMsg);
+      writer.close();
+      
+      // Read the HTTP Response
+      BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
+      StringBuffer msg = new StringBuffer();           
+      String line;
+      while((line = reader.readLine()) != null)
+        msg.append(line+"\n");
+      
+      // Convert reponse to String and trim whitespace
+      responseMsg = msg.toString().trim();
+      
+      // Close the HTTP Connection
+      reader.close();
 
-      // Stop the clock
+      // Stop the clock & calculate time
       endTime = System.currentTimeMillis();
-			
-	    // Send the HTTP Request
-	    wr.write(requestMsg);
-	    wr.flush();
-			
-	    // Read the HTTP Response
-	    BufferedReader rd = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-	    String line;
-	    StringBuffer message = new StringBuffer();
-	    while((line = rd.readLine()) != null)
-	      message.append(line+"\n");
-	      
-	    responseMsg = message.toString();
-	   } 
-	  catch (Exception e) 
-	  {
-	    e.printStackTrace();
-	  }
-	}
+      totalTime = endTime - startTime;
+     } 
+    catch (Exception e) 
+    {
+      e.printStackTrace();
+    }    
+  }
   
+  // Set new values into the session
   session.setAttribute(requestKey,requestMsg);
   session.setAttribute(responseKey,responseMsg);
-  session.setAttribute(requestTimeKey,String.valueOf(endTime-startTime));
+  session.setAttribute(requestTimeKey,String.valueOf(totalTime).trim());
   
   // Redirect back to the source page
   request.getRequestDispatcher(targetPage).forward(request,response);
