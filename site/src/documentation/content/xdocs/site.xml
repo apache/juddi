@@ -22,7 +22,7 @@ See http://xml.apache.org/forrest/linking.html for more info
     <faq label="FAQ" href="faq.html" description="FAQ"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
-    <participate label="Participation/Wiki" href="participate.html" description="Participation"/>
+    <participate label="Participation" href="participate.html" description="Participation"/>
     <reference label="Reference Library" href="library.html" description="Reference Library"/>
     <bugs label="Bugs" href="bugs.html" description="Bug Tracking"/>
   </juddi>
@@ -31,7 +31,7 @@ See http://xml.apache.org/forrest/linking.html for more info
     <install label="Installation Guide" href="install.html" description="Installation Guide"/>
     <usersguide label="User's Guide" href="usersguide.html" description="User's Guide"/>
     <devguide label="Developer's Guide" href="devguide.html" description="Developer's Guide"/>
-    <archguide label="How-Tos" href="http://wiki.apache.org/ws/jUDDI" description="How-Tos"/>
+    <archguide label="How-Tos" href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs" description="How-Tos"/>
   </documentation>
 
   <downloads label="Downloads">
@@ -47,6 +47,7 @@ See http://xml.apache.org/forrest/linking.html for more info
 
   <related label="Misc">
     <who label="Who We Are" href="who.html" description="Who We Are"/>
+    <committer label="Committer Notes" href="committers.html" description="Committer Notes"/>
     <contact label="Contact" href="contact.html" description="Contact Us"/>
     <legal label="Legal" href="legal.html" description="Legal Stuff"/>
     <whole label="Whole Site" href="site.html" description="Whole Site"/>
