@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
+import org.apache.juddi.datatype.BusinessKey;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.FindQualifiers;
@@ -99,6 +100,7 @@ public class FindRelatedBusinessesFunction extends AbstractFunction
       list.setGeneric(generic);
       list.setOperator(Config.getOperator());
       list.setTruncated(truncatedResults);
+      list.setBusinessKey(new BusinessKey(businessKey));
       list.setRelatedBusinessInfos(infos);
       return list;
     }
