@@ -92,6 +92,11 @@ div.NAV A:hover {
   color: #FFF;
 }
 
+.msgs {
+	background-color: #FFD;
+	color: darkgreen;
+}
+
 .ednote {
   color: #999;
   font-style: italic;
