@@ -10,19 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The save_service API call adds or updates one or more businessService elements.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a>, 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a>, 
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>, 
-<a href="/uddi_errors#E_userMismatch">E_userMismatch</a>, 
-<a href="/uddi_errors#E_invalidValue">E_invalidValue</a>, 
-<a href="/uddi_errors#E_requestTimeout">E_requestTimeout</a>, 
-<a href="/uddi_errors#E_valueNotAllowed">E_valueNotAllowed</a> or 
-<a href="/uddi_errors#E_accountLimitExceeded">E_accountLimitExceeded</a> 
-error was encountered.
+The <a href="uddiv2api.html#_Toc25137744" target="doc">save_service</a> API call is used 
+to add or update one or more <a href="uddiv2data.html#_Toc25130765" target="doc">businessService</a> 
+elements. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -35,18 +29,18 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <save_service generic="2.0" xmlns="urn:uddie-org:api_v2">
-      <authInfo>*****</authInfo>
-      <businessService businessKey="*****" serviceKey="">
-        <name xml:lang="en">*****</name>
-        <description xml:lang="en">*****</description>
+      <authInfo>***</authInfo>
+      <businessService businessKey="***" serviceKey="">
+        <name>***</name>
+        <description>***</description>
         <bindingTemplates>
           <bindingTemplate bindingKey="">
-            <accessPoint URLType="http">*****</accessPoint>
+            <accessPoint URLType="http">***</accessPoint>
             <tModelInstanceDetails>
-              <tModelInstanceInfo tModelKey="*****">
+              <tModelInstanceInfo tModelKey="***">
                 <instanceDetails>
                   <overviewDoc>
-                    <overviewURL>*****</overviewURL>
+                    <overviewURL>***</overviewURL>
                   </overviewDoc>
                 </instanceDetails>
               </tModelInstanceInfo>

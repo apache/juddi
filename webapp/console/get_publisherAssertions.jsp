@@ -10,14 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_publisherAssertions API call is used to obtain the full set of publisher 
-assertions that is associated with an individual publisher account.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a> or 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a> 
-error was encountered.
+The <a href="uddiv2api.html#_Toc25137740" target="doc">get_publisherAssertions</a> API call 
+is used to obtain the full set of <a href="uddiv2data.html#_Toc25130781" target="doc">publisherAssertions</a> that 
+is associated with an individual publisher account.If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">

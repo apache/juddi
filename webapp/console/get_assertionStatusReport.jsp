@@ -10,19 +10,15 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_assertionStatusReport API call provides administrative support for 
-determining the status of current and outstanding publisher assertions that 
-involve any of the business registrations managed by the individual publisher 
-account.  Using this message, a publisher can see the status of assertions 
-that they have made, as well as see assertions that others have made that 
-involve businessEntity structures controlled by the calling publisher account.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidCompletionStatus">E_invalidCompletionStatus</a>, 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a> or 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a> error was 
-encountered.
+The <a href="uddiv2api.html#_Toc25137738" target="doc">get_assertionStatusReport</a> API call 
+provides administrative support for determining the status of current and outstanding 
+<a href="uddiv2data.html#_Toc25130781" target="doc">publisherAssertions</a> that 
+involve any of the <a href="uddiv2data.html#_Toc25130756" target="doc">businessEntity</a> 
+registrations managed by the individual publisher account. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -35,8 +31,8 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <get_assertionStatusReport generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
-      <completionStatus>*****</completionStatus>
+      <authInfo>***</authInfo>
+      <completionStatus>***</completionStatus>
     </get_assertionStatusReport>
   </soapenv:Body>
 </soapenv:Envelope>

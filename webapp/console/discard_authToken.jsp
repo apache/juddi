@@ -33,7 +33,7 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <discard_authToken generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
+      <authInfo>***</authInfo>
     </discard_authToken>
   </soapenv:Body>
 </soapenv:Envelope>

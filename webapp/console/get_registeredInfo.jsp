@@ -10,15 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_registeredInfo API call is used to get an abbreviated list of all 
-businessEntity and tModel data that are controlled by the individual 
-associated with the credentials passed.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a> or 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a> 
-error was encountered.
+The <a href="uddiv2api.html#_Toc25137741" target="doc">get_registeredInfo</a> API call 
+is used to obtain an abbreviated list of all <a href="uddiv2data.html#_Toc25130756" target="doc">businessEntity</a> 
+and <a href="uddiv2data.html#_Toc25130775" target="doc">tModel</a> data that are controlled 
+by the individual associated with the credentials passed. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -31,7 +30,7 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <get_registeredInfo generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
+      <authInfo>***</authInfo>
     </get_registeredInfo>
   </soapenv:Body>
 </soapenv:Envelope>

@@ -10,18 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_authToken API call is used to obtain an authentication token.  
-Authentication tokens are opaque values that are required for all other 
-publisher API calls.  This message is not required for Operator Sites that 
-have an external mechanism defined for users to get an authentication 
-token.  This API is provided for implementations that do not have some 
-other method of obtaining an authentication token or certificate, or 
-that choose to use user ID and password based authentication.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_unknownUser">E_unknownUser</a> 
-error was encountered.
+The <a href="uddiv2api.html#_Toc25137739" target="doc">get_authToken</a> API call 
+is used to obtain an authentication token (<a href="uddiv2data.html#_Toc25130794" target="doc">authToken</a>). Authentication 
+tokens are opaque values that are required for all other publisher API calls. If an 
+error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -34,8 +30,8 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <get_authToken generic="2.0" xmlns="urn:uddi-org:api_v2" 
-      userID="*****" 
-      cred="*****"/>
+      userID="***" 
+      cred="***"/>
   </soapenv:Body>
 </soapenv:Envelope>
 <% } %>

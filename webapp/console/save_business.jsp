@@ -10,24 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The save_business API call is used to save or update information about a 
-complete businessEntity element.  This API has the broadest scope of all 
-of the save_xx API calls in the publisher API, and can be used to make 
-sweeping changes to the published information for one or more businessEntity 
-elements controlled by an individual.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a>, 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a>, 
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>, 
-<a href="/uddi_errors#E_invalidProjection">E_invalidProjection</a>, 
-<a href="/uddi_errors#E_userMismatch">E_userMismatch</a>, 
-<a href="/uddi_errors#E_invalidValue">E_invalidValue</a>, 
-<a href="/uddi_errors#E_requestTimeout">E_requestTimeout</a>, 
-<a href="/uddi_errors#E_valueNotAllowed">E_valueNotAllowed</a> or 
-<a href="/uddi_errors#E_accountLimitExceeded">E_accountLimitExceeded</a> 
-error was encountered.
+The <a href="uddiv2api.html#_Toc25137743" target="doc">save_business</a> API call is used 
+to save or update information about a complete <a href="uddiv2data.html#_Toc25130756" target="doc">businessEntity</a> 
+element. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -40,15 +29,15 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <save_business generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
+      <authInfo>***</authInfo>
       <businessEntity businessKey="">
-        <name xml:lang="en">*****</name>
-        <description xml:lang="en">*****</description>
+        <name>***</name>
+        <description>***</description>
         <contacts>
-          <contact useType="*****">
-            <personName>*****</personName>
-            <phone>*****</phone>
-            <email>*****</email>
+          <contact useType="***">
+            <personName>***</personName>
+            <phone>***</phone>
+            <email>***</email>
           </contact>
         </contacts>
       </businessEntity>

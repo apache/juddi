@@ -10,18 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The save_binding API call is used to save or update a complete bindingTemplate 
-element.  This message can be used to add or update one or more bindingTemplate 
-elements as well as the container/contained relationship that each bindingTemplate 
-has with one or more existing businessService elements.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a>, 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a>, 
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>, 
-<a href="/uddi_errors#E_userMismatch">E_userMismatch</a> or 
-<a href="/uddi_errors#E_accountLimitExceeded">E_accountLimitExceeded</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137742" target="doc">save_binding</a> API call is used 
+to save or update information about a complete <a href="uddiv2data.html#_Toc25130769" target="doc">bindingTemplate</a> 
+element. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -34,10 +29,10 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <save_binding generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
-      <bindingTemplate bindingKey="" serviceKey="*****">
-        <description xml:lang="en">*****</description>
-        <accessPoint URLType="http">*****</accessPoint>
+      <authInfo>***</authInfo>
+      <bindingTemplate bindingKey="" serviceKey="***">
+        <description xml:lang="en">***</description>
+        <accessPoint URLType="http">***</accessPoint>
       </bindingTemplate>
     </save_binding>
   </soapenv:Body>
