@@ -67,7 +67,7 @@ public class AxisTransport implements Transport
       call.setTargetEndpointAddress(endpointURL);
 
       String requestString = XMLUtils.ElementToString(request);
-      SOAPBodyElement body = new SOAPBodyElement(new ByteArrayInputStream(requestString.getBytes()));
+      SOAPBodyElement body = new SOAPBodyElement(new ByteArrayInputStream(requestString.getBytes("UTF-8")));
       Object[] soapBodies = new Object[] { body };
 
       Vector result = (Vector)call.invoke(soapBodies);
