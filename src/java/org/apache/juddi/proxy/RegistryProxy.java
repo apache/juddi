@@ -65,6 +65,8 @@ public class RegistryProxy extends AbstractRegistry
   private URL adminURL;
   private String uddiVersion;
   private String uddiNamespace;
+  private String securityProvider;
+  private String protocolHandler;
   
   /**
    * Create a new instance of RegistryProxy.  This constructor
@@ -77,7 +79,12 @@ public class RegistryProxy extends AbstractRegistry
   {
     super();
     
-    this.init(null);
+    // attempt to load proxy properties from
+    // the juddi.properties file which should
+    // be located in the classpath. 
+    Properties props = null;
+    
+    this.init(props);
   }
 
   /**
@@ -99,7 +106,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   private void init(Properties props)
   { 
-    // initialize proxy with default values
+    // Initialize proxy with default values
     try {
       this.setInquiryURL(new URL(DEFAULT_INQUIRY_ENDPOINT));
       this.setPublishURL(new URL(DEFAULT_PUBLISH_ENDPOINT));
@@ -111,7 +118,12 @@ public class RegistryProxy extends AbstractRegistry
       muex.printStackTrace();
     }
     
-    // override defaults with specific specific values
+    // There's no point in going any further
+    // if the Properties parameter is null.
+    if (props == null)
+      return;
+    
+    // Override defaults with specific specific values
     try {
       String iURL = props.getProperty("juddi.proxy.inquiryURL");
       if (iURL != null)
@@ -128,6 +140,14 @@ public class RegistryProxy extends AbstractRegistry
     catch(MalformedURLException muex) {
       muex.printStackTrace();
     } 
+
+    String secProvider = props.getProperty("juddi.proxy.securityProvider");
+    if (secProvider != null)
+      this.setSecurityProvider(secProvider);
+  
+    String protoHandler = props.getProperty("juddi.proxy.protocolHandler");
+    if (protoHandler != null)
+      this.setProtocolHandler(protoHandler);
 
     String uddiVer = props.getProperty("juddi.proxy.uddiVersion");
     if (uddiVer != null)
@@ -186,13 +206,44 @@ public class RegistryProxy extends AbstractRegistry
     this.publishURL = url;
   }
   
-  
+  /**
+   * @return Returns the protocolHandler.
+   */
+  public String getProtocolHandler() 
+  {
+    return this.protocolHandler;
+  }
+
+  /**
+   * @param protocolHandler The protocolHandler to set.
+   */
+  public void setProtocolHandler(String protoHandler)
+  {
+    this.protocolHandler = protoHandler;
+  }
+
+  /**
+   * @return Returns the securityProvider.
+   */
+  public String getSecurityProvider() 
+  {
+    return this.securityProvider;
+  }
+
+  /**
+   * @param securityProvider The securityProvider to set.
+   */
+  public void setSecurityProvider(String secProvider) 
+  {
+    this.securityProvider = secProvider;
+  }
+
   /**
    * @return Returns the uddiNS.
    */
   public String getUddiNamespace()
   {
-    return uddiNamespace;
+    return this.uddiNamespace;
   }
   
   /**
@@ -208,7 +259,7 @@ public class RegistryProxy extends AbstractRegistry
    */
   public String getUddiVersion()
   {
-    return uddiVersion;
+    return this.uddiVersion;
   }
   
   /**
@@ -218,7 +269,7 @@ public class RegistryProxy extends AbstractRegistry
   {
     this.uddiVersion = uddiVer;
   }
-
+  
   /**
    *
    */
