@@ -46,9 +46,6 @@ public class DeleteTModelSample
     String userID = "sviens";
     String password = "password";
 
-    DispositionReport dispReport = null;
-    Vector resultVector = null;
-
     try
     {      
       System.out.println("delete_tModel Sample");
@@ -70,19 +67,26 @@ public class DeleteTModelSample
       }
       
       registry.deleteTModel(authInfo,keyVector);
-      System.out.println("(done)");        
     }
-    catch(RegistryException regex)
+    catch (RegistryException regex)
     {
-      dispReport = regex.getDispositionReport();
-      resultVector = dispReport.getResultVector();
+      DispositionReport dispReport = regex.getDispositionReport();
+      Vector resultVector = dispReport.getResultVector();
       if (resultVector != null)
       {
         Result result = (Result)resultVector.elementAt(0);
-        ErrInfo errInfo = result.getErrInfo();
         int errNo = result.getErrno();
-        System.out.println("Error Number: "+errNo);
+        System.out.println("Errno:   "+errNo);
+
+        ErrInfo errInfo = result.getErrInfo();
+        if (errInfo != null)
+        {
+          System.out.println("ErrCode: "+errInfo.getErrCode());
+          System.out.println("ErrMsg:  "+errInfo.getErrMsg());
+        }        
       }
     }
+    
+    System.out.println("(done)");        
   }
 }

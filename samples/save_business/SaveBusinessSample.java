@@ -22,6 +22,10 @@ import org.apache.juddi.datatype.business.BusinessEntity;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.datatype.response.BusinessDetail;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
+import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.util.Language;
@@ -68,9 +72,25 @@ public class SaveBusinessSample
 
       System.out.println("businesses saved = "+detail.getBusinessEntityVector().size());
     }
-    catch(Exception ex)
+    catch (RegistryException regex)
     {
-      ex.printStackTrace();
+      DispositionReport dispReport = regex.getDispositionReport();
+      Vector resultVector = dispReport.getResultVector();
+      if (resultVector != null)
+      {
+        Result result = (Result)resultVector.elementAt(0);
+        int errNo = result.getErrno();
+        System.out.println("Errno:   "+errNo);
+
+        ErrInfo errInfo = result.getErrInfo();
+        if (errInfo != null)
+        {
+          System.out.println("ErrCode: "+errInfo.getErrCode());
+          System.out.println("ErrMsg:  "+errInfo.getErrMsg());
+        }        
+      }
     }
+
+    System.out.println("\ndone.");    
   }
 }

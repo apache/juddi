@@ -41,8 +41,8 @@ public class DiscardAuthTokenSample
     props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
     props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
     props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
-    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
-    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");    
+//    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+//    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");    
     IRegistry registry = new RegistryProxy(props);
 
     String userID = "sviens";
@@ -59,42 +59,41 @@ public class DiscardAuthTokenSample
       AuthToken authToken = registry.getAuthToken(userID,password);
       AuthInfo authInfo = authToken.getAuthInfo();
       System.out.println("AuthToken: "+authInfo.getValue());
- 
-      DispositionReport dispReport = null;
-      Vector resultVector = null;
 
-      dispReport = registry.discardAuthToken(authInfo);
-      resultVector = dispReport.getResultVector();
+      DispositionReport dispReport = registry.discardAuthToken(authInfo);
+      Vector resultVector = dispReport.getResultVector();
       if (resultVector != null)
       {
+        System.out.println("Discard: "+authInfo.getValue());
         Result result = (Result)resultVector.elementAt(0);
         ErrInfo errInfo = result.getErrInfo();
         int errNo = result.getErrno();
-        System.out.println("Discard Once    Error Number: "+errNo);
+        System.out.println("Errno:   "+errNo);
       }
 
-      try
-      {
-        registry.discardAuthToken(authInfo);
-      }
-      catch(RegistryException regex)
-      {
-        dispReport = regex.getDispositionReport();
-        resultVector = dispReport.getResultVector();
-        if (resultVector != null)
-        {
-          Result result = (Result)resultVector.elementAt(0);
-          ErrInfo errInfo = result.getErrInfo();
-          int errNo = result.getErrno();
-          System.out.println("Discard Twice   Error Number: "+errNo);
-        }
-      }
-
-      System.out.println("\ndone.");
+      System.out.println("Discard: "+authInfo.getValue());
+      registry.discardAuthToken(authInfo);
+      // the line above should throw a RegistryException
     }
-    catch(Exception ex)
+    catch (RegistryException regex)
     {
-      ex.printStackTrace();
+      DispositionReport dispReport = regex.getDispositionReport();
+      Vector resultVector = dispReport.getResultVector();
+      if (resultVector != null)
+      {
+        Result result = (Result)resultVector.elementAt(0);
+        int errNo = result.getErrno();
+        System.out.println("Errno:   "+errNo);
+
+        ErrInfo errInfo = result.getErrInfo();
+        if (errInfo != null)
+        {
+          System.out.println("ErrCode: "+errInfo.getErrCode());
+          System.out.println("ErrMsg:  "+errInfo.getErrMsg());
+        }        
+      }
     }
+
+    System.out.println("\ndone.");    
   }
 }

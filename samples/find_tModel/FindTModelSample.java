@@ -17,9 +17,13 @@
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.datatype.response.TModelInfo;
 import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.datatype.response.TModelList;
+import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
 
@@ -53,12 +57,28 @@ public class FindTModelSample
       for (int i=0; i<vector.size(); i++)
       {
         TModelInfo info = (TModelInfo)vector.elementAt(i);
-        System.out.println(info.getNameValue());
+        System.out.println(info.getNameValue() + "["+info.getTModelKey()+"]");
       }
     }
-    catch(Exception ex)
+    catch (RegistryException regex)
     {
-      ex.printStackTrace();
+      DispositionReport dispReport = regex.getDispositionReport();
+      Vector resultVector = dispReport.getResultVector();
+      if (resultVector != null)
+      {
+        Result result = (Result)resultVector.elementAt(0);
+        int errNo = result.getErrno();
+        System.out.println("Errno:   "+errNo);
+
+        ErrInfo errInfo = result.getErrInfo();
+        if (errInfo != null)
+        {
+          System.out.println("ErrCode: "+errInfo.getErrCode());
+          System.out.println("ErrMsg:  "+errInfo.getErrMsg());
+        }        
+      }
     }
+
+    System.out.println("\ndone.");    
   }
 }
