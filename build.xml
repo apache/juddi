@@ -412,14 +412,14 @@ Copyright:
 
     <!-- create the source ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}-src.zip" basedir="${dist.src.dir}"/>
-  	<checksum file="${build.dir}/juddi-${version}-src.zip" algorithm="MD5" forceoverwrite="yes"/>
+  	<checksum file="${build.dir}/juddi-${version}-src.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
   	<echo file="${build.dir}/juddi-${version}-src.zip.MD5" message=" juddi-${version}-src.zip" append="true"/>
   	
     <!-- create the source ".tar.gz" distribution and checksum (MD5) file -->
   	<tar destfile="${build.dir}/juddi-${version}-src.tar" basedir="${dist.src.dir}"/>
     <gzip src="${build.dir}/juddi-${version}-src.tar" zipfile="${build.dir}/juddi-${version}-src.tar.gz"/>
   	<delete file="${build.dir}/juddi-${version}-src.tar" verbose="false"/>
-  	<checksum file="${build.dir}/juddi-${version}-src.tar.gz" algorithm="MD5" forceoverwrite="yes"/>
+  	<checksum file="${build.dir}/juddi-${version}-src.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
   	<echo file="${build.dir}/juddi-${version}-src.tar.gz.MD5" message=" juddi-${version}-src.tar.gz" append="true"/>
   </target>
   <!-- =================================================================== -->
@@ -443,14 +443,14 @@ Copyright:
 
     <!-- create the binary ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}-bin.zip" basedir="${dist.bin.dir}"/>
-  	<checksum file="${build.dir}/juddi-${version}-bin.zip" algorithm="MD5" forceoverwrite="yes"/>
+  	<checksum file="${build.dir}/juddi-${version}-bin.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
   	<echo file="${build.dir}/juddi-${version}-bin.zip.MD5" message=" juddi-${version}-bin.zip" append="true"/>
   	
     <!-- create the binary ".tar.gz" distribution and checksum (MD5) file -->
   	<tar destfile="${build.dir}/juddi-${version}-bin.tar" basedir="${dist.bin.dir}"/>
     <gzip src="${build.dir}/juddi-${version}-bin.tar" zipfile="${build.dir}/juddi-${version}-bin.tar.gz"/>
     <delete file="${build.dir}/juddi-${version}-bin.tar" verbose="false"/>
-  	<checksum file="${build.dir}/juddi-${version}-bin.tar.gz" algorithm="MD5" forceoverwrite="yes"/>
+  	<checksum file="${build.dir}/juddi-${version}-bin.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
   	<echo file="${build.dir}/juddi-${version}-bin.tar.gz.MD5" message=" juddi-${version}-bin.tar.gz" append="true"/>
   </target>
   <!-- =================================================================== -->
