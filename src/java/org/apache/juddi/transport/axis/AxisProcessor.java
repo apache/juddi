@@ -15,6 +15,13 @@
  */
 package org.apache.juddi.transport.axis;
 
+import java.util.Vector;
+
+import javax.xml.soap.Detail;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPFault;
+
 import org.apache.axis.AxisFault;
 import org.apache.axis.Message;
 import org.apache.axis.MessageContext;
@@ -25,10 +32,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.BusyException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
-import org.apache.juddi.handler.DispositionReportHandler;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.monitor.Monitor;
@@ -67,6 +75,11 @@ public class AxisProcessor
     if (monitor != null)
       monitor.inspectMessageContext(messageContext);
 
+    // the soap request and response objects.
+
+    SOAPEnvelope soapReqEnv = null;
+    SOAPEnvelope soapResEnv = null;
+
     // grab a reference to the SOAP request from
     // the Message Context
 
@@ -86,11 +99,16 @@ public class AxisProcessor
 
     try
     {
+      // pull the soap request and response objects from 
+      // raw request and response message objects.
+
+      soapReqEnv = soapRequest.getSOAPEnvelope();
+      soapResEnv = soapResponse.getSOAPEnvelope();
+
       // pull the uddi request xml element from
       // the body of the soapRequest
 
-      SOAPEnvelope env = soapRequest.getSOAPEnvelope();
-      SOAPBodyElement requestBody = env.getFirstBody();
+      SOAPBodyElement requestBody = soapReqEnv.getFirstBody();
       request = requestBody.getAsDOM();
 
       // make the monitor inspect the SOAP Body
@@ -194,58 +212,112 @@ public class AxisProcessor
       // discarding the temp element) and appending
       // this child to the soap response body.
 
-      response = (Element)element.getFirstChild();
-    }
-    catch(RegistryException rex)
-    {
-      log.error(rex.getMessage(),rex);
-
-      String fCode = rex.getFaultCode();
-      String fString = rex.getFaultString();
-      String fActor = rex.getFaultActor();
-
-      DispositionReport dispRpt = rex.getDispositionReport();
-      if (dispRpt != null)
-      {
-        dispRpt.setGeneric(generic);
-        dispRpt.setOperator(Config.getOperator());
-      }
-
-      if (monitor != null)
-        monitor.addMonitorFault(fString);
-
-      response = createFault(fCode,fString,fActor,dispRpt);
-    }
-    catch(AxisFault axf)
-    {
-      log.error(axf.getMessage(),axf);
-
-      String fCode = String.valueOf(axf.getFaultCode());
-      String fString = axf.getFaultString();
-      String fActor = axf.getFaultActor();
-
-      if (monitor != null)
-        monitor.addMonitorFault(fString);
-
-      response = createFault(fCode,fString,fActor,null);
+      response = (Element)element.getFirstChild();      
+      SOAPBodyElement soapRespBody = new SOAPBodyElement(response);
+      SOAPEnvelope soapRespEnv = soapResponse.getSOAPEnvelope();
+      soapRespEnv.addBodyElement(soapRespBody);       
     }
     catch(Exception ex)
     {
       log.error(ex.getMessage(),ex);
 
-      String fCode = null;
-      String fString = ex.getMessage();
-      String fActor = null;
-
-      if (monitor != null)
-        monitor.addMonitorFault(fString);
-
-      response = createFault(fCode,fString,fActor,null);
+      String faultCode = null;
+      String faultString = null;
+      String faultActor = null;      
+      String errno = null;
+      String errCode = null;
+      String errMsg = null;
+      
+      // If a RegistryException was thrown dig out the
+      // dispositionReport if one exists and set the SOAP
+      // Fault & DispositionReport values with what we find.
+      
+      if (ex instanceof RegistryException)
+      {
+        RegistryException rex = (RegistryException)ex;
+        
+        faultCode = rex.getFaultCode();  // SOAP Fault faultCode
+        faultString = rex.getFaultString();  // SOAP Fault faultString
+        faultActor = rex.getFaultActor();  // SOAP Fault faultActor
+        
+        if (monitor != null)
+            monitor.addMonitorFault(faultString);
+        
+        DispositionReport dispRpt = rex.getDispositionReport();
+        if (dispRpt != null)
+        {
+          Result result = null;
+          ErrInfo errInfo = null;
+        
+          Vector results = dispRpt.getResultVector();
+          if ((results != null) && (!results.isEmpty()))
+            result = (Result)results.elementAt(0);
+        
+          if (result != null)
+          {
+            errno = String.valueOf(result.getErrno());  // UDDI DispositionReport errno
+            errInfo = result.getErrInfo();
+          
+            if (errInfo != null)
+            {
+              errCode = errInfo.getErrCode();  // UDDI DispositionReport errCode
+              errMsg = errInfo.getErrMsg();  // UDDI DispositionReport errMsg
+            }
+          }
+        }
+      }
+      else
+      {
+        // All other exceptions (other than RegistryException
+        // and subclasses) are either a result of a jUDDI 
+        // configuration problem or something that we *should* 
+        // be catching and converting to a RegistryException 
+        // but are not (yet!).
+          
+        faultCode = "Server";
+        faultString = ex.getMessage();
+        faultActor = null;
+          
+        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errCode = Result.E_FATAL_ERROR_CODE;
+        errMsg = "An internal UDDI server error has " +
+                 "occurred. Please report this error " +
+                 "to the UDDI server administrator.";
+      }
+      
+      // All other exceptions (other than RegistryException
+      // and subclasses) are either a jUDDI configuration 
+      // problem or something that we *should* be catching and
+      // converting to a RegistryException but are not (yet!).
+        
+      try {
+        SOAPBody soapResBody = soapResEnv.getBody();
+        SOAPFault soapFault = soapResBody.addFault();
+        soapFault.setFaultCode(faultCode);
+        soapFault.setFaultString(faultString);
+        soapFault.setFaultActor(faultActor);
+        
+        Detail faultDetail = soapFault.addDetail();
+        
+        SOAPElement dispRpt = faultDetail.addChildElement("dispositionReport","",IRegistry.UDDI_V2_NAMESPACE);        
+        dispRpt.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
+        dispRpt.setAttribute("operator",Config.getOperator());
+        
+        SOAPElement result = dispRpt.addChildElement("result");
+        result.setAttribute("errno",errno);
+        
+        SOAPElement errInfo = result.addChildElement("errInfo");
+        errInfo.setAttribute("errCode",errCode);
+        errInfo.setValue(errMsg);
+      } 
+      catch (Exception e) { 
+        e.printStackTrace(); 
+      }
     }
     finally
     {
       // write the monitored information to the currently
-      // configured 'Monitor' implemneted registry (the
+      // configured 'Monitor' implemented registry (the
       // default Monitor implementation writes the monitored
       // information to a database table via JDBC).
 
@@ -253,63 +325,10 @@ public class AxisProcessor
         monitor.log();
     }
 
-    try {
-      SOAPBodyElement soapRespBody = new SOAPBodyElement(response);
-      SOAPEnvelope soapRespEnv = soapResponse.getSOAPEnvelope();
-      soapRespEnv.addBodyElement(soapRespBody);
-    }
-    catch(AxisFault af) {
-      af.printStackTrace();
-    }
-
     // write the SOAP response XML out to the log (on debug)
     try { log.debug(soapResponse.getSOAPPartAsString()); }
     catch(AxisFault af) {
       af.printStackTrace();
     }
-
-  }
-
-  private static Element createFault(String fCode,String fString,String fActor,DispositionReport dispRpt)
-  {
-    // create a new 'Fault' XML element.
-
-    Document document = XMLUtils.createDocument();
-    Element fault = document.createElement("Fault");
-
-    if (fCode != null)
-    {
-      Element fCodeElement = document.createElement("faultcode");
-      fCodeElement.appendChild(document.createTextNode(fCode));
-      fault.appendChild(fCodeElement);
-    }
-
-    if (fString == null)
-      fString = "";
-
-    Element fStringElement = document.createElement("faultstring");
-    fStringElement.appendChild(document.createTextNode(fString));
-    fault.appendChild(fStringElement);
-
-    if (fActor != null)
-    {
-      Element fActorElement = document.createElement("faultactor");
-      fActorElement.appendChild(document.createTextNode(fActor));
-      fault.appendChild(fActorElement);
-    }
-
-    // check for a DispositionReport in the exception and if one exists,
-    // grab it, marshal it into xml and stuff it into a SOAP fault
-    // detail element.
-
-    if (dispRpt != null)
-    {
-      Element fDetailElement = document.createElement("detail");
-      IHandler handler = maker.lookup(DispositionReportHandler.TAG_NAME);
-      handler.marshal(dispRpt,fDetailElement);
-      fault.appendChild(fDetailElement);
-    }
-
-    return fault;
   }
 }

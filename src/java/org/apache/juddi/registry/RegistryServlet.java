@@ -18,6 +18,7 @@ package org.apache.juddi.registry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Vector;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
@@ -40,6 +41,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.BusyException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
@@ -287,77 +290,102 @@ public class RegistryServlet extends HttpServlet
       // only child here (this has the effect of
       // discarding the temp element) and append 
       // this child to the soap response body
-        
+      
       document.appendChild(element.getFirstChild());
       soapRes.getSOAPBody().addDocument(document);
     } 
-    catch (RegistryException ex) {             
-      log.error(ex);
+    catch(Exception ex)
+    {
+      log.error(ex.getMessage(),ex);
+
+      String faultCode = null;
+      String faultString = null;
+      String faultActor = null;      
+      String errno = null;
+      String errCode = null;
+      String errMsg = null;
       
-      try {        
-        SOAPBody body = soapRes.getSOAPBody();
-        SOAPFault soapFault = body.addFault();
-        soapFault.setFaultActor((ex.getFaultActor() == null) ? "" : ex.getFaultActor());
-        soapFault.setFaultString((ex.getFaultString() == null) ? "" : ex.getFaultString());
-        soapFault.setFaultCode((ex.getFaultCode() == null) ? "" : ex.getFaultCode());
-          
-        // Store DispositionReport in the SOAP fault node.
-        DispositionReport dispRpt = ex.getDispositionReport();
+      // If a RegistryException was thrown dig out the
+      // dispositionReport if one exists and set the SOAP
+      // Fault & DispositionReport values with what we find.
+      
+      if (ex instanceof RegistryException)
+      {
+        RegistryException rex = (RegistryException)ex;
+        
+        faultCode = rex.getFaultCode();  // SOAP Fault faultCode
+        faultString = rex.getFaultString();  // SOAP Fault faultString
+        faultActor = rex.getFaultActor();  // SOAP Fault faultActor
+        
+        DispositionReport dispRpt = rex.getDispositionReport();
         if (dispRpt != null)
-        {          
-          dispRpt.setGeneric(generic);
-          dispRpt.setOperator(Config.getOperator());
-
-          // Create a new 'temp' XML element to use as a container 
-          // in which to marshal the DispositionReport into.
-             
-          DocumentBuilder docBuilder = getDocumentBuilder();
-          Document document = docBuilder.newDocument();
-          Element dispRptElement = document.createElement("temp");
-
-          // Lookup the DispositionReportHandler and marshal 
-          // the juddi object into the appropriate xml format (we 
-          // only support UDDI v2.0 at this time).  Attach the
-          // results to the body of the SOAP fault.
-              
-          IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
-          dispRptHandler.marshal(dispRpt,dispRptElement);   
-            
-          // Create the SOAPFault Detail element and insert 
-          // the DispositionReport.
-            
-          Detail soapDetail = soapFault.addDetail();
-          soapDetail.appendChild(dispRptElement.getFirstChild());
+        {
+          Result result = null;
+          ErrInfo errInfo = null;
+        
+          Vector results = dispRpt.getResultVector();
+          if ((results != null) && (!results.isEmpty()))
+            result = (Result)results.elementAt(0);
+        
+          if (result != null)
+          {
+            errno = String.valueOf(result.getErrno());  // UDDI DispositionReport errno
+            errInfo = result.getErrInfo();
+          
+            if (errInfo != null)
+            {
+              errCode = errInfo.getErrCode();  // UDDI DispositionReport errCode
+              errMsg = errInfo.getErrMsg();  // UDDI DispositionReport errMsg
+            }
+          }
         }
       }
-      catch(SOAPException sex) {
-        log.error(sex);
+      else
+      {
+        // All other exceptions (other than RegistryException
+        // and subclasses) are either a result of a jUDDI 
+        // configuration problem or something that we *should* 
+        // be catching and converting to a RegistryException 
+        // but are not (yet!).
+          
+        faultCode = "Server";
+        faultString = ex.getMessage();
+        faultActor = null;
+          
+        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errCode = Result.E_FATAL_ERROR_CODE;
+        errMsg = "An internal UDDI server error has " +
+                 "occurred. Please report this error " +
+                 "to the UDDI server administrator.";
       }
-    } 
-    catch (SOAPException ex) {             
-      log.error(ex);
-
+      
+      // All other exceptions (other than RegistryException
+      // and subclasses) are either a jUDDI configuration 
+      // problem or something that we *should* be catching and
+      // converting to a RegistryException but are not (yet!).
+        
       try {
-        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
-        SOAPBody body = envelope.getBody(); 
-        SOAPFault soapFault = body.addFault();
-        soapFault.setFaultString(ex.getMessage());        
-      }
-      catch(SOAPException sex) {
-        log.error(sex);
-      }
-    } 
-    catch(Exception ex) {
-      log.error(ex);
-
-      try {
-        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
-        SOAPBody body = envelope.getBody(); 
-        SOAPFault soapFault = body.addFault();
-        soapFault.setFaultString(ex.getMessage());        
-      }
-      catch(SOAPException sex) {
-        log.error(sex);
+        SOAPBody soapResBody = soapRes.getSOAPBody();     
+        SOAPFault soapFault = soapResBody.addFault();
+        soapFault.setFaultCode(faultCode);
+        soapFault.setFaultString(faultString);
+        soapFault.setFaultActor(faultActor);
+        
+        Detail faultDetail = soapFault.addDetail();
+        
+        SOAPElement dispRpt = faultDetail.addChildElement("dispositionReport","",IRegistry.UDDI_V2_NAMESPACE);        
+        dispRpt.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
+        dispRpt.setAttribute("operator",Config.getOperator());
+        
+        SOAPElement result = dispRpt.addChildElement("result");
+        result.setAttribute("errno",errno);
+        
+        SOAPElement errInfo = result.addChildElement("errInfo");
+        errInfo.setAttribute("errCode",errCode);
+        errInfo.setValue(errMsg);
+      } 
+      catch (Exception e) { 
+        e.printStackTrace(); 
       }
     }
     finally {
