@@ -185,11 +185,11 @@ Copyright:
         <include name="server-config.wsdd"/>
         <include name="jonas-web.xml"/>
         <include name="jboss-web.xml"/>
+        <include name="juddi.properties"/>
+        <include name="juddi-users.xml"/>
       </webinf>
       <classes dir="${conf.dir}">
-        <include name="juddi.properties"/>
         <include name="log4j.properties"/>
-        <include name="juddi.users"/>
       </classes>
       <lib dir="${lib.dir}">
         <include name="axis.jar"/>
