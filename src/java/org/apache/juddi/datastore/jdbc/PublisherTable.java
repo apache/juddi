@@ -51,31 +51,19 @@ public class PublisherTable
     sql.append("INSERT INTO PUBLISHER (");
     sql.append("PUBLISHER_ID,");
     sql.append("PUBLISHER_NAME,");
-    sql.append("LAST_NAME,");
-    sql.append("FIRST_NAME,");
-    sql.append("MIDDLE_INIT,");
-    sql.append("WORK_PHONE,");
-    sql.append("MOBILE_PHONE,");
-    sql.append("PAGER,");
     sql.append("EMAIL_ADDRESS,");
-    sql.append("ADMIN, ");
-    sql.append("ENABLED) ");
-    sql.append("VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+    sql.append("IS_ADMIN, ");
+    sql.append("IS_ENABLED) ");
+    sql.append("VALUES (?,?,?,?,?)");
     insertSQL = sql.toString();
 
     // build selectSQL
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("PUBLISHER_NAME,");
-    sql.append("LAST_NAME,");
-    sql.append("FIRST_NAME,");
-    sql.append("MIDDLE_INIT,");
-    sql.append("WORK_PHONE,");
-    sql.append("MOBILE_PHONE,");
-    sql.append("PAGER,");
     sql.append("EMAIL_ADDRESS,");
-    sql.append("ADMIN,");
-    sql.append("ENABLED ");
+    sql.append("IS_ADMIN,");
+    sql.append("IS_ENABLED ");
     sql.append("FROM PUBLISHER ");
     sql.append("WHERE PUBLISHER_ID=?");
     selectSQL = sql.toString();
@@ -90,15 +78,9 @@ public class PublisherTable
     sql = new StringBuffer(200);
     sql.append("UPDATE PUBLISHER ");
     sql.append("SET PUBLISHER_NAME=?,");
-    sql.append("LAST_NAME=?,");
-    sql.append("FIRST_NAME=?,");
-    sql.append("MIDDLE_INIT=?,");
-    sql.append("WORK_PHONE=?,");
-    sql.append("MOBILE_PHONE=?,");
-    sql.append("PAGER=?,");
     sql.append("EMAIL_ADDRESS=?,");
-    sql.append("ADMIN=?,");
-    sql.append("ENABLED=? ");
+    sql.append("IS_ADMIN=?,");
+    sql.append("IS_ENABLED=? ");
     sql.append("WHERE PUBLISHER_ID=?");
     updateSQL = sql.toString();
   }
@@ -123,28 +105,16 @@ public class PublisherTable
       statement = connection.prepareStatement(insertSQL);
       statement.setString(1,publisher.getPublisherID());
       statement.setString(2,publisher.getName());
-      statement.setString(3,publisher.getFirstName());
-      statement.setString(4,publisher.getLastName());
-      statement.setString(5,publisher.getMiddleInit());
-      statement.setString(6,publisher.getWorkPhone());
-      statement.setString(7,publisher.getMobilePhone());
-      statement.setString(8,publisher.getPager());
-      statement.setString(9,publisher.getEmailAddress());
-      statement.setString(10,String.valueOf(publisher.isAdmin()));
-      statement.setString(11,String.valueOf(publisher.isEnabled()));
+      statement.setString(3,publisher.getEmailAddress());
+      statement.setString(4,String.valueOf(publisher.isAdmin()));
+      statement.setString(5,String.valueOf(publisher.isEnabled()));
 
       log.debug("insert into PUBLISHER table:\n\n\t" + insertSQL +
         "\n\t PUBLISHER_ID=" + publisher.getPublisherID() +
         "\n\t PUBLISHER_NAME=" + publisher.getName() +
-        "\n\t FIRST_NAME=" + publisher.getFirstName() +
-        "\n\t LAST_NAME=" + publisher.getLastName() +
-        "\n\t MIDDLE_INIT=" + publisher.getMiddleInit() +
-        "\n\t WORK_PHONE=" + publisher.getWorkPhone() +
-        "\n\t MOBILE_PHONE=" + publisher.getMobilePhone() +
-        "\n\t PAGER=" + publisher.getPager() +
         "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
-        "\n\t ADMIN=" + publisher.isAdmin() +
-        "\n\t ENABLED=" + publisher.isEnabled() + "\n");
+        "\n\t IS_ADMIN=" + publisher.isAdmin() +
+        "\n\t IS_ENABLED=" + publisher.isEnabled() + "\n");
 
       // insert
       statement.executeUpdate();
@@ -193,15 +163,9 @@ public class PublisherTable
         publisher = new Publisher();
         publisher.setPublisherID(publisherID);
         publisher.setName(resultSet.getString(1));//("PUBLISHER_NAME"));
-        publisher.setLastName(resultSet.getString(2));//("LAST_NAME"));
-        publisher.setFirstName(resultSet.getString(3));//("FIRST_NAME"));
-        publisher.setMiddleInit(resultSet.getString(4));//("MIDDLE_INIT"));
-        publisher.setWorkPhone(resultSet.getString(5));//("WORK_PHONE"));
-        publisher.setMobilePhone(resultSet.getString(6));//("MOBILE_PHONE"));
-        publisher.setPager(resultSet.getString(7));//("PAGER"));
-        publisher.setEmailAddress(resultSet.getString(8));//("EMAIL_ADDRESS"));
-        publisher.setAdminValue(resultSet.getString(9));//("ADMIN"));
-        publisher.setEnabledValue(resultSet.getString(10));//("ENABLED"));
+        publisher.setEmailAddress(resultSet.getString(2));//("EMAIL_ADDRESS"));
+        publisher.setAdminValue(resultSet.getString(3));//("IS_ADMIN"));
+        publisher.setEnabledValue(resultSet.getString(4));//("IS_ENABLED"));
       }
 
       return publisher;
@@ -270,28 +234,16 @@ public class PublisherTable
       // prepare
       statement = connection.prepareStatement(updateSQL);
       statement.setString(1,publisher.getName());
-      statement.setString(2,publisher.getFirstName());
-      statement.setString(3,publisher.getLastName());
-      statement.setString(4,publisher.getMiddleInit());
-      statement.setString(5,publisher.getWorkPhone());
-      statement.setString(6,publisher.getMobilePhone());
-      statement.setString(7,publisher.getPager());
-      statement.setString(8,publisher.getEmailAddress());
-      statement.setString(9,String.valueOf(publisher.isAdmin()));
-      statement.setString(10,String.valueOf(publisher.isEnabled()));
-      statement.setString(11,publisher.getPublisherID());
+      statement.setString(2,publisher.getEmailAddress());
+      statement.setString(3,String.valueOf(publisher.isAdmin()));
+      statement.setString(4,String.valueOf(publisher.isEnabled()));
+      statement.setString(5,publisher.getPublisherID());
 
       log.debug("update PUBLISHER table:\n\n\t" + updateSQL +
         "\n\t PUBLISHER_NAME=" + publisher.getName() +
-        "\n\t FIRST_NAME=" + publisher.getFirstName() +
-        "\n\t LAST_NAME=" + publisher.getLastName() +
-        "\n\t MIDDLE_INIT=" + publisher.getMiddleInit() +
-        "\n\t WORK_PHONE=" + publisher.getWorkPhone() +
-        "\n\t MOBILE_PHONE=" + publisher.getMobilePhone() +
-        "\n\t PAGER=" + publisher.getPager() +
         "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
-        "\n\t ADMIN=" + publisher.isAdmin() +
-        "\n\t ENABLED=" + publisher.isEnabled() +
+        "\n\t IS_ADMIN=" + publisher.isAdmin() +
+        "\n\t IS_ENABLED=" + publisher.isEnabled() +
         "\n\t PUBLISHER_ID=" + publisher.getPublisherID() + "\n");
 
       // execute
@@ -348,11 +300,6 @@ public class PublisherTable
         Publisher publisher = new Publisher();
         publisher.setPublisherID("bcrosby");
         publisher.setName("Bing Crosby");
-        publisher.setLastName("Crosby");
-        publisher.setFirstName("Bing");
-        publisher.setWorkPhone("978.123-4567");
-        publisher.setMobilePhone("617-765-9876");
-        publisher.setPager("800-123-4655 ID: 501");
         publisher.setEmailAddress("bcrosby@juddi.org");
         publisher.setAdmin(false);
         publisher.setEnabled(false);
@@ -361,7 +308,6 @@ public class PublisherTable
         // select each inserted publisher
         System.out.println(PublisherTable.select("bcrosby",connection));
 
-        publisher.setFirstName("Bart");
         publisher.setName("Barthalomue Crosby");
         publisher.setEnabled(true);
         PublisherTable.update(publisher,connection);

@@ -131,11 +131,6 @@ public class PublisherDetailHandler extends AbstractHandler
     Publisher publisher = new Publisher();
     publisher.setPublisherID("bcrosby");
     publisher.setName("Bing Crosby");
-    publisher.setLastName("Crosby");
-    publisher.setFirstName("Bing");
-    publisher.setWorkPhone("978.123-4567");
-    publisher.setMobilePhone("617-765-9876");
-    publisher.setPager("800-123-4655 ID: 501");
     publisher.setEmailAddress("bcrosby@juddi.org");
     publisher.setAdmin(true);
 

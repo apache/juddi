@@ -28,7 +28,6 @@ import org.apache.juddi.datatype.DiscoveryURLs;
 import org.apache.juddi.datatype.Email;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.Name;
-import org.apache.juddi.datatype.Phone;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.business.BusinessEntity;
 import org.apache.juddi.datatype.business.Contact;
@@ -194,18 +193,6 @@ public class SaveBusinessFunction extends AbstractFunction
           Contact contact = new Contact();
           contact.setPersonNameValue(publisher.getName());
           contact.setUseType("publisher");
-
-          String workPhone = publisher.getWorkPhone();
-          if (workPhone != null)
-            contact.addPhone(new Phone(workPhone,"business"));
-
-          String mobile = publisher.getMobilePhone();
-          if (mobile != null)
-            contact.addPhone(new Phone(mobile,"mobile"));
-
-          String pager = publisher.getPager();
-          if (pager != null)
-            contact.addPhone(new Phone(pager,"pager"));
 
           String email = publisher.getEmailAddress();
           if (email != null)

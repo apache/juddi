@@ -61,31 +61,6 @@ public class PublisherHandler extends AbstractHandler
     else
       obj.setAdmin(false);
 
-    // Attributes (optional)
-    String firstName = element.getAttribute("firstName");
-    if ((firstName != null) && (firstName.length() > 0))
-      obj.setFirstName(firstName);
-
-    String lastName = element.getAttribute("lastName");
-    if ((lastName != null) && (lastName.length() > 0))
-      obj.setLastName(lastName);
-
-    String middleInit = element.getAttribute("middleInit");
-    if ((middleInit != null) && (middleInit.length() > 0))
-      obj.setMiddleInit(middleInit);
-
-    String workPhone = element.getAttribute("workPhone");
-    if ((workPhone != null) && (workPhone.length() > 0))
-      obj.setWorkPhone(workPhone);
-
-    String mobilePhone = element.getAttribute("mobilePhone");
-    if ((mobilePhone != null) && (mobilePhone.length() > 0))
-      obj.setMobilePhone(mobilePhone);
-
-    String pager = element.getAttribute("pager");
-    if ((pager != null) && (pager.length() > 0))
-      obj.setPager(pager);
-
     String emailAddress = element.getAttribute("emailAddress");
     if ((emailAddress != null) && (emailAddress.length() > 0))
       obj.setEmailAddress(emailAddress);
@@ -121,31 +96,6 @@ public class PublisherHandler extends AbstractHandler
     element.setAttribute("admin",String.valueOf(publisher.isAdmin()));
     element.setAttribute("enabled",String.valueOf(publisher.isEnabled()));
 
-    // Attributes (optional)
-    String firstName = publisher.getFirstName();
-    if ((firstName != null) && (firstName.length() > 0))
-      element.setAttribute("firstName",firstName);
-
-    String lastName = publisher.getLastName();
-    if ((lastName != null) && (lastName.length() > 0))
-      element.setAttribute("lastName",lastName);
-
-    String middleInit = publisher.getMiddleInit();
-    if ((middleInit != null) && (middleInit.length() > 0))
-      element.setAttribute("middleInit",middleInit);
-
-    String workPhone = publisher.getWorkPhone();
-    if ((workPhone != null) && (workPhone.length() > 0))
-      element.setAttribute("workPhone",workPhone);
-
-    String mobilePhone = publisher.getMobilePhone();
-    if ((mobilePhone != null) && (mobilePhone.length() > 0))
-      element.setAttribute("mobilePhone",mobilePhone);
-
-    String pager = publisher.getPager();
-    if ((pager != null) && (pager.length() > 0))
-      element.setAttribute("pager",pager);
-
     String emailAddress = publisher.getEmailAddress();
     if ((emailAddress != null) && (emailAddress.length() > 0))
       element.setAttribute("emailAddress",emailAddress);
@@ -176,11 +126,6 @@ public class PublisherHandler extends AbstractHandler
     Publisher publisher = new Publisher();
     publisher.setPublisherID("bcrosby");
     publisher.setName("Bing Crosby");
-    publisher.setLastName("Crosby");
-    publisher.setFirstName("Bing");
-    publisher.setWorkPhone("978.123-4567");
-    publisher.setMobilePhone("617-765-9876");
-    publisher.setPager("800-123-4655 ID: 501");
     publisher.setEmailAddress("bcrosby@juddi.org");
     publisher.setAdmin(true);
     publisher.setEnabled(true);

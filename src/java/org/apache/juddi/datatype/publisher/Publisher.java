@@ -25,12 +25,6 @@ public class Publisher implements RegistryObject
 {
   private String publisherID;
   private String nameValue;
-  private String firstName;
-  private String lastName;
-  private String middleInit;
-  private String workPhone;
-  private String mobilePhone;
-  private String pager;
   private String emailAddress;
   private boolean admin;
   private boolean enabled;
@@ -107,102 +101,6 @@ public class Publisher implements RegistryObject
       this.nameValue = name.getValue();
     else
       this.nameValue = null;
-  }
-
-  /**
-   *
-   */
-  public void setFirstName(String name)
-  {
-    this.firstName = name;
-  }
-
-  /**
-   *
-   */
-  public String getFirstName()
-  {
-    return this.firstName;
-  }
-
-  /**
-   *
-   */
-  public void setLastName(String name)
-  {
-    this.lastName = name;
-  }
-
-  /**
-   *
-   */
-  public String getLastName()
-  {
-    return this.lastName;
-  }
-
-  /**
-   *
-   */
-  public void setMiddleInit(String init)
-  {
-    this.middleInit = init;
-  }
-
-  /**
-   *
-   */
-  public String getMiddleInit()
-  {
-    return this.middleInit;
-  }
-
-  /**
-   *
-   */
-  public void setWorkPhone(String phone)
-  {
-    this.workPhone = phone;
-  }
-
-  /**
-   *
-   */
-  public String getWorkPhone()
-  {
-    return this.workPhone;
-  }
-
-  /**
-   *
-   */
-  public void setMobilePhone(String phone)
-  {
-    this.mobilePhone = phone;
-  }
-
-  /**
-   *
-   */
-  public String getMobilePhone()
-  {
-    return this.mobilePhone;
-  }
-
-  /**
-   *
-   */
-  public void setPager(String pager)
-  {
-    this.pager = pager;
-  }
-
-  /**
-   *
-   */
-  public String getPager()
-  {
-    return this.pager;
   }
 
   /**
