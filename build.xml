@@ -168,7 +168,8 @@ Copyright:
                 org/apache/juddi/registry/**,
                 org/apache/juddi/transport/**,
                 org/apache/juddi/util/jdbc/**,
-                org/apache/juddi/uuidgen/**"/>
+                org/apache/juddi/uuidgen/**,
+    	        org/apache/juddi/validator/**"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
@@ -257,8 +258,9 @@ Copyright:
            org.apache.juddi.util,
            org.apache.juddi.util.jdbc,
            org.apache.juddi.util.xml,
-           org.apache.juddi.uuidgen"
-        author="true"
+           org.apache.juddi.uuidgen,
+           org.apache.juddi.validator"
+    	author="true"
         version="true"
         windowtitle="${title}"
         doctitle="${title}"
