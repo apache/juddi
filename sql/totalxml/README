@@ -1,3 +1,7 @@
-TotalXML / jUDDI version 0.9rc1
+CREATE/CONFIGURE A TOTALXML DATABASE FOR jUDDI
 
-Author: 
+jUDDI requires the use of a relational database (RDBMS) or 
+lightweight directory access protocol (LDAP) server to store
+the web services metadata it manages. This document will 
+walk you through the process of setting up an TotalXML 
+database as the persistante storage for a jUDDI registry.
