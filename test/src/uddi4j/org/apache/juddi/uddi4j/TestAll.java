@@ -76,6 +76,7 @@ public class TestAll extends TestCase
     suite.addTestSuite(TestSaveBusiness.class);
     suite.addTestSuite(Test_save_tModel.class);
     suite.addTestSuite(TestAddPublisherAssertion.class);
+    suite.addTestSuite(TestTModel.class);
     /*
     suite.addTestSuite(Test_save_binding.class);
         */

@@ -69,6 +69,7 @@ public class TestTModel extends UDDITestBase {
 
   public void testCases() {
     _testNoNameQualifier();
+    _testEmptyFindQualifier(); 
   }
   public void _testEmptyFindQualifier() {
     Vector tmods = new Vector();
@@ -134,10 +135,7 @@ public class TestTModel extends UDDITestBase {
 
   public boolean _queryNoNameQualifiers() {
     CategoryBag catBag = new CategoryBag(); 
-// one of the string is supposed to be empty, but i'm not sure which
-// keyName .. keyValue .. tModelKey .. not sure this guy has his stuff right .. 
-    KeyedReference kref = new KeyedReference(TModel.TYPES_TMODEL_KEY,"category", "");
-   // KeyedReference kref = new KeyedReference("", "category", TModel.TYPES_TMODEL_KEY);
+   KeyedReference kref = new KeyedReference("", "categorization", TModel.TYPES_TMODEL_KEY);
     catBag.add(kref);
     try {
       proxy.find_tModel("", catBag, null, null, 5);
