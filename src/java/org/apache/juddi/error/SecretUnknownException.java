@@ -26,21 +26,6 @@ public class SecretUnknownException extends RegistryException
 {
   public SecretUnknownException(String msg)
   {
-    super(Result.E_SECRET_UNKNOWN_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_SECRET_UNKNOWN_MSG;
-
-    Result result = new Result(
-      Result.E_SECRET_UNKNOWN,
-      Result.E_SECRET_UNKNOWN_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_SECRET_UNKNOWN,msg);
   }
 }

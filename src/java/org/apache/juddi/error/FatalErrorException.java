@@ -26,21 +26,6 @@ public class FatalErrorException extends RegistryException
 {
   public FatalErrorException(String msg)
   {
-    super(Result.E_FATAL_ERROR_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_FATAL_ERROR_MSG;
-
-    Result result = new Result(
-      Result.E_FATAL_ERROR,
-      Result.E_FATAL_ERROR_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Server",Result.E_FATAL_ERROR,msg);
   }
 }

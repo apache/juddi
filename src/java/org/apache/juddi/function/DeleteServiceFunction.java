@@ -132,12 +132,16 @@ public class DeleteServiceFunction extends AbstractFunction
         dataStore.release();
     }
 
-    // didn't encounter an exception so let's create
-    // and return a successfull DispositionReport
+    // We didn't encounter any problems so let's create an
+    // E_SUCCESS Result, embed it in a DispositionReport
+    // and return it.
+    Result result = new Result(Result.E_SUCCESS);
+    result.setErrCode(Result.lookupErrCode(Result.E_SUCCESS));    
     DispositionReport dispRpt = new DispositionReport();
     dispRpt.setGeneric(generic);
     dispRpt.setOperator(Config.getOperator());
-    dispRpt.addResult(new Result(Result.E_SUCCESS));
+    dispRpt.addResult(result);
+    
     return dispRpt;
   }
 

@@ -26,21 +26,6 @@ public class TransferAbortedException extends RegistryException
 {
   public TransferAbortedException(String msg)
   {
-    super(Result.E_TRANSFER_ABORTED_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_TRANSFER_ABORTED_MSG;
-
-    Result result = new Result(
-      Result.E_TRANSFER_ABORTED,
-      Result.E_TRANSFER_ABORTED_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_TRANSFER_ABORTED,msg);
   }
 }

@@ -26,21 +26,6 @@ public class InvalidTimeException extends RegistryException
 {
   public InvalidTimeException(String msg)
   {
-    super(Result.E_INVALID_TIME_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_INVALID_TIME_MSG;
-
-    Result result = new Result(
-      Result.E_INVALID_TIME,
-      Result.E_INVALID_TIME_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_INVALID_TIME,msg);
   }
 }

@@ -26,21 +26,6 @@ public class AccountLimitExceededException extends RegistryException
 {
   public AccountLimitExceededException(String msg)
   {
-    super(Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_ACCOUNT_LIMIT_EXCEEDED_MSG;
-
-    Result result = new Result(
-      Result.E_ACCOUNT_LIMIT_EXCEEDED,
-      Result.E_ACCOUNT_LIMIT_EXCEEDED_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_ACCOUNT_LIMIT_EXCEEDED,msg);
   }
 }

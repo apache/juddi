@@ -28,21 +28,6 @@ public class OperatorMismatchException extends RegistryException
 {
   public OperatorMismatchException(String msg)
   {
-    super(Result.E_OPERATOR_MISMATCH_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_OPERATOR_MISMATCH_MSG;
-
-    Result result = new Result(
-      Result.E_OPERATOR_MISMATCH,
-      Result.E_OPERATOR_MISMATCH_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_OPERATOR_MISMATCH,msg);
   }
 }

@@ -29,21 +29,6 @@ public class BusyException extends RegistryException
    */
   public BusyException(String msg)
   {
-    super(Result.E_BUSY_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_BUSY_MSG;
-
-    Result result = new Result(
-      Result.E_BUSY,
-      Result.E_BUSY_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Server",Result.E_BUSY,msg);
   }
 }

@@ -26,21 +26,6 @@ public class ResultSetTooLargeException extends RegistryException
 {
   public ResultSetTooLargeException(String msg)
   {
-    super(Result.E_RESULT_SET_TOO_LARGE_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_RESULT_SET_TOO_LARGE_MSG;
-
-    Result result = new Result(
-      Result.E_RESULT_SET_TOO_LARGE,
-      Result.E_RESULT_SET_TOO_LARGE_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_RESULT_SET_TOO_LARGE,msg);
   }
 }

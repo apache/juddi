@@ -26,21 +26,6 @@ public class AssertionNotFoundException extends RegistryException
 {
   public AssertionNotFoundException(String msg)
   {
-    super(Result.E_ASSERTION_NOT_FOUND_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_ASSERTION_NOT_FOUND_MSG;
-
-    Result result = new Result(
-      Result.E_ASSERTION_NOT_FOUND,
-      Result.E_ASSERTION_NOT_FOUND_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_ASSERTION_NOT_FOUND,msg);
   }
 }

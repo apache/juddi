@@ -26,11 +26,6 @@ public class UnvalidatableException extends RegistryException
 {
   public UnvalidatableException(String msg)
   {
-    super(
-        "Client",                    // SOAP faultCode
-        Result.E_UNVALIDATABLE_NMBR,   // UDDI errno
-        Result.E_UNVALIDATABLE_CODE,   // UDDI errInfo errCode
-        Result.E_UNVALIDATABLE_TEXT,   // UDDI errInfo text
-        msg);
+    super("Client",Result.E_UNVALIDATABLE,msg);
   }
 }

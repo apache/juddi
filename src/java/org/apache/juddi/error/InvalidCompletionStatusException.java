@@ -26,21 +26,6 @@ public class InvalidCompletionStatusException extends RegistryException
 {
   public InvalidCompletionStatusException(String msg)
   {
-    super(Result.E_INVALID_COMPLETION_STATUS_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_INVALID_COMPLETION_STATUS_MSG;
-
-    Result result = new Result(
-      Result.E_INVALID_COMPLETION_STATUS,
-      Result.E_INVALID_COMPLETION_STATUS_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_INVALID_COMPLETION_STATUS,msg);
   }
 }

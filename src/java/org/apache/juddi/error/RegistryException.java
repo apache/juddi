@@ -15,11 +15,8 @@
  */
 package org.apache.juddi.error;
 
-import java.util.Vector;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.DispositionReport;
-import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.Result;
 
 /**
@@ -42,37 +39,75 @@ public class RegistryException extends Exception implements RegistryObject
   private DispositionReport dispReport;
 
   /**
-   * Constructs an empty UDDIException instance.
-   */
-  public RegistryException()
-  {
-    super();
-  }
-
-  /**
-   * Constructs a UDDIException instance.
+   * Constructs a RegistryException instance.
    * @param msg additional error information
    */
   public RegistryException(String msg)
   {
     super(msg);
 
-    this.setFaultActor(null);
-    this.setFaultCode(null);
-    this.setFaultString(msg);
+    setFaultCode(null);
+    setFaultString(msg);
+    setFaultActor(null);
   }
 
   /**
-   * Constructs a UDDIException instance.
+   * Constructs a RegistryException instance.
    * @param ex the original exception
    */
   public RegistryException(Exception ex)
   {
-    super(ex.getMessage());
+    super(ex);
+    
+    if (ex != null)
+    {
+      // Not sure why this would ever happen but 
+      // just in case we are asked to create a new
+      // RegistryException using values from another
+      // let's be sure to grab all relevant values.
+      //
+      if (ex instanceof RegistryException)
+      {
+        RegistryException regex = (RegistryException)ex;
+        setFaultCode(regex.getFaultCode());
+        setFaultString(regex.getFaultString());
+        setFaultActor(regex.getFaultActor());
+        setDispositionReport(regex.getDispositionReport());
+      }
+      else // Not a RegistryException (or subclass)
+      {
+        setFaultString(ex.getMessage());
+      }
+    }
+  }
 
-    this.setFaultActor(null);
-    this.setFaultCode(null);
-    this.setFaultString(ex.getMessage());
+  /**
+   * Constructs a RegistryException instance.
+   * @param ex the original exception
+   */
+  public RegistryException(String fCode,String fString,String fActor,DispositionReport dispRpt)
+  {
+    super(fString);
+
+    setFaultCode(fCode);
+    setFaultString(fString);
+    setFaultActor(fActor);
+    setDispositionReport(dispRpt);
+  }
+
+  /**
+   * Constructs a RegistryException instance.
+   * @param ex the original exception
+   */
+  RegistryException(String fCode,int errno,String msg)
+  {
+    super(buildMessage(errno,msg));
+
+    String errCode = Result.lookupErrCode(errno);
+
+    setFaultCode(fCode);
+    setFaultString(getMessage());
+    addResult(new Result(errno,errCode,getMessage()));
   }
 
   /**
@@ -167,42 +202,44 @@ public class RegistryException extends Exception implements RegistryObject
    */
   public String toString()
   {
-    StringBuffer buff = new StringBuffer(100);
-
-    buff.append("RegistryException: "+getMessage()+"\n");
-    buff.append(" SOAPFault Actor: "+getFaultActor()+"\n");
-    buff.append(" SOAPFault Code: "+getFaultCode()+"\n");
-    buff.append(" SOAPFault String: "+getFaultString()+"\n");
-
-    // pull the DispositionReport out if it's present
-    DispositionReport dispRpt = getDispositionReport();
-    if (dispRpt != null)
-    {
-      buff.append(" Operator: "+dispRpt.getOperator()+"\n");
-
-      Vector results = dispRpt.getResultVector();
-      if ((results != null) && (results.size() > 0))
-      {
-        for (int i=0; i<results.size(); i++)
-        {
-          Result result = (Result)results.elementAt(i);
-          buff.append(" >Errno: "+result.getErrno()+"\n");
-
-          ErrInfo errInfo = result.getErrInfo();
-          buff.append(" >Error Code: "+errInfo.getErrCode()+"\n");
-          buff.append(" >Error Info Text: "+errInfo.getErrMsg()+"\n");
-        }
-      }
-      else
-        buff.append("\n >[No Results were present]");
-    }
+    String msg = getMessage();
+    if (msg == null)
+      return "";
     else
-      buff.append("\n [A DispositionReport was not present]");
-
-    return buff.toString();
+      return getMessage();
+  }
+  
+  private static final String buildMessage(int errno,String msg)
+  {
+    StringBuffer buffer = new StringBuffer();
+    
+    String errCode = Result.lookupErrCode(errno);
+    if (errCode != null)
+    {
+      buffer.append(errCode);
+      buffer.append(" ");
+    }
+    
+    buffer.append("(");
+    buffer.append(errno);
+    buffer.append(") ");
+    
+    String errText = Result.lookupErrText(errno);
+    if (errText != null)
+    {
+      buffer.append(errText);
+      buffer.append(" ");
+    }
+    
+    if ((msg != null) && (msg.trim().length() > 0))
+    {
+      buffer.append(msg);
+    }
+    
+    return buffer.toString();
   }
 
-
+  
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/
   /***************************************************************************/
@@ -211,6 +248,57 @@ public class RegistryException extends Exception implements RegistryObject
   public static void main(String[] args)
     throws RegistryException
   {
-    throw new UnsupportedException("Additional error information.");
+    System.out.println(new AccountLimitExceededException("Additional error information.")); 
+    System.out.println(new AssertionNotFoundException("Additional error information.")); 
+    System.out.println(new AuthTokenExpiredException("Additional error information.")); 
+    System.out.println(new AuthTokenRequiredException("Additional error information."));     
+    System.out.println(new BusyException("Additional error information.")); 
+    System.out.println(new CategorizationNotAllowedException("Additional error information.")); 
+    System.out.println(new FatalErrorException("Additional error information.")); 
+    System.out.println(new InvalidCategoryException("Additional error information.")); 
+    System.out.println(new InvalidCompletionStatusException("Additional error information.")); 
+    System.out.println(new InvalidKeyPassedException("Additional error information.")); 
+    System.out.println(new InvalidProjectionException("Additional error information.")); 
+    System.out.println(new InvalidTimeException("Additional error information.")); 
+    System.out.println(new InvalidURLPassedException("Additional error information.")); 
+    System.out.println(new InvalidValueException("Additional error information.")); 
+    System.out.println(new KeyRetiredException("Additional error information.")); 
+    System.out.println(new LanguageErrorException("Additional error information.")); 
+    System.out.println(new MessageTooLargeException("Additional error information.")); 
+    System.out.println(new NameTooLongException("Additional error information.")); 
+    System.out.println(new OperatorMismatchException("Additional error information.")); 
+    System.out.println(new PublisherCancelledException("Additional error information.")); 
+    System.out.println(new RequestDeniedException("Additional error information.")); 
+    System.out.println(new RequestTimeoutException("Additional error information.")); 
+    System.out.println(new ResultSetTooLargeException("Additional error information.")); 
+    System.out.println(new SecretUnknownException("Additional error information.")); 
+    System.out.println(new TooManyOptionsException("Additional error information.")); 
+    System.out.println(new TransferAbortedException("Additional error information.")); 
+    System.out.println(new UnknownUserException("Additional error information.")); 
+    System.out.println(new UnknownUserException("Additional error information.")); 
+    System.out.println(new UnrecognizedVersionException("Additional error information.")); 
+    System.out.println(new UnsupportedException("Additional error information.")); 
+    System.out.println(new UnvalidatableException("Additional error information.")); 
+    System.out.println(new UserMismatchException("Additional error information.")); 
+    System.out.println(new ValueNotAllowedException("Additional error information.")); 
+ 
+    System.out.println("\n----- RegistryException(String) -----");
+    
+    System.out.println(new RegistryException((String)null));
+    System.out.println(new RegistryException("Additional error information."));
+    
+    System.out.println("\n----- RegistryException(Exception) -----");
+    
+    System.out.println(new RegistryException((Exception)null));
+    System.out.println(new RegistryException((Exception)new Exception("Additional error information.")));
+    System.out.println(new RegistryException((Exception)new RegistryException("Additional error information.")));
+    System.out.println(new RegistryException((Exception)new UnknownUserException("Additional error information.")));
+    
+    System.out.println("\n----- RegistryException(FaultCode,errno,String) -----");
+    
+    System.out.println(new RegistryException(null,-1,null));
+    System.out.println(new RegistryException("Server",-1,null));
+    System.out.println(new RegistryException("Server",Result.E_BUSY,null));
+    System.out.println(new RegistryException("Server",Result.E_BUSY,"Additional error information."));
   }
 }

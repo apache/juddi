@@ -17,13 +17,7 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import org.apache.juddi.datatype.Address;
-import org.apache.juddi.datatype.AddressLine;
-import org.apache.juddi.datatype.Description;
-import org.apache.juddi.datatype.Email;
-import org.apache.juddi.datatype.Phone;
 import org.apache.juddi.datatype.RegistryObject;
-import org.apache.juddi.datatype.business.Contact;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -49,22 +43,32 @@ public class RegistryExceptionHandler extends AbstractHandler
 
   public RegistryObject unmarshal(Element element)
   {
-    RegistryException obj = new RegistryException();
     Vector nodeList = null;
     AbstractHandler handler = null;
 
+    // Attributes
+    // {none}
+
+    // Text Node Value
+    // {none}
+
+    // Child Elements
+    String fCode = null;
     nodeList = XMLUtils.getChildElementsByTagName(element,"faultcode");
     if (nodeList.size() > 0)
-      obj.setFaultCode(XMLUtils.getText((Element)nodeList.elementAt(0)));
+      fCode = XMLUtils.getText((Element)nodeList.elementAt(0));
 
+    String fString = null;
     nodeList = XMLUtils.getChildElementsByTagName(element,"faultstring");
     if (nodeList.size() > 0)
-      obj.setFaultString(XMLUtils.getText((Element)nodeList.elementAt(0)));
+      fString = XMLUtils.getText((Element)nodeList.elementAt(0));
 
+    String fActor = null;
     nodeList = XMLUtils.getChildElementsByTagName(element,"faultactor");
     if (nodeList.size() > 0)
-      obj.setFaultActor(XMLUtils.getText((Element)nodeList.elementAt(0)));
+      fActor = XMLUtils.getText((Element)nodeList.elementAt(0));
 
+    DispositionReport dispRpt = null;
     nodeList = XMLUtils.getChildElementsByTagName(element,"detail");
     if (nodeList.size() > 0)
     {
@@ -72,10 +76,13 @@ public class RegistryExceptionHandler extends AbstractHandler
       if (nodeList.size() > 0)
       {
         handler = maker.lookup(DispositionReportHandler.TAG_NAME);
-        obj.setDispositionReport((DispositionReport)handler.unmarshal((Element)nodeList.elementAt(0)));
+        dispRpt = ((DispositionReport)handler.unmarshal((Element)nodeList.elementAt(0)));
       }
     }
 
+    // Create RegistryException instance and return
+    RegistryException obj = new RegistryException(fCode,fString,fActor,dispRpt); 
+    
     return obj;
   }
 
@@ -139,25 +146,12 @@ public class RegistryExceptionHandler extends AbstractHandler
     Element parent = XMLUtils.newRootElement();
     Element child = null;
 
-    Address address = new Address();
-    address.setUseType("myAddressUseType");
-    address.setSortCode("sortThis");
-    address.setTModelKey(null);
-    address.addAddressLine(new AddressLine("AddressLine1","keyNameAttr","keyValueAttr"));
-    address.addAddressLine(new AddressLine("AddressLine2"));
-
-    Contact contact = new Contact();
-    //contact.setUseType("myAddressUseType");
-    contact.setPersonNameValue("Bob Whatever");
-    contact.addDescription(new Description("Bob is a big fat jerk"));
-    contact.addDescription(new Description("obBay sIay a igBay atFay erkJay","es"));
-    contact.addEmail(new Email("bob@whatever.com"));
-    contact.addPhone(new Phone("(603)559-1901"));
-    contact.addAddress(address);
+    RegistryException regex = 
+        new org.apache.juddi.error.AuthTokenRequiredException("Test Exception");
 
     System.out.println();
 
-    RegistryObject regObject = contact;
+    RegistryObject regObject = regex;
     handler.marshal(regObject,parent);
     child = (Element)parent.getFirstChild();
     parent.removeChild(child);

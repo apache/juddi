@@ -330,7 +330,7 @@ public class RegistryServlet extends HttpServlet
       // UDDI DispositionReport values
       String errno = null;
       String errCode = null;
-      String errMsg = null;
+      String errText = null;
       
       // All RegistryException and subclasses of RegistryException
       // should contain values for populating a SOAP Fault as well
@@ -373,7 +373,7 @@ public class RegistryServlet extends HttpServlet
             if (errInfo != null)
             {
               errCode = errInfo.getErrCode();  // UDDI ErrInfo errCode
-              errMsg = errInfo.getErrMsg();  // UDDI ErrInfo errMsg
+              errText = errInfo.getErrMsg();  // UDDI ErrInfo errMsg
             }
           }
         }
@@ -398,9 +398,10 @@ public class RegistryServlet extends HttpServlet
         // FatalError DispositionReport within the message from the 
         // SAX parsing problem in the SOAP Fault anyway.
         
-        errno = String.valueOf(Result.E_FATAL_ERROR_NMBR);
-        errCode = Result.E_FATAL_ERROR_CODE;
-        errMsg = ex.getMessage();
+        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
+        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errCode = "E_fatalError";
+        errText = ex.getMessage();
       }
       else // anything else
       {
@@ -427,11 +428,12 @@ public class RegistryServlet extends HttpServlet
         // subclass) but we're going to be friendly and include a
         // FatalError DispositionReport within the SOAP Fault anyway.
         
-        errno = String.valueOf(Result.E_FATAL_ERROR_NMBR);
-        errCode = Result.E_FATAL_ERROR_CODE;
-        errMsg = "An internal UDDI server error has " +
-                 "occurred. Please report this error " +
-                 "to the UDDI server administrator.";
+        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
+        errno = String.valueOf(Result.E_FATAL_ERROR);
+        errCode = "E_fatalError";
+        errText = "An internal UDDI server error has " +
+                  "occurred. Please report this error " +
+                  "to the UDDI server administrator.";
       }
       
       // We should have everything we need to assemble 
@@ -459,7 +461,7 @@ public class RegistryServlet extends HttpServlet
         
         SOAPElement errInfo = result.addChildElement("errInfo");
         errInfo.setAttribute("errCode",errCode);
-        errInfo.setValue(errMsg);
+        errInfo.setValue(errText);
       } 
       catch (Exception e) { // if we end up in here it's just NOT good.
         log.error("A serious error has occured while assembling the SOAP Fault.",e);

@@ -26,21 +26,6 @@ public class AuthTokenExpiredException extends RegistryException
 {
   public AuthTokenExpiredException(String msg)
   {
-    super(Result.E_AUTH_TOKEN_EXPIRED_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_AUTH_TOKEN_EXPIRED_MSG;
-
-    Result result = new Result(
-      Result.E_AUTH_TOKEN_EXPIRED,
-      Result.E_AUTH_TOKEN_EXPIRED_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_AUTH_TOKEN_EXPIRED,msg);
   }
 }

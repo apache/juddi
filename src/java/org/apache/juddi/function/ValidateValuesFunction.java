@@ -76,14 +76,20 @@ public class ValidateValuesFunction extends AbstractFunction
     if ((tModelVector != null) && (tModelVector.size() > 0))
       validateTModelVector(tModelVector);
 
-    // We don't currently support teh validate_values
+    // We don't currently support thh validate_values
     // function so to keep things moving along let's 
     // just return a successful DispositionReport.
     
+    // We didn't encounter any problems so let's create an
+    // E_SUCCESS Result, embed it in a DispositionReport
+    // and return it.
+    Result result = new Result(Result.E_SUCCESS);
+    result.setErrCode(Result.lookupErrCode(Result.E_SUCCESS));    
     DispositionReport dispRpt = new DispositionReport();
     dispRpt.setGeneric(generic);
     dispRpt.setOperator(Config.getOperator());
-    dispRpt.addResult(new Result(Result.E_SUCCESS));
+    dispRpt.addResult(result);
+    
     return dispRpt;
   }
 

@@ -26,21 +26,6 @@ public class ValueNotAllowedException extends RegistryException
 {
   public ValueNotAllowedException(String msg)
   {
-    super(Result.E_VALUE_NOT_ALLOWED_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_VALUE_NOT_ALLOWED_MSG;
-
-    Result result = new Result(
-      Result.E_VALUE_NOT_ALLOWED,
-      Result.E_VALUE_NOT_ALLOWED_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_VALUE_NOT_ALLOWED,msg);
   }
 }

@@ -226,7 +226,7 @@ public class AxisProcessor
       String faultActor = null;      
       String errno = null;
       String errCode = null;
-      String errMsg = null;
+      String errText = null;
       
       // All RegistryException and subclasses of RegistryException
       // should contain values for populating a SOAP Fault as well
@@ -265,7 +265,7 @@ public class AxisProcessor
             if (errInfo != null)
             {
               errCode = errInfo.getErrCode();  // UDDI DispositionReport errCode
-              errMsg = errInfo.getErrMsg();  // UDDI DispositionReport errMsg
+              errText = errInfo.getErrMsg();  // UDDI DispositionReport errMsg
             }
           }
         }
@@ -282,11 +282,12 @@ public class AxisProcessor
         faultString = ex.getMessage();
         faultActor = null;
           
+        // TODO Must lookup 'errCode' and pull 'errMsg' from the MessageBundle.
         errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = Result.E_FATAL_ERROR_CODE;
-        errMsg = "An internal UDDI server error has " +
-                 "occurred. Please report this error " +
-                 "to the UDDI server administrator.";
+        errCode = "E_fatalError";
+        errText = "An internal UDDI server error has " +
+                  "occurred. Please report this error " +
+                  "to the UDDI server administrator.";
       }
             
       // We should have everything we need to assemble 
@@ -311,7 +312,7 @@ public class AxisProcessor
         
         SOAPElement errInfo = result.addChildElement("errInfo");
         errInfo.setAttribute("errCode",errCode);
-        errInfo.setValue(errMsg);
+        errInfo.setValue(errText);
       } 
       catch (Exception e) { 
         e.printStackTrace(); 

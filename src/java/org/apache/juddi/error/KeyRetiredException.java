@@ -28,21 +28,6 @@ public class KeyRetiredException extends RegistryException
 {
   public KeyRetiredException(String msg)
   {
-    super(Result.E_KEY_RETIRED_CODE+": "+msg);
-
-    // grab the locale specific error
-    // message from the ResourceBundle
-
-    String errMsg = Result.E_KEY_RETIRED_MSG;
-
-    Result result = new Result(
-      Result.E_KEY_RETIRED,
-      Result.E_KEY_RETIRED_CODE,
-      errMsg);
-
-    this.setFaultActor("");
-    this.setFaultCode("Client");
-    this.setFaultString("Client Error");
-    this.addResult(result);
+    super("Client",Result.E_KEY_RETIRED,msg);
   }
 }

@@ -26,11 +26,6 @@ public class RequestTimeoutException extends RegistryException
 {
   public RequestTimeoutException(String msg)
   {
-    super(
-        "Client",                         // SOAP faultCode
-        Result.E_REQUEST_TIMEOUT_NMBR,    // UDDI errno
-        Result.E_REQUEST_TIMEOUT_CODE,    // UDDI errInfo errCode
-        Result.E_REQUEST_TIMEOUT_TEXT,    // UDDI errInfo text
-        msg);
+    super("Client",Result.E_REQUEST_TIMEOUT,msg);
   }
 }
