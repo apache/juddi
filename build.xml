@@ -67,7 +67,8 @@ Copyright:
     <property name="src.dir"             value="${basedir}/src"/>
     <property name="java.dir"            value="${basedir}/src/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
-    <property name="webapps.dir"         value="${basedir}/webapps"/>
+    <property name="webapp.dir"          value="${basedir}/webapp"/>
+  	<property name="webapps.dir"         value="${basedir}/webapps"/>
     <property name="build.dir"           value="${basedir}/build"/>
     <property name="classes.dir"         value="${build.dir}/classes"/>
     <property name="docs.dir"            value="${build.dir}/docs"/>
@@ -177,45 +178,28 @@ Copyright:
   <target name="war" depends="jar">
     <mkdir dir="${build.dir}"/>
     <!-- Assemble juddi.war file -->
-    <war warfile="${build.dir}/${war.file}" webxml="${conf.dir}/web.xml">
-      <fileset dir="${webapps.dir}/juddi">
+  	<war warfile="${build.dir}/${war.file}" webxml="${webapp.dir}/WEB-INF/web.xml">
+      <fileset dir="${webapp.dir}">
         <include name="**"/>
+        <exclude name="WEB-INF/web.xml"/>
+        <exclude name="WEB-INF/classes/**"/>
       </fileset>
-      <webinf dir="${conf.dir}">
-        <include name="server-config.wsdd"/>
-        <include name="jonas-web.xml"/>
-        <include name="jboss-web.xml"/>
-        <include name="juddi.properties"/>
-        <include name="juddi-users.xml"/>
-      </webinf>
-      <classes dir="${conf.dir}">
-        <include name="log4j.properties"/>
-      </classes>
-      <lib dir="${lib.dir}">
-        <include name="axis.jar"/>
-        <include name="commons-collections.jar"/>
-        <include name="commons-dbcp.jar"/>
-        <include name="commons-discovery.jar"/>
-        <include name="commons-logging.jar"/>
-        <include name="commons-pool.jar"/>
-        <include name="jaxrpc.jar"/>
-        <include name="log4j-1.2.8.jar"/>
-        <include name="saaj.jar"/>
-        <include name="wsdl4j.jar"/>
-      </lib>
       <lib dir="${build.dir}">
         <include name="${jar.file}"/>
       </lib>
-    </war>
+      <classes dir="${java.dir}">
+        <include name="log4j.properties"/>
+      </classes>
+  	</war>
     <!-- Explode the juddi.war file -->
-    <mkdir dir="${build.dir}/webapps/juddi"/>
+  	<mkdir dir="${build.dir}/webapps/juddi"/>
     <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapps/juddi" overwrite="true"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Enterprise Application (juddi.ear)                  -->
   <!-- =================================================================== -->
   <target name="ear" depends="war">
-    <ear earfile="${build.dir}/${ear.file}" appxml="${conf.dir}/application.xml">
+    <ear earfile="${build.dir}/${ear.file}" appxml="${basedir}/application.xml">
       <fileset dir="${build.dir}" includes="${war.file}"/>
     </ear>
   </target>
