@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
-<module name="juddi" fullname="juddi">
+<module name="ws-juddi" fullname="ws-juddi">
 
-    <url href="http://www.juddi.org"/>
+    <url href="http://incubator.apache.org/ws-juddi"/>
 
-    <site hostname="juddi.sourceforge.net"
-      remotedir="/home/groups/j/ju/juddi/htdocs/juddi"/>
+    <site hostname="incubator.apache.org"
+      remotedir="/home/cvspublic/ws-juddi"/>
 
-    <cvs repository="sourceforge"
+    <cvs repository="apache.org"
       host-prefix="cvs"
-      dir="juddi"
-      module="juddi"
-      cvsweb="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/*checkout*/juddi/juddi/"/>
+      dir="ws-juddi"
+      module="ws-juddi"
+      cvsweb="http://cvs.apache.org/viewcvs.cgi/*checkout*/ws-juddi/"/>
      
     <description>
-      juddi -- UDDI Toolkit/Repository
+      jUDDI -- UDDI Toolkit/Repository
     </description>
 
     <detailed>
-      juddi
+      jUDDI
     </detailed>
 
     <what>
@@ -28,7 +28,7 @@
       Excellent shareware UDDI support is required, that's why...
     </why>
 
-    <vendor>juddi.org</vendor>
+    <vendor>ASF WS</vendor>
 
     <licence legal="./legal">
       To Be Completed...  For detailed legal and licensing issues, please read the LICENSE.* files in the /legal directory.
@@ -38,7 +38,7 @@
       <credit>This software includes software developed by the Apache Software Foundation(http://www.apache.org/).</credit>
     </credits>
 
-    <project name="juddi" fullname="juddi">
+    <project name="ws-juddi" fullname="ws-juddi">
 
         <version major="0"
             minor="7"
@@ -65,7 +65,7 @@
         <option project="junit"/>
         <option project="checkstyle"/>
 
-        <jar name="juddi-@@DATE@@.jar"/>
+        <jar name="juddi.jar"/>
 
         <ant basedir="." buildfile="build.xml" target="gump" vm="1.4">
           <property name="ant.home" project="ant" reference="home" />
@@ -73,11 +73,11 @@
         </ant>
 
          <nag to="juddi-dev@ws.apache.org"
-           from="Anou Manavalan &lt;anou@apache.org&gt;"/>
+           from="Anou Manavalan &lt;anou_mana@apache.org&gt;"/>
               
     </project>
     
-    <project name="juddi-test" fullname="juddi-test">
+    <project name="ws-juddi-test" fullname="ws-juddi-test">
 
         <version 
           major="0"
@@ -92,7 +92,7 @@
         <home nested="build"/>
         <code type="test/junit" dir="src/test/unit"/>
 
-        <depend project="juddi" inherit="all"/>
+        <depend project="ws-juddi" inherit="all"/>
         <depend project="uddi4j"/>
         <depend project="junit"/>
 
@@ -102,7 +102,7 @@
 
          <nag 
            to="juddi-dev@ws.apache.org"
-           from="Anou Manavalan &lt;anou@trysybase.com&gt;"/>
+           from="Anou Manavalan &lt;anou_mana@apache.org&gt;"/>
            
     </project>
 </module>
