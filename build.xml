@@ -211,7 +211,7 @@ Copyright:
     </copy>
 
     <!-- start the jUDDI webapp -->
-    <echo message="starting the Axis webapp" />
+    <echo message="starting the jUDDI webapp" />
     <get
       src="${tomcat.url}/manager/start?path=/juddi"
       dest="${build.dir}/deploy.start.log"
