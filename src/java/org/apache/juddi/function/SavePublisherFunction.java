@@ -68,6 +68,11 @@ public class SavePublisherFunction extends AbstractFunction
       Publisher publisher = getPublisher(authInfo,dataStore);
       String publisherID = publisher.getPublisherID();
 
+      // Only a user with administrative access can create new publishers
+      if (!dataStore.isAdministrator(publisherID))
+        throw new RegistryException("Invalid Operation, You must have " +
+          "administrative priveledges to create a new publisher account.");
+      
       // validate request parameters
       for (int i=0; i<publisherVector.size(); i++)
       {
