@@ -183,7 +183,7 @@ class EmailTable
       {
         Email email = new Email();
         email.setUseType(resultSet.getString(1));//("USE_TYPE"));
-        email.setValue(resultSet.getString(1));//("EMAIL_ADDRESS"));
+        email.setValue(resultSet.getString(2));//("EMAIL_ADDRESS"));
         emailList.add(email);
       }
 
