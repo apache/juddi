@@ -54,14 +54,17 @@ public class RegistryProxy extends AbstractRegistry
   private static final String PROPFILE_NAME = "juddi.properties";
   
   // jUDDI Proxy Property Names
-  public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "juddi.proxy.inquiryURL";
-  public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "juddi.proxy.publishURL";
-  public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "juddi.proxy.adminURL";    
-  public static final String TRANSPORT_CLASS_PROPERTY_NAME = "juddi.proxy.transportClass";
-  public static final String SECURITY_PROVIDER_PROPERTY_NAME = "juddi.proxy.securityProvider";
-  public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "juddi.proxy.protocolHandler";
-  public static final String UDDI_VERSION_PROPERTY_NAME = "juddi.proxy.uddiVersion";
-  public static final String UDDI_NAMESPACE_PROPERTY_NAME = "juddi.proxy.uddiNamespace";
+  public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.inquiryURL";
+  public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.publishURL";
+  public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "net.viens.uddi.proxy.adminURL";    
+  public static final String TRANSPORT_CLASS_PROPERTY_NAME = "net.viens.uddi.proxy.transportClass";
+  public static final String SECURITY_PROVIDER_PROPERTY_NAME = "net.viens.uddi.proxy.securityProvider";
+  public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "net.viens.uddi.proxy.protocolHandler";
+  public static final String UDDI_VERSION_PROPERTY_NAME = "net.viens.uddi.proxy.uddiVersion";
+  public static final String UDDI_NAMESPACE_PROPERTY_NAME = "net.viens.uddi.proxy.uddiNamespace";
+  public static final String HTTP_PROXY_SET_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxySet";
+  public static final String HTTP_PROXY_HOST_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxyHost";
+  public static final String HTTP_PROXY_PORT_PROPERTY_NAME = "net.viens.uddi.proxy.httpProxyPort";
 
   // jUDDI Proxy Default Property Values
   public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
@@ -72,6 +75,9 @@ public class RegistryProxy extends AbstractRegistry
   public static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
   public static final String DEFAULT_UDDI_VERSION = "2.0";
   public static final String DEFAULT_UDDI_NAMESPACE = "urn:uddi-org:api_v2";
+  public static final String DEFAULT_HTTP_PROXY_SET = "false";
+  public static final String DEFAULT_HTTP_PROXY_HOST = null;
+  public static final String DEFAULT_HTTP_PROXY_PORT = "0";
   
   // jUDDI Proxy Properties
   private URL inquiryURL;
@@ -82,6 +88,9 @@ public class RegistryProxy extends AbstractRegistry
   private String protocolHandler;
   private String uddiVersion;
   private String uddiNamespace;
+  private boolean httpProxySet;
+  private String httpProxyHost;
+  private int httpProxyPort;
   
   /**
    * Create a new instance of RegistryProxy.  This constructor
@@ -159,12 +168,6 @@ public class RegistryProxy extends AbstractRegistry
     catch(MalformedURLException muex) {
       muex.printStackTrace();
     } 
-
-    String transClass = props.getProperty(TRANSPORT_CLASS_PROPERTY_NAME);
-    if (transClass != null)
-      this.setTransport(this.getTransport(transClass));
-    else
-    	this.setTransport(this.getTransport(DEFAULT_TRANSPORT_CLASS));
             
     String secProvider = props.getProperty(SECURITY_PROVIDER_PROPERTY_NAME);
     if (secProvider != null)
@@ -189,6 +192,30 @@ public class RegistryProxy extends AbstractRegistry
       this.setUddiNamespace(uddiNS);
     else
       this.setUddiNamespace(DEFAULT_UDDI_NAMESPACE);
+
+    String proxySet = props.getProperty(HTTP_PROXY_SET_PROPERTY_NAME);
+    if (proxySet != null)
+      this.setHttpProxySet(Boolean.getBoolean(proxySet));
+    else
+    	this.setHttpProxySet(Boolean.getBoolean(DEFAULT_HTTP_PROXY_SET));
+    	
+    String proxyHost = props.getProperty(HTTP_PROXY_HOST_PROPERTY_NAME);
+    if (proxyHost != null)
+      this.setHttpProxyHost(proxyHost);
+    else
+      this.setHttpProxyHost(DEFAULT_HTTP_PROXY_HOST);
+  
+    String proxyPort = props.getProperty(HTTP_PROXY_PORT_PROPERTY_NAME);
+    if (proxyPort != null)
+      this.setHttpProxyPort(Integer.parseInt(proxyPort));
+    else
+      this.setHttpProxyPort(Integer.parseInt(DEFAULT_HTTP_PROXY_PORT));
+
+    String transClass = props.getProperty(TRANSPORT_CLASS_PROPERTY_NAME);
+    if (transClass != null)
+      this.setTransport(this.getTransport(transClass));
+    else
+    	this.setTransport(this.getTransport(DEFAULT_TRANSPORT_CLASS));
   }
    
    /**
@@ -320,6 +347,54 @@ public class RegistryProxy extends AbstractRegistry
   }
   
   /**
+   * @return Returns the httpProxySet.
+   */
+  public boolean isHttpProxySet() 
+  {
+  	return httpProxySet;
+  }
+  
+  /**
+   * @param httpProxySet The httpProxySet to set.
+   */
+  public void setHttpProxySet(boolean httpProxySet) 
+  {
+  	this.httpProxySet = httpProxySet;
+  }
+
+  /**
+   * @return Returns the httpProxyHost.
+   */
+  public String getHttpProxyHost() 
+  {
+  	return httpProxyHost;
+  }
+  
+  /**
+   * @param httpProxyHost The httpProxyHost to set.
+   */
+  public void setHttpProxyHost(String httpProxyHost) 
+  {
+  	this.httpProxyHost = httpProxyHost;
+  }
+  
+  /**
+   * @return Returns the httpProxyPort.
+   */
+  public int getHttpProxyPort() 
+  {
+  	return httpProxyPort;
+  }
+  
+  /**
+   * @param httpProxyPort The httpProxyPort to set.
+   */
+  public void setHttpProxyPort(int httpProxyPort) 
+  {
+  	this.httpProxyPort = httpProxyPort;
+  }
+
+  /**
    *
    */
   public RegistryObject execute(RegistryObject uddiRequest)
@@ -365,7 +440,7 @@ public class RegistryProxy extends AbstractRegistry
     // A SOAP request is made and a SOAP response
     // is returned.
 
-    Element response = transport.send(request,endPointURL);
+    Element response = transport.send(request,endPointURL,httpProxySet,httpProxyHost,httpProxyPort);
 
     // First, let's make sure that a response
     // (any response) is found in the SOAP Body.
@@ -452,22 +527,38 @@ public class RegistryProxy extends AbstractRegistry
   public static void main(String[] args)
     throws RegistryException
   {
-    // Option #1 (grabs properties from juddi.properties file)
+    // Option #1 (grab proxy property values from uddi.properties in classpath)
     //IRegistry registry = new RegistryProxy();
     
-    // Option #2 (provides properties in Properties instance)
+    // Option #2 (import proxy property values from a specified properties file)
+  	//Properties props = new Properties();
+  	//props.load(new FileInputStream("proxy.properties"));
+  	//IRegistry registry = new RegistryProxy(props);
+  	
+    // Option #3 (explicitly set the proxy property values)
+    //Properties props = new Properties();
+    //props.setProperty(ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/uddi/admin");
+    //props.setProperty(INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/uddi/inquiry");
+    //props.setProperty(PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/uddi/publish");
+    //props.setProperty(TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
+    //props.setProperty(SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+    //props.setProperty(PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");    
+    //IRegistry registry = new RegistryProxy(props);
+
+    // Option #4 (Microsoft Test Site)
     Properties props = new Properties();
-    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
-    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
-    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
-    props.setProperty(RegistryProxy.TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
-    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
-    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
+    props.setProperty(INQUIRY_ENDPOINT_PROPERTY_NAME,"http://test.uddi.microsoft.com/inquire");
+    props.setProperty(PUBLISH_ENDPOINT_PROPERTY_NAME,"https://test.uddi.microsoft.com/publish");
+    props.setProperty(TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
+    props.setProperty(SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+    props.setProperty(PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
+    props.setProperty(HTTP_PROXY_HOST_PROPERTY_NAME,"na6v13a01.fmr.com");
+    props.setProperty(HTTP_PROXY_PORT_PROPERTY_NAME,"8000");
     IRegistry registry = new RegistryProxy(props);
     
     AuthToken authToken = registry.getAuthToken("sviens","password");
     AuthInfo authInfo = authToken.getAuthInfo();
 
-    System.out.println("AuthToken: "+authInfo.getValue());
+    System.out.println(authInfo.getValue());
   }
 }

@@ -27,4 +27,7 @@ public interface Transport
 {
   Element send(Element request,URL endPointURL)
     throws RegistryException;
+
+  Element send(Element request,URL endPointURL,boolean proxySet,String proxyHost,int proxyPort)
+    throws RegistryException;
 }

@@ -67,7 +67,7 @@ public interface IRegistry
    *
    * @exception RegistryException
    */
-  BindingDetail findBinding(String serviceKey,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
+  BindingDetail findBinding(String serviceKey,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException;
 
   /**
@@ -111,7 +111,25 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
+  BindingDetail getBindingDetail(String bindingKey)
+    throws RegistryException;
+
+  /**
+   * "Used to get full bindingTemplate information suitable for make one
+   *  or more service requests. Returns a bindingDetail message."
+   *
+   * @exception RegistryException;
+   */
   BindingDetail getBindingDetail(Vector bindingKeys)
+    throws RegistryException;
+
+  /**
+   * "Used to get the full businessEntity information for one or more
+   *  businesses. Returns a businessDetail message."
+   *
+   * @exception RegistryException;
+   */
+  BusinessDetail getBusinessDetail(String businessKey)
     throws RegistryException;
 
   /**
@@ -129,6 +147,15 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
+  BusinessDetailExt getBusinessDetailExt(String businessKey)
+    throws RegistryException;
+
+  /**
+   * "Used to get extended businessEntity information. Returns a
+   *  businessDetailExt message."
+   *
+   * @exception RegistryException;
+   */
   BusinessDetailExt getBusinessDetailExt(Vector businessKeyVector)
     throws RegistryException;
   
@@ -138,9 +165,27 @@ public interface IRegistry
    *
    * @exception RegistryException;
    */
+  ServiceDetail getServiceDetail(String serviceKey)
+    throws RegistryException;
+
+  /**
+   * "Used to get full details for a given set of registered
+   *  businessService data. Returns a serviceDetail message."
+   *
+   * @exception RegistryException;
+   */
   ServiceDetail getServiceDetail(Vector serviceKeyVector)
     throws RegistryException;
   
+  /**
+   * "Used to get full details for a given set of registered tModel
+   *  data. Returns a tModelDetail message."
+   *
+   * @exception RegistryException;
+   */
+  TModelDetail getTModelDetail(String tModelKey)
+    throws RegistryException;
+
   /**
    * "Used to get full details for a given set of registered tModel
    *  data. Returns a tModelDetail message."

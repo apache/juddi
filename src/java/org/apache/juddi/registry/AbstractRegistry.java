@@ -207,11 +207,12 @@ public abstract class AbstractRegistry implements IRegistry
    *
    * @exception RegistryException
    */
-  public BindingDetail findBinding(String serviceKey,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
+  public BindingDetail findBinding(String serviceKey,CategoryBag categoryBag,TModelBag tModelBag,FindQualifiers findQualifiers,int maxRows)
     throws RegistryException
   {
     FindBinding request = new FindBinding();
     request.setServiceKey(serviceKey);
+    request.setCategoryBag(categoryBag);
     request.setTModelBag(tModelBag);
     request.setFindQualifiers(findQualifiers);
     request.setMaxRows(maxRows);
@@ -342,6 +343,21 @@ public abstract class AbstractRegistry implements IRegistry
   }
 
   /**
+   * Used to get full bindingTemplate information suitable for a
+   * particular business service. Returns a bindingDetail message.
+   *
+   * @exception RegistryException;
+   */
+  public BindingDetail getBindingDetail(String bindingKey)
+    throws RegistryException
+  {
+  	Vector keys = new Vector(1);
+  	keys.addElement(bindingKey);
+  	
+  	return getBindingDetail(keys);
+  }
+
+  /**
    * "Used to get full bindingTemplate information suitable for make one
    *  or more service requests. Returns a bindingDetail message."
    *
@@ -357,6 +373,21 @@ public abstract class AbstractRegistry implements IRegistry
   }
 
   /**
+   * Used to get the full businessEntity information for a 
+   * particular business entity. Returns a businessDetail message.
+   *
+   * @exception RegistryException;
+   */
+  public BusinessDetail getBusinessDetail(String businessKey)
+    throws RegistryException
+  {
+  	Vector keys = new Vector(1);
+  	keys.addElement(businessKey);
+
+    return getBusinessDetail(keys);
+  }
+
+  /**
    * "Used to get the full businessEntity information for one or more
    *  businesses. Returns a businessDetail message."
    *
@@ -369,6 +400,21 @@ public abstract class AbstractRegistry implements IRegistry
     request.setBusinessKeyVector(businessKeyVector);
 
     return (BusinessDetail)execute(request);
+  }
+
+  /**
+   * "Used to get extended businessEntity information. Returns a
+   *  businessDetailExt message."
+   *
+   * @exception RegistryException;
+   */
+  public BusinessDetailExt getBusinessDetailExt(String businessKey)
+    throws RegistryException
+  {
+  	Vector keys = new Vector(1);
+  	keys.addElement(businessKey);
+
+    return getBusinessDetailExt(keys);
   }
 
   /**
@@ -426,6 +472,21 @@ public abstract class AbstractRegistry implements IRegistry
   }
 
   /**
+   * "Used to get full details for a particular registered
+   *  businessService. Returns a serviceDetail message."
+   *
+   * @exception RegistryException;
+   */
+  public ServiceDetail getServiceDetail(String serviceKey)
+    throws RegistryException
+  {
+  	Vector keys = new Vector(1);
+  	keys.addElement(serviceKey);
+
+    return getServiceDetail(keys);
+  }
+
+  /**
    * "Used to get full details for a given set of registered
    *  businessService data. Returns a serviceDetail message."
    *
@@ -438,6 +499,21 @@ public abstract class AbstractRegistry implements IRegistry
     request.setServiceKeyVector(serviceKeyVector);
 
     return (ServiceDetail)execute(request);
+  }
+
+  /**
+   * "Used to get full details for a particular registered 
+   *  TModel. Returns a tModelDetail message."
+   *
+   * @exception RegistryException;
+   */
+  public TModelDetail getTModelDetail(String tModelKey)
+    throws RegistryException
+  {
+  	Vector keys = new Vector(1);
+  	keys.addElement(tModelKey);
+
+    return getTModelDetail(keys);
   }
 
   /**

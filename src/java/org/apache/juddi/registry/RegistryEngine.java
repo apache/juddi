@@ -36,37 +36,37 @@ import org.apache.juddi.util.Loader;
  */
 public class RegistryEngine extends AbstractRegistry
 {
-  // jUDDI Registry Property File Name
+  // Registry Property File Name
   private static final String PROPFILE_NAME = "juddi.properties";
   
-  // jUDDI Registry Property Names
-  public static final String PROPNAME_OPERATOR = "juddi.operatorName";
+  // Registry Property Names
+  public static final String PROPNAME_OPERATOR_NAME = "juddi.operatorName";
+  public static final String PROPNAME_OPERATOR_URL = "juddi.operatorURL";
   public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
   public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLength";    
-  public static final String PROPNAME_OPERATOR_SITE_URL = "juddi.operatorSiteURL";
-  public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress";
-  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize";
+  public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress"; // unused
+  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize"; // unused
   public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
   public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.datastore";
   public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
   public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
 
-  // jUDDI Registry Default Property Values
-  public static final String DEFAULT_OPERATOR = "jUDDI.org";
+  // Registry Default Property Values
+  public static final String DEFAULT_OPERATOR_NAME = "Viens.net";
+  public static final String DEFAULT_OPERATOR_URL = "http://localhost:8080/uddi/";
   public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
   public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
-  public static final String DEFAULT_OPERATOR_SITE_URL = "http://localhost/juddi";
-  public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "admin@juddi.org";
-  public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152;
+  public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "uddi@viens.net"; // unused
+  public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152; // unused
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
-  public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
+  public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.JDBCDataStore";
   public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
   public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
 
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(RegistryEngine.class);
 
-  // jUDDI Function maker
+  // Function maker
   private FunctionMaker maker = null;
 
   // registry status
@@ -122,7 +122,7 @@ public class RegistryEngine extends AbstractRegistry
   {
     // Turn off registry access
     isAvailable = false;
-    
+
     // Grab a reference to the function
     // registry (hmm bad name choice).
     this.maker = new FunctionMaker(this);
@@ -181,14 +181,13 @@ public class RegistryEngine extends AbstractRegistry
     
     // Option #2 (provides properties in Properties instance)
     Properties props = new Properties();
-    props.setProperty(RegistryEngine.PROPNAME_OPERATOR,"jUDDI.org");
+    props.setProperty(RegistryEngine.PROPNAME_OPERATOR_NAME,"jUDDI.org");
     props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,"5");
     props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,"255");
-    props.setProperty(RegistryEngine.PROPNAME_OPERATOR_SITE_URL,"http://localhost/juddi");
+    props.setProperty(RegistryEngine.PROPNAME_OPERATOR_URL,"http://localhost/juddi");
     props.setProperty(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,"admin@juddi.org");    
     props.setProperty(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,"2097152");
     props.setProperty(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,"org.apache.juddi.auth.DefaultAuthenticator");
-    props.setProperty(RegistryEngine.PROPNAME_DATASTORE_CLASS_NAME,"org.apache.juddi.datastore.jdbc.JDBCDataStore");
     props.setProperty(RegistryEngine.PROPNAME_CRYPTOR_CLASS_NAME,"org.apache.juddi.cryptor.DefaultCryptor");
     props.setProperty(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,"org.apache.juddi.uuidgen.DefaultUUIDGen");
     
