@@ -15,6 +15,8 @@
  */
 package org.apache.juddi.proxy;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -33,6 +35,7 @@ import org.apache.juddi.registry.AbstractRegistry;
 import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.transport.Transport;
 import org.apache.juddi.transport.TransportFactory;
+import org.apache.juddi.util.Loader;
 import org.apache.juddi.util.xml.XMLUtils;
 
 import org.w3c.dom.Document;
@@ -51,6 +54,9 @@ public class RegistryProxy extends AbstractRegistry
 
   // jUDDI SOAP Transport
   private static Transport transport = TransportFactory.getTransport();
+  
+  // jUDDI Proxy Property File Name
+  private static final String PROPFILE_NAME = "juddi.properties";
   
   // Default Properties
   private static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
@@ -82,8 +88,17 @@ public class RegistryProxy extends AbstractRegistry
     // attempt to load proxy properties from
     // the juddi.properties file which should
     // be located in the classpath. 
-    Properties props = null;
-    
+    Properties props = new Properties();
+
+    try {
+      InputStream stream = Loader.getResourceAsStream(PROPFILE_NAME);
+      if (stream != null)
+        props.load(stream);
+    }
+    catch (IOException ioex) {
+    	ioex.printStackTrace();
+    }
+
     this.init(props);
   }
 
