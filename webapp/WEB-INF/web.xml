@@ -6,9 +6,9 @@
 
 <web-app>
 
-  <display-name>juddi</display-name>
+  <display-name>jUDDI</display-name>
   <description>
-    testuddi is Java-based implmementation of a UDDI version 2.0 registry.
+    jUDDI is Java-based implmementation of a UDDI version 2.0 registry.
   </description>
 
   <!--
