@@ -27,9 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
@@ -46,6 +46,7 @@ import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.util.Config;
+import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -97,8 +98,8 @@ public class RegistryServlet extends HttpServlet
         propFile = DEFAULT_PROPERTY_FILE;
       
       InputStream is = 
-      	getServletContext().getResourceAsStream(propFile);
-    	
+        getServletContext().getResourceAsStream(propFile);
+        
       if (is != null)
       {
         log.info("Resources loaded from: "+propFile);
@@ -112,11 +113,11 @@ public class RegistryServlet extends HttpServlet
       else
       {
         log.warn("Could not locate jUDDI properties '" + propFile + 
-        		"'. Using defaults.");
+                "'. Using defaults.");
 
         // A juddi.properties file doesn't exist
         // yet so create create a new Properties 
-      	// instance using default property values.
+        // instance using default property values.
         
         props.put(RegistryEngine.PROPNAME_OPERATOR_NAME,
                   RegistryEngine.DEFAULT_OPERATOR_NAME);
@@ -206,6 +207,8 @@ public class RegistryServlet extends HttpServlet
   public void doPost(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
+    res.setContentType("text/xml; charset=utf-8");
+      
     SOAPMessage soapReq = null;
     SOAPMessage soapRes = null;
     String generic = null; // TODO (Steve) References to generic should be renamed to "UDDI Version or UDDI Namespace"
@@ -278,6 +281,7 @@ public class RegistryServlet extends HttpServlet
       // results to the body of the SOAP response.
         
       responseHandler.marshal(uddiResObj,element);
+      log.debug(XMLUtils.toString((Element)element.getFirstChild()));
       
       // Grab a reference to the 'temp' element's
       // only child here (this has the effect of
@@ -288,44 +292,48 @@ public class RegistryServlet extends HttpServlet
       soapRes.getSOAPBody().addDocument(document);
     } 
     catch (RegistryException ex) {             
-      log.error(ex);
-    
-      try {
-        SOAPEnvelope envelope = soapRes.getSOAPPart().getEnvelope();
-        SOAPBody body = envelope.getBody(); 
-        SOAPFault soapFault = body.addFault();
-        soapFault.setFaultActor(ex.getFaultActor());
-        soapFault.setFaultCode(ex.getFaultCode());
-        soapFault.setFaultString(ex.getFaultString());
+        log.error(ex);
+      
+        try {        
+          SOAPBody body = soapRes.getSOAPBody();
+          SOAPFault soapFault = body.addFault();
+          soapFault.setFaultActor((ex.getFaultActor() == null) ? "" : ex.getFaultActor());
+          soapFault.setFaultString((ex.getFaultString() == null) ? "" : ex.getFaultString());
+          soapFault.setFaultCode((ex.getFaultCode() == null) ? "" : ex.getFaultCode());
+          
+          // Store DispositionReport in the SOAP fault node.
+          DispositionReport dispRpt = ex.getDispositionReport();
+          if (dispRpt != null)
+          {          
+            dispRpt.setGeneric(generic);
+            dispRpt.setOperator(Config.getOperator());
 
-        // Store DispositionReport in the SOAP fault node.
-        DispositionReport dispRpt = ex.getDispositionReport();
-        if (dispRpt != null)
-        {
-          dispRpt.setGeneric(generic);
-          dispRpt.setOperator(Config.getOperator());
+            // Create a new 'temp' XML element to use as a container 
+            // in which to marshal the DispositionReport into.
+              
+            DocumentBuilder docBuilder = getDocumentBuilder();
+            Document document = docBuilder.newDocument();
+            Element dispRptElement = document.createElement("temp");
+
+            // Lookup the DispositionReportHandler and marshal 
+            // the juddi object into the appropriate xml format (we 
+            // only support UDDI v2.0 at this time).  Attach the
+            // results to the body of the SOAP fault.
+              
+            IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
+            dispRptHandler.marshal(dispRpt,dispRptElement);   
+            
+            // Create the SOAPFault Detail element and insert 
+            // the DispositionReport.
+            
+            Detail soapDetail = soapFault.addDetail();
+            soapDetail.appendChild(dispRptElement.getFirstChild());
+          }
         }
-                
-        // Create a new 'temp' XML element to use as a container 
-        // in which to marshal the DispositionReport into.
-          
-        DocumentBuilder docBuilder = getDocumentBuilder();
-        Document document = docBuilder.newDocument();
-        Element dispRptElement = document.createElement("temp");
-
-        // Lookup the DispositionReportHandler and marshal 
-        // the juddi object into the appropriate xml format (we 
-        // only support UDDI v2.0 at this time).  Attach the
-        // results to the body of the SOAP fault.
-          
-        IHandler dispRptHandler = maker.lookup(DispositionReport.class.getName());
-        dispRptHandler.marshal(dispRpt,dispRptElement);        
-        soapFault.addChildElement((SOAPElement)dispRptElement);
-      }
-      catch(SOAPException sex) {
-        log.error(sex);
-      }
-    } 
+        catch(SOAPException sex) {
+          log.error(sex);
+        }
+      } 
     catch (SOAPException ex) {             
       log.error(ex);
 
@@ -354,8 +362,6 @@ public class RegistryServlet extends HttpServlet
     }
     finally {
       try {               
-        res.setContentType("text/xml; charset=utf-8");
-
         //soapRes.writeTo(System.out);     
         soapRes.writeTo(res.getOutputStream());     
       }

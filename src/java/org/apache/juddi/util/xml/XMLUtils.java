@@ -15,23 +15,28 @@
  */
 package org.apache.juddi.util.xml;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.net.URL;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import org.jdom.input.DOMBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.apache.juddi.util.Loader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -100,12 +105,8 @@ public class XMLUtils
 
     try
     {
-      javax.xml.parsers.DocumentBuilderFactory factory =
-        javax.xml.parsers.DocumentBuilderFactory.newInstance();
-
-      javax.xml.parsers.DocumentBuilder builder =
-        factory.newDocumentBuilder();
-
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = factory.newDocumentBuilder();
       Document document = builder.newDocument();
       Element holder = document.createElement("root");
       document.appendChild(holder);
@@ -142,36 +143,95 @@ public class XMLUtils
 
   public static void writeXML(Element element,OutputStream stream)
   {
-      try {
-          DOMBuilder builder = new DOMBuilder();
-          Format format = org.jdom.output.Format.getPrettyFormat();
-          XMLOutputter outputter = new XMLOutputter(format);
-          outputter.output(builder.build(element),stream);        
-      }
-      catch(IOException ioex) {
-          ioex.printStackTrace();
-      }
+    try {
+      TransformerFactory xformerFactory = TransformerFactory.newInstance();
+      Transformer xformer = xformerFactory.newTransformer();
+      Result output = new StreamResult(stream);
+      DOMSource source = new DOMSource(element);
+      
+      // print the xml to the specified OutputStream
+      xformer.transform(source,output);
+    }
+    catch(Exception ex) {
+      ex.printStackTrace();
+    }
   }
-
-  public static void writeXML(Element element,Writer writer)
-  {
-      try {
-          DOMBuilder builder = new DOMBuilder();
-          Format format = org.jdom.output.Format.getPrettyFormat();
-          XMLOutputter outputter = new XMLOutputter(format);
-          outputter.output(builder.build(element),writer);        
-      }
-      catch(IOException ioex) {
-          ioex.printStackTrace();
-      }
-  }
-  
+    
   public static String toString(Element element)
   {
-    StringWriter writer = new StringWriter();
+      ByteArrayOutputStream stream = new ByteArrayOutputStream();      
+      writeXML(element,stream);
+      
+      return stream.toString();      
+  }
+  
+  public static void validate(URL xmlDocUrl) 
+  {    
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setValidating(true);    
+    factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage","http://www.w3.org/2001/XMLSchema");
+    factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",Loader.getResource("uddi_v2.xsd"));
+
+    try
+    {
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Validator handler = new Validator();
+        builder.setErrorHandler(handler); 
+        //builder.parse(xmlDocUrl);
     
-    writeXML(element,writer);
+        if ((handler.error) || (handler.warning))
+            System.out.println(handler.toString());
+    }
+    catch(ParserConfigurationException pcex) {
+        pcex.printStackTrace();
+    }
+  }
+}
+
+class Validator extends DefaultHandler
+{
+  public boolean warning = false;
+  public boolean error = false;  
+  public SAXParseException exception = null;
     
-    return writer.toString();    
-  } 
+  public void warning(SAXParseException spex) 
+      throws SAXException
+  {
+    warning = true;
+    exception = spex;        
+  }
+  
+  public void error(SAXParseException spex) 
+      throws SAXException
+  {
+    error = true;
+    exception = spex;        
+  }
+  
+  public void fatalError(SAXParseException spex) 
+      throws SAXException
+  {
+    error = true;
+    exception = spex;        
+  }
+  
+  public String toString()
+  {
+    StringBuffer buffer = new StringBuffer();
+    
+    if (exception != null)
+    {
+      buffer.append("Public ID: " + exception.getPublicId());
+      buffer.append("\n");
+      buffer.append("System ID: " + exception.getSystemId());
+      buffer.append("\n");
+      buffer.append("Line number: " + exception.getLineNumber());
+      buffer.append("\n");
+      buffer.append("Column number: " + exception.getColumnNumber());
+      buffer.append("\n");
+      buffer.append("Message: " + exception.getMessage());
+    }
+    
+    return buffer.toString();
+  }
 }
