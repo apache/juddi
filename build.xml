@@ -4,28 +4,26 @@
 Jakarta Ant build script for jUDDI
 
 Prerequisites:
-   jakarta-ant          from http://jakarta.apache.org/ant/
-   axis			        from http://ws.apache.org/axis/
-   commons-logging      from http://jakarta.apache.org/commons/logging.html
-   servlet              from http://jakarta.apache.org/tomcat/
-   jdbc-2.0-stdext      from http://jakarta.apache.org/tomcat/
-   log4j                from http://jakarta.apache.org/log4j
-
+  jakarta-ant          from http://jakarta.apache.org/ant/
+  axis			        from http://ws.apache.org/axis/
+  commons-logging      from http://jakarta.apache.org/commons/logging.html
+  servlet              from http://jakarta.apache.org/tomcat/
+  jdbc-2.0-stdext      from http://jakarta.apache.org/tomcat/
+  log4j                from http://jakarta.apache.org/log4j
 
 Optional components:
-   junit                from http://www.junit.org/
-   jce                  from http://java.sun.com/products/jce/
-   checkstyle           from http://checkstyle.sourceforge.net/
-   commons-collections  from http://jakarta.apache.org/commons/collections.html
-   commons-dbcp         from http://jakarta.apache.org/commons/dbcp/
-   commons-pool         from http://jakarta.apache.org/commons/pool/
+  junit                from http://www.junit.org/
+  jce                  from http://java.sun.com/products/jce/
+  checkstyle           from http://checkstyle.sourceforge.net/
+  commons-collections  from http://jakarta.apache.org/commons/collections.html
+  commons-dbcp         from http://jakarta.apache.org/commons/dbcp/
+  commons-pool         from http://jakarta.apache.org/commons/pool/
 
 Optional dependees:
-   krysalis-version     from http://www.krysalis.org/version
-
+  krysalis-version     from http://www.krysalis.org/version
 
 Most Useful Targets:
- - compile   Compiles and jars all Java classes
+ - compile   Compiles and jars all Java classes (default)
  - jar       Builds the jUDDI library (juddi.jar)
  - javadoc   Builds JavaDoc
  - test      tests everything via JUnit
@@ -37,13 +35,11 @@ Most Useful Targets:
  - all       builds everything
  - clean     cleans everything
 
-
 Author:
- Steve Viens <sviens@apache.org>
-
+  Steve Viens <sviens@apache.org>
 
 Copyright:
-  Copyright (c) 2003 Apache Software Foundation.
+  Copyright (c) 2004 Apache Software Foundation.
 
    $Id$
 
