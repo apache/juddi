@@ -13,6 +13,7 @@ Prerequisites:
   log4j                from http://jakarta.apache.org/log4j
 
 Optional components:
+  jboss                from http://www.jboss.org/
   junit                from http://www.junit.org/
   jce                  from http://java.sun.com/products/jce/
   checkstyle           from http://checkstyle.sourceforge.net/
@@ -58,17 +59,17 @@ Copyright:
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
-  	<property name="war.file"            value="${name}.war"/>
+    <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
     <property name="sql.dir"             value="${basedir}/sql"/>
     <property name="site.dir"            value="${basedir}/site"/>
     <property name="src.dir"             value="${basedir}/src"/>
     <property name="java.dir"            value="${basedir}/src/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
-   	<property name="build.dir"           value="${basedir}/build"/>
+    <property name="build.dir"           value="${basedir}/build"/>
     <property name="webapp.dir"          value="${basedir}/webapp"/>
     <property name="lib.dir"             value="${basedir}/webapp/WEB-INF/lib"/>
-  	<property name="classes.dir"         value="${build.dir}/classes"/>
+    <property name="classes.dir"         value="${build.dir}/classes"/>
     <property name="docs.dir"            value="${build.dir}/docs"/>
     <property name="javadoc.dir"         value="${docs.dir}/apiDocs"/>
     <property name="dist.src.dir"        value="${build.dir}/dist-src"/>
@@ -91,64 +92,58 @@ Copyright:
         <include name="*.jar"/>
       </fileset>
     </path>
-  	  	
+
     <!-- classpath search to determine if JUnit tests should be run -->
     <condition property="junit.present" value="true">
       <available classname="junit.framework.TestCase" />
     </condition>
     <echo message="junit.present=${junit.present}" />
-  	
+
     <!-- classpath search to determine if CheckStyle should be run -->
     <condition property="checkstyle.present" value="true">
       <available classname="com.puppycrawl.tools.checkstyle.Main" />
     </condition>
-  	<echo message="checkstyle.present=${checkstyle.present}" />
-  	
+    <echo message="checkstyle.present=${checkstyle.present}" />
+
   </target>
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
   <target name="compile" depends="init">
-    <mkdir dir="${classes.dir}"/>	  	
-	
-  	<!-- Apache Log4J (log4j.jar) -->
-  	<available property="log4j.present"
+    <mkdir dir="${classes.dir}"/>
+
+    <!-- Apache Log4J (log4j.jar) -->
+    <available property="log4j.present"
       classname="org.apache.log4j.Category"
       classpathref="project.classpath"/>
     <echo message="log4j.present=${log4j.present}" />
-  	
-  	<!-- Java Servlet API (servlet-api.jar) -->
-  	<available property="servlet.present"
+
+    <!-- Java Servlet API (servlet-api.jar) -->
+    <available property="servlet.present"
       classname="javax.servlet.ServletException"
       classpathref="project.classpath"/>
-  	<echo message="servlet.present=${servlet.present}" />
-  	  	
-  	<!-- Java API for XML-Based RPC (jaxrpc.jar) -->
-  	<available property="jaxrpc.present"
+    <echo message="servlet.present=${servlet.present}" />
+
+    <!-- Java API for XML-Based RPC (jaxrpc.jar) -->
+    <available property="jaxrpc.present"
       classname="javax.xml.rpc.Service"
       classpathref="project.classpath"/>
-  	<echo message="jaxrpc.present=${jaxrpc.present}" />
-  	  	
-  	<!-- JBoss (jboss.jar) -->
-  	<available property="jboss.present"
+    <echo message="jaxrpc.present=${jaxrpc.present}" />
+
+    <!-- JBoss (jboss.jar) -->
+    <available property="jboss.present"
       classname="org.jboss.security.AuthenticationManager"
       classpathref="project.classpath"/>
-  	<echo message="jboss.present=${jboss.present}" />
-  	  	
-  	<!-- SOAP with Attachments API for Java (saaj.jar) -->
-  	<available property="saaj.present"
+    <echo message="jboss.present=${jboss.present}" />
+
+    <!-- SOAP with Attachments API for Java (saaj.jar) -->
+    <available property="saaj.present"
       classname="javax.xml.soap.SOAPEnvelope"
       classpathref="project.classpath"/>
-  	<echo message="saaj.present=${saaj.present}" />
-  		
-  	<!-- Libraries from Novell for LDAP implementation  -->
-  	<available property="novell.present"
-      classname="com.novell.ecb.Connection"
-      classpathref="project.classpath"/>
-  	<echo message="novell.present=${novell.present}" />
-  		
-  	<!-- Compile Java Source Code -->
-  	<javac
+    <echo message="saaj.present=${saaj.present}" />
+
+    <!-- Compile Java Source Code -->
+    <javac
         destdir="${classes.dir}"
         debug="${compile.debug}"
         deprecation="${compile.deprecation}"
@@ -156,7 +151,6 @@ Copyright:
       <classpath refid="project.classpath"/>
       <src path="${java.dir}"/>
       <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>
-      <exclude name="**/org/apache/juddi/ldap/**" unless="novell.present"/>    	    	
     </javac>
   </target>
   <!-- =================================================================== -->
@@ -175,7 +169,7 @@ Copyright:
   <target name="war" depends="jar">
     <mkdir dir="${build.dir}"/>
     <!-- Assemble juddi.war file -->
-  	<war warfile="${build.dir}/${war.file}" webxml="${webapp.dir}/WEB-INF/web.xml">
+    <war warfile="${build.dir}/${war.file}" webxml="${webapp.dir}/WEB-INF/web.xml">
       <fileset dir="${webapp.dir}">
         <include name="**"/>
         <exclude name="WEB-INF/web.xml"/>
@@ -187,9 +181,9 @@ Copyright:
       <classes dir="${java.dir}">
         <include name="log4j.properties"/>
       </classes>
-  	</war>
+     </war>
     <!-- Explode the juddi.war file -->
-  	<mkdir dir="${build.dir}/webapp/juddi"/>
+    <mkdir dir="${build.dir}/webapp/juddi"/>
     <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapp/juddi" overwrite="true"/>
   </target>
   <!-- =================================================================== -->
@@ -229,13 +223,13 @@ Copyright:
            org.apache.juddi.datatype.request,
            org.apache.juddi.datatype.response,
            org.apache.juddi.datatype.service,
-    	   org.apache.juddi.datatype.subscription,
+           org.apache.juddi.datatype.subscription,
            org.apache.juddi.datatype.tmodel,
            org.apache.juddi.error,
            org.apache.juddi.function,
            org.apache.juddi.handler,
            org.apache.juddi.monitor,
-    	   org.apache.juddi.proxy,
+           org.apache.juddi.proxy,
            org.apache.juddi.registry,
            org.apache.juddi.transport,
            org.apache.juddi.util,
@@ -243,7 +237,7 @@ Copyright:
            org.apache.juddi.util.xml,
            org.apache.juddi.uuidgen,
            org.apache.juddi.validator"
-    	author="true"
+        author="true"
         version="true"
         windowtitle="${title}"
         doctitle="${title}"
@@ -308,7 +302,7 @@ Copyright:
     <copy file="build.properties" todir="${dist.src.root}"/>
     <copy file="checkstyle.xml" todir="${dist.src.root}"/>
     <copy file="application.xml" todir="${dist.src.root}"/>
-  	<copy file="LICENSE" todir="${dist.src.root}"/>
+    <copy file="LICENSE" todir="${dist.src.root}"/>
     <copy file="README" todir="${dist.src.root}"/>
     <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.src.root}/site"><fileset dir="${site.dir}"/></copy>
@@ -318,15 +312,15 @@ Copyright:
 
     <!-- create the source ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}-src.zip" basedir="${dist.src.dir}"/>
-  	<checksum file="${build.dir}/juddi-${version}-src.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
-  	<echo file="${build.dir}/juddi-${version}-src.zip.MD5" message=" juddi-${version}-src.zip" append="true"/>
-  	
+        <checksum file="${build.dir}/juddi-${version}-src.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+        <echo file="${build.dir}/juddi-${version}-src.zip.MD5" message=" juddi-${version}-src.zip" append="true"/>
+
     <!-- create the source ".tar.gz" distribution and checksum (MD5) file -->
-  	<tar destfile="${build.dir}/juddi-${version}-src.tar" basedir="${dist.src.dir}"/>
+    <tar destfile="${build.dir}/juddi-${version}-src.tar" basedir="${dist.src.dir}"/>
     <gzip src="${build.dir}/juddi-${version}-src.tar" zipfile="${build.dir}/juddi-${version}-src.tar.gz"/>
-  	<delete file="${build.dir}/juddi-${version}-src.tar" verbose="false"/>
-  	<checksum file="${build.dir}/juddi-${version}-src.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
-  	<echo file="${build.dir}/juddi-${version}-src.tar.gz.MD5" message=" juddi-${version}-src.tar.gz" append="true"/>
+    <delete file="${build.dir}/juddi-${version}-src.tar" verbose="false"/>
+    <checksum file="${build.dir}/juddi-${version}-src.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+    <echo file="${build.dir}/juddi-${version}-src.tar.gz.MD5" message=" juddi-${version}-src.tar.gz" append="true"/>
   </target>
   <!-- =================================================================== -->
   <!-- Creates the binary distribution                                     -->
@@ -348,15 +342,15 @@ Copyright:
 
     <!-- create the binary ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}.zip" basedir="${dist.bin.dir}"/>
-  	<checksum file="${build.dir}/juddi-${version}.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
-  	<echo file="${build.dir}/juddi-${version}.zip.MD5" message=" juddi-${version}.zip" append="true"/>
-  	
+    <checksum file="${build.dir}/juddi-${version}.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+    <echo file="${build.dir}/juddi-${version}.zip.MD5" message=" juddi-${version}.zip" append="true"/>
+
     <!-- create the binary ".tar.gz" distribution and checksum (MD5) file -->
-  	<tar destfile="${build.dir}/juddi-${version}.tar" basedir="${dist.bin.dir}"/>
+    <tar destfile="${build.dir}/juddi-${version}.tar" basedir="${dist.bin.dir}"/>
     <gzip src="${build.dir}/juddi-${version}.tar" zipfile="${build.dir}/juddi-${version}.tar.gz"/>
     <delete file="${build.dir}/juddi-${version}.tar" verbose="false"/>
-  	<checksum file="${build.dir}/juddi-${version}.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
-  	<echo file="${build.dir}/juddi-${version}.tar.gz.MD5" message=" juddi-${version}.tar.gz" append="true"/>
+    <checksum file="${build.dir}/juddi-${version}.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+    <echo file="${build.dir}/juddi-${version}.tar.gz.MD5" message=" juddi-${version}.tar.gz" append="true"/>
   </target>
   <!-- =================================================================== -->
   <!-- Creates both binary and source distributions                        -->
@@ -370,7 +364,7 @@ Copyright:
   <!-- Invoked only by Gump (see http://gump.apache.org)                   -->
   <!-- =================================================================== -->
   <target name="gump" depends="clean,jar">
-  	<copy file="${build.dir}/${jar.file}" 
+    <copy file="${build.dir}/${jar.file}" 
       tofile="${build.dir}/${name}-${DATE_STAMP}.jar"/>
   </target>
   <!-- =================================================================== -->
@@ -393,6 +387,6 @@ Copyright:
   <!-- =================================================================== -->
   <target name="clean" depends="init">
     <delete dir="${build.dir}" verbose="false"/>
-    <ant antfile="site/build.xml" target="clean" inheritAll="false"/>  	
+    <ant antfile="site/build.xml" target="clean" inheritAll="false"/>
   </target>
 </project>
