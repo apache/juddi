@@ -15,6 +15,8 @@
  */
 package org.apache.juddi.registry;
 
+import java.util.Properties;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStoreFactory;
@@ -28,7 +30,7 @@ import org.apache.juddi.util.Config;
 /**
  * @author Steve Viens (sviens@apache.org)
  */
-public class RegistryEngine extends Registry
+public class RegistryEngine extends AbstractRegistry
 {
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(RegistryEngine.class);
@@ -43,10 +45,27 @@ public class RegistryEngine extends Registry
   private boolean isAvailable = false;
 
   /**
-   *
+   * Create a new instance of RegistryEngine.  This constructor
+   * looks in the classpath for a file named 'juddi.properties'
+   * and uses property values in this file to initialize the
+   * new instance. Default values are used if the file does not
+   * exist or if a particular property value is not present.
    */
   private RegistryEngine()
   {
+    super();
+  }
+
+  /**
+   * Creates a new instance of RegistryEngine. This constructor
+   * uses the property values passed in the Properties parameter
+   * to initialize the new RegistryProxy instance. Default values 
+   * are used if the file does not exist or if a particular 
+   * property value is not present.
+   */
+  private RegistryEngine(Properties props)
+  {
+    super();
   }
 
   /**

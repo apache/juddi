@@ -32,7 +32,7 @@ import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.monitor.Monitor;
 import org.apache.juddi.monitor.MonitorFactory;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -114,7 +114,7 @@ public class AxisProcessor
 
       generic = request.getAttribute("generic");
       if (generic == null)
-        generic = Registry.UDDI_V2_GENERIC;
+        generic = IRegistry.UDDI_V2_GENERIC;
 
       // lookup the appropriate xml handler, throw
       // an UnsupportedException if one could not be

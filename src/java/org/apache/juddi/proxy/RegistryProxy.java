@@ -15,10 +15,10 @@
  */
 package org.apache.juddi.proxy;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.Admin;
 import org.apache.juddi.datatype.request.AuthInfo;
@@ -29,79 +29,194 @@ import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
-import org.apache.juddi.registry.Registry;
+import org.apache.juddi.registry.AbstractRegistry;
+import org.apache.juddi.registry.IRegistry;
 import org.apache.juddi.transport.Transport;
 import org.apache.juddi.transport.TransportFactory;
-import org.apache.juddi.util.Config;
 import org.apache.juddi.util.xml.XMLUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Represents a vesion 2.0 UDDI registry and implements all
- * services as specified in the UDDI version 2.0 specification.
+ * Represents a version 2.0 UDDI registry and implements
+ * all services as specified in the v2.0 specification.
  *
  * @author Steve Viens (sviens@apache.org)
  */
-public class RegistryProxy extends Registry
+public class RegistryProxy extends AbstractRegistry
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(RegistryProxy.class);
-
   // jUDDI XML Handler maker
   private static HandlerMaker maker = HandlerMaker.getInstance();
 
   // jUDDI SOAP Transport
   private static Transport transport = TransportFactory.getTransport();
-
+  
+  // Default Properties
+  private static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
+  private static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
+  private static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
+  private static final String DEFAULT_SECURITY_PROVIDER = "com.sun.net.ssl.internal.ssl.Provider";
+  private static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
+  
+  // Registry Server End Points
+  private URL inquiryURL;
+  private URL publishURL;
+  private URL adminURL;
+  private String uddiVersion;
+  private String uddiNamespace;
+  
   /**
-   * Default constructor
+   * Create a new instance of RegistryProxy.  This constructor
+   * looks in the classpath for a file named 'juddi.properties'
+   * and uses property values in this file to initialize the
+   * new instance. Default values are used if the file does not
+   * exist or if a particular property value is not present.
    */
   public RegistryProxy()
   {
+    super();
+    
+    this.init(null);
   }
 
   /**
-   * "Used to request an authentication token from an Operator Site.
-   *  Authentication tokens are required to use all other APIs defined
-   *  in the publishers API.  This server serves as the program's
-   *  equivalent of a login request."
-   *
-   * @exception org.apache.juddi.error.RegistryException
+   * Creates a new instance of RegistryProxy. This constructor
+   * uses the property values passed in the Properties parameter
+   * to initialize the new RegistryProxy instance. Default values 
+   * are used if the file does not exist or if a particular 
+   * property value is not present.
    */
-  public AuthToken getAuthToken()
-    throws RegistryException
+  public RegistryProxy(Properties props)
   {
-    String userID = Config.getStringProperty("juddi.userID",null);
-    if ((userID == null) || (userID.trim().length() == 0))
-      throw new RegistryException("A juddi.userID property " +
-        "value was not found in the juddi.properties " +
-        "file: juddi.userID = "+userID);
-
-    String password = Config.getStringProperty("juddi.password",null);
-    if (password == null)
-      throw new RegistryException("A juddi.password property " +
-        "value was not found in the juddi.properties " +
-        "file: juddi.password = "+password);
-
-    return this.getAuthToken(userID,password);
+    super();
+    
+    this.init(props);
   }
 
   /**
-   *
+   * 
    */
-  public AuthToken getAuthToken(String userID,String password)
-    throws RegistryException
+  private void init(Properties props)
+  { 
+    // initialize proxy with default values
+    try {
+      this.setInquiryURL(new URL(DEFAULT_INQUIRY_ENDPOINT));
+      this.setPublishURL(new URL(DEFAULT_PUBLISH_ENDPOINT));
+      this.setAdminURL(new URL(DEFAULT_ADMIN_ENDPOINT));
+      this.setUddiVersion(IRegistry.UDDI_V2_GENERIC);
+      this.setUddiNamespace(IRegistry.UDDI_V2_NAMESPACE);
+    }
+    catch(MalformedURLException muex) {
+      muex.printStackTrace();
+    }
+    
+    // override defaults with specific specific values
+    try {
+      String iURL = props.getProperty("juddi.proxy.inquiryURL");
+      if (iURL != null)
+        this.setInquiryURL(new URL(iURL));
+        
+      String pURL = props.getProperty("juddi.proxy.publishURL");
+      if (pURL != null)
+        this.setPublishURL(new URL(pURL));
+    
+      String aURL = props.getProperty("juddi.proxy.adminURL");
+      if (aURL != null)
+        this.setAdminURL(new URL(aURL));
+    }
+    catch(MalformedURLException muex) {
+      muex.printStackTrace();
+    } 
+
+    String uddiVer = props.getProperty("juddi.proxy.uddiVersion");
+    if (uddiVer != null)
+      this.setUddiVersion(uddiVer);
+  
+    String uddiNS = props.getProperty("juddi.proxy.uddiNamespace");
+    if (uddiNS != null)
+      this.setUddiNamespace(uddiNS);
+  }
+   
+   /**
+   * @return Returns the adminURL.
+   */
+  public URL getAdminURL() 
   {
-    if ((userID == null) || (userID.trim().length() == 0))
-      throw new RegistryException("An invalid userID " +
-        "value was specified: userID = "+userID);
-
-    if (password == null)
-      throw new RegistryException("An invalid password " +
-        "value was specified: password = "+password);
-
-    return super.getAuthToken(userID,password);
+    return this.adminURL;
+  }
+  
+  /**
+   * @param adminURL The adminURL to set.
+   */
+  public void setAdminURL(URL url) 
+  {
+    this.adminURL = url;
+  }
+  
+  /**
+   * @return Returns the inquiryURL.
+   */
+  public URL getInquiryURL() 
+  {
+    return this.inquiryURL;
+  }
+  
+  /**
+   * @param inquiryURL The inquiryURL to set.
+   */
+  public void setInquiryURL(URL url) 
+  {
+    this.inquiryURL = url;
+  }
+  
+  /**
+   * @return Returns the publishURL.
+   */
+  public URL getPublishURL() 
+  {
+    return this.publishURL;
+  }
+  
+  /**
+   * @param publishURL The publishURL to set.
+   */
+  public void setPublishURL(URL url) 
+  {
+    this.publishURL = url;
+  }
+  
+  
+  /**
+   * @return Returns the uddiNS.
+   */
+  public String getUddiNamespace()
+  {
+    return uddiNamespace;
+  }
+  
+  /**
+   * @param uddiNS The uddiNS to set.
+   */
+  public void setUddiNamespace(String uddiNS)
+  {
+    this.uddiNamespace = uddiNS;
+  }
+  
+  /**
+   * @return Returns the uddiVersion.
+   */
+  public String getUddiVersion()
+  {
+    return uddiVersion;
+  }
+  
+  /**
+   * @param uddiVersion The uddiVersion to set.
+   */
+  public void setUddiVersion(String uddiVer) 
+  {
+    this.uddiVersion = uddiVer;
   }
 
   /**
@@ -116,11 +231,11 @@ public class RegistryProxy extends Registry
 
     URL endPointURL = null;
     if (uddiRequest instanceof Inquiry)
-      endPointURL = Config.getInquiryURL();
+      endPointURL = this.getInquiryURL();
     else if (uddiRequest instanceof Publish || uddiRequest instanceof SecurityPolicy)
-      endPointURL = Config.getPublishURL();
+      endPointURL = this.getPublishURL();
     else if (uddiRequest instanceof Admin)
-      endPointURL = Config.getAdminURL();
+      endPointURL = this.getAdminURL();
     else
       throw new RegistryException("Unsupported Request: The " +
         "request '"+uddiRequest.getClass().getName()+"' is an " +
@@ -144,8 +259,8 @@ public class RegistryProxy extends Registry
     requestHandler.marshal(uddiRequest,temp);
     Element request = (Element)temp.getFirstChild();
 
-    request.setAttribute("generic",Config.getStringProperty("juddi.clientGeneric",Registry.UDDI_V2_GENERIC));
-    request.setAttribute("xmlns",Config.getStringProperty("juddi.clientXMLNS",Registry.UDDI_V2_NAMESPACE));
+    request.setAttribute("generic",this.getUddiVersion());
+    request.setAttribute("xmlns",this.getUddiNamespace());
 
     // A SOAP request is made and a SOAP response
     // is returned.
@@ -192,7 +307,7 @@ public class RegistryProxy extends Registry
     return uddiResponse;
   }
 
-
+  
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/
   /***************************************************************************/
@@ -201,8 +316,15 @@ public class RegistryProxy extends Registry
   public static void main(String[] args)
     throws RegistryException
   {
-    RegistryProxy proxy = new RegistryProxy();
-    AuthToken authToken = proxy.getAuthToken("sviens","password");
+    Properties proxyProps = new Properties();
+    proxyProps.setProperty("1","one");
+    proxyProps.setProperty("2","two");
+    proxyProps.setProperty("3","three");
+    proxyProps.setProperty("4","four");
+    proxyProps.setProperty("5","five");    
+    
+    IRegistry registry = new RegistryProxy(proxyProps);    
+    AuthToken authToken = registry.getAuthToken("sviens","password");
     AuthInfo authInfo = authToken.getAuthInfo();
 
     System.out.println("AuthToken: "+authInfo.getValue());
