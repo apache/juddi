@@ -18,7 +18,6 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
-import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -31,33 +30,23 @@ public class GetAuthTokenSample
 
     String userID = "sviens";
     String password = "password";
-    AuthToken authToken = null;
-    AuthInfo authInfo = null;
 
     try
     {
-      System.out.println("get_authToken Sample #1");
-      System.out.println("-----------------------");
-      System.out.println("Using userID and password values pass as method parameters: ");
-      System.out.println("  userID: "+userID);
-      System.out.println("  password: "+password);
+      System.out.println("get_authToken Sample");
+      System.out.println("--------------------");
+      System.out.println("userID: "+userID);
+      System.out.println("password: "+password);
+      System.out.println("");
 
-      authToken = registry.getAuthToken(userID,password);
-      authInfo = authToken.getAuthInfo();
-      System.out.println("AuthToken: "+authInfo.getValue());
-      System.out.println();
-
-
-      System.out.println("get_authToken Sample #2");
-      System.out.println("-----------------------");
-      System.out.println("Using userID and password values from 'juddi.properties' file: ");
-      System.out.println("  juddi.userID: "+Config.getStringProperty("juddi.userID",null));
-      System.out.println("  juddi.password: "+Config.getStringProperty("juddi.password",null));
-
-      authToken = registry.getAuthToken(userID,password);
-      authInfo = authToken.getAuthInfo();
-      System.out.println("AuthToken: "+authInfo.getValue());
-      System.out.println();
+      for (int i=0; i<100; i++)
+      {
+        AuthToken authToken = registry.getAuthToken(userID,password);
+        AuthInfo authInfo = authToken.getAuthInfo();
+        System.out.println("AuthToken: "+authInfo.getValue());
+      }
+      
+      System.out.println("\ndone.");
     }
     catch(Exception ex)
     {
