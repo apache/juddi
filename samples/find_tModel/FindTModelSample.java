@@ -46,6 +46,14 @@ public class FindTModelSample
     props.setProperty("juddi.proxy.protocolHandler","com.sun.net.ssl.internal.www.protocol");    
     IRegistry registry = new RegistryProxy(props);
 
+    // Option #3 (Microsoft Test Site)
+    //Properties props = new Properties();
+    //props.setProperty("juddi.proxy.inquiryURL","http://test.uddi.microsoft.com/inquire");
+    //props.setProperty("juddi.proxy.publishURL","https://test.uddi.microsoft.com/publish");
+    //props.setProperty("juddi.proxy.securityProvider","com.sun.net.ssl.internal.ssl.Provider");
+    //props.setProperty("juddi.proxy.protocolHandler","com.sun.net.ssl.internal.www.protocol");    
+    //IRegistry registry = new RegistryProxy(props);
+
     try
     {
       System.out.println("find_tModel Sample");
