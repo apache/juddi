@@ -31,7 +31,7 @@ See http://forrest.apache.org/docs/linking.html for more info
     <install label="Installation Guide" href="install.html" description="Installation Guide"/>
     <usersguide label="User's Guide" href="usersguide.html" description="User's Guide"/>
     <devguide label="Developer's Guide" href="devguide.html" description="Developer's Guide"/>
-    <archguide label="How-To/Wiki" href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs" description="How-Tos"/>
+    <howto label="How-To/Wiki" href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs" description="How-Tos"/>
   </documentation>
 
   <downloads label="Downloads">
@@ -41,7 +41,8 @@ See http://forrest.apache.org/docs/linking.html for more info
   </downloads>
 
   <related label="Related Projects">
-    <axis label="Axis" href="http://ws.apache.org/axis/" description="Apache Axis"/>
+    <axis label="Apache Axis" href="http://ws.apache.org/axis/" description="Apache Axis"/>
+    <scout label="Apache Scout" href="http://ws.apache.org/scout/" description="Apache Scout"/>
     <uddi4j label="UDDI4J" href="http://www-124.ibm.com/developerworks/oss/uddi4j/" description="UDDI4J"/>
   </related>
 
