@@ -194,8 +194,8 @@ Copyright:
       </classes>
   	</war>
     <!-- Explode the juddi.war file -->
-  	<mkdir dir="${build.dir}/webapps/juddi"/>
-    <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapps/juddi" overwrite="true"/>
+  	<mkdir dir="${build.dir}/webapp/juddi"/>
+    <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapp/juddi" overwrite="true"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Enterprise Application (juddi.ear)                  -->
@@ -446,7 +446,7 @@ Copyright:
     <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
     <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.bin.root}/sql"><fileset dir="${sql.dir}"/></copy>
-    <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
+    <copy todir="${dist.bin.root}/webapp"><fileset dir="${build.dir}/webapp"/></copy>
 
     <!-- create the binary ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}-bin.zip" basedir="${dist.bin.dir}"/>
