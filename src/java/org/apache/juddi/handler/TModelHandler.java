@@ -107,14 +107,16 @@ public class TModelHandler extends AbstractHandler
     String tModelKey = tModel.getTModelKey();
     if (tModelKey != null)
       element.setAttribute("tModelKey",tModelKey);
-
-    String authName = tModel.getAuthorizedName();
-    if (authName != null)
-      element.setAttribute("authorizedName",authName);
+    else
+      element.setAttribute("tModelKey","");
 
     String operator = tModel.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
+
+    String authName = tModel.getAuthorizedName();
+    if (authName != null)
+      element.setAttribute("authorizedName",authName);
 
     String name = tModel.getName();
     if (name != null)
