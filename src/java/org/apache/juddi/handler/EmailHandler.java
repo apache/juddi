@@ -42,7 +42,6 @@ public class EmailHandler extends AbstractHandler
     Email obj = new Email();
 
     // Attributes
-    // Attributes
     String useType = element.getAttribute("useType");
     if ((useType != null) && (useType.trim().length() > 0))
       obj.setUseType(useType);
@@ -70,16 +69,5 @@ public class EmailHandler extends AbstractHandler
       element.appendChild(parent.getOwnerDocument().createTextNode(emailValue));
 
     parent.appendChild(element);
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String args[])
-    throws Exception
-  {
   }
 }
