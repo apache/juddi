@@ -31,7 +31,7 @@ See http://xml.apache.org/forrest/linking.html for more info
     <install label="Installation Guide" href="install.html" description="Installation Guide"/>
     <usersguide label="User's Guide" href="usersguide.html" description="User's Guide"/>
     <devguide label="Developer's Guide" href="devguide.html" description="Developer's Guide"/>
-    <archguide label="Architecture Guide" href="archguide.html" description="Architecture Guide"/>
+    <archguide label="How-Tos" href="http://wiki.apache.org/ws/jUDDI" description="How-Tos"/>
   </documentation>
 
   <downloads label="Downloads">
