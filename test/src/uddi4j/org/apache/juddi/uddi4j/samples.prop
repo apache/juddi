@@ -12,6 +12,7 @@
 # IBM UDDI test site
 inquiryURL=http://localhost:8080/juddi/inquiry
 publishURL=http://localhost:8080/juddi/publish
+adminURL=http://localhost:8080/juddi/admin
 
 # -----------------------------------------------------------------------
 # Userid to use when running the publish samples. Userid/passwords should
