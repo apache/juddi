@@ -179,7 +179,10 @@ Copyright:
         <include name="${jar.file}"/>
       </lib>
       <classes dir="${java.dir}">
-        <include name="log4j.properties"/>
+        <include name="log4j.dtd"/>
+        <include name="log4j.xml"/>
+        <include name="uddi_v2.xsd"/>
+        <include name="uddi_v3.xsd"/>
       </classes>
      </war>
     <!-- Explode the juddi.war file -->
@@ -211,8 +214,8 @@ Copyright:
     <mkdir dir="${javadoc.dir}"/>
     <javadoc sourcepath="${java.dir}" destdir="${javadoc.dir}"
         packagenames=
-          "org.apache.juddi.auth,
-           org.apache.juddi.client,
+          "org.apache.juddi,
+           org.apache.juddi.auth,
            org.apache.juddi.cryptor,
            org.apache.juddi.datastore,
            org.apache.juddi.datatype,
@@ -231,7 +234,6 @@ Copyright:
            org.apache.juddi.monitor,
            org.apache.juddi.proxy,
            org.apache.juddi.registry,
-           org.apache.juddi.transport,
            org.apache.juddi.util,
            org.apache.juddi.util.jdbc,
            org.apache.juddi.util.xml,
