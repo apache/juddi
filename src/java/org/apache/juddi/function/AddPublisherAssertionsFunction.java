@@ -90,7 +90,7 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
         // make sure we've got a 'fromKey'
         String fromKey = assertion.getFromKey();
         if ((fromKey == null) || (fromKey.length() == 0))
-          throw new InvalidKeyPassedException("fromKey: "+fromKey);
+          throw new InvalidKeyPassedException("fromKey="+fromKey);
 
         // make sure we've got a 'toKey'
         String toKey = assertion.getToKey();
