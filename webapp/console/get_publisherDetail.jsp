@@ -26,7 +26,7 @@ if (requestMessage != null) {
 <?xml version="1.0" encoding="utf-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
-    <get_publisherDetail generic="2.0" xmlns="urn:juddi-org:api_v2">
+    <get_publisherDetail generic="1.0" xmlns="urn:juddi-org:api_v1">
       <publisherID>***</publisherID>
     </get_publisherDetail>
   </soapenv:Body>

@@ -29,7 +29,7 @@ if (requestMessage != null) {
 <?xml version="1.0" encoding="utf-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
-    <delete_publisher generic="2.0" xmlns="urn:juddi-org:api_v2">
+    <delete_publisher generic="1.0" xmlns="urn:juddi-org:api_v1">
       <authInfo>*****</authInfo>
       <publisherID>*****</publisherID>
     </delete_publisher>
