@@ -446,14 +446,14 @@ Copyright:
     <copy file="LICENSE" todir="${dist.bin.root}"/>
     <copy file="README" todir="${dist.bin.root}"/>
     <copy file="release-notes.html" todir="${dist.bin.root}"/>
-    <copy file="${build.dir}/${jar.file}" todir="${dist.bin.root}/build"/>
-    <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}/build"/>
-    <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}/build"/>
+    <copy file="${build.dir}/${jar.file}" todir="${dist.bin.root}"/>
+    <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
+    <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
     <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.bin.root}/docs/dbscripts"><fileset dir="${dbscripts.dir}"/></copy>
     <copy todir="${dist.bin.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
     <copy todir="${dist.bin.root}/conf"><fileset dir="${conf.dir}"/></copy>
-    <copy todir="${dist.bin.root}/build/webapps"><fileset dir="${build.dir}/webapps"/></copy>
+    <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
 
     <!-- loading complete, now package the binary distribution up -->
     <zip destfile="${build.dir}/juddi_${version}_bin.zip" basedir="${dist.bin.dir}"/>
