@@ -158,10 +158,11 @@
 <p>
 <h3>Happy jUDDI!</h3>
 
-<h4>jUDDI Version &amp; Build Date</h4>
+<h4>jUDDI Version Information</h4>
 <pre>
-<b>Version:</b>    <%= org.apache.juddi.util.Release.getVersion() %>
-<b>Build Date:</b> <%= org.apache.juddi.util.Release.getLastModified() %>
+<b>jUDDI Version:</b> <%= org.apache.juddi.util.Release.getRegistryVersion() %>
+<b>Build Date:</b>    <%= org.apache.juddi.util.Release.getLastModified() %>
+<b>UDDI Version:</b>  <%= org.apache.juddi.util.Release.getUDDIVersion() %>
 </pre>
         
 <h4>jUDDI Dependencies: Class Files &amp; Libraries</h4>
