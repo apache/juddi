@@ -23,7 +23,7 @@
           <ul>
             <li><link href="lists.html">Join Mailing Lists</link></li>
             <li><link href="releases.html">Download Binary Builds</link></li>
-            <li><link href="bugs.html">Report bugs/Request additional features</link></li>
+            <li><link href="issues.html">Report Bugs &amp; Request New Features</link></li>
           </ul>
         </p>
       </section>
@@ -50,7 +50,7 @@
         <title>Getting Support on the Lists</title>
         <p>We do all development and bug fixing on the latest available code base.
           If you've encountered what you think is a bug, please first check the
-          <link href="bugs.html">bug database</link> for known issues. If you
+          <link href="issues.html">issues database</link> for known issues. If you
           can't find your bug, make sure you're using the latest code base. We are
           not able to fix bugs on earlier code bases.
         </p>

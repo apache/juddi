@@ -17,19 +17,17 @@ See http://forrest.apache.org/docs/linking.html for more info
 <site label="jUDDI" href="" tab="" xmlns="http://apache.org/forrest/linkmap/1.0">
 
   <juddi label="jUDDI">
-    <welcome label="About jUDDI" href="index.html" description="Overview &amp; News"/>
-    <faq label="FAQ/Wiki" href="http://wiki.apache.org/ws/jUDDI_20FAQs" description="FAQ"/>
+    <welcome label="Overview" href="index.html" description="Overview &amp; News"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
+    <issues label="Issue Tracking" href="issues.html" description="Issue Tracking"/>
     <participate label="Participation" href="participate.html" description="Participation"/>
-    <reference label="Reference Library" href="library.html" description="Reference Library"/>
-    <bugs label="Bugs" href="bugs.html" description="Bug Tracking"/>
   </juddi>
 
   <documentation label="Documentation">
     <usersguide label="User's Guide" href="usersguide.html" description="User's Guide"/>
-    <devguide label="Developer's Guide" href="devguide.html" description="Developer's Guide"/>
-    <howto label="How-To/Wiki" href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs" description="How-Tos"/>
+    <wiki label="Wiki (FAQ &amp; How-Tos)" href="http://wiki.apache.org/ws/jUDDI" description="FAQ &amp; How-Tos"/>
+    <reference label="Reference Library" href="library.html" description="Reference Library"/>
   </documentation>
 
   <downloads label="Downloads">
@@ -46,9 +44,7 @@ See http://forrest.apache.org/docs/linking.html for more info
   <related label="Misc">
     <who label="Who We Are" href="who.html" description="Who We Are"/>
     <committer label="Committer Notes" href="committers.html" description="Committer Notes"/>
-    <contact label="Contact" href="contact.html" description="Contact Us"/>
     <legal label="Legal" href="legal.html" description="Legal Stuff"/>
-    <whole label="Whole Site" href="site.html" description="Whole Site"/>
   </related>
 
   <external-refs>

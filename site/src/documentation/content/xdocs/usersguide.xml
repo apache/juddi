@@ -18,7 +18,7 @@
         or servlet engine will vary on a product-by-product basis.
       </p>
       <p>Instructions for deploying jUDDI to several application servers have
-        been donated and are available in the <link href="http://wiki.apache.org/ws/jUDDI_20HOW_2dTOs">HOW-TO</link>
+        been donated and are available in the <link href="http://wiki.apache.org/ws/jUDDI">HOW-TO</link>
         section of the jUDDI wiki.
       </p>
       <p>jUDDI also requires an external datastore in which to persist the 
@@ -49,8 +49,8 @@
       </p>
       <p>Several public Java interfaces for creating your own DataStore,
         Authenticator and UUIDGen module implementations are available. Please
-        see the <link href="/devguide.html">jUDDI Developer's Guide</link> for
-        more information regarding jUDDI module development.
+        see the <link href="#moddev">module development</link> section of this 
+        guide for more information regarding jUDDI module development.
       </p>
     </section>
 
@@ -172,6 +172,13 @@
        runtime. One Log4j property value that you'll most likely want to set
        is log4j.appender.LOGFILE.File which specifies the name and location of
        the jUDDI log file.
+      </p>
+    </section>
+
+    <anchor id="moddev"/>
+    <section>
+      <title>Module Development</title>
+      <p>Coming Soon.
       </p>
     </section>
 
