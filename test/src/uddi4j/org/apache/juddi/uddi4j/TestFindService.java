@@ -39,7 +39,7 @@ import org.uddi4j.util.*;
 
 
 
-class TestFindService extends UDDITestBase
+public class TestFindService extends UDDITestBase
 {
   private static final String ANIMAL_PROTOCOL_NAME="animal_protocol";
   private static final String ANIMAL_BUSINESS = "animal_business";
@@ -51,7 +51,13 @@ class TestFindService extends UDDITestBase
   protected BusinessEntity _animalBusinessEntity = null;
   protected boolean initOK=false;
 
-  private boolean publish_animalProtocol() {
+
+  public void testCases() {
+    _testInit();
+  }
+
+
+  private boolean _publish_animalProtocol() {
     boolean ret = false;
     TModel animal_tModel = new TModel();
     animal_tModel.setName(ANIMAL_PROTOCOL_NAME);
@@ -79,28 +85,29 @@ class TestFindService extends UDDITestBase
     return ret;
   }
 
-  private CategoryBag createCategoryBag() {
+  private CategoryBag _createCategoryBag() {
     CategoryBag catBag = new CategoryBag();
     KeyedReference kr = new KeyedReference(TModel.NAICS_TMODEL_KEY, "<FAKE NAICS NUMBER>");
     catBag.add(kr);
     return catBag;
   }
 
-  private IdentifierBag createIdentifierBag() {
+  private IdentifierBag _createIdentifierBag() {
     IdentifierBag idBag = new IdentifierBag();
     KeyedReference kr = new KeyedReference(TModel.D_U_N_S_TMODEL_KEY , "<FAKE DUNS KEY>");
     idBag.add(kr);
     return idBag;
   }
 
-  private boolean publish_animalBusiness() {
+  private boolean _publish_animalBusiness() {
     boolean ret = false;
     java.util.Vector entities = new Vector();
     BusinessEntity be = new BusinessEntity("", ANIMAL_BUSINESS);
-    IdentifierBag idBag = createIdentifierBag();
+    IdentifierBag idBag = _createIdentifierBag();
     be.setIdentifierBag(idBag);
-    CategoryBag catBag = createCategoryBag();
+    CategoryBag catBag = _createCategoryBag();
     be.setCategoryBag(catBag);
+    entities.addElement(be);
     try {
       BusinessDetail businessDetail = proxy.save_business(token.getAuthInfoString(), entities);
       Vector businessEntities = businessDetail.getBusinessEntityVector();
@@ -120,20 +127,20 @@ class TestFindService extends UDDITestBase
     return ret;
   }
 
-  private AccessPoint createAccessPoint(String url) {
+  private AccessPoint _createAccessPoint(String url) {
    AccessPoint animalAccessPoint = new AccessPoint();
    animalAccessPoint.setURLType("http");
    animalAccessPoint.setText(url);
    return animalAccessPoint;
  }
 
-  private boolean publish_animalService(){
+  private boolean _publish_animalService(){
     boolean ret = false;
     BusinessService busService = new BusinessService();
     busService.setBusinessKey(_animalBusinessEntity.getBusinessKey());
     Name name = new Name(ANIMAL_BUSINESS_SERVICE);
     busService.setDefaultName(name);
-    CategoryBag catBag = createCategoryBag();
+    CategoryBag catBag = _createCategoryBag();
     busService.setCategoryBag(catBag);
     BindingTemplate bindingTemplate = new BindingTemplate();
     TModelInstanceDetails tModelInstanceDetails = new TModelInstanceDetails();
@@ -150,7 +157,7 @@ class TestFindService extends UDDITestBase
      */
     TModelDetail tmodelDetail = null;
     try {
-      tmodelDetail = publishWSDL_tModel();
+      tmodelDetail = _publishWSDL_tModel();
     }
     catch (TransportException ex) {
       /**
@@ -177,7 +184,7 @@ class TestFindService extends UDDITestBase
     /**
      * The binding template needs an [ accessPoint | hostRedirector ]
      */
-    AccessPoint animalAccessPoint = createAccessPoint(ANIMAL_WSDL_URL.substring(0,ANIMAL_WSDL_URL.lastIndexOf("?")));
+    AccessPoint animalAccessPoint = _createAccessPoint(ANIMAL_WSDL_URL.substring(0,ANIMAL_WSDL_URL.lastIndexOf("?")));
     bindingTemplate.setAccessPoint(animalAccessPoint);
     BindingTemplates bindingTemplates = new BindingTemplates();
 
@@ -207,7 +214,7 @@ class TestFindService extends UDDITestBase
     return ret;
   }
 
-  private TModelDetail publishWSDL_tModel()
+  private TModelDetail _publishWSDL_tModel()
       throws TransportException, UDDIException
   {
     TModel animalWSDL_tModel = new TModel();
@@ -236,13 +243,13 @@ class TestFindService extends UDDITestBase
 
 
   public void setUp() {
-    if (!publish_animalProtocol()) {
+    if (!_publish_animalProtocol()) {
       return;
     }
-    if (!publish_animalBusiness()) {
+    if (!_publish_animalBusiness()) {
       return;
     }
-    if (!publish_animalService()) {
+    if (!_publish_animalService()) {
       return;
     }
     initOK = true;
@@ -251,7 +258,8 @@ class TestFindService extends UDDITestBase
   public void tearDown() {
   }
 
-  public void testCases() {
-  }
 
+  protected boolean _testInit() {
+    return initOK;
+  }
 }
