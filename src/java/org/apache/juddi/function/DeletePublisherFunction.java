@@ -74,6 +74,7 @@ public class DeletePublisherFunction extends AbstractFunction
       Publisher publisher = getPublisher(authInfo,dataStore);
       String publisherID = publisher.getPublisherID();
 
+      // Only a user with administrative access can delete publishers
       if (!dataStore.isAdministrator(publisherID))
         throw new RegistryException("Invalid Operation, You must have " +
           "administrative priveledges to delete a publisher account.");
