@@ -28,7 +28,7 @@
       BusinessDetail detail = registry.getBusinessDetail(key);
       if (detail != null)
       {
-    		Vector collection = detail.getBusinessEntityVector();
+    		java.util.Vector collection = detail.getBusinessEntityVector();
     		if ((collection != null) && (collection.size() > 0))
     			business = (BusinessEntity)collection.elementAt(0);
       }
@@ -45,7 +45,7 @@
     	ServiceDetail detail = registry.getServiceDetail(key);
     	if (detail != null)
     	{
-    		Vector collection = detail.getBusinessServiceVector();
+    		java.util.Vector collection = detail.getBusinessServiceVector();
     		if ((collection != null) && (collection.size() > 0))
     			service = (BusinessService)collection.elementAt(0);
     	}
@@ -62,7 +62,7 @@
     	BindingDetail detail = registry.getBindingDetail(key);
     	if (detail != null)
     	{
-    		Vector collection = detail.getBindingTemplateVector();
+    		java.util.Vector collection = detail.getBindingTemplateVector();
     		if ((collection != null) && (collection.size() > 0))
     			binding = (BindingTemplate)collection.elementAt(0);
     	}
@@ -79,7 +79,7 @@
     	TModelDetail detail = registry.getTModelDetail(key);
     	if (detail != null)
     	{
-    		Vector collection = detail.getTModelVector();
+    		java.util.Vector collection = detail.getTModelVector();
     		if ((collection != null) && (collection.size() > 0))
     			tModel = (TModel)collection.elementAt(0);
     	}
