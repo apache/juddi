@@ -28,7 +28,6 @@ Most Useful Targets:
  - javadoc   Builds JavaDoc
  - test      tests everything via JUnit
  - war       Builds the jUDDI Web Application (juddi.war)
- - deploy    Deploys (Redeploys) the jUDDI webapp (local Tomcat only)
  - ear       Builds the jUDDI Enterprise Application (juddi.ear)
  - binary    Builds the jUDDI binary distribution
  - source    Builds the jUDDI source distribution
@@ -159,63 +158,6 @@ Copyright:
     </war>
     <mkdir dir="${build.dir}/webapps/juddi"/>
     <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapps/juddi" overwrite="true"/>
-  </target>
-  <!-- =================================================================== -->
-  <!-- Deploys/Redeploys the jUDDI webapp (local Tomcat only)              -->
-  <!--                                                                     -->
-  <!-- The following properties are set in "build.properties". To          -->
-  <!-- use this target you'll need to set these property values to         -->
-  <!-- reflect you're own Tomcat installation:                             -->
-  <!--                                                                     -->
-  <!--   Property              Description                                 -->
-  <!--   ~~~~~~~~              ~~~~~~~~~~~                                 -->
-  <!--   tomcat.dir            Tomcat's home directory                     -->
-  <!--   tomcat.url            The URL to Tomcat's home page               -->
-  <!--   tomcat.mngr.username  Username to the Tomcat Manager webapp       -->
-  <!--   tomcat.mngr.password  Password to the Tomcat Manager webapp       -->
-  <!--                                                                     -->
-  <!-- =================================================================== -->
-  <target name="deploy" depends="war">
-
-    <!-- delete log files from previous 'deploy' attempts -->
-    <echo message="deleting log files from previous 'deploy' attempts" />
-    <delete file="${build.dir}/deploy.verify.log" />
-    <delete file="${build.dir}/deploy.stop.log" />
-    <delete file="${build.dir}/deploy.start.log" />
-
-    <!-- verify that Tomcat is running -->
-    <echo message="verify that Tomcat is running (and listening)" />
-    <get
-      src="${tomcat.url}"
-      dest="${build.dir}/deploy.verify.log" />
-
-    <!-- stop the jUDDI webapp -->
-    <echo message="stopping the jUDDI webapp" />
-    <get
-      src="${tomcat.url}/manager/stop?path=/juddi"
-      dest="${build.dir}/deploy.stop.log"
-      username="${tomcat.mngr.username}"
-      password="${tomcat.mngr.password}"
-      ignoreerrors="true" />
-
-    <!-- delete the currently deployed jUDDI webapp -->
-    <echo message="deleting current jUDDI webapp from Tomcat's webapp dir" />
-    <delete dir="${tomcat.dir}/webapps/juddi" verbose="false" />
-
-    <!-- copy the new jUDDI webapp dir into Tomcat's webapp dir -->
-    <echo message="copying new jUDDI webapp dir into Tomcat's webapp dir" />
-    <copy todir="${tomcat.dir}/webapps/juddi" overwrite="yes">
-      <fileset dir="${build.dir}/webapps/juddi" />
-    </copy>
-
-    <!-- start the jUDDI webapp -->
-    <echo message="starting the jUDDI webapp" />
-    <get
-      src="${tomcat.url}/manager/start?path=/juddi"
-      dest="${build.dir}/deploy.start.log"
-      username="${tomcat.mngr.username}"
-      password="${tomcat.mngr.password}" />
-
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Enterprise Application (juddi.ear)                  -->
