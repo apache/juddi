@@ -24,6 +24,11 @@
     </section>
       
     <section>
+      <title>UDDI Taxonomies</title>            
+      <p><b><link href="http://www.census.gov/epcd/www/naics.html">North American Industry Classification System (NAICS)</link></b><br/>U.S. Census Bureau</p>
+    </section>
+      
+    <section>
       <title>Articles, Tutorials and Best Practices</title>            
       <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-version/">Best practices for Web services versioning</link></b><br/>Keep your Web services current with WSDL and UDDI<br/>Kyle Brown and Michael Ellis, IBM developerWorks<br/>January 2004</p>      
       <p><b><link href="http://www.sys-con.com/webservices/article.cfm?id=663">Registering a Web Service in UDDI using the new WSDL mapping model</link></b><br/>Anne Thomas Manes, WebServices Journal<br/>October 2003</p>      
