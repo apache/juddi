@@ -100,16 +100,6 @@ Copyright:
       <available classname="com.puppycrawl.tools.checkstyle.Main" />
     </condition>
 
-    <!-- create start.time property in 'yyyyMMdd' format -->
-    <!--
-    <tstamp>
-      <format 
-      	property="start.time" 
-      	pattern="yyyyMMdd" 
-      	timezone="GMT" />
-    </tstamp>
-    -->
-  	
   </target>
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
