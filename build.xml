@@ -470,5 +470,6 @@ Copyright:
   <!-- =================================================================== -->
   <target name="clean" depends="init">
     <delete dir="${build.dir}" verbose="false"/>
+    <ant antfile="site/build.xml" target="clean" inheritAll="false"/>  	
   </target>
 </project>
