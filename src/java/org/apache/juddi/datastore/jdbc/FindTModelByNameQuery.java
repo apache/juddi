@@ -181,14 +181,24 @@ class FindTModelByNameQuery
     }
     else if (qualifiers.sortByNameAsc || qualifiers.sortByNameDesc)
     {
-      if (qualifiers.sortByNameAsc && qualifiers.sortByDateDesc)
-        sql.append("M.NAME ASC,M.LAST_UPDATE DESC");
-      else if (qualifiers.sortByNameAsc && qualifiers.sortByDateAsc)
-        sql.append("M.NAME ASC,M.LAST_UPDATE ASC");
-      else if (qualifiers.sortByNameDesc && qualifiers.sortByDateDesc)
-        sql.append("M.NAME DESC,M.LAST_UPDATE DESC");
+      if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc) 
+      {
+        if (qualifiers.sortByNameAsc && qualifiers.sortByDateDesc)
+          sql.append("M.NAME ASC,M.LAST_UPDATE DESC");
+        else if (qualifiers.sortByNameAsc && qualifiers.sortByDateAsc)
+          sql.append("M.NAME ASC,M.LAST_UPDATE ASC");
+        else if (qualifiers.sortByNameDesc && qualifiers.sortByDateDesc)
+          sql.append("M.NAME DESC,M.LAST_UPDATE DESC");
+        else
+          sql.append("M.NAME DESC,M.LAST_UPDATE ASC");
+      } 
       else
-        sql.append("M.NAME DESC,M.LAST_UPDATE ASC");
+      {
+        if (qualifiers.sortByNameAsc)
+          sql.append("M.NAME ASC,M.LAST_UPDATE DESC");
+        else
+          sql.append("M.NAME DESC,M.LAST_UPDATE DESC");
+      }
     }
     else if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
     {

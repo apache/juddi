@@ -220,14 +220,24 @@ class FindBusinessByNameQuery
     }
     else if (qualifiers.sortByNameAsc || qualifiers.sortByNameDesc)
     {
-      if (qualifiers.sortByNameAsc && qualifiers.sortByDateDesc)
-        sql.append("N.NAME ASC,B.LAST_UPDATE DESC");
-      else if (qualifiers.sortByNameAsc && qualifiers.sortByDateAsc)
-        sql.append("N.NAME ASC,B.LAST_UPDATE ASC");
-      else if (qualifiers.sortByNameDesc && qualifiers.sortByDateDesc)
-        sql.append("N.NAME DESC,B.LAST_UPDATE DESC");
+      if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc) 
+      {
+        if (qualifiers.sortByNameAsc && qualifiers.sortByDateDesc)
+          sql.append("N.NAME ASC,B.LAST_UPDATE DESC");
+        else if (qualifiers.sortByNameAsc && qualifiers.sortByDateAsc)
+          sql.append("N.NAME ASC,B.LAST_UPDATE ASC");
+        else if (qualifiers.sortByNameDesc && qualifiers.sortByDateDesc)
+          sql.append("N.NAME DESC,B.LAST_UPDATE DESC");
+        else
+          sql.append("N.NAME DESC,B.LAST_UPDATE ASC");
+      } 
       else
-        sql.append("N.NAME DESC,B.LAST_UPDATE ASC");
+      {
+        if (qualifiers.sortByNameAsc)
+          sql.append("N.NAME ASC,B.LAST_UPDATE DESC");
+        else
+          sql.append("N.NAME DESC,B.LAST_UPDATE DESC");
+      }
     }
     else if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
     {
