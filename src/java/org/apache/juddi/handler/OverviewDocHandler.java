@@ -54,18 +54,18 @@ public class OverviewDocHandler extends AbstractHandler
     // {none}
 
     // Child Elements
-    nodeList = XMLUtils.getChildElementsByTagName(element,OverviewURLHandler.TAG_NAME);
-    if (nodeList.size() > 0)
-    {
-      handler = maker.lookup(OverviewURLHandler.TAG_NAME);
-      obj.setOverviewURL((OverviewURL)handler.unmarshal((Element)nodeList.elementAt(0)));
-    }
-
     nodeList = XMLUtils.getChildElementsByTagName(element,DescriptionHandler.TAG_NAME);
     for (int i=0; i<nodeList.size(); i++)
     {
       handler = maker.lookup(DescriptionHandler.TAG_NAME);
       obj.addDescription((Description)handler.unmarshal((Element)nodeList.elementAt(i)));
+    }
+
+    nodeList = XMLUtils.getChildElementsByTagName(element,OverviewURLHandler.TAG_NAME);
+    if (nodeList.size() > 0)
+    {
+      handler = maker.lookup(OverviewURLHandler.TAG_NAME);
+      obj.setOverviewURL((OverviewURL)handler.unmarshal((Element)nodeList.elementAt(0)));
     }
 
     return obj;
