@@ -80,6 +80,7 @@ import org.apache.juddi.datatype.request.GetBusinessDetailExt;
 import org.apache.juddi.datatype.request.GetPublisherAssertions;
 import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.request.GetRegisteredInfo;
+import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.datatype.request.GetServiceDetail;
 import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.request.SaveBinding;
@@ -102,12 +103,14 @@ import org.apache.juddi.datatype.response.CompletionStatus;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.ErrInfo;
 import org.apache.juddi.datatype.response.KeysOwned;
+import org.apache.juddi.datatype.response.Property;
 import org.apache.juddi.datatype.response.PublisherAssertions;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.datatype.response.PublisherInfo;
 import org.apache.juddi.datatype.response.PublisherInfos;
 import org.apache.juddi.datatype.response.PublisherList;
 import org.apache.juddi.datatype.response.RegisteredInfo;
+import org.apache.juddi.datatype.response.RegistryInfo;
 import org.apache.juddi.datatype.response.RelatedBusinessInfo;
 import org.apache.juddi.datatype.response.RelatedBusinessInfos;
 import org.apache.juddi.datatype.response.RelatedBusinessesList;
@@ -373,6 +376,10 @@ public class HandlerMaker
     handlers.put(GetRegisteredInfo.class.getName().toLowerCase(),handler);
     handlers.put(GetRegisteredInfoHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new GetRegistryInfoHandler(this);
+    handlers.put(GetRegistryInfo.class.getName().toLowerCase(),handler);
+    handlers.put(GetRegistryInfoHandler.TAG_NAME.toLowerCase(),handler);
+
     handler = new GetServiceDetailHandler(this);
     handlers.put(GetServiceDetail.class.getName().toLowerCase(),handler);
     handlers.put(GetServiceDetailHandler.TAG_NAME.toLowerCase(),handler);
@@ -425,6 +432,10 @@ public class HandlerMaker
     handlers.put(Phone.class.getName().toLowerCase(),handler);
     handlers.put(PhoneHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new PropertyHandler(this);
+    handlers.put(Property.class.getName().toLowerCase(),handler);
+    handlers.put(PropertyHandler.TAG_NAME.toLowerCase(),handler);
+
     handler = new PublisherAssertionHandler(this);
     handlers.put(PublisherAssertion.class.getName().toLowerCase(),handler);
     handlers.put(PublisherAssertionHandler.TAG_NAME.toLowerCase(),handler);
@@ -460,6 +471,10 @@ public class HandlerMaker
     handler = new RegisteredInfoHandler(this);
     handlers.put(RegisteredInfo.class.getName().toLowerCase(),handler);
     handlers.put(RegisteredInfoHandler.TAG_NAME.toLowerCase(),handler);
+
+    handler = new RegistryInfoHandler(this);
+    handlers.put(RegistryInfo.class.getName().toLowerCase(),handler);
+    handlers.put(RegistryInfoHandler.TAG_NAME.toLowerCase(),handler);
 
     handler = new RelatedBusinessInfoHandler(this);
     handlers.put(RelatedBusinessInfo.class.getName().toLowerCase(),handler);

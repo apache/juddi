@@ -36,6 +36,7 @@ import org.apache.juddi.datatype.response.PublisherAssertions;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.datatype.response.PublisherList;
 import org.apache.juddi.datatype.response.RegisteredInfo;
+import org.apache.juddi.datatype.response.RegistryInfo;
 import org.apache.juddi.datatype.response.RelatedBusinessesList;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.datatype.response.ServiceList;
@@ -282,6 +283,15 @@ public interface IRegistry
    * @exception RegistryException;
    */
   RegisteredInfo getRegisteredInfo(AuthInfo authInfo)
+    throws RegistryException;
+
+  /**
+   * Used to request public property values from the UDDI registry. This
+   * is a proprietary jUDDI/Viens.net API call.
+   *
+   * @exception RegistryException;
+   */
+  RegistryInfo getRegistryInfo()
     throws RegistryException;
 
   /**

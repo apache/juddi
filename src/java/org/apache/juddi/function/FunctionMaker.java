@@ -41,6 +41,7 @@ import org.apache.juddi.datatype.request.GetBusinessDetailExt;
 import org.apache.juddi.datatype.request.GetPublisherAssertions;
 import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.request.GetRegisteredInfo;
+import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.datatype.request.GetServiceDetail;
 import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.request.SaveBinding;
@@ -142,6 +143,9 @@ public class FunctionMaker
 
     function = new GetRegisteredInfoFunction(registry);
     functions.put(GetRegisteredInfo.class.getName(),function);
+
+    function = new GetRegisteryInfoFunction(registry);
+    functions.put(GetRegistryInfo.class.getName(),function);
 
     function = new GetServiceDetailFunction(registry);
     functions.put(GetServiceDetail.class.getName(),function);

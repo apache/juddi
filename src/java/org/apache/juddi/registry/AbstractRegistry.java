@@ -46,6 +46,7 @@ import org.apache.juddi.datatype.request.GetBusinessDetailExt;
 import org.apache.juddi.datatype.request.GetPublisherAssertions;
 import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.request.GetRegisteredInfo;
+import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.datatype.request.GetServiceDetail;
 import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.request.SaveBinding;
@@ -66,6 +67,7 @@ import org.apache.juddi.datatype.response.PublisherAssertions;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.datatype.response.PublisherList;
 import org.apache.juddi.datatype.response.RegisteredInfo;
+import org.apache.juddi.datatype.response.RegistryInfo;
 import org.apache.juddi.datatype.response.RelatedBusinessesList;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.datatype.response.ServiceList;
@@ -469,6 +471,20 @@ public abstract class AbstractRegistry implements IRegistry
     request.setAuthInfo(authInfo);
 
     return (RegisteredInfo)execute(request);
+  }
+
+  /**
+   * "Used to request an abbreviated synopsis of all information currently
+   *  managed by a given individual."
+   *
+   * @exception RegistryException;
+   */
+  public RegistryInfo getRegistryInfo()
+    throws RegistryException
+  {
+    GetRegistryInfo request = new GetRegistryInfo();
+
+    return (RegistryInfo)execute(request);
   }
 
   /**
