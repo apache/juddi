@@ -31,6 +31,16 @@ import org.apache.juddi.util.jdbc.DynamicQuery;
 import org.apache.juddi.util.jdbc.Transaction;
 
 /**
+ * tModelBag: This is a list of tModel uuid_key values that represent the 
+ * technical fingerprint of a bindingTemplate structure to find. All 
+ * bindingTemplate structures within any businessService associated with the 
+ * businessEntity specified by the businessKey argument will be searched. 
+ * 
+ * If more than one tModel key is specified in this structure, only 
+ * businessService structures that contain bindingTemplate structures with 
+ * fingerprint information that matches all of the tModel keys specified will 
+ * be returned (logical AND only).
+ * 
  * @author Steve Viens (sviens@apache.org)
  */
 class FindServiceByTModelKeyQuery
