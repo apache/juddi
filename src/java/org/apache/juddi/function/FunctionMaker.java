@@ -25,6 +25,7 @@ import org.apache.juddi.datatype.request.DeleteBusiness;
 import org.apache.juddi.datatype.request.DeletePublisher;
 import org.apache.juddi.datatype.request.DeletePublisherAssertions;
 import org.apache.juddi.datatype.request.DeleteService;
+import org.apache.juddi.datatype.request.DeleteSubscription;
 import org.apache.juddi.datatype.request.DeleteTModel;
 import org.apache.juddi.datatype.request.DiscardAuthToken;
 import org.apache.juddi.datatype.request.FindBinding;
@@ -43,11 +44,14 @@ import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.request.GetRegisteredInfo;
 import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.datatype.request.GetServiceDetail;
+import org.apache.juddi.datatype.request.GetSubscriptionResults;
+import org.apache.juddi.datatype.request.GetSubscriptions;
 import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.request.SaveBinding;
 import org.apache.juddi.datatype.request.SaveBusiness;
 import org.apache.juddi.datatype.request.SavePublisher;
 import org.apache.juddi.datatype.request.SaveService;
+import org.apache.juddi.datatype.request.SaveSubscription;
 import org.apache.juddi.datatype.request.SaveTModel;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
 import org.apache.juddi.datatype.request.ValidateValues;
@@ -96,6 +100,9 @@ public class FunctionMaker
     function = new DeleteServiceFunction(registry);
     functions.put(DeleteService.class.getName(),function);
 
+    function = new DeleteSubscriptionFunction(registry);
+    functions.put(DeleteSubscription.class.getName(),function);
+    
     function = new DeleteTModelFunction(registry);
     functions.put(DeleteTModel.class.getName(),function);
 
@@ -150,6 +157,12 @@ public class FunctionMaker
     function = new GetServiceDetailFunction(registry);
     functions.put(GetServiceDetail.class.getName(),function);
 
+    function = new GetSubscriptionResultsFunction(registry);
+    functions.put(GetSubscriptionResults.class.getName(),function);
+    
+    function = new GetSubscriptionsFunction(registry);
+    functions.put(GetSubscriptions.class.getName(),function);
+    
     function = new GetTModelDetailFunction(registry);
     functions.put(GetTModelDetail.class.getName(),function);
 
@@ -164,6 +177,9 @@ public class FunctionMaker
 
     function = new SaveServiceFunction(registry);
     functions.put(SaveService.class.getName(),function);
+    
+    function = new SaveSubscriptionFunction(registry);
+    functions.put(SaveSubscription.class.getName(),function);
 
     function = new SaveTModelFunction(registry);
     functions.put(SaveTModel.class.getName(),function);

@@ -62,6 +62,7 @@ import org.apache.juddi.datatype.request.DeleteBusiness;
 import org.apache.juddi.datatype.request.DeletePublisher;
 import org.apache.juddi.datatype.request.DeletePublisherAssertions;
 import org.apache.juddi.datatype.request.DeleteService;
+import org.apache.juddi.datatype.request.DeleteSubscription;
 import org.apache.juddi.datatype.request.DeleteTModel;
 import org.apache.juddi.datatype.request.DiscardAuthToken;
 import org.apache.juddi.datatype.request.FindBinding;
@@ -82,11 +83,13 @@ import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.request.GetRegisteredInfo;
 import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.datatype.request.GetServiceDetail;
+import org.apache.juddi.datatype.request.GetSubscriptions;
 import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.request.SaveBinding;
 import org.apache.juddi.datatype.request.SaveBusiness;
 import org.apache.juddi.datatype.request.SavePublisher;
 import org.apache.juddi.datatype.request.SaveService;
+import org.apache.juddi.datatype.request.SaveSubscription;
 import org.apache.juddi.datatype.request.SaveTModel;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
 import org.apache.juddi.datatype.request.ValidateValues;
@@ -125,6 +128,8 @@ import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.datatype.response.TModelList;
 import org.apache.juddi.datatype.service.BusinessService;
 import org.apache.juddi.datatype.service.BusinessServices;
+import org.apache.juddi.datatype.subscription.Subscription;
+import org.apache.juddi.datatype.subscription.SubscriptionKey;
 import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
 
@@ -280,6 +285,10 @@ public class HandlerMaker
     handlers.put(DeleteService.class.getName().toLowerCase(),handler);
     handlers.put(DeleteServiceHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new DeleteSubscriptionHandler(this);
+    handlers.put(DeleteSubscription.class.getName().toLowerCase(),handler);
+    handlers.put(DeleteSubscriptionHandler.TAG_NAME.toLowerCase(),handler);
+	
     handler = new DeleteTModelHandler(this);
     handlers.put(DeleteTModel.class.getName().toLowerCase(),handler);
     handlers.put(DeleteTModelHandler.TAG_NAME.toLowerCase(),handler);
@@ -384,6 +393,10 @@ public class HandlerMaker
     handlers.put(GetServiceDetail.class.getName().toLowerCase(),handler);
     handlers.put(GetServiceDetailHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new GetSubscriptionsHandler(this);
+    handlers.put(GetSubscriptions.class.getName().toLowerCase(),handler);
+    handlers.put(GetSubscriptionsHandler.TAG_NAME.toLowerCase(),handler);
+    	
     handler = new GetTModelDetailHandler(this);
     handlers.put(GetTModelDetail.class.getName().toLowerCase(),handler);
     handlers.put(GetTModelDetailHandler.TAG_NAME.toLowerCase(),handler);
@@ -508,6 +521,10 @@ public class HandlerMaker
     handlers.put(SaveService.class.getName().toLowerCase(),handler);
     handlers.put(SaveServiceHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new SaveSubscriptionHandler(this);
+    handlers.put(SaveSubscription.class.getName().toLowerCase(),handler);
+    handlers.put(SaveSubscriptionHandler.TAG_NAME.toLowerCase(),handler);
+	
     handler = new SaveTModelHandler(this);
     handlers.put(SaveTModel.class.getName().toLowerCase(),handler);
     handlers.put(SaveTModelHandler.TAG_NAME.toLowerCase(),handler);
@@ -539,7 +556,15 @@ public class HandlerMaker
     handler = new SharedRelationshipsHandler(this);
     handlers.put(SharedRelationships.class.getName().toLowerCase(),handler);
     handlers.put(SharedRelationshipsHandler.TAG_NAME.toLowerCase(),handler);
+    
+    handler = new SubscriptionHandler(this);
+    handlers.put(Subscription.class.getName().toLowerCase(),handler);
+    handlers.put(SubscriptionHandler.TAG_NAME.toLowerCase(),handler);
 
+    handler = new SubscriptionKeyHandler(this);
+    handlers.put(SubscriptionKey.class.getName().toLowerCase(),handler);
+    handlers.put(SubscriptionKeyHandler.TAG_NAME.toLowerCase(),handler);
+	
     handler = new TModelHandler(this);
     handlers.put(TModel.class.getName().toLowerCase(),handler);
     handlers.put(TModelHandler.TAG_NAME.toLowerCase(),handler);
