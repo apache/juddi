@@ -88,20 +88,29 @@ public class AddressLineHandler extends AbstractHandler
   public static void main(String args[])
     throws Exception
   {
-    // create the source object
-    AddressLine lineIn = new AddressLine("AddressLine1","keyNameAttr","keyValueAttr");
+      HandlerMaker maker = HandlerMaker.getInstance();
+      AbstractHandler handler = maker.lookup(AddressLineHandler.TAG_NAME);
+      Element parent = XMLUtils.newRootElement();
+      Element child = null;
 
-    // unmarshal & marshal (object->xml->object)
-    HandlerMaker maker = HandlerMaker.getInstance();
-    AbstractHandler handler = maker.lookup(AddressLineHandler.TAG_NAME);
-    Element element = null;
-    handler.marshal(lineIn,element);
-    AddressLine lineOut = (AddressLine)handler.unmarshal(element);
+      AddressLine object = new AddressLine("AddressLine1","keyNameAttr","keyValueAttr");
 
-    // compare unmarshaled with marshaled obj
-    if (lineOut.equals(lineIn))
-      System.out.println("Input and output are the same.");
-    else
-      System.out.println("Input and output are NOT the same!");
+      System.out.println();
+
+      RegistryObject regObject = object;
+      handler.marshal(regObject,parent);
+      child = (Element)parent.getFirstChild();
+      parent.removeChild(child);
+      XMLUtils.writeXML(child,System.out);
+
+      System.out.println();
+
+      regObject = handler.unmarshal(child);
+      handler.marshal(regObject,parent);
+      child = (Element)parent.getFirstChild();
+      parent.removeChild(child);
+      XMLUtils.writeXML(child,System.out);
+
+      System.out.println();
   }
 }
