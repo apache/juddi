@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<%@ page contentType="text/xml;charset=UTF-8"
+<%@ page contentType="text/xml;charset=utf-8"
          session="false"
          import="java.util.Vector,
                  org.w3c.dom.Element,
