@@ -10,13 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_serviceDetail API call is used to request full information about a 
-known businessService structure.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a> error was 
-encountered.
+The <a href="uddiv2api.html#_Toc25137720" target="api">get_serviceDetail</a> API call is used to 
+request full information about a known <a href="uddiv2data.html#_Toc25130765" target="api">businessService</a>
+structure. If an error occurs while processing this 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">

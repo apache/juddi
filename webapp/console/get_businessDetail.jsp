@@ -10,14 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_businessDetail API call returns complete businessEntity information 
-for one or more specified businessEntity registrations matching on the 
-businessKey values specified.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a> error was 
-encountered. 
+The <a href="uddiv2api.html#_Toc25137718" target="api">get_businessDetail</a> API call 
+returns complete <a href="uddiv2data.html#_Toc25130756" target="api">businessEntity</a> information 
+for one or more specified <a href="uddiv2data.html#_Toc25130756" target="api">businessEntity</a> 
+registrations matching on the businessKey values specified. If an error occurs while processing this 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">

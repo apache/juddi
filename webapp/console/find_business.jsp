@@ -10,13 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The find_business API call returns a businessList message that matches the conditions 
-specified in the arguments.
-If any error occurs in processing this API call, a dispositionReport element will 
-be returned to the caller within a SOAP Fault containing an error number indicating 
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>,
-<a href="/uddi_errors#E_unsupported">E_unsupported</a> or 
-<a href="/uddi_errors#E_tooManyOptions">E_tooManyOptions</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137713" target="api">find_business</a> API call returns
+a <a href="uddiv2data.html#_Toc25130802" target="api">businessList</a> message that contains 
+zero or more <a href="uddiv2data.html#_Toc25130802" target="api">businessInfo</a> structures 
+matching the criteria specified in the argument list. If an error occurs while processing this 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">

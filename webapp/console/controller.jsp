@@ -12,16 +12,16 @@
   // Access the UDDI registry on localhost
   final String HTTP_PROXY_HOST = null;
   final String HTTP_PROXY_PORT = null;
-  final URL INQUIRY_URL = new URL("http://localhost/juddi//inquiry");
-  final URL PUBLISH_URL = new URL("http://localhost/juddi/publish");
-  final URL ADMIN_URL =   new URL("http://localhost/juddi/admin");
+  final URL INQUIRY_URL = new URL("http://localhost:8080/juddi/inquiry");
+  final URL PUBLISH_URL = new URL("http://localhost:8080/juddi/publish");
+  final URL ADMIN_URL =   new URL("http://localhost:8080/juddi/admin");
   
   // Access a remote UDDI registry
-  //final String HTTP_PROXY_HOST = "www-proxy";
+  //final String HTTP_PROXY_HOST = "proxy";
   //final String HTTP_PROXY_PORT = "80";
-  //final URL INQUIRY_URL = new URL("http://www.viens.net/juddi/inquiry");
-  //final URL PUBLISH_URL = new URL("http://www.viens.net/juddi/publish");
-  //final URL ADMIN_URL =   new URL("http://www.viens.net/juddi/admin");
+  //final URL INQUIRY_URL = new URL("http://[host]:[port]/juddi/inquiry");
+  //final URL PUBLISH_URL = new URL("http://[host]:[port]/juddi/publish");
+  //final URL ADMIN_URL =   new URL("http://[host]:[port]/juddi/admin");
 
   // Pull input parameters from the HTTP request
   String requestName = request.getParameter("request_name");

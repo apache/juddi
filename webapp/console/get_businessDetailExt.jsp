@@ -10,15 +10,16 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The get_businessDetailExt API call returns extended businessEntity information 
-for one or more specified businessEntity registrations.  This message returns 
-exactly the same information as the get_businessDetail message, but may contain 
-additional attributes.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a> or 
-<a href="/uddi_errors#E_unsupported">E_unsupported</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137719" target="api">get_businessDetailExt</a> API call 
+returns extended <a href="uddiv2data.html#_Toc25130756" target="api">businessEntity</a> information 
+for one or more specified <a href="uddiv2data.html#_Toc25130756" target="api">businessEntity</a> 
+registrations. This message returns exactly the same information as 
+the <a href="uddiv2api.html#_Toc25137718" target="api">get_businessDetail</a> message, 
+but may contain additional attributes. If an error occurs while processing this 
+API call, a <a href="uddiv2api.html#_Toc25137750" target="api">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="api">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="api">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
