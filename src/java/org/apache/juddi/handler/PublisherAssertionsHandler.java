@@ -89,10 +89,14 @@ public class PublisherAssertionsHandler extends AbstractHandler
       else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
         element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
+    else
+      element.setAttribute("generic","");
 
     String operator = assertions.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
+    else
+      element.setAttribute("operator","");
 
     Vector vector = assertions.getPublisherAssertionVector();
     if ((vector!=null) && (vector.size() > 0))

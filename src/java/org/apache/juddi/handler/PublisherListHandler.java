@@ -90,10 +90,14 @@ public class PublisherListHandler extends AbstractHandler
       element.setAttribute("generic",generic);
       element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
     }
+    else
+      element.setAttribute("generic","");
 
     String operator = list.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
+    else
+      element.setAttribute("operator","");
 
     boolean truncated = list.isTruncated();
     if (truncated)

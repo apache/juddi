@@ -104,10 +104,14 @@ public class RegisteredInfoHandler extends AbstractHandler
       else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
         element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
+    else
+      element.setAttribute("generic","");
 
     String operator = info.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
+    else
+      element.setAttribute("operator","");
 
     BusinessInfos bInfos = info.getBusinessInfos();
     if (bInfos!=null)

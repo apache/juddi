@@ -91,11 +91,15 @@ public class AssertionStatusReportHandler extends AbstractHandler
       else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
         element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
-
+    else
+      element.setAttribute("generic","");
+    
     String operator = report.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
-
+    else
+      element.setAttribute("operator","");
+    
     Vector vector = report.getAssertionStatusItemVector();
     if ((vector!=null) && (vector.size() > 0))
     {

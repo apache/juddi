@@ -102,10 +102,14 @@ public class BindingDetailHandler extends AbstractHandler
       else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
         element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
     }
+    else
+      element.setAttribute("generic","");
 
     String operator = detail.getOperator();
     if (operator != null)
       element.setAttribute("operator",operator);
+    else
+      element.setAttribute("operator","");
 
     boolean truncated = detail.isTruncated();
     if (truncated)
