@@ -70,9 +70,6 @@ public class RegistryEngine extends AbstractRegistry
   // jUDDI Function maker
   private FunctionMaker maker = null;
 
-  // registry singleton instance
-  private static RegistryEngine registry = null;
-
   // registry status
   private boolean isAvailable = false;
 
@@ -83,7 +80,7 @@ public class RegistryEngine extends AbstractRegistry
    * new instance. Default values are used if the file does not
    * exist or if a particular property value is not present.
    */
-  private RegistryEngine()
+  public RegistryEngine()
   {
     super();
 
@@ -111,32 +108,12 @@ public class RegistryEngine extends AbstractRegistry
    * are used if the file does not exist or if a particular 
    * property value is not present.
    */
-  private RegistryEngine(Properties props)
+  public RegistryEngine(Properties props)
   {
     super();
 
     if (props != null)
       Config.addProperties(props);
-  }
-
-  /**
-   *
-   */
-  public static RegistryEngine getInstance()
-  {
-    if (registry == null)
-      registry = createInstance();
-    return registry;
-  }
-
-  /**
-   *
-   */
-  private static synchronized RegistryEngine createInstance()
-  {
-    if (registry == null)
-      registry = new RegistryEngine();
-    return registry;
   }
 
   /**
@@ -221,6 +198,15 @@ public class RegistryEngine extends AbstractRegistry
     props.setProperty(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,"org.apache.juddi.auth.DefaultAuthenticator");
     props.setProperty(RegistryEngine.PROPNAME_CRYPTOR_CLASS_NAME,"org.apache.juddi.cryptor.DefaultCryptor");
     props.setProperty(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,"org.apache.juddi.uuidgen.DefaultUUIDGen");
+    
+    props.setProperty("juddi.useConnectionPool","true");
+    props.setProperty("juddi.jdbcDriver","com.mysql.jdbc.Driver");
+    props.setProperty("juddi.jdbcURL","jdbc:mysql://localhost/juddi");
+    props.setProperty("juddi.jdbcUser","juddi");
+    props.setProperty("juddi.jdbcPassword","juddi");
+    props.setProperty("juddi.jdbcMaxActive","10");
+    props.setProperty("juddi.jdbcMaxIdle","10");
+    
     RegistryEngine registry = new RegistryEngine(props);    
 
     // initialize the registry

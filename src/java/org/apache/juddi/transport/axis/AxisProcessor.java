@@ -165,12 +165,13 @@ public class AxisProcessor
           "does not support function: "+function);
       }
 
-      // grab a reference to the uddi registry
-      // instance (make sure it's running) and
-      // execute the requested uddi function.
+      // grab a reference to the shared jUDDI registry
+      // instance (make sure it's running) and execute 
+      // the requested UDDI function.
 
       RegistryObject uddiResponse = null;
-      RegistryEngine registry = RegistryEngine.getInstance();
+      
+      RegistryEngine registry = RegistryServlet.getInstance();
       if ((registry != null) && (registry.isAvailable()))
         uddiResponse = registry.execute(uddiRequest);
       else
