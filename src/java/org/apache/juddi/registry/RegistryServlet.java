@@ -17,6 +17,8 @@ package org.apache.juddi.registry;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -205,8 +207,8 @@ public class RegistryServlet extends HttpServlet
   public void doPost(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, IOException
   {
-    res.setContentType("text/xml; charset=utf-8");
-      
+    res.setContentType("text/xml; charset=utf-8");        
+
     SOAPMessage soapReq = null;
     SOAPMessage soapRes = null;
 
@@ -439,8 +441,12 @@ public class RegistryServlet extends HttpServlet
     }
     finally 
     {
-      try {               
-        soapRes.writeTo(res.getOutputStream());     
+      try {  
+        OutputStream stream = res.getOutputStream();        
+        OutputStreamWriter writer = new OutputStreamWriter(stream); 
+        writer.write("<?xml version='1.0' encoding='UTF-8'?>");
+        writer.flush();        
+        soapRes.writeTo(stream); 
       }
       catch(SOAPException sex) {
         log.error(sex);
