@@ -6,7 +6,7 @@
   </header>
   <body>
     <section>
-      <title>Updating the Site jUDDI Web Site</title>
+      <title>Updating the jUDDI Web Site</title>
       <p>You'll need the appropriate version of <link href="http://xml.apache.org/forrest/">forrest</link> as
 	well as the appropriate version of <link href="http://ant.apache.org/">ant</link>. This document
 	assumes you generally understand how to use these tools. 
