@@ -69,7 +69,10 @@ public class XMLUtils
     for (int i=0; i<children.getLength(); i++)
     {
       Node node = children.item(i);
-      if (node.getNodeType() == Node.ELEMENT_NODE && node.getLocalName().equals(tagName))
+      
+      //System.out.println("parsing: "+node.getNodeName());
+      
+      if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName))
         result.addElement(node); // matching element
     }
 
