@@ -1,8 +1,7 @@
-Be sure to get the latest jars from Axis 1.1! And 
-remember to remove "log4j.properties" from "axis.jar"
+Be sure to get the latest jars from Axis 1.2 beta.
 
-	Apache Axis 1.1 (http://ws.apache.org/axis)
-	---------------
+	Apache Axis 1.2 beta (http://ws.apache.org/axis)
+	--------------------
 	axis.jar
 	commons-discovery.jar
 	commons-logging.jar
