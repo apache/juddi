@@ -52,7 +52,7 @@ public class  ResultHandlerTests extends HandlerTestCase
     errInfo.setErrMsg("Authentication token information has timed out.");
 
 		Result object = new Result();
-		object.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED_NMBR);
+		object.setErrno(Result.E_ACCOUNT_LIMIT_EXCEEDED);
 		object.setErrInfo(errInfo);
 
 		return object;

@@ -62,7 +62,7 @@ public class  DispositionReportHandlerTests extends HandlerTestCase
     errInfo2.setErrMsg(null);
 
 		Result result2 = new Result();
-		result2.setErrno(Result.E_SUCCESS_NMBR);
+		result2.setErrno(Result.E_SUCCESS);
 		result2.setErrInfo(errInfo2);
 
 		DispositionReport object = new  DispositionReport();
