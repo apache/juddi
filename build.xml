@@ -62,15 +62,14 @@ Copyright:
   	<property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
     <property name="sql.dir"             value="${basedir}/sql"/>
-    <property name="lib.dir"             value="${basedir}/lib"/>
     <property name="site.dir"            value="${basedir}/site"/>
     <property name="src.dir"             value="${basedir}/src"/>
     <property name="java.dir"            value="${basedir}/src/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
+   	<property name="build.dir"           value="${basedir}/build"/>
     <property name="webapp.dir"          value="${basedir}/webapp"/>
-  	<property name="webapps.dir"         value="${basedir}/webapps"/>
-    <property name="build.dir"           value="${basedir}/build"/>
-    <property name="classes.dir"         value="${build.dir}/classes"/>
+    <property name="lib.dir"             value="${basedir}/webapp/WEB-INF/lib"/>
+  	<property name="classes.dir"         value="${build.dir}/classes"/>
     <property name="docs.dir"            value="${build.dir}/docs"/>
     <property name="javadoc.dir"         value="${docs.dir}/apiDocs"/>
     <property name="dist.src.dir"        value="${build.dir}/dist-src"/>
@@ -89,8 +88,11 @@ Copyright:
       <fileset dir="${lib.dir}">
         <include name="*.jar"/>
       </fileset>
+      <fileset dir="${basedir}/lib">
+        <include name="*.jar"/>
+      </fileset>
     </path>
-
+  	  	
     <!-- classpath search to determine if JUnit tests should be run -->
     <condition property="junit.present" value="true">
       <available classname="junit.framework.TestCase" />
@@ -407,27 +409,14 @@ Copyright:
     <copy file="build.xml" todir="${dist.src.root}"/>
     <copy file="build.properties" todir="${dist.src.root}"/>
     <copy file="checkstyle.xml" todir="${dist.src.root}"/>
-    <copy file="LICENSE" todir="${dist.src.root}"/>
+    <copy file="application.xml" todir="${dist.src.root}"/>
+  	<copy file="LICENSE" todir="${dist.src.root}"/>
     <copy file="README" todir="${dist.src.root}"/>
     <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
-    <copy todir="${dist.src.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.src.root}/site"><fileset dir="${site.dir}"/></copy>
     <copy todir="${dist.src.root}/src"><fileset dir="${src.dir}"/></copy>
     <copy todir="${dist.src.root}/sql"><fileset dir="${sql.dir}"/></copy>
-    <copy todir="${dist.src.root}/webapps"><fileset dir="${webapps.dir}"/></copy>
-    <copy todir="${dist.src.root}/lib">
-      <fileset dir="${lib.dir}">
-        <include name="axis.jar"/>
-        <include name="commons-collections.jar"/>
-        <include name="commons-dbcp.jar"/>
-        <include name="commons-discovery.jar"/>
-        <include name="commons-logging.jar"/>
-        <include name="commons-pool.jar"/>
-        <include name="log4j-1.2.8.jar"/>
-        <include name="wsdl4j.jar"/>
-        <include name="*.LICENSE"/>
-      </fileset>
-    </copy>
+    <copy todir="${dist.src.root}/webapp"><fileset dir="${webapp.dir}"/></copy>
 
     <!-- create the source ".zip" distribution and checksum (MD5) file -->
     <zip destfile="${build.dir}/juddi-${version}-src.zip" basedir="${dist.src.dir}"/>
@@ -456,7 +445,6 @@ Copyright:
     <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
     <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
-    <copy todir="${dist.bin.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.bin.root}/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
 
