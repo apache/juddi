@@ -310,6 +310,12 @@ public interface IRegistry
     throws RegistryException;
 
   /**
+   * @exception RegistryException;
+   */
+  DispositionReport validateValues(Vector businessVector,Vector serviceVector,Vector tModelVector)
+    throws RegistryException;
+
+  /**
    * @exception RegistryException
    */
   RegistryObject execute(RegistryObject request)
