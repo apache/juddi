@@ -2,30 +2,11 @@
 <!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V1.2//EN" "http://apache.org/forrest/dtd/faq-v12.dtd">
 <faqs  title="jUDDI FAQ">
 
-<!--
-  <part id="docs">
-    <title>Documentation</title>
-    <faq id="wsrp4j">
-      <question>
-        How can I help write documentation?
-      </question>
-      <answer>
-        <p>
-          This project uses <link href="ext:forrest">Apache
-          Forrest</link> to generate documentation from XML.  Please
-          download a copy of Forrest, which can be used to <link
-          href="ext:forrest/validation">validate</link>, <link
-          href="ext:forrest/webapp">develop</link> and render a
-          project site.
-        </p>
-      </answer>
-    </faq>
-  </part>
--->
+
 
   <part id="jdk">
 	<title>JDK support</title>
-	<faq id="juddi">
+	<faq id="juddi8">
 	<question> what are the JDK Requirements</question>
 	<answer><p>
         jUDDI 0.7 requires a 1.4.x JDK. You can compile and run with
@@ -44,7 +25,7 @@
 	related properties) to avoid using the JNDI lookup. Here's a sample setup of
 	juddi.properties </p>
 
-<pre>
+<source>
 #Required JDBC DataSource properties
 juddi.dataSource=java:comp/env/jdbc/juddiDB
 
@@ -60,19 +41,19 @@ juddi.jdbcMinConnections = 3
 juddi.jdbcMaxConnections = 50
 juddi.jdbcMaxWaitTime = 15000
 juddi.jdbcRetryInterval = 1000
-</pre>
+</source>
 </answer>
 </faq>
 </part>
 
 <part id="Datasources">
   <title>How do I configure jUDDI to run with Tomcat, MySQL and use a JNDI DataSource?</title>
-<faq id="juddi">
+<faq id="juddi1">
 <question>
 </question>
 <answer>
-<p >A good setup is discussed here <a href="http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138" target="_setup">
-http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138</a></p>
+<p >A good setup is discussed here <link href="http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138">
+http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138</link></p>
 
 </answer>
 </faq>
@@ -80,21 +61,18 @@ http://sourceforge.net/mailarchive/forum.php?thread_id=2429672&amp;forum_id=7138
 
 <part id="authentication">
 <title>Writing pluggable authentication modules</title>
-<faq id="juddi">
+<faq id="juddi2">
 <question>
 </question>
 <answer>
-<p >
+<p>
 You can configure jUDDI to use one of the three Authentication modules supplied or you can write your own Authenticator that integrates jUDDI with your organizations authentication mechanism. All you have to do to create your own Authenticator is:
+Create a class that implements the Authenticator interface (your Authenticator);
+create a class that extends the AuthenticatorFactory abstract class (your Authenticator's Factory);
+specify your AuthenticatorFactory in jUDDI's property file ("juddi.properties"). For example:
 </p>
-
-<ul>
-<li>create a class that implements the Authenticator interface (your Authenticator)</li>
-<li>create a class that extends the AuthenticatorFactory abstract class (your Authenticator's Factory)</li>
-<li>specify your AuthenticatorFactory in jUDDI's property file ("juddi.properties").</li>
-</ul>
-
-Example: <b>juddi.authFactory = org.apache.juddi.auth.simple.SimpleAuthenticatorFactory</b>
+<source>juddi.authFactory = org.apache.juddi.auth.simple.SimpleAuthenticatorFactory
+</source>
 <p>
 In the example above you'll need to replace "org.apache.juddi.auth.simple.SimpleAuthenticatorFactory" with the fully qualified name of your AuthenticatorFactory class. Take a look at the SimpleAuthenticator and SimpleAuthenticationFactory classes in the "org.apache.juddi.auth.simple" package for an example
 </p>
@@ -104,7 +82,7 @@ In the example above you'll need to replace "org.apache.juddi.auth.simple.Simple
 
 <part id="datastores">
 <title>Using a datastore without JDBC</title>
-<faq id="juddi">
+<faq id="juddi3">
 <question>
 </question>
 <answer>
@@ -129,20 +107,20 @@ supplied. </p>
 
 <part id="appservers">
 <title>Application server support</title>
-<faq id="juddi">
+<faq id="juddi4">
 <question>Which application servers does jUDDI support?
 </question>
 <answer>
         <p >jUDDI is known to work with a number of application
           servers like Tomcat, Sybase EAServer and Borland Enterprise Server 5.2 and 6.0.
-          A Sybase EAServer deployment guide is available <a href="easerver.html" target="_easerver">here</a>.</p>
+          </p>
 </answer>
 </faq>
 </part>
 
 <part id="authors">
 <title>FAQ Contributors</title>
-<faq id="juddi">
+<faq id="juddi5">
 <question>Who helped with this FAQ
 </question>
 <answer>
