@@ -23,6 +23,7 @@ import org.apache.juddi.datatype.response.RegistryInfo;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
+import org.apache.juddi.util.Release;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -57,9 +58,11 @@ public class GetRegisteryInfoFunction extends AbstractFunction
       RegistryInfo info = new RegistryInfo();
       info.setGeneric(generic);
       info.setOperator(Config.getOperator());
-      info.addProperty("registry_contact","admin@viens.net");
-      info.addProperty("registry_version","1.0b1");
-      info.addProperty("uddi_version","2.0");
+      info.addProperty("operatorName",Config.getStringProperty("juddi.operatorName"));
+      info.addProperty("operatorEmailAddress",Config.getStringProperty("juddi.operatorEmailAddress"));
+      info.addProperty("registryVersion",Release.getRegistryVersion());
+      info.addProperty("registryLastModified",Release.getLastModified());
+      info.addProperty("uddiVersion",Release.getUDDIVersion());
       
       return info;
     }
