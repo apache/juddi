@@ -17,7 +17,6 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.Description;
 import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.RegistryObject;
@@ -87,12 +86,13 @@ public class BindingTemplateHandler extends AbstractHandler
       obj.setTModelInstanceDetails((TModelInstanceDetails)handler.unmarshal((Element)nodeList.elementAt(0)));
     }
 
-    nodeList = XMLUtils.getChildElementsByTagName(element,CategoryBagHandler.TAG_NAME); // UDDI v3.0
-    if (nodeList.size() > 0)
-    {
-      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
-      obj.setCategoryBag((CategoryBag)handler.unmarshal((Element)nodeList.elementAt(0)));
-    }
+// TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0     
+//    nodeList = XMLUtils.getChildElementsByTagName(element,CategoryBagHandler.TAG_NAME); // UDDI v3.0
+//    if (nodeList.size() > 0)
+//    {
+//      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
+//      obj.setCategoryBag((CategoryBag)handler.unmarshal((Element)nodeList.elementAt(0)));
+//    }
 
     return obj;
   }
@@ -140,12 +140,13 @@ public class BindingTemplateHandler extends AbstractHandler
       handler.marshal(tModInstDet,element);
     }
 
-    CategoryBag categoryBag = binding.getCategoryBag(); // UDDI v3.0
-    if (categoryBag != null)
-    {
-      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
-      handler.marshal(categoryBag,element);
-    }
+//  TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0     
+//    CategoryBag categoryBag = binding.getCategoryBag(); // UDDI v3.0
+//    if (categoryBag != null)
+//    {
+//      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
+//      handler.marshal(categoryBag,element);
+//    }
 
     parent.appendChild(element);
   }
