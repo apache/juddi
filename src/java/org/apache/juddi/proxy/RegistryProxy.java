@@ -67,7 +67,7 @@ public class RegistryProxy extends AbstractRegistry
   public static final String UDDI_VERSION_PROPERTY_NAME = "juddi.proxy.uddiVersion";
   public static final String UDDI_NAMESPACE_PROPERTY_NAME = "juddi.proxy.uddiNamespace";
 
-  // jUDDI Proxy Default Properties
+  // jUDDI Proxy Default Property Values
   public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
   public static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
   public static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
@@ -76,11 +76,10 @@ public class RegistryProxy extends AbstractRegistry
   public static final String DEFAULT_UDDI_VERSION = "2.0";
   public static final String DEFAULT_UDDI_NAMESPACE = "urn:uddi-org:api_v2";
   
-  // Registry Server End Points
+  // jUDDI Proxy Properties
   private URL inquiryURL;
   private URL publishURL;
   private URL adminURL;
-  
   private String securityProvider;
   private String protocolHandler;
   private String uddiVersion;
