@@ -66,7 +66,6 @@ public class RegistryServlet extends HttpServlet
 
     StringBuffer propFilePath = new StringBuffer(255);
     propFilePath.append(getServletContext().getRealPath("/"));
-    propFilePath.append(File.separator);
     propFilePath.append("WEB-INF");
     propFilePath.append(File.separator);
     propFilePath.append(PROPERTY_FILE_NAME);
