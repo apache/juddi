@@ -33,8 +33,6 @@ import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.registry.AbstractRegistry;
 import org.apache.juddi.registry.IRegistry;
-import org.apache.juddi.transport.Transport;
-import org.apache.juddi.transport.TransportFactory;
 import org.apache.juddi.util.Loader;
 import org.apache.juddi.util.xml.XMLUtils;
 
@@ -52,9 +50,6 @@ public class RegistryProxy extends AbstractRegistry
   // jUDDI XML Handler maker
   private static HandlerMaker maker = HandlerMaker.getInstance();
 
-  // jUDDI SOAP Transport
-  private static Transport transport = TransportFactory.getTransport();
-  
   // jUDDI Proxy Property File Name
   private static final String PROPFILE_NAME = "juddi.properties";
   
@@ -62,6 +57,7 @@ public class RegistryProxy extends AbstractRegistry
   public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "juddi.proxy.inquiryURL";
   public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "juddi.proxy.publishURL";
   public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "juddi.proxy.adminURL";    
+  public static final String TRANSPORT_CLASS_PROPERTY_NAME = "juddi.proxy.transportClass";
   public static final String SECURITY_PROVIDER_PROPERTY_NAME = "juddi.proxy.securityProvider";
   public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "juddi.proxy.protocolHandler";
   public static final String UDDI_VERSION_PROPERTY_NAME = "juddi.proxy.uddiVersion";
@@ -71,6 +67,7 @@ public class RegistryProxy extends AbstractRegistry
   public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
   public static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
   public static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
+  public static final String DEFAULT_TRANSPORT_CLASS = "org.apache.juddi.proxy.AxisTransport";    
   public static final String DEFAULT_SECURITY_PROVIDER = "com.sun.net.ssl.internal.ssl.Provider";
   public static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
   public static final String DEFAULT_UDDI_VERSION = "2.0";
@@ -80,6 +77,7 @@ public class RegistryProxy extends AbstractRegistry
   private URL inquiryURL;
   private URL publishURL;
   private URL adminURL;
+  private Transport transport;
   private String securityProvider;
   private String protocolHandler;
   private String uddiVersion;
@@ -132,56 +130,65 @@ public class RegistryProxy extends AbstractRegistry
    */
   private void init(Properties props)
   { 
-    // Initialize proxy with default values
-    try {
-      this.setInquiryURL(new URL(DEFAULT_INQUIRY_ENDPOINT));
-      this.setPublishURL(new URL(DEFAULT_PUBLISH_ENDPOINT));
-      this.setAdminURL(new URL(DEFAULT_ADMIN_ENDPOINT));
-      this.setUddiVersion(IRegistry.UDDI_V2_GENERIC);
-      this.setUddiNamespace(IRegistry.UDDI_V2_NAMESPACE);
-    }
-    catch(MalformedURLException muex) {
-      muex.printStackTrace();
-    }
-    
-    // There's no point in going any further
-    // if the Properties parameter is null.
+    // We need to have a non-null Properties
+    // instance so initialization takes place.
     if (props == null)
-      return;
+      props = new Properties();
     
     // Override defaults with specific specific values
-    try {
+    try 
+    {
       String iURL = props.getProperty(INQUIRY_ENDPOINT_PROPERTY_NAME);
       if (iURL != null)
         this.setInquiryURL(new URL(iURL));
-        
+      else
+        this.setInquiryURL(new URL(DEFAULT_INQUIRY_ENDPOINT));
+      
       String pURL = props.getProperty(PUBLISH_ENDPOINT_PROPERTY_NAME);
       if (pURL != null)
         this.setPublishURL(new URL(pURL));
-    
+      else
+        this.setPublishURL(new URL(DEFAULT_PUBLISH_ENDPOINT));
+      
       String aURL = props.getProperty(ADMIN_ENDPOINT_PROPERTY_NAME);
       if (aURL != null)
         this.setAdminURL(new URL(aURL));
+      else
+        this.setAdminURL(new URL(DEFAULT_ADMIN_ENDPOINT));
     }
     catch(MalformedURLException muex) {
       muex.printStackTrace();
     } 
 
+    String transClass = props.getProperty(TRANSPORT_CLASS_PROPERTY_NAME);
+    if (transClass != null)
+      this.setTransport(this.getTransport(transClass));
+    else
+    	this.setTransport(this.getTransport(DEFAULT_TRANSPORT_CLASS));
+            
     String secProvider = props.getProperty(SECURITY_PROVIDER_PROPERTY_NAME);
     if (secProvider != null)
       this.setSecurityProvider(secProvider);
+    else
+      this.setSecurityProvider(DEFAULT_SECURITY_PROVIDER);
   
     String protoHandler = props.getProperty(PROTOCOL_HANDLER_PROPERTY_NAME);
     if (protoHandler != null)
       this.setProtocolHandler(protoHandler);
+    else
+      this.setProtocolHandler(DEFAULT_PROTOCOL_HANDLER);
 
     String uddiVer = props.getProperty(UDDI_VERSION_PROPERTY_NAME);
     if (uddiVer != null)
       this.setUddiVersion(uddiVer);
+    else
+      this.setUddiVersion(DEFAULT_UDDI_VERSION);
   
     String uddiNS = props.getProperty(UDDI_NAMESPACE_PROPERTY_NAME);
     if (uddiNS != null)
       this.setUddiNamespace(uddiNS);
+    else
+      this.setUddiNamespace(DEFAULT_UDDI_NAMESPACE);
   }
    
    /**
@@ -232,6 +239,22 @@ public class RegistryProxy extends AbstractRegistry
     this.publishURL = url;
   }
   
+  /**
+   * @return Returns the transport.
+   */
+  public Transport getTransport() 
+  {
+    return transport;
+  }
+  
+  /**
+   * @param transport The transport to set.
+   */
+  public void setTransport(Transport transport) 
+  {
+    this.transport = transport;
+  }
+
   /**
    * @return Returns the protocolHandler.
    */
@@ -384,6 +407,42 @@ public class RegistryProxy extends AbstractRegistry
     return uddiResponse;
   }
 
+  /**
+   * Returns an implementation of Transport based on the className passed in.
+   * If a null value is passed then the default Transport implementation 
+   * "org.apache.juddi.proxy.AxisTransport" is created and returned.
+   *
+   * @return Transport
+   */
+  private Transport getTransport(String className)
+  {
+    Transport transport = null;
+    Class transportClass = null; 
+    
+    // If a Transport class name isn't supplied use 
+    // the default Transport implementation.
+    if (className == null)
+      className = DEFAULT_TRANSPORT_CLASS;
+    
+    try {
+      // instruct class loader to load the TransportFactory
+      transportClass = Loader.getClassForName(className);
+    }
+    catch(ClassNotFoundException cnfex) {
+      cnfex.printStackTrace();
+    }
+
+    try {
+      // try to instantiate the TransportFactory
+      transport = (Transport)transportClass.newInstance();
+    }
+    catch(java.lang.Exception ex) {
+      ex.printStackTrace();
+    }
+
+    return transport;
+  }
+
   
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/
@@ -401,6 +460,7 @@ public class RegistryProxy extends AbstractRegistry
     props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
     props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
     props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
+    props.setProperty(RegistryProxy.TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
     props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
     props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
     IRegistry registry = new RegistryProxy(props);
