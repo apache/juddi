@@ -229,7 +229,7 @@ Copyright:
     <mkdir dir="${build.dir}"/>
     <taskdef resource="checkstyletask.properties" />
     <checkstyle
-        config="${conf.dir}/checkstyle.xml"
+        config="${basedir}/checkstyle.xml"
         failureProperty="checkstyle.failure"
         failOnViolation="true">
       <fileset dir="${java.dir}" includes="**/*.java"/>
