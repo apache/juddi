@@ -14,6 +14,9 @@
       of this transition involves decommissioning the lists formely hosted
       on SourceForge.net including juddi-announce, juddi-users and juddi-developers.
         </p>
+      <p>We encourage everyone interested to get involved and contribute. These forums are where
+         the jUDDI developer and user communities meet to discuss issues and plans. Please join us!
+      </p>
         </section>
 
         <section>
@@ -67,6 +70,16 @@
 	<ul>
 	<li><link href="http://nagoya.apache.org/jira/secure/BrowseProject.jspa?id=10401">jUDDI JIRA http://nagoya.apache.org/jira/secure/BrowseProject.jspa?id=10401</link></li>
 	</ul>
+  </section>
+ 
+  <section>
+    <title>jUDDI wiki</title>
+    <p>
+      We also have a wiki for whatever wiki's are for..  
+    </p>
+    <ul>
+    <li><link href="http://wiki.apache.org/general/jUDDI">http://wiki.apache.org/general/jUDDI</link></li>
+    </ul>
   </section>
 
   </body>
