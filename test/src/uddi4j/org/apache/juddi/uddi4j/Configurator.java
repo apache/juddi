@@ -91,7 +91,7 @@ public class Configurator {
      ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
 //     java.io.InputStream is = loader.getResourceAsStream("samples.prop");
-     java.io.InputStream is = loader.getResourceAsStream("org/juddi/uddi4j/samples.prop");
+     java.io.InputStream is = loader.getResourceAsStream("org/apache/juddi/uddi4j/samples.prop");
 
       Properties config = new Properties();
       try {
