@@ -61,5 +61,13 @@
 	</ul>
       </section>
 
+  <section>
+  <title>Bug Tracking</title>
+  <p>Like many other Apache projects, we've begun using <link href="http://www.atlassian.com/software/jira">JIRA</link>. Our tracking database can be found here:</p>
+	<ul>
+	<li><link href="http://nagoya.apache.org/jira/secure/BrowseProject.jspa?id=10401">jUDDI JIRA http://nagoya.apache.org/jira/secure/BrowseProject.jspa?id=10401</link></li>
+	</ul>
+  </section>
+
   </body>
 </document>
