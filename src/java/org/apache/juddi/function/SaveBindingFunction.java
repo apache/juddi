@@ -30,6 +30,7 @@ import org.apache.juddi.datatype.response.BindingDetail;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
@@ -45,9 +46,9 @@ public class SaveBindingFunction extends AbstractFunction
   /**
    *
    */
-  public SaveBindingFunction()
+  public SaveBindingFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

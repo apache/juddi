@@ -29,6 +29,7 @@ import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.AuthTokenRequiredException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -42,9 +43,9 @@ public class DiscardAuthTokenFunction extends AbstractFunction
   /**
    *
    */
-  public DiscardAuthTokenFunction()
+  public DiscardAuthTokenFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -126,19 +127,19 @@ public class DiscardAuthTokenFunction extends AbstractFunction
       GetAuthToken getRequest = new GetAuthToken("sviens","password");
 
       // invoke the server
-      AuthToken getResponse = (AuthToken)(new GetAuthTokenFunction().execute(getRequest));
+      AuthToken getResponse = (AuthToken)(new GetAuthTokenFunction(reg).execute(getRequest));
 
       // create a request
       DiscardAuthToken discardRequest1 = new DiscardAuthToken(getResponse.getAuthInfo());
       // invoke the server with a valid AuthToken value
-      DispositionReport discardResponse = (DispositionReport)(new DiscardAuthTokenFunction().execute(discardRequest1));
+      DispositionReport discardResponse = (DispositionReport)(new DiscardAuthTokenFunction(reg).execute(discardRequest1));
       System.out.println("errno: "+discardResponse.toString());
 
       // create a request
       DiscardAuthToken discardRequest2 = new DiscardAuthToken();
       discardRequest2.setAuthInfo(new AuthInfo("**-BadAuthToken-**"));
       // invoke the server with an invalid AuthToken value
-      DispositionReport discardResponse2 = (DispositionReport)(new DiscardAuthTokenFunction().execute(discardRequest2));
+      DispositionReport discardResponse2 = (DispositionReport)(new DiscardAuthTokenFunction(reg).execute(discardRequest2));
       System.out.println("errno: "+discardResponse2.toString());
     }
     catch (Exception ex)

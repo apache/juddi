@@ -41,6 +41,7 @@ import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.error.UserMismatchException;
 import org.apache.juddi.handler.BusinessEntityHandler;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
@@ -56,9 +57,9 @@ public class SaveBusinessFunction extends AbstractFunction
   /**
    *
    */
-  public SaveBusinessFunction()
+  public SaveBusinessFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

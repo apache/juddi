@@ -30,6 +30,7 @@ import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -43,9 +44,9 @@ public class DeleteTModelFunction extends AbstractFunction
   /**
    *
    */
-  public DeleteTModelFunction()
+  public DeleteTModelFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -151,7 +152,7 @@ public class DeleteTModelFunction extends AbstractFunction
       DeleteTModel request = new DeleteTModel();
 
       // invoke the server
-      DispositionReport response = (DispositionReport)(new DeleteTModelFunction().execute(request));
+      DispositionReport response = (DispositionReport)(new DeleteTModelFunction(reg).execute(request));
       System.out.println("errno: "+response.toString());
     }
     catch (Exception ex)

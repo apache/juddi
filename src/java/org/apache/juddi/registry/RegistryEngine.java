@@ -23,6 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStoreFactory;
 import org.apache.juddi.datatype.RegistryObject;
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.function.FunctionMaker;
@@ -35,12 +37,36 @@ import org.apache.juddi.util.Loader;
  */
 public class RegistryEngine extends AbstractRegistry
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(RegistryEngine.class);
-
   // jUDDI Registry Property File Name
   private static final String PROPFILE_NAME = "juddi.properties";
   
+  // jUDDI Registry Property Names
+  public static final String PROPNAME_OPERATOR = "juddi.operatorName";
+  public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
+  public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLength";    
+  public static final String PROPNAME_OPERATOR_SITE_URL = "juddi.operatorSiteURL";
+  public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress";
+  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize";
+  public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
+  public static final String PROPNAME_DATASTORE_FACTORY_CLASS_NAME = "juddi.datastore";
+  public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
+  public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
+
+  // jUDDI Registry Default Property Values
+  public static final String DEFAULT_OPERATOR = "jUDDI.org";
+  public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
+  public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
+  public static final String DEFAULT_OPERATOR_SITE_URL = "http://localhost/juddi";
+  public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "admin@juddi.org";
+  public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152;
+  public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
+  public static final String DEFAULT_DATASTORE_FACTORY_CLASS_NAME = "org.apache.juddi.datastore.JDBCDataStoreFactory";
+  public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
+  public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
+
+  // private reference to the jUDDI logger
+  private static Log log = LogFactory.getLog(RegistryEngine.class);
+
   // jUDDI Function maker
   private FunctionMaker maker = null;
 
@@ -118,19 +144,18 @@ public class RegistryEngine extends AbstractRegistry
    */
   public void init()
   {
-    // turn off registry access
-
+    // Turn off registry access
     isAvailable = false;
 
-    // create, initialize and register
+    // Create, initialize and register
     // the core jUDDI components.
-
     DataStoreFactory.initFactory();
     
-    this.maker = FunctionMaker.getInstance();
+    // Grab a reference to the function
+    // registry (hmm bad name choice).
+    this.maker = new FunctionMaker(this);
 
-    // turn on registry access
-
+    // Turn on registry access
     isAvailable = true;
   }
 
@@ -140,12 +165,10 @@ public class RegistryEngine extends AbstractRegistry
    */
   public void dispose()
   {
-    // turn off registry access
-
+    // Turn off registry access
     isAvailable = false;
 
-    // call each sub-component's dispose methods
-
+    // Call each sub-component's dispose methods
     DataStoreFactory.destroyFactory();
   }
 
@@ -184,19 +207,32 @@ public class RegistryEngine extends AbstractRegistry
   public static void main(String[] args)
     throws Exception
   {
-    // okay, let's build the registry
-    RegistryEngine registry = RegistryEngine.getInstance();
+    // Option #1 (grabs properties from juddi.properties file)
+    //RegistryEngine registry = new RegistryEngine();
+    
+    // Option #2 (provides properties in Properties instance)
+    Properties props = new Properties();
+    props.setProperty(RegistryEngine.PROPNAME_OPERATOR,"jUDDI.org");
+    props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_ELEMENTS,"5");
+    props.setProperty(RegistryEngine.PROPNAME_MAX_NAME_LENGTH,"255");
+    props.setProperty(RegistryEngine.PROPNAME_OPERATOR_SITE_URL,"http://localhost/juddi");
+    props.setProperty(RegistryEngine.PROPNAME_ADMIN_EMAIL_ADDRESS,"admin@juddi.org");    
+    props.setProperty(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,"2097152");
+    props.setProperty(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,"org.apache.juddi.auth.DefaultAuthenticator");
+    props.setProperty(RegistryEngine.PROPNAME_CRYPTOR_CLASS_NAME,"org.apache.juddi.cryptor.DefaultCryptor");
+    props.setProperty(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,"org.apache.juddi.uuidgen.DefaultUUIDGen");
+    RegistryEngine registry = new RegistryEngine(props);    
+
+    // initialize the registry
     registry.init();
 
-    // dump all registry properties to the console
+    // write all properties to the console
     System.out.println(Config.getProperties());
 
-    // test the logger
-    log.debug("log.debug");
-    log.info("log.info");
-    log.warn("log.warn");
-    log.error("log.error");
-    log.fatal("log.fatal");
+    AuthToken authToken = registry.getAuthToken("sviens","password");
+    AuthInfo authInfo = authToken.getAuthInfo();
+
+    System.out.println("AuthToken: "+authInfo.getValue());    
 
     // tear down the registry
     registry.dispose();

@@ -25,6 +25,7 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.GetAssertionStatusReport;
 import org.apache.juddi.datatype.response.AssertionStatusReport;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -38,9 +39,9 @@ public class GetAssertionStatusReportFunction extends AbstractFunction
   /**
    *
    */
-  public GetAssertionStatusReportFunction()
+  public GetAssertionStatusReportFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

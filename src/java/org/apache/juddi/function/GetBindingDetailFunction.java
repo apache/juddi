@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.request.GetBindingDetail;
 import org.apache.juddi.datatype.response.BindingDetail;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -39,9 +40,9 @@ public class GetBindingDetailFunction extends AbstractFunction
   /**
    *
    */
-  public GetBindingDetailFunction()
+  public GetBindingDetailFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

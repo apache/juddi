@@ -30,6 +30,7 @@ import org.apache.juddi.datatype.response.PublisherList;
 import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -55,9 +56,9 @@ public class FindPublisherFunction extends AbstractFunction
   /**
    *
    */
-  public FindPublisherFunction()
+  public FindPublisherFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

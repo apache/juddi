@@ -50,6 +50,7 @@ import org.apache.juddi.datatype.request.SaveService;
 import org.apache.juddi.datatype.request.SaveTModel;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
 import org.apache.juddi.datatype.request.ValidateValues;
+import org.apache.juddi.registry.RegistryEngine;
 
 /**
  * Holds a static HashMap linking the string representation of operations to
@@ -62,11 +63,8 @@ import org.apache.juddi.datatype.request.ValidateValues;
  */
 public class FunctionMaker
 {
-  // private reference to the jUDDI logger
+  // private reference to the logger
   private static Log log = LogFactory.getLog(FunctionMaker.class);
-
-  // shared FunctionMaker
-  private static FunctionMaker maker = null;
 
   // table of shared Function instances
   private HashMap functions = null;
@@ -74,125 +72,198 @@ public class FunctionMaker
   /**
    *
    */
-  private FunctionMaker()
+  public FunctionMaker(RegistryEngine registry)
   {
     functions = new HashMap();
     IFunction function = null;
 
-    function = new AddPublisherAssertionsFunction();
+//    function = new AddPublisherAssertionsFunction();
+//    functions.put(AddPublisherAssertions.class.getName(),function);
+//
+//    function = new DeleteBindingFunction();
+//    functions.put(DeleteBinding.class.getName(),function);
+//
+//    function = new DeleteBusinessFunction();
+//    functions.put(DeleteBusiness.class.getName(),function);
+//
+//    function = new DeletePublisherAssertionsFunction();
+//    functions.put(DeletePublisherAssertions.class.getName(),function);
+//
+//    function = new DeletePublisherFunction();
+//    functions.put(DeletePublisher.class.getName(),function);
+//
+//    function = new DeleteServiceFunction();
+//    functions.put(DeleteService.class.getName(),function);
+//
+//    function = new DeleteTModelFunction();
+//    functions.put(DeleteTModel.class.getName(),function);
+//
+//    function = new DiscardAuthTokenFunction();
+//    functions.put(DiscardAuthToken.class.getName(),function);
+//
+//    function = new FindBindingFunction();
+//    functions.put(FindBinding.class.getName(),function);
+//
+//    function = new FindBusinessFunction();
+//    functions.put(FindBusiness.class.getName(),function);
+//
+//    function = new FindPublisherFunction();
+//    functions.put(FindPublisher.class.getName(),function);
+//
+//    function = new FindRelatedBusinessesFunction();
+//    functions.put(FindRelatedBusinesses.class.getName(),function);
+//
+//    function = new FindServiceFunction();
+//    functions.put(FindService.class.getName(),function);
+//
+//    function = new FindTModelFunction();
+//    functions.put(FindTModel.class.getName(),function);
+//
+//    function = new GetAssertionStatusReportFunction();
+//    functions.put(GetAssertionStatusReport.class.getName(),function);
+//
+//    function = new GetAuthTokenFunction();
+//    functions.put(GetAuthToken.class.getName(),function);
+//
+//    function = new GetBindingDetailFunction();
+//    functions.put(GetBindingDetail.class.getName(),function);
+//
+//    function = new GetBusinessDetailFunction();
+//    functions.put(GetBusinessDetail.class.getName(),function);
+//
+//    function = new GetBusinessDetailExtFunction();
+//    functions.put(GetBusinessDetailExt.class.getName(),function);
+//
+//    function = new GetPublisherAssertionsFunction();
+//    functions.put(GetPublisherAssertions.class.getName(),function);
+//
+//    function = new GetPublisherDetailFunction();
+//    functions.put(GetPublisherDetail.class.getName(),function);
+//
+//    function = new GetRegisteredInfoFunction();
+//    functions.put(GetRegisteredInfo.class.getName(),function);
+//
+//    function = new GetServiceDetailFunction();
+//    functions.put(GetServiceDetail.class.getName(),function);
+//
+//    function = new GetTModelDetailFunction();
+//    functions.put(GetTModelDetail.class.getName(),function);
+//
+//    function = new SaveBindingFunction();
+//    functions.put(SaveBinding.class.getName(),function);
+//
+//    function = new SaveBusinessFunction();
+//    functions.put(SaveBusiness.class.getName(),function);
+//
+//    function = new SavePublisherFunction();
+//    functions.put(SavePublisher.class.getName(),function);
+//
+//    function = new SaveServiceFunction();
+//    functions.put(SaveService.class.getName(),function);
+//
+//    function = new SaveTModelFunction();
+//    functions.put(SaveTModel.class.getName(),function);
+//
+//    function = new SetPublisherAssertionsFunction();
+//    functions.put(SetPublisherAssertions.class.getName(),function);
+//
+//    function = new ValidateValuesFunction();
+//    functions.put(ValidateValues.class.getName(),function);
+//
+//    /** **/
+    
+    function = new AddPublisherAssertionsFunction(registry);
     functions.put(AddPublisherAssertions.class.getName(),function);
 
-    function = new DeleteBindingFunction();
+    function = new DeleteBindingFunction(registry);
     functions.put(DeleteBinding.class.getName(),function);
 
-    function = new DeleteBusinessFunction();
+    function = new DeleteBusinessFunction(registry);
     functions.put(DeleteBusiness.class.getName(),function);
 
-    function = new DeletePublisherAssertionsFunction();
+    function = new DeletePublisherAssertionsFunction(registry);
     functions.put(DeletePublisherAssertions.class.getName(),function);
 
-    function = new DeletePublisherFunction();
+    function = new DeletePublisherFunction(registry);
     functions.put(DeletePublisher.class.getName(),function);
 
-    function = new DeleteServiceFunction();
+    function = new DeleteServiceFunction(registry);
     functions.put(DeleteService.class.getName(),function);
 
-    function = new DeleteTModelFunction();
+    function = new DeleteTModelFunction(registry);
     functions.put(DeleteTModel.class.getName(),function);
 
-    function = new DiscardAuthTokenFunction();
+    function = new DiscardAuthTokenFunction(registry);
     functions.put(DiscardAuthToken.class.getName(),function);
 
-    function = new FindBindingFunction();
+    function = new FindBindingFunction(registry);
     functions.put(FindBinding.class.getName(),function);
 
-    function = new FindBusinessFunction();
+    function = new FindBusinessFunction(registry);
     functions.put(FindBusiness.class.getName(),function);
 
-    function = new FindPublisherFunction();
+    function = new FindPublisherFunction(registry);
     functions.put(FindPublisher.class.getName(),function);
 
-    function = new FindRelatedBusinessesFunction();
+    function = new FindRelatedBusinessesFunction(registry);
     functions.put(FindRelatedBusinesses.class.getName(),function);
 
-    function = new FindServiceFunction();
+    function = new FindServiceFunction(registry);
     functions.put(FindService.class.getName(),function);
 
-    function = new FindTModelFunction();
+    function = new FindTModelFunction(registry);
     functions.put(FindTModel.class.getName(),function);
 
-    function = new GetAssertionStatusReportFunction();
+    function = new GetAssertionStatusReportFunction(registry);
     functions.put(GetAssertionStatusReport.class.getName(),function);
 
-    function = new GetAuthTokenFunction();
+    function = new GetAuthTokenFunction(registry);
     functions.put(GetAuthToken.class.getName(),function);
 
-    function = new GetBindingDetailFunction();
+    function = new GetBindingDetailFunction(registry);
     functions.put(GetBindingDetail.class.getName(),function);
 
-    function = new GetBusinessDetailFunction();
+    function = new GetBusinessDetailFunction(registry);
     functions.put(GetBusinessDetail.class.getName(),function);
 
-    function = new GetBusinessDetailExtFunction();
+    function = new GetBusinessDetailExtFunction(registry);
     functions.put(GetBusinessDetailExt.class.getName(),function);
 
-    function = new GetPublisherAssertionsFunction();
+    function = new GetPublisherAssertionsFunction(registry);
     functions.put(GetPublisherAssertions.class.getName(),function);
 
-    function = new GetPublisherDetailFunction();
+    function = new GetPublisherDetailFunction(registry);
     functions.put(GetPublisherDetail.class.getName(),function);
 
-    function = new GetRegisteredInfoFunction();
+    function = new GetRegisteredInfoFunction(registry);
     functions.put(GetRegisteredInfo.class.getName(),function);
 
-    function = new GetServiceDetailFunction();
+    function = new GetServiceDetailFunction(registry);
     functions.put(GetServiceDetail.class.getName(),function);
 
-    function = new GetTModelDetailFunction();
+    function = new GetTModelDetailFunction(registry);
     functions.put(GetTModelDetail.class.getName(),function);
 
-    function = new SaveBindingFunction();
+    function = new SaveBindingFunction(registry);
     functions.put(SaveBinding.class.getName(),function);
 
-    function = new SaveBusinessFunction();
+    function = new SaveBusinessFunction(registry);
     functions.put(SaveBusiness.class.getName(),function);
 
-    function = new SavePublisherFunction();
+    function = new SavePublisherFunction(registry);
     functions.put(SavePublisher.class.getName(),function);
 
-    function = new SaveServiceFunction();
+    function = new SaveServiceFunction(registry);
     functions.put(SaveService.class.getName(),function);
 
-    function = new SaveTModelFunction();
+    function = new SaveTModelFunction(registry);
     functions.put(SaveTModel.class.getName(),function);
 
-    function = new SetPublisherAssertionsFunction();
+    function = new SetPublisherAssertionsFunction(registry);
     functions.put(SetPublisherAssertions.class.getName(),function);
 
-    function = new ValidateValuesFunction();
+    function = new ValidateValuesFunction(registry);
     functions.put(ValidateValues.class.getName(),function);
-  }
-
-  /**
-   *
-   */
-  public static FunctionMaker getInstance()
-  {
-    if (maker == null)
-      maker = createInstance();
-
-    return maker;
-  }
-
-  /**
-   *
-   */
-  private static synchronized FunctionMaker createInstance()
-  {
-    if (maker == null)
-      maker = new FunctionMaker();
-
-    return maker;
   }
 
   /**

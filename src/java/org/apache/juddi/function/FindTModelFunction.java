@@ -32,6 +32,7 @@ import org.apache.juddi.datatype.response.TModelList;
 import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -45,9 +46,9 @@ public class FindTModelFunction extends AbstractFunction
   /**
    *
    */
-  public FindTModelFunction()
+  public FindTModelFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -94,7 +95,7 @@ public class FindTModelFunction extends AbstractFunction
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
-        int maxNameLength = org.apache.juddi.util.Config.getMaxNameLength();
+        int maxNameLength = Config.getMaxNameLength();
         if (name.length() > maxNameLength)
           throw new NameTooLongException("Name: '"+name+"' (max="+maxNameLength+")");
       }

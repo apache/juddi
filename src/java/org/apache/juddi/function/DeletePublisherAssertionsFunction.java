@@ -38,6 +38,7 @@ import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -51,9 +52,9 @@ public class DeletePublisherAssertionsFunction extends AbstractFunction
   /**
    *
    */
-  public DeletePublisherAssertionsFunction()
+  public DeletePublisherAssertionsFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -135,7 +136,7 @@ public class DeletePublisherAssertionsFunction extends AbstractFunction
     {
       // generate an AuthToken
       GetAuthToken authTokenRequest = new GetAuthToken("sviens","password");
-      GetAuthTokenFunction authTokenService = new GetAuthTokenFunction();
+      GetAuthTokenFunction authTokenService = new GetAuthTokenFunction(reg);
       AuthToken authToken = (AuthToken)authTokenService.execute(authTokenRequest);
       String authInfo = authToken.getAuthInfo().getValue();
 
@@ -154,7 +155,7 @@ public class DeletePublisherAssertionsFunction extends AbstractFunction
       SaveBusiness sbReq = new SaveBusiness();
       sbReq.setAuthInfo(new AuthInfo(authInfo));
       sbReq.setBusinessEntityVector(businessVector);
-      BusinessDetail detail = (BusinessDetail)(new SaveBusinessFunction().execute(sbReq));
+      BusinessDetail detail = (BusinessDetail)(new SaveBusinessFunction(reg).execute(sbReq));
       Vector detailVector = detail.getBusinessEntityVector();
       BusinessEntity b1 = (BusinessEntity)detailVector.elementAt(0);
       BusinessEntity b2 = (BusinessEntity)detailVector.elementAt(1);
@@ -174,16 +175,16 @@ public class DeletePublisherAssertionsFunction extends AbstractFunction
       AddPublisherAssertions apaReq = new AddPublisherAssertions();
       apaReq.setAuthInfo(new AuthInfo(authInfo));
       apaReq.setPublisherAssertionVector(assertionVector);
-      DispositionReport dspRpt1 = (DispositionReport)(new AddPublisherAssertionsFunction().execute(apaReq));
+      DispositionReport dspRpt1 = (DispositionReport)(new AddPublisherAssertionsFunction(reg).execute(apaReq));
       System.out.println("errno: "+dspRpt1.toString());
-      DispositionReport dspRpt2 = (DispositionReport)(new AddPublisherAssertionsFunction().execute(apaReq));
+      DispositionReport dspRpt2 = (DispositionReport)(new AddPublisherAssertionsFunction(reg).execute(apaReq));
       System.out.println("errno: "+dspRpt2.toString());
 
       // create an DeletePublisherAssertions request & invoke the server
       DeletePublisherAssertions dpaReq = new DeletePublisherAssertions();
       dpaReq.setAuthInfo(new AuthInfo(authInfo));
       dpaReq.setPublisherAssertionVector(assertionVector);
-      DispositionReport response = (DispositionReport)(new DeletePublisherAssertionsFunction().execute(dpaReq));
+      DispositionReport response = (DispositionReport)(new DeletePublisherAssertionsFunction(reg).execute(dpaReq));
       System.out.println("errno: "+response.toString());
     }
     catch (Exception ex)

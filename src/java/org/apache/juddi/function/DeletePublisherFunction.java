@@ -28,6 +28,7 @@ import org.apache.juddi.datatype.request.DeletePublisher;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -41,9 +42,9 @@ public class DeletePublisherFunction extends AbstractFunction
   /**
    *
    */
-  public DeletePublisherFunction()
+  public DeletePublisherFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

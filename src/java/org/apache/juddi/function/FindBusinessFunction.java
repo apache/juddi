@@ -38,6 +38,7 @@ import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.TooManyOptionsException;
 import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -69,9 +70,9 @@ public class FindBusinessFunction extends AbstractFunction
   /**
    *
    */
-  public FindBusinessFunction()
+  public FindBusinessFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -128,7 +129,7 @@ public class FindBusinessFunction extends AbstractFunction
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
-        int maxNameLength = org.apache.juddi.util.Config.getMaxNameLength();
+        int maxNameLength = Config.getMaxNameLength();
         for (int i = 0; i < nameVector.size(); i++)
         {
           String name = ((Name) nameVector.elementAt(i)).getValue();
@@ -316,7 +317,7 @@ public class FindBusinessFunction extends AbstractFunction
 
       // invoke the server
       BusinessList response =
-        (BusinessList) (new FindBusinessFunction().execute(request));
+        (BusinessList) (new FindBusinessFunction(reg).execute(request));
       System.out.println(response);
     }
     catch (Exception ex)

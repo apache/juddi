@@ -30,6 +30,7 @@ import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -43,9 +44,9 @@ public class DeleteServiceFunction extends AbstractFunction
   /**
    *
    */
-  public DeleteServiceFunction()
+  public DeleteServiceFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -149,7 +150,7 @@ public class DeleteServiceFunction extends AbstractFunction
       DeleteService request = new DeleteService();
 
       // invoke the server
-      DispositionReport response = (DispositionReport)(new DeleteServiceFunction().execute(request));
+      DispositionReport response = (DispositionReport)(new DeleteServiceFunction(reg).execute(request));
       System.out.println("errno: "+response.toString());
     }
     catch (Exception ex)

@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.request.GetBusinessDetail;
 import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -39,9 +40,9 @@ public class GetBusinessDetailFunction extends AbstractFunction
   /**
    *
    */
-  public GetBusinessDetailFunction()
+  public GetBusinessDetailFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

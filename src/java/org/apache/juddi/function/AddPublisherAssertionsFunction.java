@@ -39,6 +39,7 @@ import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -48,13 +49,13 @@ public class AddPublisherAssertionsFunction extends AbstractFunction
 {
   // private reference to jUDDI Logger
   private static Log log = LogFactory.getLog(AddPublisherAssertionsFunction.class);
-
+  
   /**
    *
    */
-  public AddPublisherAssertionsFunction()
+  public AddPublisherAssertionsFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

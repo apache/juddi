@@ -21,12 +21,40 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.error.AuthTokenExpiredException;
 import org.apache.juddi.error.AuthTokenRequiredException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 
 /**
  * @author Steve Viens (sviens@apache.org)
  */
 public abstract class AbstractFunction implements IFunction
 {
+  // protected reference to parent Registry instance
+  protected RegistryEngine registry = null;
+
+  /**
+   * @param registry
+   */
+  protected AbstractFunction(RegistryEngine registry)
+  {
+  	this.registry = registry;
+  }
+  
+  /**
+   * @return
+   */
+  public RegistryEngine getRegistry()
+  {
+  	return this.registry;
+  }
+  
+  /**
+   * @param registry
+   */
+  public void setRegistry(RegistryEngine registry)
+  {
+    this.registry = registry;
+  }
+
   /**
    * Verify the authentication parameters.
    */

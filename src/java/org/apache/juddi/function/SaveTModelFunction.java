@@ -31,6 +31,7 @@ import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
@@ -46,9 +47,9 @@ public class SaveTModelFunction extends AbstractFunction
   /**
    *
    */
-  public SaveTModelFunction()
+  public SaveTModelFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -115,7 +116,7 @@ public class SaveTModelFunction extends AbstractFunction
         // Everything checks out so let's save it. First store
         // 'authorizedName' and 'operator' values in each TModel.
         tModel.setAuthorizedName(authorizedName);
-        tModel.setOperator(org.apache.juddi.util.Config.getOperator());
+        tModel.setOperator(Config.getOperator());
         dataStore.saveTModel(tModel,publisherID);
       }
 

@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.request.GetTModelDetail;
 import org.apache.juddi.datatype.response.TModelDetail;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -39,9 +40,9 @@ public class GetTModelDetailFunction extends AbstractFunction
   /**
    *
    */
-  public GetTModelDetailFunction()
+  public GetTModelDetailFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.ValidateValues;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -34,9 +35,9 @@ public class ValidateValuesFunction extends AbstractFunction
   /**
    *
    */
-  public ValidateValuesFunction()
+  public ValidateValuesFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

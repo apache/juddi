@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
 import org.apache.juddi.datatype.response.PublisherAssertions;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -40,9 +41,9 @@ public class SetPublisherAssertionsFunction extends AbstractFunction
   /**
    *
    */
-  public SetPublisherAssertionsFunction()
+  public SetPublisherAssertionsFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

@@ -27,6 +27,7 @@ import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.SavePublisher;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -40,9 +41,9 @@ public class SavePublisherFunction extends AbstractFunction
   /**
    *
    */
-  public SavePublisherFunction()
+  public SavePublisherFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

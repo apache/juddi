@@ -42,9 +42,9 @@ public class GetAuthTokenFunction extends AbstractFunction
   /**
    *
    */
-  public GetAuthTokenFunction()
+  public GetAuthTokenFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -132,20 +132,20 @@ public class GetAuthTokenFunction extends AbstractFunction
     {
       // valid request
       GetAuthToken request = new GetAuthToken("sviens","password");
-      AuthToken response = (AuthToken)(new GetAuthTokenFunction().execute(request));
+      AuthToken response = (AuthToken)(new GetAuthTokenFunction(reg).execute(request));
       System.out.println("Function: getAuthToken(sviens/password)");
       System.out.println(" AuthInfo: "+response.getAuthInfo());
 
       // invalid (unknown user) request
       request = new GetAuthToken("jdoe","password");
       System.out.println("Function: getAuthToken(jdoe/password)");
-      response = (AuthToken)(new GetAuthTokenFunction().execute(request));
+      response = (AuthToken)(new GetAuthTokenFunction(reg).execute(request));
       System.out.println(" AuthInfo: "+response.getAuthInfo());
 
       // invalid (invalid credential) request
       request = new GetAuthToken("guest","password");
       System.out.println("Function: getAuthToken(guest/password)");
-      response = (AuthToken)(new GetAuthTokenFunction().execute(request));
+      response = (AuthToken)(new GetAuthTokenFunction(reg).execute(request));
       System.out.println(" AuthInfo: "+response.getAuthInfo());
     }
     catch (Exception ex)

@@ -26,6 +26,7 @@ import org.apache.juddi.datatype.request.GetPublisherDetail;
 import org.apache.juddi.datatype.response.PublisherDetail;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnknownUserException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -39,9 +40,9 @@ public class GetPublisherDetailFunction extends AbstractFunction
   /**
    *
    */
-  public GetPublisherDetailFunction()
+  public GetPublisherDetailFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

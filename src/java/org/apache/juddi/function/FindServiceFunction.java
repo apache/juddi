@@ -34,6 +34,7 @@ import org.apache.juddi.error.NameTooLongException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.TooManyOptionsException;
 import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -47,9 +48,9 @@ public class FindServiceFunction extends AbstractFunction
   /**
    *
    */
-  public FindServiceFunction()
+  public FindServiceFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
@@ -96,14 +97,14 @@ public class FindServiceFunction extends AbstractFunction
       {
         // only allowed to specify a maximum of 5 names (implementation
         // dependent).  This value is configurable in jUDDI.
-        int maxNames = org.apache.juddi.util.Config.getMaxNameElementsAllowed();
+        int maxNames = Config.getMaxNameElementsAllowed();
         if ((nameVector != null) && (nameVector.size() > maxNames))
           throw new TooManyOptionsException("max = "+maxNames);
 
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
-        int maxNameLength = org.apache.juddi.util.Config.getMaxNameLength();
+        int maxNameLength = Config.getMaxNameLength();
         for (int i=0; i<nameVector.size(); i++)
         {
           String name = ((Name)nameVector.elementAt(i)).getValue();
@@ -223,7 +224,7 @@ public class FindServiceFunction extends AbstractFunction
       request.setTModelBag(bag);
 
       // invoke the server
-      ServiceList response = (ServiceList) (new FindServiceFunction().execute(request));
+      ServiceList response = (ServiceList) (new FindServiceFunction(reg).execute(request));
 
       System.out.println(response);
     }

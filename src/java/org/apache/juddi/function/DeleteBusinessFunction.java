@@ -30,6 +30,7 @@ import org.apache.juddi.datatype.response.Result;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -43,9 +44,9 @@ public class DeleteBusinessFunction extends AbstractFunction
   /**
    *
    */
-  public DeleteBusinessFunction()
+  public DeleteBusinessFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

@@ -26,7 +26,9 @@ import org.apache.juddi.datatype.request.GetServiceDetail;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
+;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -39,9 +41,9 @@ public class GetServiceDetailFunction extends AbstractFunction
   /**
    *
    */
-  public GetServiceDetailFunction()
+  public GetServiceDetailFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

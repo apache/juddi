@@ -29,6 +29,7 @@ import org.apache.juddi.datatype.response.BusinessInfos;
 import org.apache.juddi.datatype.response.RegisteredInfo;
 import org.apache.juddi.datatype.response.TModelInfos;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
 /**
@@ -42,9 +43,9 @@ public class GetRegisteredInfoFunction extends AbstractFunction
   /**
    *
    */
-  public GetRegisteredInfoFunction()
+  public GetRegisteredInfoFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**

@@ -28,8 +28,8 @@ import org.apache.juddi.datatype.request.FindRelatedBusinesses;
 import org.apache.juddi.datatype.response.RelatedBusinessInfos;
 import org.apache.juddi.datatype.response.RelatedBusinessesList;
 import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
-
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -42,9 +42,9 @@ public class FindRelatedBusinessesFunction extends AbstractFunction
   /**
    *
    */
-  public FindRelatedBusinessesFunction()
+  public FindRelatedBusinessesFunction(RegistryEngine registry)
   {
-    super();
+    super(registry);
   }
 
   /**
