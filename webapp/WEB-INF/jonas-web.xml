@@ -11,6 +11,4 @@
         <jndi-name>jdbc/juddiDB</jndi-name>
     </jonas-resource>
 
-    <java2-delegation-model>false</java2-delegation-model>
-
 </jonas-web-app>
