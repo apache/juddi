@@ -26,7 +26,7 @@ import java.util.Date;
  */
 public class Release 
 {
-  private static final String VERSION = "0.9rc3";
+  private static final String VERSION = "0.9rc4";
   
   // Made private to avoid instantiation
   private Release()
