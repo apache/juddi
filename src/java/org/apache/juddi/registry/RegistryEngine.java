@@ -41,29 +41,51 @@ public class RegistryEngine extends AbstractRegistry
   private static final String PROPFILE_NAME = "juddi.properties";
   
   // Registry Property Names
+  //
   public static final String PROPNAME_OPERATOR_NAME = "juddi.operatorName";
   public static final String PROPNAME_OPERATOR_URL = "juddi.operatorURL";
-  public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
-  public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLength";    
   public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress"; // unused
-  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize"; // unused
+  public static final String PROPNAME_DATASOURCE_NAME = "juddi.dataSource";
+  
   public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
   public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.datastore";
   public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
   public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
-
+  public static final String PROPNAME_VALIDATOR_CLASS_NAME = "juddi.validator";
+  public static final String PROPNAME_MONITOR_CLASS_NAME = "juddi.monitor";
+  
+  public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
+  public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLengthAllowed";    
+  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize"; // unused
+  public static final String PROPNAME_MAX_BUSINESS_ENTITIES_PER_USER = "juddi.maxBusinessEntitiesPerUser"; // unused
+  public static final String PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS = "juddi.maxBusinessServicesPerBusiness"; // unused
+  public static final String PROPNAME_MAX_BINDING_TEMPLATES_PER_SERVICE = "juddi.maxBindingTemplatesPerService"; // unused
+  public static final String PROPNAME_MAX_TMODELS_PER_USER = "juddi.maxTModelsPerUser"; // unused
+  public static final String PROPNAME_MAX_ROWS_LIMIT = "juddi.maxRowsLimit"; // unused
+  
   // Registry Default Property Values
-  public static final String DEFAULT_OPERATOR_NAME = "Viens.net";
-  public static final String DEFAULT_OPERATOR_URL = "http://localhost:8080/uddi/";
-  public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
-  public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
-  public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "uddi@viens.net"; // unused
-  public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152; // unused
+  //
+  public static final String DEFAULT_OPERATOR_NAME = "Apache.org";
+  public static final String DEFAULT_OPERATOR_URL = "http://localhost:8080/juddi/";
+  public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "nobody@apache.org"; // unused
+  public static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/juddiDB";
+  
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
   public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.JDBCDataStore";
   public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
   public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
-
+  public static final String DEFAULT_VALIDATOR_CLASS_NAME = "org.apache.juddi.validator.DefaultValidator";
+  public static final String DEFAULT_MONITOR_CLASS_NAME = "org.apache.juddi.monitor.jdbc.JDBCMonitor";
+  
+  public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
+  public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
+  public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152; // unused
+  public static final int    DEFAULT_MAX_BUSINESS_ENTITIES_PER_USER = 25; // unused
+  public static final int    DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS = 20; // unused
+  public static final int    DEFAULT_MAX_BINDING_TEMPLATES_PER_SERVICE = 10; // unused
+  public static final int    DEFAULT_MAX_TMODELS_PER_USER = 100; // unused
+  public static final int    DEFAULT_MAX_ROWS_LIMIT = 10; // unused
+  
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(RegistryEngine.class);
 
