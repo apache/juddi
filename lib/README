@@ -1,0 +1,43 @@
+Be sure to get the latest jars from Axis 1.1! And 
+remember to remove "log4j.properties" from "axis.jar"
+
+	Apache Axis 1.1 (http://ws.apache.org/axis)
+	---------------
+	axis.jar
+	commons-discovery.jar
+	commons-logging.jar
+	jaxrpc.jar
+	log4j-1.2.8.jar
+	saaj.jar
+	wsdl4j.jar
+	
+	Java Cryptography Extensions 1.2.2 (http://java.sun.com/products/jce/)
+	----------------------------------
+	jce.jar
+	
+	JUnit 3.8.1 (http://www.junit.org)
+	-----------
+	junit.jar
+	
+	UDDI4j 2.0.1 (http://www.uddi4j.org)
+	------------
+	uddi4j.jar	
+	
+	Jakarta Commons Collections 2.1 (http://jakarta.apache.org/commons/collections.html)
+	-------------------------------
+    commons-collections.jar        
+	
+	Jakarta Commons DBCP 1.0 (http://jakarta.apache.org/commons/dbcp/)
+	------------------------	
+    commons-dbcp.jar
+        
+	Jakarta Commons Pool 1.0.1 (http://jakarta.apache.org/commons/pool/)
+	--------------------------
+    commons-pool.jar        
+        
+	Jakarta Tomcat 4.1.24 (http://jakarta.apache.org/tomcat)
+	---------------------
+	jdbc2_0-stdext.jar
+	servlet.jar
+
+        
