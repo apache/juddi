@@ -18,7 +18,8 @@ package org.apache.juddi.auth;
 /**
  * @author Steve Viens (sviens@apache.org)
  */
-public interface Authenticator {
+public interface Authenticator 
+{
   /**
    *
    * @param userID
