@@ -246,7 +246,7 @@ public class RegistryServlet extends HttpServlet
       
       String function = uddiReq.getLocalName();
       if ((function == null) || (function.trim().length() == 0))
-        throw new FatalErrorException("The name of the UDDI request " +
+        throw new FatalErrorException("The UDDI request type " +
           "could not be identified.");
       
       // Lookup the appropriate XML handler.  Throw an 
@@ -255,7 +255,7 @@ public class RegistryServlet extends HttpServlet
       IHandler requestHandler = maker.lookup(function);
       if (requestHandler == null)
         throw new UnsupportedException("The UDDI request " +
-          "type specified is unknown: " +function);
+          "type specified is unknown or unsupported: " +function);
       
       // Grab the generic attribute value.  If one isn't 
       // specified or the value specified is not "2.0" then 
