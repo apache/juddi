@@ -94,6 +94,8 @@ public class AssertionStatusItemHandler extends AbstractHandler
     CompletionStatus status = item.getCompletionStatus();
     if ((status != null) && (status.getValue() != null))
       element.setAttribute("completionStatus",status.getValue());
+    else
+      element.setAttribute("completionStatus","");
 
     String fromKey = item.getFromKey();
     if (fromKey != null)
