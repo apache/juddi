@@ -21,7 +21,7 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.*;
+import org.apache.juddi.AbstractRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.response.AuthToken;
