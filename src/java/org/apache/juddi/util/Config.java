@@ -96,14 +96,6 @@ public class Config extends Properties
   /**
    *
    */
-  public static String getAdminEmailAddress()
-  {
-    return getStringProperty("juddi.adminEmailAddress");
-  }
-
-  /**
-   *
-   */
   public static String getDataStoreFactory()
   {
     return getStringProperty("juddi.dataStoreFactory");
@@ -120,22 +112,6 @@ public class Config extends Properties
   public static String getMonitorClass()
   {
     return getStringProperty("juddi.monitor");
-  }
-
-  /**
-   *
-   */
-  public static String getTransport()
-  {
-    return getStringProperty("juddi.transport", null);
-  }
-
-  /**
-   *
-   */
-  public static int getMaxMessageSize()
-  {
-    return getIntProperty("juddi.maxMessageSize", 0);
   }
 
   /**
