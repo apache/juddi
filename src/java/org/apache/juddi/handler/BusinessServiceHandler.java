@@ -104,6 +104,8 @@ public class BusinessServiceHandler extends AbstractHandler
     String serviceKey = service.getServiceKey();
     if (serviceKey != null)
       element.setAttribute("serviceKey",serviceKey);
+    else
+      element.setAttribute("serviceKey","");
 
     String businessKey = service.getBusinessKey();
     if (businessKey != null)
