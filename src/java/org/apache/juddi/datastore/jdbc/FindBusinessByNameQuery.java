@@ -157,10 +157,11 @@ class FindBusinessByNameQuery
               sql.addValue(text.endsWith("%") ? text.toUpperCase() : text.toUpperCase()+"%");
             }
 
+            // If lang is "en" we'll need to match with "en", "en_US" or "en_UK"
             if ((lang != null) && (lang.length() > 0))
             {
-              sql.append(" AND LANG_CODE = ?");
-              sql.addValue(lang);
+              sql.append(" AND (UPPER(LANG_CODE) LIKE ?)");
+              sql.addValue(lang.toUpperCase()+"%");
             }
             
             sql.append(")");
