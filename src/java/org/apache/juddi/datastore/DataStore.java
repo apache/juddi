@@ -69,7 +69,7 @@ public interface DataStore
    *
    * @param publisherID
    * @return publisher
-   * @throws UDDIException
+   * @throws RegistryException
    */
   Publisher getPublisher(String publisherID)
     throws RegistryException;
