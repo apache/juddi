@@ -15,10 +15,8 @@
  */
 package org.apache.juddi.registry;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -37,98 +35,51 @@ import org.apache.commons.logging.LogFactory;
 public class RegistryServlet extends HttpServlet
 {
   // xml config file name.
-  private static final String PROPERTY_FILE_NAME = "juddi.properties";
+  private static final String PROPERTY_FILE = "/WEB-INF/juddi.properties";
 
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(RegistryServlet.class);
-
-  // file containing the webapp's properties/state
-  private static File propertyFile = null;
   
   // registry singleton instance
   private static RegistryEngine registry = null;
 
   /**
-   * Grab the shared instance of jUDDI's Registry class
-   * (this will typically create the registry for the first
-   * time) and call it's "init()" method to get all core
-   * components initialized.
+   * Create the shared instance of jUDDI's Registry class
+   * and call it's "init()" method to initialize all core 
+   * components.
    */
   public void init(ServletConfig config) 
     throws ServletException
   {
     super.init(config);    
 
-    log.info("jUDDI Starting: Initializing resources and subsystems.");
-
-    // Calculate the path to the juddi.properties 
-    // file found in the WEB-INF directory.
-
-    StringBuffer propFilePath = new StringBuffer(255);
-    propFilePath.append(getServletContext().getRealPath("/"));
-    propFilePath.append("WEB-INF");
-    propFilePath.append(File.separator);
-    propFilePath.append(PROPERTY_FILE_NAME);
-      
-    // Store path to the webapp's properties 
-    // file in a static location.
-    
-    RegistryServlet.propertyFile = new File(propFilePath.toString());
-  }
-
-  /**
-   * Grab the shared instance of jUDDI's Registry class and
-   * call it's "dispose()" method to notify all sub-components
-   * to stop any background threads and release any external
-   * resources they may have aquired.
-   */
-  public void destroy()
-  {
-    super.destroy();
-    
-    log.info("jUDDI Stopping: Cleaning up existing resources.");
-
-    RegistryEngine registry = RegistryServlet.getRegistry();
-    if (registry != null)
-      registry.dispose();
-  }
-
-  /**
-   *
-   */
-  public static RegistryEngine getRegistry()
-  {
-    if (registry == null)
-      registry = createRegistry();
-    
-    return registry;
-  }
-
-  /**
-   *
-   */
-  private static synchronized RegistryEngine createRegistry()
-  {
-    if (registry != null)
-      return registry;
-    
     Properties props = new Properties();
 
     try
     {      
-      if (propertyFile.exists())
+      log.info("jUDDI Starting: Loading resources and initializing subsystems.");
+      
+      InputStream is = 
+      	getServletContext().getResourceAsStream(PROPERTY_FILE);
+    	
+      if (is != null)
       {
-        // Import jUDDI configuration from the 
+        log.info("Resources loaded from: "+PROPERTY_FILE);
+
+        // Load jUDDI configuration from the 
         // juddi.properties file found in the 
         // WEB-INF directory.
 
-        props.load(new FileInputStream(propertyFile));
+        props.load(is);
       }
       else
       {
+        log.warn("Could not locate jUDDI properties '" + PROPERTY_FILE + 
+        		"'. Using defaults.");
+
         // A juddi.properties file doesn't exist
-        // yet so create one in the WEB-INF directory
-        // populated with default properties.
+        // yet so create create a new Properties 
+      	// instance using default property values.
         
         props.put(RegistryEngine.PROPNAME_OPERATOR_NAME,
                   RegistryEngine.DEFAULT_OPERATOR_NAME);
@@ -183,20 +134,40 @@ public class RegistryServlet extends HttpServlet
         
         props.put(RegistryEngine.PROPNAME_MAX_ROWS_LIMIT,           
                   Integer.toString(RegistryEngine.DEFAULT_MAX_ROWS_LIMIT));
-        
-        // Create a new "juddi.properties" file in
-        // the WEB-INF directory.
-        
-        props.store(new FileOutputStream(propertyFile),"");
       }
     }
     catch(IOException ioex) {
       log.error(ioex.getMessage(),ioex);
     }
 
+    log.info("Initializing jUDDI subsystems.");
+    
     registry = new RegistryEngine(props);
     registry.init();
+  }
 
+  /**
+   * Grab the shared instance of jUDDI's Registry class and
+   * call it's "dispose()" method to notify all sub-components
+   * to stop any background threads and release any external
+   * resources they may have aquired.
+   */
+  public void destroy()
+  {
+    super.destroy();
+    
+    log.info("jUDDI Stopping: Cleaning up existing resources.");
+
+    RegistryEngine registry = RegistryServlet.getRegistry();
+    if (registry != null)
+      registry.dispose();
+  }
+
+  /**
+   *
+   */
+  public static RegistryEngine getRegistry()
+  {
     return registry;
   }
 }
