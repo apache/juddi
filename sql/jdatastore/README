@@ -1,4 +1,10 @@
-Borland JDataStore / jUDDI version 0.9rc1
+CREATE/CONFIGURE A BORLAND JDATASTORE DATABASE FOR jUDDI
 
-Author: Andy Cutright
+jUDDI requires the use of a relational database (RDBMS) or 
+lightweight directory access protocol (LDAP) server to store
+the web services metadata it manages. This document will 
+walk you through the process of setting up an JDataStore 
+database as the persistante storage for a jUDDI registry.
+
+Andy Cutright
 acutright@apache.org
