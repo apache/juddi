@@ -245,9 +245,6 @@ class TModelTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,tModelKey.toString());
 
-      System.out.println(selectSQL +
-        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
-      		
       log.debug(selectSQL +
         "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
 
@@ -298,9 +295,6 @@ class TModelTable
       statement = connection.prepareStatement(selectByPublisherSQL);
       statement.setString(1,publisherID.toString());
 
-      System.out.println(selectByPublisherSQL +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
-      		
       log.debug(selectByPublisherSQL +
         "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
@@ -345,10 +339,6 @@ class TModelTable
       statement = connection.prepareStatement(verifyOwnershipSQL);
       statement.setString(1,tModelKey);
       statement.setString(2,publisherID);
-
-      System.out.println(verifyOwnershipSQL +
-	      "\n\t TMODEL_KEY=" + tModelKey +
-	      "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
       log.debug(verifyOwnershipSQL +
         "\n\t TMODEL_KEY=" + tModelKey +
