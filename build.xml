@@ -276,7 +276,7 @@ Copyright:
     <mkdir dir="${build.dir}"/>
     <taskdef resource="checkstyletask.properties" />
     <checkstyle
-        config="${conf.dir}/juddi-checkstyle-checks.xml"
+        config="${conf.dir}/checkstyle.xml"
         failureProperty="checkstyle.failure"
         failOnViolation="true">
       <fileset dir="${java.dir}" includes="**/*.java"/>
