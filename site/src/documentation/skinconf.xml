@@ -90,7 +90,7 @@ be used to configure the chosen Forrest skin.
   <project-name>jUDDI</project-name>
   <project-description>jUDDI</project-description>
   <project-url>http://ws.apache.org/juddi</project-url>
-  <project-logo>images/group-logo.gif</project-logo>
+  <project-logo>images/juddi.jpg</project-logo>
   <!-- Alternative static image:
   <project-logo>images/project-logo.gif</project-logo> -->
 
