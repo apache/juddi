@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-<<<<<<< GetAssertionStatusReportSample.java
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
-=======
-import org.apache.juddi.proxy.RegistryProxy;
-import org.apache.juddi.registry.Registry;
->>>>>>> 1.3
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -29,11 +24,7 @@ public class GetAssertionStatusReportSample
 {
   public static void main(String[] args)
   {
-<<<<<<< GetAssertionStatusReportSample.java
     IRegistry registry = new RegistryProxy();
-=======
-    Registry registry = new RegistryProxy();
->>>>>>> 1.3
 
     try
     {
