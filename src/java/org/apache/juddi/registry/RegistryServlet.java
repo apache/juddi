@@ -50,7 +50,6 @@ import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
 import org.apache.juddi.util.Config;
-import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -306,7 +305,6 @@ public class RegistryServlet extends HttpServlet
       // results to the body of the SOAP response.
         
       responseHandler.marshal(uddiResObj,element);
-      log.debug(XMLUtils.toString((Element)element.getFirstChild()));
       
       // Grab a reference to the 'temp' element's
       // only child here (this has the effect of
