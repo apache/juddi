@@ -26,6 +26,13 @@ See http://xml.apache.org/forrest/linking.html for more info
     <bugs label="Bugs" href="bugs.html" description="Bugs"/>
   </juddi>
 
+  <documentation label="Documentation">
+    <install label="Installation Guide" href="install.html"/>
+    <usersguide label="Users Guide" href="usersguide.html"/>
+    <devguide label="Developers Guide" href="devguide.html"/>
+    <archguide label="Architecture Guide" href="archguide.html"/>
+  </documentation>
+
   <downloads label="Downloads">
     <releases label="Releases" href="releases.html"/>
     <interim label="Interim Drops" href="interim.html"/>
