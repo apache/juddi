@@ -159,9 +159,14 @@ Copyright:
   <target name="jar" depends="compile">
     <mkdir dir="${build.dir}"/>
     <jar
-      jarfile="${build.dir}/${jar.file}"
+      destfile="${build.dir}/${jar.file}"
       basedir="${classes.dir}"
       includes="org/apache/juddi/**"/>
+    <jar
+      destfile="${build.dir}/${jar.file}"
+      update="true"
+      basedir="${java.dir}"
+      includes="org/apache/juddi/i18n/*.properties"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
