@@ -54,7 +54,7 @@ Copyright:
 
     <!-- set project-wide property values -->
     <property name="name"                value="juddi"/>
-    <property name="version"             value="0.9rc1"/>
+    <property name="version"             value="0.9rc2"/>
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
