@@ -5,7 +5,7 @@ Jakarta Ant build script for jUDDI
 
 Prerequisites:
   jakarta-ant          from http://jakarta.apache.org/ant/
-  axis			        from http://ws.apache.org/axis/
+  axis			       from http://ws.apache.org/axis/
   commons-logging      from http://jakarta.apache.org/commons/logging.html
   servlet              from http://jakarta.apache.org/tomcat/
   jdbc-2.0-stdext      from http://jakarta.apache.org/tomcat/
@@ -146,11 +146,8 @@ Copyright:
       </classes>
       <lib dir="${lib.dir}">
         <include name="axis.jar"/>
-        <include name="commons-collections.jar"/>
-        <include name="commons-dbcp.jar"/>
         <include name="commons-discovery.jar"/>
         <include name="commons-logging.jar"/>
-        <include name="commons-pool.jar"/>
         <include name="jaxrpc.jar"/>
         <include name="log4j-1.2.8.jar"/>
         <include name="saaj.jar"/>
