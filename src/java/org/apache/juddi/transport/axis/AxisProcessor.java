@@ -228,9 +228,13 @@ public class AxisProcessor
       String errCode = null;
       String errMsg = null;
       
-      // If a RegistryException was thrown dig out the
-      // dispositionReport if one exists and set the SOAP
-      // Fault & DispositionReport values with what we find.
+      // All RegistryException and subclasses of RegistryException
+      // should contain values for populating a SOAP Fault as well
+      // as a UDDI DispositionReport with specific information 
+      // about the problem.
+      //
+      // We've got to dig out the dispositionReport and populate  
+      // the SOAP Fault 'detail' element with this information.        
       
       if (ex instanceof RegistryException)
       {
@@ -284,12 +288,11 @@ public class AxisProcessor
                  "occurred. Please report this error " +
                  "to the UDDI server administrator.";
       }
-      
-      // All other exceptions (other than RegistryException
-      // and subclasses) are either a jUDDI configuration 
-      // problem or something that we *should* be catching and
-      // converting to a RegistryException but are not (yet!).
-        
+            
+      // We should have everything we need to assemble 
+      // the SOAPFault so lets piece it together and 
+      // send it on it's way.
+              
       try {
         SOAPBody soapResBody = soapResEnv.getBody();
         SOAPFault soapFault = soapResBody.addFault();

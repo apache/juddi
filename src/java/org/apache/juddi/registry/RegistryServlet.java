@@ -32,7 +32,6 @@ import javax.xml.soap.Detail;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 
@@ -214,7 +213,7 @@ public class RegistryServlet extends HttpServlet
       
     SOAPMessage soapReq = null;
     SOAPMessage soapRes = null;
-    String generic = null; // TODO (Steve) References to generic should be renamed to "UDDI Version or UDDI Namespace"
+    String generic = null;
 
     try 
     {
@@ -224,7 +223,6 @@ public class RegistryServlet extends HttpServlet
       MessageFactory msgFactory = MessageFactory.newInstance();
       soapReq = msgFactory.createMessage(null,req.getInputStream());
       soapRes = msgFactory.createMessage();
-      //soapReq.writeTo(System.out);
            
       // Extract the UDDI request
 
@@ -235,6 +233,8 @@ public class RegistryServlet extends HttpServlet
       // Grab the generic value - we'll need it in the event
       // that an exception is thrown.
 
+      // TODO (Steve) We need to throw a UDDI Exception if a generic value is not specified (or if it is specified to be something other than 2.0).
+      
       generic = uddiReq.getAttribute("generic");
       if (generic == null)
         generic = IRegistry.UDDI_V2_GENERIC;
@@ -269,7 +269,8 @@ public class RegistryServlet extends HttpServlet
       
       IHandler responseHandler = maker.lookup(uddiResObj.getClass().getName());
       if (responseHandler == null)
-        throw new RegistryException(""); // TODO (Steve) need more info in this exception.
+        throw new RegistryException("The response object " +
+          "type is unknown: " +uddiResObj.getClass().getName());
       
       // Create a new 'temp' XML element to use as a container 
       // in which to marshal the UDDI response data into.
@@ -305,9 +306,13 @@ public class RegistryServlet extends HttpServlet
       String errCode = null;
       String errMsg = null;
       
-      // If a RegistryException was thrown dig out the
-      // dispositionReport if one exists and set the SOAP
-      // Fault & DispositionReport values with what we find.
+      // All RegistryException and subclasses of RegistryException
+      // should contain values for populating a SOAP Fault as well
+      // as a UDDI DispositionReport with specific information 
+      // about the problem.
+      //
+      // We've got to dig out the dispositionReport and populate  
+      // the SOAP Fault 'detail' element with this information.        
       
       if (ex instanceof RegistryException)
       {
@@ -359,11 +364,10 @@ public class RegistryServlet extends HttpServlet
                  "to the UDDI server administrator.";
       }
       
-      // All other exceptions (other than RegistryException
-      // and subclasses) are either a jUDDI configuration 
-      // problem or something that we *should* be catching and
-      // converting to a RegistryException but are not (yet!).
-        
+      // We should have everything we need to assemble 
+      // the SOAPFault so lets piece it together and 
+      // send it on it's way.
+      
       try {
         SOAPBody soapResBody = soapRes.getSOAPBody();     
         SOAPFault soapFault = soapResBody.addFault();
@@ -385,16 +389,7 @@ public class RegistryServlet extends HttpServlet
         errInfo.setValue(errMsg);
       } 
       catch (Exception e) { 
-        e.printStackTrace(); 
-      }
-    }
-    finally {
-      try {               
-        //soapRes.writeTo(System.out);     
-        soapRes.writeTo(res.getOutputStream());     
-      }
-      catch(SOAPException sex) {
-        log.error(sex);
+        log.error("A serious error has occured while assembling the SOAP Fault.",e);
       }
     }
   }
