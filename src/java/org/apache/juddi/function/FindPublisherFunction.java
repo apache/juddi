@@ -100,7 +100,7 @@ public class FindPublisherFunction extends AbstractFunction
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
-        int maxNameLength = Config.getMaxNameLength();
+        int maxNameLength = Config.getMaxNameLengthAllowed();
         if (name.length() > maxNameLength)
           throw new NameTooLongException("Name: '"+name+"' (max="+maxNameLength+")");
       }

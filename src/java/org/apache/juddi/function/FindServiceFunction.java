@@ -103,7 +103,7 @@ public class FindServiceFunction extends AbstractFunction
         // names can not exceed the maximum character length specified by the
         // UDDI specification (v2.0 specifies a max character length of 255). This
         // value is configurable in jUDDI.
-        int maxNameLength = Config.getMaxNameLength();
+        int maxNameLength = Config.getMaxNameLengthAllowed();
         for (int i=0; i<nameVector.size(); i++)
         {
           String name = ((Name)nameVector.elementAt(i)).getValue();
