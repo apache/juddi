@@ -262,7 +262,7 @@ $Id$
   <xsl:template name="pdflink">
     <xsl:if test="not($config/disable-pdf-link) or $disable-pdf-link = 'false'"> 
       <div align="right" id="pdf"><a href="{$filename-noext}.pdf">
-          <img class="skin" src="{$skin-img-dir}/pdfdoc.gif" alt="PDF"/><br/>
+          <img class="skin" src="{$skin-img-dir}/pdfdoc.gif" alt="PDF" border="0"/><br/>
           PDF</a>
       </div>
     </xsl:if>
