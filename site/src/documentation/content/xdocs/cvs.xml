@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://apache.org/forrest/dtd/document-v12.dtd">
+<document>
+  <header>
+     <title>Access the Source Tree</title>
+  </header>
+  <body>
+      <p>
+      Anyone can checkout source code from our anonymous CVS server. To do
+      so, simply use the following commands (if you are using a GUI CVS
+      client, configure it appropriately):
+      </p>
+
+      <source>
+      cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login
+      password: anoncvs
+      </source>
+
+      <source>
+      cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout ws-juddi
+      </source>
+  </body>
+</document>

@@ -20,6 +20,7 @@ See http://xml.apache.org/forrest/linking.html for more info
     <index label="Index" href="index.html" description="jUDDI"/>
     <index label="FAQ" href="faq.html" description="FAQ"/>
     <index label="Community" href="lists.html" description="Community"/>
+    <index label="CVS" href="cvs.html" description="CVS"/>
   </about>
 
 
