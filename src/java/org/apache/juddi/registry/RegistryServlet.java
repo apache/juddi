@@ -200,8 +200,8 @@ public class RegistryServlet extends HttpServlet
     throws ServletException, IOException
   {
     res.setHeader("Allow","POST");
-    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
-      "method 'GET' is not allowed by the UDDI Inquiry API.");
+    res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"Use of the " +
+      "HTTP request method 'GET' is not allowed by UDDI specification.");
   }
 
   /**
