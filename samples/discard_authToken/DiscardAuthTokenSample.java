@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 
+import java.util.Properties;
+import java.util.Vector;
+
+import org.apache.juddi.datatype.request.AuthInfo;
+import org.apache.juddi.datatype.response.AuthToken;
+import org.apache.juddi.datatype.response.DispositionReport;
+import org.apache.juddi.datatype.response.ErrInfo;
+import org.apache.juddi.datatype.response.Result;
+import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.proxy.RegistryProxy;
 import org.apache.juddi.registry.IRegistry;
 
@@ -24,10 +33,64 @@ public class DiscardAuthTokenSample
 {
   public static void main(String[] args)
   {
-    IRegistry registry = new RegistryProxy();
+    // Option #1 (grabs properties from juddi.properties)
+    //IRegistry registry = new RegistryProxy();
+    
+    // Option #2
+    Properties props = new Properties();
+    props.setProperty(RegistryProxy.ADMIN_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/admin");
+    props.setProperty(RegistryProxy.INQUIRY_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/inquiry");
+    props.setProperty(RegistryProxy.PUBLISH_ENDPOINT_PROPERTY_NAME,"http://localhost:8080/juddi/publish");
+    props.setProperty(RegistryProxy.SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
+    props.setProperty(RegistryProxy.PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");    
+    IRegistry registry = new RegistryProxy(props);
+
+    String userID = "sviens";
+    String password = "password";
 
     try
     {
+      System.out.println("discard_authToken Sample");
+      System.out.println("------------------------");
+      System.out.println("userID: "+userID);
+      System.out.println("password: "+password);
+      System.out.println("");
+
+      AuthToken authToken = registry.getAuthToken(userID,password);
+      AuthInfo authInfo = authToken.getAuthInfo();
+      System.out.println("AuthToken: "+authInfo.getValue());
+ 
+      DispositionReport dispReport = null;
+      Vector resultVector = null;
+
+      dispReport = registry.discardAuthToken(authInfo);
+      resultVector = dispReport.getResultVector();
+      if (resultVector != null)
+      {
+        Result result = (Result)resultVector.elementAt(0);
+        ErrInfo errInfo = result.getErrInfo();
+        int errNo = result.getErrno();
+        System.out.println("Discard Once    Error Number: "+errNo);
+      }
+
+      try
+      {
+        registry.discardAuthToken(authInfo);
+      }
+      catch(RegistryException regex)
+      {
+        dispReport = regex.getDispositionReport();
+        resultVector = dispReport.getResultVector();
+        if (resultVector != null)
+        {
+          Result result = (Result)resultVector.elementAt(0);
+          ErrInfo errInfo = result.getErrInfo();
+          int errNo = result.getErrno();
+          System.out.println("Discard Twice   Error Number: "+errNo);
+        }
+      }
+
+      System.out.println("\ndone.");
     }
     catch(Exception ex)
     {
