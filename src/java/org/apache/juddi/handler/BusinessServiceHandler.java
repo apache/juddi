@@ -133,7 +133,7 @@ public class BusinessServiceHandler extends AbstractHandler
     }
 
     CategoryBag categoryBag = service.getCategoryBag();
-    if (categoryBag != null)
+    if ((categoryBag != null) && (categoryBag.getKeyedReferenceVector() != null) && (!categoryBag.getKeyedReferenceVector().isEmpty()))
     {
       handler = maker.lookup(CategoryBagHandler.TAG_NAME);
       handler.marshal(categoryBag,element);

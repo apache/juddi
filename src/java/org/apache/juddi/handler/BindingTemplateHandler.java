@@ -142,7 +142,7 @@ public class BindingTemplateHandler extends AbstractHandler
 
 //  TODO (UDDI v3) This code should be uncommented when jUDDI is ready to support UDDI v3.0
 //    CategoryBag categoryBag = binding.getCategoryBag(); // UDDI v3.0
-//    if (categoryBag != null)
+//    if ((categoryBag != null) && (categoryBag.getKeyedReferenceVector() != null) && (!categoryBag.getKeyedReferenceVector().isEmpty()))
 //    {
 //      handler = maker.lookup(CategoryBagHandler.TAG_NAME);
 //      handler.marshal(categoryBag,element);

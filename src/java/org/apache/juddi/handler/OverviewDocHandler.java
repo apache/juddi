@@ -77,19 +77,19 @@ public class OverviewDocHandler extends AbstractHandler
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
     AbstractHandler handler = null;
 
-    OverviewURL overURL = overDoc.getOverviewURL();
-    if (overURL != null)
-    {
-      handler = maker.lookup(OverviewURLHandler.TAG_NAME);
-      handler.marshal(overURL,element);
-    }
-
     Vector descrVector = overDoc.getDescriptionVector();
     if ((descrVector!=null) && (descrVector.size() > 0))
     {
       handler = maker.lookup(DescriptionHandler.TAG_NAME);
       for (int i=0; i < descrVector.size(); i++)
         handler.marshal((Description)descrVector.elementAt(i),element);
+    }
+
+    OverviewURL overURL = overDoc.getOverviewURL();
+    if (overURL != null)
+    {
+      handler = maker.lookup(OverviewURLHandler.TAG_NAME);
+      handler.marshal(overURL,element);
     }
 
     parent.appendChild(element);

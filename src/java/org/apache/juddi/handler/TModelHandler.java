@@ -139,14 +139,14 @@ public class TModelHandler extends AbstractHandler
     }
 
     IdentifierBag identifierBag = tModel.getIdentifierBag();
-    if (identifierBag != null)
+    if ((identifierBag != null) && (identifierBag.getKeyedReferenceVector() != null) && (!identifierBag.getKeyedReferenceVector().isEmpty()))
     {
       handler = maker.lookup(IdentifierBagHandler.TAG_NAME);
       handler.marshal(identifierBag,element);
     }
 
     CategoryBag categoryBag = tModel.getCategoryBag();
-    if (categoryBag != null)
+    if ((categoryBag != null) && (categoryBag.getKeyedReferenceVector() != null) && (!categoryBag.getKeyedReferenceVector().isEmpty()))
     {
       handler = maker.lookup(CategoryBagHandler.TAG_NAME);
       handler.marshal(categoryBag,element);
