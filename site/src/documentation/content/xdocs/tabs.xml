@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE tabs PUBLIC "-//APACHE//DTD Cocoon Documentation Tab V1.0//EN" "http://apache.org/forrest/dtd/tab-cocoon-v10.dtd">
 
-<tabs software="MyProj"
-  title="MyProj"
-  copyright="Foo"
+<tabs software="jUDDI"
+  title="jUDDI"
+  copyright="The Apache Software Foundation"
   xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <!-- The rules are:
@@ -14,7 +14,7 @@
     If @id's are present, site.xml entries with a matching @tab will be in that tab.
   -->
 
-  <tab id="" label="Home" dir="" indexfile="index.html"/>
+  <tab id="" label="HOME" dir="" indexfile="index.html"/>
   <!-- Add new tabs here, eg:
   <tab label="How-Tos" dir="community/howto/"/>
   <tab label="XML Site" dir="xml-site/"/>
