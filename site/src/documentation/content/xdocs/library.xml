@@ -26,6 +26,8 @@
     <section>
       <title>Articles, Tutorials and Best Practices</title>            
       <p><b><link href="http://www-106.ibm.com/developerworks/webservices/library/ws-version/">Best practices for Web services versioning</link></b><br/>Keep your Web services current with WSDL and UDDI<br/>Kyle Brown and Michael Ellis, IBM developerWorks<br/>January 2004</p>      
+      <p><b><link href="http://www.sys-con.com/webservices/article.cfm?id=663">Registering a Web Service in UDDI using the new WSDL mapping model</link></b><br/>Anne Thomas Manes, WebServices Journal<br/>October 2003</p>      
+      <p><b><link href="http://www.sys-con.com/webservices/article.cfm?id=664">Bringing Order to Enterprise Service Proliferation</link></b><br/>The foundation of a flexible infrastructure<br/>Toufic Boubez, WebServices Journal<br/>October 2003</p>      
       <p><b><link href="http://www.line56.com/articles/default.asp?ArticleID=4927">A Second Look at UDDI</link></b><br/>The stepchild of Web services could be a cornerstone of service-oriented architectures beginning to take shape<br/>Jim Ericson, Line56.com<br/>August 2003</p>
       <p><b><link href="http://www-106.ibm.com/developerworks/edu/ws-dw-ws-dwsuddi-i.html">Discovering Web Services: UDDI (a Tutorial)</link></b><br/>Rick Hightower, IBM developerWorks<br/>February 2003</p>      
       <p><b><link href="http://www.gotdotnet.com/team/karstenj/docs/rss_in_uddi.aspx">Registering and Discovering RSS Feeds in UDDI</link></b><br/>Keep your Web services current with WSDL and UDDI<br/>Karsten Januszewski, GotDotNet.com<br/>July 2002</p>
