@@ -225,7 +225,7 @@ Copyright:
   <!-- =================================================================== -->
   <target name="checkstyle" depends="init" if="checkstyle.present">
     <echo message="Checkstyle package is present." />
-    <echo message="Running Checkstyle using: ${conf.dir}/checkstyle.xml" />
+    <echo message="Running Checkstyle using: ${basedir}/checkstyle.xml" />
     <mkdir dir="${build.dir}"/>
     <taskdef resource="checkstyletask.properties" />
     <checkstyle
