@@ -229,6 +229,7 @@ Copyright:
            org.apache.juddi.datatype.request,
            org.apache.juddi.datatype.response,
            org.apache.juddi.datatype.service,
+    	   org.apache.juddi.datatype.subscription,
            org.apache.juddi.datatype.tmodel,
            org.apache.juddi.error,
            org.apache.juddi.function,
