@@ -141,7 +141,6 @@ Copyright:
   <target name="war" depends="clean,jar">
     <mkdir dir="${build.dir}"/>
     <!-- Create the version & build time #include files -->
-    <mkdir dir="${webapps.dir}/juddi/includes"/>
 	<echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
 	<echo file="${webapps.dir}/juddi/includes/buildtime.inc" append="false">${build.time}</echo>	
     <!-- Assemble juddi.war file -->
