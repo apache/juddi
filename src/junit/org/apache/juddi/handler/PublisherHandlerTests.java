@@ -49,11 +49,6 @@ public class  PublisherHandlerTests extends HandlerTestCase
 		Publisher object = new Publisher();
 		object.setPublisherID("bcrosby");
 		object.setName("Bing Crosby");
-		object.setLastName("Crosby");
-		object.setFirstName("Bing");
-		object.setWorkPhone("978.123-4567");
-		object.setMobilePhone("617-765-9876");
-		object.setPager("800-123-4655 ID: 501");
 		object.setEmailAddress("bcrosby@juddi.org");
 		object.setAdmin(true);
 		object.setEnabled(true);
