@@ -112,5 +112,32 @@ public class AuthTokenHandler extends AbstractHandler
   public static void main(String args[])
     throws Exception
   {
+    HandlerMaker maker = HandlerMaker.getInstance();
+    AbstractHandler handler = maker.lookup(AuthTokenHandler.TAG_NAME);
+    Element parent = XMLUtils.newRootElement();
+    Element child = null;
+    
+    AuthToken object = new AuthToken();
+    object.setAuthInfo(new AuthInfo("authToken:c9613c3c-fe55-4f34-a3da-b3167afbca4a"));
+    object.setGeneric(IRegistry.UDDI_V2_GENERIC);
+    object.setOperator("jUDDI.org");
+    
+    System.out.println();
+    
+    RegistryObject regObject = object;
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+    
+    System.out.println();
+    
+    regObject = handler.unmarshal(child);
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+    
+    System.out.println();
   }
 }

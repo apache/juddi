@@ -73,5 +73,30 @@ public class AuthInfoHandler extends AbstractHandler
   public static void main(String args[])
     throws Exception
   {
+    HandlerMaker maker = HandlerMaker.getInstance();
+    AbstractHandler handler = maker.lookup(AuthInfoHandler.TAG_NAME);
+    Element parent = XMLUtils.newRootElement();
+    Element child = null;
+    
+    AuthInfo object = new AuthInfo();
+    object.setValue("authToken:c9613c3c-fe55-4f34-a3da-b3167afbca4a");
+    
+    System.out.println();
+    
+    RegistryObject regObject = object;
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+    
+    System.out.println();
+    
+    regObject = handler.unmarshal(child);
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+    
+    System.out.println();
   }
 }
