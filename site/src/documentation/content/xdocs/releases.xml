@@ -5,10 +5,25 @@
     <title>jUDDI Releases</title>
   </header>
   <body>
-    <section>
-      <title>Releases</title>
+    <section>      
+      <title>Releases</title>      
       <p>
-      </p>
+      <table border="0" width="90%">        
+        <tr> 
+          <td><b>Name</b></td>
+          <td><b>Date</b></td>
+          <td><b>Description</b></td>
+        </tr>
+        <!--
+        <tr>
+          <td><link href="http://archive.apache.org/dist/ws/juddi/1_0alpha/">1.0alpha</link></td>
+          <td>April 1, 2001</td>
+          <td>Alpha Version 1.0.</td>
+        </tr>
+        -->
+      </table>
+      </p>      
+      <p>For nightly builds, see the <link href="interim.html">Interim Drops</link> page.</p>
     </section>
   </body>
 </document>

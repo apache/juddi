@@ -17,40 +17,39 @@ See http://xml.apache.org/forrest/linking.html for more info
 <site label="jUDDI" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
 
   <juddi label="jUDDI">
-    <welcome label="Welcome" href="index.html" description="Welcome"/>
-    <overview label="Overview" href="overview.html" description="Overview"/>
+    <welcome label="Introduction" href="index.html" description="Introduction"/>
     <news label="News" href="news.html" description="News"/>
     <faq label="FAQ/Wiki" href="faq.html" description="FAQ"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
+    <participate label="Participation" href="participate.html" description="Participation"/>
     <reference label="Reference Library" href="library.html" description="Reference Library"/>
-    <bugs label="Bugs" href="bugs.html" description="Bugs"/>
+    <bugs label="Bugs" href="bugs.html" description="Bug Tracking"/>
   </juddi>
 
   <documentation label="Documentation">
-    <install label="Installation Guide" href="install.html"/>
-    <usersguide label="Users Guide" href="usersguide.html"/>
-    <devguide label="Developers Guide" href="devguide.html"/>
-    <archguide label="Architecture Guide" href="archguide.html"/>
+    <install label="Installation Guide" href="install.html" description="Installation Guide"/>
+    <usersguide label="User's Guide" href="usersguide.html" description="User's Guide"/>
+    <devguide label="Developer's Guide" href="devguide.html" description="Developer's Guide"/>
+    <archguide label="Architecture Guide" href="archguide.html" description="Architecture Guide"/>
   </documentation>
 
   <downloads label="Downloads">
-    <releases label="Releases" href="releases.html"/>
-    <interim label="Interim Drops" href="interim.html"/>
-    <source label="Source Code" href="http://cvs.apache.org/viewcvs/ws-juddi/"/>
+    <releases label="Releases" href="releases.html" description="Releases"/>
+    <interim label="Interim Drops" href="interim.html" description="Interim Drops"/>
+    <source label="Source Code" href="http://cvs.apache.org/viewcvs/ws-juddi/" description="Source Code"/>
   </downloads>
 
   <related label="Related Projects">
-    <axis label="Axis" href="http://ws.apache.org/axis/"/>
-    <uddi4j label="UDDI4J" href="http://www-124.ibm.com/developerworks/oss/uddi4j/"/>
+    <axis label="Axis" href="http://ws.apache.org/axis/" description="Apache Axis"/>
+    <uddi4j label="UDDI4J" href="http://www-124.ibm.com/developerworks/oss/uddi4j/" description="UDDI4J"/>
   </related>
 
   <related label="Misc">
-    <who label="Who We Are" href="who.html"/>
-    <contact label="Contact" href="contact.html"/>
-    <legal label="Legal" href="legal.html"/>
-    <wholehtml label="Whole Site HTML" href="site.html"/>
-    <wholepdf label="Whole Site PDF" href="site.pdf"/>
+    <who label="Who We Are" href="who.html" description="Who We Are"/>
+    <contact label="Contact" href="contact.html" description="Contact Us"/>
+    <legal label="Legal" href="legal.html" description="Legal Stuff"/>
+    <whole label="Whole Site" href="site.html" description="Whole Site"/>
   </related>
 
   <external-refs>

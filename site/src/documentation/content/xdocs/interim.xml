@@ -6,9 +6,25 @@
   </header>
   <body>
     <section>
+      
       <title>Interim Drops</title>
-      <p>
-      </p>
+        <p>Nightly builds are done of the current source in the CVS 
+        repository.  The source and binaries from these builds are available at:
+        <br/>
+        <blockquote>
+        <link href="http://cvs.apache.org/dist/juddi/nightly">http://cvs.apache.org/dist/juddi/nightly</link>
+        </blockquote>
+        </p>
+        
+        <p>Nightly Snapshots of the current CVS source tree are available at:
+        <br/>
+        <blockquote>
+        <link href="http://cvs.apache.org/snapshots/ws-juddi/">
+        http://cvs.apache.org/snapshots/ws-juddi/
+        </link>
+        </blockquote>
+        </p>
+        
     </section>
   </body>
 </document>

@@ -6,17 +6,13 @@
   </header>
   <body>
     
-  <anchor id="intro"/>
-  <section>
-    <title>Mailing Lists</title>
-    <p><strong>Before subscribing to any of the mailing lists, please make sure you have read and 
-      understand the mailing list <link href="#guidelines">guidelines</link></strong>.
-    </p>
-    <p>We encourage everyone interested to get involved and contribute. These forums are where
-       the jUDDI developer and user communities meet to discuss issues and plans. Please join us!
-    </p>
-  </section>
-  
+  <p>We encourage everyone interested to get involved and contribute. These forums are where
+     the jUDDI developer and user communities meet to discuss issues and plans. Please join us!
+  </p>
+  <p><strong>Before subscribing to any of the mailing lists, please make sure you have read and 
+    understand the mailing list <link href="#guidelines">guidelines</link></strong>.
+  </p>
+
   <anchor id="juddi-user"/>
   <section>
     <title>jUDDI Users List</title>
