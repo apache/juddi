@@ -26,6 +26,7 @@
   // Pull input parameters from the HTTP request
   String requestName = request.getParameter("request_name");
   String requestType = request.getParameter("request_type");
+  String validateAction = request.getParameter("validate_button");
   String submitAction = request.getParameter("submit_button");
   String resetAction = request.getParameter("reset_button");
   String requestMsg = request.getParameter("soap_request");
@@ -43,7 +44,15 @@
   long totalTime = 0;
 
   // Determine which action the user selected.
-  if (resetAction != null)
+  if (validateAction != null)
+  {
+    // If user clicked the "Validate" button then check 
+    // that the request XML is well-formed and validate
+    // it against the UDDI v2.0 XML Schema.
+
+    responseMsg = "Validation is not implemented yet.";
+  }
+  else if (resetAction != null)
   {
     // If user clicked the "Reset" button then initialize 
     // the request & response values to null.

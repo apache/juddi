@@ -10,16 +10,14 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The delete_business API call is used to remove one or more business 
-registrations (e.g. registered businessEntity data) and all direct contents 
-from a UDDI registry.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>, 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a>, 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a> or 
-<a href="/uddi_errors#E_userMismatch">E_userMismatch</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137733" target="doc">delete_business</a> API call 
+is used to remove one or more business registrations (e.g. registered 
+<a href="uddiv2data.html#_Toc25130756" target="doc">businessEntity</a> data) and all direct contents 
+from a UDDI registry. If an error occurs while processing this API call, a 
+<a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> element 
+will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -50,6 +48,7 @@ if (requestTime == null) {
 <td>
 <input type="hidden" name="request_name" value=<%=requestName%>>
 <input type="hidden" name="request_type" value=<%=requestType%>>
+<input type="submit" name="validate_button" value="Validate">
 <input type="submit" name="submit_button" value="Submit">
 <input type="submit" name="reset_button" value="Reset">
 </td>
@@ -59,7 +58,7 @@ Time: <strong><%= requestTime%></strong> milliseconds
 </tr>
 </table>
 
-<textarea class=msgs id=soap_response name=soap_response rows=20 cols=75 wrap=off><%
+<textarea class=msgs id=soap_response name=soap_response rows=25 cols=75 wrap=off><%
 String responseMessage = (String)session.getAttribute(responseKey);
 if (responseMessage != null) {
   out.print(responseMessage);

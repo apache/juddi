@@ -30,6 +30,9 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <find_business maxRows="100" generic="2.0" xmlns="urn:uddi-org:api_v2">
+      <findQualifiers>
+        <findQualifier>***</findQualifier>
+      </findQualifiers>      
       <name>***</name>
       <discoveryURLs>
         <discoveryURL>***</discoveryURL>
@@ -59,6 +62,7 @@ if (requestTime == null) {
 <td>
 <input type="hidden" name="request_name" value=<%=requestName%>>
 <input type="hidden" name="request_type" value=<%=requestType%>>
+<input type="submit" name="validate_button" value="Validate">
 <input type="submit" name="submit_button" value="Submit">
 <input type="submit" name="reset_button" value="Reset">
 </td>
@@ -68,7 +72,7 @@ Time: <strong><%= requestTime%></strong> milliseconds
 </tr>
 </table>
 
-<textarea class=msgs id=soap_response name=soap_response rows=20 cols=75 wrap=off><%
+<textarea class=msgs id=soap_response name=soap_response rows=25 cols=75 wrap=off><%
 String responseMessage = (String)session.getAttribute(responseKey);
 if (responseMessage != null) {
   out.print(responseMessage);

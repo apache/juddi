@@ -10,16 +10,13 @@
 
 <h3><%= requestName%></h3>
 <div class="link">
-The delete_service API call is used to remove one or more previously 
-businessService elements from the UDDI registry and from its containing 
-businessEntity parent.
-If any error occurs in processing this API call, a dispositionReport element 
-will be returned to the caller within a SOAP Fault containing an error number 
-indicating an
-<a href="/uddi_errors#E_invalidKeyPassed">E_invalidKeyPassed</a>, 
-<a href="/uddi_errors#E_authTokenExpired">E_authTokenExpired</a>, 
-<a href="/uddi_errors#E_authTokenRequired">E_authTokenRequired</a> or 
-<a href="/uddi_errors#E_userMismatch">E_userMismatch</a> error was encountered.
+The <a href="uddiv2api.html#_Toc25137735" target="doc">delete_service</a> API call 
+causes one or more instances of <a href="uddiv2data.html#_Toc25130765" target="doc">businessService</a> 
+data to be deleted from the UDDI registry and from its containing <a href="uddiv2data.html#_Toc25130756" target="doc">businessEntity</a> parent. If an error 
+occurs while processing this API call, a <a href="uddiv2api.html#_Toc25137750" target="doc">dispositionReport</a> 
+element will be returned to the caller within a <a href="uddiv2api.html#_Toc25137756" target="doc">SOAP 
+Fault</a> containing information about the <a href="uddiv2api.html#_Toc25137748" target="doc">error</a> that 
+was encountered.
 </div>
 
 <form method="post" action="controller.jsp">
@@ -32,8 +29,8 @@ if (requestMessage != null) {
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
     <delete_service generic="2.0" xmlns="urn:uddi-org:api_v2">
-      <authInfo>*****</authInfo>
-      <serviceKey>*****</serviceKey>
+      <authInfo>***</authInfo>
+      <serviceKey>***</serviceKey>
     </delete_service>
   </soapenv:Body>
 </soapenv:Envelope>
@@ -50,6 +47,7 @@ if (requestTime == null) {
 <td>
 <input type="hidden" name="request_name" value=<%=requestName%>>
 <input type="hidden" name="request_type" value=<%=requestType%>>
+<input type="submit" name="validate_button" value="Validate">
 <input type="submit" name="submit_button" value="Submit">
 <input type="submit" name="reset_button" value="Reset">
 </td>
@@ -59,7 +57,7 @@ Time: <strong><%= requestTime%></strong> milliseconds
 </tr>
 </table>
 
-<textarea class=msgs id=soap_response name=soap_response rows=20 cols=75 wrap=off><%
+<textarea class=msgs id=soap_response name=soap_response rows=25 cols=75 wrap=off><%
 String responseMessage = (String)session.getAttribute(responseKey);
 if (responseMessage != null) {
   out.print(responseMessage);
