@@ -80,4 +80,46 @@ public class AxisTransport implements Transport
 
     return response;
   }
+  
+  public String send(String request,URL endpointURL)
+    throws RegistryException
+  {    
+    Service service = null;
+    Call call = null;
+    String response = null;
+
+    log.debug("\nRequest message:\n" + request);
+
+    try {
+        
+      service = new Service();
+      call = (Call)service.createCall();
+      call.setTargetEndpointAddress(endpointURL);
+    
+      SOAPBodyElement body = new SOAPBodyElement(new ByteArrayInputStream(request.getBytes("UTF-8")));
+      Object[] soapBodies = new Object[] { body };
+    
+      Vector result = (Vector)call.invoke(soapBodies);
+      response = ((SOAPBodyElement)result.elementAt(0)).getAsString();
+    }
+    catch (AxisFault fault) {
+
+      fault.printStackTrace();
+
+      try {
+        Message msg = call.getResponseMessage();
+        response = msg.getSOAPEnvelope().getFirstBody().getAsString();
+      }
+      catch (Exception ex) {
+        throw new RegistryException(ex);
+      }
+    }
+    catch (Exception ex) {
+      throw new RegistryException(ex);
+    }
+
+    log.debug("\nResponse message:\n" + response);
+
+    return response;
+  }
 }
