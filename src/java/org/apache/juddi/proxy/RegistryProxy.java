@@ -58,21 +58,33 @@ public class RegistryProxy extends AbstractRegistry
   // jUDDI Proxy Property File Name
   private static final String PROPFILE_NAME = "juddi.properties";
   
-  // Default Properties
-  private static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
-  private static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
-  private static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
-  private static final String DEFAULT_SECURITY_PROVIDER = "com.sun.net.ssl.internal.ssl.Provider";
-  private static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
+  // jUDDI Proxy Property Names
+  public static final String INQUIRY_ENDPOINT_PROPERTY_NAME = "juddi.proxy.inquiryURL";
+  public static final String PUBLISH_ENDPOINT_PROPERTY_NAME = "juddi.proxy.publishURL";
+  public static final String ADMIN_ENDPOINT_PROPERTY_NAME = "juddi.proxy.adminURL";    
+  public static final String SECURITY_PROVIDER_PROPERTY_NAME = "juddi.proxy.securityProvider";
+  public static final String PROTOCOL_HANDLER_PROPERTY_NAME = "juddi.proxy.protocolHandler";
+  public static final String UDDI_VERSION_PROPERTY_NAME = "juddi.proxy.uddiVersion";
+  public static final String UDDI_NAMESPACE_PROPERTY_NAME = "juddi.proxy.uddiNamespace";
+
+  // jUDDI Proxy Default Properties
+  public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
+  public static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
+  public static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
+  public static final String DEFAULT_SECURITY_PROVIDER = "com.sun.net.ssl.internal.ssl.Provider";
+  public static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
+  public static final String DEFAULT_UDDI_VERSION = "2.0";
+  public static final String DEFAULT_UDDI_NAMESPACE = "urn:uddi-org:api_v2";
   
   // Registry Server End Points
   private URL inquiryURL;
   private URL publishURL;
   private URL adminURL;
-  private String uddiVersion;
-  private String uddiNamespace;
+  
   private String securityProvider;
   private String protocolHandler;
+  private String uddiVersion;
+  private String uddiNamespace;
   
   /**
    * Create a new instance of RegistryProxy.  This constructor
@@ -140,15 +152,15 @@ public class RegistryProxy extends AbstractRegistry
     
     // Override defaults with specific specific values
     try {
-      String iURL = props.getProperty("juddi.proxy.inquiryURL");
+      String iURL = props.getProperty(INQUIRY_ENDPOINT_PROPERTY_NAME);
       if (iURL != null)
         this.setInquiryURL(new URL(iURL));
         
-      String pURL = props.getProperty("juddi.proxy.publishURL");
+      String pURL = props.getProperty(PUBLISH_ENDPOINT_PROPERTY_NAME);
       if (pURL != null)
         this.setPublishURL(new URL(pURL));
     
-      String aURL = props.getProperty("juddi.proxy.adminURL");
+      String aURL = props.getProperty(ADMIN_ENDPOINT_PROPERTY_NAME);
       if (aURL != null)
         this.setAdminURL(new URL(aURL));
     }
@@ -156,19 +168,19 @@ public class RegistryProxy extends AbstractRegistry
       muex.printStackTrace();
     } 
 
-    String secProvider = props.getProperty("juddi.proxy.securityProvider");
+    String secProvider = props.getProperty(SECURITY_PROVIDER_PROPERTY_NAME);
     if (secProvider != null)
       this.setSecurityProvider(secProvider);
   
-    String protoHandler = props.getProperty("juddi.proxy.protocolHandler");
+    String protoHandler = props.getProperty(PROTOCOL_HANDLER_PROPERTY_NAME);
     if (protoHandler != null)
       this.setProtocolHandler(protoHandler);
 
-    String uddiVer = props.getProperty("juddi.proxy.uddiVersion");
+    String uddiVer = props.getProperty(UDDI_VERSION_PROPERTY_NAME);
     if (uddiVer != null)
       this.setUddiVersion(uddiVer);
   
-    String uddiNS = props.getProperty("juddi.proxy.uddiNamespace");
+    String uddiNS = props.getProperty(UDDI_NAMESPACE_PROPERTY_NAME);
     if (uddiNS != null)
       this.setUddiNamespace(uddiNS);
   }
