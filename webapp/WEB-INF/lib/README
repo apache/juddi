@@ -1,0 +1,15 @@
+The Java libraries found in this directory are deployed with the 
+jUDDI web application. If you're building jUDDI from source you 
+will need to acquire the two jar files below and place them in 
+this directory.
+
+	Java API for XML-Based RPC (http://java.sun.com/xml/jaxrpc/)
+	--------------------------
+	jax-rpc.jar
+	
+	SOAP with Attachments API for Java (http://java.sun.com/xml/saaj/)
+	----------------------------------
+	saaj.jar
+
+Steve Viens
+sviens@apache.org
