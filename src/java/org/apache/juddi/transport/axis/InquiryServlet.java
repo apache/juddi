@@ -36,6 +36,6 @@ public class InquiryServlet extends AxisServlet
   {
     res.setHeader("Allow","POST");
     res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED,"The request " +
-      "method (GET) is not allowed by the UDDI Inquiry API.");
+      "method 'GET' is not allowed by the UDDI Inquiry API.");
   }
 }
