@@ -10,7 +10,7 @@
           <title>Web Services PMC</title>
 
       <p>jUDDI is now being incubated within the Web Services PMC as part of the
-      to the <a href="http://incubator.apache.org/">Apache Incubator</a>. Part
+      to the <link href="incubator.apache.org">Apache Incubator</link>. Part
       of this transition involves decommissioning the lists formely hosted
       on SourceForge.net including juddi-announce, juddi-users and juddi-developers.
         </p>
@@ -18,7 +18,7 @@
 
         <section>
           <title>jUDDI users</title>
-      <p>The <STRONG>juddi-user@ws.apache.org</STRONG> mailing list
+      <p>The juddi-user@ws.apache.org  mailing list
       is the primary source of support for anyone using jUDDI. Use this list for
       posting questions (and answers) related to the installation, configuration
       and use of jUDDI.
@@ -26,7 +26,7 @@
         </section>
         <section>
           <title>jUDDI dev</title>
-      <p>The <STRONG>juddi-dev@ws.apache.org</STRONG> mailing list is for
+      <p>The juddi-dev@ws.apache.org mailing list is for
       discussions about the jUDDI architecture, build process, testing and
       implementation details.
       </p>
@@ -34,9 +34,9 @@
         <section>
           <title>Archives</title>
 
-      <p><STRONG>NOTE:</STRONG> Archives for the original jUDDI lists will continue to
+      <p> NOTE:  Archives for the original jUDDI lists will continue to
       be available on SourceForge.net indefinitely. Click
-      <A href="http://sourceforge.net/mail/?group_id=42875" target="_top">here</A> to
+      <link href="sourceforge.net/mail/?group_id=42875">here</link> to
       browse them.
       </p>
       </section>
