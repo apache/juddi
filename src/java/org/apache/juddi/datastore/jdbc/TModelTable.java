@@ -76,17 +76,21 @@ class TModelTable
     sql.append("AUTHORIZED_NAME,");
     sql.append("OPERATOR,");
     sql.append("NAME,");
-    sql.append("OVERVIEW_URL ");
+    sql.append("OVERVIEW_URL,");
+    sql.append("DELETED ");
     sql.append("FROM TMODEL ");
-    sql.append("WHERE TMODEL_KEY=?");
+    sql.append("WHERE TMODEL_KEY=? ");
+    sql.append("AND DELETED IS NULL");
     selectSQL = sql.toString();
 
     // build selectByPublisherSQL
     sql = new StringBuffer(200);
     sql.append("SELECT ");
-    sql.append("TMODEL_KEY ");
+    sql.append("TMODEL_KEY,");
+    sql.append("DELETED ");
     sql.append("FROM TMODEL ");
-    sql.append("WHERE PUBLISHER_ID=?");
+    sql.append("WHERE PUBLISHER_ID=? ");
+    sql.append("AND DELETED IS NULL");
     selectByPublisherSQL = sql.toString();
 
     // build verifyOwnershipSQL
@@ -94,7 +98,8 @@ class TModelTable
     sql.append("SELECT * ");
     sql.append("FROM TMODEL ");
     sql.append("WHERE TMODEL_KEY=? ");
-    sql.append("AND PUBLISHER_ID=?");
+    sql.append("AND PUBLISHER_ID=? " );
+    sql.append("AND DELETED IS NULL");
     verifyOwnershipSQL = sql.toString();
   }
 
@@ -200,6 +205,9 @@ class TModelTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,tModelKey.toString());
 
+      System.out.println(selectSQL +
+        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      		
       log.debug(selectSQL +
         "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
 
@@ -250,6 +258,9 @@ class TModelTable
       statement = connection.prepareStatement(selectByPublisherSQL);
       statement.setString(1,publisherID.toString());
 
+      System.out.println(selectByPublisherSQL +
+        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      		
       log.debug(selectByPublisherSQL +
         "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
@@ -294,6 +305,10 @@ class TModelTable
       statement = connection.prepareStatement(verifyOwnershipSQL);
       statement.setString(1,tModelKey);
       statement.setString(2,publisherID);
+
+      System.out.println(verifyOwnershipSQL +
+	      "\n\t TMODEL_KEY=" + tModelKey +
+	      "\n\t PUBLISHER_ID=" + publisherID + "\n");
 
       log.debug(verifyOwnershipSQL +
         "\n\t TMODEL_KEY=" + tModelKey +
