@@ -61,6 +61,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis.transport.http.AxisServlet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.registry.RegistryEngine;
 
 /**
@@ -68,6 +70,9 @@ import org.apache.juddi.registry.RegistryEngine;
  */
 public class AdminServlet extends AxisServlet
 {
+  // private reference to the webapp's logger.
+  private static Log log = LogFactory.getLog(AdminServlet.class);
+
   /**
    * Grab the shared instance of jUDDI's Registry class
    * (this will typically create the registry for the first
