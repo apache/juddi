@@ -41,24 +41,12 @@ public class Config extends Properties
   static Config config;
 
   /**
-   * Default Config Constructor. Creates a new instance
-   * of Config and initializes it with default values. 
+   * shared Config constructor. Made private to 
+   * avoid creation of more than one Config.
    */
   private Config()
   {
-    // Load default property values
-    this.put("juddi.operatorName","jUDDI.org");
-    this.put("juddi.operatorSiteURL","http://localhost:8080/juddi");
-    this.put("juddi.adminEmailAddress", "admin@juddi.org");
-    this.put("juddi.maxMessageSize","2097152");
-    this.put("juddi.maxNameElementsAllowed", "5");
-    this.put("juddi.maxNameLength","255");
-    this.put("juddi.dataStore","org.apache.juddi.datastore.jdbc.JDBCDataStore");
-    this.put("juddi.auth", "org.apache.juddi.auth.DefaultAuthenticator");
-    this.put("juddi.uuidgen", "org.apache.juddi.uuidgen.DefaultUUIDGen");
-    this.put("juddi.useMonitor", "true");
-    this.put("juddi.monitor", "org.apache.juddi.monitor.jdbc.JDBCMonitor");
-    this.put("juddi.useConnectionPool", "false");
+    super();
   }
 
   /**
@@ -91,27 +79,6 @@ public class Config extends Properties
   public static String getOperator()
   {
     return getStringProperty("juddi.operatorName");
-  }
-
-  /**
-   *
-   */
-  public static String getDataStoreFactory()
-  {
-    return getStringProperty("juddi.dataStoreFactory");
-  }
-
-  /**
-   *
-   */
-  public static String getMonitor()
-  {
-    return getStringProperty("juddi.useMonitor");
-  }
-
-  public static String getMonitorClass()
-  {
-    return getStringProperty("juddi.monitor");
   }
 
   /**
