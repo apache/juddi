@@ -7,8 +7,62 @@
   <body>
     <section>
       <title>Reference Library</title>
-      <p>
+      
+      <p>The jUDDI Project lives or fails based on its human resources. Users
+        and contributors alike help the project with ideas and brainpower. A common
+        foundation of knowledge is required to effectively participate in this
+        virtual community. The following is a list of documents that we have found
+        helpful for us and may be helpful to you.
       </p>
+      <p><b>These resources are required reading for anybody contributing source 
+        code to the project.</b>
+      </p>
+
+      <section>
+        <title>UDDI Specific Resources</title>        
+        <p><b><link href="http://www.uddi.org/">UDDI.org</link></b></p>
+        <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/contribs.htm#uddiv1">UDDI Version 1.0 Specification</link></b></p>
+        <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv2">UDDI Version 2.0 Specification</link></b></p>
+        <p><b><link href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">UDDI Version 3.0 Specification</link></b></p>
+      </section>
+        
+      <section>
+        <title>Related Specifications</title>        
+        <p><b><link href="http://www.w3.org/TR/SOAP/">SOAP W3C Specification</link></b></p>
+        <p><b><link href="http://www.w3c.org/TR/wsdl.html">Web Services Description Language (WSDL) 1.1</link></b></p>
+        <p><b><link href="http://java.sun.com/xml/jaxr/">Java API for XML Registries (JAXR)</link></b></p>
+      </section>
+                 
+      <section>
+        <title>Other Resources</title>        
+        <p><b><link href="http://java.sun.com/docs/books/jls/index.html" target="new">The Java Language Specification</link></b><br/>
+          Written by the creators of the Java Programming Language, this online
+          book is considered by many to be the bible for programming in Java. A must
+          read.
+        </p>
+        <p><b><link href="http://java.sun.com/products/jdk/javadoc/index.html" target="new">Javadoc</link></b><br/>
+          Javadoc is the automatic software documentation generator used by Java
+          since it was first released. All code written for this project must be
+          documented using Javadoc conventions.
+        </p> 
+        <p><b><link href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">The Java Code Conventions</link></b><br/>
+          This Sun document specifies the de-facto standard way of formatting
+          Java code. All code written for this project must follow these conventions.
+        </p>
+        <p><b><link href="http://cvsbook.red-bean.com/">Open Source Development with CVS</link></b><br/>
+          Written by Karl Fogel, this is an online version of many of the primary
+          chapters from the dead-tree version of his book.
+        </p>
+        <p><b><link href="http://www.cvshome.org/docs/blandy.html">Introduction to CVS</link></b><br/>
+          Written by Jim Blandy, this brief introduction gives a first look into
+          CVS. If you have never used CVS before, you'll want to start here.
+        </p>
+        <p><b><link href="http://www.cvshome.org/docs/manual/">Version Management with CVS</link></b><br/>
+          Written by Per Cederqvist at al, this is the main manual for CVS. It
+          provides details on all documented CVS features.
+        </p>  
+      </section>
+
     </section>
   </body>
 </document>

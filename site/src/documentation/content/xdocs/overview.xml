@@ -6,9 +6,44 @@
   </header>
   <body>
     <section>
+      
       <title>Overview</title>
-      <p>
+        <p>Every volunteer project obtains its strength from the people involved in it. 
+        We invite you to participate as much or as little as you choose. The roles 
+        and responsibilities that people can assume in the project are based on 
+        merit. Everybody's input matters!
       </p>
+      <p>There are a variety of ways to participate. Regardless of how you choose 
+        to participate, we suggest you join some or all of our <link href="lists.html">mailing lists</link>. 
+      </p>
+      
+      <section>
+        <title>Use the Products &amp; Give Us Feedback</title>
+        <p>Using the products,reporting bugs, making feature requests, etc. is by 
+          far the most important role. It's your feedback that allows the technology 
+          to evolve. 
+          <ul>
+            <li><link href="lists.html">Join Mailing Lists</link></li>
+            <li><link href="releases.html">Download Binary Builds</link></li>
+            <li><link href="bugs.html">Report bugs/Request additional features</link></li>
+          </ul>
+        </p>
+      </section>
+
+      <section>
+        <title>Contribute Code or Documentation Patches</title>
+        <p>In this role, you participate in the actual development of the code. If this 
+          is the type of role you'd like to play, here are some steps (in addition to 
+          the ones above) to get you started: 
+          <ul>
+            <li> <link href="lists.html#guidelines">Read Mailing List Guidelines </link></li>
+            <li> <link href="library.html">Review Reference Library </link></li>
+            <li> <link href="http://cvs.apache.org/viewcvs/ws-juddi/">Download the Source Code</link></li>
+            <li> <link href="cvs.html">Access CVS Repository </link></li>
+          </ul>
+        </p>
+        </section>
+      
     </section>
   </body>
 </document>

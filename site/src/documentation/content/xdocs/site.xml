@@ -41,8 +41,8 @@ See http://xml.apache.org/forrest/linking.html for more info
   </downloads>
 
   <related label="Related Projects">
-    <axis label="Axis" href="http://ws.apache.org/axis/index.html"/>
-    <uddi4j label="UDDI4j" href="http://www-124.ibm.com/developerworks/oss/uddi4j/"/>
+    <axis label="Axis" href="http://ws.apache.org/axis/"/>
+    <uddi4j label="UDDI4J" href="http://www-124.ibm.com/developerworks/oss/uddi4j/"/>
   </related>
 
   <related label="Misc">

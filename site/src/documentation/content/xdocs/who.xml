@@ -5,9 +5,59 @@
     <title>Who We Are</title>
   </header>
   <body>
+    
     <section>
-      <title>Title</title>
-      <p>Content</p>
+      <title>Who We Are</title>
+      <p>
+        The jUDDI Project operates on a meritocracy: the more you do,
+        the more responsibility you will obtain. This page lists all
+        of the people who have gone the extra mile and are
+        Committers. If you would like to get involved, the first step
+        is to join the mailing lists.
+      </p>
+      <p>
+        We ask that you please do not send us emails privately asking
+        for support. We are non-paid volunteers who help out with the
+        project and we do not necessarily have the time or energy to
+        help people on an individual basis. Instead, we have setup
+        mailing lists which often contain hundreds of individuals who
+        will help answer detailed requests for help. The benefit of
+        using mailing lists over private communication is that it is
+        a shared resource where others can also learn from common
+        mistakes and as a community we all grow together.
+      </p>
     </section>
+
+    <section>
+      <title>Active Committers</title>
+      <p>
+        <ul class="noindent">
+          <li>
+            <b>Steve Viens</b>
+            &lt;<a href="mailto:sviens@apache.org">sviens@apache.org</a>&gt;
+          </li>
+          <li>
+            <b>Anou Manavalan</b>
+            &lt;<a href="mailto:anou_mana@apache.org">anou_mana@apache.org</a>&gt;
+          </li>
+          <li>
+            <b>Andy Cutright</b>
+            &lt;<a href="mailto:acutright@apache.org">acutright@apache.org</a>&gt;
+          </li>
+          <li>
+            <b>Anil Saldhana</b>
+            &lt;<a href="mailto:anilsaldhana@yahoo.com">anilsaldhana@yahoo.com</a>&gt;
+          </li>
+        </ul>
+      </p>
+    </section>
+
+    <section>
+      <title>Committers Emeriti (committers that have been inactive for 3 months or more)</title>
+      <p>
+        None at this time.
+      </p>
+    </section>
+
   </body>
 </document>
