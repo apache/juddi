@@ -123,6 +123,7 @@ public class AddPublisherAssertionsHandler extends AbstractHandler
     assertion.setTModelKey("uuid:3379ec11-a509-4668-9fee-19b134d0d09b");
 
     AddPublisherAssertions service = new AddPublisherAssertions();
+    service.setGeneric("2.0");
     service.setAuthInfo(authInfo);
     service.addPublisherAssertion(assertion);
     service.addPublisherAssertion(assertion);
