@@ -1,0 +1,16 @@
+<!DOCTYPE project [
+<!ENTITY forrest-targets SYSTEM "file:./forrest-targets.ent">
+]>
+
+<project default="run-forrest">
+    
+  &forrest-targets;
+
+  <target name="run-forrest" depends="clean,site">
+  </target>
+
+  <target name="clean" description="clean up the build area">
+    <delete dir="./build"/>
+  </target>
+
+</project>
