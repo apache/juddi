@@ -137,6 +137,7 @@ Copyright:
       </fileset>
       <webinf dir="${conf.dir}">
         <include name="server-config.wsdd"/>
+        <include name="jonas-web.xml"/>
       </webinf>
       <classes dir="${conf.dir}">
         <include name="juddi.properties"/>
