@@ -57,15 +57,15 @@ Copyright:
     <property name="jar.file"            value="${name}.jar"/>
     <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
-    <property name="sql.dir"             value="${basedir}/sql"/>
     <property name="docs.dir"            value="${basedir}/docs"/>
+  	<property name="sql.dir"             value="${basedir}/sql"/>
     <property name="lib.dir"             value="${basedir}/lib"/>
     <property name="src.dir"             value="${basedir}/src"/>
     <property name="java.dir"            value="${basedir}/src/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
     <property name="webapps.dir"         value="${basedir}/webapps"/>
     <property name="build.dir"           value="${basedir}/build"/>
-    <property name="classes.dir"         value="${build.dir}/classes"/>
+  	<property name="classes.dir"         value="${build.dir}/classes"/>
     <property name="javadoc.dir"         value="${build.dir}/apiDocs"/>
     <property name="dist.src.dir"        value="${build.dir}/dist_src"/>
     <property name="dist.src.root"       value="${dist.src.dir}/${name}_${version}_src"/>
@@ -138,7 +138,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
   <!-- =================================================================== -->
-  <target name="war" depends="clean,jar">
+  <target name="war" depends="jar">
     <mkdir dir="${build.dir}"/>
     <!-- Create the version & build time #include files -->
 	<echo file="${webapps.dir}/juddi/includes/version.inc" append="false">${version}</echo>
@@ -151,6 +151,7 @@ Copyright:
       <webinf dir="${conf.dir}">
         <include name="server-config.wsdd"/>
         <include name="jonas-web.xml"/>
+        <include name="jboss-web.xml"/>
       </webinf>
       <classes dir="${conf.dir}">
         <include name="juddi.properties"/>
@@ -373,18 +374,29 @@ Copyright:
     <!-- load the source distribution directory with what's needed here -->
     <copy file="build.xml" todir="${dist.src.root}"/>
     <copy file="build.properties" todir="${dist.src.root}"/>
-    <copy file="gump.xml" todir="${dist.src.root}"/>
+    <copy file="checkstyle.xml" todir="${dist.src.root}"/>
     <copy file="LICENSE" todir="${dist.src.root}"/>
     <copy file="README" todir="${dist.src.root}"/>
-    <copy file="release-notes.html" todir="${dist.src.root}"/>
-    <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
     <copy todir="${dist.src.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
-    <copy todir="${dist.src.root}/docs/sql"><fileset dir="${sql.dir}"/></copy>
-    <copy todir="${dist.src.root}/lib"><fileset dir="${lib.dir}"/></copy>
     <copy todir="${dist.src.root}/conf"><fileset dir="${conf.dir}"/></copy>
     <copy todir="${dist.src.root}/src"><fileset dir="${src.dir}"/></copy>
+    <copy todir="${dist.src.root}/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.src.root}/webapps"><fileset dir="${webapps.dir}"/></copy>
-
+    <copy todir="${dist.src.root}/lib">
+      <fileset dir="${lib.dir}">
+        <include name="axis.jar"/>
+        <include name="axis_ant.jar"/>
+        <include name="commons-collections.jar"/>
+        <include name="commons-dbcp.jar"/>
+        <include name="commons-discovery.jar"/>
+        <include name="commons-logging.jar"/>
+      	<include name="commons-pool.jar"/>
+        <include name="log4j-1.2.8.jar"/>
+        <include name="wsdl4j.jar"/>
+      	<include name="*.LICENSE"/>
+      </fileset>
+    </copy>
+  	
     <!-- loading complete, now package the source distribution up -->
     <zip destfile="${build.dir}/juddi_${version}_src.zip" basedir="${dist.src.dir}"/>
     <tar destfile="${build.dir}/juddi_${version}_src.tar" basedir="${dist.src.dir}"/>
@@ -401,15 +413,13 @@ Copyright:
     <!-- load the binary distribution directory with what's needed here -->
     <copy file="LICENSE" todir="${dist.bin.root}"/>
     <copy file="README" todir="${dist.bin.root}"/>
-    <copy file="release-notes.html" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${jar.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
     <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
-    <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
-    <copy todir="${dist.bin.root}/docs/sql"><fileset dir="${sql.dir}"/></copy>
     <copy todir="${dist.bin.root}/docs/apiDoc"><fileset dir="${javadoc.dir}"/></copy>
     <copy todir="${dist.bin.root}/conf"><fileset dir="${conf.dir}"/></copy>
-    <copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
+    <copy todir="${dist.bin.root}/sql"><fileset dir="${sql.dir}"/></copy>
+  	<copy todir="${dist.bin.root}/webapps"><fileset dir="${build.dir}/webapps"/></copy>
 
     <!-- loading complete, now package the binary distribution up -->
     <zip destfile="${build.dir}/juddi_${version}_bin.zip" basedir="${dist.bin.dir}"/>
@@ -419,7 +429,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Creates both the binary and source distributions                    -->
   <!-- =================================================================== -->
-  <target name="dist" depends="source,binary"/>
+  <target name="dist" depends="clean,source,binary"/>
   <!-- =================================================================== -->
   <!-- Build everything                                                    -->
   <!-- =================================================================== -->
