@@ -17,8 +17,7 @@ See http://forrest.apache.org/docs/linking.html for more info
 <site label="jUDDI" href="" tab="" xmlns="http://apache.org/forrest/linkmap/1.0">
 
   <juddi label="jUDDI">
-    <welcome label="Introduction" href="index.html" description="Introduction"/>
-    <news label="News" href="news.html" description="News"/>
+    <welcome label="About jUDDI" href="index.html" description="Overview &amp; News"/>
     <faq label="FAQ/Wiki" href="http://wiki.apache.org/ws/jUDDI_20FAQs" description="FAQ"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
