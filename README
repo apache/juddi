@@ -78,7 +78,17 @@ jUDDI RELEASE NOTES
      
  16. Calls to the delete_tModel function no longer remove
      the TModel from the TMODEL table, it is now simply 
-     marked as removed (see bug# 11).
+     marked as removed (see bug# 11) per the UDDI 
+     specification(s).
+     
+ 17. Updated underlying Axis implementation to ver 1.2 beta.
+ 
+ 18. Added a JBossAuthenticator donated by Antoni Reus
+ 
+ 19. HTTP GET requests to the three jUDDI endpoints (inquiry,
+     publish and admin) now return HTTP 405 Method Not 
+     Allowed error messages according to the HTTP 1.1 
+     specification. (see bug# JUDDI-23 for more info)
      
 
   Changes From 0.7.2 to 0.8.0
