@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.GetRegistryInfo;
+import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -77,5 +78,27 @@ public class GetRegistryInfoHandler extends AbstractHandler
   public static void main(String args[])
     throws Exception
   {
+    HandlerMaker maker = HandlerMaker.getInstance();
+    AbstractHandler handler = maker.lookup(GetRegistryInfoHandler.TAG_NAME);
+
+    Element parent = XMLUtils.newRootElement();
+    Element child = null;
+
+    GetRegistryInfo service = new GetRegistryInfo();
+    System.out.println();
+
+    RegistryObject regObject = service;
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
+
+    System.out.println();
+
+    regObject = handler.unmarshal(child);
+    handler.marshal(regObject,parent);
+    child = (Element)parent.getFirstChild();
+    parent.removeChild(child);
+    XMLUtils.writeXML(child,System.out);
   }
 }
