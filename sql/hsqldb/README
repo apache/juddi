@@ -1,4 +1,8 @@
-HSQL / jUDDI version 0.9rc1
+CREATE/CONFIGURE A MYSQL DATABASE FOR jUDDI
 
-Author: Steve Viens
-sviens@apache.org
+jUDDI requires the use of a relational database (RDBMS) or 
+lightweight directory access protocol (LDAP) server to store
+the web services metadata it manages. This document will 
+walk you through the process of setting up an HSQLdb database 
+as the persistante storage for a jUDDI registry.
+
