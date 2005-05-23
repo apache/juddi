@@ -44,12 +44,6 @@ public class Database
   private static final String JDBC_PASSWORD_KEY = "juddi.jdbcPassword";
   private static final String DEFAULT_JDBC_PASSWORD = "juddi";
 
-  private static final String JDBC_MAX_ACTIVITY_KEY = "juddi.maxActive";
-  private static final int DEFAULT_JDBC_MAX_ACTIVITY = 10;
-
-  private static final String JDBC_MAX_IDLE_KEY = "juddi.maxIdle";
-  private static final int DEFAULT_JDBC_MAX_IDLE = 5;
-
   /**
    *
    */
@@ -63,8 +57,6 @@ public class Database
     String jdbcURL = Config.getStringProperty(JDBC_URL_KEY,DEFAULT_JDBC_URL);
     String jdbcUser = Config.getStringProperty(JDBC_USERNAME_KEY,DEFAULT_JDBC_USERNAME);
     String jdbcPassword = Config.getStringProperty(JDBC_PASSWORD_KEY,DEFAULT_JDBC_PASSWORD);
-    int jdbcMaxActive = Config.getIntProperty(JDBC_MAX_ACTIVITY_KEY,DEFAULT_JDBC_MAX_ACTIVITY);
-    int jdbcMaxIdle = Config.getIntProperty(JDBC_MAX_IDLE_KEY,DEFAULT_JDBC_MAX_IDLE);
 
     // make sure the JDBC Driver is loaded
     
