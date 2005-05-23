@@ -17,9 +17,6 @@ Optional components:
   junit                from http://www.junit.org/
   jce                  from http://java.sun.com/products/jce/
   checkstyle           from http://checkstyle.sourceforge.net/
-  commons-collections  from http://jakarta.apache.org/commons/collections.html
-  commons-dbcp         from http://jakarta.apache.org/commons/dbcp/
-  commons-pool         from http://jakarta.apache.org/commons/pool/
 
 Optional dependees:
   krysalis-version     from http://www.krysalis.org/version
