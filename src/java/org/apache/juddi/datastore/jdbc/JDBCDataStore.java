@@ -19,10 +19,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
@@ -58,8 +54,8 @@ import org.apache.juddi.datatype.service.BusinessServices;
 import org.apache.juddi.datatype.tmodel.TModel;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnknownUserException;
-import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
+import org.apache.juddi.util.jdbc.ConnectionManager;
 import org.apache.juddi.util.jdbc.Transaction;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
@@ -85,25 +81,12 @@ public class JDBCDataStore implements DataStore
    */
   public JDBCDataStore()
   {
-    try
-    {
-      String dataSourceName =
-        Config.getStringProperty(RegistryEngine.PROPNAME_DATASOURCE_NAME,
-            RegistryEngine.DEFAULT_DATASOURCE_NAME);
-
-      InitialContext initCtx = new InitialContext();
-      DataSource dataSource = (DataSource)initCtx.lookup(dataSourceName);
-      
-      if (dataSource != null)
-      	this.connection = dataSource.getConnection();
+    try {
+      this.connection = ConnectionManager.aquireConnection();
     }
     catch(SQLException sqlex) {
       log.error("Exception occured while attempting to " +
         "aquire a JDBC connection: "+sqlex.getMessage());
-    }
-    catch (NamingException nex) {
-      log.error("Exception occurred while attempting to acquire " +
-        "a JDBC DataSource from JNDI: "+nex.getMessage());
     }
   }
 
@@ -113,8 +96,7 @@ public class JDBCDataStore implements DataStore
    */
   public void release()
   {
-    try 
-		{
+    try {
       if (connection != null)
       {
         this.connection.close();
@@ -2157,3 +2139,4 @@ public class JDBCDataStore implements DataStore
     return keyVector;
   }
 }
+
