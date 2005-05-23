@@ -27,9 +27,6 @@ import org.apache.juddi.datatype.assertion.PublisherAssertion;
 import org.apache.juddi.datatype.response.AssertionStatusItem;
 import org.apache.juddi.datatype.response.CompletionStatus;
 import org.apache.juddi.datatype.response.KeysOwned;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
 
 /**
  * @author Steve Viens (steve@users.sourceforge.net)
@@ -1104,57 +1101,5 @@ class PublisherAssertionTable
     }
 
     sql.append(") ");
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection) throws Exception
-  {
-    Transaction txn = new Transaction();
-
-    if (connection != null)
-    {
-      try
-      {
-        // begin a new transaction
-        txn.begin(connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch (Exception ex)
-      {
-        try
-        {
-          txn.rollback();
-        }
-        catch (java.sql.SQLException sqlex)
-        {
-          sqlex.printStackTrace();
-        }
-        throw ex;
-      }
-    }
   }
 }

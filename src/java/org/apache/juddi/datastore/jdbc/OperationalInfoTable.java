@@ -15,23 +15,18 @@
  */
 package org.apache.juddi.datastore.jdbc;
 
-// java imports
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.util.Vector;
-
-// apache imports
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Andy Cutright (acutright@apache.org)
  */
-
-class OperationalInfoTable {
+class OperationalInfoTable 
+{
   private static Log log = LogFactory.getLog(OperationalInfoTable.class);
+
   private static String insertSQL = null;
+
   static {
     StringBuffer sql = null;
     sql = new StringBuffer(256); // @todo right size?
@@ -46,15 +41,5 @@ class OperationalInfoTable {
     sql.append(" VALUES ");
     sql.append("(?,?,?,?,?,?,?)");
     insertSQL = sql.toString();
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-  public static void main(String [] args) {
-    OperationalInfoTable.test();
-  }
-  public static void test() {
-    System.out.println("insertSQL: [" + insertSQL + "]");
   }
 }

@@ -23,12 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.TModelBag;
-import org.apache.juddi.datatype.TModelKey;
 import org.apache.juddi.datatype.request.FindQualifiers;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
 import org.apache.juddi.util.jdbc.DynamicQuery;
-import org.apache.juddi.util.jdbc.Transaction;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -262,70 +258,5 @@ class FindBusinessByTModelKeyQuery
       sql.append("B.LAST_UPDATE ASC");
     else
       sql.append("B.LAST_UPDATE DESC");
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection)
-    throws Exception
-  {
-    TModelBag tModelBag = new TModelBag();
-    Vector tModelKeyVector = new Vector();
-    tModelKeyVector.addElement(new TModelKey(""));
-    tModelKeyVector.addElement(new TModelKey(""));
-    tModelKeyVector.addElement(new TModelKey("2a33d7d7-2b73-4de9-99cd-d4c51c186bce"));
-    tModelKeyVector.addElement(new TModelKey("2a33d7d7-2b73-4de9-99cd-d4c51c186bce"));
-    tModelBag.setTModelKeyVector(tModelKeyVector);
-
-    Vector keysIn = new Vector();
-    keysIn.add("13411e97-24cf-43d1-bee0-455e7ec5e9fc");
-    keysIn.add("3f244f19-7ba7-4c3e-a93e-ae33e530794b");
-    keysIn.add("3009f336-98c1-4193-a22f-fea73e79c909");
-    keysIn.add("3ef4772f-e04b-46ed-8065-c5a4e167b5ba");
-
-    Transaction txn = new Transaction();
-
-    if (connection != null)
-    {
-      try
-      {
-        // begin a new transaction
-        txn.begin(connection);
-
-        select(tModelBag,keysIn,null,connection);
-        select(tModelBag,null,null,connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch(Exception ex)
-      {
-        try { txn.rollback(); }
-        catch(java.sql.SQLException sqlex) { sqlex.printStackTrace(); }
-        throw ex;
-      }
-    }
   }
 }

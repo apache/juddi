@@ -15,21 +15,14 @@
  */
 package org.apache.juddi.datastore.jdbc;
 
-// java imports
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//import java.util.Vector;
-
-// apache imports
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Andy Cutright (acutright@apache.org)
  */
-
-class OperationalInfoChildTable {
+class OperationalInfoChildTable 
+{
   private static Log log = LogFactory.getLog(OperationalInfoChildTable.class);
 
   private static String insertSQL = null;
@@ -42,15 +35,5 @@ class OperationalInfoChildTable {
     sql.append(" VALUES ");
     sql.append("(?,?)");
     insertSQL = sql.toString();
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-  public static void main(String [] args) {
-    OperationalInfoChildTable.test();
-  }
-  public static void test() {
-    System.out.println("insertSQL: [" + insertSQL + "]");
   }
 }

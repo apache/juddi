@@ -23,9 +23,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.KeyedReference;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -198,62 +195,6 @@ class FindRelatedBusinessQuery
       {
         log.warn("An Exception was encountered while attempting to close " +
           "the Find BusinessEntity Statement: "+e.getMessage(),e);
-      }
-    }
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection)
-    throws Exception
-  {
-    Transaction txn = new Transaction();
-
-    KeyedReference keyedRef = new KeyedReference();
-    keyedRef.setTModelKey("");
-    keyedRef.setKeyName("");
-    keyedRef.setKeyValue("");
-
-    if (connection != null)
-    {
-      try
-      {
-        // begin a new transaction
-        txn.begin(connection);
-
-        select("2a33d7d7-2b73-4de9-99cd-d4c51c186bce",connection);
-        selectWithKeyedRef("2a33d7d7-2b73-4de9-99cd-d4c51c186bce",keyedRef,connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch(Exception ex)
-      {
-        try { txn.rollback(); }
-        catch(java.sql.SQLException sqlex) { sqlex.printStackTrace(); }
-        throw ex;
       }
     }
   }

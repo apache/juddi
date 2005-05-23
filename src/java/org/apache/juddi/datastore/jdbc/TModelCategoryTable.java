@@ -23,13 +23,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.KeyedReference;
-import org.apache.juddi.datatype.OverviewDoc;
-import org.apache.juddi.datatype.tmodel.TModel;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
-import org.apache.juddi.uuidgen.UUIDGen;
-import org.apache.juddi.uuidgen.UUIDGenFactory;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -235,103 +228,6 @@ class TModelCategoryTable
       }
       catch (Exception e)
       { /* ignored */
-      }
-    }
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection) throws Exception
-  {
-    Transaction txn = new Transaction();
-    UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
-
-    if (connection != null)
-    {
-      try
-      {
-        OverviewDoc overviewDoc = new OverviewDoc();
-        overviewDoc.setOverviewURL(
-          "http://www.steveviens.com/overviewdoc.html");
-
-        String tModelKey = uuidgen.uuidgen();
-        TModel tModel = new TModel();
-        tModel.setTModelKey(tModelKey);
-        tModel.setAuthorizedName("sviens");
-        tModel.setOperator("WebServiceRegistry.com");
-        tModel.setName("Tuscany Web Service Company");
-        tModel.setOverviewDoc(overviewDoc);
-
-        Vector keyRefs = new Vector();
-        keyRefs.add(new KeyedReference(uuidgen.uuidgen(), "blah, blah, blah"));
-        keyRefs.add(
-          new KeyedReference(uuidgen.uuidgen(), "Yadda, Yadda, Yadda"));
-        keyRefs.add(
-          new KeyedReference(uuidgen.uuidgen(), "WhoobWhoobWhoobWhoob"));
-        keyRefs.add(new KeyedReference(uuidgen.uuidgen(), "Haachachachacha"));
-
-        String authorizedUserID = "sviens";
-
-        // begin a new transaction
-        txn.begin(connection);
-
-        // insert a new TModel
-        TModelTable.insert(tModel, authorizedUserID, connection);
-
-        // insert a Collection of new Category KeyedReference objects
-        TModelCategoryTable.insert(tModelKey, keyRefs, connection);
-
-        // insert another new TModel
-        tModel.setTModelKey(uuidgen.uuidgen());
-        TModelTable.insert(tModel, authorizedUserID, connection);
-
-        // insert another Collection of new Category KeyedReference objects
-        TModelCategoryTable.insert(tModel.getTModelKey(), keyRefs, connection);
-
-        // select a Collection of Category KeyedReference objects
-        keyRefs = TModelCategoryTable.select(tModelKey, connection);
-
-        // delete a Collection of Category KeyedReference objects
-        TModelCategoryTable.delete(tModelKey, connection);
-
-        // re-select a Collection of Category KeyedReference objects
-        keyRefs = TModelCategoryTable.select(tModelKey, connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch (Exception ex)
-      {
-        try
-        {
-          txn.rollback();
-        }
-        catch (java.sql.SQLException sqlex)
-        {
-          sqlex.printStackTrace();
-        }
-        throw ex;
       }
     }
   }

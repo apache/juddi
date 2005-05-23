@@ -23,9 +23,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -223,55 +220,6 @@ class TModelDocDescTable
       }
       catch (Exception e)
       { /* ignored */
-      }
-    }
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection) throws Exception
-  {
-    Transaction txn = new Transaction();
-
-    if (connection != null)
-    {
-      try
-      {
-        // commit the transaction
-        txn.commit();
-      }
-      catch (Exception ex)
-      {
-        try
-        {
-          txn.rollback();
-        }
-        catch (java.sql.SQLException sqlex)
-        {
-          sqlex.printStackTrace();
-        }
-        throw ex;
       }
     }
   }

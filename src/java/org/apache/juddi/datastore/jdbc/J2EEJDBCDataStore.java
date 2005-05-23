@@ -19,6 +19,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
@@ -58,11 +63,6 @@ import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.Transaction;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
-
-import javax.naming.InitialContext;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 /**
  * The Datastore that uses the JCA based ConnectionFactory

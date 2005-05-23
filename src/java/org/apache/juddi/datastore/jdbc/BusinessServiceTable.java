@@ -23,13 +23,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.datatype.business.BusinessEntity;
 import org.apache.juddi.datatype.service.BusinessService;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
-import org.apache.juddi.uuidgen.UUIDGen;
-import org.apache.juddi.uuidgen.UUIDGenFactory;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -314,100 +308,6 @@ class BusinessServiceTable
     {
       try { resultSet.close(); } catch (Exception e) { /* ignored */ }
       try { statement.close(); } catch (Exception e) { /* ignored */ }
-    }
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection)
-    throws Exception
-  {
-    Transaction txn = new Transaction();
-    UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
-
-    if (connection != null)
-    {
-      try
-      {
-        String businessKey = uuidgen.uuidgen();
-        BusinessEntity business = new BusinessEntity();
-        business.setBusinessKey(businessKey);
-        business.setAuthorizedName("sviens");
-        business.setOperator("WebServiceRegistry.com");
-
-        String serviceKey = uuidgen.uuidgen();
-        BusinessService service = new BusinessService();
-        service.setBusinessKey(businessKey);
-        service.setServiceKey(serviceKey);
-
-        // begin a new transaction
-        txn.begin(connection);
-
-        String authorizedUserID = "sviens";
-
-        // insert a new BusinessEntity
-        BusinessEntityTable.insert(business,authorizedUserID,connection);
-
-        // insert a new BusinessService
-        BusinessServiceTable.insert(service,connection);
-
-        // insert another new BusinessService
-        service.setServiceKey(uuidgen.uuidgen());
-        BusinessServiceTable.insert(service,connection);
-
-        // insert one more new BusinessService
-        service.setServiceKey(uuidgen.uuidgen());
-        BusinessServiceTable.insert(service,connection);
-
-        // select a BusinessService object
-        service = BusinessServiceTable.select(serviceKey,connection);
-
-        // delete a BusinessService object
-        BusinessServiceTable.delete(serviceKey,connection);
-
-        // select a BusinessService object
-        service = BusinessServiceTable.select(serviceKey,connection);
-
-        // select a Collection BusinessService objects by BusinessKey
-        BusinessServiceTable.selectByBusinessKey(businessKey,connection);
-
-        // delete a Collection BusinessService objects by BusinessKey
-        BusinessServiceTable.deleteByBusinessKey(businessKey,connection);
-
-        // select a Collection BusinessService objects by BusinessKey
-        BusinessServiceTable.selectByBusinessKey(businessKey,connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch(Exception ex)
-      {
-        try { txn.rollback(); }
-        catch(java.sql.SQLException sqlex) { sqlex.printStackTrace(); }
-        throw ex;
-      }
     }
   }
 }

@@ -23,13 +23,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
-import org.apache.juddi.datatype.business.BusinessEntity;
-import org.apache.juddi.datatype.service.BusinessService;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.juddi.util.jdbc.Transaction;
-import org.apache.juddi.uuidgen.UUIDGen;
-import org.apache.juddi.uuidgen.UUIDGenFactory;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -225,96 +218,6 @@ class ServiceDescTable
       }
       catch (Exception e)
       { /* ignored */
-      }
-    }
-  }
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection) throws Exception
-  {
-    Transaction txn = new Transaction();
-    UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
-
-    if (connection != null)
-    {
-      try
-      {
-        String businessKey = uuidgen.uuidgen();
-        BusinessEntity business = new BusinessEntity();
-        business.setBusinessKey(businessKey);
-        business.setAuthorizedName("sviens");
-        business.setOperator("WebServiceRegistry.com");
-
-        String serviceKey = uuidgen.uuidgen();
-        BusinessService service = new BusinessService();
-        service.setServiceKey(serviceKey);
-        service.setBusinessKey(businessKey);
-
-        Vector descList = new Vector();
-        descList.add(new Description("blah, blah, blah", "en"));
-        descList.add(new Description("Yadda, Yadda, Yadda", "it"));
-        descList.add(new Description("WhoobWhoobWhoobWhoob", "cy"));
-        descList.add(new Description("Haachachachacha", "km"));
-
-        String authorizedUserID = "sviens";
-
-        // begin a new transaction
-        txn.begin(connection);
-
-        // insert a new BusinessEntity
-        BusinessEntityTable.insert(business, authorizedUserID, connection);
-
-        // insert a new BusinessService
-        BusinessServiceTable.insert(service, connection);
-
-        // insert a Collection of Description objects
-        ServiceDescTable.insert(serviceKey, descList, connection);
-
-        // select the Collection of Description objects
-        descList = ServiceDescTable.select(serviceKey, connection);
-
-        // delete the Collection of Description objects
-        ServiceDescTable.delete(serviceKey, connection);
-
-        // re-select the Collection of Description objects
-        descList = ServiceDescTable.select(serviceKey, connection);
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch (Exception ex)
-      {
-        try
-        {
-          txn.rollback();
-        }
-        catch (java.sql.SQLException sqlex)
-        {
-          sqlex.printStackTrace();
-        }
-        throw ex;
       }
     }
   }

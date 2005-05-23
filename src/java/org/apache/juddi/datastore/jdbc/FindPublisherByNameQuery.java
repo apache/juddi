@@ -23,10 +23,7 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.request.FindQualifiers;
-import org.apache.juddi.util.Config;
-import org.apache.juddi.util.jdbc.ConnectionManager;
 import org.apache.juddi.util.jdbc.DynamicQuery;
-import org.apache.juddi.util.jdbc.Transaction;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -180,88 +177,6 @@ class FindPublisherByNameQuery
     else if (qualifiers.sortByNameAsc)
     {
       sql.append("P.PUBLISHER_NAME ASC");
-    }
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    // make sure we're using a DBCP DataSource and
-    // not trying to use JNDI to aquire one.
-    Config.setStringProperty("juddi.useConnectionPool","true");
-
-    Connection conn = null;
-    try {
-      conn = ConnectionManager.aquireConnection();
-      test(conn);
-    }
-    finally {
-      if (conn != null)
-        conn.close();
-    }
-  }
-
-  public static void test(Connection connection)
-    throws Exception
-  {
-    String name = new String("Steve");
-
-    Vector idsIn = null;
-    idsIn = new Vector();
-    idsIn.add(new String("sviens"));
-    idsIn.add(new String("jdoe"));
-    idsIn.add(new String("steveviens"));
-
-    Transaction txn = new Transaction();
-
-    if (connection != null)
-    {
-      try
-      {
-        // begin a new transaction
-        txn.begin(connection);
-
-        Vector results = select(name,idsIn,null,connection);
-        if (results != null)
-        {
-          for (int i=0; i<results.size(); i++)
-            System.out.println(i+": "+(String)results.elementAt(i));
-        }
-
-        FindQualifiers fqs = new FindQualifiers();
-        fqs.sortByNameAsc = true;
-
-        Vector resutls2 = select(name,null,fqs,connection);
-        if (results != null)
-        {
-          for (int i=0; i<resutls2.size(); i++)
-            System.out.println(i+": "+(String)resutls2.elementAt(i));
-        }
-
-        fqs.exactNameMatch = true;
-
-        Vector resutls3 = select(name,null,fqs,connection);
-        if (results != null)
-        {
-          for (int i=0; i<resutls3.size(); i++)
-            System.out.println(i+": "+(String)resutls3.elementAt(i));
-        }
-
-        // commit the transaction
-        txn.commit();
-      }
-      catch(Exception ex)
-      {
-        try { txn.rollback(); }
-        catch(java.sql.SQLException sqlex) { sqlex.printStackTrace(); }
-        throw ex;
-      }
     }
   }
 }
