@@ -21,7 +21,6 @@ import java.sql.SQLException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.util.Config;
 
 
 /**
@@ -53,10 +52,10 @@ public class Database
     // grab the JDBC properties we'll need to setup 
   	// the connection pool.
   	
-    String jdbcDriver = Config.getStringProperty(JDBC_DRIVER_KEY,DEFAULT_JDBC_DRIVER);
-    String jdbcURL = Config.getStringProperty(JDBC_URL_KEY,DEFAULT_JDBC_URL);
-    String jdbcUser = Config.getStringProperty(JDBC_USERNAME_KEY,DEFAULT_JDBC_USERNAME);
-    String jdbcPassword = Config.getStringProperty(JDBC_PASSWORD_KEY,DEFAULT_JDBC_PASSWORD);
+    String jdbcDriver = System.getProperty(JDBC_DRIVER_KEY,DEFAULT_JDBC_DRIVER);
+    String jdbcURL = System.getProperty(JDBC_URL_KEY,DEFAULT_JDBC_URL);
+    String jdbcUser = System.getProperty(JDBC_USERNAME_KEY,DEFAULT_JDBC_USERNAME);
+    String jdbcPassword = System.getProperty(JDBC_PASSWORD_KEY,DEFAULT_JDBC_PASSWORD);
 
     // make sure the JDBC Driver is loaded
     
