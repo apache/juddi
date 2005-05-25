@@ -56,7 +56,6 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_CRYPTOR_CLASS_NAME = "juddi.cryptor";
   public static final String PROPNAME_UUIDGEN_CLASS_NAME = "juddi.uuidgen";
   public static final String PROPNAME_VALIDATOR_CLASS_NAME = "juddi.validator";
-  public static final String PROPNAME_MONITOR_CLASS_NAME = "juddi.monitor";
   
   public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
   public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLengthAllowed";    
@@ -83,7 +82,6 @@ public class RegistryEngine extends AbstractRegistry
   public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
   public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
   public static final String DEFAULT_VALIDATOR_CLASS_NAME = "org.apache.juddi.validator.DefaultValidator";
-  public static final String DEFAULT_MONITOR_CLASS_NAME = "org.apache.juddi.monitor.jdbc.JDBCMonitor";
   
   public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
   public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    

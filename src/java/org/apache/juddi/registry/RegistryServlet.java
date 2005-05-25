@@ -149,9 +149,6 @@ public class RegistryServlet extends HttpServlet
         props.put(RegistryEngine.PROPNAME_DATASTORE_CLASS_NAME,
                   RegistryEngine.DEFAULT_DATASTORE_CLASS_NAME);
         
-        props.put(RegistryEngine.PROPNAME_MONITOR_CLASS_NAME,
-                  RegistryEngine.DEFAULT_MONITOR_CLASS_NAME);
-        
         props.put(RegistryEngine.PROPNAME_UUIDGEN_CLASS_NAME,
                   RegistryEngine.DEFAULT_UUIDGEN_CLASS_NAME);
         

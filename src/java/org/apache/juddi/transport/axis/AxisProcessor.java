@@ -39,8 +39,6 @@ import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.handler.HandlerMaker;
 import org.apache.juddi.handler.IHandler;
-import org.apache.juddi.monitor.Monitor;
-import org.apache.juddi.monitor.MonitorFactory;
 import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.registry.RegistryServlet;
 import org.apache.juddi.util.Config;
@@ -65,16 +63,7 @@ public class AxisProcessor
    * @param messageContext
    */
   public AxisProcessor(Message soapResponse,MessageContext messageContext)
-  {
-    // get a new monitor from the MonitorFactory
-    
-    Monitor monitor = MonitorFactory.getMonitor();
-    
-    // if monitoring is turned on inspect the MessageContext
-
-    if (monitor != null)
-      monitor.inspectMessageContext(messageContext);
-
+  {    
     // the soap request and response objects.
 
     SOAPEnvelope soapReqEnv = null;
@@ -111,11 +100,6 @@ public class AxisProcessor
       SOAPBodyElement requestBody = soapReqEnv.getFirstBody();
       request = requestBody.getAsDOM();
 
-      // make the monitor inspect the SOAP Body
-      // DOM element
-      if (monitor != null)
-        monitor.inspectUDDIRequest(request);
-
       // grab the function name from this element -
       // we'll need this to lookup the xml handler
       // to use to unmarshal the xml into a juddi
@@ -143,11 +127,6 @@ public class AxisProcessor
       // jUDDI request object.
 
       RegistryObject uddiRequest = requestHandler.unmarshal(request);
-
-      // make the monitor inspect the UDDI request
-      // object
-      if (monitor != null)
-        monitor.inspectRegistryObject(uddiRequest);
 
       // Determine if this message came from through
       // the Publish, Inquiry or Admin API and handle
@@ -244,9 +223,6 @@ public class AxisProcessor
         faultString = rex.getFaultString();  // SOAP Fault faultString
         faultActor = rex.getFaultActor();  // SOAP Fault faultActor
         
-        if (monitor != null)
-            monitor.addMonitorFault(faultString);
-        
         DispositionReport dispRpt = rex.getDispositionReport();
         if (dispRpt != null)
         {
@@ -317,16 +293,6 @@ public class AxisProcessor
       catch (Exception e) { 
         e.printStackTrace(); 
       }
-    }
-    finally
-    {
-      // write the monitored information to the currently
-      // configured 'Monitor' implemented registry (the
-      // default Monitor implementation writes the monitored
-      // information to a database table via JDBC).
-
-      if (monitor != null)
-        monitor.log();
     }
 
     // write the SOAP response XML out to the log (on debug)
