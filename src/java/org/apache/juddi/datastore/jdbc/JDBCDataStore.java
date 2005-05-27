@@ -1633,22 +1633,35 @@ public class JDBCDataStore implements DataStore
       if (serviceKey != null)
         keyVector = FindBindingByServiceKeyQuery.select(serviceKey,keyVector,findQualifiers,connection);
         
-      if ((tModelBag != null) && (tModelBag.size() > 0))
-        keyVector = FindBindingByTModelKeyQuery.select(serviceKey,tModelBag,keyVector,findQualifiers,connection);
-
       if ((findQualifiers != null) && (findQualifiers.orAllKeys))  
       {
-        // orAllKeys = Use logical "OR" when searching by category 
-        // bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // orAllKeys = Use logical "OR" when searching by TModel bag
+        // or category bag. See UDDI v2.04 API Specification - Appendix E.
+
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+          keyVector = FindBindingByTModelKeyQuery.select(serviceKey,tModelBag,keyVector,findQualifiers,connection);
+
         if ((categoryBag != null) && (categoryBag.size() > 0))
           keyVector = FindBindingByCategoryQuery.select(serviceKey,categoryBag,keyVector,findQualifiers,connection);
       }
       else 
       {
         // Default UDDI v2 behavior: Use logical "AND" when searching 
-        // by category bag. See UDDI v2.04 API Specification - Appendix E.
-        //
+        // by tModel bag. See UDDI v2.04 API Specification - Appendix E.
+
+        if ((tModelBag != null) && (tModelBag.size() > 0))
+        {
+          Vector tModelKeyVector = tModelBag.getTModelKeyVector();
+          if (tModelKeyVector != null)
+          {
+            for (int i=0; i<tModelKeyVector.size(); i++)
+            {
+            	String tModelKey = (String)tModelKeyVector.elementAt(i);
+              keyVector = FindBindingByTModelKeyQuery.select(serviceKey,tModelKey,keyVector,findQualifiers,connection);
+            }
+          }
+        }
+
         if ((categoryBag != null) && (categoryBag.size() > 0))
         {
           Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
