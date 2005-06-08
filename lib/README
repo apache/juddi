@@ -2,20 +2,40 @@ The Java libraries found in this directory are used during
 the build or unit testing process only and are not deployed 
 with the jUDDI web application.
 
+A jar file containing the servlet API classes is required 
+to successfully build jUDDI.  This is available from a 
+number of places including Tomcat:
+
+	Jakarta Tomcat (http://jakarta.apache.org/tomcat)
+	-------------------------------------------------
+	servlet.jar
+
+If you're plannign to run the	JUnit test cases that accompany
+jUDDI you'll need a copy of the JUnit jar file to be placed
+in this directory:
+
+ (http://www.junit.org)
+	---------------------
+	junit.jar
+
+If you're building with a JRE that preceeds 1.4 you'll need the 
+following jar files:
+
 	Java Cryptography Extensions (http://java.sun.com/products/jce/)
-	----------------------------
+	----------------------------------------------------------------
 	jce.jar
 	
-	JUnit (http://www.junit.org)
-	-----
-	junit.jar
-	
-	UDDI4j (http://www.uddi4j.org)
-	----------
-	uddi4j.jar	
-	
 	Jakarta Tomcat (http://jakarta.apache.org/tomcat)
-	------------------
+	-------------------------------------------------
+	jdbc2_0-stdext.jar
+		
+Finally, the JBossAuthenticator is opptionally built and 
+included in the juddi.jar file if the dependent JBoss classes 
+are available in the classpath.if you're planning to use the 
+JBossAuthenticator you'll need a copy of the jboss.jar file.  
+
+	JBoss (http://www.jboss.org)
+	----------------------------
 	jdbc2_0-stdext.jar
 	servlet.jar
 

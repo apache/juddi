@@ -11,5 +11,10 @@ this directory.
 	----------------------------------
 	saaj.jar
 
+If you're having trouble finding them I'd suggest grabbing them
+from the Axis 1.2 final distribution.  This is where the other 
+jar files in this directory were taken.  For licensing reasons
+we could not make them available from the jUDDI CVS repository.
+
 Steve Viens
 sviens@apache.org
