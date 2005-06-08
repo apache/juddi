@@ -104,6 +104,7 @@
       // Create HTTP Connection
       URLConnection connection = targetURL.openConnection();
       connection.setDoOutput(true);
+      connection.setRequestProperty("SOAPAction","");
       PrintWriter writer = new PrintWriter(connection.getOutputStream());
 
       // Send the HTTP Request
