@@ -26,17 +26,33 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>jUDDIAdminService</servlet-name>
+    <display-name>jUDDI Admin Service</display-name>
+    <servlet-class>org.apache.juddi.registry.AdminService</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDIV2InquiryService</servlet-name>
+    <display-name>UDDI Version 2.0 Inquiry Service</display-name>
+    <servlet-class>org.apache.juddi.registry.InquiryService</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDIV2PublishService</servlet-name>
+    <display-name>UDDI Version 2.0 Publish Service</display-name>
+    <servlet-class>org.apache.juddi.registry.PublishService</servlet-class>
+  </servlet>
+
   <servlet-mapping>
-    <servlet-name>jUDDIRegistryServlet</servlet-name>
+    <servlet-name>jUDDIAdminService</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIV2InquiryService</servlet-name>
     <url-pattern>/inquiry</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>jUDDIRegistryServlet</servlet-name>
+    <servlet-name>UDDIV2PublishService</servlet-name>
     <url-pattern>/publish</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>jUDDIRegistryServlet</servlet-name>
-    <url-pattern>/admin</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list id="WelcomeFileList">
