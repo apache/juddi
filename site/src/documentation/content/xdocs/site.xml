@@ -20,7 +20,6 @@ See http://forrest.apache.org/docs/linking.html for more info
     <welcome label="Overview" href="index.html" description="Overview &amp; News"/>
     <cvs label="CVS Repository" href="cvs.html" description="CVS Repository"/>
     <lists label="Mailing Lists" href="lists.html" description="Mailing Lists"/>
-    <issues label="Issue Tracking" href="issues.html" description="Issue Tracking"/>    
     <issues label="Issue Tracking" href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10401" description="Issue Tracking"/>
     <participate label="Participation" href="participate.html" description="Participation"/>
   </juddi>
