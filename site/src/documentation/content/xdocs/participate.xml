@@ -23,7 +23,7 @@
           <ul>
             <li><link href="lists.html">Join Mailing Lists</link></li>
             <li><link href="releases.html">Download Binary Builds</link></li>
-            <li><link href="issues.html">Report Bugs &amp; Request New Features</link></li>
+            <li><link href="http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10401">Report Bugs &amp; Request New Features</link></li>
           </ul>
         </p>
       </section>
