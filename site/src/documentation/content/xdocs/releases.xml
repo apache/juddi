@@ -40,11 +40,16 @@
         <!--
         <tr>
           <td><link href="http://ws.apache.org/juddi/download.cgi">0.9</link> (from mirror)</td>
-          <td>July 1, 2004</td>
+          <td>July 1, 2005</td>
           <td>Final Version 0.9</td>
         </tr>
         -->
 
+        <tr>
+          <td><link href="http://archive.apache.org/dist/ws/juddi/0_9rc4/">0.9rc4</link></td>
+          <td>June 7, 2005</td>
+          <td>Release Candidate #4 for Version 0.9.</td>
+        </tr>
         <tr>
           <td><link href="http://archive.apache.org/dist/ws/juddi/0_9rc3/">0.9rc3</link></td>
           <td>July 2, 2004</td>
