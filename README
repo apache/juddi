@@ -15,6 +15,27 @@ WELCOME TO jUDDI!
   
 jUDDI RELEASE NOTES
                           
+  Changes From 0.9.0rc1 to 0.9.0rc4
+
+  X. It's been such a long time since 0.9rc1 
+     was cut that there are simply way too many 
+     changes and improvements to list here.  We 
+     believe that virtually all of UDDI v2 is 
+     supported at this point.  
+     
+     Moving foreward, more the jUDDI project will
+     be releasing much more often and will include
+     careful tracking and reporting of changes and 
+     features will begin with the 0.9rc4 release.
+
+     If you would like to see a complete list of 
+     fixes and feature requests that have been 
+     addressed since jUDDI moved to the Apache
+     Web Services Project visit the issue 
+     tracker which can be found at the following URL:
+     
+     http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10401
+     
   Changes From 0.8.0 to 0.9.0rc1
 
   1. Added CategoryBag support to BindingTemplate
