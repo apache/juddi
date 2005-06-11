@@ -131,6 +131,9 @@
     catch (Exception e) 
     {
       e.printStackTrace();
+      
+      // Display the exception msg as the result
+      responseMsg = e.getMessage();
     }    
   }
   
