@@ -6,48 +6,27 @@
   </header>
   <body>
     <section>      
-      <title>Releases</title>      
-      <p>
-      <table border="0" width="90%">   
+      <title>Releases</title>    
+        
+      <table>   
            
         <tr> 
-          <td><b>Name</b></td>
-          <td><b>Date</b></td>
-          <td><b>Description</b></td>
+          <td><strong>Name</strong></td>
+          <td><strong>Date</strong></td>
+          <td><strong>Description</strong></td>
         </tr>
 
-        <!-- INSTRUCTIONS FOR DISTRIBUTING A jUDDI RELEASE
-        
-             NON-FINAL RELEASES
-             
-               You'll need to deploy releases that don't need to be mirrored 
-               to archive.apache.org and place your files in a new directory
-               named after the version of your release (i.e. 0_9rc1 for version
-               0.9rc1) within the following directory: 
-                
-                 /www/archive.apache.org/dist/ws/juddi 
-          
-               So the files for jUDDI 0.9rc1 would end up here:
-             
-                 /www/archive.apache.org/dist/ws/juddi/0_9rc1
-                      
-               FINAL RELEASES
-             
-                 (to-do)
-             
-        -->
-        
         <!--
         <tr>
-          <td><link href="http://ws.apache.org/juddi/download.cgi">0.9</link> (from mirror)</td>
+          <td><link href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9/">0.9</link></td>
           <td>July 1, 2005</td>
           <td>Final Version 0.9</td>
         </tr>
         -->
 
         <tr>
-          <td><link href="http://archive.apache.org/dist/ws/juddi/0_9rc4/">0.9rc4</link></td>
-          <td>June 7, 2005</td>
+          <td><link href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9RC4/">0.9rc4</link></td>
+          <td>June 14, 2005</td>
           <td>Release Candidate #4 for Version 0.9.</td>
         </tr>
         <tr>
@@ -66,10 +45,13 @@
           <td>Release Candidate #1 for Version 0.9.</td>
         </tr>
 
-      </table>
-      </p>      
-      <p>For nightly builds or nightly snapshots of the CVS tree see 
-       the <link href="interim.html">Interim Drops</link> page.</p>
+      </table>    
+
+      <note>
+       For nightly builds or nightly snapshots of the CVS tree see 
+       the <link href="interim.html">Interim Drops</link> page.
+	  </note>
+		
     </section>
   </body>
 </document>

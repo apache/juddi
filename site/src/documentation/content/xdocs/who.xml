@@ -30,37 +30,18 @@
 
     <section>
       <title>Active Committers</title>
-      <p>
-        <ul class="noindent">
-          <li>
-            <b>Steve Viens</b>
-            &lt;<a href="mailto:sviens@apache.org">sviens@apache.org</a>&gt;
-          </li>
-          <li>
-            <b>Andy Cutright</b>
-            &lt;<a href="mailto:acutright@apache.org">acutright@apache.org</a>&gt;
-          </li>
-          <li>
-            <b>Anil Saldhana</b>
-            &lt;<a href="mailto:anil@apache.org">anil@apache.org</a>&gt;
-          </li>
-        </ul>
+      <p>      
+        <strong>Steve Viens</strong>&lt;<link href="mailto:sviens@apache.org">sviens@apache.org</link>&gt;<br/>
+        <strong>Andy Cutright</strong>&lt;<link href="mailto:acutright@apache.org">acutright@apache.org</link>&gt;<br/>
+	    <strong>Anil Saldhana</strong>&lt;<link href="mailto:anil@apache.org">anil@apache.org</link>&gt;<br/>
       </p>
     </section>
 
     <section>
       <title>Committers Emeriti (committers that have been inactive for 3 months or more)</title>
       <p>
-        <ul class="noindent">
-          <li>
-            <b>Anou Manavalan</b>
-            &lt;<a href="mailto:anou_mana@apache.org">anou_mana@apache.org</a>&gt;
-          </li>
-          <li>
-            <b>Chris Dellario</b>
-            &lt;<a href="mailto:dellario@comcast.net">dellario@comcast.net</a>&gt;
-          </li>
-        </ul>
+        <strong>Anou Manavalan</strong>&lt;<link href="mailto:anou_mana@apache.org">anou_mana@apache.org</link>&gt;<br/>
+        <strong>Chris Dellario</strong>&lt;<link href="mailto:dellario@comcast.net">dellario@comcast.net</link>&gt;<br/>
       </p>
     </section>
 
