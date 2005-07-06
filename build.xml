@@ -76,6 +76,8 @@ Copyright:
     <property name="compile.debug"       value="on"/>
     <property name="compile.deprecation" value="on"/>
     <property name="compile.optimize"    value="off"/>
+    <property name="compile.source"      value="1.4"/>
+    <property name="compile.target"      value="1.4"/>
     <property name="test.failonerror"    value="true" />
     <property name="test.runner"         value="junit.textui.TestRunner"/>
 
@@ -141,6 +143,8 @@ Copyright:
 
     <!-- Compile Java Source Code -->
     <javac
+        source="${compile.source}"
+        target="${compile.target}"
         destdir="${classes.dir}"
         debug="${compile.debug}"
         deprecation="${compile.deprecation}"
@@ -275,6 +279,8 @@ Copyright:
   <target name="test" depends="jar" if="junit.present">
     <mkdir dir="${build.dir}/unit/classes"/>
     <javac
+        source="${compile.source}"
+        target="${compile.target}"
         destdir="${build.dir}/unit/classes"
         debug="${compile.debug}"
         deprecation="${compile.deprecation}"

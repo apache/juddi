@@ -149,10 +149,10 @@ public class XMLDocAuthenticator implements ContentHandler, ErrorHandler, Authen
   {
     StringBuffer buff = new StringBuffer(100);
 
-    Enumeration enum = userTable.keys();
-    while (enum.hasMoreElements())
+    Enumeration e = userTable.keys();
+    while (e.hasMoreElements())
     {
-      UserInfo userInfo = (UserInfo)userTable.get(enum.nextElement());
+      UserInfo userInfo = (UserInfo)userTable.get(e.nextElement());
       buff.append(userInfo.toString()+"\n");
     }
 
