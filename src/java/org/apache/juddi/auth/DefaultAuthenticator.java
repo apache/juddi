@@ -15,8 +15,6 @@
  */
 package org.apache.juddi.auth;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.error.RegistryException;
 
 /**
@@ -26,9 +24,6 @@ import org.apache.juddi.error.RegistryException;
  */
 public class DefaultAuthenticator implements Authenticator
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(DefaultAuthenticator.class);
-
   /**
    *
    */
