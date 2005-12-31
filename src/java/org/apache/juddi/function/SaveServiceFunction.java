@@ -33,7 +33,6 @@ import org.apache.juddi.datatype.request.GetAuthToken;
 import org.apache.juddi.datatype.request.SaveBusiness;
 import org.apache.juddi.datatype.request.SaveService;
 import org.apache.juddi.datatype.response.AuthToken;
-import org.apache.juddi.datatype.response.BusinessDetail;
 import org.apache.juddi.datatype.response.ServiceDetail;
 import org.apache.juddi.datatype.service.BusinessService;
 import org.apache.juddi.datatype.service.BusinessServices;
@@ -251,7 +250,7 @@ public class SaveServiceFunction extends AbstractFunction
       SaveBusiness request = new SaveBusiness();
       request.setAuthInfo(authInfo);
       request.setBusinessEntityVector(businessEntityVector);
-      BusinessDetail detail = (BusinessDetail)reg.execute(request);
+      reg.execute(request);
     }
     catch (Exception ex)
     {
