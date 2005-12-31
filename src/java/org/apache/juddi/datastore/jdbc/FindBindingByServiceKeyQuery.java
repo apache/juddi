@@ -65,7 +65,6 @@ class FindBindingByServiceKeyQuery
     Vector keysOut = new Vector();
     PreparedStatement statement = null;
     ResultSet resultSet = null;
-    DynamicQuery dynStmt = new DynamicQuery();
     
     DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,serviceKey,qualifiers);

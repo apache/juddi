@@ -69,7 +69,6 @@ class FindBindingByCategoryQuery
     Vector keysOut = new Vector();
     PreparedStatement statement = null;
     ResultSet resultSet = null;
-    DynamicQuery dynStmt = new DynamicQuery();
     
     DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,serviceKey,categoryBag,qualifiers);
@@ -202,7 +201,6 @@ class FindBindingByCategoryQuery
     Vector keysOut = new Vector();
     PreparedStatement statement = null;
     ResultSet resultSet = null;
-    DynamicQuery dynStmt = new DynamicQuery();
     
     DynamicQuery sql = new DynamicQuery(selectSQL);
     appendWhere(sql,serviceKey,keyedRef,qualifiers);
