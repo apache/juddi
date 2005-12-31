@@ -15,8 +15,6 @@
  */
 package org.apache.juddi.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
 import org.apache.juddi.datatype.KeyedReference;
@@ -29,9 +27,6 @@ import org.apache.juddi.error.RegistryException;
  */
 public class DefaultValidator implements Validator
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(DefaultValidator.class);
-
   /**
    *
    */
@@ -64,17 +59,5 @@ public class DefaultValidator implements Validator
     throws RegistryException
   {
     return true;
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    Validator validation = new DefaultValidator();
   }
 }
