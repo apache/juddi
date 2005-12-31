@@ -15,14 +15,11 @@
  */
 package org.apache.juddi.function;
 
-import java.util.Vector;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datastore.DataStore;
 import org.apache.juddi.datastore.DataStoreFactory;
 import org.apache.juddi.datatype.RegistryObject;
-import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.DeleteSubscription;
 import org.apache.juddi.datatype.response.DispositionReport;
 import org.apache.juddi.datatype.response.Result;
@@ -61,8 +58,8 @@ public class DeleteSubscriptionFunction extends AbstractFunction
     // extract individual parameters
     DeleteSubscription request = (DeleteSubscription)regObject;
     String generic = request.getGeneric();
-    AuthInfo authInfo = request.getAuthInfo();
-    Vector bindingKeyVector = request.getSubscriptionKeyVector();
+    // AuthInfo authInfo = request.getAuthInfo();
+    // Vector bindingKeyVector = request.getSubscriptionKeyVector();
 
     // aquire a jUDDI datastore instance
     DataStore dataStore = DataStoreFactory.getDataStore();
