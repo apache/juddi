@@ -19,7 +19,6 @@ import java.util.Vector;
 
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
-import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.binding.BindingTemplate;
 import org.apache.juddi.datatype.binding.BindingTemplates;
@@ -227,7 +226,7 @@ public class ValidateValuesFunction extends AbstractFunction
     
     for (int i=0; i<refs.size(); i++)
     {
-      KeyedReference ref = (KeyedReference)refs.elementAt(i);
+      //KeyedReference ref = (KeyedReference)refs.elementAt(i);
      
       // Perform the validation
     }
