@@ -20,8 +20,6 @@ import java.util.TreeSet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.IRegistry;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
@@ -34,9 +32,6 @@ import org.w3c.dom.Element;
  */
 public class PublishService extends AbstractService
 {
-  // private reference to the webapp's logger.
-  private static Log log = LogFactory.getLog(PublishService.class);
-
   // collection of valid operations
   private TreeSet operations = null;
 
