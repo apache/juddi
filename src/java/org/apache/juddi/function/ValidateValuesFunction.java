@@ -17,8 +17,6 @@ package org.apache.juddi.function;
 
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.IdentifierBag;
 import org.apache.juddi.datatype.KeyedReference;
@@ -41,9 +39,6 @@ import org.apache.juddi.util.Config;
  */
 public class ValidateValuesFunction extends AbstractFunction
 {
-  // private reference to jUDDI Logger
-  private static Log log = LogFactory.getLog(SetPublisherAssertionsFunction.class);
-
   /**
    *
    */
