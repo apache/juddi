@@ -19,9 +19,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Used to create new universally unique identifiers or UUID's (sometimes called
  * GUID's).  UDDI UUID's are allways formmated according to DCE UUID conventions.
@@ -31,9 +28,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SecureUUIDGen implements UUIDGen
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(SecureUUIDGen.class);
-
   private static final BigInteger COUNT_START = new BigInteger("-12219292800000");  // 15 October 1582
   private static final int CLOCK_SEQUENCE = (new Random()).nextInt(16384);
 
