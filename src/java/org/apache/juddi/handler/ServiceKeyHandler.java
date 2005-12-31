@@ -30,11 +30,8 @@ public class ServiceKeyHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "serviceKey";
 
-  private HandlerMaker maker = null;
-
   protected ServiceKeyHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

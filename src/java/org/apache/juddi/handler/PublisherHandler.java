@@ -15,8 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.util.Vector;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -32,18 +30,13 @@ public class PublisherHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "publisher";
 
-  private HandlerMaker maker = null;
-
   protected PublisherHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)
   {
     Publisher obj = new Publisher();
-    Vector nodeList = null;
-    AbstractHandler handler = null;
 
     // Attributes (required)
     obj.setPublisherID(element.getAttribute("publisherID"));
@@ -78,7 +71,6 @@ public class PublisherHandler extends AbstractHandler
   {
     Publisher publisher = (Publisher)object;
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-    AbstractHandler handler = null;
 
     // Attributes (required)
     String publisherID = publisher.getPublisherID();

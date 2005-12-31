@@ -30,11 +30,8 @@ public class EmailHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "email";
 
-  private HandlerMaker maker = null;
-
   protected EmailHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

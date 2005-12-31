@@ -30,11 +30,8 @@ public class PhoneHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "phone";
 
-  private HandlerMaker maker = null;
-
   protected PhoneHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

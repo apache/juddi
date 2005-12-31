@@ -16,7 +16,6 @@
 package org.apache.juddi.handler;
 
 import java.util.Date;
-import java.util.Vector;
 
 import org.apache.juddi.datatype.BindingKey;
 import org.apache.juddi.datatype.RegistryObject;
@@ -35,11 +34,8 @@ public class SubscriptionHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "subscription";
 
-  private HandlerMaker maker = null;
-
   protected SubscriptionHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)
@@ -47,8 +43,6 @@ public class SubscriptionHandler extends AbstractHandler
     // TODO (UDDI v3) Fill out SubscriptoinHandler.unmarshal()
       
     Subscription obj = new Subscription();
-    Vector nodeList = null;
-    AbstractHandler handler = null;
 
     // Attributes
     obj.setSubscriptionKey(element.getAttribute("subscriptionKey"));
@@ -65,7 +59,6 @@ public class SubscriptionHandler extends AbstractHandler
   {
     Subscription subscription = (Subscription)object;
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-    AbstractHandler handler = null;
 
     String subscriptionKey = subscription.getSubscriptionKey();
     if (subscriptionKey != null)

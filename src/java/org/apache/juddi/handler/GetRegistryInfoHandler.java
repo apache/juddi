@@ -15,8 +15,6 @@
  */
 package org.apache.juddi.handler;
 
-import java.util.Vector;
-
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.request.GetRegistryInfo;
 import org.apache.juddi.util.xml.XMLUtils;
@@ -29,18 +27,13 @@ public class GetRegistryInfoHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "get_registryInfo";
 
-  private HandlerMaker maker = null;
-
   protected GetRegistryInfoHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)
   {
     GetRegistryInfo obj = new GetRegistryInfo();
-    Vector nodeList = null;
-    AbstractHandler handler = null;
 
     // Attributes
     String generic = element.getAttribute("generic");
@@ -60,7 +53,6 @@ public class GetRegistryInfoHandler extends AbstractHandler
   {
     GetRegistryInfo request = (GetRegistryInfo)object;
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-    AbstractHandler handler = null;
 
     String generic = request.getGeneric();
     if (generic != null)

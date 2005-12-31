@@ -30,11 +30,8 @@ public class HostingRedirectorHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "hostingRedirector";
 
-  private HandlerMaker maker = null;
-
   protected HostingRedirectorHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -30,11 +30,8 @@ public class DiscoveryURLHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "discoveryURL";
 
-  private HandlerMaker maker = null;
-
   protected DiscoveryURLHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

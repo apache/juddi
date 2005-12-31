@@ -30,11 +30,8 @@ public class BusinessKeyHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "businessKey";
 
-  private HandlerMaker maker = null;
-
   protected BusinessKeyHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -31,11 +31,8 @@ public class NameHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "name";
 
-  private HandlerMaker maker = null;
-
   protected NameHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -29,11 +29,8 @@ public class AuthInfoHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "authInfo";
 
-  private HandlerMaker maker = null;
-
   protected AuthInfoHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

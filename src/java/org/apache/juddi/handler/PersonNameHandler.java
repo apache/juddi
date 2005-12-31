@@ -30,11 +30,8 @@ public class PersonNameHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "personName";
 
-  private HandlerMaker maker = null;
-
   protected PersonNameHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

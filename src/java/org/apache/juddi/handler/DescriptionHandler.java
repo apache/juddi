@@ -30,11 +30,8 @@ public class DescriptionHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "description";
 
-  private HandlerMaker maker = null;
-
   protected DescriptionHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -27,11 +27,8 @@ public class GetAuthTokenHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "get_authToken";
 
-  private HandlerMaker maker = null;
-
   protected GetAuthTokenHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

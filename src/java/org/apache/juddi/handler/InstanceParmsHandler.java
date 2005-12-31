@@ -30,11 +30,8 @@ public class InstanceParmsHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "instanceParms";
 
-  private HandlerMaker maker = null;
-
   protected InstanceParmsHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

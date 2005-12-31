@@ -30,11 +30,8 @@ public class BindingKeyHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "bindingKey";
 
-  private HandlerMaker maker = null;
-
   protected BindingKeyHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

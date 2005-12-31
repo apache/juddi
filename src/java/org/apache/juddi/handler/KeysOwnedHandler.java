@@ -34,18 +34,14 @@ public class KeysOwnedHandler extends AbstractHandler
   private static final String FROM_KEY_TAG_NAME = "fromKey";
   private static final String TO_KEY_TAG_NAME = "toKey";
 
-  private HandlerMaker maker = null;
-
   protected KeysOwnedHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)
   {
     KeysOwned obj = new KeysOwned();
     Vector nodeList = null;
-    AbstractHandler handler = null;
 
     // Attributes
     // {none}
@@ -75,7 +71,6 @@ public class KeysOwnedHandler extends AbstractHandler
   {
     KeysOwned keysOwned = (KeysOwned)object;
     Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-    AbstractHandler handler = null;
 
     String fromKey = keysOwned.getFromKey();
     if ((fromKey != null) && (fromKey.length() > 0))

@@ -33,11 +33,8 @@ public class FindQualifierHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "findQualifier";
 
-  private HandlerMaker maker = null;
-
   protected FindQualifierHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

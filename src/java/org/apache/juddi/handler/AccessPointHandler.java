@@ -30,11 +30,8 @@ public class AccessPointHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "accessPoint";
 
-  private HandlerMaker maker = null;
-
   protected AccessPointHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

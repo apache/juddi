@@ -30,11 +30,8 @@ public class OverviewURLHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "overviewURL";
 
-  private HandlerMaker maker = null;
-
   protected OverviewURLHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -30,11 +30,8 @@ public class TModelKeyHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "tModelKey";
 
-  private HandlerMaker maker = null;
-
   protected TModelKeyHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)

@@ -30,11 +30,8 @@ public class KeyedReferenceHandler extends AbstractHandler
 {
   public static final String TAG_NAME = "keyedReference";
 
-  private HandlerMaker maker = null;
-
   protected KeyedReferenceHandler(HandlerMaker maker)
   {
-    this.maker = maker;
   }
 
   public RegistryObject unmarshal(Element element)
