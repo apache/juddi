@@ -61,7 +61,6 @@ public class GetRegisteryInfoFunction extends AbstractFunction
       info.addProperty("operatorName",Config.getStringProperty("juddi.operatorName"));
       info.addProperty("operatorEmailAddress",Config.getStringProperty("juddi.operatorEmailAddress"));
       info.addProperty("registryVersion",Release.getRegistryVersion());
-      info.addProperty("registryLastModified",Release.getLastModified());
       info.addProperty("uddiVersion",Release.getUDDIVersion());
       
       return info;
