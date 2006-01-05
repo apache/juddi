@@ -161,7 +161,6 @@
 <h4>jUDDI Version Information</h4>
 <pre>
 <b>jUDDI Version:</b> <%= org.apache.juddi.util.Release.getRegistryVersion() %>
-<b>Build Date:</b>    <%= org.apache.juddi.util.Release.getLastModified() %>
 <b>UDDI Version:</b>  <%= org.apache.juddi.util.Release.getUDDIVersion() %>
 </pre>
         
@@ -289,7 +288,7 @@
   catch(Exception ex)
   {
     out.print("<font color=\"red\">");
-    out.print("- DB connection was not aquired. ("+ex.getMessage()+")");
+    out.print("- DB connection was not acquired. ("+ex.getMessage()+")");
     out.println("</font>");
   }
   
