@@ -111,6 +111,42 @@ public class Config extends Properties
   }
 
   /**
+   *
+   */
+  public static int getMaxBusinessEntitiesPerPublisher()
+  {
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_BUSINESS_ENTITIES_PER_PUBLISHER,
+              RegistryEngine.DEFAULT_MAX_BUSINESS_ENTITIES_PER_PUBLISHER);
+  }
+
+  /**
+   *
+   */
+  public static int getMaxBusinessServicesPerBusinessEntity()
+  {
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY,
+              RegistryEngine.DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY);
+  }
+
+  /**
+   *
+   */
+  public static int getMaxBindingTemplatesPerBusinessService()
+  {
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE,
+              RegistryEngine.DEFAULT_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE);
+  }
+
+  /**
+   *
+   */
+  public static int getMaxTModelsPerPublisher()
+  {
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_TMODELS_PER_PUBLISHER,
+              RegistryEngine.DEFAULT_MAX_TMODELS_PER_PUBLISHER);
+  }
+
+  /**
    * Retrieves a configuration property as a String object.
    * Loads the juddi.properties file if not already initialized.
    *
