@@ -23,165 +23,221 @@ import org.apache.juddi.datatype.RegistryObject;
  */
 public class Publisher implements RegistryObject
 {
-  private String publisherID;
-  private String nameValue;
-  private String emailAddress;
-  private boolean admin;
-  private boolean enabled;
+	private String publisherID;
+	private String nameValue;
+	private String emailAddress;
+	private boolean admin;
+	private boolean enabled;  
+	private int maxBusinesses;
+	private int maxServices;
+	private int maxBindings;
+	private int maxTModels;
 
-  /**
-   *
-   */
-  public Publisher()
-  {
-  }
+	/**
+	 *
+	 */
+	public Publisher()
+	{
+	}
 
-  /**
-   *
-   */
-  public Publisher(String pubID,String name)
-  {
-    this.publisherID = pubID;
-    this.nameValue = name;
-  }
+	/**
+	 *
+	 */
+	public Publisher(String pubID,String name)
+	{
+	    this.publisherID = pubID;
+	    this.nameValue = name;
+	}
 
-  /**
-   *
-   */
-  public Publisher(String pubID,String name,boolean adminValue)
-  {
-    this(pubID,name);
-    this.admin = adminValue;
-  }
+	/**
+	 *
+	 */
+	public Publisher(String pubID,String name,boolean adminValue)
+	{
+		this(pubID,name);
+		this.admin = adminValue;
+	}
 
-  /**
-   *
-   */
-  public void setPublisherID(String pubID)
-  {
-    this.publisherID = pubID;
-  }
+	/**
+	 *
+	 */
+	public void setPublisherID(String pubID)
+	{
+		this.publisherID = pubID;
+	}
 
-  /**
-   *
-   */
-  public String getPublisherID()
-  {
-    return this.publisherID;
-  }
+	/**
+	 *
+	 */
+	public String getPublisherID()
+	{
+		return this.publisherID;
+	}
 
-  /**
-   * Sets the name of this Publisher to the given name.
-   *
-   * @param name The new name of this Publisher.
-   */
-  public void setName(String name)
-  {
-    this.nameValue = name;
-  }
+	/**
+	 * Sets the name of this Publisher to the given name.
+	 *
+	 * @param name The new name of this Publisher.
+	 */
+	public void setName(String name)
+	{
+		this.nameValue = name;
+	}
+	
+	/**
+	 * Returns the name of this Publisher as a String.
+	 *
+	 * @return The name of this Publisher.
+	 */
+	public String getName()
+	{
+	    return this.nameValue;
+	}
 
-  /**
-   * Returns the name of this Publisher as a String.
-   *
-   * @return The name of this Publisher.
-   */
-  public String getName()
-  {
-    return this.nameValue;
-  }
+	/**
+	 * Sets the name of this Publisher to the given name.
+	 *
+	 * @param name The new name of this Publisher.
+	 */
+	public void setName(Name name)
+	{
+	    if (name != null)
+	    	this.nameValue = name.getValue();
+	    else
+	    	this.nameValue = null;
+	}
 
-  /**
-    * Sets the name of this Publisher to the given name.
-    *
-    * @param name The new name of this Publisher.
-    */
-  public void setName(Name name)
-  {
-    if (name != null)
-      this.nameValue = name.getValue();
-    else
-      this.nameValue = null;
-  }
+	/**
+	 *
+	 */
+	public void setEmailAddress(String email)
+	{
+		this.emailAddress = email;
+	}
 
-  /**
-   *
-   */
-  public void setEmailAddress(String email)
-  {
-    this.emailAddress = email;
-  }
+    /**
+     *
+     */
+    public String getEmailAddress()
+  	{
+    	return this.emailAddress;
+  	}
 
-  /**
-   *
-   */
-  public String getEmailAddress()
-  {
-    return this.emailAddress;
-  }
+    /**
+     *
+     */
+    public void setAdmin(boolean adminValue)
+    {
+    	this.admin = adminValue;
+    }
 
-  /**
-   *
-   */
-  public void setAdmin(boolean adminValue)
-  {
-    this.admin = adminValue;
-  }
+    /**
+     *
+     */
+  	public void setAdminValue(String adminValue)
+  	{
+	    if (adminValue == null)
+	      this.admin = false;
+	    else
+	      this.admin = (adminValue.equalsIgnoreCase("true"));
+  	}
 
-  /**
-   *
-   */
-  public void setAdminValue(String adminValue)
-  {
-    if (adminValue == null)
-      this.admin = false;
-    else
-      this.admin = (adminValue.equalsIgnoreCase("true"));
-  }
+  	/**
+	 *
+	 */
+	public boolean isAdmin()
+	{
+		return this.admin;
+	}
 
-  /**
-   *
-   */
-  public boolean isAdmin()
-  {
-    return this.admin;
-  }
+	/**
+	 *
+	 */
+	public void setEnabled(boolean enabledValue)
+	{
+		this.enabled = enabledValue;
+	}
 
+	/**
+	 *
+	 */
+	public void setEnabledValue(String enabledValue)
+	{
+		if (enabledValue == null)
+			this.enabled = false;
+		else
+			this.enabled = (enabledValue.equalsIgnoreCase("true"));
+	}
 
-  /**
-   *
-   */
-  public void setEnabled(boolean enabledValue)
-  {
-    this.enabled = enabledValue;
-  }
+	/**
+	 *
+	 */
+	public boolean isEnabled()
+	{
+		return this.enabled;
+	}
 
-  /**
-   *
-   */
-  public void setEnabledValue(String enabledValue)
-  {
-    if (enabledValue == null)
-      this.enabled = false;
-    else
-      this.enabled = (enabledValue.equalsIgnoreCase("true"));
-  }
-
-  /**
-   *
-   */
-  public boolean isEnabled()
-  {
-    return this.enabled;
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  // test-driver
-  public static void main(String[] args)
-  {
-  }
+	/**
+	 *
+	 */
+	public void setMaxBusinesses(int max)
+	{
+		this.maxBusinesses = max;
+	}
+	
+	/**
+	 *
+	 */
+	public int getMaxBusinesses()
+	{
+		return this.maxBusinesses;
+	}
+	
+	/**
+	 *
+	 */
+	public void setMaxServices(int max)
+	{
+		this.maxServices = max;
+	}
+	
+	/**
+	 *
+	 */
+	public int getMaxServices()
+	{
+		return this.maxServices;
+	}
+	
+	/**
+	 *
+	 */
+	public void setMaxBindings(int max)
+	{
+		this.maxBindings = max;
+	}
+	
+	/**
+	 *
+	 */
+	public int getMaxBindings()
+	{
+		return this.maxBindings;
+	}
+	
+	/**
+	 *
+	 */
+	public void setMaxTModels(int max)
+	{
+		this.maxTModels = max;
+	}
+	
+	/**
+	 *
+	 */
+	public int getMaxTModels()
+	{
+		return this.maxTModels;
+	}
 }
