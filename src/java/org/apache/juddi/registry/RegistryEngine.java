@@ -86,10 +86,10 @@ public class RegistryEngine extends AbstractRegistry
   public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
   public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
   public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152; // unused
-  public static final int    DEFAULT_MAX_BUSINESS_ENTITIES_PER_PUBLISHER = 5; // unused
-  public static final int    DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY = 20; // unused
-  public static final int    DEFAULT_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE = 10; // unused
-  public static final int    DEFAULT_MAX_TMODELS_PER_PUBLISHER = 25; // unused
+  public static final int    DEFAULT_MAX_BUSINESS_ENTITIES_PER_PUBLISHER = -1; // unused
+  public static final int    DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY = -1; // unused
+  public static final int    DEFAULT_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE = -1; // unused
+  public static final int    DEFAULT_MAX_TMODELS_PER_PUBLISHER = -1; // unused
   public static final int    DEFAULT_MAX_ROWS_LIMIT = 10; // unused
   
   // private reference to the jUDDI logger
