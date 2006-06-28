@@ -17,6 +17,7 @@ package org.apache.juddi.handler;
 
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.publisher.Publisher;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.xml.XMLUtils;
 import org.w3c.dom.Element;
 
@@ -57,7 +58,59 @@ public class PublisherHandler extends AbstractHandler
     String emailAddress = element.getAttribute("emailAddress");
     if ((emailAddress != null) && (emailAddress.length() > 0))
       obj.setEmailAddress(emailAddress);
+    
+    // maxBusinesses
+    try {
+    	String attrValue = element.getAttribute("maxBusinesses");
+    	if ((attrValue != null) && (attrValue.length() > 0))
+     		obj.setMaxBusinesses(Integer.parseInt(attrValue));
+    	else 
+    		obj.setMaxBusinesses(Config.getMaxBusinessesPerPublisher());
+    }
+    catch (Exception ex) {
+    	obj.setMaxBusinesses(
+    			Config.getMaxBusinessesPerPublisher());
+    }
+    
+    // maxServicesPerBusiness
+    try {
+    	String attrValue = element.getAttribute("maxServicesPerBusiness");
+    	if ((attrValue != null) && (attrValue.length() > 0))
+    		obj.setMaxServicesPerBusiness(Integer.parseInt(attrValue));
+    	else 
+    		obj.setMaxServicesPerBusiness(Config.getMaxServicesPerBusiness());
+    }
+    catch (Exception ex) {
+    	obj.setMaxServicesPerBusiness(
+    			Config.getMaxServicesPerBusiness());
+    }
 
+    // maxBindingsPerService
+    try {
+    	String attrValue = element.getAttribute("maxBindingsPerService");
+    	if ((attrValue != null) && (attrValue.length() > 0))
+    		obj.setMaxBindingsPerService(Integer.parseInt(attrValue));
+    	else 
+    		obj.setMaxBindingsPerService(Config.getMaxBindingsPerService());
+    }
+    catch (Exception ex) {
+    	obj.setMaxBindingsPerService(
+    			Config.getMaxBindingsPerService());
+    }
+
+    // maxTModels
+    try {
+    	String attrValue = element.getAttribute("maxTModels");
+    	if ((attrValue != null) && (attrValue.length() > 0))
+    		obj.setMaxTModels(Integer.parseInt(attrValue));
+    	else 
+    		obj.setMaxTModels(Config.getMaxTModelsPerPublisher());
+    }
+    catch (Exception ex) {
+    	obj.setMaxTModels(
+    			Config.getMaxTModelsPerPublisher());
+    }
+    
     // Text Node Value
     // {none}
 
@@ -92,6 +145,11 @@ public class PublisherHandler extends AbstractHandler
     if ((emailAddress != null) && (emailAddress.length() > 0))
       element.setAttribute("emailAddress",emailAddress);
 
+    element.setAttribute("maxBusinessEntities",String.valueOf(publisher.getMaxBusinessEntities()));
+    element.setAttribute("maxServicesPerBusiness",String.valueOf(publisher.getMaxServicesPerBusiness()));
+    element.setAttribute("maxBindingsPerService",String.valueOf(publisher.getMaxBindingsPerService()));
+    element.setAttribute("maxTModels",String.valueOf(publisher.getMaxTModels()));
+
     // Text Node Value
     // {none}
 
@@ -121,6 +179,10 @@ public class PublisherHandler extends AbstractHandler
     publisher.setEmailAddress("bcrosby@juddi.org");
     publisher.setAdmin(true);
     publisher.setEnabled(true);
+    publisher.setMaxBusinesses(5);
+    publisher.setMaxServicesPerBusiness(10);
+    publisher.setMaxBindingsPerService(25);
+    publisher.setMaxTModels(10);
 
     System.out.println();
 

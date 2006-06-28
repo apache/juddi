@@ -52,8 +52,8 @@ public class PublisherTable
     sql.append("IS_ADMIN, ");
     sql.append("IS_ENABLED), ");
     sql.append("MAX_BUSINESSES), ");
-    sql.append("MAX_SERVICES), ");
-    sql.append("MAX_BINDINGS), ");
+    sql.append("MAX_SERVICES_PER_BUSINESS), ");
+    sql.append("MAX_BINDINGS_PER_SERVICE), ");
     sql.append("MAX_TMODELS) ");
     sql.append("VALUES (?,?,?,?,?,?,?,?,?)");
     insertSQL = sql.toString();
@@ -66,8 +66,8 @@ public class PublisherTable
     sql.append("IS_ADMIN,");
     sql.append("IS_ENABLED,");
     sql.append("MAX_BUSINESSES,");
-    sql.append("MAX_SERVICES,");
-    sql.append("MAX_BINDINGS,");
+    sql.append("MAX_SERVICES_PER_BUSINESS,");
+    sql.append("MAX_BINDINGS_PER_SERVICE,");
     sql.append("MAX_TMODELS ");
     sql.append("FROM PUBLISHER ");
     sql.append("WHERE PUBLISHER_ID=?");
@@ -87,8 +87,8 @@ public class PublisherTable
     sql.append("IS_ADMIN=?,");
     sql.append("IS_ENABLED=?,");
     sql.append("MAX_BUSINESSES=?,");
-    sql.append("MAX_SERVICES=?,");
-    sql.append("MAX_BINDINGS=?,");
+    sql.append("MAX_SERVICES_PER_BUSINESS=?,");
+    sql.append("MAX_BINDINGS_PER_SERVICE=?,");
     sql.append("MAX_TMODELS=? ");
     sql.append("WHERE PUBLISHER_ID=?");
     updateSQL = sql.toString();
@@ -118,8 +118,8 @@ public class PublisherTable
       statement.setString(4,String.valueOf(publisher.isAdmin()));
       statement.setString(5,String.valueOf(publisher.isEnabled()));
       statement.setInt(6,publisher.getMaxBusinesses());
-      statement.setInt(7,publisher.getMaxServices());
-      statement.setInt(8,publisher.getMaxBindings());
+      statement.setInt(7,publisher.getMaxServicesPerBusiness());
+      statement.setInt(8,publisher.getMaxBindingsPerService());
       statement.setInt(9,publisher.getMaxTModels());
       
       log.debug("insert into PUBLISHER table:\n\n\t" + insertSQL +
@@ -129,8 +129,8 @@ public class PublisherTable
         "\n\t IS_ADMIN=" + publisher.isAdmin() +
         "\n\t IS_ENABLED=" + publisher.isEnabled() +
         "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
-        "\n\t MAX_SERVICES=" + publisher.getMaxServices() +
-        "\n\t MAX_BINDINGS=" + publisher.getMaxBindings() +
+        "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
+        "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
         "\n\t MAX_TMODELS=" + publisher.getMaxTModels() + "\n");
 
       // insert
@@ -184,8 +184,8 @@ public class PublisherTable
         publisher.setAdminValue(resultSet.getString(3));//("IS_ADMIN"));
         publisher.setEnabledValue(resultSet.getString(4));//("IS_ENABLED"));
         publisher.setMaxBusinesses(resultSet.getInt(5));//("MAX_BUSINESSES"));
-        publisher.setMaxServices(resultSet.getInt(6));//("MAX_SERVICES"));
-        publisher.setMaxBindings(resultSet.getInt(7));//("MAX_BINDINGS"));
+        publisher.setMaxServicesPerBusiness(resultSet.getInt(6));//("MAX_SERVICES_PER_BUSINESS"));
+        publisher.setMaxBindingsPerService(resultSet.getInt(7));//("MAX_BINDINGS_PER_SERVICE"));
         publisher.setMaxTModels(resultSet.getInt(8));//("MAX_TMODELS"));      
       }
 
@@ -259,8 +259,8 @@ public class PublisherTable
       statement.setString(3,String.valueOf(publisher.isAdmin()));
       statement.setString(4,String.valueOf(publisher.isEnabled()));      
       statement.setInt(5,publisher.getMaxBusinesses());
-      statement.setInt(6,publisher.getMaxServices());
-      statement.setInt(7,publisher.getMaxBindings());
+      statement.setInt(6,publisher.getMaxServicesPerBusiness());
+      statement.setInt(7,publisher.getMaxBindingsPerService());
       statement.setInt(8,publisher.getMaxTModels());
       statement.setString(9,publisher.getPublisherID());
 
@@ -270,8 +270,8 @@ public class PublisherTable
         "\n\t IS_ADMIN=" + publisher.isAdmin() +
         "\n\t IS_ENABLED=" + publisher.isEnabled() +
         "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
-        "\n\t MAX_SERVICES=" + publisher.getMaxServices() +
-        "\n\t MAX_BINDINGS=" + publisher.getMaxBindings() +
+        "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
+        "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
         "\n\t MAX_TMODELS=" + publisher.getMaxTModels() +       
         "\n\t PUBLISHER_ID=" + publisher.getPublisherID() + "\n");
       

@@ -29,8 +29,8 @@ public class Publisher implements RegistryObject
 	private boolean admin;
 	private boolean enabled;  
 	private int maxBusinesses;
-	private int maxServices;
-	private int maxBindings;
+	private int maxServicesPerBusiness;
+	private int maxBindingsPerService;
 	private int maxTModels;
 
 	/**
@@ -196,33 +196,33 @@ public class Publisher implements RegistryObject
 	/**
 	 *
 	 */
-	public void setMaxServices(int max)
+	public void setMaxServicesPerBusiness(int max)
 	{
-		this.maxServices = max;
+		this.maxServicesPerBusiness = max;
 	}
 	
 	/**
 	 *
 	 */
-	public int getMaxServices()
+	public int getMaxServicesPerBusiness()
 	{
-		return this.maxServices;
+		return this.maxServicesPerBusiness;
 	}
 	
 	/**
 	 *
 	 */
-	public void setMaxBindings(int max)
+	public void setMaxBindingsPerService(int max)
 	{
-		this.maxBindings = max;
+		this.maxBindingsPerService = max;
 	}
 	
 	/**
 	 *
 	 */
-	public int getMaxBindings()
+	public int getMaxBindingsPerService()
 	{
-		return this.maxBindings;
+		return this.maxBindingsPerService;
 	}
 	
 	/**

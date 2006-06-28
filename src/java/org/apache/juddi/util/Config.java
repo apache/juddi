@@ -113,28 +113,28 @@ public class Config extends Properties
   /**
    *
    */
-  public static int getMaxBusinessEntitiesPerPublisher()
+  public static int getMaxBusinessesPerPublisher()
   {
-    return getIntProperty(RegistryEngine.PROPNAME_MAX_BUSINESS_ENTITIES_PER_PUBLISHER,
-              RegistryEngine.DEFAULT_MAX_BUSINESS_ENTITIES_PER_PUBLISHER);
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_BUSINESSES_PER_PUBLISHER,
+              RegistryEngine.DEFAULT_MAX_BUSINESSES_PER_PUBLISHER);
   }
 
   /**
    *
    */
-  public static int getMaxBusinessServicesPerBusinessEntity()
+  public static int getMaxServicesPerBusiness()
   {
-    return getIntProperty(RegistryEngine.PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY,
-              RegistryEngine.DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY);
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_SERVICES_PER_BUSINESS,
+              RegistryEngine.DEFAULT_MAX_SERVICES_PER_BUSINESS);
   }
 
   /**
    *
    */
-  public static int getMaxBindingTemplatesPerBusinessService()
+  public static int getMaxBindingsPerService()
   {
-    return getIntProperty(RegistryEngine.PROPNAME_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE,
-              RegistryEngine.DEFAULT_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE);
+    return getIntProperty(RegistryEngine.PROPNAME_MAX_BINDINGS_PER_SERVICE,
+              RegistryEngine.DEFAULT_MAX_BINDINGS_PER_SERVICE);
   }
 
   /**

@@ -58,12 +58,14 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_VALIDATOR_CLASS_NAME = "juddi.validator";
   
   public static final String PROPNAME_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
-  public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLengthAllowed";    
-  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize"; // unused
-  public static final String PROPNAME_MAX_BUSINESS_ENTITIES_PER_PUBLISHER = "juddi.maxBusinessEntitiesPerPublisher";
-  public static final String PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY = "juddi.maxBusinessServicesPerBusinessEntity";
-  public static final String PROPNAME_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE = "juddi.maxBindingTemplatesPerBusinessService";
+  public static final String PROPNAME_MAX_NAME_LENGTH = "juddi.maxNameLengthAllowed";
+  
+  public static final String PROPNAME_MAX_BUSINESSES_PER_PUBLISHER = "juddi.maxBusinessesPerPublisher";
+  public static final String PROPNAME_MAX_SERVICES_PER_BUSINESS = "juddi.maxServicesPerBusiness";
+  public static final String PROPNAME_MAX_BINDINGS_PER_SERVICE = "juddi.maxBindingsPerService";
   public static final String PROPNAME_MAX_TMODELS_PER_PUBLISHER = "juddi.maxTModelsPerPublisher";
+
+  public static final String PROPNAME_MAX_MESSAGE_SIZE = "juddi.maxMessageSize"; // unused
   public static final String PROPNAME_MAX_ROWS_LIMIT = "juddi.maxRowsLimit"; // unused
   
   // Registry Default Property Values
@@ -86,9 +88,9 @@ public class RegistryEngine extends AbstractRegistry
   public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
   public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    
   public static final int    DEFAULT_MAX_MESSAGE_SIZE = 2097152; // unused
-  public static final int    DEFAULT_MAX_BUSINESS_ENTITIES_PER_PUBLISHER = -1; // unused
-  public static final int    DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS_ENTITY = -1; // unused
-  public static final int    DEFAULT_MAX_BINDING_TEMPLATES_PER_BUSINESS_SERVICE = -1; // unused
+  public static final int    DEFAULT_MAX_BUSINESSES_PER_PUBLISHER = -1; // unused
+  public static final int    DEFAULT_MAX_SERVICES_PER_BUSINESS = -1; // unused
+  public static final int    DEFAULT_MAX_BINDINGS_PER_SERVICE = -1; // unused
   public static final int    DEFAULT_MAX_TMODELS_PER_PUBLISHER = -1; // unused
   public static final int    DEFAULT_MAX_ROWS_LIMIT = 10; // unused
   
