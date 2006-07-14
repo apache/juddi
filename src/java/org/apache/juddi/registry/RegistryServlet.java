@@ -131,17 +131,17 @@ public class RegistryServlet extends HttpServlet
         props.put(RegistryEngine.PROPNAME_MAX_MESSAGE_SIZE,
                   Integer.toString(RegistryEngine.DEFAULT_MAX_MESSAGE_SIZE));        
 
-        props.put(RegistryEngine.PROPNAME_MAX_BUSINESS_ENTITIES_PER_USER,
-                  Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_ENTITIES_PER_USER));
+        props.put(RegistryEngine.PROPNAME_MAX_BUSINESSES_PER_PUBLISHER,
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESSES_PER_PUBLISHER));
         
-        props.put(RegistryEngine.PROPNAME_MAX_BUSINESS_SERVICES_PER_BUSINESS,
-                  Integer.toString(RegistryEngine.DEFAULT_MAX_BUSINESS_SERVICES_PER_BUSINESS));
+        props.put(RegistryEngine.PROPNAME_MAX_SERVICES_PER_BUSINESS,
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_SERVICES_PER_BUSINESS));
         
-        props.put(RegistryEngine.PROPNAME_MAX_BINDING_TEMPLATES_PER_SERVICE,
-                  Integer.toString(RegistryEngine.DEFAULT_MAX_BINDING_TEMPLATES_PER_SERVICE));
+        props.put(RegistryEngine.PROPNAME_MAX_BINDINGS_PER_SERVICE,
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_BINDINGS_PER_SERVICE));
         
-        props.put(RegistryEngine.PROPNAME_MAX_TMODELS_PER_USER,
-                  Integer.toString(RegistryEngine.DEFAULT_MAX_TMODELS_PER_USER));
+        props.put(RegistryEngine.PROPNAME_MAX_TMODELS_PER_PUBLISHER,
+                  Integer.toString(RegistryEngine.DEFAULT_MAX_TMODELS_PER_PUBLISHER));
         
         props.put(RegistryEngine.PROPNAME_MAX_ROWS_LIMIT,           
                   Integer.toString(RegistryEngine.DEFAULT_MAX_ROWS_LIMIT));
