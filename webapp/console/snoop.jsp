@@ -12,7 +12,6 @@
   String responseKey = requestName+":response"; 
   String requestMsg = request.getParameter("soap_request");
   String responseMsg = "";
-  String targetPage = requestName+".jsp";
 
   try 
   {
@@ -62,69 +61,67 @@
 <body>
 <div class="nav" align="right"><font size="-2"><a href="http://ws.apache.org/juddi/" target="_top">jUDDI@Apache</a></font></div>
 <h1>jUDDI Console</h1>
-<TABLE border="0">
+<table border="0">
 
-<TR valign=top>
-<TD>
-<H2>SOAP Request Name</H2>
+<tr valign=top>
+<td>
+<h2>SOAP Request Name</h2>
 <%= requestName %>
-<P></P>
-</TD>
-</TR>
+<p></p>
+</td>
+</tr>
 
-<TR valign=top>
-<TD>
-<H2>SOAP Request Type</H2>
+<tr valign=top>
+<td>
+<h2>SOAP Request Type</h2>
 <%= requestType %>
-<P></P>
-</TD>
-</TR>
+<p></p>
+</td>
+</tr>
 
-<TR valign=top>
-<TD>
-<H2>SOAP Request Action</H2>
-Submit Button: <%= submitButton %><br>
+<tr valign=top>
+<td>
+<h2>SOAP Request Action</h2>
+Submit Button: <%= submitButton %><br/>
 Reset Button: <%= resetButton %>
-<P></P>
-</TD>
-</TR>
+<p></p>
+</td>
+</tr>
 
 
-<TR valign=top>
-<TD>
-<H2>SOAP Request Message</H2>
-<FORM>
-<TEXTAREA rows=15 cols=75 wrap=off><%= session.getAttribute(requestKey) %></TEXTAREA>
-</FORM>
-</TD>
-</TR>
+<tr valign=top>
+<td>
+<h2>SOAP Request Message</h2>
+<form><textarea rows=15 cols=75 wrap=off><%= session.getAttribute(requestKey) %></textarea>
+</form>
+</td>
+</tr>
 
 
-<TR valign=top>
-<TD>
-<H2>SOAP Response Message</H2>
-<FORM>
-<TEXTAREA rows=15 cols=75 wrap=off><%= session.getAttribute(responseKey) %></TEXTAREA>
-</FORM>
-</TD>
-</TR>
+<tr valign=top>
+<td>
+<h2>SOAP Response Message</h2>
+<form><textarea rows=15 cols=75 wrap=off><%= session.getAttribute(responseKey) %></textarea>
+</form>
+</td>
+</tr>
 
 
-<TR valign=top>
-<TD>
-<H2>Current Message Set</H2>
+<tr valign=top>
+<td>
+<h2>Current Message Set</h2>
 <%
-	Enumeration enum = session.getAttributeNames();
-	while (enum.hasMoreElements())
+	Enumeration e = session.getAttributeNames();
+	while (e.hasMoreElements())
 	{
-	  out.print(enum.nextElement());
-	  out.print("<br>");
+	  out.print(e.nextElement());
+	  out.print("<br/>");
 	}
 %>
-</TD>
-</TR>
+</td>
+</tr>
 
 
-</TABLE>
-</BODY>
-</HTML>
+</table>
+</body>
+</html>
