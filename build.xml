@@ -13,13 +13,8 @@ Prerequisites:
   log4j                from http://jakarta.apache.org/log4j
 
 Optional components:
-  jboss                from http://www.jboss.org/
   junit                from http://www.junit.org/
-  jce                  from http://java.sun.com/products/jce/
   checkstyle           from http://checkstyle.sourceforge.net/
-
-Optional dependees:
-  krysalis-version     from http://www.krysalis.org/version
 
 Most Useful Targets:
  - compile   Compiles and jars all Java classes (default)
@@ -129,12 +124,6 @@ Copyright:
       classpathref="project.classpath"/>
     <echo message="jaxrpc.present=${jaxrpc.present}" />
 
-    <!-- JBoss (jboss.jar) -->
-    <available property="jboss.present"
-      classname="org.jboss.security.AuthenticationManager"
-      classpathref="project.classpath"/>
-    <echo message="jboss.present=${jboss.present}" />
-
     <!-- SOAP with Attachments API for Java (saaj.jar) -->
     <available property="saaj.present"
       classname="javax.xml.soap.SOAPEnvelope"
@@ -151,7 +140,6 @@ Copyright:
         optimize="${compile.optimize}">
       <classpath refid="project.classpath"/>
       <src path="${java.dir}"/>
-      <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>
     </javac>
   </target>
   <!-- =================================================================== -->
