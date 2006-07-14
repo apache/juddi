@@ -145,7 +145,7 @@ public class PublisherHandler extends AbstractHandler
     if ((emailAddress != null) && (emailAddress.length() > 0))
       element.setAttribute("emailAddress",emailAddress);
 
-    element.setAttribute("maxBusinessEntities",String.valueOf(publisher.getMaxBusinessEntities()));
+    element.setAttribute("maxBusinessEntities",String.valueOf(publisher.getMaxBusinesses()));
     element.setAttribute("maxServicesPerBusiness",String.valueOf(publisher.getMaxServicesPerBusiness()));
     element.setAttribute("maxBindingsPerService",String.valueOf(publisher.getMaxBindingsPerService()));
     element.setAttribute("maxTModels",String.valueOf(publisher.getMaxTModels()));
