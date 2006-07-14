@@ -89,15 +89,6 @@
       else if (requestType.equals("admin"))
         targetURL = ADMIN_URL;
       
-      // Declare & initialize the UDDI server properties
-      String hostname = targetURL.getHost();
-      int port = targetURL.getPort();
-      String path = targetURL.getPath();
-      
-      // Default to port 80 if one wasn't specified
-      if (port < 0)
-        port = 80;
-
       // Start the clock
       startTime = System.currentTimeMillis();
       
