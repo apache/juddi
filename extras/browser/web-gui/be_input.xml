@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<content xmlns:session="http://apache.org/cocoon/session/1.0">
-	<businessDetail generic="2.0" xmlns:uddi="urn:uddi-org:api_v2">
-		<uddi:businessEntity/>
-	</businessDetail>
-	<session:getxml context="mycontext" path="/"/>
-</content>
