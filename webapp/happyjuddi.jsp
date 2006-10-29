@@ -342,6 +342,6 @@ Platform: <%= getServletConfig().getServletContext().getServerInfo() %>
 <tr><td height="50" align="center" valign="bottom" nowrap><div class="footer">&nbsp;</div></td></tr>
 </table>
 
-</body>
 </div>
+</body>
 </html>

@@ -129,3 +129,21 @@ div.footer a {
 div.footer a:hover { 
   color: #666699; text-decoration: underline; 
 }
+
+div.header { 
+  background: #000;
+  margin: 0px -10px;
+  padding: 2px 10px;
+  color: #CCC;
+  font-size: 8pt;
+  font-weight: bold;
+}
+
+div.header a {
+  color: #CCC;
+  text-decoration: none;
+}
+
+div.header a:hover { 
+  color: #FFF;
+}
