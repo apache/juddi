@@ -298,6 +298,7 @@ Copyright:
     <!-- load the source distribution directory with what's needed here -->
     <copy file="build.xml" todir="${dist.src.root}"/>
     <copy file="build.properties" todir="${dist.src.root}"/>
+    <copy file="checkstyle.dtd" todir="${dist.src.root}"/>
     <copy file="checkstyle.xml" todir="${dist.src.root}"/>
     <copy file="application.xml" todir="${dist.src.root}"/>
     <copy file="LICENSE" todir="${dist.src.root}"/>
