@@ -3,8 +3,6 @@ package org.apache.juddi.registry.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import javax.xml.registry.RegistryException;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -25,7 +23,7 @@ public class PublishService extends UnicastRemoteObject
 			new org.apache.juddi.registry.local.PublishService();
 		try {
 			response = publishService.publish(request);
-		} catch (RegistryException e) {
+		} catch (Exception e) {
 			throw new RemoteException(e.getLocalizedMessage(), e);
 		}
 		return response;

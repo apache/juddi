@@ -125,12 +125,6 @@ Copyright:
       classpathref="project.classpath"/>
     <echo message="jaxrpc.present=${jaxrpc.present}" />
   	
-  	<!-- Java API for XML Registries (jaxr-api.jar) 
-  	    <available property="jaxr.present"
-  	      classname="javax.xml.registry.RegistryException"
-  	      classpathref="project.classpath"/>
-  	    <echo message="jaxr.present=${jaxr.present}" /> -->
-
     <!-- SOAP with Attachments API for Java (saaj.jar) -->
     <available property="saaj.present"
       classname="javax.xml.soap.SOAPEnvelope"

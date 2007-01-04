@@ -80,7 +80,7 @@ public class PublishService extends AbstractService
     			"supported by the UDDI version 2 Publish API.");
 	}
   
-  public Node publish(Element uddiReq) throws javax.xml.registry.RegistryException{
+  public Node publish(Element uddiReq) throws Exception{
 	  return handleRequest(uddiReq);
   }
 }

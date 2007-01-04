@@ -73,7 +73,7 @@ public class InquiryService extends AbstractService
     			"supported by the UDDI version 2 Inquiry API.");
 	}
   
-  public Node inquire(Element uddiReq) throws javax.xml.registry.RegistryException{
+  public Node inquire(Element uddiReq) throws Exception{
 	  return handleRequest(uddiReq);
   }
   

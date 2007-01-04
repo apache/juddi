@@ -50,7 +50,7 @@ public abstract class AbstractService
   // XML Document Builder
   private static DocumentBuilder docBuilder = null;
 
-  public Node handleRequest(Element uddiReq) throws javax.xml.registry.RegistryException
+  public Node handleRequest(Element uddiReq) throws Exception
   {
     try 
     {
@@ -266,8 +266,7 @@ public abstract class AbstractService
       String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
   	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
   	+ ", errText=" + errText;
-      //FIX ME Kurt, change to other type of exception.
-      throw new javax.xml.registry.RegistryException(fault);
+      throw new Exception(fault);
     }
   }
 
