@@ -141,13 +141,13 @@ public class Loader
   {
     Method method = null;
     try {
-      method = Thread.class.getMethod("getContextClassLoader",null);
+      method = Thread.class.getMethod("getContextClassLoader",(Class[])null);
     }
     catch (NoSuchMethodException e) {
       return null; // Using JDK 1.1 or earlier
     }
 
-    return (ClassLoader)method.invoke(Thread.currentThread(),null);
+    return (ClassLoader)method.invoke(Thread.currentThread(),(Object[])null);
   }
 
   /**
@@ -176,7 +176,6 @@ public class Loader
     if (null == clazz)
     {
       ClassLoader scl = ClassLoader.getSystemClassLoader();
-
       try
       {
         log.info("Using the System ClassLoader");
