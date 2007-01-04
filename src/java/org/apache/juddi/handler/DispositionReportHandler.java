@@ -77,26 +77,13 @@ public class DispositionReportHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     DispositionReport report = (DispositionReport)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = report.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
-    // We could use the generic value to determine which
-    // version of UDDI we should follow to format the
-    // response XML. For now we'll simply send back a
-    // UDDI 2.0 formatted response.  - Steve
-
-    String generic = report.getGeneric();
-    if (generic != null)
-    {
-      element.setAttribute("generic",generic);
-
-      if (generic.equals(IRegistry.UDDI_V1_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V1_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V2_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
-    }
+    element.setAttribute("generic",generic);
 
     String operator = report.getOperator();
     if (operator != null)

@@ -63,7 +63,9 @@ public class IdentifierBagHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     IdentifierBag categoryBag = (IdentifierBag)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
     Vector keyedRefVector = categoryBag.getKeyedReferenceVector();

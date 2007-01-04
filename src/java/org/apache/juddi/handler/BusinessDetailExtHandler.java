@@ -17,7 +17,6 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.business.BusinessEntityExt;
 import org.apache.juddi.datatype.response.BusinessDetailExt;
@@ -79,26 +78,13 @@ public class BusinessDetailExtHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     BusinessDetailExt detail = (BusinessDetailExt)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = detail.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
-    String generic = detail.getGeneric();
-    if ((generic != null) && (generic.trim().length() > 0))
-    {
-      element.setAttribute("generic",generic);
-
-      if (generic.equals(IRegistry.UDDI_V1_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V1_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V2_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
-    }
-    else // Default to UDDI v2 values
-    {
-      element.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
-      element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
-    }
+    element.setAttribute("generic",generic);
 
     String operator = detail.getOperator();
     if (operator != null)

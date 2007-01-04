@@ -68,7 +68,9 @@ public class SharedRelationshipsHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     SharedRelationships relationships = (SharedRelationships)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String direction = relationships.getDirection();
     if ((direction != null && (direction.length() > 0)))

@@ -53,7 +53,9 @@ public class AccessPointHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     AccessPoint accessPoint = (AccessPoint)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     // Attributes
     String urlType = accessPoint.getURLType();

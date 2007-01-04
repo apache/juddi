@@ -72,13 +72,15 @@ public class PublisherAssertionHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     PublisherAssertion assertion = (PublisherAssertion)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
     String fromKey = assertion.getFromKey();
     if (fromKey != null)
     {
-      Element fkElement = parent.getOwnerDocument().createElement("fromKey");
+      Element fkElement = parent.getOwnerDocument().createElementNS(namespace,"fromKey");
       fkElement.appendChild(parent.getOwnerDocument().createTextNode(fromKey));
       element.appendChild(fkElement);
     }
@@ -86,7 +88,7 @@ public class PublisherAssertionHandler extends AbstractHandler
     String toKey = assertion.getToKey();
     if (toKey != null)
     {
-      Element tkElement = parent.getOwnerDocument().createElement("toKey");
+      Element tkElement = parent.getOwnerDocument().createElementNS(namespace,"toKey");
       tkElement.appendChild(parent.getOwnerDocument().createTextNode(toKey));
       element.appendChild(tkElement);
     }

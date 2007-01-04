@@ -73,26 +73,13 @@ public class AuthTokenHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     AuthToken authToken = (AuthToken)object;
-    Element element = parent.getOwnerDocument().createElement(AuthTokenHandler.TAG_NAME);
+    String generic = authToken.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,AuthTokenHandler.TAG_NAME);
     AbstractHandler handler = null;
 
-    String generic = authToken.getGeneric();
-    if ((generic != null) && (generic.trim().length() > 0))
-    {
-      element.setAttribute("generic",generic);
-
-      if (generic.equals(IRegistry.UDDI_V1_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V1_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V2_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
-      else if (generic.equals(IRegistry.UDDI_V3_GENERIC))
-        element.setAttribute("xmlns",IRegistry.UDDI_V3_NAMESPACE);
-    }
-    else // Default to UDDI v2 values
-    {
-      element.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
-      element.setAttribute("xmlns",IRegistry.UDDI_V2_NAMESPACE);
-    }
+    element.setAttribute("generic",generic);
 
     String operator = authToken.getOperator();
     if (operator != null)

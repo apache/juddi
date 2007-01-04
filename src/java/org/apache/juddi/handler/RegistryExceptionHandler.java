@@ -90,7 +90,9 @@ public class RegistryExceptionHandler extends AbstractHandler
   {
     RegistryException regEx = (RegistryException)object;
     Document document = parent.getOwnerDocument();
-    Element fault = document.createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element fault = document.createElementNS(namespace,TAG_NAME);
 
     String fCode = regEx.getFaultCode();
     if (fCode != null)

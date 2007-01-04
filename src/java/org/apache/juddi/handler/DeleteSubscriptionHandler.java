@@ -76,12 +76,12 @@ public class DeleteSubscriptionHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     DeleteSubscription request = (DeleteSubscription)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-    AbstractHandler handler = null;
-
     String generic = request.getGeneric();
-    if (generic != null)
-      element.setAttribute("generic",generic);
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
+    AbstractHandler handler = null;
+    element.setAttribute("generic",generic);
 
     AuthInfo authInfo = request.getAuthInfo();
     if (authInfo != null)

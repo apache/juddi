@@ -17,7 +17,6 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.datatype.response.PublisherDetail;
@@ -80,17 +79,13 @@ public class PublisherDetailHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     PublisherDetail detail = (PublisherDetail)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = detail.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
-    String generic = detail.getGeneric();
-    if (generic != null)
-    {
-      element.setAttribute("generic",generic);
-      element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
-    }
-    else
-      element.setAttribute("generic","");
+    element.setAttribute("generic",generic);
 
     String operator = detail.getOperator();
     if (operator != null)

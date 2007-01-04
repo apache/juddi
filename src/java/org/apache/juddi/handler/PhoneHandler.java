@@ -55,7 +55,9 @@ public class PhoneHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     Phone phone = (Phone)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String useType = phone.getUseType();
     if ((useType != null) && (useType.trim().length() > 0))

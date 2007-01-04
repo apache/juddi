@@ -53,7 +53,9 @@ public class BindingKeyHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     BindingKey key = (BindingKey)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String keyValue = key.getValue();
     if (keyValue != null)

@@ -67,7 +67,10 @@ public class RegistryInfoHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     RegistryInfo info = (RegistryInfo)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = info.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
     Properties props = info.getProperties();

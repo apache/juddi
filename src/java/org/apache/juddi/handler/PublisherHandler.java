@@ -123,7 +123,9 @@ public class PublisherHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     Publisher publisher = (Publisher)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     // Attributes (required)
     String publisherID = publisher.getPublisherID();

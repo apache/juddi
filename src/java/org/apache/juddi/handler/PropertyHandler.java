@@ -58,7 +58,9 @@ public class PropertyHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     Property property = (Property)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String name = property.getName();
     if ((name != null) && (name.trim().length() > 0))

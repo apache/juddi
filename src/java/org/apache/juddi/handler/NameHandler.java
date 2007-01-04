@@ -57,7 +57,9 @@ public class NameHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     Name name = (Name)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String langCode = name.getLanguageCode();
     if ((langCode != null) && (langCode.trim().length() > 0))

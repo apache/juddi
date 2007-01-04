@@ -60,7 +60,10 @@ public class GetAuthTokenHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     GetAuthToken request = (GetAuthToken)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = request.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String cred = request.getCredential();
     if ((cred != null && (cred.length() > 0)))
@@ -70,9 +73,7 @@ public class GetAuthTokenHandler extends AbstractHandler
     if ((userID != null && (userID.length() > 0)))
       element.setAttribute("userID",userID);
 
-    String generic = request.getGeneric();
-    if (generic != null)
-      element.setAttribute("generic",generic);
+    element.setAttribute("generic",generic);
 
     parent.appendChild(element);
   }

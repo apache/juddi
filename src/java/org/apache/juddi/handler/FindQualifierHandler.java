@@ -56,7 +56,9 @@ public class FindQualifierHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     FindQualifier qualifier = (FindQualifier)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String qValue = qualifier.getValue();
     if (qValue != null)

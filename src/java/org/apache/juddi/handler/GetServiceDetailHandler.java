@@ -65,12 +65,13 @@ public class GetServiceDetailHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     GetServiceDetail request = (GetServiceDetail)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = request.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
-    String generic = request.getGeneric();
-    if (generic != null)
-      element.setAttribute("generic",generic);
+    element.setAttribute("generic",generic);
 
     Vector keyVector = request.getServiceKeyVector();
     if ((keyVector!=null) && (keyVector.size() > 0))

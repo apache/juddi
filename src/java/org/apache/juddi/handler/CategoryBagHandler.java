@@ -66,7 +66,9 @@ public class CategoryBagHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     CategoryBag categoryBag = (CategoryBag)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     Vector keyedRefVector = categoryBag.getKeyedReferenceVector();
     if ((keyedRefVector!=null) && (keyedRefVector.size() > 0))

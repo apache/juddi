@@ -73,9 +73,12 @@ public class AddPublisherAssertionsHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     AddPublisherAssertions request = (AddPublisherAssertions)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
-
     String generic = request.getGeneric();
+    generic = getGeneric(generic);
+    String nameSpace = getUDDINamespace(generic);
+    
+    Element element = parent.getOwnerDocument().createElementNS(nameSpace,TAG_NAME);
+
     if (generic != null)
       element.setAttribute("generic",generic);
 

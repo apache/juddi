@@ -53,7 +53,9 @@ public class HostingRedirectorHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     HostingRedirector redirector = (HostingRedirector)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = getGeneric(null);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
 
     String bindingKey = redirector.getBindingKey();
     if (bindingKey != null)

@@ -17,7 +17,6 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import org.apache.juddi.IRegistry;
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.PublisherInfo;
 import org.apache.juddi.datatype.response.PublisherInfos;
@@ -81,20 +80,13 @@ public class PublisherListHandler extends AbstractHandler
   public void marshal(RegistryObject object,Element parent)
   {
     PublisherList list = (PublisherList)object;
-    Element element = parent.getOwnerDocument().createElementNS(null,TAG_NAME);
+    String generic = list.getGeneric();
+    generic = getGeneric(generic);
+    String namespace = getUDDINamespace(generic);
+    Element element = parent.getOwnerDocument().createElementNS(namespace,TAG_NAME);
     AbstractHandler handler = null;
 
-    String generic = list.getGeneric();
-    if ((generic != null) && (generic.trim().length() > 0))
-    {
-      element.setAttribute("generic",generic);
-      element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
-    }
-    else // Default to UDDI v2 and jUDDI v1 values
-    {
-      element.setAttribute("generic",IRegistry.UDDI_V2_GENERIC);
-      element.setAttribute("xmlns",IRegistry.JUDDI_V1_NAMESPACE);
-    }
+    element.setAttribute("generic",generic);
 
     String operator = list.getOperator();
     if (operator != null)
