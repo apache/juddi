@@ -106,6 +106,21 @@ public class RegistryServlet extends HttpServlet
         
         props.put(RegistryEngine.PROPNAME_DATASOURCE_NAME,
                   RegistryEngine.DEFAULT_DATASOURCE_NAME);
+        
+        props.put(RegistryEngine.PROPNAME_IS_USE_DATASOURCE,
+                  RegistryEngine.DEFAULT_IS_USE_DATASOURCE);
+        
+        props.put(RegistryEngine.PROPNAME_JDBC_DRIVER,
+                RegistryEngine.DEFAULT_JDBC_DRIVER);
+      
+        props.put(RegistryEngine.PROPNAME_JDBC_URL,
+                RegistryEngine.DEFAULT_JDBC_URL);
+      
+        props.put(RegistryEngine.PROPNAME_JDBC_USERNAME,
+                RegistryEngine.DEFAULT_JDBC_USERNAME);
+      
+        props.put(RegistryEngine.PROPNAME_JDBC_PASSWORD,
+                RegistryEngine.DEFAULT_JDBC_PASSWORD);
               
         props.put(RegistryEngine.PROPNAME_AUTH_CLASS_NAME,
                   RegistryEngine.DEFAULT_AUTH_CLASS_NAME);
@@ -145,6 +160,16 @@ public class RegistryServlet extends HttpServlet
         
         props.put(RegistryEngine.PROPNAME_MAX_ROWS_LIMIT,           
                   Integer.toString(RegistryEngine.DEFAULT_MAX_ROWS_LIMIT));
+        
+        props.put(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL,           
+                RegistryEngine.DEFAULT_JAVA_NAMING_FACTORY_INITIAL);
+      
+        props.put(RegistryEngine.PROPNAME_JAVA_NAMING_PROVIDER_URL,           
+                RegistryEngine.DEFAULT_JAVA_NAMING_PROVIDER_URL);
+      
+        props.put(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS,           
+                RegistryEngine.DEFAULT_JAVA_NAMING_FACTORY_URL_PKGS);
+        
       }
     }
     catch(IOException ioex) {

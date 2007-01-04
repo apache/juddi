@@ -50,6 +50,15 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_DISCOVERY_URL = "juddi.discoveryURL";
   public static final String PROPNAME_ADMIN_EMAIL_ADDRESS = "juddi.adminEmailAddress"; // unused
   public static final String PROPNAME_DATASOURCE_NAME = "juddi.dataSource";
+  public static final String PROPNAME_IS_USE_DATASOURCE = "juddi.isUseDataSource";
+  public static final String PROPNAME_JDBC_DRIVER = "juddi.jdbcDriver";
+  public static final String PROPNAME_JDBC_URL = "juddi.jdbcUrl";
+  public static final String PROPNAME_JDBC_USERNAME = "juddi.jdbcUsername";
+  public static final String PROPNAME_JDBC_PASSWORD = "juddi.jdbcPassword";
+  
+  public static final String PROPNAME_JAVA_NAMING_FACTORY_INITIAL = "java.naming.factory.initial";
+  public static final String PROPNAME_JAVA_NAMING_PROVIDER_URL = "java.naming.provider.url";
+  public static final String PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS = "java.naming.factory.url.pkgs";
   
   public static final String PROPNAME_AUTH_CLASS_NAME = "juddi.auth";
   public static final String PROPNAME_DATASTORE_CLASS_NAME = "juddi.dataStore";
@@ -78,12 +87,21 @@ public class RegistryEngine extends AbstractRegistry
   public static final String DEFAULT_DISCOVERY_URL = "http://localhost:8080/juddi/uddiget.jsp?";
   public static final String DEFAULT_ADMIN_EMAIL_ADDRESS = "nobody@apache.org"; // unused
   public static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/juddiDB";
+  public static final Boolean DEFAULT_IS_USE_DATASOURCE = Boolean.TRUE;
+  public static final String DEFAULT_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+  public static final String DEFAULT_JDBC_URL = "jdbc:mysql://localhost/juddi";
+  public static final String DEFAULT_JDBC_USERNAME = "juddi";
+  public static final String DEFAULT_JDBC_PASSWORD = "juddi";
   
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
-  public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.JDBCDataStore";
+  public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
   public static final String DEFAULT_CRYPTOR_CLASS_NAME = "org.apache.juddi.cryptor.DefaultCryptor";
   public static final String DEFAULT_UUIDGEN_CLASS_NAME = "org.apache.juddi.uuidgen.DefaultUUIDGen";
   public static final String DEFAULT_VALIDATOR_CLASS_NAME = "org.apache.juddi.validator.DefaultValidator";
+  
+  public static final String DEFAULT_JAVA_NAMING_FACTORY_INITIAL = "org.jnp.interfaces.NamingContextFactory";
+  public static final String DEFAULT_JAVA_NAMING_PROVIDER_URL = "jnp://localhost:1099";
+  public static final String DEFAULT_JAVA_NAMING_FACTORY_URL_PKGS = "org.jboss.naming";
   
   public static final int    DEFAULT_MAX_NAME_ELEMENTS = 5;
   public static final int    DEFAULT_MAX_NAME_LENGTH = 255;    

@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.datastore.jdbc.Database;
 import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
@@ -45,13 +46,24 @@ public class ConnectionManager
   public static Connection aquireConnection()
     throws SQLException
   {
+	  
     // Make sure we've got a DataSource first
     if (dataSource == null)
       dataSource = lookupDataSource();
 
     Connection conn = null;
-    if (dataSource != null)
+    if (dataSource != null) {
       conn = dataSource.getConnection();
+    } else {
+        //check if we wanted to use a dataSource
+        boolean isUseDatasource =
+            Config.getBooleanProperty(RegistryEngine.PROPNAME_IS_USE_DATASOURCE,
+                RegistryEngine.DEFAULT_IS_USE_DATASOURCE.booleanValue());
+        if (!isUseDatasource) {
+        	//create jdbc connection
+        	conn = Database.aquireConnection();
+        }
+    }
 
     return conn;
   }
@@ -66,6 +78,17 @@ public class ConnectionManager
     if (dataSource != null)
       return dataSource;
 
+    //check if we wanted to use a dataSource
+    boolean isUseDatasource =
+        Config.getBooleanProperty(RegistryEngine.PROPNAME_IS_USE_DATASOURCE,
+            RegistryEngine.DEFAULT_IS_USE_DATASOURCE.booleanValue());
+    if (!isUseDatasource) {
+    	log.info("Not using Datasource as " 
+    			+ RegistryEngine.PROPNAME_IS_USE_DATASOURCE + "=" 
+    			+ isUseDatasource);
+    	return dataSource;
+    }
+    
     // look it up.
     try
     {

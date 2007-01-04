@@ -212,9 +212,14 @@ public class Config extends Properties
     boolean boolVal = defaultValue;
 
     String propValue = getStringProperty(key);
-    if ((propValue != null) && (propValue.equalsIgnoreCase("true")))
-      boolVal = true;
-
+    if (propValue != null) {
+    	if (propValue.equalsIgnoreCase("true")) {
+    		boolVal = true;
+    	} else if (propValue.equalsIgnoreCase("false")) {
+    		boolVal = false;
+    	}
+    }
+      
     return boolVal;
   }
 
