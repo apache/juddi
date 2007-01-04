@@ -41,7 +41,14 @@
     <display-name>UDDI Version 2.0 Publish Service</display-name>
     <servlet-class>org.apache.juddi.registry.PublishService</servlet-class>
   </servlet>
-
+  <!--  uncomment if you want to enable making calls in juddi with rmi 
+  <servlet>
+  	<servlet-name>RegisterServicesWithJNDI</servlet-name>
+  	<servlet-class>org.apache.juddi.registry.rmi.RegistrationService</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet> -->
+ 
+   
   <servlet-mapping>
     <servlet-name>jUDDIAdminService</servlet-name>
     <url-pattern>/admin</url-pattern>

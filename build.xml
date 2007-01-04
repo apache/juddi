@@ -51,6 +51,7 @@ Copyright:
     <property name="owner"               value="Apache Software Foundation"/>
     <property name="title"               value="jUDDI ${version}"/>
     <property name="jar.file"            value="${name}.jar"/>
+  	<property name="client.jar.file"     value="${name}-client.jar"/>
     <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
     <property name="sql.dir"             value="${basedir}/sql"/>
@@ -123,6 +124,12 @@ Copyright:
       classname="javax.xml.rpc.Service"
       classpathref="project.classpath"/>
     <echo message="jaxrpc.present=${jaxrpc.present}" />
+  	
+  	<!-- Java API for XML Registries (jaxr-api.jar) 
+  	    <available property="jaxr.present"
+  	      classname="javax.xml.registry.RegistryException"
+  	      classpathref="project.classpath"/>
+  	    <echo message="jaxr.present=${jaxr.present}" /> -->
 
     <!-- SOAP with Attachments API for Java (saaj.jar) -->
     <available property="saaj.present"
@@ -142,10 +149,18 @@ Copyright:
       <src path="${java.dir}"/>
     </javac>
   </target>
+	
+  <target name="rmic" depends="compile">
+  	<rmic base="${classes.dir}"
+ 		includes="org/apache/juddi/registry/rmi/PublishService.class,
+  		org/apache/juddi/registry/rmi/InquiryService.class"/>
+  </target>
+	
+	
   <!-- =================================================================== -->
   <!-- Creates the Java libraries (juddi.jar)                              -->
   <!-- =================================================================== -->
-  <target name="jar" depends="compile">
+  <target name="jar" depends="rmic">
     <mkdir dir="${build.dir}"/>
     <jar
       destfile="${build.dir}/${jar.file}"
@@ -156,6 +171,11 @@ Copyright:
       update="true"
       basedir="${java.dir}"
       includes="org/apache/juddi/i18n/*.properties"/>
+  	<jar
+  	      destfile="${build.dir}/${client.jar.file}"
+  	      basedir="${classes.dir}"
+  		  includes="org/apache/juddi/registry/rmi/**"
+  	      excludes="org/apache/juddi/registry/rmi/*Service.class"/>
   </target>
   <!-- =================================================================== -->
   <!-- Build the jUDDI Web Application (juddi.war)                         -->
