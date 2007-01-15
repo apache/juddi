@@ -56,12 +56,12 @@ public abstract class Registry
 
     try
     {      
-      log.info("Loading jUDDI configuration.");
+      log.debug("Loading jUDDI configuration.");
         
 //    determine the name of the juddi property file to use from web.xml
       String propFile = System.getProperty(CONFIG_FILE_PROPERTY_NAME);
       if ((propFile == null) || (propFile.trim().length() == 0)) {
-        propFile = DEFAULT_PROPERTY_FILE;
+        propFile = "/" + DEFAULT_PROPERTY_FILE;
       }
    
       InputStream is = Loader.getResourceAsStream(propFile);
@@ -69,17 +69,16 @@ public abstract class Registry
     	  is = Class.class.getResourceAsStream(propFile);
       }
       if (is==null) {
+    	  if (("/" + DEFAULT_PROPERTY_FILE).equals(propFile)) {
+    		  propFile=DEFAULT_PROPERTY_FILE;
+    	  }
     	  File configFile = new File(propFile);
     	  is = new FileInputStream(configFile);
       }
         
       if (is != null)
       {
-        log.info("Resources loaded from: "+propFile);
-
-        // Load jUDDI configuration from the 
-        // juddi.properties file found in root directory.
-
+        log.debug("Resources loaded from: "+propFile);
         props.load(is);
       }
       else
@@ -178,7 +177,7 @@ public abstract class Registry
       log.error(ioex.getMessage(),ioex);
     }
 
-    log.info("Initializing jUDDI components.");
+    log.debug("Initializing jUDDI components.");
     
     registry = new RegistryEngine(props);
     registry.init();
@@ -207,4 +206,10 @@ public abstract class Registry
 	  init();
       return registry;
   }
+
+  private Registry() {
+	super();
+  }
+  
+  
 }

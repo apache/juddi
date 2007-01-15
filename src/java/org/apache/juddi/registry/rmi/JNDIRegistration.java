@@ -63,17 +63,23 @@ public class JNDIRegistration
 			env.setProperty(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL, factoryInitial);
 			env.setProperty(RegistryEngine.PROPNAME_JAVA_NAMING_PROVIDER_URL, providerURL);
 			env.setProperty(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS, factoryURLPkgs); 
-			log.info("Creating Initial Context using: \n" 
+			if (log.isDebugEnabled()) {
+			log.debug("Creating Initial Context using: \n" 
 				+ RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL + "=" + factoryInitial + "\n"
 				+ RegistryEngine.PROPNAME_JAVA_NAMING_PROVIDER_URL    + "=" + providerURL + "\n"
 				+ RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS + "=" + factoryURLPkgs + "\n");
+			}
 			InitialContext context = new InitialContext(env);
 			Inquiry inquiry = new InquiryService();
-			log.info("Setting " + INQUIRY_SERVICE + ", " + inquiry.getClass().getName());
+			if (log.isDebugEnabled()) {
+				log.debug("Setting " + INQUIRY_SERVICE + ", " + inquiry.getClass().getName());
+			}
 			mInquery = inquiry;
 			context.bind(INQUIRY_SERVICE, inquiry);
 			Publish publish = new PublishService();
-			log.info("Setting " + PUBLISH_SERVICE + ", " + publish.getClass().getName());
+			if (log.isDebugEnabled()) {
+				log.debug("Setting " + PUBLISH_SERVICE + ", " + publish.getClass().getName());
+			}
 			mPublish = publish;
 			context.bind(PUBLISH_SERVICE, publish);
 		} catch (Exception e) {
