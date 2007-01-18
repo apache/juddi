@@ -86,7 +86,7 @@ public class JDBCDataStore implements DataStore
     }
     catch(SQLException sqlex) {
       log.error("Exception occured while attempting to " +
-        "aquire a JDBC connection: "+sqlex.getMessage());
+        "aquire a JDBC connection: "+sqlex.getMessage(),sqlex);
     }
   }
 

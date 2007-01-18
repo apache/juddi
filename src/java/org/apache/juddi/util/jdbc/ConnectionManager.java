@@ -60,7 +60,6 @@ public class ConnectionManager
             Config.getBooleanProperty(RegistryEngine.PROPNAME_IS_USE_DATASOURCE,
                 RegistryEngine.DEFAULT_IS_USE_DATASOURCE.booleanValue());
         if (!isUseDatasource) {
-        	//create jdbc connection
         	conn = Database.aquireConnection();
         }
     }
@@ -83,10 +82,10 @@ public class ConnectionManager
         Config.getBooleanProperty(RegistryEngine.PROPNAME_IS_USE_DATASOURCE,
             RegistryEngine.DEFAULT_IS_USE_DATASOURCE.booleanValue());
     if (!isUseDatasource) {
-    	log.info("Not using Datasource as " 
-    			+ RegistryEngine.PROPNAME_IS_USE_DATASOURCE + "=" 
+    	log.info("Using direct JDBC, since " 
+    			+ RegistryEngine.PROPNAME_IS_USE_DATASOURCE + " is set to " 
     			+ isUseDatasource);
-    	return dataSource;
+    	return null;
     }
     
     // look it up.

@@ -36,7 +36,7 @@ public abstract class Registry
 { 
   private static final String CONFIG_FILE_PROPERTY_NAME = "juddi.propertiesFile";
   // default config file name. 
-  private static final String DEFAULT_PROPERTY_FILE = "/juddi.properties";
+  private static final String DEFAULT_PROPERTY_FILE = "juddi.properties";
    
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(Registry.class);
@@ -66,13 +66,20 @@ public abstract class Registry
    
       InputStream is = Loader.getResourceAsStream(propFile);
       if (is==null) {
+    	  log.debug("Loading " + propFile + " using the context classloader failed, trying regular classloader..");
     	  is = Class.class.getResourceAsStream(propFile);
       }
       if (is==null) {
+    	  log.debug("Loading " + propFile + " using the Class classloader failed.");
     	  if (("/" + DEFAULT_PROPERTY_FILE).equals(propFile)) {
     		  propFile=DEFAULT_PROPERTY_FILE;
     	  }
     	  File configFile = new File(propFile);
+    	  if (!configFile.exists()) {
+    		  log.debug("Could not find " + configFile.getAbsolutePath());
+    	  } else {
+    		  log.debug("Reading juddi properties from " + configFile.getAbsolutePath());
+    	  }
     	  is = new FileInputStream(configFile);
       }
         
