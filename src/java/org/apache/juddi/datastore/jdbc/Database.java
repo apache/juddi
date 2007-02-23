@@ -19,8 +19,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.registry.RegistryEngine;
 import org.apache.juddi.util.Config;
 
@@ -30,9 +28,6 @@ import org.apache.juddi.util.Config;
  */
 public class Database
 {
-  // private reference to the jUDDI logger
-  private static Log log = LogFactory.getLog(Database.class);
-  
   // grab the JDBC properties we'll need to setup 
   // the connection pool.
   private static String jdbcDriver = Config.getStringProperty(
