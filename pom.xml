@@ -50,6 +50,12 @@
             <organization></organization>
         </developer>
         <developer>
+            <name>Kurt Stam</name>
+            <id>kstam</id>
+            <email>kstam@apache.org</email>
+            <organization></organization>
+        </developer>
+        <developer>
             <name>Andy Cutright</name>
             <id>acutright</id>
             <email>acutright@apache.org</email>
