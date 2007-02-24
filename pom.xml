@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi</artifactId>
-    <name>JUDDI</name>
+    <name>jUDDI</name>
     <version>SNAPSHOT</version>
     <description>
     jUDDI (pronounced "Judy") is an open source Java implementation of the Universal Description, Discovery, and Integration (UDDI) specification for Web Services.
@@ -33,47 +33,55 @@
     </ciManagement>
     <mailingLists>
         <mailingList>
-            <name>JUDDI Developer List</name>
+            <name>jUDDI Developer List</name>
             <subscribe>juddi-dev-subscribe@ws.apache.org</subscribe>
             <unsubscribe>juddi-dev-unsubscribe@ws.apache.org</unsubscribe>
             <post>juddi-dev@ws.apache.org</post>
             <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-dev/</archive>
         </mailingList>
+        <mailingList>
+            <name>jUDDI User List</name>
+            <subscribe>juddi-user-subscribe@ws.apache.org</subscribe>
+            <unsubscribe>juddi-user-unsubscribe@ws.apache.org</unsubscribe>
+            <post>juddi-user@ws.apache.org</post>
+            <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-user/</archive>
+        </mailingList>
     </mailingLists>
     <inceptionYear>2004</inceptionYear>
-  <!-- who the developers are for the project -->
-  <developers>
-        <developer>
-            <name>Steve Viens</name>
-            <id>sviens</id>
-            <email>sviens@apache.org</email>
-            <organization></organization>
-        </developer>
-        <developer>
-            <name>Kurt Stam</name>
-            <id>kstam</id>
-            <email>kstam@apache.org</email>
-            <organization></organization>
-        </developer>
-        <developer>
-            <name>Andy Cutright</name>
-            <id>acutright</id>
-            <email>acutright@apache.org</email>
-            <organization></organization>
-        </developer>
-        <developer>
-            <name>Anil Saldhana</name>
-            <id>anil</id>
-            <email>anil@apache.org</email>
-            <organization></organization>
-        </developer>
-        <developer>
-            <name>Davanum Srinivas</name>
-            <id>dims</id>
-            <email>dims@yahoo.com</email>
-            <organization></organization>
-        </developer>
-  </developers>
+	  <!-- who the developers are for the project -->
+	  <developers>
+	        <developer>
+	            <name>Steve Viens</name>
+	            <id>sviens</id>
+	            <email>steve AT viens.net</email>
+	            <organization>ASF</organization>
+	            <url>http://www.viens.net</url>            
+	        </developer>
+	        <developer>
+	            <name>Kurt Stam</name>
+	            <id>kstam</id>
+	            <email>kstam AT apache.org</email>
+	            <organization>ASF</organization>
+	        </developer>
+	        <developer>
+	            <name>Andy Cutright</name>
+	            <id>acutright</id>
+	            <email>acutright AT apache.org</email>
+	            <organization>ASF</organization>
+	        </developer>
+	        <developer>
+	            <name>Anil Saldhana</name>
+	            <id>anil</id>
+	            <email>anil AT apache.org</email>
+	            <organization>ASF</organization>
+	        </developer>
+	        <developer>
+	            <name>Davanum Srinivas</name>
+	            <id>dims</id>
+	            <email>dims AT yahoo.com</email>
+	            <organization>ASF</organization>
+	        </developer>
+	  </developers>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -274,20 +282,30 @@
 	</repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>snapshot</id>
+            <id>codehaus-snapshot</id>
             <name>Snapshot repository</name>
             <url>http://snapshots.maven.codehaus.org/maven2/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
             <releases>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </releases>
         </pluginRepository>
         <pluginRepository>
-            <id>snapshot-apache</id>
+            <id>apache-snapshot</id>
             <name>Apache Snapshot repository</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Codehaus Snapshots</id>
+            <url>http://snapshots.repository.codehaus.org/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -326,9 +344,9 @@
     </dependencies>
     <reporting>
         <plugins>
-            <!--plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin-->
+     		<plugin>
+        		<artifactId>maven-javadoc-plugin</artifactId>
+      		</plugin>
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
@@ -337,11 +355,10 @@
                 <artifactId>jdepend-maven-plugin</artifactId>
                 <version>2.0-beta-1-SNAPSHOT</version>
             </plugin>
-            <!--plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>jxr-maven-plugin</artifactId>
-              <version>2.0-beta-2-SNAPSHOT</version>
-            </plugin-->
+            <plugin>
+        		<groupId>org.codehaus.mojo</groupId>
+        		<artifactId>jxr-maven-plugin</artifactId>
+      		</plugin> 
         </plugins>
     </reporting>
     <distributionManagement>
