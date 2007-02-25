@@ -115,6 +115,11 @@
         -->
         <plugins>
             <plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+        	<artifactId>maven-clean-plugin</artifactId>
+        	<version>2.1</version>
+            </plugin>
+            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.1</version>
                 <executions>
@@ -139,6 +144,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-one-plugin</artifactId>
+                <version>1.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -154,6 +160,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
+                <version>2.0-beta-4</version>
                 <configuration>
                     <tagBase>https://svn.apache.org/repos/asf/webservices/juddi/tags/</tagBase>
                 </configuration>
@@ -178,6 +185,7 @@
             </plugin>-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.1</version>
                 <configuration>
                     <descriptors>
                         <descriptor>assembly/bin.xml</descriptor>
@@ -188,6 +196,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>2.0</version>
                 <executions>
                     <execution>
                         <goals>
