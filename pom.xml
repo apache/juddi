@@ -311,17 +311,6 @@
 	</repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>codehaus-snapshot</id>
-            <name>Snapshot repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
             <id>apache-snapshot</id>
             <name>Apache Snapshot repository</name>
             <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
