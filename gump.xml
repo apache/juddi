@@ -60,6 +60,9 @@
         <depend project="commons-collections"/>
         <depend project="commons-pool"/>
         <depend project="jakarta-servletapi"/>
+        <depend project="ws-axis2"/>
+        <depend project="ws-commons-axiom"/>
+        <depend project="stax"/>
 
 		<option project="krysalis-version-ant" inherit="all"/>
         <option project="junit"/>
