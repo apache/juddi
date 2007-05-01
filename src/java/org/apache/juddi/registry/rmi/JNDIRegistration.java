@@ -48,16 +48,33 @@ public class JNDIRegistration
 	public static void register()
 	{
 		try {
-			//Getting the JNDI setting from the config
-			String factoryInitial = Config.getStringProperty(
+            //JNDI settings can be overriden with System parameters
+            String factoryInitial = System.getProperty(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL);
+            String providerURL    = System.getProperty(RegistryEngine.PROPNAME_JAVA_NAMING_PROVIDER_URL);
+            String factoryURLPkgs = System.getProperty(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS);
+			//If not set then getting the JNDI setting from the config, or default them.
+            if (factoryInitial==null) { 
+                factoryInitial = Config.getStringProperty(
 					  RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL,
 					  RegistryEngine.DEFAULT_JAVA_NAMING_FACTORY_INITIAL);
-			String providerURL = Config.getStringProperty(
+            } else {
+                log.debug("FactoryInitial was obtained from a System Parameter");
+            }
+			if (providerURL==null) { 
+                providerURL = Config.getStringProperty(
 					  RegistryEngine.PROPNAME_JAVA_NAMING_PROVIDER_URL,
 					  RegistryEngine.DEFAULT_JAVA_NAMING_PROVIDER_URL);
-			String factoryURLPkgs = Config.getStringProperty(
+            } else {
+                log.debug("ProviderUrl was obtained from a System Parameter");
+            }
+            
+			if (factoryURLPkgs==null) {
+                factoryURLPkgs = Config.getStringProperty(
 					  RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_URL_PKGS,
 					  RegistryEngine.DEFAULT_JAVA_NAMING_FACTORY_URL_PKGS);
+            } else {
+                log.debug("FactoryURLPkgs was obtained from a System Parameter");
+            }
 			//Setting them in the properties for the Initial Context 
 			Properties env = new Properties();
 			env.setProperty(RegistryEngine.PROPNAME_JAVA_NAMING_FACTORY_INITIAL, factoryInitial);
@@ -75,13 +92,13 @@ public class JNDIRegistration
 				log.debug("Setting " + INQUIRY_SERVICE + ", " + inquiry.getClass().getName());
 			}
 			mInquery = inquiry;
-			context.bind(INQUIRY_SERVICE, inquiry);
+			context.rebind(INQUIRY_SERVICE, inquiry);
 			Publish publish = new PublishService();
 			if (log.isDebugEnabled()) {
 				log.debug("Setting " + PUBLISH_SERVICE + ", " + publish.getClass().getName());
 			}
 			mPublish = publish;
-			context.bind(PUBLISH_SERVICE, publish);
+			context.rebind(PUBLISH_SERVICE, publish);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
