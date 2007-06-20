@@ -49,7 +49,7 @@ public abstract class Registry
    * and call it's "init()" method to initialize all core 
    * components.
    */
-  public static void init() 
+  private static void init() 
   {   
 
     Properties props = new Properties();
@@ -210,7 +210,9 @@ public abstract class Registry
    */
   public static RegistryEngine getRegistry()
   {
-	  init();
+      if (registry==null) {
+          init();
+      }
       return registry;
   }
 
