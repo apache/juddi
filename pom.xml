@@ -27,6 +27,13 @@
   </ciManagement>
   <inceptionYear>2004</inceptionYear>
   <mailingLists>
+  <mailingList>
+      <name>jUDDI User List</name>
+      <subscribe>juddi-user-subscribe@ws.apache.org</subscribe>
+      <unsubscribe>juddi-user-unsubscribe@ws.apache.org</unsubscribe>
+      <post>juddi-user@ws.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-user/</archive>
+    </mailingList>
     <mailingList>
       <name>jUDDI Developer List</name>
       <subscribe>juddi-dev-subscribe@ws.apache.org</subscribe>
@@ -35,11 +42,11 @@
       <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-dev/</archive>
     </mailingList>
     <mailingList>
-      <name>jUDDI User List</name>
-      <subscribe>juddi-user-subscribe@ws.apache.org</subscribe>
-      <unsubscribe>juddi-user-unsubscribe@ws.apache.org</unsubscribe>
-      <post>juddi-user@ws.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-user/</archive>
+      <name>jUDDI SVN List</name>
+      <subscribe>juddi-cvs-subscribe@ws.apache.org</subscribe>
+      <unsubscribe>juddi-cvs-unsubscribe@ws.apache.org</unsubscribe>
+      <post>juddi-cvs@ws.apache.org</post>
+      <archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-cvs/</archive>
     </mailingList>
   </mailingLists>
   <developers>
@@ -54,6 +61,12 @@
       <id>kstam</id>
       <name>Kurt Stam</name>
       <email>kstam AT apache.org</email>
+      <organization>ASF</organization>
+    </developer>
+    <developer>
+      <id>jfaath</id>
+      <name>Jeffrey Faath</name>
+      <email>jfaath AT apache.org</email>
       <organization>ASF</organization>
     </developer>
     <developer>
