@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
 <document>
-  <header>
+  <properties>
     <title>jUDDI Releases</title>
-  </header>
+  </properties>
   <body>
     <section name="Releases">    
         
