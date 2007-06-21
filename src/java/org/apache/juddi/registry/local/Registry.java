@@ -42,8 +42,13 @@ public abstract class Registry
   private static Log log = LogFactory.getLog(Registry.class);
 
   // registry singleton instance
-  private static RegistryEngine registry = null;
+  private static RegistryEngine registry;
 
+  static
+  {
+      init() ;
+  }
+  
 /**
    * Create the shared instance of jUDDI's Registry class
    * and call it's "init()" method to initialize all core 
@@ -210,9 +215,6 @@ public abstract class Registry
    */
   public static RegistryEngine getRegistry()
   {
-      if (registry==null) {
-          init();
-      }
       return registry;
   }
 
