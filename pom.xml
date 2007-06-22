@@ -9,7 +9,6 @@
   <name>jUDDI</name>
   <version>1.0-SNAPSHOT</version>
   <description>jUDDI (pronounced "Judy") is an open source Java implementation of the Universal Description, Discovery, and Integration (UDDI) specification for Web Services.</description>
-  <packaging>pom</packaging>
   <url>http://ws.apache.org/juddi/</url>
   <issueManagement>
     <system>JIRA</system>
