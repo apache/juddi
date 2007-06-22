@@ -1,10 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi</artifactId>
   <name>jUDDI</name>
-  <version>SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <description>jUDDI (pronounced "Judy") is an open source Java implementation of the Universal Description, Discovery, and Integration (UDDI) specification for Web Services.</description>
+  <packaging>pom</packaging>
   <url>http://ws.apache.org/juddi/</url>
   <issueManagement>
     <system>JIRA</system>
@@ -125,7 +130,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.3</version>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -288,8 +293,12 @@
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <releases />
-      <snapshots />
+      <releases>
+          <enabled>false</enabled>
+      </releases>
+      <snapshots>
+      	<enabled>true</enabled>
+      </snapshots>
       <id>apache-snapshot</id>
       <name>Apache Snapshot repository</name>
       <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
