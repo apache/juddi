@@ -7,13 +7,13 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>SNAPSHOT</version>
   </parent>
 
   <artifactId>juddi-client</artifactId>
   <name>jUDDI-client</name>
-  <groupId>org.apache.ws.juddi</groupId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>org.apache.juddi</groupId>
+  <version>SNAPSHOT</version>
   <description>The JAXR API</description>
   
   <packaging>jar</packaging>

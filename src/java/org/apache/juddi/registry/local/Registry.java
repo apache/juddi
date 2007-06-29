@@ -84,10 +84,16 @@ public abstract class Registry
     		  log.debug("Could not find " + configFile.getAbsolutePath());
     	  } else {
     		  log.debug("Reading juddi properties from " + configFile.getAbsolutePath());
-    	  }
-    	  is = new FileInputStream(configFile);
+              is = new FileInputStream(configFile);
+    	  } 
       }
-        
+      //Adding this to make maven happy, what maven wants, maven gets.
+      if (is==null) {
+          log.debug("Trying the classloader of the class itself. (workaround for maven2)");
+          Loader loader = new Loader();
+          is = loader.getResourceAsStreamFromClass(propFile);
+      }
+      
       if (is != null)
       {
         log.debug("Resources loaded from: "+propFile);

@@ -36,7 +36,16 @@ public class Loader
 {
   // private reference to the jUDDI logger
   private static Log log = LogFactory.getLog(Loader.class);
-
+  /**
+   * Added for unittesting with maven
+   * 
+   * @param resource
+   * @return
+   */
+  public InputStream getResourceAsStreamFromClass(String resource) {
+      InputStream stream = getClass().getClassLoader().getResourceAsStream(resource);
+      return stream;
+  }
   /**
    * @param resource
    * @return InputStream to the named resource
