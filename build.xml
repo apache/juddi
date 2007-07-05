@@ -54,10 +54,10 @@ Copyright:
   	<property name="client.jar.file"     value="${name}-client.jar"/>
     <property name="war.file"            value="${name}.war"/>
     <property name="ear.file"            value="${name}.ear"/>
-    <property name="sql.dir"             value="${basedir}/sql"/>
+    <property name="sql.dir"             value="${basedir}/src/main/resources/sql"/>
     <property name="site.dir"            value="${basedir}/site"/>
     <property name="src.dir"             value="${basedir}/src"/>
-    <property name="java.dir"            value="${basedir}/src/java"/>
+    <property name="java.dir"            value="${basedir}/src/main/java"/>
     <property name="conf.dir"            value="${basedir}/conf"/>
     <property name="build.dir"           value="${basedir}/build"/>
     <property name="webapp.dir"          value="${basedir}/webapp"/>

@@ -19,13 +19,10 @@
   <packaging>jar</packaging>
    
   <build>
-    <sourceDirectory>../src/java</sourceDirectory>
+    <sourceDirectory>../src/main/java</sourceDirectory>
     <resources>
       <resource>
-        <directory>../src/java</directory>
-        <includes>
-          <include>**/*.properties</include>
-        </includes>
+        <directory>../src/main/resources</directory>
       </resource>
     </resources>
     <plugins>
