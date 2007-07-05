@@ -19,7 +19,7 @@
   <packaging>jar</packaging>
   
   <build>
-    <sourceDirectory>../src/mainjava</sourceDirectory>
+    <sourceDirectory>../src/main/java</sourceDirectory>
     
     <plugins>
       <plugin>
