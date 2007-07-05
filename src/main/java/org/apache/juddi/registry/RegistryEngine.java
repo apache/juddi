@@ -17,6 +17,10 @@ package org.apache.juddi.registry;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -31,9 +35,12 @@ import org.apache.juddi.function.FunctionMaker;
 import org.apache.juddi.function.IFunction;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.Loader;
+import org.apache.juddi.util.jdbc.ConnectionManager;
+import org.apache.log4j.lf5.util.StreamUtils;
 
 /**
  * @author Steve Viens (sviens@apache.org)
+ * @author Kurt Stam (kurt@osconsulting.org)
  */
 public class RegistryEngine extends AbstractRegistry
 {
@@ -55,6 +62,9 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_JDBC_URL = "juddi.jdbcUrl";
   public static final String PROPNAME_JDBC_USERNAME = "juddi.jdbcUsername";
   public static final String PROPNAME_JDBC_PASSWORD = "juddi.jdbcPassword";
+  public static final String PROPNAME_IS_CREATE_DATABASE = "juddi.isCreateDatabase";
+  public static final String PROPNAME_DB_EXISTS_SQL = "juddi.databaseExistsSql";
+  public static final String PROPNAME_SQL_FILES = "juddi.sqlFiles";
   
   public static final String PROPNAME_JAVA_NAMING_FACTORY_INITIAL = "java.naming.factory.initial";
   public static final String PROPNAME_JAVA_NAMING_PROVIDER_URL = "java.naming.provider.url";
@@ -92,6 +102,9 @@ public class RegistryEngine extends AbstractRegistry
   public static final String DEFAULT_JDBC_URL = "jdbc:mysql://localhost/juddi";
   public static final String DEFAULT_JDBC_USERNAME = "juddi";
   public static final String DEFAULT_JDBC_PASSWORD = "juddi";
+  public static final Boolean DEFAULT_IS_CREATE_DATABASE = Boolean.TRUE;
+  public static final String DEFAULT_DB_EXISTS_SQL = "select * from BUSINESS_ENTITY";
+  public static final String DEFAULT_SQL_FILES = "sql/derby/create_database.sql,sql/insert_publishers.sql";
   
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
   public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
@@ -175,6 +188,12 @@ public class RegistryEngine extends AbstractRegistry
     // Grab a reference to the function
     // registry (hmm bad name choice).
     this.maker = new FunctionMaker(this);
+    
+    if (Config.getBooleanProperty(
+            RegistryEngine.PROPNAME_IS_CREATE_DATABASE,RegistryEngine.DEFAULT_IS_CREATE_DATABASE.booleanValue())) {
+        // Initialize database
+        initializeDatabase();
+    }
 
     // Turn on registry access
     isAvailable = true;
@@ -215,7 +234,72 @@ public class RegistryEngine extends AbstractRegistry
 
     return response;
   }
+  
+  private void initializeDatabase()
+  {
+      String dbExistsSql = Config.getStringProperty(
+              RegistryEngine.PROPNAME_DB_EXISTS_SQL,RegistryEngine.DEFAULT_DB_EXISTS_SQL);
+      String sqlFiles = Config.getStringProperty(
+              RegistryEngine.PROPNAME_SQL_FILES,RegistryEngine.DEFAULT_SQL_FILES);
+      try {
+          Connection conn = ConnectionManager.aquireConnection();
+          boolean create = false;
 
+          Statement st = conn.createStatement();
+          ResultSet rs = null;
+          try {
+             rs = st.executeQuery(dbExistsSql.trim());
+             rs.close();
+          } catch (SQLException e) {
+             create = true;
+          }
+          st.close();
+          if (!create) {
+             log.debug("jUDDI Database is already initialized");
+             return;
+          }
+          log.info("Initializing jUDDI database from listed sql files");
+          String[] list = sqlFiles.split(",");
+          for (int i=0; i<list.length; i++) {
+             executeSql(list[i].trim(), conn);
+          }
+      } catch (Exception e) {
+          log.error("Could not create jUDDI database " + e.getMessage(), e);
+      }
+  }
+  
+  public void executeSql(String resource, Connection conn) throws Exception 
+  {
+        InputStream is = Loader.getResourceAsStream(resource);
+        if (is == null) {
+            log.debug("Trying the classloader of the class itself. (workaround for maven2)");
+            Loader loader = new Loader();
+            is = loader.getResourceAsStreamFromClass(resource);
+        }
+        byte[] bytes = StreamUtils.getBytes(is);
+        String sql = new String(bytes, "UTF-8");
+        is.close();
+        String[] statements = sql.split(";");
+        for (int i=0; i<statements.length;i++) {
+            String statement = statements[i].trim();
+            Statement sqlStatement = null;
+            if (!"".equals(statement)) {
+                try {
+                    sqlStatement = conn.createStatement();
+                    sqlStatement.executeUpdate(statement);
+                } catch (Exception e) {
+                    //ignore drop errors
+                    if (!statement.toUpperCase().startsWith("DROP")) {
+                        throw e;
+                    }
+                } finally {
+                    sqlStatement.close();
+                }
+            }
+        }
+    }
+
+  
 
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/

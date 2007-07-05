@@ -98,6 +98,7 @@ public abstract class Registry
       {
         log.debug("Resources loaded from: "+propFile);
         props.load(is);
+        is.close();
       }
       else
       {
