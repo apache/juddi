@@ -122,6 +122,7 @@
   <modules>
     <module>juddi</module>
     <module>juddi-client</module>
+    <module>juddi-web</module>
   </modules>
   
   <distributionManagement>

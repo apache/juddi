@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app xmlns="http://caucho.com/ns/resin">
+
+<!--  See http://wiki.caucho.com/Resin-web.xml for info about this file.  The
+      [type> element value specified below is for a MySQL database.  If you're 
+      not using MySQL you'll need to determine the correct value for your DBMS. -->
+
+  <database>
+    <jndi-name>jdbc/juddiDB</jndi-name>
+    <driver>
+      <type>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</type>
+      <url>jdbc:mysql://{host:port}/{database}</url>
+      <user>{db_user_id}</user>
+      <password>{db_password}</password>
+    </driver>
+  </database>
+
+</web-app> 
