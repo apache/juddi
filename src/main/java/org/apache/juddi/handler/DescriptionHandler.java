@@ -62,7 +62,7 @@ public class DescriptionHandler extends AbstractHandler
 
     String langCode = descr.getLanguageCode();
     if ((langCode != null) && (langCode.trim().length() > 0))
-      element.setAttribute("xml:lang",langCode);
+      element.setAttributeNS("http://www.w3.org/XML/1998/namespace","xml:lang",langCode);
 
     String descrValue = descr.getValue();
     if (descrValue != null)

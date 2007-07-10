@@ -63,7 +63,7 @@ public class NameHandler extends AbstractHandler
 
     String langCode = name.getLanguageCode();
     if ((langCode != null) && (langCode.trim().length() > 0))
-      element.setAttribute("xml:lang",langCode);
+      element.setAttributeNS("http://www.w3.org/XML/1998/namespace","xml:lang",langCode);
 
     String nameValue = name.getValue();
     if (nameValue != null)
