@@ -124,11 +124,11 @@ public class TModelHandler extends AbstractHandler
     if (authName != null)
       element.setAttribute("authorizedName",authName);
 
-    String name = tModel.getName();
+    Name name = tModel.getName();
     if (name != null)
     {
       handler = maker.lookup(NameHandler.TAG_NAME);
-      handler.marshal(new Name(name),element);
+      handler.marshal(name,element);
     }
 
     Vector descrVector = tModel.getDescriptionVector();

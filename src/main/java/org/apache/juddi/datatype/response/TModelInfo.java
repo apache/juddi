@@ -26,7 +26,7 @@ import org.apache.juddi.datatype.RegistryObject;
 public class TModelInfo implements RegistryObject
 {
   String tModelKey;
-  String nameValue;
+  Name name;
 
   /**
    * default constructor
@@ -41,7 +41,7 @@ public class TModelInfo implements RegistryObject
   public TModelInfo(String key,String name)
   {
     this.tModelKey = key;
-    this.nameValue = name;
+    setNameValue(name);
   }
 
   /**
@@ -57,7 +57,11 @@ public class TModelInfo implements RegistryObject
    */
   public void setNameValue(String nameValue)
   {
-    this.nameValue = nameValue;
+      if (nameValue == null) {
+          this.name = null;
+      } else {
+          this.name = new Name(nameValue);
+      }
   }
 
   /**
@@ -67,10 +71,7 @@ public class TModelInfo implements RegistryObject
     */
   public void setName(Name name)
   {
-    if (name != null)
-      this.nameValue = name.getValue();
-    else
-      this.nameValue = null;
+      this.name = name;
   }
 
   /**
@@ -86,7 +87,11 @@ public class TModelInfo implements RegistryObject
    */
   public String getNameValue()
   {
-    return nameValue;
+      if (this.name == null) {
+          return null;
+      } else {
+          return this.name.getValue();
+      }
   }
 
   /**
@@ -94,9 +99,6 @@ public class TModelInfo implements RegistryObject
    */
   public Name getName()
   {
-    if (this.nameValue != null)
-      return new Name(nameValue);
-    else
-      return null;
+      return this.name;
   }
 }

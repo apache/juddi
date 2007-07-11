@@ -179,7 +179,7 @@ public class TModel implements RegistryObject
   String tModelKey;
   String authorizedName;
   String operator;
-  String nameValue;
+  Name name;
   Vector descVector;
   OverviewDoc overviewDoc;
   IdentifierBag identifierBag;
@@ -201,7 +201,7 @@ public class TModel implements RegistryObject
    */
   public TModel(String name)
   {
-    this.nameValue = name;
+    setName(name);
   }
 
   /**
@@ -212,7 +212,7 @@ public class TModel implements RegistryObject
    */
   public TModel(String name,String key)
   {
-    this.nameValue = name;
+    setName(name);
     this.tModelKey = key;
   }
 
@@ -263,9 +263,13 @@ public class TModel implements RegistryObject
    *
    * @param name The new name of this tModel.
    */
-  public void setName(String name)
+  public void setName(String nameValue)
   {
-    this.nameValue = name;
+      if (nameValue == null) {
+          this.name = null;
+      } else {
+          this.name = new Name(nameValue);
+      }
   }
 
   /**
@@ -273,9 +277,9 @@ public class TModel implements RegistryObject
    *
    * @return The name of this tModel.
    */
-  public String getName()
+  public Name getName()
   {
-    return this.nameValue;
+      return this.name;
   }
 
   /**
@@ -285,10 +289,7 @@ public class TModel implements RegistryObject
     */
   public void setName(Name name)
   {
-    if (name != null)
-      this.nameValue = name.getValue();
-    else
-      this.nameValue = null;
+      this.name = name;
   }
 
   /**

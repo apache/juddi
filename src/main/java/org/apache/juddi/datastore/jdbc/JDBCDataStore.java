@@ -1404,7 +1404,7 @@ public class JDBCDataStore implements DataStore
         TModel tModel = TModelTable.select(tModelKey,connection);
         info = new TModelInfo();
         info.setTModelKey(tModelKey);
-        info.setNameValue(tModel.getName());
+        info.setName(tModel.getName());
       }
       catch(java.sql.SQLException sqlex)
       {

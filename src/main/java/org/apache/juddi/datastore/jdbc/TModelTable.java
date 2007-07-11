@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.tmodel.TModel;
 
@@ -54,9 +55,10 @@ class TModelTable
     sql.append("PUBLISHER_ID,");
     sql.append("OPERATOR,");
     sql.append("NAME,");
+    sql.append("LANG_CODE,");
     sql.append("OVERVIEW_URL,");
     sql.append("LAST_UPDATE) ");
-    sql.append("VALUES (?,?,?,?,?,?,?)");
+    sql.append("VALUES (?,?,?,?,?,?,?,?)");
     insertSQL = sql.toString();
 
     // build deleteSQL
@@ -78,6 +80,7 @@ class TModelTable
     sql.append("AUTHORIZED_NAME,");
     sql.append("OPERATOR,");
     sql.append("NAME,");
+    sql.append("LANG_CODE,");
     sql.append("OVERVIEW_URL,");
     sql.append("DELETED ");
     sql.append("FROM TMODEL ");
@@ -130,16 +133,18 @@ class TModelTable
       statement.setString(2,tModel.getAuthorizedName());
       statement.setString(3,publisherID);
       statement.setString(4,tModel.getOperator());
-      statement.setString(5,tModel.getName());
-      statement.setString(6,overviewURL);
-      statement.setTimestamp(7,timeStamp);
+      statement.setString(5,tModel.getName().getValue());
+      statement.setString(6,tModel.getName().getLanguageCode());
+      statement.setString(7,overviewURL);
+      statement.setTimestamp(8,timeStamp);
 
       log.debug(insertSQL +
         "\n\t TMODEL_KEY=" + tModel.getTModelKey().toString() +
         "\n\t AUTHORIZED_NAME=" + tModel.getAuthorizedName() +
         "\n\t PUBLISHER_ID=" + publisherID +
         "\n\t OPERATOR=" + tModel.getOperator() +
-        "\n\t NAME=" + tModel.getName() +
+        "\n\t NAME=" + tModel.getName().getValue() +
+        "\n\t LANG_CODE=" + tModel.getName().getLanguageCode() +
         "\n\t OVERVIEW_URL=" + overviewURL +
         "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
 
@@ -250,10 +255,15 @@ class TModelTable
         tModel.setTModelKey(tModelKey);
         tModel.setAuthorizedName(resultSet.getString(1));//("AUTHORIZED_NAME"));
         tModel.setOperator(resultSet.getString(2));//("OPERATOR"));
-        tModel.setName(resultSet.getString(3));//("NAME"));
+
+        Name name = new Name();
+        name.setValue(resultSet.getString(3));//("NAME"));
+        name.setLanguageCode(resultSet.getString(4));//("LANG_CODE"));
+
+        tModel.setName(name);
 
         OverviewDoc overviewDoc = new OverviewDoc();
-        overviewDoc.setOverviewURL(resultSet.getString(4));//("OVERVIEW_URL"));
+        overviewDoc.setOverviewURL(resultSet.getString(5));//("OVERVIEW_URL"));
         tModel.setOverviewDoc(overviewDoc);
       }
 
