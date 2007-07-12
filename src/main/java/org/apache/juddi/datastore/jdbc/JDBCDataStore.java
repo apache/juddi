@@ -82,7 +82,7 @@ public class JDBCDataStore implements DataStore
   public JDBCDataStore()
   {
     try {
-      this.connection = ConnectionManager.aquireConnection();
+      this.connection = ConnectionManager.acquireConnection();
     }
     catch(SQLException sqlex) {
       log.error("Exception occured while attempting to " +

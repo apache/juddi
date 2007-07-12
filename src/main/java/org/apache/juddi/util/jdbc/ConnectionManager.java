@@ -43,7 +43,7 @@ public class ConnectionManager
   /**
    *
    */
-  public static Connection aquireConnection()
+  public static Connection acquireConnection()
     throws SQLException
   {
 	  

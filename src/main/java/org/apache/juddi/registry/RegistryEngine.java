@@ -242,7 +242,7 @@ public class RegistryEngine extends AbstractRegistry
       String sqlFiles = Config.getStringProperty(
               RegistryEngine.PROPNAME_SQL_FILES,RegistryEngine.DEFAULT_SQL_FILES);
       try {
-          Connection conn = ConnectionManager.aquireConnection();
+          Connection conn = ConnectionManager.acquireConnection();
           boolean create = false;
 
           Statement st = conn.createStatement();
