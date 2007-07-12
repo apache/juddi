@@ -200,9 +200,9 @@ class FindTModelByNameQuery
     else if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
     {
       if (qualifiers.sortByDateDesc)
-        sql.append("M.LAST_UPDATE ASC,M.NAME ASC");
-      else
         sql.append("M.LAST_UPDATE DESC,M.NAME ASC");
+      else
+        sql.append("M.LAST_UPDATE ASC,M.NAME ASC");
     }
   }
 }

@@ -240,9 +240,9 @@ class FindBusinessByNameQuery
     else if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
     {
       if (qualifiers.sortByDateDesc)
-        sql.append("B.LAST_UPDATE ASC,N.NAME ASC");
-      else
         sql.append("B.LAST_UPDATE DESC,N.NAME ASC");
+      else
+        sql.append("B.LAST_UPDATE ASC,N.NAME ASC");
     }
   }
 }

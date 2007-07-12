@@ -249,9 +249,9 @@ class FindServiceByNameQuery
     else if (qualifiers.sortByDateAsc || qualifiers.sortByDateDesc)
     {
       if (qualifiers.sortByDateDesc)
-        sql.append("S.LAST_UPDATE ASC,N.NAME ASC");
-      else
         sql.append("S.LAST_UPDATE DESC,N.NAME ASC");
+      else
+        sql.append("S.LAST_UPDATE ASC,N.NAME ASC");
     }
   }
 }
