@@ -298,4 +298,4 @@ jUDDI RELEASE NOTES
    This value was being set in the AxisProcessor
    (in org.apache.judditransport.axis). All associated
    unit test methods within the XxxxHandler classes
-   were updated as well.
+   were updated as well. 
