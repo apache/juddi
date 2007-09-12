@@ -142,10 +142,10 @@ class FindTModelByCategoryQuery
             // keyNames are not significant. Omitted keyNames are treated as 
             // identical to empty (zero length) keyNames.
             //
-            if (key.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
+            if (key == null || key.length() == 0 || key.equals(TModel.GENERAL_KEYWORDS_TMODEL_KEY)) 
             {
               sql.append("(C.TMODEL_KEY_REF = ? AND C.KEY_NAME = ? AND C.KEY_VALUE = ?)");
-              sql.addValue(key);
+              sql.addValue(TModel.GENERAL_KEYWORDS_TMODEL_KEY);
               sql.addValue(name);
               sql.addValue(value);
 
