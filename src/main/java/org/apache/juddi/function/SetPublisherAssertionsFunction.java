@@ -26,8 +26,11 @@ import org.apache.juddi.datatype.publisher.Publisher;
 import org.apache.juddi.datatype.request.AuthInfo;
 import org.apache.juddi.datatype.request.SetPublisherAssertions;
 import org.apache.juddi.datatype.response.PublisherAssertions;
+import org.apache.juddi.datatype.assertion.PublisherAssertion;
+import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.util.Config;
 
 /**
@@ -69,6 +72,24 @@ public class SetPublisherAssertionsFunction extends AbstractFunction
       String publisherID = publisher.getPublisherID();
 
       // validate request parameters & execute
+      // Per UDDI v2.0 specification, the tModelKey in a passed publisherAssertion CANNOT be null or blank.  An invalidKeyPassed error must be thrown.
+      if (assertionVector != null) {
+    	  for (int i = 0; i < assertionVector.size(); i++) {
+    		  PublisherAssertion publisherAssertion = (PublisherAssertion)assertionVector.elementAt(i);
+    		  if (publisherAssertion != null) {
+    			  KeyedReference kr = publisherAssertion.getKeyedReference();
+    			  if (kr != null) {
+    				  if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0) {
+    					  //throw new InvalidKeyPassedException("tModelKey must be provided in KeyedReference for publisherAssertion: fromKey=" + 
+    					//		                               publisherAssertion.getFromKey() + "; toKey=" + publisherAssertion.getToKey());
+  					  throw new InvalidKeyPassedException("tModelKey must be provided in KeyedReference for publisherAssertion: fromKey=");
+
+    				  }
+    			  }
+    		  }
+    		  
+    	  }
+      }
       // nothing that requires validation has been identified
 
       // set the PublisherAssertions
@@ -81,6 +102,12 @@ public class SetPublisherAssertionsFunction extends AbstractFunction
       assertions.setOperator(Config.getOperator());
       assertions.setPublisherAssertionVector(savedAssertionsVector);
       return assertions;
+    }
+    catch(InvalidKeyPassedException ivkex)
+    {
+      try { dataStore.rollback(); } catch(Exception e) { }
+      log.error(ivkex);
+      throw (RegistryException)ivkex;
     }
     catch(RegistryException regex)
     {
