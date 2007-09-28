@@ -27,14 +27,14 @@ import org.w3c.dom.Node;
 /**
  * @author Kurt Stam (kurt.stam@jboss.com)
  */
-public class PublishService extends AbstractService
+public class PublishService
 {
   // collection of valid operations
-  private TreeSet operations = null;
+  private TreeSet<String> operations = null;
 
   public PublishService() {
 	super();
-	operations = new TreeSet();
+	operations = new TreeSet<String>();
   	operations.add("get_authtoken");
   	operations.add("get_registeredinfo");
   	operations.add("discard_authtoken");
@@ -80,7 +80,20 @@ public class PublishService extends AbstractService
     			"supported by the UDDI version 2 Publish API.");
 	}
   
-  public Node publish(Element uddiReq) throws Exception{
-	  return handleRequest(uddiReq);
+  public Node publish(Element uddiReq) throws Exception
+  {
+      //new RequestHandler on it's own thread
+      RequestHandler requestHandler = new RequestHandler();
+      requestHandler.setUddiReq(uddiReq);
+      String operation = requestHandler.getOperation(uddiReq);
+      String version   = requestHandler.getVersion(uddiReq, operation);
+      validateRequest(operation, version, uddiReq);
+      Thread thread = new Thread(requestHandler, "WorkThread");
+      thread.start();
+      thread.join();
+      if (requestHandler.getException()!=null) {
+          throw new Exception(requestHandler.getException());
+      }
+      return requestHandler.getResponse();
   }
 }

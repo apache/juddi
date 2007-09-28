@@ -27,14 +27,14 @@ import org.w3c.dom.Node;
 /**
  * @author Kurt Stam (kurt.stam@redhat.com)
  */
-public class InquiryService extends AbstractService
+public class InquiryService
 {
 //	 collection of valid operations
-	  private TreeSet operations = null;
+	  private TreeSet<String> operations = null;
 	  
   public InquiryService() {
 		super();
-		operations = new TreeSet();
+		operations = new TreeSet<String>();
 	  	operations.add("find_business");
 	  	operations.add("find_service");
 	  	operations.add("find_binding");
@@ -47,6 +47,9 @@ public class InquiryService extends AbstractService
 	  	operations.add("get_tmodeldetail");
 	}
 
+  //Verify that the appropriate endpoint was targeted for
+  // this service request.  The validateRequest method will
+  // throw an UnsupportedException if anything's amiss.
   public void validateRequest(String operation,String version,Element uddiReq)
 		throws RegistryException
 	{
@@ -74,7 +77,20 @@ public class InquiryService extends AbstractService
 	}
   
   public Node inquire(Element uddiReq) throws Exception{
-	  return handleRequest(uddiReq);
+      
+      //new RequestHandler on it's own thread
+      RequestHandler requestHandler = new RequestHandler();
+      requestHandler.setUddiReq(uddiReq);
+      String operation = requestHandler.getOperation(uddiReq);
+      String version   = requestHandler.getVersion(uddiReq,operation);
+      validateRequest(operation, version, uddiReq);
+      Thread thread = new Thread(requestHandler, "WorkThread");
+      thread.start();
+      thread.join();
+      if (requestHandler.getException()!=null) {
+          throw new Exception(requestHandler.getException());
+      }
+	  return requestHandler.getResponse();
   }
   
 }

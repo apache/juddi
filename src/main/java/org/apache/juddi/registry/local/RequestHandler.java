@@ -42,55 +42,72 @@ import org.w3c.dom.Node;
 /**
  * @author Kurt Stam (kurt.stam@redhat.com)
  */
-public abstract class AbstractService
+public class RequestHandler implements Runnable
 {
   // private reference to the webapp's logger.
-  private static Log log = LogFactory.getLog(AbstractService.class);
+  private static Log log = LogFactory.getLog(RequestHandler.class);
   
   // XML Document Builder
   private static DocumentBuilder docBuilder = null;
-
-  public Node handleRequest(Element uddiReq) throws Exception
+  
+  private String version;
+  private String operation;
+  private Element uddiReq;
+  private Node response;
+  private String exception;
+   
+    /**
+   * Grab the local name of the UDDI request element
+   * from the UDDI Request. If a value isn't returned 
+   * (either null or an empty String is returned) then 
+   * throw a FatalError exception. This is probably a 
+   * configuration problem related to the XML Parser 
+   * that jUDDI is using.
+   * @param uddiReq
+   * @return 
+   * @throws Exception
+   */
+  public String getOperation(Element uddiReq) throws Exception
   {
-    try 
-    {
       if (uddiReq == null)
-        throw new FatalErrorException("A UDDI request was not " +
-          "found in the SOAP message.");
-      
-      // Grab the local name of the UDDI request element
-      // from the UDDI Request. If a value isn't returned 
-      // (either null or an empty String is returned) then 
-      // throw a FatalError exception. This is probably a 
-      // configuration problem related to the XML Parser 
-      // that jUDDI is using.
-      
+          throw new FatalErrorException("A UDDI request was not " +
+            "found in the SOAP message.");
+
       String operation = uddiReq.getLocalName();
       if ((operation == null) || (operation.trim().length() == 0))
         throw new FatalErrorException("The UDDI service operation " +
           "could not be identified.");
-      
-      // Grab the generic attribute value (version value).  If 
-      // one isn't specified or the value specified is not "2.0" 
-      // then throw an exception (this value must be specified 
-      // for all UDDI requests and currently only vesion 2.0
-      // UDDI requests are supported).
-
+      setOperation(operation);
+      return operation;
+  }
+  /**
+   * Grab the generic attribute value (version value).  If 
+   * one isn't specified or the value specified is not "2.0" 
+   * then throw an exception (this value must be specified 
+   * for all UDDI requests and currently only vesion 2.0
+   * UDDI requests are supported).
+   *   
+   * @param uddiReq
+   * @return
+   * @throws Exception
+   */
+  public String getVersion(Element uddiReq, String operation) throws Exception
+  {
       String version = uddiReq.getAttribute("generic");
       if (version == null)
         throw new FatalErrorException("A UDDI generic attribute " +
           "value was not found for UDDI request: "+operation+" (The " +
           "'generic' attribute must be present)");
-
-      // Verify that the appropriate endpoint was targeted for
-      // this service request.  The validateRequest method will
-      // throw an UnsupportedException if anything's amiss.
-
-      validateRequest(operation,version,uddiReq);
-      
+      setVersion(version);
+      return version;
+  }
+  
+  public void run()
+  {
+    try 
+    { 
       // Lookup the appropriate XML handler.  Throw an 
       // UnsupportedException if one could not be located.
-
       HandlerMaker maker = HandlerMaker.getInstance();
 			IHandler requestHandler = maker.lookup(operation);
       if (requestHandler == null)
@@ -141,8 +158,7 @@ public abstract class AbstractService
       // discarding the temp element) and append 
       // this child to the soap response body
       document.appendChild(element.getFirstChild());
-
-      return document;
+      setResponse(document);
     } 
     catch(Exception ex) // Catch ALL exceptions
     {
@@ -266,15 +282,9 @@ public abstract class AbstractService
       String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
   	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
   	+ ", errText=" + errText;
-      throw new Exception(fault);
+      setException(fault);
     }
   }
-
-  /**
-   * 
-   */
-  public abstract void validateRequest(String operation,String generic,Element uddiReq)
-  	throws RegistryException;
   
   /**
    *
@@ -307,4 +317,34 @@ public abstract class AbstractService
 
     return docBuilder;
   }
+public String getOperation() {
+    return operation;
+}
+public void setOperation(String operation) {
+    this.operation = operation;
+}
+public Node getResponse() {
+    return response;
+}
+public void setResponse(Node response) {
+    this.response = response;
+}
+public Element getUddiReq() {
+    return uddiReq;
+}
+public void setUddiReq(Element uddiReq) {
+    this.uddiReq = uddiReq;
+}
+public String getVersion() {
+    return version;
+}
+public void setVersion(String version) {
+    this.version = version;
+}
+public String getException() {
+    return exception;
+}
+public void setException(String exception) {
+    this.exception = exception;
+}
 }
