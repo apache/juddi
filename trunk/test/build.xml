@@ -1,0 +1,497 @@
+<?xml version="1.0"?>
+<!-- ===================================================================
+
+Jakarta Ant build script for jUDDI
+
+Prerequisites:
+  jakarta-ant          from http://jakarta.apache.org/ant/
+  forrest              from http://xml.apache.org/forrest/
+  axis                 from http://ws.apache.org/axis/
+  commons-logging      from http://jakarta.apache.org/commons/logging.html
+  servlet              from http://jakarta.apache.org/tomcat/
+  jdbc-2.0-stdext      from http://jakarta.apache.org/tomcat/
+  log4j                from http://jakarta.apache.org/log4j
+
+Optional components:
+  junit                from http://www.junit.org/
+  jce                  from http://java.sun.com/products/jce/
+  checkstyle           from http://checkstyle.sourceforge.net/
+  commons-collections  from http://jakarta.apache.org/commons/collections.html
+  commons-dbcp         from http://jakarta.apache.org/commons/dbcp/
+  commons-pool         from http://jakarta.apache.org/commons/pool/
+
+Optional dependees:
+  krysalis-version     from http://www.krysalis.org/version
+
+Most Useful Targets:
+ - compile   Compiles and jars all Java classes (default)
+ - jar       Builds the jUDDI libraries (juddi.jar)
+ - javadoc   Builds JavaDoc
+ - site      Builds the jUDDI web site
+ - test      tests everything via JUnit
+ - war       Builds the jUDDI Web Application (juddi.war)
+ - ear       Builds the jUDDI Enterprise Application (juddi.ear)
+ - binary    Builds the jUDDI binary distribution
+ - source    Builds the jUDDI source distribution
+ - dist      Builds both the binary and source distributions
+ - all       builds everything
+ - clean     cleans everything
+
+Author:
+  Steve Viens <sviens@apache.org>
+
+Copyright:
+  Copyright (c) 2004 Apache Software Foundation.
+
+   $Id$
+
+==================================================================== -->
+<project default="jar" basedir=".">
+  <target name="init">
+
+    <!-- load property values from build.properties -->
+    <property file="${basedir}/build.properties"/>
+
+    <!-- set project-wide property values -->
+    <property name="name"                value="juddi"/>
+    <property name="version"             value="0.9"/>
+    <property name="owner"               value="Apache Software Foundation"/>
+    <property name="title"               value="jUDDI ${version}"/>
+    <property name="jar.file"            value="${name}.jar"/>
+  	<property name="war.file"            value="${name}.war"/>
+    <property name="ear.file"            value="${name}.ear"/>
+    <property name="sql.dir"             value="${basedir}/sql"/>
+    <property name="site.dir"            value="${basedir}/site"/>
+    <property name="src.dir"             value="${basedir}/src"/>
+    <property name="java.dir"            value="${basedir}/src/java"/>
+    <property name="conf.dir"            value="${basedir}/conf"/>
+   	<property name="build.dir"           value="${basedir}/build"/>
+    <property name="webapp.dir"          value="${basedir}/webapp"/>
+    <property name="lib.dir"             value="${basedir}/webapp/WEB-INF/lib"/>
+  	<property name="classes.dir"         value="${build.dir}/classes"/>
+    <property name="docs.dir"            value="${build.dir}/docs"/>
+    <property name="javadoc.dir"         value="${docs.dir}/apiDocs"/>
+    <property name="dist.src.dir"        value="${build.dir}/dist-src"/>
+    <property name="dist.src.root"       value="${dist.src.dir}/${name}-${version}-src"/>
+    <property name="dist.bin.dir"        value="${build.dir}/dist-bin"/>
+    <property name="dist.bin.root"       value="${dist.bin.dir}/${name}-${version}"/>
+    <property name="compile.debug"       value="on"/>
+    <property name="compile.deprecation" value="on"/>
+    <property name="compile.optimize"    value="off"/>
+    <property name="test.failonerror"    value="true" />
+    <property name="test.runner"         value="junit.textui.TestRunner"/>
+
+    <!-- project-wide classpath for building and running all targets -->
+    <path id="project.classpath">
+      <pathelement path="${build.dir}/${jar.file}"/>
+      <fileset dir="${lib.dir}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${basedir}/lib">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+  	  	
+    <!-- classpath search to determine if JUnit tests should be run -->
+    <condition property="junit.present" value="true">
+      <available classname="junit.framework.TestCase" />
+    </condition>
+    <echo message="junit.present=${junit.present}" />
+  	
+    <!-- classpath search to determine if CheckStyle should be run -->
+    <condition property="checkstyle.present" value="true">
+      <available classname="com.puppycrawl.tools.checkstyle.Main" />
+    </condition>
+  	<echo message="checkstyle.present=${checkstyle.present}" />
+  	
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="init">
+    <mkdir dir="${classes.dir}"/>	  	
+	
+  	<!-- Apache Log4J (log4j.jar) -->
+  	<available property="log4j.present"
+      classname="org.apache.log4j.Category"
+      classpathref="project.classpath"/>
+    <echo message="log4j.present=${log4j.present}" />
+  	
+  	<!-- Java Servlet API (servlet-api.jar) -->
+  	<available property="servlet.present"
+      classname="javax.servlet.ServletException"
+      classpathref="project.classpath"/>
+  	<echo message="servlet.present=${servlet.present}" />
+  	  	
+  	<!-- Java API for XML-Based RPC (jaxrpc.jar) -->
+  	<available property="jaxrpc.present"
+      classname="javax.xml.rpc.Service"
+      classpathref="project.classpath"/>
+  	<echo message="jaxrpc.present=${jaxrpc.present}" />
+  	  	
+  	<!-- JBoss (jboss.jar) -->
+  	<available property="jboss.present"
+      classname="org.jboss.security.AuthenticationManager"
+      classpathref="project.classpath"/>
+  	<echo message="jboss.present=${jboss.present}" />
+  	  	
+  	<!-- SOAP with Attachments API for Java (saaj.jar) -->
+  	<available property="saaj.present"
+      classname="javax.xml.soap.SOAPEnvelope"
+      classpathref="project.classpath"/>
+  	<echo message="saaj.present=${saaj.present}" />
+  		
+  	<!-- Libraries from Novell for LDAP implementation  -->
+  	<available property="novell.present"
+      classname="com.novell.ecb.Connection"
+      classpathref="project.classpath"/>
+  	<echo message="novell.present=${novell.present}" />
+  		
+  	<!-- Compile Java Source Code -->
+  	<javac
+        destdir="${classes.dir}"
+        debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+      <classpath refid="project.classpath"/>
+      <src path="${java.dir}"/>
+      <exclude name="**/org/apache/juddi/auth/JBossAuthenticator.java" unless="jboss.present"/>
+      <exclude name="**/org/apache/juddi/ldap/**" unless="novell.present"/>    	    	
+    </javac>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates the Java libraries (juddi.jar)                              -->
+  <!-- =================================================================== -->
+  <target name="jar" depends="compile">
+    <mkdir dir="${build.dir}"/>
+    <jar
+      jarfile="${build.dir}/${jar.file}"
+      basedir="${classes.dir}"
+      includes="org/apache/juddi/**"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Build the jUDDI Web Application (juddi.war)                         -->
+  <!-- =================================================================== -->
+  <target name="war" depends="jar">
+    <mkdir dir="${build.dir}"/>
+    <!-- Assemble juddi.war file -->
+  	<war warfile="${build.dir}/${war.file}" webxml="${webapp.dir}/WEB-INF/web.xml">
+      <fileset dir="${webapp.dir}">
+        <include name="**"/>
+        <exclude name="WEB-INF/web.xml"/>
+        <exclude name="WEB-INF/classes/**"/>
+      </fileset>
+      <lib dir="${build.dir}">
+        <include name="${jar.file}"/>
+      </lib>
+      <classes dir="${java.dir}">
+        <include name="log4j.properties"/>
+      </classes>
+  	</war>
+    <!-- Explode the juddi.war file -->
+  	<mkdir dir="${build.dir}/webapp/juddi"/>
+    <unzip src="${build.dir}/${war.file}" dest="${build.dir}/webapp/juddi" overwrite="true"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Build the jUDDI Enterprise Application (juddi.ear)                  -->
+  <!-- =================================================================== -->
+  <target name="ear" depends="war">
+    <ear earfile="${build.dir}/${ear.file}" appxml="${basedir}/application.xml">
+      <fileset dir="${build.dir}" includes="${war.file}"/>
+    </ear>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates the jUDDI web site                                          -->
+  <!-- =================================================================== -->
+  <target name="site" depends="init">
+    <mkdir dir="${docs.dir}"/>
+    <ant antfile="site/build.xml" inheritAll="false"/>
+    <copy todir="${docs.dir}" overwrite="true">
+      <fileset dir="${site.dir}/build/site"/>
+    </copy>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates the complete set of JavaDoc API                             -->
+  <!-- =================================================================== -->
+  <target name="javadoc" depends="init">
+    <mkdir dir="${javadoc.dir}"/>
+    <javadoc sourcepath="${java.dir}" destdir="${javadoc.dir}"
+        packagenames=
+          "org.apache.juddi.auth,
+           org.apache.juddi.client,
+           org.apache.juddi.cryptor,
+           org.apache.juddi.datastore,
+           org.apache.juddi.datatype,
+           org.apache.juddi.datatype.assertion,
+           org.apache.juddi.datatype.binding,
+           org.apache.juddi.datatype.business,
+           org.apache.juddi.datatype.publisher,
+           org.apache.juddi.datatype.request,
+           org.apache.juddi.datatype.response,
+           org.apache.juddi.datatype.service,
+    	   org.apache.juddi.datatype.subscription,
+           org.apache.juddi.datatype.tmodel,
+           org.apache.juddi.error,
+           org.apache.juddi.function,
+           org.apache.juddi.handler,
+           org.apache.juddi.monitor,
+    	   org.apache.juddi.proxy,
+           org.apache.juddi.registry,
+           org.apache.juddi.transport,
+           org.apache.juddi.util,
+           org.apache.juddi.util.jdbc,
+           org.apache.juddi.util.xml,
+           org.apache.juddi.uuidgen,
+           org.apache.juddi.validator"
+    	author="true"
+        version="true"
+        windowtitle="${title}"
+        doctitle="${title}"
+        bottom="Copyright &#169; 2003 ${owner}. All rights reserved.">
+      <classpath refid="project.classpath"/>
+    </javadoc>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Build both the jUDDI web site and JavaDocs                          -->
+  <!-- =================================================================== -->
+  <target name="docs" depends="clean,site,javadoc"/>
+  <!-- =================================================================== -->
+  <!-- Running CheckStyle validation of jUDDI Source code                  -->
+  <!-- =================================================================== -->
+  <target name="checkstyle" depends="init" if="checkstyle.present">
+    <echo message="Checkstyle package is present." />
+    <echo message="Running Checkstyle using: ${basedir}/checkstyle.xml" />
+    <mkdir dir="${build.dir}"/>
+    <taskdef resource="checkstyletask.properties" />
+    <checkstyle
+        config="${basedir}/checkstyle.xml"
+        failureProperty="checkstyle.failure"
+        failOnViolation="true">
+      <fileset dir="${java.dir}" includes="**/*.java"/>
+      <formatter type="plain" toFile="${build.dir}/checkstyle.txt"/>
+    </checkstyle>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles and Runs jUDDI Unit Test Suites                            -->
+  <!-- =================================================================== -->
+  <target name="test" depends="jar" if="junit.present">
+    <mkdir dir="${build.dir}/unit/classes"/>
+    <javac
+        destdir="${build.dir}/unit/classes"
+        debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+      <classpath refid="project.classpath"/>
+      <src path="${src.dir}/junit"/>
+    </javac>
+    <junit
+        printsummary="yes" fork="on" haltonfailure="yes">
+      <formatter type="plain" usefile="false"/>
+      <test name="org.apache.juddi.TestAll"/>
+      <classpath>
+        <pathelement location="${build.dir}/unit/classes" />
+        <pathelement location="${build.dir}/${jar.file}" />
+        <pathelement path="${java.class.path}" />
+      </classpath>
+    </junit>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles UDDI4j Interoperability Tests                              -->
+  <!-- =================================================================== -->
+  <target name="compile-uddi4j-tests" depends="jar">
+    <mkdir dir="${build.dir}/uddi4j/classes"/>
+    <javac
+        destdir="${build.dir}/uddi4j/classes"
+        debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+      <classpath refid="project.classpath"/>
+      <src path="${src.dir}/uddi4j"/>
+    </javac>
+    <copy
+        file="${src.dir}/uddi4j/org/apache/juddi/uddi4j/samples.prop"
+        todir="${build.dir}/uddi4j/classes/org/apache/juddi/uddi4j"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Runs UDDI4j Interoperability Tests                                  -->
+  <!-- =================================================================== -->
+  <target name="run-uddi4j-tests" depends="compile-uddi4j-tests">
+    <java classname="${test.runner}" fork="true">
+      <jvmarg value="-Dorg.uddi4j.TransportClassName=org.uddi4j.transport.ApacheAxisTransport"/>
+      <arg value="org.apache.juddi.uddi4j.TestAll"/>
+      <classpath>
+                <pathelement location="${lib.dir}/uddi4j.jar"/>
+                <pathelement location="${lib.dir}/junit.jar"/>
+                <pathelement location="${lib.dir}/axis.jar"/>
+                <pathelement location="${lib.dir}/jaxrpc.jar"/>
+                <pathelement location="${lib.dir}/saaj.jar"/>
+                <pathelement location="${lib.dir}/commons-logging.jar"/>
+                <pathelement location="${lib.dir}/commons-discovery.jar"/>
+                <pathelement location="${lib.dir}/commons-collections.jar"/>
+                <pathelement location="${lib.dir}/commons-dbcp.jar"/>
+                <pathelement location="${lib.dir}/commons-pool.jar"/>
+                <pathelement location="${build.dir}/uddi4j/classes"/>
+                <pathelement location="${build.dir}/juddi.jar"/>
+        <pathelement location="${build.dir}/${jar.file}"/>
+      </classpath>
+    </java>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles jUDDI Proxy Interoperability Tests                         -->
+  <!-- =================================================================== -->
+  <target name="compile-proxy-tests" depends="jar">
+    <mkdir dir="${build.dir}/proxy/classes"/>
+    <javac
+        destdir="${build.dir}/proxy/classes"
+        debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+      <classpath refid="project.classpath"/>
+      <src path="${src.dir}/proxy"/>
+    </javac>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Runs jUDDI Proxy Interoperability Tests                             -->
+  <!-- =================================================================== -->
+  <target name="run-proxy-tests" depends="compile-proxy-tests">
+    <java classname="${test.runner}" fork="true">
+      <arg value="org.apache.juddi.proxy.TestAll"/>
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+                <pathelement location="${build.dir}/proxy/classes"/>
+        <pathelement location="${build.dir}/${jar.file}"/>
+      </classpath>
+    </java>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Compiles JAXR Interoperability Tests                                -->
+  <!-- =================================================================== -->
+  <target name="compile-jaxr-tests" depends="jar">
+    <mkdir dir="${build.dir}/jaxr/classes"/>
+    <javac
+        destdir="${build.dir}/jaxr/classes"
+        debug="${compile.debug}"
+        deprecation="${compile.deprecation}"
+        optimize="${compile.optimize}">
+      <classpath refid="project.classpath"/>
+      <src path="${src.dir}/jaxr"/>
+    </javac>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Runs JAXR Interoperability Tests                                    -->
+  <!-- =================================================================== -->
+  <target name="run-jaxr-tests" depends="compile-jaxr-tests">
+    <java classname="${test.runner}" fork="true">
+      <arg value="org.apache.juddi.jaxr.TestAll"/>
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+                <pathelement location="${build.dir}/jaxr/classes"/>
+        <pathelement location="${build.dir}/${jar.file}"/>
+      </classpath>
+    </java>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates the source distribution                                     -->
+  <!-- =================================================================== -->
+  <target name="source" depends="docs">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.src.dir}"/>
+    <mkdir dir="${dist.src.root}"/>
+
+    <!-- load the source distribution directory with what's needed here -->
+    <copy file="build.xml" todir="${dist.src.root}"/>
+    <copy file="build.properties" todir="${dist.src.root}"/>
+    <copy file="checkstyle.xml" todir="${dist.src.root}"/>
+    <copy file="application.xml" todir="${dist.src.root}"/>
+  	<copy file="LICENSE" todir="${dist.src.root}"/>
+    <copy file="README" todir="${dist.src.root}"/>
+    <copy todir="${dist.src.root}/docs"><fileset dir="${docs.dir}"/></copy>
+    <copy todir="${dist.src.root}/site"><fileset dir="${site.dir}"/></copy>
+    <copy todir="${dist.src.root}/src"><fileset dir="${src.dir}"/></copy>
+    <copy todir="${dist.src.root}/sql"><fileset dir="${sql.dir}"/></copy>
+    <copy todir="${dist.src.root}/webapp"><fileset dir="${webapp.dir}"/></copy>
+
+    <!-- create the source ".zip" distribution and checksum (MD5) file -->
+    <zip destfile="${build.dir}/juddi-${version}-src.zip" basedir="${dist.src.dir}"/>
+  	<checksum file="${build.dir}/juddi-${version}-src.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+  	<echo file="${build.dir}/juddi-${version}-src.zip.MD5" message=" juddi-${version}-src.zip" append="true"/>
+  	
+    <!-- create the source ".tar.gz" distribution and checksum (MD5) file -->
+  	<tar destfile="${build.dir}/juddi-${version}-src.tar" basedir="${dist.src.dir}"/>
+    <gzip src="${build.dir}/juddi-${version}-src.tar" zipfile="${build.dir}/juddi-${version}-src.tar.gz"/>
+  	<delete file="${build.dir}/juddi-${version}-src.tar" verbose="false"/>
+  	<checksum file="${build.dir}/juddi-${version}-src.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+  	<echo file="${build.dir}/juddi-${version}-src.tar.gz.MD5" message=" juddi-${version}-src.tar.gz" append="true"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates the binary distribution                                     -->
+  <!-- =================================================================== -->
+  <target name="binary" depends="ear,site,javadoc">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dist.bin.dir}"/>
+    <mkdir dir="${dist.bin.root}"/>
+
+    <!-- load the binary distribution directory with what's needed here -->
+    <copy file="LICENSE" todir="${dist.bin.root}"/>
+    <copy file="README" todir="${dist.bin.root}"/>
+    <copy file="${build.dir}/${jar.file}" todir="${dist.bin.root}"/>
+    <copy file="${build.dir}/${war.file}" todir="${dist.bin.root}"/>
+    <copy file="${build.dir}/${ear.file}" todir="${dist.bin.root}"/>
+    <copy todir="${dist.bin.root}/docs"><fileset dir="${docs.dir}"/></copy>
+    <copy todir="${dist.bin.root}/sql"><fileset dir="${sql.dir}"/></copy>
+    <copy todir="${dist.bin.root}/webapp"><fileset dir="${build.dir}/webapp"/></copy>
+
+    <!-- create the binary ".zip" distribution and checksum (MD5) file -->
+    <zip destfile="${build.dir}/juddi-${version}.zip" basedir="${dist.bin.dir}"/>
+  	<checksum file="${build.dir}/juddi-${version}.zip" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+  	<echo file="${build.dir}/juddi-${version}.zip.MD5" message=" juddi-${version}.zip" append="true"/>
+  	
+    <!-- create the binary ".tar.gz" distribution and checksum (MD5) file -->
+  	<tar destfile="${build.dir}/juddi-${version}.tar" basedir="${dist.bin.dir}"/>
+    <gzip src="${build.dir}/juddi-${version}.tar" zipfile="${build.dir}/juddi-${version}.tar.gz"/>
+    <delete file="${build.dir}/juddi-${version}.tar" verbose="false"/>
+  	<checksum file="${build.dir}/juddi-${version}.tar.gz" algorithm="MD5" fileext=".md5" forceoverwrite="yes"/>
+  	<echo file="${build.dir}/juddi-${version}.tar.gz.MD5" message=" juddi-${version}.tar.gz" append="true"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Creates both binary and source distributions                        -->
+  <!-- =================================================================== -->
+  <target name="dist" depends="clean,source,binary"/>
+  <!-- =================================================================== -->
+  <!-- Builds everything                                                   -->
+  <!-- =================================================================== -->
+  <target name="all" depends="clean,jar,test,site,javadoc,binary,source"/>
+  <!-- =================================================================== -->
+  <!-- Invoked only by Gump (see http://gump.apache.org)                   -->
+  <!-- =================================================================== -->
+  <target name="gump" depends="clean,jar">
+  	<copy file="${build.dir}/${jar.file}" 
+      tofile="${build.dir}/${name}-${DATE_STAMP}.jar"/>
+  </target>
+  <!-- =================================================================== -->
+  <!-- Versioning                                                          -->
+  <!-- Note: Fails safe if krysalis-version is not available...            -->
+  <!-- =================================================================== -->
+  <target name="version" if="version.available" description="versioning">
+    <taskdef resource="version" />
+    <!-- For now just log (later store for checking) -->
+    <version-environment />
+    <!-- Brand a (standalone) version stamp into source... -->
+    <version-stamp dest="${src.dir}" overWrite="true">
+      <versionMarker versionId="org.apache.juddi" version="${version}">
+        <defaultAttributes />
+      </versionMarker>
+    </version-stamp>   
+  </target>  
+  <!-- =================================================================== -->
+  <!-- Clean everything                                                    -->
+  <!-- =================================================================== -->
+  <target name="clean" depends="init">
+    <delete dir="${build.dir}" verbose="false"/>
+    <ant antfile="site/build.xml" target="clean" inheritAll="false"/>  	
+  </target>
+</project>

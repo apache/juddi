@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <header>
+    <title>jUDDI Interim Drops</title>
+  </header>
+  <body>
+    <section>
+      
+      <title>Interim Drops</title>
+        <p>We're not currently creating nightly builds of jUDDI however 
+         nightly snapshots of the current CVS tree are available here:
+        <br/>
+        <blockquote>
+        <link href="http://cvs.apache.org/snapshots/ws-juddi/">
+        http://cvs.apache.org/snapshots/ws-juddi/
+        </link>
+        </blockquote>
+        </p>
+        
+    </section>
+  </body>
+</document>

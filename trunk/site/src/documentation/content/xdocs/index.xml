@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <header>
+    <title>Welcome to jUDDI</title>
+  </header>
+  <body>
+
+      <p>jUDDI (pronounced &quot;Judy&quot;) is an open source Java implementation
+        of the Universal Description, Discovery, and Integration (UDDI) specification
+        for Web Services.
+      </p>
+    
+	  <section>
+	    <title>jUDDI Features</title>
+	    <ul>
+	      <li>Open Source</li>
+	      <li>Platform Independent</li>
+	      <li>Supports for JDK 1.3.1 and later</li>
+	      <li>UDDI version 2.0 compliant implementation</li>
+	      <li>Use with any relational database that supports ANSI standard SQL (MySQL, DB2, Sybase, JDataStore, HSQLDB, etc.)</li>
+	      <li>Deployable on any Java application server that supports the Servlet 2.3 specification (Jakarta Tomcat, JOnAS, WebSphere, WebLogic, Borland Enterprise Server, JRun, etc.)</li>
+	      <li>jUDDI registry supports a clustered deployment configuration.</li>
+	      <li>Easy integration with existing authentication systems</li>
+	    </ul>
+	  </section>
+      
+	  <section>
+	    <title>News</title>
+	    <p><strong>June 7, 2005</strong> Version 0.9rc4 is now available.</p>
+	    <p><strong>July 2, 2004</strong> Version 0.9rc3 is now available.</p>
+	    <p><strong>June 29, 2004</strong> Version 0.9rc2 is now available.</p>
+	    <p><strong>June 16, 2004</strong> Version 0.9rc1 is now available.</p>
+	    <p><strong>March 24, 2004</strong> jUDDI graduates from the Apache Incubator into Apache Web Services Project.</p>
+	    <p><strong>Oct 08, 2003</strong> The Apache Software Foundation's Web Services PMC (http://ws.apache.org/) voted to accept jUDDI into the Apache Incubator. The move is expected to be complete in early December.</p>
+	    <p><strong>July 22, 2003</strong> A proposal to contribute jUDDI to the Apache Software Foundation's Web Services Project is being considered.</p>
+	    <p><strong>July 22, 2003</strong> Version 0.8.0 is now available.</p>
+	    <p><strong>June 27, 2003</strong> Version 0.7.1 is now available.</p>
+	    <p><strong>April 22, 2003</strong> Version 0.7.0 is now available.</p>
+	  </section>
+
+      <section>
+        <title>About UDDI</title>
+        <p>The Universal Description, Discovery and Integration (UDDI) protocol is 
+          one of the major building blocks required for successful Web services. 
+          UDDI creates a standard interoperable platform that enables companies 
+          and applications to quickly, easily, and dynamically find and use Web 
+          services over the Internet. UDDI also allows operational registries to 
+          be maintained for different purposes in different contexts. UDDI is a 
+          cross-industry effort driven by major platform and software providers, 
+          as well as marketplace operators and e-business leaders within the 
+          OASIS standards consortium.
+        </p>
+        <p>Additional information regarding UDDI can be found 
+          at <link href="http://www.uddi.org/">UDDI.org</link>.
+        </p>
+      </section>
+      
+  </body>
+</document>

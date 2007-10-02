@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE log4j:configuration 
+          SYSTEM 
+          "log4j.dtd">
+
+<log4j:configuration 
+	 debug="false"
+	 xmlns:log4j="http://jakarta.apache.org/log4j/"
+	 threshold="info">
+
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				   value="%d [%t] %-5p %c %x - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="LOGFILE" class="org.apache.log4j.RollingFileAppender">
+	    <param name="Threshold" value="info"/> 
+		<param name="File" value="juddi.log"/> 
+		<param name="Append" value="true"/> 
+		<param name="MaxFileSize" value="10MB"/> 
+		<param name="MaxBackupIndex" value="3"/> 
+		<layout class="org.apache.log4j.TTCCLayout">
+		    <param name="DateFormat" value="ISO8601"/> 		
+		    <param name="ContextPrinting" value="true"/> 
+		</layout>
+	</appender>
+
+	<category name="org.apache.log4j">
+		<priority value="debug" />
+		<appender-ref ref="STDOUT" />
+	</category>
+
+	<category name="org.apache.juddi">
+		<priority value="debug"/>
+		<appender-ref ref="LOGFILE" />
+	</category>
+
+	<root>
+		<priority value="warn" />
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</log4j:configuration>

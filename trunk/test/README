@@ -1,0 +1,8 @@
+This directory contains the source code and Ant 
+scripts neccessary to execute interoperability
+tests with the following UDDI & JAXR clients:
+
+   jUDDI Proxy
+   JAXR (Apache Scout & Reference Implementation)
+   UDDI4j
+   

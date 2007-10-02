@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <header>
+    <title>CVS Repository</title>
+  </header>
+  <body>
+
+    <section>
+      <title>CVS Repository</title>
+      <p>Most users of the source code probably don't need to have day to day access 
+        to the source code as it changes. For these users we provide easy to unpack 
+        source code downloads via our <link href="releases.html">download pages</link>.
+      </p>
+      <p><strong><font size="+1">View the Source Tree</font></strong><br/>
+      </p>
+      <p>The latest CVS sources can be viewed at <link href="http://cvs.apache.org/viewcvs/ws-juddi/">http://cvs.apache.org/viewcvs/ws-juddi/</link>
+      </p>      
+
+      <p>
+        <strong><font size="+1">Access the Source Tree (AnonCVS)</font></strong><br />
+         So, you've decided that you need access to the source tree
+        to see the latest and greatest code. There's two different
+        forms of CVS access. The first is anonymous and anybody can
+        use it. The second is not and you must have a login to the
+        development server. If you don't know what this means, join
+        the <link href="lists.html">mailing list</link> and find out.
+      </p>
+      <p>
+        Anyone can checkout source code from our anonymous CVS
+        server. To do so, simply use the following commands (if you
+        are using a GUI CVS client, configure it appropriatly):
+      </p>
+      
+<source>
+cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic login
+password: anoncvs
+      
+cvs -d :pserver:anoncvs@cvs.apache.org:/home/cvspublic checkout ws-juddi
+</source>
+  
+      <strong><font size="+1">Full Remote CVS Access</font></strong> <br />
+      If you are a <i>Committer</i> and have a login on the Apache
+      development server, this section is for you. If you are not a
+      Committer, but you want to submit patches or even request
+      commit privelages, please see the <link
+      href="http://jakarta.apache.org/site/guidelines.html">Jakarta
+      GuideLines</link> page (we follow the same rules) for more
+      information. 
+      <p>
+        To have full access to the CVS server, you need to follow the
+        links depending on the operating system you are using:
+      </p>
+      <ul>
+        <li>
+          <link
+          href="http://jakarta.apache.org/site/cvsonunix.html">Unix</link>
+        </li>
+        <li>
+          <link
+          href="http://jakarta.apache.org/site/cvsonwin32.html">Windows</link>
+        </li>
+      </ul>
+    </section>
+
+  </body>
+</document>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <properties>
+    <title>jUDDI Releases</title>
+  </properties>
+  <body>
+    <section name="Releases">    
+        
+      <table>   
+           
+        <tr> 
+          <td><strong>Name</strong></td>
+          <td><strong>Date</strong></td>
+          <td><strong>Description</strong></td>
+        </tr>
+
+        <!--
+        <tr>
+          <td><link href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9/">0.9</link></td>
+          <td>July 1, 2005</td>
+          <td>Final Version 0.9</td>
+        </tr>
+        -->
+
+        <tr>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9RC4/">0.9rc4</a></td>
+          <td>June 14, 2005</td>
+          <td>Release Candidate #4 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc3/">0.9rc3</a></td>
+          <td>July 2, 2004</td>
+          <td>Release Candidate #3 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc2/">0.9rc2</a></td>
+          <td>June 29, 2004</td>
+          <td>Release Candidate #2 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc1/">0.9rc1</a></td>
+          <td>June 16, 2004</td>
+          <td>Release Candidate #1 for Version 0.9.</td>
+        </tr>
+
+      </table>    
+
+      <note>
+       For nightly builds or nightly snapshots of the CVS tree see 
+       the <link href="interim.html">Interim Drops</link> page.
+	  </note>
+		
+    </section>
+  </body>
+</document>

@@ -1,0 +1,7 @@
+CREATE/CONFIGURE A MYSQL DATABASE FOR jUDDI
+
+jUDDI requires the use of a relational database (RDBMS) to 
+store the web services metadata it manages. This document will 
+walk you through the process of setting up an HSQLdb database 
+as the persistent storage for a jUDDI registry.
+

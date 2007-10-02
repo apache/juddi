@@ -1,0 +1,12 @@
+CREATE/CONFIGURE A Firebird SQL DATABASE FOR jUDDI
+
+jUDDI requires the use of a relational database (RDBMS) to 
+store the web services metadata it manages. This document 
+will walk you through the process of setting up a Firebird 
+SQL database as the persistent storage for a jUDDI registry.
+
+Author: Kurt R. Hoehn
+Director, Information Systems
+Transcor, Inc.
+http://www.etranscor.com
+

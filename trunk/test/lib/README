@@ -1,0 +1,10 @@
+The Java libraries found in this directory are used for 
+functionality testing of UDDI clients such as Apache Scout,
+jUDDI Proxy and UDDI4j.
+
+	UDDI4j (http://www.uddi4j.org)
+	----------
+	uddi4j.jar	
+
+Steve Viens
+sviens@apache.org
