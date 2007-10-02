@@ -4,7 +4,7 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-web</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>SNAPSHOT</version>
   <name>juddi-web Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -248,10 +248,13 @@
       <version>2.0.2</version>
       <scope>runtime</scope>
     </dependency>
-
-
+    <dependency>
+      <artifactId>juddi</artifactId>
+      <groupId>org.apache.juddi</groupId>
+      <version>SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
-    <finalName>juddi-web</finalName>
+    <finalName>juddi</finalName>
   </build>
 </project>
