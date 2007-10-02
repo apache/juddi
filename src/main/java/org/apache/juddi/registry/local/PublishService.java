@@ -30,11 +30,11 @@ import org.w3c.dom.Node;
 public class PublishService
 {
   // collection of valid operations
-  private TreeSet<String> operations = null;
+  private TreeSet operations = null;
 
   public PublishService() {
 	super();
-	operations = new TreeSet<String>();
+	operations = new TreeSet();
   	operations.add("get_authtoken");
   	operations.add("get_registeredinfo");
   	operations.add("discard_authtoken");

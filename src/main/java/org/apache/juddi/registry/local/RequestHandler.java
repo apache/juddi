@@ -50,11 +50,11 @@ public class RequestHandler implements Runnable
   // XML Document Builder
   private static DocumentBuilder docBuilder = null;
   
-  private String version;
-  private String operation;
-  private Element uddiReq;
-  private Node response;
-  private String exception;
+  private volatile String version;
+  private volatile String operation;
+  private volatile Element uddiReq;
+  private volatile Node response;
+  private volatile String exception;
    
     /**
    * Grab the local name of the UDDI request element

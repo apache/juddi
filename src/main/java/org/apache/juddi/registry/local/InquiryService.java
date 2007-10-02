@@ -30,11 +30,11 @@ import org.w3c.dom.Node;
 public class InquiryService
 {
 //	 collection of valid operations
-	  private TreeSet<String> operations = null;
+	  private TreeSet operations = null;
 	  
   public InquiryService() {
 		super();
-		operations = new TreeSet<String>();
+		operations = new TreeSet();
 	  	operations.add("find_business");
 	  	operations.add("find_service");
 	  	operations.add("find_binding");
