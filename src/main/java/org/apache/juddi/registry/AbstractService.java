@@ -17,6 +17,7 @@ package org.apache.juddi.registry;
 
 import java.io.IOException;
 import java.util.Vector;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -100,7 +101,15 @@ public abstract class AbstractService extends HttpServlet
       // that this is a Client-side (consumer) error.
 
       SOAPBody soapReqBody = soapReq.getSOAPBody();
-      Element uddiReq = (Element)soapReqBody.getFirstChild();
+      Element uddiReq = null;
+      Iterator itrChildElements = soapReqBody.getChildElements();
+      while (itrChildElements.hasNext()) {
+    	  Object obj = (Object)itrChildElements.next();
+    	  if (obj instanceof Element) {
+    		  uddiReq = (Element)obj;
+    		  break;
+    	  }
+      }
       if (uddiReq == null)
         throw new FatalErrorException("A UDDI request was not " +
           "found in the SOAP message.");
