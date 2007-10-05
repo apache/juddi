@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.DiscoveryURL;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class DiscoveryURLTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = null;
 
   static {
+    tablePrefix = Config.getStringProperty(
+         RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO DISCOVERY_URL (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("DISCOVERY_URL (");
     sql.append("BUSINESS_KEY,");
     sql.append("DISCOVERY_URL_ID,");
     sql.append("USE_TYPE,");
@@ -56,14 +61,14 @@ class DiscoveryURLTable
     sql.append("USE_TYPE,");
     sql.append("URL, ");
     sql.append("DISCOVERY_URL_ID ");
-    sql.append("FROM DISCOVERY_URL ");
+    sql.append("FROM ").append(tablePrefix).append("DISCOVERY_URL ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("ORDER BY DISCOVERY_URL_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM DISCOVERY_URL ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("DISCOVERY_URL ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -99,18 +104,20 @@ class DiscoveryURLTable
         DiscoveryURL url = (DiscoveryURL) urlList.elementAt(urlID);
         String urlValue = url.getValue();
 
-        log.debug(
-          "insert into DISCOVERY_URL table:\n\n\t"
-            + insertSQL
-            + "\n\t BUSINESS_KEY="
-            + businessKey.toString()
-            + "\n\t DISCOVERY_URL_ID="
-            + urlID
-            + "\n\t USE_TYPE="
-            + url.getUseType()
-            + "\n\t URL="
-            + urlValue
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "DISCOVERY_URL table:\n\n\t"
+                + insertSQL
+                + "\n\t BUSINESS_KEY="
+                + businessKey.toString()
+                + "\n\t DISCOVERY_URL_ID="
+                + urlID
+                + "\n\t USE_TYPE="
+                + url.getUseType()
+                + "\n\t URL="
+                + urlValue
+                + "\n");
+        }
 
         statement.setInt(2, urlID);
         statement.setString(3, url.getUseType());
@@ -150,12 +157,14 @@ class DiscoveryURLTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "select from DISCOVERY_URL table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "DISCOVERY_URL table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -201,12 +210,14 @@ class DiscoveryURLTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "delete from DISCOVERY_URL table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "DISCOVERY_URL table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

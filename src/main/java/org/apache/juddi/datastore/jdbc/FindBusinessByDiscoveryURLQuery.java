@@ -25,6 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.DiscoveryURL;
 import org.apache.juddi.datatype.DiscoveryURLs;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -36,12 +38,15 @@ class FindBusinessByDiscoveryURLQuery
   private static Log log = LogFactory.getLog(FindBusinessByDiscoveryURLQuery.class);
 
   static String selectSQL;
+  static String tablePrefix;
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT B.BUSINESS_KEY,B.LAST_UPDATE ");
-    sql.append("FROM BUSINESS_ENTITY B,DISCOVERY_URL U ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY B,").append(tablePrefix).append("DISCOVERY_URL U ");
     selectSQL = sql.toString();
   }
 

@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Email;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class EmailTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO EMAIL (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("EMAIL (");
     sql.append("BUSINESS_KEY,");
     sql.append("CONTACT_ID,");
     sql.append("EMAIL_ID,");
@@ -57,7 +62,7 @@ class EmailTable
     sql.append("USE_TYPE,");
     sql.append("EMAIL_ADDRESS, ");
     sql.append("EMAIL_ID ");
-    sql.append("FROM EMAIL ");
+    sql.append("FROM ").append(tablePrefix).append("EMAIL ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("AND CONTACT_ID=? ");
     sql.append("ORDER BY EMAIL_ID");
@@ -65,7 +70,7 @@ class EmailTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM EMAIL ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("EMAIL ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -106,20 +111,22 @@ class EmailTable
         statement.setString(4, email.getUseType());
         statement.setString(5, email.getValue());
 
-        log.debug(
-          "insert into EMAIL table:\n\n\t"
-            + insertSQL
-            + "\n\t BUSINESS_KEY="
-            + businessKey.toString()
-            + "\n\t CONTACT_ID="
-            + contactID
-            + "\n\t EMAIL_ID="
-            + emailID
-            + "\n\t USE_TYPE="
-            + email.getUseType()
-            + "\n\t EMAIL_ADDRESS="
-            + email.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "EMAIL table:\n\n\t"
+                + insertSQL
+                + "\n\t BUSINESS_KEY="
+                + businessKey.toString()
+                + "\n\t CONTACT_ID="
+                + contactID
+                + "\n\t EMAIL_ID="
+                + emailID
+                + "\n\t USE_TYPE="
+                + email.getUseType()
+                + "\n\t EMAIL_ADDRESS="
+                + email.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -161,14 +168,16 @@ class EmailTable
       statement.setString(1, businessKey.toString());
       statement.setInt(2, contactID);
 
-      log.debug(
-        "select from EMAIL table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n\t CONTACT_ID="
-          + contactID
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "EMAIL table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n\t CONTACT_ID="
+              + contactID
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -214,12 +223,14 @@ class EmailTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "delete from EMAIL table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "EMAIL table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

@@ -27,6 +27,8 @@ import org.apache.juddi.datatype.assertion.PublisherAssertion;
 import org.apache.juddi.datatype.response.AssertionStatusItem;
 import org.apache.juddi.datatype.response.CompletionStatus;
 import org.apache.juddi.datatype.response.KeysOwned;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (steve@users.sourceforge.net)
@@ -45,14 +47,18 @@ class PublisherAssertionTable
   static String updateToCheckByToKeySQL = null;
   static String selectAssertionsSQL = null;
   static String selectRelationships = null;
-
-  static {
+  static String tablePrefix;
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO PUBLISHER_ASSERTION (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("PUBLISHER_ASSERTION (");
     sql.append("FROM_KEY,");
     sql.append("TO_KEY,");
     sql.append("TMODEL_KEY,");
@@ -71,7 +77,7 @@ class PublisherAssertionTable
     sql.append("TMODEL_KEY,");
     sql.append("KEY_NAME,");
     sql.append("KEY_VALUE ");
-    sql.append("FROM PUBLISHER_ASSERTION ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("WHERE FROM_KEY=? ");
     sql.append("AND TO_KEY=? ");
     sql.append("AND TMODEL_KEY=? ");
@@ -81,14 +87,14 @@ class PublisherAssertionTable
 
     // build deleteDeadAssertionsSQL
     sql = new StringBuffer(200);
-    sql.append("DELETE FROM PUBLISHER_ASSERTION ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("WHERE FROM_CHECK='false' ");
     sql.append("AND TO_CHECK='false'");
     deleteDeadAssertionsSQL = sql.toString();
 
     // build updateFromCheckSQL
     sql = new StringBuffer(200);
-    sql.append("UPDATE PUBLISHER_ASSERTION ");
+    sql.append("UPDATE ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("SET FROM_CHECK=? ");
     sql.append("WHERE FROM_KEY=? ");
     sql.append("AND TO_KEY=? ");
@@ -99,7 +105,7 @@ class PublisherAssertionTable
 
     // build updateToCheckSQL
     sql = new StringBuffer(200);
-    sql.append("UPDATE PUBLISHER_ASSERTION ");
+    sql.append("UPDATE ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("SET TO_CHECK=? ");
     sql.append("WHERE FROM_KEY=? ");
     sql.append("AND TO_KEY=? ");
@@ -110,14 +116,14 @@ class PublisherAssertionTable
 
     // build updateFromCheckByFromKeySQL
     sql = new StringBuffer(200);
-    sql.append("UPDATE PUBLISHER_ASSERTION ");
+    sql.append("UPDATE ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("SET FROM_CHECK=? ");
     sql.append("WHERE FROM_KEY IN ");
     updateFromCheckByFromKeySQL = sql.toString();
 
     // build updateFromCheckByFromKeySQL
     sql = new StringBuffer(200);
-    sql.append("UPDATE PUBLISHER_ASSERTION ");
+    sql.append("UPDATE ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("SET TO_CHECK=? ");
     sql.append("WHERE TO_KEY IN ");
     updateFromCheckByFromKeySQL = sql.toString();
@@ -132,13 +138,13 @@ class PublisherAssertionTable
     sql.append("KEY_VALUE,");
     sql.append("FROM_CHECK,");
     sql.append("TO_CHECK ");
-    sql.append("FROM PUBLISHER_ASSERTION ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     selectAssertionsSQL = sql.toString();
 
     // build selectRelationships
     sql = new StringBuffer(200);
     sql.append("SELECT TMODEL_KEY,KEY_NAME,KEY_VALUE ");
-    sql.append("FROM PUBLISHER_ASSERTION ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append(
       "WHERE ((FROM_KEY = ? AND TO_KEY = ?) OR (FROM_KEY = ? AND TO_KEY = ?)) ");
     sql.append("AND FROM_CHECK = 'true' ");
@@ -187,24 +193,26 @@ class PublisherAssertionTable
       statement.setString(6, String.valueOf(fromCheck));
       statement.setString(7, String.valueOf(toCheck));
 
-      log.debug(
-        "insert into PUBLISHER_ASSERTION table:\n\n\t"
-          + insertSQL
-          + "\n\t FROM_KEY="
-          + assertion.getFromKey()
-          + "\n\t TO_KEY="
-          + assertion.getToKey()
-          + "\n\t TMODEL_KEY="
-          + tModelKey
-          + "\n\t KEY_NAME="
-          + keyedRefName
-          + "\n\t KEY_VALUE="
-          + keyedRefValue
-          + "\n\t FROM_CHECK="
-          + fromCheck
-          + "\n\t TO_CHECK="
-          + toCheck
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "insert into " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + insertSQL
+              + "\n\t FROM_KEY="
+              + assertion.getFromKey()
+              + "\n\t TO_KEY="
+              + assertion.getToKey()
+              + "\n\t TMODEL_KEY="
+              + tModelKey
+              + "\n\t KEY_NAME="
+              + keyedRefName
+              + "\n\t KEY_VALUE="
+              + keyedRefValue
+              + "\n\t FROM_CHECK="
+              + fromCheck
+              + "\n\t TO_CHECK="
+              + toCheck
+              + "\n");
+      }
 
       // insert
       statement.executeUpdate();
@@ -253,20 +261,22 @@ class PublisherAssertionTable
       statement.setString(4, keyedRefIn.getKeyName());
       statement.setString(5, keyedRefIn.getKeyValue());
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t"
-          + selectSQL
-          + "\n\t FROM_KEY="
-          + assertionIn.getFromKey()
-          + "\n\t TO_KEY="
-          + assertionIn.getToKey()
-          + "\n\t TMODEL_KEY="
-          + keyedRefIn.getTModelKey()
-          + "\n\t KEY_NAME="
-          + keyedRefIn.getKeyName()
-          + "\n\t KEY_VALUE="
-          + keyedRefIn.getKeyValue()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + selectSQL
+              + "\n\t FROM_KEY="
+              + assertionIn.getFromKey()
+              + "\n\t TO_KEY="
+              + assertionIn.getToKey()
+              + "\n\t TMODEL_KEY="
+              + keyedRefIn.getTModelKey()
+              + "\n\t KEY_NAME="
+              + keyedRefIn.getKeyName()
+              + "\n\t KEY_VALUE="
+              + keyedRefIn.getKeyValue()
+              + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -323,10 +333,12 @@ class PublisherAssertionTable
       // prepare the delete
       statement = connection.prepareStatement(deleteDeadAssertionsSQL);
 
-      log.debug(
-        "delete from PUBLISHER_ASSERTION table:\n\n\t"
-          + deleteDeadAssertionsSQL
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + deleteDeadAssertionsSQL
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -369,22 +381,24 @@ class PublisherAssertionTable
 
     try
     {
-      log.debug(
-        "update PUBLISHER_ASSERTION table:\n\n\t"
-          + updateFromCheckSQL
-          + "\n\t FROM_CHECK="
-          + String.valueOf(fromCheck)
-          + "\n\t FROM_KEY="
-          + assertion.getFromKey()
-          + "\n\t TO_KEY="
-          + assertion.getToKey()
-          + "\n\t TMODEL_KEY="
-          + keyedRef.getTModelKey()
-          + "\n\t KEY_NAME="
-          + keyedRef.getKeyName()
-          + "\n\t KEY_VALUE="
-          + keyedRef.getKeyValue()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "update " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + updateFromCheckSQL
+              + "\n\t FROM_CHECK="
+              + String.valueOf(fromCheck)
+              + "\n\t FROM_KEY="
+              + assertion.getFromKey()
+              + "\n\t TO_KEY="
+              + assertion.getToKey()
+              + "\n\t TMODEL_KEY="
+              + keyedRef.getTModelKey()
+              + "\n\t KEY_NAME="
+              + keyedRef.getKeyName()
+              + "\n\t KEY_VALUE="
+              + keyedRef.getKeyValue()
+              + "\n");
+      }
 
       // create a statement to query with
       statement = connection.prepareStatement(updateFromCheckSQL);
@@ -443,22 +457,24 @@ class PublisherAssertionTable
 
     try
     {
-      log.debug(
-        "update PUBLISHER_ASSERTION table:\n\n\t"
-          + updateToCheckSQL
-          + "\n\t TO_CHECK="
-          + String.valueOf(toCheck)
-          + "\n\t FROM_KEY="
-          + assertion.getFromKey()
-          + "\n\t TO_KEY="
-          + assertion.getToKey()
-          + "\n\t TMODEL_KEY="
-          + keyedRef.getTModelKey()
-          + "\n\t KEY_NAME="
-          + keyedRef.getKeyName()
-          + "\n\t KEY_VALUE="
-          + keyedRef.getKeyValue()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "update " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + updateToCheckSQL
+              + "\n\t TO_CHECK="
+              + String.valueOf(toCheck)
+              + "\n\t FROM_KEY="
+              + assertion.getFromKey()
+              + "\n\t TO_KEY="
+              + assertion.getToKey()
+              + "\n\t TMODEL_KEY="
+              + keyedRef.getTModelKey()
+              + "\n\t KEY_NAME="
+              + keyedRef.getKeyName()
+              + "\n\t KEY_VALUE="
+              + keyedRef.getKeyValue()
+              + "\n");
+      }
 
       // create a statement to query with
       statement = connection.prepareStatement(updateToCheckSQL);
@@ -525,8 +541,10 @@ class PublisherAssertionTable
       statement = connection.prepareStatement(sql.toString());
       statement.setString(1, String.valueOf(fromCheck));
 
-      log.debug(
-        "update PUBLISHER_ASSERTION table:\n\n\t" + sql.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "update " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + sql.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -584,8 +602,10 @@ class PublisherAssertionTable
       statement = connection.prepareStatement(sql.toString());
       statement.setString(1, String.valueOf(toCheck));
 
-      log.debug(
-        "update PUBLISHER_ASSERTION table:\n\n\t" + sql.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "update " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + sql.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -655,8 +675,10 @@ class PublisherAssertionTable
     {
       statement = connection.prepareStatement(sql.toString());
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())
@@ -748,8 +770,10 @@ class PublisherAssertionTable
     {
       statement = connection.prepareStatement(sql.toString());
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())
@@ -851,8 +875,10 @@ class PublisherAssertionTable
     {
       statement = connection.prepareStatement(sql.toString());
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())
@@ -951,8 +977,10 @@ class PublisherAssertionTable
     {
       statement = connection.prepareStatement(sql.toString());
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectSQL + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())
@@ -1027,14 +1055,16 @@ class PublisherAssertionTable
       statement.setString(3, relatedKey);
       statement.setString(4, businessKey);
 
-      log.debug(
-        "select from PUBLISHER_ASSERTION table:\n\n\t"
-          + selectRelationships
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n\t RELATED_BUSINESS_KEY="
-          + relatedKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t"
+              + selectRelationships
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n\t RELATED_BUSINESS_KEY="
+              + relatedKey.toString()
+              + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Name;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class BusinessNameTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO BUSINESS_NAME (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BUSINESS_NAME (");
     sql.append("BUSINESS_KEY,");
     sql.append("BUSINESS_NAME_ID,");
     sql.append("LANG_CODE,");
@@ -56,14 +61,14 @@ class BusinessNameTable
     sql.append("LANG_CODE,");
     sql.append("NAME, ");
     sql.append("BUSINESS_NAME_ID ");
-    sql.append("FROM BUSINESS_NAME ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_NAME ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("ORDER BY BUSINESS_NAME_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BUSINESS_NAME ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BUSINESS_NAME ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -101,18 +106,20 @@ class BusinessNameTable
         statement.setString(3, name.getLanguageCode());
         statement.setString(4, name.getValue());
 
-        log.debug(
-          "insert into BUSINESS_NAME table:\n\n\t"
-            + insertSQL
-            + "\n\t BUSINESS_KEY="
-            + businessKey.toString()
-            + "\n\t BUSINESS_NAME_ID="
-            + nameID
-            + "\n\t LANG_CODE="
-            + name.getLanguageCode()
-            + "\n\t NAME="
-            + name.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "BUSINESS_NAME table:\n\n\t"
+                + insertSQL
+                + "\n\t BUSINESS_KEY="
+                + businessKey.toString()
+                + "\n\t BUSINESS_NAME_ID="
+                + nameID
+                + "\n\t LANG_CODE="
+                + name.getLanguageCode()
+                + "\n\t NAME="
+                + name.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -149,12 +156,14 @@ class BusinessNameTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "select from the BUSINESS_NAME table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from the " + tablePrefix + "BUSINESS_NAME table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -200,12 +209,14 @@ class BusinessNameTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "delete from the BUSINESS_NAME table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from the " + tablePrefix + "BUSINESS_NAME table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

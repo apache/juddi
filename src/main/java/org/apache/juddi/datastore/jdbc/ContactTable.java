@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.business.Contact;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class ContactTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+         RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO CONTACT (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("CONTACT (");
     sql.append("BUSINESS_KEY,");
     sql.append("CONTACT_ID,");
     sql.append("USE_TYPE,");
@@ -56,14 +61,14 @@ class ContactTable
     sql.append("USE_TYPE,");
     sql.append("PERSON_NAME, ");
     sql.append("CONTACT_ID ");
-    sql.append("FROM CONTACT ");
+    sql.append("FROM ").append(tablePrefix).append("CONTACT ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("ORDER BY CONTACT_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM CONTACT ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("CONTACT ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -101,18 +106,20 @@ class ContactTable
         statement.setString(3, contact.getUseType());
         statement.setString(4, contact.getPersonNameValue());
 
-        log.debug(
-          "insert into CONTACT table:\n\n\t"
-            + insertSQL
-            + "\n\t BUSINESS_KEY="
-            + businessKey.toString()
-            + "\n\t CONTACT_ID="
-            + contactID
-            + "\n\t USE_TYPE="
-            + contact.getUseType()
-            + "\n\t PERSON_NAME="
-            + contact.getPersonNameValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "CONTACT table:\n\n\t"
+                + insertSQL
+                + "\n\t BUSINESS_KEY="
+                + businessKey.toString()
+                + "\n\t CONTACT_ID="
+                + contactID
+                + "\n\t USE_TYPE="
+                + contact.getUseType()
+                + "\n\t PERSON_NAME="
+                + contact.getPersonNameValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -149,12 +156,14 @@ class ContactTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "select from CONTACT table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "CONTACT table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -200,12 +209,14 @@ class ContactTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "delete from CONTACT table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "CONTACT table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

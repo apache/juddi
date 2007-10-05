@@ -26,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.binding.AccessPoint;
 import org.apache.juddi.datatype.binding.BindingTemplate;
 import org.apache.juddi.datatype.binding.HostingRedirector;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -41,15 +43,18 @@ class BindingTemplateTable
   static String selectByServiceKeySQL = null;
   static String deleteByServiceKeySQL = null;
   static String verifyOwnershipSQL = null;
+  static String tablePrefix = "";
 
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO BINDING_TEMPLATE (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BINDING_TEMPLATE (");
     sql.append("SERVICE_KEY,");
     sql.append("BINDING_KEY,");
     sql.append("ACCESS_POINT_TYPE,");
@@ -61,7 +66,7 @@ class BindingTemplateTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BINDING_TEMPLATE ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BINDING_TEMPLATE ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
 
@@ -72,7 +77,7 @@ class BindingTemplateTable
     sql.append("ACCESS_POINT_TYPE,");
     sql.append("ACCESS_POINT_URL,");
     sql.append("HOSTING_REDIRECTOR ");
-    sql.append("FROM BINDING_TEMPLATE ");
+    sql.append("FROM ").append(tablePrefix).append("BINDING_TEMPLATE ");
     sql.append("WHERE BINDING_KEY=?");
     selectSQL = sql.toString();
 
@@ -83,7 +88,7 @@ class BindingTemplateTable
     sql.append("ACCESS_POINT_TYPE,");
     sql.append("ACCESS_POINT_URL,");
     sql.append("HOSTING_REDIRECTOR ");
-    sql.append("FROM BINDING_TEMPLATE ");
+    sql.append("FROM ").append(tablePrefix).append("BINDING_TEMPLATE ");
     sql.append("WHERE SERVICE_KEY=?");
     selectByServiceKeySQL = sql.toString();
 
@@ -97,7 +102,9 @@ class BindingTemplateTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("* ");
-    sql.append("FROM BUSINESS_ENTITY e, BUSINESS_SERVICE s, BINDING_TEMPLATE t ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY e, ")
+                       .append(tablePrefix).append("BUSINESS_SERVICE s, ")
+                       .append(tablePrefix).append("BINDING_TEMPLATE t ");
     sql.append("WHERE s.SERVICE_KEY = t.SERVICE_KEY ");
     sql.append("AND e.BUSINESS_KEY = s.BUSINESS_KEY ");
     sql.append("AND t.BINDING_KEY=? ");
@@ -148,13 +155,15 @@ class BindingTemplateTable
       statement.setString(5,redirectorKey);
       statement.setTimestamp(6,timeStamp);
 
-      log.debug("insert into BINDING_TEMPLATE table:\n\n\t" + insertSQL +
-        "\n\t SERVICE_KEY=" + binding.getServiceKey().toString() +
-        "\n\t BINDING_KEY=" + binding.getBindingKey().toString() +
-        "\n\t ACCESS_POINT_TYPE=" + urlType +
-        "\n\t ACCESS_POINT_URL=" + url +
-        "\n\t HOSTING_REDIRECTOR=" + redirectorKey +
-        "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("insert into " + tablePrefix + "BINDING_TEMPLATE table:\n\n\t" + insertSQL +
+            "\n\t SERVICE_KEY=" + binding.getServiceKey().toString() +
+            "\n\t BINDING_KEY=" + binding.getBindingKey().toString() +
+            "\n\t ACCESS_POINT_TYPE=" + urlType +
+            "\n\t ACCESS_POINT_URL=" + url +
+            "\n\t HOSTING_REDIRECTOR=" + redirectorKey +
+            "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      }
 
       statement.executeUpdate();
     }
@@ -182,8 +191,10 @@ class BindingTemplateTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,bindingKey);
 
-      log.debug("delete from BINDING_TEMPLATE table:\n\n\t" + deleteSQL +
-        "\n\t BINDING_KEY=" + bindingKey + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "BINDING_TEMPLATE table:\n\n\t" + deleteSQL +
+            "\n\t BINDING_KEY=" + bindingKey + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -213,8 +224,10 @@ class BindingTemplateTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,bindingKey.toString());
 
-      log.debug("select from BINDING_TEMPLATE table:\n\n\t" + selectSQL +
-        "\n\t BINDING_KEY=" + bindingKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BINDING_TEMPLATE table:\n\n\t" + selectSQL +
+            "\n\t BINDING_KEY=" + bindingKey.toString() + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -263,8 +276,10 @@ class BindingTemplateTable
       statement = connection.prepareStatement(selectByServiceKeySQL);
       statement.setString(1,serviceKey.toString());
 
-      log.debug("select from BINDING_TEMPLATE table:\n\n\t" + selectByServiceKeySQL +
-        "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BINDING_TEMPLATE table:\n\n\t" + selectByServiceKeySQL +
+            "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -317,8 +332,10 @@ class BindingTemplateTable
       statement = connection.prepareStatement(deleteByServiceKeySQL);
       statement.setString(1,serviceKey.toString());
 
-      log.debug("delete from BINDING_TEMPLATE table:\n\n\t" + deleteByServiceKeySQL +
-        "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "BINDING_TEMPLATE table:\n\n\t" + deleteByServiceKeySQL +
+            "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      }
 
       // execute
       int returnCode = statement.executeUpdate();
@@ -356,9 +373,11 @@ class BindingTemplateTable
       statement.setString(1,bindingKey);
       statement.setString(2,publisherID);
 
-      log.debug("checking ownership of BINDING_TEMPLATE:\n\n\t" + verifyOwnershipSQL +
-        "\n\t BINDNG_KEY=" + bindingKey +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("checking ownership of BINDING_TEMPLATE:\n\n\t" + verifyOwnershipSQL +
+            "\n\t BINDNG_KEY=" + bindingKey +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

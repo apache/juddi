@@ -24,6 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.TModelBag;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -45,12 +47,17 @@ class FindServiceByTModelKeyQuery
   private static Log log = LogFactory.getLog(FindServiceByTModelKeyQuery.class);
 
   static String selectSQL;
+  static String tablePrefix;
   static
   {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT S.SERVICE_KEY,S.LAST_UPDATE ");
-    sql.append("FROM BUSINESS_SERVICE S,BINDING_TEMPLATE T,TMODEL_INSTANCE_INFO I ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_SERVICE S,")
+                       .append(tablePrefix).append("BINDING_TEMPLATE T,")
+                       .append(tablePrefix).append("TMODEL_INSTANCE_INFO I ");
     selectSQL = sql.toString();
   }
 

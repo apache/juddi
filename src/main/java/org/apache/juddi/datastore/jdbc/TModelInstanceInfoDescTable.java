@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,18 @@ class TModelInstanceInfoDescTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
-
-  static {
+  static String tablePrefix = "";
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO TMODEL_INSTANCE_INFO_DESCR (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("TMODEL_INSTANCE_INFO_DESCR (");
     sql.append("BINDING_KEY,");
     sql.append("TMODEL_INSTANCE_INFO_ID,");
     sql.append("TMODEL_INSTANCE_INFO_DESCR_ID,");
@@ -57,7 +63,7 @@ class TModelInstanceInfoDescTable
     sql.append("LANG_CODE,");
     sql.append("DESCR, ");
     sql.append("TMODEL_INSTANCE_INFO_DESCR_ID ");
-    sql.append("FROM TMODEL_INSTANCE_INFO_DESCR ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL_INSTANCE_INFO_DESCR ");
     sql.append("WHERE BINDING_KEY=? ");
     sql.append("AND TMODEL_INSTANCE_INFO_ID=? ");
     sql.append("ORDER BY TMODEL_INSTANCE_INFO_DESCR_ID");
@@ -65,7 +71,7 @@ class TModelInstanceInfoDescTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM TMODEL_INSTANCE_INFO_DESCR ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("TMODEL_INSTANCE_INFO_DESCR ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -106,20 +112,22 @@ class TModelInstanceInfoDescTable
         statement.setString(4, desc.getLanguageCode());
         statement.setString(5, desc.getValue());
 
-        log.debug(
-          "insert into TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
-            + insertSQL
-            + "\n\t BINDING_KEY="
-            + bindingKey.toString()
-            + "\n\t TMODEL_INSTANCE_INFO_ID="
-            + tModelInstanceInfoID
-            + "\n\t TMODEL_INSTANCE_INFO_DESCR_ID="
-            + descID
-            + "\n\t LANG_CODE="
-            + desc.getLanguageCode()
-            + "\n\t DESCR="
-            + desc.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
+                + insertSQL
+                + "\n\t BINDING_KEY="
+                + bindingKey.toString()
+                + "\n\t TMODEL_INSTANCE_INFO_ID="
+                + tModelInstanceInfoID
+                + "\n\t TMODEL_INSTANCE_INFO_DESCR_ID="
+                + descID
+                + "\n\t LANG_CODE="
+                + desc.getLanguageCode()
+                + "\n\t DESCR="
+                + desc.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -161,14 +169,16 @@ class TModelInstanceInfoDescTable
       statement.setString(1, bindingKey.toString());
       statement.setInt(2, tModelInstanceInfoID);
 
-      log.debug(
-        "select from TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
-          + selectSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n\t TMODEL_INSTANCE_INFO_ID="
-          + tModelInstanceInfoID
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
+              + selectSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n\t TMODEL_INSTANCE_INFO_ID="
+              + tModelInstanceInfoID
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -214,12 +224,14 @@ class TModelInstanceInfoDescTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "delete from TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
-          + deleteSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "TMODEL_INSTANCE_INFO_DESCR table:\n\n\t"
+              + deleteSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

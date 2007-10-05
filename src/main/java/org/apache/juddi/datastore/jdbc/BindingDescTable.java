@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class BindingDescTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO BINDING_DESCR (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BINDING_DESCR (");
     sql.append("BINDING_KEY,");
     sql.append("BINDING_DESCR_ID,");
     sql.append("LANG_CODE,");
@@ -56,14 +61,14 @@ class BindingDescTable
     sql.append("LANG_CODE,");
     sql.append("DESCR, ");
     sql.append("BINDING_DESCR_ID ");
-    sql.append("FROM BINDING_DESCR ");
+    sql.append("FROM ").append(tablePrefix).append("BINDING_DESCR ");
     sql.append("WHERE BINDING_KEY=? ");
     sql.append("ORDER BY BINDING_DESCR_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BINDING_DESCR ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BINDING_DESCR ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -101,18 +106,20 @@ class BindingDescTable
         statement.setString(3, desc.getLanguageCode());
         statement.setString(4, desc.getValue());
 
-        log.debug(
-          "insert into BINDING_DESCR table:\n\n\t"
-            + insertSQL
-            + "\n\t BINDING_KEY="
-            + bindingKey.toString()
-            + "\n\t BINDING_DESCR_ID="
-            + descID
-            + "\n\t LANG_CODE="
-            + desc.getLanguageCode()
-            + "\n\t DESCR="
-            + desc.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "BINDING_DESCR table:\n\n\t"
+                + insertSQL
+                + "\n\t BINDING_KEY="
+                + bindingKey.toString()
+                + "\n\t BINDING_DESCR_ID="
+                + descID
+                + "\n\t LANG_CODE="
+                + desc.getLanguageCode()
+                + "\n\t DESCR="
+                + desc.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -149,12 +156,14 @@ class BindingDescTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "select from BINDING_DESCR table:\n\n\t"
-          + selectSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "BINDING_DESCR table:\n\n\t"
+              + selectSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -200,12 +209,14 @@ class BindingDescTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "delete from BINDING_DESCR table:\n\n\t"
-          + deleteSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "BINDING_DESCR table:\n\n\t"
+              + deleteSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

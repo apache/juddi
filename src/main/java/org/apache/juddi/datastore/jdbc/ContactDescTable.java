@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class ContactDescTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO CONTACT_DESCR (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("CONTACT_DESCR (");
     sql.append("BUSINESS_KEY,");
     sql.append("CONTACT_ID,");
     sql.append("CONTACT_DESCR_ID,");
@@ -57,7 +62,7 @@ class ContactDescTable
     sql.append("LANG_CODE,");
     sql.append("DESCR, ");
     sql.append("CONTACT_DESCR_ID ");
-    sql.append("FROM CONTACT_DESCR ");
+    sql.append("FROM ").append(tablePrefix).append("CONTACT_DESCR ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("AND CONTACT_ID=? ");
     sql.append("ORDER BY CONTACT_DESCR_ID");
@@ -65,7 +70,7 @@ class ContactDescTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM CONTACT_DESCR ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("CONTACT_DESCR ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -106,20 +111,22 @@ class ContactDescTable
         statement.setString(4, desc.getLanguageCode());
         statement.setString(5, desc.getValue());
 
-        log.debug(
-          "insert into CONTACT_DESCR table:\n\n\t"
-            + insertSQL
-            + "\n\t BUSINESS_KEY="
-            + businessKey.toString()
-            + "\n\t CONTACT_ID="
-            + contactID
-            + "\n\t CONTACT_DESCR_ID="
-            + descID
-            + "\n\t LANG_CODE="
-            + desc.getLanguageCode()
-            + "\n\t DESCR="
-            + desc.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "CONTACT_DESCR table:\n\n\t"
+                + insertSQL
+                + "\n\t BUSINESS_KEY="
+                + businessKey.toString()
+                + "\n\t CONTACT_ID="
+                + contactID
+                + "\n\t CONTACT_DESCR_ID="
+                + descID
+                + "\n\t LANG_CODE="
+                + desc.getLanguageCode()
+                + "\n\t DESCR="
+                + desc.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -161,14 +168,16 @@ class ContactDescTable
       statement.setString(1, businessKey.toString());
       statement.setInt(2, contactID);
 
-      log.debug(
-        "select from CONTACT_DESCR table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n\t CONTACT_KEY="
-          + contactID
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "CONTACT_DESCR table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n\t CONTACT_KEY="
+              + contactID
+              + "\n");
+      }
 
       // execute
       resultSet = statement.executeQuery();
@@ -213,13 +222,14 @@ class ContactDescTable
       // prepare
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
-
-      log.debug(
-        "delet from CONTACT_DESCR table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delet from " + tablePrefix + "CONTACT_DESCR table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

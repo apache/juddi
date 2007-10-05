@@ -26,6 +26,8 @@ import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.binding.InstanceDetails;
 import org.apache.juddi.datatype.binding.InstanceParms;
 import org.apache.juddi.datatype.binding.TModelInstanceInfo;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -38,14 +40,18 @@ class TModelInstanceInfoTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
-
-  static {
+  static String tablePrefix = "";
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO TMODEL_INSTANCE_INFO (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("TMODEL_INSTANCE_INFO (");
     sql.append("BINDING_KEY,");
     sql.append("TMODEL_INSTANCE_INFO_ID,");
     sql.append("TMODEL_KEY, ");
@@ -61,14 +67,14 @@ class TModelInstanceInfoTable
     sql.append("OVERVIEW_URL,");
     sql.append("INSTANCE_PARMS, ");
     sql.append("TMODEL_INSTANCE_INFO_ID ");
-    sql.append("FROM TMODEL_INSTANCE_INFO ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL_INSTANCE_INFO ");
     sql.append("WHERE BINDING_KEY=? ");
     sql.append("ORDER BY TMODEL_INSTANCE_INFO_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM TMODEL_INSTANCE_INFO ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("TMODEL_INSTANCE_INFO ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -124,21 +130,23 @@ class TModelInstanceInfoTable
         statement.setString(3, tModelKey);
         statement.setString(4, overURL);
         statement.setString(5, instParms);
-
-        log.debug(
-          "insert into TMODEL_INSTANCE_INFO table:\n\n\t"
-            + insertSQL
-            + "\n\t BINDING_KEY="
-            + bindingKey.toString()
-            + "\n\t TMODEL_INSTANCE_INFO_ID="
-            + infoID
-            + "\n\t TMODEL_KEY="
-            + tModelKey
-            + "\n\t OVERVIEW_URL="
-            + overURL
-            + "\n\t INSTANCE_PARMS="
-            + instParms
-            + "\n");
+        
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "TMODEL_INSTANCE_INFO table:\n\n\t"
+                + insertSQL
+                + "\n\t BINDING_KEY="
+                + bindingKey.toString()
+                + "\n\t TMODEL_INSTANCE_INFO_ID="
+                + infoID
+                + "\n\t TMODEL_KEY="
+                + tModelKey
+                + "\n\t OVERVIEW_URL="
+                + overURL
+                + "\n\t INSTANCE_PARMS="
+                + instParms
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -175,12 +183,14 @@ class TModelInstanceInfoTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "select from TMODEL_INSTANCE_INFO table:\n\n\t"
-          + selectSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "TMODEL_INSTANCE_INFO table:\n\n\t"
+              + selectSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -257,12 +267,14 @@ class TModelInstanceInfoTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "delete from TMODEL_INSTANCE_INFO table:\n\n\t"
-          + deleteSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "TMODEL_INSTANCE_INFO table:\n\n\t"
+              + deleteSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

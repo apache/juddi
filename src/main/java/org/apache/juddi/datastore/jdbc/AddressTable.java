@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Address;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class AddressTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+      tablePrefix = Config.getStringProperty(
+          RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
       // buffer used to build SQL statements
       StringBuffer sql = null;
 
       // build insertSQL
       sql = new StringBuffer(150);
-      sql.append("INSERT INTO ADDRESS (");
+      sql.append("INSERT INTO ").append(tablePrefix).append("ADDRESS (");
       sql.append("BUSINESS_KEY,");
       sql.append("CONTACT_ID,");
       sql.append("ADDRESS_ID,");
@@ -59,7 +64,7 @@ class AddressTable
       sql.append("SORT_CODE,");
       sql.append("TMODEL_KEY, ");
       sql.append("ADDRESS_ID ");
-      sql.append("FROM ADDRESS ");
+      sql.append("FROM ").append(tablePrefix).append("ADDRESS ");
       sql.append("WHERE BUSINESS_KEY=? ");
       sql.append("AND CONTACT_ID=? ");
       sql.append("ORDER BY ADDRESS_ID");
@@ -67,7 +72,7 @@ class AddressTable
 
       // build deleteSQL
       sql = new StringBuffer(100);
-      sql.append("DELETE FROM ADDRESS ");
+      sql.append("DELETE FROM ").append(tablePrefix).append("ADDRESS ");
       sql.append("WHERE BUSINESS_KEY=?");
       deleteSQL = sql.toString();
   }
@@ -104,8 +109,9 @@ class AddressTable
         statement.setString(5, address.getSortCode());
         statement.setString(6, address.getTModelKey());
   
+        if (log.isDebugEnabled()) {
         log.debug(
-          "insert into ADDRESS table:\n\n\t"
+          "insert into " + tablePrefix + "ADDRESS table:\n\n\t"
             + insertSQL
             + "\n\t BUSINESS_KEY="
             + businessKey.toString()
@@ -120,6 +126,7 @@ class AddressTable
             + "\n\t TMODEL_KEY="
             + address.getTModelKey()
             + "\n");
+        }
   
         statement.executeUpdate();
       }
@@ -155,14 +162,16 @@ class AddressTable
       statement.setString(1, businessKey.toString());
       statement.setInt(2, contactID);
 
-      log.debug(
-        "select from ADDRESS table:\n\n\t"
-          + selectSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n\t CONTACT_ID="
-          + contactID
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "ADDRESS table:\n\n\t"
+              + selectSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n\t CONTACT_ID="
+              + contactID
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -207,12 +216,14 @@ class AddressTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, businessKey.toString());
 
-      log.debug(
-        "delete from ADDRESS table:\n\n\t"
-          + deleteSQL
-          + "\n\t BUSINESS_KEY="
-          + businessKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "ADDRESS table:\n\n\t"
+              + deleteSQL
+              + "\n\t BUSINESS_KEY="
+              + businessKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

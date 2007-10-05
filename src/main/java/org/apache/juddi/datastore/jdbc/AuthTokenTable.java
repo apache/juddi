@@ -24,6 +24,8 @@ import java.sql.Timestamp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.publisher.Publisher;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -40,15 +42,18 @@ class AuthTokenTable
   static String selectLastUsedSQL = null;
   static String invalidateSQL = null;
   static String selectTokenStateSQL = null;
+  static String tablePrefix = "";
 
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(350);
-    sql.append("INSERT INTO AUTH_TOKEN (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("AUTH_TOKEN (");
     sql.append("AUTH_TOKEN,");
     sql.append("PUBLISHER_ID,");
     sql.append("PUBLISHER_NAME,");
@@ -64,19 +69,19 @@ class AuthTokenTable
     sql.append("SELECT ");
     sql.append("PUBLISHER_ID,");
     sql.append("PUBLISHER_NAME ");
-    sql.append("FROM AUTH_TOKEN ");
+    sql.append("FROM ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("WHERE AUTH_TOKEN=?");
     selectPublisherSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM AUTH_TOKEN ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("WHERE AUTH_TOKEN=?");
     deleteSQL = sql.toString();
 
     // build touchSQL
     sql = new StringBuffer(150);
-    sql.append("UPDATE AUTH_TOKEN ");
+    sql.append("UPDATE ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("SET LAST_USED=?,");
     sql.append("NUMBER_OF_USES=NUMBER_OF_USES+1 ");
     sql.append("WHERE AUTH_TOKEN=? ");
@@ -86,13 +91,13 @@ class AuthTokenTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("LAST_USED ");
-    sql.append("FROM AUTH_TOKEN ");
+    sql.append("FROM ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("WHERE AUTH_TOKEN=?");
     selectLastUsedSQL = sql.toString();
 
     // build invalidateSQL
     sql = new StringBuffer(100);
-    sql.append("UPDATE AUTH_TOKEN ");
+    sql.append("UPDATE ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("SET LAST_USED=?,");
     sql.append("NUMBER_OF_USES=NUMBER_OF_USES+1,");
     sql.append("TOKEN_STATE=0 ");
@@ -103,7 +108,7 @@ class AuthTokenTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("TOKEN_STATE ");
-    sql.append("FROM AUTH_TOKEN ");
+    sql.append("FROM ").append(tablePrefix).append("AUTH_TOKEN ");
     sql.append("WHERE AUTH_TOKEN=?");
     selectTokenStateSQL = sql.toString();
   }
@@ -131,14 +136,16 @@ class AuthTokenTable
       statement.setTimestamp(4,timestamp);
       statement.setTimestamp(5,timestamp);
 
-      log.debug("insert into AUTH_TOKEN table:\n\n\t" + insertSQL +
-        "\n\t AUTH_TOKEN=" + authToken +
-        "\n\t PUBLISHER_ID=" + publisher.getPublisherID() +
-        "\n\t PUBLISHER_NAME=" + publisher.getName() +
-        "\n\t CREATED=" + timestamp.toString() +
-        "\n\t LAST_USED=" + timestamp.toString() +
-        "\n\t NUMBER_OF_USES=1" +
-        "\n\t TOKEN_STATE=1\n");
+      if (log.isDebugEnabled()) {
+          log.debug("insert into " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + insertSQL +
+            "\n\t AUTH_TOKEN=" + authToken +
+            "\n\t PUBLISHER_ID=" + publisher.getPublisherID() +
+            "\n\t PUBLISHER_NAME=" + publisher.getName() +
+            "\n\t CREATED=" + timestamp.toString() +
+            "\n\t LAST_USED=" + timestamp.toString() +
+            "\n\t NUMBER_OF_USES=1" +
+            "\n\t TOKEN_STATE=1\n");
+      }
 
       statement.executeUpdate();
     }
@@ -173,8 +180,10 @@ class AuthTokenTable
       statement = connection.prepareStatement(selectPublisherSQL);
       statement.setString(1,authToken);
 
-      log.debug("select from AUTH_TOKEN table:\n\n\t" + selectPublisherSQL +
-        "\n\t AUTH_TOKEN=" + authToken + "\n");
+      if (log.isDebugEnabled()){
+          log.debug("select from " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + selectPublisherSQL +
+            "\n\t AUTH_TOKEN=" + authToken + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -216,8 +225,10 @@ class AuthTokenTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,authToken);
 
-      log.debug("delete from AUTH_TOKEN table:\n\n\t" + deleteSQL +
-        "\n\t AUTH_TOKEN=" + authToken + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + deleteSQL +
+            "\n\t AUTH_TOKEN=" + authToken + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -252,9 +263,11 @@ class AuthTokenTable
       statement.setTimestamp(1,timestamp);
       statement.setString(2,authToken);
 
-      log.debug("update AUTH_TOKEN table:\n\n\t" + touchSQL +
-       "\n\t AUTH_TOKEN=" + authToken +
-       "\n\t LAST_USED=" + timestamp.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("update " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + touchSQL +
+           "\n\t AUTH_TOKEN=" + authToken +
+           "\n\t LAST_USED=" + timestamp.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -289,8 +302,10 @@ class AuthTokenTable
       statement = connection.prepareStatement(selectLastUsedSQL);
       statement.setString(1,authToken);
 
-      log.debug("select LAST_USED from AUTH_TOKEN table:\n\n\t" + selectLastUsedSQL +
-       "\n\t AUTH_TOKEN=" + authToken + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select LAST_USED from " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + selectLastUsedSQL +
+           "\n\t AUTH_TOKEN=" + authToken + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -333,9 +348,11 @@ class AuthTokenTable
       statement.setTimestamp(1,timestamp);
       statement.setString(2,authToken);
 
-      log.debug("update AUTH_TOKEN table:\n\n\t" + invalidateSQL +
-        "\n\t LAST_USED=" + timestamp.toString() +
-        "\n\t AUTH_TOKEN=" + authToken + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("update " + tablePrefix + "AUTH_TOKEN table:\n\n\t" + invalidateSQL +
+            "\n\t LAST_USED=" + timestamp.toString() +
+            "\n\t AUTH_TOKEN=" + authToken + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -372,7 +389,9 @@ class AuthTokenTable
       statement = connection.prepareStatement(selectTokenStateSQL);
       statement.setString(1,authToken);
 
-      log.debug("SQL Statement: [" + selectTokenStateSQL + "], parameter authToken: [" + authToken + "]");
+      if (log.isDebugEnabled()) {
+          log.debug("SQL Statement: [" + selectTokenStateSQL + "], parameter authToken: [" + authToken + "]");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

@@ -24,6 +24,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.business.BusinessEntity;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -39,15 +41,18 @@ class BusinessEntityTable
   static String selectByPublisherSQL = null;
   static String verifyOwnershipSQL = null;
   static String selectPublisherSQL = null;
+  static String tablePrefix = "";
 
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO BUSINESS_ENTITY (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BUSINESS_ENTITY (");
     sql.append("BUSINESS_KEY,");
     sql.append("AUTHORIZED_NAME,");
     sql.append("PUBLISHER_ID,");
@@ -58,7 +63,7 @@ class BusinessEntityTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BUSINESS_ENTITY ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BUSINESS_ENTITY ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteSQL = sql.toString();
 
@@ -67,7 +72,7 @@ class BusinessEntityTable
     sql.append("SELECT ");
     sql.append("AUTHORIZED_NAME,");
     sql.append("OPERATOR ");
-    sql.append("FROM BUSINESS_ENTITY ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY ");
     sql.append("WHERE BUSINESS_KEY=?");
     selectSQL = sql.toString();
 
@@ -75,7 +80,7 @@ class BusinessEntityTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("BUSINESS_KEY ");
-    sql.append("FROM BUSINESS_ENTITY ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY ");
     sql.append("WHERE PUBLISHER_ID=?");
     selectByPublisherSQL = sql.toString();
 
@@ -83,7 +88,7 @@ class BusinessEntityTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("* ");
-    sql.append("FROM BUSINESS_ENTITY ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY ");
     sql.append("WHERE BUSINESS_KEY=? ");
     sql.append("AND PUBLISHER_ID=?");
     verifyOwnershipSQL = sql.toString();
@@ -92,7 +97,7 @@ class BusinessEntityTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("PUBLISHER_ID ");
-    sql.append("FROM BUSINESS_ENTITY ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY ");
     sql.append("WHERE BUSINESS_KEY=?");
     selectPublisherSQL = sql.toString();
   }
@@ -120,12 +125,14 @@ class BusinessEntityTable
       statement.setString(4,business.getOperator());
       statement.setTimestamp(5,timeStamp);
 
-      log.debug("insert into BUSINESS_ENTITY table:\n\n\t" + insertSQL +
-        "\n\t BUSINESS_KEY=" + business.getBusinessKey() +
-        "\n\t AUTHORIZED_NAME=" + business.getAuthorizedName() +
-        "\n\t PUBLISHER_ID=" + publisherID +
-        "\n\t OPERATOR=" + business.getOperator() +
-        "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("insert into " + tablePrefix + "BUSINESS_ENTITY table:\n\n\t" + insertSQL +
+            "\n\t BUSINESS_KEY=" + business.getBusinessKey() +
+            "\n\t AUTHORIZED_NAME=" + business.getAuthorizedName() +
+            "\n\t PUBLISHER_ID=" + publisherID +
+            "\n\t OPERATOR=" + business.getOperator() +
+            "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -161,8 +168,10 @@ class BusinessEntityTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,businessKey.toString());
 
-      log.debug("delete from BUSINESS_ENTITY table:\n\n\t" + deleteSQL +
-        "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "BUSINESS_ENTITY table:\n\n\t" + deleteSQL +
+            "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -199,8 +208,10 @@ class BusinessEntityTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,businessKey.toString());
 
-      log.debug("select from BUSINESS_ENTITY table:\n\n\t" + selectSQL +
-        "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BUSINESS_ENTITY table:\n\n\t" + selectSQL +
+            "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -249,8 +260,10 @@ class BusinessEntityTable
       statement = connection.prepareStatement(selectByPublisherSQL);
       statement.setString(1,publisherID);
 
-      log.debug("select from BUSINESS_ENTITY table:\n\n\t" + selectByPublisherSQL +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BUSINESS_ENTITY table:\n\n\t" + selectByPublisherSQL +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -298,9 +311,11 @@ class BusinessEntityTable
       statement.setString(1,businessKey);
       statement.setString(2,publisherID);
 
-      log.debug("checking ownership of BUSINESS_ENTITY:\n\n\t" + verifyOwnershipSQL +
-        "\n\t BUSINESS_KEY=" + businessKey +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("checking ownership of " + tablePrefix + "BUSINESS_ENTITY:\n\n\t" + verifyOwnershipSQL +
+            "\n\t BUSINESS_KEY=" + businessKey +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -344,8 +359,10 @@ class BusinessEntityTable
       statement = connection.prepareStatement(selectPublisherSQL);
       statement.setString(1,businessKey);
 
-      log.debug("fetching publishers ID for BUSINESS_ENTITY:\n\n\t" + selectPublisherSQL +
-        "\n\t BUSINESS_KEY=" + businessKey + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("fetching publishers ID for BUSINESS_ENTITY:\n\n\t" + selectPublisherSQL +
+            "\n\t BUSINESS_KEY=" + businessKey + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

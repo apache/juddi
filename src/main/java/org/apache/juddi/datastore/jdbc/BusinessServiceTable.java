@@ -24,6 +24,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.service.BusinessService;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -39,15 +41,18 @@ class BusinessServiceTable
   static String selectByBusinessKeySQL = null;
   static String deleteByBusinessKeySQL = null;
   static String verifyOwnershipSQL = null;
+  static String tablePrefix = "";
 
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(100);
-    sql.append("INSERT INTO BUSINESS_SERVICE (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BUSINESS_SERVICE (");
     sql.append("BUSINESS_KEY,");
     sql.append("SERVICE_KEY,");
     sql.append("LAST_UPDATE) ");
@@ -56,7 +61,7 @@ class BusinessServiceTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BUSINESS_SERVICE ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BUSINESS_SERVICE ");
     sql.append("WHERE SERVICE_KEY=?");
     deleteSQL = sql.toString();
 
@@ -64,7 +69,7 @@ class BusinessServiceTable
     sql = new StringBuffer(100);
     sql.append("SELECT ");
     sql.append("BUSINESS_KEY ");
-    sql.append("FROM BUSINESS_SERVICE ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_SERVICE ");
     sql.append("WHERE SERVICE_KEY=?");
     selectSQL = sql.toString();
 
@@ -72,13 +77,13 @@ class BusinessServiceTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("SERVICE_KEY ");
-    sql.append("FROM BUSINESS_SERVICE ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_SERVICE ");
     sql.append("WHERE BUSINESS_KEY=?");
     selectByBusinessKeySQL = sql.toString();
 
     // build deleteByBusinessKeySQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BUSINESS_SERVICE ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BUSINESS_SERVICE ");
     sql.append("WHERE BUSINESS_KEY=?");
     deleteByBusinessKeySQL = sql.toString();
 
@@ -86,7 +91,7 @@ class BusinessServiceTable
     sql = new StringBuffer(200);
     sql.append("SELECT ");
     sql.append("* ");
-    sql.append("FROM BUSINESS_ENTITY e, BUSINESS_SERVICE s ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY e, ").append(tablePrefix).append("BUSINESS_SERVICE s ");
     sql.append("WHERE e.BUSINESS_KEY = s.BUSINESS_KEY ");
     sql.append("AND s.SERVICE_KEY=? ");
     sql.append("AND e.PUBLISHER_ID=?");
@@ -113,10 +118,12 @@ class BusinessServiceTable
       statement.setString(2,service.getServiceKey().toString());
       statement.setTimestamp(3,timeStamp);
 
-      log.debug("insert into BUSINESS_SERVICE table:\n\n\t" + insertSQL +
-        "\n\t BUSINESS_KEY=" + service.getBusinessKey().toString() +
-        "\n\t SERVICE_KEY=" + service.getServiceKey().toString() +
-        "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("insert into " + tablePrefix + "BUSINESS_SERVICE table:\n\n\t" + insertSQL +
+            "\n\t BUSINESS_KEY=" + service.getBusinessKey().toString() +
+            "\n\t SERVICE_KEY=" + service.getServiceKey().toString() +
+            "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      }
 
       statement.executeUpdate();
     }
@@ -144,8 +151,10 @@ class BusinessServiceTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,serviceKey.toString());
 
-      log.debug("delete from BUSINESS_SERVICE table:\n\n\t" + deleteSQL +
-        "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "BUSINESS_SERVICE table:\n\n\t" + deleteSQL +
+            "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -175,8 +184,10 @@ class BusinessServiceTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,serviceKey.toString());
 
-      log.debug("select from BUSINESS_SERVICE table:\n\n\t" + selectSQL +
-        "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BUSINESS_SERVICE table:\n\n\t" + selectSQL +
+            "\n\t SERVICE_KEY=" + serviceKey.toString() + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -214,8 +225,10 @@ class BusinessServiceTable
       statement = connection.prepareStatement(deleteByBusinessKeySQL);
       statement.setString(1,businessKey.toString());
 
-      log.debug("delet from the BUSINESS_SERVICE table:\n\n\t" + deleteByBusinessKeySQL +
-        "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delet from the " + tablePrefix + "BUSINESS_SERVICE table:\n\n\t" + deleteByBusinessKeySQL +
+            "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -247,8 +260,10 @@ class BusinessServiceTable
       statement = connection.prepareStatement(selectByBusinessKeySQL);
       statement.setString(1,businessKey.toString());
 
-      log.debug("select from BUSINESS_SERVICE table:\n\n\t" + selectByBusinessKeySQL +
-        "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "BUSINESS_SERVICE table:\n\n\t" + selectByBusinessKeySQL +
+            "\n\t BUSINESS_KEY=" + businessKey.toString() + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -294,9 +309,11 @@ class BusinessServiceTable
       statement.setString(1,serviceKey);
       statement.setString(2,publisherID);
 
-      log.debug("checking ownership of BUSINESS_SERVICE:\n\n\t" + verifyOwnershipSQL +
+      if (log.isDebugEnabled()) {
+      log.debug("checking ownership of " + tablePrefix + "BUSINESS_SERVICE:\n\n\t" + verifyOwnershipSQL +
         "\n\t SERVICE_KEY=" + serviceKey +
         "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

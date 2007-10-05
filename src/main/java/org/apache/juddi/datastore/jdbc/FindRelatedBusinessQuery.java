@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.KeyedReference;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class FindRelatedBusinessQuery
   static String selectSQL;
   static String selectWithKeyedRefSQL;
 
+  static String tablePrefix;
   static
   {
+   tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     StringBuffer sql = null;
 
     // build selectSQL
     sql = new StringBuffer(300);
     sql.append("SELECT FROM_KEY,TO_KEY,TMODEL_KEY,KEY_NAME,KEY_VALUE ");
-    sql.append("FROM PUBLISHER_ASSERTION ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("WHERE (FROM_KEY=? OR TO_KEY=?) ");
     sql.append("AND FROM_CHECK='true' ");
     sql.append("AND TO_CHECK='true'");
@@ -51,7 +56,7 @@ class FindRelatedBusinessQuery
     // build selectWithKeyedRefSQL
     sql = new StringBuffer(300);
     sql.append("SELECT FROM_KEY,TO_KEY,TMODEL_KEY,KEY_NAME,KEY_VALUE ");
-    sql.append("FROM PUBLISHER_ASSERTION ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER_ASSERTION ");
     sql.append("WHERE (FROM_KEY=? OR TO_KEY=?) ");
     sql.append("AND TMODEL_KEY=? ");
     sql.append("AND KEY_NAME=? ");
@@ -84,9 +89,11 @@ class FindRelatedBusinessQuery
       statement.setString(1,businessKey.toString());
       statement.setString(2,businessKey.toString());
 
-      log.debug("select from PUBLISHER_ASSERTION table:\n\n\t" + selectSQL +
-        "\n\t FROM_KEY=" + businessKey+
-        "\n\t TO_KEY=" + businessKey + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectSQL +
+            "\n\t FROM_KEY=" + businessKey+
+            "\n\t TO_KEY=" + businessKey + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())
@@ -151,12 +158,14 @@ class FindRelatedBusinessQuery
       statement.setString(4,keyedRef.getKeyName());
       statement.setString(5,keyedRef.getKeyValue());
 
-      log.debug("select from PUBLISHER_ASSERTION table:\n\n\t" + selectWithKeyedRefSQL +
-        "\n\t FROM_KEY=" + businessKey +
-        "\n\t TO_KEY=" + businessKey +
-        "\n\t TMODEL_KEY=" + keyedRef.getTModelKey() +
-        "\n\t KEY_NAME=" + keyedRef.getKeyName() +
-        "\n\t KEY_VALUE=" + keyedRef.getKeyValue() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "PUBLISHER_ASSERTION table:\n\n\t" + selectWithKeyedRefSQL +
+            "\n\t FROM_KEY=" + businessKey +
+            "\n\t TO_KEY=" + businessKey +
+            "\n\t TMODEL_KEY=" + keyedRef.getTModelKey() +
+            "\n\t KEY_NAME=" + keyedRef.getKeyName() +
+            "\n\t KEY_VALUE=" + keyedRef.getKeyValue() + "\n");
+      }
 
       resultSet = statement.executeQuery();
       while (resultSet.next())

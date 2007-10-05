@@ -26,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.OverviewDoc;
 import org.apache.juddi.datatype.tmodel.TModel;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -41,15 +43,18 @@ class TModelTable
   static String selectSQL = null;
   static String selectByPublisherSQL = null;
   static String verifyOwnershipSQL = null;
-
+  static String tablePrefix = "";
+  
   static
   {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO TMODEL (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("TMODEL (");
     sql.append("TMODEL_KEY,");
     sql.append("AUTHORIZED_NAME,");
     sql.append("PUBLISHER_ID,");
@@ -63,13 +68,13 @@ class TModelTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM TMODEL ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("TMODEL ");
     sql.append("WHERE TMODEL_KEY=?");
     deleteSQL = sql.toString();
 
     // build updateSQL
     sql = new StringBuffer(100);
-    sql.append("UPDATE TMODEL ");
+    sql.append("UPDATE ").append(tablePrefix).append("TMODEL ");
     sql.append("SET DELETED='true' ");
     sql.append("WHERE TMODEL_KEY=?");
     updateSQL = sql.toString();
@@ -83,7 +88,7 @@ class TModelTable
     sql.append("LANG_CODE,");
     sql.append("OVERVIEW_URL,");
     sql.append("DELETED ");
-    sql.append("FROM TMODEL ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL ");
     sql.append("WHERE TMODEL_KEY=? ");
     sql.append("AND DELETED IS NULL");
     selectSQL = sql.toString();
@@ -93,7 +98,7 @@ class TModelTable
     sql.append("SELECT ");
     sql.append("TMODEL_KEY,");
     sql.append("DELETED ");
-    sql.append("FROM TMODEL ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL ");
     sql.append("WHERE PUBLISHER_ID=? ");
     sql.append("AND DELETED IS NULL");
     selectByPublisherSQL = sql.toString();
@@ -101,7 +106,7 @@ class TModelTable
     // build verifyOwnershipSQL
     sql = new StringBuffer(200);
     sql.append("SELECT * ");
-    sql.append("FROM TMODEL ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL ");
     sql.append("WHERE TMODEL_KEY=? ");
     sql.append("AND PUBLISHER_ID=? " );
     sql.append("AND DELETED IS NULL");
@@ -138,15 +143,17 @@ class TModelTable
       statement.setString(7,overviewURL);
       statement.setTimestamp(8,timeStamp);
 
-      log.debug(insertSQL +
-        "\n\t TMODEL_KEY=" + tModel.getTModelKey().toString() +
-        "\n\t AUTHORIZED_NAME=" + tModel.getAuthorizedName() +
-        "\n\t PUBLISHER_ID=" + publisherID +
-        "\n\t OPERATOR=" + tModel.getOperator() +
-        "\n\t NAME=" + tModel.getName().getValue() +
-        "\n\t LANG_CODE=" + tModel.getName().getLanguageCode() +
-        "\n\t OVERVIEW_URL=" + overviewURL +
-        "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(insertSQL +
+            "\n\t TMODEL_KEY=" + tModel.getTModelKey().toString() +
+            "\n\t AUTHORIZED_NAME=" + tModel.getAuthorizedName() +
+            "\n\t PUBLISHER_ID=" + publisherID +
+            "\n\t OPERATOR=" + tModel.getOperator() +
+            "\n\t NAME=" + tModel.getName().getValue() +
+            "\n\t LANG_CODE=" + tModel.getName().getLanguageCode() +
+            "\n\t OVERVIEW_URL=" + overviewURL +
+            "\n\t LAST_UPDATE=" + timeStamp.getTime() + "\n");
+      }
 
       // insert
       statement.executeUpdate();
@@ -178,8 +185,10 @@ class TModelTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,tModelKey.toString());
 
-      log.debug(deleteSQL +
-        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(deleteSQL +
+            "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -211,8 +220,10 @@ class TModelTable
       statement = connection.prepareStatement(updateSQL);
       statement.setString(1,tModelKey.toString());
 
-      log.debug(updateSQL +
-        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(updateSQL +
+            "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      }
 
       // execute
       statement.executeUpdate();
@@ -245,8 +256,10 @@ class TModelTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,tModelKey.toString());
 
-      log.debug(selectSQL +
-        "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(selectSQL +
+            "\n\t TMODEL_KEY=" + tModelKey.toString() + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -300,8 +313,10 @@ class TModelTable
       statement = connection.prepareStatement(selectByPublisherSQL);
       statement.setString(1,publisherID.toString());
 
-      log.debug(selectByPublisherSQL +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(selectByPublisherSQL +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -345,9 +360,11 @@ class TModelTable
       statement.setString(1,tModelKey);
       statement.setString(2,publisherID);
 
-      log.debug(verifyOwnershipSQL +
-        "\n\t TMODEL_KEY=" + tModelKey +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(verifyOwnershipSQL +
+            "\n\t TMODEL_KEY=" + tModelKey +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())

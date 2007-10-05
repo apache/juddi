@@ -26,6 +26,8 @@ import org.apache.juddi.datatype.CategoryBag;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.request.FindQualifiers;
 import org.apache.juddi.datatype.tmodel.TModel;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -37,12 +39,15 @@ class FindBusinessByCategoryQuery
   private static Log log = LogFactory.getLog(FindBusinessByCategoryQuery.class);
 
   static String selectSQL;
+  static String tablePrefix = "";
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT B.BUSINESS_KEY,B.LAST_UPDATE ");
-    sql.append("FROM BUSINESS_ENTITY B,BUSINESS_CATEGORY C ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY B,").append(tablePrefix).append("BUSINESS_CATEGORY C ");
     selectSQL = sql.toString();
   }
 

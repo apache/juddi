@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -34,12 +36,15 @@ class FindBindingByServiceKeyQuery
   private static Log log = LogFactory.getLog(FindBindingByServiceKeyQuery.class);
 
   static String selectSQL;
+  static String tablePrefix;
   static
   {
+    tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT B.BINDING_KEY,B.LAST_UPDATE ");
-    sql.append("FROM BINDING_TEMPLATE B ");
+    sql.append("FROM ").append(tablePrefix).append("BINDING_TEMPLATE B ");
     selectSQL = sql.toString();
   }
 

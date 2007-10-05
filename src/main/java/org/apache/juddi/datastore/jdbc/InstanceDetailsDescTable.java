@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,18 @@ class InstanceDetailsDescTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
-
-  static {
+  static String tablePrefix;
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO INSTANCE_DETAILS_DESCR (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("INSTANCE_DETAILS_DESCR (");
     sql.append("BINDING_KEY,");
     sql.append("TMODEL_INSTANCE_INFO_ID,");
     sql.append("INSTANCE_DETAILS_DESCR_ID,");
@@ -57,7 +63,7 @@ class InstanceDetailsDescTable
     sql.append("LANG_CODE,");
     sql.append("DESCR, ");
     sql.append("INSTANCE_DETAILS_DESCR_ID ");
-    sql.append("FROM INSTANCE_DETAILS_DESCR ");
+    sql.append("FROM ").append(tablePrefix).append("INSTANCE_DETAILS_DESCR ");
     sql.append("WHERE BINDING_KEY=? ");
     sql.append("AND TMODEL_INSTANCE_INFO_ID=? ");
     sql.append("ORDER BY INSTANCE_DETAILS_DESCR_ID");
@@ -65,7 +71,7 @@ class InstanceDetailsDescTable
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM INSTANCE_DETAILS_DESCR ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("INSTANCE_DETAILS_DESCR ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -107,20 +113,22 @@ class InstanceDetailsDescTable
         statement.setString(4, desc.getLanguageCode());
         statement.setString(5, desc.getValue());
 
-        log.debug(
-          "insert into INSTANCE_DETAILS_DESCR table:\n\n\t"
-            + insertSQL
-            + "\n\t BINDING_KEY="
-            + bindingKey.toString()
-            + "\n\t TMODEL_INSTANCE_INFO_ID="
-            + tModelInstanceInfoID
-            + "\n\t INSTANCE_DETAILS_DESCR_ID="
-            + descID
-            + "\n\t LANG_CODE="
-            + desc.getLanguageCode()
-            + "\n\t DESCR="
-            + desc.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "INSTANCE_DETAILS_DESCR table:\n\n\t"
+                + insertSQL
+                + "\n\t BINDING_KEY="
+                + bindingKey.toString()
+                + "\n\t TMODEL_INSTANCE_INFO_ID="
+                + tModelInstanceInfoID
+                + "\n\t INSTANCE_DETAILS_DESCR_ID="
+                + descID
+                + "\n\t LANG_CODE="
+                + desc.getLanguageCode()
+                + "\n\t DESCR="
+                + desc.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -162,14 +170,16 @@ class InstanceDetailsDescTable
       statement.setString(1, bindingKey.toString());
       statement.setInt(2, tModelInstanceInfoID);
 
-      log.debug(
-        "select from INSTANCE_DETAILS_DESCR table:\n\n\t"
-          + selectSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n\t TMODEL_INSTANCE_INFO_ID="
-          + tModelInstanceInfoID
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "INSTANCE_DETAILS_DESCR table:\n\n\t"
+              + selectSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n\t TMODEL_INSTANCE_INFO_ID="
+              + tModelInstanceInfoID
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -216,12 +226,14 @@ class InstanceDetailsDescTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "delete from INSTANCE_DETAILS_DESCR table:\n\n\t"
-          + deleteSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "INSTANCE_DETAILS_DESCR table:\n\n\t"
+              + deleteSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

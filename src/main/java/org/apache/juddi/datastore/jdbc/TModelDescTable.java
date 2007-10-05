@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Description;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,18 @@ class TModelDescTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
-
-  static {
+  static String tablePrefix = "";
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO TMODEL_DESCR (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("TMODEL_DESCR (");
     sql.append("TMODEL_KEY,");
     sql.append("TMODEL_DESCR_ID,");
     sql.append("LANG_CODE,");
@@ -56,14 +62,14 @@ class TModelDescTable
     sql.append("LANG_CODE,");
     sql.append("DESCR, ");
     sql.append("TMODEL_DESCR_ID ");
-    sql.append("FROM TMODEL_DESCR ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL_DESCR ");
     sql.append("WHERE TMODEL_KEY=? ");
     sql.append("ORDER BY TMODEL_DESCR_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM TMODEL_DESCR ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("TMODEL_DESCR ");
     sql.append("WHERE TMODEL_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -101,18 +107,20 @@ class TModelDescTable
         statement.setString(3, desc.getLanguageCode());
         statement.setString(4, desc.getValue());
 
-        log.debug(
-          "insert into TMODEL_DESCR table:\n\n\t"
-            + insertSQL
-            + "\n\t TMODEL_KEY="
-            + tModelKey.toString()
-            + "\n\t TMODEL_DESCR_ID="
-            + descID
-            + "\n\t LANG_CODE="
-            + desc.getLanguageCode()
-            + "\n\t DESCR="
-            + desc.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "TMODEL_DESCR table:\n\n\t"
+                + insertSQL
+                + "\n\t TMODEL_KEY="
+                + tModelKey.toString()
+                + "\n\t TMODEL_DESCR_ID="
+                + descID
+                + "\n\t LANG_CODE="
+                + desc.getLanguageCode()
+                + "\n\t DESCR="
+                + desc.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -149,12 +157,14 @@ class TModelDescTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, tModelKey.toString());
 
-      log.debug(
-        "select from TMODEL_DESCR table:\n\n\t"
-          + selectSQL
-          + "\n\t TMODEL_KEY="
-          + tModelKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "TMODEL_DESCR table:\n\n\t"
+              + selectSQL
+              + "\n\t TMODEL_KEY="
+              + tModelKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -200,12 +210,14 @@ class TModelDescTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, tModelKey.toString());
 
-      log.debug(
-        "delete from TMODEL_DESCR table:\n\n\t"
-          + deleteSQL
-          + "\n\t TMODEL_KEY="
-          + tModelKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "TMODEL_DESCR table:\n\n\t"
+              + deleteSQL
+              + "\n\t TMODEL_KEY="
+              + tModelKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

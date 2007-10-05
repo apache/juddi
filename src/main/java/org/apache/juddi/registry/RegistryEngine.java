@@ -36,7 +36,6 @@ import org.apache.juddi.function.IFunction;
 import org.apache.juddi.util.Config;
 import org.apache.juddi.util.Loader;
 import org.apache.juddi.util.jdbc.ConnectionManager;
-import org.apache.log4j.lf5.util.StreamUtils;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -65,6 +64,7 @@ public class RegistryEngine extends AbstractRegistry
   public static final String PROPNAME_IS_CREATE_DATABASE = "juddi.isCreateDatabase";
   public static final String PROPNAME_DB_EXISTS_SQL = "juddi.databaseExistsSql";
   public static final String PROPNAME_SQL_FILES = "juddi.sqlFiles";
+  public static final String PROPNAME_TABLE_PREFIX = "juddi.tablePrefix";
   
   public static final String PROPNAME_JAVA_NAMING_FACTORY_INITIAL = "java.naming.factory.initial";
   public static final String PROPNAME_JAVA_NAMING_PROVIDER_URL = "java.naming.provider.url";
@@ -102,9 +102,10 @@ public class RegistryEngine extends AbstractRegistry
   public static final String DEFAULT_JDBC_URL = "jdbc:mysql://localhost/juddi";
   public static final String DEFAULT_JDBC_USERNAME = "juddi";
   public static final String DEFAULT_JDBC_PASSWORD = "juddi";
-  public static final Boolean DEFAULT_IS_CREATE_DATABASE = Boolean.TRUE;
+  public static final Boolean DEFAULT_IS_CREATE_DATABASE = Boolean.FALSE;
   public static final String DEFAULT_DB_EXISTS_SQL = "select * from BUSINESS_ENTITY";
   public static final String DEFAULT_SQL_FILES = "sql/derby/create_database.sql,sql/insert_publishers.sql";
+  public static final String DEFAULT_TABLE_PREFIX = "";
   
   public static final String DEFAULT_AUTH_CLASS_NAME = "org.apache.juddi.auth.DefaultAuthenticator";
   public static final String DEFAULT_DATASTORE_CLASS_NAME = "org.apache.juddi.datastore.jdbc.JDBCDataStore";
@@ -241,6 +242,9 @@ public class RegistryEngine extends AbstractRegistry
               RegistryEngine.PROPNAME_DB_EXISTS_SQL,RegistryEngine.DEFAULT_DB_EXISTS_SQL);
       String sqlFiles = Config.getStringProperty(
               RegistryEngine.PROPNAME_SQL_FILES,RegistryEngine.DEFAULT_SQL_FILES);
+      String tablePrefix = Config.getStringProperty(
+              RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
+      
       try {
           Connection conn = ConnectionManager.acquireConnection();
           boolean create = false;
@@ -248,7 +252,8 @@ public class RegistryEngine extends AbstractRegistry
           Statement st = conn.createStatement();
           ResultSet rs = null;
           try {
-             rs = st.executeQuery(dbExistsSql.trim());
+             dbExistsSql = dbExistsSql.trim().replaceAll("\\$\\{prefix}", tablePrefix);
+             rs = st.executeQuery(dbExistsSql);
              rs.close();
           } catch (SQLException e) {
              create = true;
@@ -261,23 +266,23 @@ public class RegistryEngine extends AbstractRegistry
           log.info("Initializing jUDDI database from listed sql files");
           String[] list = sqlFiles.split(",");
           for (int i=0; i<list.length; i++) {
-             executeSql(list[i].trim(), conn);
+             executeSql(list[i].trim(), conn, tablePrefix);
           }
       } catch (Exception e) {
           log.error("Could not create jUDDI database " + e.getMessage(), e);
       }
   }
   
-  public void executeSql(String resource, Connection conn) throws Exception 
-  {
+  public void executeSql(String resource, Connection conn, String tablePrefix) throws Exception 
+  { 
         InputStream is = Loader.getResourceAsStream(resource);
         if (is == null) {
             log.debug("Trying the classloader of the class itself. (workaround for maven2)");
             Loader loader = new Loader();
             is = loader.getResourceAsStreamFromClass(resource);
         }
-        byte[] bytes = StreamUtils.getBytes(is);
-        String sql = new String(bytes, "UTF-8");
+        String sql = getString(is);
+        sql = sql.replaceAll("\\$\\{prefix}", tablePrefix);
         is.close();
         String[] statements = sql.split(";");
         for (int i=0; i<statements.length;i++) {
@@ -298,6 +303,16 @@ public class RegistryEngine extends AbstractRegistry
             }
         }
     }
+  
+  public static String getString(InputStream in) throws IOException {
+      StringBuffer out = new StringBuffer();
+      byte[] b = new byte[4096];
+      for (int n; (n = in.read(b)) != -1;) {
+          out.append(new String(b, 0, n));
+      }
+      return out.toString();
+  }
+
 
   
 

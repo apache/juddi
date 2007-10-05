@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.KeyedReference;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,17 @@ class BindingCategoryTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
+  static String tablePrefix = "";
 
   static {
+    tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO BINDING_CATEGORY (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("BINDING_CATEGORY (");
     sql.append("BINDING_KEY,");
     sql.append("CATEGORY_ID,");
     sql.append("TMODEL_KEY_REF,");
@@ -58,14 +63,14 @@ class BindingCategoryTable
     sql.append("KEY_NAME,");
     sql.append("KEY_VALUE, ");
     sql.append("CATEGORY_ID ");
-    sql.append("FROM BINDING_CATEGORY ");
+    sql.append("FROM ").append(tablePrefix).append("BINDING_CATEGORY ");
     sql.append("WHERE BINDING_KEY=? ");
     sql.append("ORDER BY CATEGORY_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM BINDING_CATEGORY ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("BINDING_CATEGORY ");
     sql.append("WHERE BINDING_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -107,20 +112,22 @@ class BindingCategoryTable
         statement.setString(4, keyRef.getKeyName());
         statement.setString(5, keyRef.getKeyValue());
 
-        log.debug(
-          "insert into BINDING_CATEGORY table:\n\n\t"
-            + insertSQL
-            + "\n\t BINDING_KEY="
-            + bindingKey.toString()
-            + "\n\t CATEGORY_ID="
-            + categoryID
-            + "\n\t TMODEL_KEY_REF="
-            + tModelKeyValue
-            + "\n\t KEY_NAME="
-            + keyRef.getKeyName()
-            + "\n\t KEY_VALUE="
-            + keyRef.getKeyValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "BINDING_CATEGORY table:\n\n\t"
+                + insertSQL
+                + "\n\t BINDING_KEY="
+                + bindingKey.toString()
+                + "\n\t CATEGORY_ID="
+                + categoryID
+                + "\n\t TMODEL_KEY_REF="
+                + tModelKeyValue
+                + "\n\t KEY_NAME="
+                + keyRef.getKeyName()
+                + "\n\t KEY_VALUE="
+                + keyRef.getKeyValue()
+                + "\n");
+        }
 
         // insert
         statement.executeUpdate();
@@ -158,12 +165,14 @@ class BindingCategoryTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "select from BINDING_CATEGORY table:\n\n\t"
-          + selectSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from " + tablePrefix + "BINDING_CATEGORY table:\n\n\t"
+              + selectSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -210,12 +219,14 @@ class BindingCategoryTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, bindingKey.toString());
 
-      log.debug(
-        "delete from BINDING_CATEGORY table:\n\n\t"
-          + deleteSQL
-          + "\n\t BINDING_KEY="
-          + bindingKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from " + tablePrefix + "BINDING_CATEGORY table:\n\n\t"
+              + deleteSQL
+              + "\n\t BINDING_KEY="
+              + bindingKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

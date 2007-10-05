@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -34,12 +36,15 @@ class FindPublisherByNameQuery
   private static Log log = LogFactory.getLog(FindPublisherByNameQuery.class);
 
   static String selectSQL;
+  static String tablePrefix;
   static
   {
+   tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT P.PUBLISHER_ID,P.PUBLISHER_NAME ");
-    sql.append("FROM PUBLISHER P ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER P ");
     selectSQL = sql.toString();
   }
 

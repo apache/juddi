@@ -24,6 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Name;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -35,12 +37,15 @@ class FindBusinessByNameQuery
   private static Log log = LogFactory.getLog(FindBusinessByNameQuery.class);
 
   static String selectSQL;
+  static String tablePrefix;
   static
   {
+   tablePrefix = Config.getStringProperty(
+        RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT B.BUSINESS_KEY,B.LAST_UPDATE,N.NAME ");
-    sql.append("FROM BUSINESS_ENTITY B,BUSINESS_NAME N ");
+    sql.append("FROM ").append(tablePrefix).append("BUSINESS_ENTITY B,").append(tablePrefix).append("BUSINESS_NAME N ");
     selectSQL = sql.toString();
   }
 

@@ -23,6 +23,8 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.Name;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -35,14 +37,18 @@ class ServiceNameTable
   static String insertSQL = null;
   static String selectSQL = null;
   static String deleteSQL = null;
-
-  static {
+  static String tablePrefix = "";
+  
+  static
+  {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO SERVICE_NAME (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("SERVICE_NAME (");
     sql.append("SERVICE_KEY,");
     sql.append("SERVICE_NAME_ID,");
     sql.append("LANG_CODE,");
@@ -56,14 +62,14 @@ class ServiceNameTable
     sql.append("LANG_CODE,");
     sql.append("NAME, ");
     sql.append("SERVICE_NAME_ID ");
-    sql.append("FROM SERVICE_NAME ");
+    sql.append("FROM ").append(tablePrefix).append("SERVICE_NAME ");
     sql.append("WHERE SERVICE_KEY=? ");
     sql.append("ORDER BY SERVICE_NAME_ID");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(100);
-    sql.append("DELETE FROM SERVICE_NAME ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("SERVICE_NAME ");
     sql.append("WHERE SERVICE_KEY=?");
     deleteSQL = sql.toString();
   }
@@ -101,18 +107,20 @@ class ServiceNameTable
         statement.setString(3, name.getLanguageCode());
         statement.setString(4, name.getValue());
 
-        log.debug(
-          "insert into SERVICE_NAME table:\n\n\t"
-            + insertSQL
-            + "\n\t SERVICE_KEY="
-            + serviceKey.toString()
-            + "\n\t SERVICE_NAME_ID="
-            + nameID
-            + "\n\t LANG_CODE="
-            + name.getLanguageCode()
-            + "\n\t NAME="
-            + name.getValue()
-            + "\n");
+        if (log.isDebugEnabled()) {
+            log.debug(
+              "insert into " + tablePrefix + "SERVICE_NAME table:\n\n\t"
+                + insertSQL
+                + "\n\t SERVICE_KEY="
+                + serviceKey.toString()
+                + "\n\t SERVICE_NAME_ID="
+                + nameID
+                + "\n\t LANG_CODE="
+                + name.getLanguageCode()
+                + "\n\t NAME="
+                + name.getValue()
+                + "\n");
+        }
 
         statement.executeUpdate();
       }
@@ -149,12 +157,14 @@ class ServiceNameTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1, serviceKey.toString());
 
-      log.debug(
-        "select from SERVICE_NAME table:\n\n\t"
-          + selectSQL
-          + "\n\t SERVICE_KEY="
-          + serviceKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "select from SERVICE_NAME table:\n\n\t"
+              + selectSQL
+              + "\n\t SERVICE_KEY="
+              + serviceKey.toString()
+              + "\n");
+      }
 
       // execute the statement
       resultSet = statement.executeQuery();
@@ -200,12 +210,14 @@ class ServiceNameTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1, serviceKey.toString());
 
-      log.debug(
-        "delete from SERVICE_NAME table:\n\n\t"
-          + deleteSQL
-          + "\n\t SERVICE_KEY="
-          + serviceKey.toString()
-          + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug(
+            "delete from SERVICE_NAME table:\n\n\t"
+              + deleteSQL
+              + "\n\t SERVICE_KEY="
+              + serviceKey.toString()
+              + "\n");
+      }
 
       // execute
       statement.executeUpdate();

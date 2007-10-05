@@ -25,6 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.IdentifierBag;
 import org.apache.juddi.datatype.KeyedReference;
 import org.apache.juddi.datatype.request.FindQualifiers;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 import org.apache.juddi.util.jdbc.DynamicQuery;
 
 /**
@@ -36,12 +38,15 @@ class FindTModelByIdentifierQuery
   private static Log log = LogFactory.getLog(FindTModelByIdentifierQuery.class);
 
   static String selectSQL;
+  static String tablePrefix="";
   static
   {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // build selectSQL
     StringBuffer sql = new StringBuffer(200);
     sql.append("SELECT M.TMODEL_KEY,M.LAST_UPDATE ");
-    sql.append("FROM TMODEL M,TMODEL_IDENTIFIER I ");
+    sql.append("FROM ").append(tablePrefix).append("TMODEL M,").append(tablePrefix).append("TMODEL_IDENTIFIER I ");
     selectSQL = sql.toString();
   }
 

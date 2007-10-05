@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.datatype.publisher.Publisher;
+import org.apache.juddi.registry.RegistryEngine;
+import org.apache.juddi.util.Config;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -37,15 +39,18 @@ public class PublisherTable
   static String deleteSQL = null;
   static String updateSQL = null;
   static String verifyAdminSQL = null;
-
+  static String tablePrefix = "";
+  
   static
   {
+   tablePrefix = Config.getStringProperty(
+       RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
     // buffer used to build SQL statements
     StringBuffer sql = null;
 
     // build insertSQL
     sql = new StringBuffer(150);
-    sql.append("INSERT INTO PUBLISHER (");
+    sql.append("INSERT INTO ").append(tablePrefix).append("PUBLISHER (");
     sql.append("PUBLISHER_ID,");
     sql.append("PUBLISHER_NAME,");
     sql.append("EMAIL_ADDRESS,");
@@ -69,19 +74,19 @@ public class PublisherTable
     sql.append("MAX_SERVICES_PER_BUSINESS,");
     sql.append("MAX_BINDINGS_PER_SERVICE,");
     sql.append("MAX_TMODELS ");
-    sql.append("FROM PUBLISHER ");
+    sql.append("FROM ").append(tablePrefix).append("PUBLISHER ");
     sql.append("WHERE PUBLISHER_ID=?");
     selectSQL = sql.toString();
 
     // build deleteSQL
     sql = new StringBuffer(200);
-    sql.append("DELETE FROM PUBLISHER ");
+    sql.append("DELETE FROM ").append(tablePrefix).append("PUBLISHER ");
     sql.append("WHERE PUBLISHER_ID=?");
     deleteSQL = sql.toString();
 
     // build updateSQL
     sql = new StringBuffer(200);
-    sql.append("UPDATE PUBLISHER ");
+    sql.append("UPDATE ").append(tablePrefix).append("PUBLISHER ");
     sql.append("SET PUBLISHER_NAME=?,");
     sql.append("EMAIL_ADDRESS=?,");
     sql.append("IS_ADMIN=?,");
@@ -122,16 +127,18 @@ public class PublisherTable
       statement.setInt(8,publisher.getMaxBindingsPerService());
       statement.setInt(9,publisher.getMaxTModels());
       
-      log.debug("insert into PUBLISHER table:\n\n\t" + insertSQL +
-        "\n\t PUBLISHER_ID=" + publisher.getPublisherID() +
-        "\n\t PUBLISHER_NAME=" + publisher.getName() +
-        "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
-        "\n\t IS_ADMIN=" + publisher.isAdmin() +
-        "\n\t IS_ENABLED=" + publisher.isEnabled() +
-        "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
-        "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
-        "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
-        "\n\t MAX_TMODELS=" + publisher.getMaxTModels() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("insert into " + tablePrefix + "PUBLISHER table:\n\n\t" + insertSQL +
+            "\n\t PUBLISHER_ID=" + publisher.getPublisherID() +
+            "\n\t PUBLISHER_NAME=" + publisher.getName() +
+            "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
+            "\n\t IS_ADMIN=" + publisher.isAdmin() +
+            "\n\t IS_ENABLED=" + publisher.isEnabled() +
+            "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
+            "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
+            "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
+            "\n\t MAX_TMODELS=" + publisher.getMaxTModels() + "\n");
+      }
 
       // insert
       statement.executeUpdate();
@@ -171,8 +178,10 @@ public class PublisherTable
       statement = connection.prepareStatement(selectSQL);
       statement.setString(1,publisherID);
 
-      log.debug("select from PUBLISHER table:\n\n\t" + selectSQL +
-        "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("select from " + tablePrefix + "PUBLISHER table:\n\n\t" + selectSQL +
+            "\n\t PUBLISHER_ID=" + publisherID + "\n");
+      }
 
       resultSet = statement.executeQuery();
       if (resultSet.next())
@@ -221,8 +230,10 @@ public class PublisherTable
       statement = connection.prepareStatement(deleteSQL);
       statement.setString(1,publisherID);
 
-      log.debug("delete from PUBLISHER table:\n\n\t" + deleteSQL +
-        "\n\t PUBLISHER_ID=" + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("delete from " + tablePrefix + "PUBLISHER table:\n\n\t" + deleteSQL +
+            "\n\t PUBLISHER_ID=" + "\n");
+      }
 
       // execute the delete
       statement.executeUpdate();
@@ -264,16 +275,18 @@ public class PublisherTable
       statement.setInt(8,publisher.getMaxTModels());
       statement.setString(9,publisher.getPublisherID());
 
-      log.debug("update PUBLISHER table:\n\n\t" + updateSQL +
-        "\n\t PUBLISHER_NAME=" + publisher.getName() +
-        "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
-        "\n\t IS_ADMIN=" + publisher.isAdmin() +
-        "\n\t IS_ENABLED=" + publisher.isEnabled() +
-        "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
-        "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
-        "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
-        "\n\t MAX_TMODELS=" + publisher.getMaxTModels() +       
-        "\n\t PUBLISHER_ID=" + publisher.getPublisherID() + "\n");
+      if (log.isDebugEnabled()) {
+          log.debug("update " + tablePrefix + "PUBLISHER table:\n\n\t" + updateSQL +
+            "\n\t PUBLISHER_NAME=" + publisher.getName() +
+            "\n\t EMAIL_ADDRESS=" + publisher.getEmailAddress() +
+            "\n\t IS_ADMIN=" + publisher.isAdmin() +
+            "\n\t IS_ENABLED=" + publisher.isEnabled() +
+            "\n\t MAX_BUSINESSES=" + publisher.getMaxBusinesses() +
+            "\n\t MAX_SERVICES_PER_BUSINESS=" + publisher.getMaxServicesPerBusiness() +
+            "\n\t MAX_BINDINGS_PER_SERVICE=" + publisher.getMaxBindingsPerService() +
+            "\n\t MAX_TMODELS=" + publisher.getMaxTModels() +       
+            "\n\t PUBLISHER_ID=" + publisher.getPublisherID() + "\n");
+      }
       
       // execute
       statement.executeUpdate();
