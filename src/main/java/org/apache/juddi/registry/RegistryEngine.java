@@ -282,6 +282,7 @@ public class RegistryEngine extends AbstractRegistry
             is = loader.getResourceAsStreamFromClass(resource);
         }
         String sql = getString(is);
+        sql = sql.replaceAll("(?m)^--([^\n]+)?$", ""); // Remove all commented lines
         sql = sql.replaceAll("\\$\\{prefix}", tablePrefix);
         is.close();
         String[] statements = sql.split(";");

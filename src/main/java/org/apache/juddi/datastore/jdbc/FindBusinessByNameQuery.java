@@ -92,7 +92,9 @@ class FindBusinessByNameQuery
     finally
     {
       try {
-        resultSet.close();
+    	  if (resultSet != null) {
+    		  resultSet.close();
+    	  }
       }
       catch (Exception e)
       {
