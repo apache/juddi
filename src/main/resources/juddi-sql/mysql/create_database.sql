@@ -667,9 +667,5 @@ VALUES ('uuid:AD61DE98-4DB8-31B2-A299-A2373DC97212',0,'en','A tModel used to ind
 INSERT INTO ${prefix}TMODEL_DOC_DESCR (TMODEL_KEY,TMODEL_DOC_DESCR_ID,LANG_CODE,DESCR)
 VALUES ('uuid:AD61DE98-4DB8-31B2-A299-A2373DC97212',0,'en','The WSDL Address tModel provides A mechanism to indicate that the endpoint address should be obtained from a WSDL document.');
 
-INSERT INTO ${prefix}TMODEL (TMODEL_KEY,AUTHORIZED_NAME,PUBLISHER_ID,OPERATOR,NAME,OVERVIEW_URL,LAST_UPDATE)
-VALUES ('uuid:C7536010-F786-11DB-A010-E6245C4E79A1','JBoss ESB User','jbossesb','jUDDI.org','org.jboss.soa.esb.:category',NULL,CURDATE());
-
-
 
 
