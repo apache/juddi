@@ -86,7 +86,6 @@ public class ServiceListHandler extends AbstractHandler
     AbstractHandler handler = null;
 
     element.setAttribute("generic",generic);
-    element.setAttribute("generic",namespace);
 
     String operator = list.getOperator();
     if (operator != null)
