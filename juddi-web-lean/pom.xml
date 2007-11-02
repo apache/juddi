@@ -12,11 +12,10 @@
       <artifactId>juddi</artifactId>
       <groupId>org.apache.juddi</groupId>
       <version>SNAPSHOT</version> 
-      
       <exclusions>
         <exclusion>
-           <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
         </exclusion>
         <exclusion>
          <groupId>commons-discovery</groupId>
@@ -33,6 +32,10 @@
         <exclusion>
            <groupId>axis</groupId>
            <artifactId>axis</artifactId>
+        </exclusion>
+        <exclusion>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
         </exclusion>
        </exclusions>
         
