@@ -59,6 +59,7 @@
                 <exclude>**/lib/</exclude>
                 <exclude>**/axis2.xml</exclude>
 		        <exclude>**/happyjuddi.jsp</exclude>
+		        <exclude>**/juddi.properties</exclude>
                </excludes>
             </resource>
           </webResources>
