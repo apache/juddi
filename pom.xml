@@ -123,6 +123,7 @@
     <module>juddi</module>
     <module>juddi-client</module>
     <module>juddi-web</module>
+    <module>juddi-web-lean</module>
   </modules>
   
   <distributionManagement>
