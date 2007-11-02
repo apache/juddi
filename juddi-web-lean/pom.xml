@@ -12,6 +12,7 @@
       <artifactId>juddi</artifactId>
       <groupId>org.apache.juddi</groupId>
       <version>SNAPSHOT</version> 
+      <!--  
       <exclusions>
         <exclusion>
            <groupId>commons-logging</groupId>
@@ -42,7 +43,9 @@
       <artifactId>stax-api</artifactId>
         </exclusion>
       </exclusions>
+       -->
     </dependency> 
+   
   </dependencies>
   <build>
   <plugins>
