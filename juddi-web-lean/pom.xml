@@ -12,7 +12,7 @@
       <artifactId>juddi</artifactId>
       <groupId>org.apache.juddi</groupId>
       <version>SNAPSHOT</version> 
-      <!--  
+      
       <exclusions>
         <exclusion>
            <groupId>commons-logging</groupId>
@@ -20,30 +20,22 @@
         </exclusion>
         <exclusion>
          <groupId>commons-discovery</groupId>
-      <artifactId>commons-discovery</artifactId>
+         <artifactId>commons-discovery</artifactId>
         </exclusion>
         <exclusion>
           <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+           <artifactId>log4j</artifactId>
         </exclusion>
         <exclusion>
            <groupId>wsdl4j</groupId>
-      <artifactId>wsdl4j</artifactId>
+           <artifactId>wsdl4j</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.apache.axis2</groupId>
-          <artifactId>axis2-kernel</artifactId>
+           <groupId>axis</groupId>
+           <artifactId>axis</artifactId>
         </exclusion>
-         <exclusion>
-         <groupId>org.apache.ws.commons.axiom</groupId>
-      <artifactId>axiom-api</artifactId>
-        </exclusion>
-         <exclusion>
-          <groupId>stax</groupId>
-      <artifactId>stax-api</artifactId>
-        </exclusion>
-      </exclusions>
-       -->
+       </exclusions>
+        
     </dependency> 
    
   </dependencies>
