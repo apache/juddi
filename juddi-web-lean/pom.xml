@@ -56,10 +56,9 @@
               <!-- this is relative to the pom.xml directory -->
               <directory>juddi-web/src/main/webapp</directory>
                <excludes>
-                <exclude>**/*-LICENSE.txt</exclude>
                 <exclude>**/lib/</exclude>
                 <exclude>**/axis2.xml</exclude>
-                
+		        <exclude>**/happyjuddi.jsp</exclude>
                </excludes>
             </resource>
           </webResources>
