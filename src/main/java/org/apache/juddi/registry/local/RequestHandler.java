@@ -20,7 +20,6 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.SOAPException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -159,41 +158,24 @@ public class RequestHandler implements Runnable
       // this child to the soap response body
       document.appendChild(element.getFirstChild());
       setResponse(document);
-    } 
-    catch(Exception ex) // Catch ALL exceptions
+    }
+    catch (RegistryException rex) 
     {
-      // SOAP Fault values
-      String faultCode = null;
-      String faultString = null;
-      String faultActor = null;
-      
-      // UDDI DispositionReport values
-      String errno = null;
-      String errCode = null;
-      String errText = null;
-      
-      // All RegistryException and subclasses of RegistryException
-      // should contain values for populating a SOAP Fault as well
-      // as a UDDI DispositionReport with specific information 
-      // about the problem.
-      //
-      // We've got to dig out the dispositionReport and populate  
-      // the SOAP Fault 'detail' element with this information.        
-      
-      if (ex instanceof RegistryException)
-      {
-        // Since we've intercepted a RegistryException type
-        // then we can assume this is a "controlled" event
-        // and simply log the error message without a stack
-        // trace.
-
-        log.error(ex.getMessage());
-
-        RegistryException rex = (RegistryException)ex;
+    	log.error(rex.getMessage());
+    	
+        // All RegistryException and subclasses of RegistryException
+        // should contain values for populating a SOAP Fault as well
+        // as a UDDI DispositionReport with specific information 
+        // about the problem.
+    	// SOAP Fault values
+        String faultCode = rex.getFaultCode();
+        String faultString = rex.getFaultString();
+        String faultActor = rex.getFaultActor();
         
-        faultCode = rex.getFaultCode();  // SOAP Fault faultCode
-        faultString = rex.getFaultString();  // SOAP Fault faultString
-        faultActor = rex.getFaultActor();  // SOAP Fault faultActor
+        // UDDI DispositionReport values
+        String errno = null;
+        String errCode = null;
+        String errText = null;
         
         DispositionReport dispRpt = rex.getDispositionReport();
         if (dispRpt != null)
@@ -217,72 +199,48 @@ public class RequestHandler implements Runnable
             }
           }
         }
-      }
-      else if (ex instanceof SOAPException)
-      {
+        // We should have everything we need to assemble 
+        // the SOAPFault so lets piece it together and 
+        // send it on it's way.
+        String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
+    	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
+    	+ ", errText=" + errText;
+        setException(fault);
+        
+    }
+    catch(Exception ex) // Catch any other exceptions
+    {
         log.error(ex.getMessage());
-          
+    
         // Because something occured that jUDDI wasn't expecting
         // let's set default SOAP Fault values.  Since SOAPExceptions
         // here are most likely XML validation errors let's blame the
         // client by placing "Client" in the Fault Code and pass
         // the Exception message back to the client.
         
-        faultCode = "Client";
-        faultString = ex.getMessage();
-        faultActor = null;
+        String faultCode = "Server";
+        String faultString = ex.getMessage();
+        String faultActor = null;
         
-        // Let's set default values for the UDDI DispositionReport
-        // here.  While we didn't catch a RegistryException (or 
-        // subclass) we're going to be friendly and include a
-        // FatalError DispositionReport within the message from the 
-        // SAX parsing problem in the SOAP Fault anyway.
-        
-        errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
-        errText = Result.lookupErrText(Result.E_FATAL_ERROR) + 
-                  " " + ex.getMessage();
-      }
-      else // anything else
-      {
-        // All other exceptions (other than SOAPException or 
-        // RegistryException and subclasses) are either a result 
-        // of a jUDDI configuration problem or something that 
-        // we *should* be catching and converting to a 
-        // RegistryException but are not (yet!).
-            
-        log.error(ex.getMessage(),ex);
-
-        // Because something occured that jUDDI wasn't expecting
-        // let's set default SOAP Fault values.  Since jUDDI
-        // should be catching anything significant let's blame 
-        // jUDDI by placing "Server" in the Fault Code and pass
-        // the Exception message on to the client.
-        
-        faultCode = "Server";
-        faultString = ex.getMessage();
-        faultActor = null;
-          
         // Let's set default values for the UDDI DispositionReport
         // here.  While we didn't catch a RegistryException (or 
         // subclass) but we're going to be friendly and include a
         // FatalError DispositionReport within the SOAP Fault anyway.
         
-        errno = String.valueOf(Result.E_FATAL_ERROR);
-        errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
-        errText = Result.lookupErrText(Result.E_FATAL_ERROR) +
+        String errno = String.valueOf(Result.E_FATAL_ERROR);
+        String errCode = Result.lookupErrCode(Result.E_FATAL_ERROR); 
+        String errText = Result.lookupErrText(Result.E_FATAL_ERROR) +
                   " An internal UDDI server error has " +
                   "occurred. Please report this error " +
                   "to the UDDI server administrator.";
-      }
-      
-      // We should have everything we need to assemble 
-      // the SOAPFault so lets piece it together and 
-      // send it on it's way.
-      String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
-  	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
-  	+ ", errText=" + errText;
-      setException(fault);
+
+        // We should have everything we need to assemble 
+        // the SOAPFault so lets piece it together and 
+        // send it on it's way.
+        String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
+    	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
+    	+ ", errText=" + errText;
+        setException(fault);
     }
   }
   

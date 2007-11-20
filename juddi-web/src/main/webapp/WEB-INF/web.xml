@@ -45,19 +45,19 @@
   <servlet>
     <servlet-name>jUDDIAdminService</servlet-name>
     <display-name>jUDDI Admin Service</display-name>
-    <servlet-class>org.apache.juddi.registry.AdminService</servlet-class>
+    <servlet-class>org.apache.juddi.registry.service.AdminService</servlet-class>
   </servlet>
   
   <servlet>
     <servlet-name>UDDIV2InquiryService</servlet-name>
     <display-name>UDDI Version 2.0 Inquiry Service</display-name>
-    <servlet-class>org.apache.juddi.registry.InquiryService</servlet-class>
+    <servlet-class>org.apache.juddi.registry.service.InquiryService</servlet-class>
   </servlet>
   
   <servlet>
     <servlet-name>UDDIV2PublishService</servlet-name>
     <display-name>UDDI Version 2.0 Publish Service</display-name>
-    <servlet-class>org.apache.juddi.registry.PublishService</servlet-class>
+    <servlet-class>org.apache.juddi.registry.service.PublishService</servlet-class>
   </servlet>
   
   <!--  uncomment if you want to enable making calls in juddi with rmi 

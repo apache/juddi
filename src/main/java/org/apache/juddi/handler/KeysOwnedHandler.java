@@ -17,8 +17,8 @@ package org.apache.juddi.handler;
 
 import java.util.Vector;
 
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
+//import javax.xml.soap.SOAPElement;
+//import javax.xml.soap.SOAPException;
 
 import org.apache.juddi.datatype.RegistryObject;
 import org.apache.juddi.datatype.response.KeysOwned;
@@ -93,6 +93,7 @@ public class KeysOwnedHandler extends AbstractHandler
     parent.appendChild(element);
   }
 
+/*  
   public RegistryObject unmarshal(SOAPElement element)
   {
     return null;
@@ -102,7 +103,7 @@ public class KeysOwnedHandler extends AbstractHandler
     throws SOAPException
   {
   }
-
+*/
 
   /***************************************************************************/
   /***************************** TEST DRIVER *********************************/

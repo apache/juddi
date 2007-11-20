@@ -251,11 +251,7 @@
       <scope>test</scope>
     </dependency>
    
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis</artifactId>
-      <version>${axis.version}</version>
-    </dependency>
+
   </dependencies>
   
   <distributionManagement>
