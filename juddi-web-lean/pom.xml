@@ -14,35 +14,33 @@
       <version>SNAPSHOT</version> 
       <exclusions>
         <exclusion>
-           <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
         </exclusion>
         <exclusion>
          <groupId>commons-discovery</groupId>
-      <artifactId>commons-discovery</artifactId>
+         <artifactId>commons-discovery</artifactId>
         </exclusion>
         <exclusion>
           <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+           <artifactId>log4j</artifactId>
         </exclusion>
         <exclusion>
            <groupId>wsdl4j</groupId>
-      <artifactId>wsdl4j</artifactId>
+           <artifactId>wsdl4j</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.apache.axis2</groupId>
-          <artifactId>axis2-kernel</artifactId>
+           <groupId>axis</groupId>
+           <artifactId>axis</artifactId>
         </exclusion>
-         <exclusion>
-         <groupId>org.apache.ws.commons.axiom</groupId>
-      <artifactId>axiom-api</artifactId>
+        <exclusion>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
         </exclusion>
-         <exclusion>
-          <groupId>stax</groupId>
-      <artifactId>stax-api</artifactId>
-        </exclusion>
-      </exclusions>
+       </exclusions>
+        
     </dependency> 
+   
   </dependencies>
   <build>
   <plugins>
@@ -59,6 +57,7 @@
                 <exclude>**/lib/</exclude>
                 <exclude>**/axis2.xml</exclude>
 		        <exclude>**/happyjuddi.jsp</exclude>
+		        <exclude>**/juddi.properties</exclude>
                </excludes>
             </resource>
           </webResources>

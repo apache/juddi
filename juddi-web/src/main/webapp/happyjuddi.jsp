@@ -12,7 +12,9 @@
                  java.util.TreeSet,
                  javax.naming.Context,
                  javax.naming.InitialContext,
-                 javax.sql.DataSource"
+                 javax.sql.DataSource,
+                 org.apache.juddi.registry.RegistryServlet,
+                 org.apache.juddi.registry.RegistryEngine"
 %>
 <%
 /*
@@ -167,6 +169,10 @@
 <h4>jUDDI Dependencies: Class Files &amp; Libraries</h4>
 <pre>
 <%
+    //creates the schema if not there
+    RegistryEngine registry = RegistryServlet.getRegistry();
+    registry.init();
+    
     String[] classArray = {
       "org.apache.juddi.IRegistry",
       "org.apache.axis.transport.http.AxisServlet",
@@ -204,7 +210,7 @@
 <pre>
 <%
     String[] resourceArray = {
-      "log4j.xml"
+      //"log4j.xml"
     };
     
     for (int i=0; i<resourceArray.length; i++)
