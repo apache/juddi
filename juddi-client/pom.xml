@@ -7,20 +7,25 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2.0rc5</version>
   </parent>
 
   <artifactId>juddi-client</artifactId>
   <name>jUDDI-client</name>
   <groupId>org.apache.juddi</groupId>
-  <version>SNAPSHOT</version>
+  <version>2.0rc5</version>
   <description>The JAXR API</description>
   
   <packaging>jar</packaging>
   
   <build>
     <sourceDirectory>../src/main/java</sourceDirectory>
-    
+    <resources>
+      <resource>
+        <directory>../src/main/resources/META-INF</directory>
+        <targetPath>META-INF</targetPath>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-install-plugin</artifactId>

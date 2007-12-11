@@ -15,13 +15,14 @@
           <td><strong>Description</strong></td>
         </tr>
 
-        <!--
-        <tr>
-          <td><link href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9/">0.9</link></td>
-          <td>July 1, 2005</td>
-          <td>Final Version 0.9</td>
+		<tr>
+          <td><a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi/2.0rc5/juddi-2.0rc5.jar">juddi-2.0rc5.jar</a><br/>
+              <a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi-client/2.0rc5/juddi-client-2.0rc5.jar">juddi-client-2.0rc5.jar</a><br/>
+              <a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi-web/2.0rc5/juddi-web-2.0rc5.war">juddi-web-2.0rc5.war</a><br/>
+              <a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi-web-lean/2.0rc5/juddi-web-lean-2.0rc5.war">juddi-web-lean-2.0rc5.war</a></td>
+          <td>Dec 11, 2007</td>
+          <td>Release Candidate #5 for Version 2.0.(previously version 0.9)</td>
         </tr>
-        -->
 
         <tr>
           <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9RC4/">0.9rc4</a></td>

@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2.0rc5</version>
   </parent>
   
   <name>jUDDI</name>
@@ -14,7 +14,7 @@
   <url>http://ws.apache.org/juddi/</url>
   <artifactId>juddi</artifactId>
   <groupId>org.apache.juddi</groupId>
-  <version>SNAPSHOT</version>
+  <version>2.0rc5</version>
   
   <packaging>jar</packaging>
    
@@ -23,6 +23,10 @@
     <resources>
       <resource>
         <directory>../src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>../src/main/resources/META-INF</directory>
+        <targetPath>META-INF</targetPath>
       </resource>
     </resources>
     <plugins>
@@ -45,29 +49,6 @@
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.1</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <id>prepareLicenseFiles</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <copy todir="${project.build.outputDirectory}/META-INF">
-                  <fileset dir="${basedir}">
-                    <include name="LICENSE.txt"></include>
-                    <include name="NOTICE.txt"></include>
-                  </fileset>
-                </copy>
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-one-plugin</artifactId>

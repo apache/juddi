@@ -14,7 +14,78 @@ WELCOME TO jUDDI!
   
   
 jUDDI RELEASE NOTES
-                          
+         
+  Release Notes - jUDDI - Version 2.0rc5
+
+** Bug
+    * [JUDDI-5] - Incomplete FindQualifiers processing in queries
+    * [JUDDI-6] - find_business by tModelBag returns unexpected results
+    * [JUDDI-10] - Null ptr exception with find_service
+    * [JUDDI-12] - FindServiceByNameQuery doesn't obey findQualifiers
+    * [JUDDI-14] - possible issue with find_service using CategoryBag
+    * [JUDDI-30] - jUDDI fails to deploy on JOnAS 4.1
+    * [JUDDI-31] - Automatically generated discoveryURL is incorrect
+    * [JUDDI-33] - findTModel returns unexpected results when trying to filter results with categoryBag
+    * [JUDDI-35] - The bindingTemplate element does contain a categoryBag element but should not.
+    * [JUDDI-36] - jaxax.xml.registry.JAXRException:javax.xml.bind.UnmarshalException:Unexpected Element {urn:uddi-org:api_v2}:description
+    * [JUDDI-37] - Updating an existing tModel fails, and causes it to be removed from registry
+    * [JUDDI-41] - getTModelDetail bug
+    * [JUDDI-42] - FindRelatedBusinesses function miss businessKey
+    * [JUDDI-43] - IdentifierBag and CategoryBag should not be empty
+    * [JUDDI-50] - Pb with appendOrderBy() method of juddi/datastore/jdbc/FindServiceByNameQuery?
+    * [JUDDI-57] - delete_business | service | binding do not return problem keys in error text
+    * [JUDDI-58] - SOAP Fault Element is not qualified with the SOAP Envelope namespace
+    * [JUDDI-60] - Database tables accomodate only 2-character language codes
+    * [JUDDI-62] - LANG_CODE columns in Database DDL is too short
+    * [JUDDI-63] - jUDDI responses are missing XML heading: <?xml version="1.0" encoding="utf-8"?>
+    * [JUDDI-64] - bindingTemplate does not check empty description
+    * [JUDDI-65] - Searching for Business & Service by LANG_CODE shouldn't require exact match
+    * [JUDDI-66] - Ambiguous DispositionReport returned when invalid XML is sent in SOAP request.
+    * [JUDDI-67] - find_service should return matches when only businessKey is provided.
+    * [JUDDI-68] - ErrInfo element not found in E_success messages.
+    * [JUDDI-69] - The SharedRelationship class is missing support for the 'direction' attribute.
+    * [JUDDI-70] - FindBindingByTModelQuery returns bindingTemplates based on logical OR of tModel keys
+    * [JUDDI-76] - The acquireConnection method in ConnectionManager is spelled incorrectly
+    * [JUDDI-81] - UDDI v2-compliant registry should come with tModels preloaded
+    * [JUDDI-83] - jUDDI and MySQL 4.1 ubuntu release
+    * [JUDDI-97] - invoking a juddi method from a web service
+    * [JUDDI-98] - Result of sort by date is in reversed order in searching function.
+    * [JUDDI-103] -  Transient registry errors caused by jUDDI race condition
+    * [JUDDI-106] - xml:lang attribute is serialized without namespace
+    * [JUDDI-107] - Language code of the name attribute of the TModel is not handled correctly
+    * [JUDDI-111] - PUBLISHER table definition uses NULL in DB2 Database Script
+    * [JUDDI-112] - jUDDI console - saveBinding pulls up the wrong XML; saveBinding XML is incomplete
+    * [JUDDI-113] - jUDDI error in a transacted environment
+    * [JUDDI-114] - Classcast Exception on JBoss, Tomcat 6 on geronimo
+    * [JUDDI-115] - Problems with JUDDI Oracle scripts 
+    * [JUDDI-116] - Drop statements in create_database.sql scripts should be prefixed
+    * [JUDDI-117] - juddi / JBossESB MySQL/PostGres ACCESS_POINT_URL size
+    * [JUDDI-118] - Create two wars - one with axis jars (tomcat) one without (jboss)
+    * [JUDDI-119] - happyjuddi.jsp looking for stale dependencies
+
+** Improvement
+    * [JUDDI-59] - Rename ADMIN column of PUBLISHER table to support Firebird SQL
+
+** New Feature
+    * [JUDDI-52] - Make Registry Specific Request in JAXR
+    * [JUDDI-82] - Scripts to create a jUDDI DataSource using Informix Dynamic Server
+    * [JUDDI-101] - Axis2 Support
+    * [JUDDI-108] - Add ability to configure MessageFactory from juddi.properties
+
+
+
+** Task
+    * [JUDDI-102] - Convert site generation to Maven
+    * [JUDDI-104] - Add Maven2 support
+    * [JUDDI-105] - Adding option to create the database at runtime
+    * [JUDDI-120] - Update the docs, to reflect changes in setup
+    * [JUDDI-121] - Update settings from 0.9rc4 to 2.0rc5
+    * [JUDDI-123] - Rolling back Axis2 until we get a good axis2 build
+
+
+
+** Wish
+    * [JUDDI-74] - Make the Database tables used by jUDDI to be configurable                 
   Changes From 0.9.0rc1 to 0.9.0rc4
 
   X. It's been such a long time since 0.9rc1 
