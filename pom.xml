@@ -100,6 +100,11 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/trunk/</url>
+  </scm>
   <reporting>
     <plugins>
       <plugin>
@@ -111,7 +116,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jdepend-maven-plugin</artifactId>
-        <version>2.0-beta-1-SNAPSHOT</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
