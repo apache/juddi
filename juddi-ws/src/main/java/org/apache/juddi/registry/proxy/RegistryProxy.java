@@ -67,7 +67,7 @@ public class RegistryProxy extends AbstractRegistry
   public static final String DEFAULT_INQUIRY_ENDPOINT = "http://localhost/juddi/inquiry";
   public static final String DEFAULT_PUBLISH_ENDPOINT = "http://localhost/juddi/publish";
   public static final String DEFAULT_ADMIN_ENDPOINT = "http://localhost/juddi/admin";    
-  public static final String DEFAULT_TRANSPORT_CLASS = "org.apache.juddi.proxy.AxisTransport";    
+  public static final String DEFAULT_TRANSPORT_CLASS = "org.apache.juddi.registry.proxy.Axis2Transport";    
   public static final String DEFAULT_SECURITY_PROVIDER = "com.sun.net.ssl.internal.ssl.Provider";
   public static final String DEFAULT_PROTOCOL_HANDLER = "com.sun.net.ssl.internal.www.protocol";
   public static final String DEFAULT_UDDI_VERSION = "2.0";
@@ -432,7 +432,7 @@ public class RegistryProxy extends AbstractRegistry
   /**
    * Returns an implementation of Transport based on the className passed in.
    * If a null value is passed then the default Transport implementation 
-   * "org.apache.juddi.proxy.AxisTransport" is created and returned.
+   * "org.apache.juddi.registry.proxy.Axis2Transport" is created and returned.
    *
    * @return Transport
    */
@@ -496,7 +496,7 @@ public class RegistryProxy extends AbstractRegistry
     Properties props = new Properties();
     props.setProperty(INQUIRY_ENDPOINT_PROPERTY_NAME,"http://test.uddi.microsoft.com/inquire");
     props.setProperty(PUBLISH_ENDPOINT_PROPERTY_NAME,"https://test.uddi.microsoft.com/publish");
-    props.setProperty(TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.proxy.AxisTransport");
+    props.setProperty(TRANSPORT_CLASS_PROPERTY_NAME,"org.apache.juddi.registry.proxy.Axis2Transport");
     props.setProperty(SECURITY_PROVIDER_PROPERTY_NAME,"com.sun.net.ssl.internal.ssl.Provider");
     props.setProperty(PROTOCOL_HANDLER_PROPERTY_NAME,"com.sun.net.ssl.internal.www.protocol");
     IRegistry registry = new RegistryProxy(props);
