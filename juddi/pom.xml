@@ -270,7 +270,4 @@
       <url>scpexe://people.apache.org/www/ws.apache.org/juddi/</url>
     </site>
   </distributionManagement>
-   <properties>
-    <axis.version>1.4</axis.version>
-  </properties>
 </project>
