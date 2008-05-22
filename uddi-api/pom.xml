@@ -8,12 +8,10 @@
     <version>3.0.0.SNAPSHOT</version>
   </parent>
    
-  <name>jUDDI-UDDI3</name>
-  <description>UDDI 3 API</description>
-  <url>http://ws.apache.org/juddi/</url>
-  <artifactId>uddi-v3-api</artifactId>
-  <groupId>org.apache.uddiv3</groupId>
-  <version>3.0.0.SNAPSHOT</version>
+  <name>UDDI3 API</name>
+  <description>UDDI verion 3 API</description>
+  <artifactId>uddi-api-v3</artifactId>
+  <version>3.0.2</version>
   
   <packaging>jar</packaging>
    
@@ -31,9 +29,22 @@
       			<configuration>
       				<clearOutputDir>false</clearOutputDir>
       				<packageName>
-      					org.apache.ws.uddiv3
+      					uddi.v3
       				</packageName><!-- The name of your generated source package -->
       				<schemaFiles>uddi_v3.xsd</schemaFiles>
+      			</configuration>
+      		</execution>
+      		<execution>
+      			<id>uddiv3_custody</id>
+      			<goals>
+      				<goal>xjc</goal>
+      			</goals>
+      			<configuration>
+      				<clearOutputDir>false</clearOutputDir>
+      				<packageName>
+      					uddi.v3.custody
+      				</packageName><!-- The name of your generated source package -->
+      				<schemaFiles>uddi_v3custody.xsd</schemaFiles>
       			</configuration>
       		</execution>
       	</executions>

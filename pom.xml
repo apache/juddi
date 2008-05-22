@@ -103,7 +103,7 @@
     </plugins>
   </reporting>
   <modules>
-    <module>juddi-uddi3</module>
+    <module>uddi3-api</module>
   </modules>
   
   <distributionManagement>
