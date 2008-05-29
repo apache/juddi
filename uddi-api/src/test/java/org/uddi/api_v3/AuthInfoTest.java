@@ -25,7 +25,7 @@ public class AuthInfoTest {
                                                        +"    <ns3:authInfo>AuthInfo String</ns3:authInfo>\n"
                                                        +"</fragment>";
 	/**
-	 * Testing going from object to XML using JAXB.
+	 * Testing going from object to XML using JAXB using a XML Fragment.
 	 */
 	@Test 
 	public void marshall()
@@ -48,13 +48,14 @@ public class AuthInfoTest {
 			fail("No exception should be thrown");
 		}
 	}
-	
+	/**
+	 * Unmarshall an xml fragment.
+	 */
 	@Test public void unmarshall()
 	{
 		try {
 			JAXBContext jaxbContext=JAXBContext.newInstance("org.uddi.api_v3");
 			Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
-			//unMarshaller.setProperty(U, arg1)
 			StringReader reader = new StringReader(EXPECTED_XML_FRAGMENT);
 			JAXBElement<AuthToken> element = unMarshaller.unmarshal(new StreamSource(reader),AuthToken.class);
 			String infoString = element.getValue().getAuthInfo();
