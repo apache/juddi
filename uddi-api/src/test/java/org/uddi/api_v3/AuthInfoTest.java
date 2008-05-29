@@ -19,7 +19,7 @@ import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.ObjectFactory;
 
 
-public class AuthInfoTester {
+public class AuthInfoTest {
 
 	private final static String EXPECTED_XML_FRAGMENT = "<fragment xmlns:ns3=\"urn:uddi-org:api_v3\" xmlns:ns2=\"http://www.w3.org/2000/09/xmldsig#\">\n"
                                                        +"    <ns3:authInfo>AuthInfo String</ns3:authInfo>\n"
