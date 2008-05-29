@@ -11,24 +11,7 @@
 	<version>3.0.2</version>
 	<packaging>jar</packaging>
 	<name>UDDI API Generated from xsd from OASIS</name>
-	<dependencies>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+	
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -91,7 +74,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<configuration>
 					<skip>false</skip>
 					<excludes>
