@@ -17,7 +17,7 @@
   </issueManagement>
   <ciManagement>
     <system>Continuum</system>
-    <url>unknown</url>
+    <url>http://vmbuild.apache.org</url>
     <notifiers>
       <notifier>
         <sendOnError>false</sendOnError>
