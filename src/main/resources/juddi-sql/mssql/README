@@ -1,0 +1,9 @@
+CREATE/CONFIGURE AN MSSQL DATABASE FOR jUDDI
+
+jUDDI requires the use of a relational database (RDBMS) to 
+store the web services metadata it manages. This document 
+will walk you through the process of setting up an PostgreSQL 
+database as the persistent storage for a jUDDI registry.
+
+Note: You may wish to visit the embedded referential
+integrity policy (on update / delete stuff)
