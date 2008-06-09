@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:uddi_api_v3_portType="urn:uddi-org:api_v3_portType" xmlns:uddi_api_v3_binding="urn:uddi-org:api_v3_binding" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:uddi-org:api_v3_service">
+  <import namespace="urn:uddi-org:api_v3_binding" location="uddi_api_v3_binding.wsdl"/>
+  <service name="UDDI_v3_Inquiry">
+    <documentation>The UDDI v3 Inquiry Service</documentation>
+    <port name="UDDI_Inquiry_PortType" binding="uddi_api_v3_binding:UDDI_Inquiry_SoapBinding">
+      <soap:address location="http://localhost:8080/inquiry" />
+    </port>
+  </service>
+</definitions>
