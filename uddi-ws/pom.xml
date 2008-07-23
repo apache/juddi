@@ -46,12 +46,17 @@
           </execution>
         </executions>
         <configuration>
-          <packageName>org.uddi</packageName>
           <wsdlDirectory>src/main/resources</wsdlDirectory>
           <wsdlFiles>
-            <wsdlFile>uddi_v3_InquiryService.wsdl</wsdlFile>
+            <wsdlFile>uddi_v3_service.wsdl</wsdlFile>
           </wsdlFiles>
           <keep>true</keep>
+<!-- 
+          <bindingDirectory>../uddi-api/target/generated-sources/xjc/META-INF</bindingDirectory>
+          <bindingFiles>
+            <bindingFile>sun-jaxb.episode</bindingFile>
+          </bindingFiles>
+-->
         </configuration>
       </plugin>
 
