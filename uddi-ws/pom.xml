@@ -6,7 +6,7 @@
   <artifactId>uddi-ws</artifactId>
   <version>3.0.2</version>
   <packaging>jar</packaging>
-  <name>UDDI v3 Inquiry Web Service generated from wsdl</name>
+  <name>UDDI v3 Web Service Stubs and Schema bindings generated from wsdl</name>
   
   <repositories>
     <repository>
@@ -51,12 +51,6 @@
             <wsdlFile>uddi_v3_service.wsdl</wsdlFile>
           </wsdlFiles>
           <keep>true</keep>
-<!-- 
-          <bindingDirectory>../uddi-api/target/generated-sources/xjc/META-INF</bindingDirectory>
-          <bindingFiles>
-            <bindingFile>sun-jaxb.episode</bindingFile>
-          </bindingFiles>
--->
         </configuration>
       </plugin>
 

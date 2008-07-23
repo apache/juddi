@@ -14,6 +14,8 @@
 	<types>
 		<xsd:schema targetNamespace="urn:uddi-org:api_v3_portType" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 			<xsd:import namespace="urn:uddi-org:api_v3" schemaLocation="uddi_v3.xsd"/>
+            <xsd:import namespace="urn:uddi-org:policy_v3" schemaLocation="uddi_v3policy.xsd"/>
+            <xsd:import namespace="urn:uddi-org:policy_v3_instanceParms" schemaLocation="uddi_v3policy_instanceParms.xsd"/>
 		</xsd:schema>
 	</types>
 	<message name="bindingDetailMessage">

@@ -1,15 +1,24 @@
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:uddi_api_v3_binding="urn:uddi-org:api_v3_binding"
              xmlns:uddi_custody_v3_binding="urn:uddi-org:custody_v3_binding"
+             xmlns:uddi_repl_v3_binding="urn:uddi-org:repl_v3_binding"
              xmlns:uddi_sub_v3_binding="urn:uddi-org:sub_v3_binding"
+             xmlns:uddi_subr_v3_binding="urn:uddi-org:subr_v3_binding"
+             xmlns:uddi_vs_v3_binding="urn:uddi-org:vs_v3_binding"
+             xmlns:uddi_vscache_v3_binding="urn:uddi-org:vscache_v3_binding"
 	     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
 	     targetNamespace="urn:uddi-org:v3_service">
 
     <import namespace="urn:uddi-org:api_v3_binding" location="uddi_api_v3_binding.wsdl"/>
     <import namespace="urn:uddi-org:custody_v3_binding" location="uddi_custody_v3_binding.wsdl"/>
+    <import namespace="urn:uddi-org:repl_v3_binding" location="uddi_repl_v3_binding.wsdl"/>
     <import namespace="urn:uddi-org:sub_v3_binding" location="uddi_sub_v3_binding.wsdl"/>
+    <import namespace="urn:uddi-org:subr_v3_binding" location="uddi_subr_v3_binding.wsdl"/>
+    <import namespace="urn:uddi-org:vs_v3_binding" location="uddi_vs_v3_binding.wsdl"/>
+    <import namespace="urn:uddi-org:vscache_v3_binding" location="uddi_vscache_v3_binding.wsdl"/>
 
     <service name="UDDI_Service">
+        <!-- UDDI API Interface-->
         <port name="UDDI_Inquiry_Port" binding="uddi_api_v3_binding:UDDI_Inquiry_SoapBinding">
             <soap:address location="http://localhost/uddi/inquire/"/>
         </port>
@@ -19,18 +28,37 @@
         <port name="UDDI_Security_Port" binding="uddi_api_v3_binding:UDDI_Security_SoapBinding">
             <soap:address location="http://localhost/uddi/security/"/>
         </port>
+        
+        <!-- Custody Interface -->
         <port name="UDDI_Custody_Port" binding="uddi_custody_v3_binding:UDDI_CustodyTransfer_SoapBinding">
             <soap:address location="http://localhost/uddi/custody/"/>
         </port>
+
+        <!-- Replication Interface -->
+        <port name="UDDI_Replication_Port" binding="uddi_repl_v3_binding:UDDI_Replication_SoapBinding">
+            <soap:address location="http://localhost/uddi/replication/"/>
+        </port>
+        
+        <!-- Subscription Interface -->
         <port name="UDDI_Subscription_Port" binding="uddi_sub_v3_binding:UDDI_Subscription_SoapBinding">
             <soap:address location="http://localhost/uddi/subscription/"/>
         </port>
+
+        <!-- Subscription Listener Interface -->
+        <port name="UDDI_SubscriptionListener_Port" binding="uddi_subr_v3_binding:UDDI_SubscriptionListener_SoapBinding">
+            <soap:address location="http://localhost/uddi/subscriptionlistener/"/>
+        </port>
+
+        <!-- Value Set Validation Interface -->
+        <port name="UDDI_ValueSetValidation_Port" binding="uddi_vs_v3_binding:UDDI_ValueSetValidation_SoapBinding">
+            <soap:address location="http://localhost/uddi/valuesetvalidation/"/>
+        </port>
+
+        <!-- Value Set Caching Interface -->
+        <port name="UDDI_ValueSetCaching_Port" binding="uddi_vscache_v3_binding:UDDI_ValueSetCaching_SoapBinding">
+            <soap:address location="http://localhost/uddi/valuesetcaching/"/>
+        </port>
     </service>
 
-	<!-- 
-	Copyright (c) OASIS Open 2002-2004. All Rights Reserved.
-
-	Version 3.0.2 
-	-->
-	<documentation>WSDL service definition for UDDI 3.0.2 JAX-RPC client</documentation>
+	<documentation>WSDL service definition for UDDI 3.0.2 specification</documentation>
 </definitions>
