@@ -103,7 +103,7 @@
     </plugins>
   </reporting>
   <modules>
-    <module>uddi-api</module>
+    <module>uddi-ws</module>
   </modules>
   
   <distributionManagement>

@@ -7,5 +7,5 @@ rem echo %relpath%
 GoTo :loop
 
 :done
-md src\main\%relpath%
-copy lic.txt + %1 src\main\%relpath%%~n1%~x1
+md ..\..\src\main\%relpath%
+copy lic.txt + %1 ..\..\src\main\%relpath%%~n1%~x1

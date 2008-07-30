@@ -14,3 +14,6 @@ import lines were added to the schema tag in this file:
 
 <xsd:import namespace="urn:uddi-org:policy_v3" schemaLocation="uddi_v3policy.xsd"/>
 <xsd:import namespace="urn:uddi-org:policy_v3_instanceParms" schemaLocation="uddi_v3policy_instanceParms.xsd"/>
+
+- In util\copylic\ there is a DOS batch file, copylic.bat that will copy the lic.txt file on top of each java file in the generated target directory and
+move them over to the appropriate source folder under uddi-ws.
