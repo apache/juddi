@@ -14,7 +14,12 @@ WELCOME TO jUDDI!
   
   
 jUDDI RELEASE NOTES
-                          
+  
+  Changes From 0.9.0rc4 to 2.0rc6  
+  1. Added support for MS-SQL
+  
+  2. Added an Apache Tomcat bundle that uses Derby as the store.    
+                       
   Changes From 0.9.0rc1 to 0.9.0rc4
 
   X. It's been such a long time since 0.9rc1 
