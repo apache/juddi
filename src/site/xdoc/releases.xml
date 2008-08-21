@@ -22,7 +22,16 @@
           <td>Final Version 0.9</td>
         </tr>
         -->
-
+        <tr>
+          <td><a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi/2.0rc6/">0.9rc4</a></td>
+          <td>August 21, 2008</td>
+          <td>Release Candidate #6 for Version 2.0.</td>
+        </tr>        
+		<tr>
+          <td><a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi/2.0rc5/">0.9rc4</a></td>
+          <td>December 13, 2007</td>
+          <td>Release Candidate #5 for Version 2.0.</td>
+        </tr>
         <tr>
           <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9RC4/">0.9rc4</a></td>
           <td>June 14, 2005</td>
