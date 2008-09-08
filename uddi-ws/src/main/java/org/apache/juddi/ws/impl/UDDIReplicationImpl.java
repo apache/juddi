@@ -35,13 +35,13 @@ import org.uddi.v3_service.UDDIReplicationPortType;
 			endpointInterface="org.uddi.v3_service.UDDIReplicationPortType")
 public class UDDIReplicationImpl implements UDDIReplicationPortType {
 
-	@Override
+
 	public String doPing(DoPing body) throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public List<ChangeRecord> getChangeRecords(String requestingNode,
 			HighWaterMarkVectorType changesAlreadySeen,
 			BigInteger responseLimitCount,
@@ -51,21 +51,21 @@ public class UDDIReplicationImpl implements UDDIReplicationPortType {
 		return null;
 	}
 
-	@Override
+
 	public List<ChangeRecordIDType> getHighWaterMarks()
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public void transferCustody(TransferCustody body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub

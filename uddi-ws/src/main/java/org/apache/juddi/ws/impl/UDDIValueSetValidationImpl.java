@@ -29,7 +29,7 @@ import org.uddi.vs_v3.ValidateValues;
 public class UDDIValueSetValidationImpl implements
 		UDDIValueSetValidationPortType {
 
-	@Override
+
 	public DispositionReport validateValues(ValidateValues body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub

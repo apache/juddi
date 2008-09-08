@@ -30,7 +30,7 @@ import org.uddi.vscache_v3.ValidValue;
 			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType")
 public class UDDIValueSetCachingImpl implements UDDIValueSetCachingPortType {
 
-	@Override
+
 	public void getAllValidValues(String authInfo, String modelKey,
 			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
 			throws DispositionReportFaultMessage {

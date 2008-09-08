@@ -45,70 +45,60 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType")
 public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
-	@Override
 	public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public RelatedBusinessesList findRelatedBusinesses(
 			FindRelatedBusinesses body) throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public BindingDetail getBindingDetail(GetBindingDetail body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public BusinessDetail getBusinessDetail(GetBusinessDetail body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public OperationalInfos getOperationalInfo(GetOperationalInfo body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public TModelDetail getTModelDetail(GetTModelDetail body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub

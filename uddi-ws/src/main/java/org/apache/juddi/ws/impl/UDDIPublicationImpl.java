@@ -48,49 +48,48 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 			endpointInterface="org.uddi.v3_service.UDDIPublicationPortType")
 public class UDDIPublicationImpl implements UDDIPublicationPortType {
 
-	@Override
+	
 	public void addPublisherAssertions(AddPublisherAssertions body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public void deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public void deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public void deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public void deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public List<AssertionStatusItem> getAssertionStatusReport(String authInfo,
 			CompletionStatus completionStatus)
 			throws DispositionReportFaultMessage {
@@ -98,49 +97,49 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		return null;
 	}
 
-	@Override
+
 	public List<PublisherAssertion> getPublisherAssertions(String authInfo)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public BindingDetail saveBinding(SaveBinding body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public BusinessDetail saveBusiness(SaveBusiness body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public ServiceDetail saveService(SaveService body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public TModelDetail saveTModel(SaveTModel body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public void setPublisherAssertions(String authInfo,
 			Holder<List<PublisherAssertion>> publisherAssertion)
 			throws DispositionReportFaultMessage {

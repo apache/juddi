@@ -29,7 +29,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class UDDISubscriptionListenerImpl implements
 		UDDISubscriptionListenerPortType {
 
-	@Override
+
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {

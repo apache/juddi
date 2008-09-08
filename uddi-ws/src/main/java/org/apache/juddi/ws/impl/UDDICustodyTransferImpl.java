@@ -31,14 +31,12 @@ import org.uddi.v3_service.UDDICustodyTransferPortType;
 			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType")
 public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
 
-	@Override
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void getTransferToken(String authInfo, KeyBag keyBag,
 			Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
 			Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
@@ -46,7 +44,6 @@ public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
 
 	}
 
-	@Override
 	public void transferEntities(TransferEntities body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub

@@ -33,28 +33,28 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType")
 public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 
-	@Override
+
 	public void deleteSubscription(DeleteSubscription body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public SubscriptionResultsList getSubscriptionResults(
 			GetSubscriptionResults body) throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public List<Subscription> getSubscriptions(String authInfo)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
 			throws DispositionReportFaultMessage {

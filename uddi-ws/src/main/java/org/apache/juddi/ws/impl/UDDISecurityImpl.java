@@ -29,14 +29,14 @@ import org.uddi.v3_service.UDDISecurityPortType;
 			endpointInterface="org.uddi.v3_service.UDDISecurityPortType")
 public class UDDISecurityImpl implements UDDISecurityPortType {
 
-	@Override
+
 	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+
 	public AuthToken getAuthToken(GetAuthToken body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
