@@ -21,6 +21,14 @@
       <url>http://download.java.net/maven/1</url>
       <layout>legacy</layout>
     </repository>
+	<repository>
+	  <id>jfrog-plugins</id>
+	  <name>jfrog-plugins-dist</name>
+	  <url>http://www.jfrog.org/artifactory/plugins-releases@repo</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+	</repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
@@ -35,6 +43,7 @@
   </pluginRepositories>
   <build>
     <plugins>
+      <!--  uncomment this section to regenerate the java classes
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxws-maven-plugin</artifactId>
@@ -53,7 +62,7 @@
           <keep>true</keep>
         </configuration>
       </plugin>
-      <!-- Don't forget Java 5!! -->
+      -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -61,7 +70,19 @@
           <target>1.5</target>
         </configuration>
       </plugin>
-
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <skip>false</skip>
+          <excludes>
+            <exclude>**/*Abstract*.java</exclude>
+          </excludes>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -70,6 +91,11 @@
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>jaxws-rt</artifactId>
       <version>2.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.5</version>
     </dependency>
   </dependencies>
 
