@@ -1,4 +1,4 @@
-package org.apache.ws.juddi.model;
+package org.apache.juddi.model;
 /*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
