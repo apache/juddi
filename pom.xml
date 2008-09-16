@@ -126,9 +126,9 @@
   <modules>
     <module>juddi</module>
     <module>juddi-client</module>
+    <module>juddi-ws</module>
     <module>juddi-web</module>
     <module>juddi-web-lean</module>
-    <module>juddi-ws</module>
   </modules>
   
   <distributionManagement>
