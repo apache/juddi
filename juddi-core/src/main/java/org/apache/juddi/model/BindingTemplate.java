@@ -28,48 +28,38 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
 @Table(name = "binding_template")
-public class BindingTemplate implements java.io.Serializable {
+public class BindingTemplate extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String bindingKey;
-	private UddiEntity uddiEntity;
 	private BusinessService businessService;
 	private String accessPointType;
 	private String accessPointUrl;
 	private String hostingRedirector;
-	private Date lastUpdate;
-	private Set<BindingCategory> bindingCategories = new HashSet<BindingCategory>(
-			0);
-	private Set<TmodelInstanceInfo> tmodelInstanceInfos = new HashSet<TmodelInstanceInfo>(
-			0);
+	private Set<BindingCategory> bindingCategories = new HashSet<BindingCategory>(0);
+	private Set<TmodelInstanceInfo> tmodelInstanceInfos = new HashSet<TmodelInstanceInfo>(0);
 	private Set<BindingDescr> bindingDescrs = new HashSet<BindingDescr>(0);
 
 	public BindingTemplate() {
 	}
 
-	public BindingTemplate(String bindingKey, UddiEntity uddiEntity,
-			BusinessService businessService, Date lastUpdate) {
+	public BindingTemplate(String bindingKey, BusinessService businessService, Date lastUpdate) {
 		this.bindingKey = bindingKey;
-		this.uddiEntity = uddiEntity;
 		this.businessService = businessService;
 		this.lastUpdate = lastUpdate;
 	}
-	public BindingTemplate(String bindingKey, UddiEntity uddiEntity,
-			BusinessService businessService, String accessPointType,
+	public BindingTemplate(String bindingKey, BusinessService businessService, String accessPointType,
 			String accessPointUrl, String hostingRedirector, Date lastUpdate,
 			Set<BindingCategory> bindingCategories,
 			Set<TmodelInstanceInfo> tmodelInstanceInfos,
 			Set<BindingDescr> bindingDescrs) {
 		this.bindingKey = bindingKey;
-		this.uddiEntity = uddiEntity;
 		this.businessService = businessService;
 		this.accessPointType = accessPointType;
 		this.accessPointUrl = accessPointUrl;
@@ -85,27 +75,15 @@ public class BindingTemplate implements java.io.Serializable {
 	public String getBindingKey() {
 		return this.bindingKey;
 	}
-
 	public void setBindingKey(String bindingKey) {
 		this.bindingKey = bindingKey;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "binding_key", unique = true, nullable = false, insertable = false, updatable = false)
 
-	public UddiEntity getUddiEntity() {
-		return this.uddiEntity;
-	}
-
-	public void setUddiEntity(UddiEntity uddiEntity) {
-		this.uddiEntity = uddiEntity;
-	}
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_key", nullable = false)
-
 	public BusinessService getBusinessService() {
 		return this.businessService;
 	}
-
 	public void setBusinessService(BusinessService businessService) {
 		this.businessService = businessService;
 	}
@@ -114,7 +92,6 @@ public class BindingTemplate implements java.io.Serializable {
 	public String getAccessPointType() {
 		return this.accessPointType;
 	}
-
 	public void setAccessPointType(String accessPointType) {
 		this.accessPointType = accessPointType;
 	}
@@ -123,7 +100,6 @@ public class BindingTemplate implements java.io.Serializable {
 	public String getAccessPointUrl() {
 		return this.accessPointUrl;
 	}
-
 	public void setAccessPointUrl(String accessPointUrl) {
 		this.accessPointUrl = accessPointUrl;
 	}
@@ -132,42 +108,31 @@ public class BindingTemplate implements java.io.Serializable {
 	public String getHostingRedirector() {
 		return this.hostingRedirector;
 	}
-
 	public void setHostingRedirector(String hostingRedirector) {
 		this.hostingRedirector = hostingRedirector;
 	}
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_update", nullable = false, length = 29)
 
-	public Date getLastUpdate() {
-		return this.lastUpdate;
-	}
-
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
 	public Set<BindingCategory> getBindingCategories() {
 		return this.bindingCategories;
 	}
-
 	public void setBindingCategories(Set<BindingCategory> bindingCategories) {
 		this.bindingCategories = bindingCategories;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
 	public Set<TmodelInstanceInfo> getTmodelInstanceInfos() {
 		return this.tmodelInstanceInfos;
 	}
-
 	public void setTmodelInstanceInfos(
 			Set<TmodelInstanceInfo> tmodelInstanceInfos) {
 		this.tmodelInstanceInfos = tmodelInstanceInfos;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
 	public Set<BindingDescr> getBindingDescrs() {
 		return this.bindingDescrs;
 	}
-
 	public void setBindingDescrs(Set<BindingDescr> bindingDescrs) {
 		this.bindingDescrs = bindingDescrs;
 	}
