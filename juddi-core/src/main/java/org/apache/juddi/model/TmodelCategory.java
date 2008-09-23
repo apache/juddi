@@ -58,7 +58,7 @@ public class TmodelCategory implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "categoryId", column = @Column(name = "category_id", nullable = false))})
 
 	public TmodelCategoryId getId() {

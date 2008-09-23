@@ -36,7 +36,7 @@ public class BusinessCategoryId implements java.io.Serializable {
 		this.categoryId = categoryId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 41)
+	@Column(name = "business_key", nullable = false, length = 255)
 	public String getBusinessKey() {
 		return this.businessKey;
 	}

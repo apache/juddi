@@ -57,7 +57,7 @@ public class BindingDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "bindingDescrId", column = @Column(name = "binding_descr_id", nullable = false))})
 
 	public BindingDescrId getId() {

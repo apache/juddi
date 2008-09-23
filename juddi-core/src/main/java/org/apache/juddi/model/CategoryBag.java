@@ -41,8 +41,8 @@ public class CategoryBag implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "categoryBagKey", column = @Column(name = "category_bag_key", nullable = false, length = 41)),
-			@AttributeOverride(name = "tmodelKeyRef", column = @Column(name = "tmodel_key_ref", length = 41))})
+			@AttributeOverride(name = "categoryBagKey", column = @Column(name = "category_bag_key", nullable = false, length = 255)),
+			@AttributeOverride(name = "tmodelKeyRef", column = @Column(name = "tmodel_key_ref", length = 255))})
 
 	public CategoryBagId getId() {
 		return this.id;

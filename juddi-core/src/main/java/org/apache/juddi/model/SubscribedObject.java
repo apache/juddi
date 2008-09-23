@@ -42,7 +42,7 @@ public class SubscribedObject implements java.io.Serializable {
 	@EmbeddedId
 	@AttributeOverrides({
 			@AttributeOverride(name = "subscribedObjectKey", column = @Column(name = "subscribed_object_key", nullable = false)),
-			@AttributeOverride(name = "subscriptionKey", column = @Column(name = "subscription_key", nullable = false, length = 41))})
+			@AttributeOverride(name = "subscriptionKey", column = @Column(name = "subscription_key", nullable = false, length = 255))})
 
 	public SubscribedObjectId getId() {
 		return this.id;

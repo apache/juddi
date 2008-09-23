@@ -36,7 +36,7 @@ public class TmodelIdentifierId implements java.io.Serializable {
 		this.identifierId = identifierId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

@@ -66,7 +66,7 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	}
 
 	@Id
-	@Column(name = "service_key", unique = true, nullable = false, length = 41)
+	@Column(name = "service_key", unique = true, nullable = false, length = 255)
 	public String getServiceKey() {
 		return this.serviceKey;
 	}

@@ -38,7 +38,7 @@ public class ContactDescrId implements java.io.Serializable {
 		this.contactDescrId = contactDescrId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 41)
+	@Column(name = "business_key", nullable = false, length = 255)
 	public String getBusinessKey() {
 		return this.businessKey;
 	}

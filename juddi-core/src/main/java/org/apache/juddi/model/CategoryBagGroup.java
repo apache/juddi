@@ -53,7 +53,7 @@ public class CategoryBagGroup implements java.io.Serializable {
 		this.bagGroupId = bagGroupId;
 	}
 
-	@Column(name = "binding_key", nullable = false, length = 41)
+	@Column(name = "binding_key", nullable = false, length = 255)
 	public String getBindingKey() {
 		return this.bindingKey;
 	}
@@ -62,7 +62,7 @@ public class CategoryBagGroup implements java.io.Serializable {
 		this.bindingKey = bindingKey;
 	}
 
-	@Column(name = "category_bag_key", nullable = false, length = 41)
+	@Column(name = "category_bag_key", nullable = false, length = 255)
 	public String getCategoryBagKey() {
 		return this.categoryBagKey;
 	}

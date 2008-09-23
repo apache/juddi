@@ -64,7 +64,7 @@ public class Address implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false)),
 			@AttributeOverride(name = "addressId", column = @Column(name = "address_id", nullable = false))})
 
@@ -106,7 +106,7 @@ public class Address implements java.io.Serializable {
 		this.sortCode = sortCode;
 	}
 
-	@Column(name = "tmodel_key", length = 41)
+	@Column(name = "tmodel_key", length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

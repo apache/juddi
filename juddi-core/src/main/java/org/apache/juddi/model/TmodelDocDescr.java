@@ -56,7 +56,7 @@ public class TmodelDocDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "tmodelDocDescrId", column = @Column(name = "tmodel_doc_descr_id", nullable = false))})
 
 	public TmodelDocDescrId getId() {

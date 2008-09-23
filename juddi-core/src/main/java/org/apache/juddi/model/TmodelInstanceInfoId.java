@@ -36,7 +36,7 @@ public class TmodelInstanceInfoId implements java.io.Serializable {
 		this.tmodelInstanceInfoId = tmodelInstanceInfoId;
 	}
 
-	@Column(name = "binding_key", nullable = false, length = 41)
+	@Column(name = "binding_key", nullable = false, length = 255)
 	public String getBindingKey() {
 		return this.bindingKey;
 	}

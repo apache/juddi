@@ -61,8 +61,8 @@ public class PublisherAssertion implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "fromKey", column = @Column(name = "from_key", nullable = false, length = 41)),
-			@AttributeOverride(name = "toKey", column = @Column(name = "to_key", nullable = false, length = 41))})
+			@AttributeOverride(name = "fromKey", column = @Column(name = "from_key", nullable = false, length = 255)),
+			@AttributeOverride(name = "toKey", column = @Column(name = "to_key", nullable = false, length = 255))})
 
 	public PublisherAssertionId getId() {
 		return this.id;
@@ -93,7 +93,7 @@ public class PublisherAssertion implements java.io.Serializable {
 		this.businessEntityByFromKey = businessEntityByFromKey;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

@@ -36,7 +36,7 @@ public class PublisherAssertionId implements java.io.Serializable {
 		this.toKey = toKey;
 	}
 
-	@Column(name = "from_key", nullable = false, length = 41)
+	@Column(name = "from_key", nullable = false, length = 255)
 	public String getFromKey() {
 		return this.fromKey;
 	}
@@ -45,7 +45,7 @@ public class PublisherAssertionId implements java.io.Serializable {
 		this.fromKey = fromKey;
 	}
 
-	@Column(name = "to_key", nullable = false, length = 41)
+	@Column(name = "to_key", nullable = false, length = 255)
 	public String getToKey() {
 		return this.toKey;
 	}

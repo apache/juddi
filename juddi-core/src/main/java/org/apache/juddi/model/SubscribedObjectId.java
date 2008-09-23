@@ -46,7 +46,7 @@ public class SubscribedObjectId implements java.io.Serializable {
 		this.subscribedObjectKey = subscribedObjectKey;
 	}
 
-	@Column(name = "subscription_key", nullable = false, length = 41)
+	@Column(name = "subscription_key", nullable = false, length = 255)
 	public String getSubscriptionKey() {
 		return this.subscriptionKey;
 	}

@@ -56,7 +56,7 @@ public class Phone implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false)),
 			@AttributeOverride(name = "phoneId", column = @Column(name = "phone_id", nullable = false))})
 

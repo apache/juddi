@@ -57,7 +57,7 @@ public class BusinessDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "businessDescrId", column = @Column(name = "business_descr_id", nullable = false))})
 
 	public BusinessDescrId getId() {

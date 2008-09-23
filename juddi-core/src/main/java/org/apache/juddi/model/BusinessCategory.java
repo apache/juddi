@@ -60,7 +60,7 @@ public class BusinessCategory implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "categoryId", column = @Column(name = "category_id", nullable = false))})
 
 	public BusinessCategoryId getId() {
@@ -81,7 +81,7 @@ public class BusinessCategory implements java.io.Serializable {
 		this.businessEntity = businessEntity;
 	}
 
-	@Column(name = "tmodel_key_ref", length = 41)
+	@Column(name = "tmodel_key_ref", length = 255)
 	public String getTmodelKeyRef() {
 		return this.tmodelKeyRef;
 	}

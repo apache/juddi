@@ -57,7 +57,7 @@ public class ServiceDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "serviceDescrId", column = @Column(name = "service_descr_id", nullable = false))})
 
 	public ServiceDescrId getId() {

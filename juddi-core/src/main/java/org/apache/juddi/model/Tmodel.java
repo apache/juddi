@@ -77,7 +77,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "tmodel_key", unique = true, nullable = false, length = 41)
+	@Column(name = "tmodel_key", unique = true, nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

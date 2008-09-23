@@ -72,7 +72,7 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "tmodelInstanceInfoId", column = @Column(name = "tmodel_instance_info_id", nullable = false))})
 
 	public TmodelInstanceInfoId getId() {
@@ -93,7 +93,7 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 		this.bindingTemplate = bindingTemplate;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

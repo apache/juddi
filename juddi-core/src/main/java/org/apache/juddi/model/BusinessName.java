@@ -57,7 +57,7 @@ public class BusinessName implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "businessNameId", column = @Column(name = "business_name_id", nullable = false))})
 
 	public BusinessNameId getId() {

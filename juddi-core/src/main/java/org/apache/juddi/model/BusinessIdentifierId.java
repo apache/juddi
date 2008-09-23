@@ -36,7 +36,7 @@ public class BusinessIdentifierId implements java.io.Serializable {
 		this.identifierId = identifierId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 41)
+	@Column(name = "business_key", nullable = false, length = 255)
 	public String getBusinessKey() {
 		return this.businessKey;
 	}

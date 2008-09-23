@@ -60,7 +60,7 @@ public class BindingCategory implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "categoryId", column = @Column(name = "category_id", nullable = false))})
 
 	public BindingCategoryId getId() {
@@ -81,7 +81,7 @@ public class BindingCategory implements java.io.Serializable {
 		this.bindingTemplate = bindingTemplate;
 	}
 
-	@Column(name = "tmodel_key_ref", length = 41)
+	@Column(name = "tmodel_key_ref", length = 255)
 	public String getTmodelKeyRef() {
 		return this.tmodelKeyRef;
 	}

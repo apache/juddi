@@ -57,7 +57,7 @@ public class ServiceName implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "serviceNameId", column = @Column(name = "service_name_id", nullable = false))})
 
 	public ServiceNameId getId() {

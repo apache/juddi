@@ -36,7 +36,7 @@ public class TmodelDescrId implements java.io.Serializable {
 		this.tmodelDescrId = tmodelDescrId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

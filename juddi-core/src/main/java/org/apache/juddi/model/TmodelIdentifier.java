@@ -59,7 +59,7 @@ public class TmodelIdentifier implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "identifierId", column = @Column(name = "identifier_id", nullable = false))})
 
 	public TmodelIdentifierId getId() {

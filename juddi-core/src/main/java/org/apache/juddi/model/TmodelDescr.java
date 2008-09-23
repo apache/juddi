@@ -56,7 +56,7 @@ public class TmodelDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "tmodelDescrId", column = @Column(name = "tmodel_descr_id", nullable = false))})
 
 	public TmodelDescrId getId() {

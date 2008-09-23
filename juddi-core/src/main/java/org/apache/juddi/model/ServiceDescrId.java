@@ -36,7 +36,7 @@ public class ServiceDescrId implements java.io.Serializable {
 		this.serviceDescrId = serviceDescrId;
 	}
 
-	@Column(name = "service_key", nullable = false, length = 41)
+	@Column(name = "service_key", nullable = false, length = 255)
 	public String getServiceKey() {
 		return this.serviceKey;
 	}

@@ -36,7 +36,7 @@ public class TmodelCategoryId implements java.io.Serializable {
 		this.categoryId = categoryId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

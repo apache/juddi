@@ -57,7 +57,7 @@ public class TmodelOverview implements java.io.Serializable {
 		this.tmodelOverviewId = tmodelOverviewId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 41)
+	@Column(name = "tmodel_key", nullable = false, length = 255)
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}

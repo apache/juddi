@@ -71,7 +71,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 
 	@Id
-	@Column(name = "binding_key", unique = true, nullable = false, length = 41)
+	@Column(name = "binding_key", unique = true, nullable = false, length = 255)
 	public String getBindingKey() {
 		return this.bindingKey;
 	}

@@ -58,7 +58,7 @@ public class TmodelInstanceInfoDescr implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "tmodelInstanceInfoId", column = @Column(name = "tmodel_instance_info_id", nullable = false)),
 			@AttributeOverride(name = "tmodelInstanceInfoDescrId", column = @Column(name = "tmodel_instance_info_descr_id", nullable = false))})
 

@@ -60,7 +60,7 @@ public class ServiceCategory implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 41)),
+			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 255)),
 			@AttributeOverride(name = "categoryId", column = @Column(name = "category_id", nullable = false))})
 
 	public ServiceCategoryId getId() {
@@ -81,7 +81,7 @@ public class ServiceCategory implements java.io.Serializable {
 		this.businessService = businessService;
 	}
 
-	@Column(name = "tmodel_key_ref", length = 41)
+	@Column(name = "tmodel_key_ref", length = 255)
 	public String getTmodelKeyRef() {
 		return this.tmodelKeyRef;
 	}

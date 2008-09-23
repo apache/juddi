@@ -39,7 +39,7 @@ public class CategoryBagId implements java.io.Serializable {
 		this.tmodelKeyRef = tmodelKeyRef;
 	}
 
-	@Column(name = "category_bag_key", nullable = false, length = 41)
+	@Column(name = "category_bag_key", nullable = false, length = 255)
 	public String getCategoryBagKey() {
 		return this.categoryBagKey;
 	}
@@ -48,7 +48,7 @@ public class CategoryBagId implements java.io.Serializable {
 		this.categoryBagKey = categoryBagKey;
 	}
 
-	@Column(name = "tmodel_key_ref", length = 41)
+	@Column(name = "tmodel_key_ref", length = 255)
 	public String getTmodelKeyRef() {
 		return this.tmodelKeyRef;
 	}
