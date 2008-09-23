@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.ws.impl;
+package org.apache.juddi.api.impl;
 
 import java.math.BigInteger;
 import java.util.List;

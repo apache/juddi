@@ -1,0 +1,43 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite-one" verbose="1">
+  <parameter name="businessFile" value="./src/test/java/org/apache/juddi/test/businessEntity1.xml" />
+  <parameter name="serviceFile" value="./src/test/java/org/apache/juddi/test/businessService1.xml" />
+  <parameter name="businessKey" value="uddi:businessone.com" />
+  <parameter name="serviceKey" value="uddi:businessone.com:services:serviceone" />
+  <test name="saveBusiness">
+    <classes>
+      <class name="org.apache.juddi.test.BusinessEntityTest">
+        <methods>
+          <include name="saveBusiness" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveService">
+    <classes>
+       <class name="org.apache.juddi.test.BusinessServiceTest">
+        <methods>
+          <include name="saveService" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="deleteService">
+    <classes>
+      <class name="org.apache.juddi.test.BusinessServiceTest">
+        <methods>
+          <include name="deleteService" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="deleteBusiness">
+    <classes>
+      <class name="org.apache.juddi.test.BusinessEntityTest">
+        <methods>
+          <include name="deleteBusiness" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

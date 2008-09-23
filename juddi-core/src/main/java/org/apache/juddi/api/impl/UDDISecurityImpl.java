@@ -15,27 +15,32 @@
  *
  */
 
-package org.apache.juddi.ws.impl;
-
-import java.util.List;
+package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
-import javax.xml.ws.Holder;
 
+import org.uddi.api_v3.AuthToken;
+import org.uddi.api_v3.DiscardAuthToken;
+import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDIValueSetCachingPortType;
-import org.uddi.vscache_v3.ValidValue;
+import org.uddi.v3_service.UDDISecurityPortType;
 
-@WebService(serviceName="UDDIValueSetCachingService", 
-			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType")
-public class UDDIValueSetCachingImpl implements UDDIValueSetCachingPortType {
+@WebService(serviceName="UDDISecurityService", 
+			endpointInterface="org.uddi.v3_service.UDDISecurityPortType")
+public class UDDISecurityImpl implements UDDISecurityPortType {
 
 
-	public void getAllValidValues(String authInfo, String modelKey,
-			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
+	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	public AuthToken getAuthToken(GetAuthToken body)
+			throws DispositionReportFaultMessage {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

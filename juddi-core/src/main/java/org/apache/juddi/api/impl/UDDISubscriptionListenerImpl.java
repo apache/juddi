@@ -15,29 +15,23 @@
  *
  */
 
-package org.apache.juddi.ws.impl;
+package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
 
-import org.uddi.api_v3.AuthToken;
-import org.uddi.api_v3.DiscardAuthToken;
-import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
-@WebService(serviceName="UDDISecurityService", 
-			endpointInterface="org.uddi.v3_service.UDDISecurityPortType")
-public class UDDISecurityImpl implements UDDISecurityPortType {
-
-
-	public void discardAuthToken(DiscardAuthToken body)
-			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
-	}
+@WebService(serviceName="UDDISubscriptionListenerService", 
+			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType")
+public class UDDISubscriptionListenerImpl implements
+		UDDISubscriptionListenerPortType {
 
 
-	public AuthToken getAuthToken(GetAuthToken body)
+	public DispositionReport notifySubscriptionListener(
+			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
 		return null;

@@ -15,26 +15,27 @@
  *
  */
 
-package org.apache.juddi.ws.impl;
+package org.apache.juddi.api.impl;
+
+import java.util.List;
 
 import javax.jws.WebService;
+import javax.xml.ws.Holder;
 
-import org.uddi.api_v3.DispositionReport;
-import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+import org.uddi.v3_service.UDDIValueSetCachingPortType;
+import org.uddi.vscache_v3.ValidValue;
 
-@WebService(serviceName="UDDISubscriptionListenerService", 
-			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType")
-public class UDDISubscriptionListenerImpl implements
-		UDDISubscriptionListenerPortType {
+@WebService(serviceName="UDDIValueSetCachingService", 
+			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType")
+public class UDDIValueSetCachingImpl implements UDDIValueSetCachingPortType {
 
 
-	public DispositionReport notifySubscriptionListener(
-			NotifySubscriptionListener body)
+	public void getAllValidValues(String authInfo, String modelKey,
+			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
 			throws DispositionReportFaultMessage {
 		// TODO Auto-generated method stub
-		return null;
+
 	}
 
 }

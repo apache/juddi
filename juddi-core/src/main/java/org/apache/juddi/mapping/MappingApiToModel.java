@@ -306,8 +306,9 @@ public class MappingApiToModel {
 		
 		mapServiceNames(apiBusinessService.getName(), modelBusinessService.getServiceNames(), modelBusinessService);
 		mapServiceDescriptions(apiBusinessService.getDescription(), modelBusinessService.getServiceDescrs(), modelBusinessService);
-		
 		mapServiceCategories(apiBusinessService.getCategoryBag(), modelBusinessService.getServiceCategories(), modelBusinessService);
+		
+		mapBindingTemplates(apiBusinessService.getBindingTemplates(), modelBusinessService.getBindingTemplates(), modelBusinessService);
 
 	}
 
@@ -368,6 +369,26 @@ public class MappingApiToModel {
 		}
 	}
 
+	public static void mapBindingTemplates(org.uddi.api_v3.BindingTemplates apiBindingTemplates, 
+										   Set<org.apache.juddi.model.BindingTemplate> modelBusinessTemplateList,
+										   org.apache.juddi.model.BusinessService modelBusinessService) 
+				   throws DispositionReportFaultMessage {
+		modelBusinessTemplateList.clear();
+
+		if (apiBindingTemplates != null) {
+			List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = apiBindingTemplates.getBindingTemplate();
+			Iterator<org.uddi.api_v3.BindingTemplate> apiBindingTemplateListItr = apiBindingTemplateList.iterator();
+			while (apiBindingTemplateListItr.hasNext()) {
+				org.uddi.api_v3.BindingTemplate apiBindingTemplate = apiBindingTemplateListItr.next();
+				org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
+
+				mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
+
+				modelBusinessTemplateList.add(modelBindingTemplate);
+			}
+		}
+	}
+	
 	public static void mapBindingTemplate(org.uddi.api_v3.BindingTemplate apiBindingTemplate, 
 										  org.apache.juddi.model.BindingTemplate modelBindingTemplate,
 										  org.apache.juddi.model.BusinessService modelBusinessService) 
@@ -378,7 +399,7 @@ public class MappingApiToModel {
 		modelBindingTemplate.setLastUpdate(new Date());
 		modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
 		modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
-		modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
+		//modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
 		
 		mapBindingDescriptions(apiBindingTemplate.getDescription(), modelBindingTemplate.getBindingDescrs(), modelBindingTemplate);
 		mapBindingCategories(apiBindingTemplate.getCategoryBag(), modelBindingTemplate.getBindingCategories(), modelBindingTemplate);
