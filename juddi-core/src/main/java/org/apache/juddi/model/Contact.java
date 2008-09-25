@@ -29,6 +29,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.OrderBy;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
@@ -77,17 +78,15 @@ public class Contact implements java.io.Serializable {
 	public ContactId getId() {
 		return this.id;
 	}
-
 	public void setId(ContactId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "business_key", nullable = false, insertable = false, updatable = false)
-
 	public BusinessEntity getBusinessEntity() {
 		return this.businessEntity;
 	}
-
 	public void setBusinessEntity(BusinessEntity businessEntity) {
 		this.businessEntity = businessEntity;
 	}
@@ -96,49 +95,50 @@ public class Contact implements java.io.Serializable {
 	public String getUseType() {
 		return this.useType;
 	}
-
 	public void setUseType(String useType) {
 		this.useType = useType;
 	}
 
 	@Column(name = "person_name", nullable = false)
-
 	public String getPersonName() {
 		return this.personName;
 	}
-
 	public void setPersonName(String personName) {
 		this.personName = personName;
 	}
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
+	@OrderBy
 	public Set<ContactDescr> getContactDescrs() {
 		return this.contactDescrs;
 	}
-
 	public void setContactDescrs(Set<ContactDescr> contactDescrs) {
 		this.contactDescrs = contactDescrs;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
+	@OrderBy
 	public Set<Email> getEmails() {
 		return this.emails;
 	}
-
 	public void setEmails(Set<Email> emails) {
 		this.emails = emails;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
+	@OrderBy
 	public Set<Phone> getPhones() {
 		return this.phones;
 	}
-
 	public void setPhones(Set<Phone> phones) {
 		this.phones = phones;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
+	@OrderBy
 	public Set<Address> getAddresses() {
 		return this.addresses;
 	}
-
 	public void setAddresses(Set<Address> addresses) {
 		this.addresses = addresses;
 	}

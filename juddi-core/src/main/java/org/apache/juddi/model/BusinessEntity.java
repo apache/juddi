@@ -26,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.OrderBy;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
@@ -119,6 +120,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<Contact> getContacts() {
 		return this.contacts;
 	}
@@ -127,6 +129,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<BusinessIdentifier> getBusinessIdentifiers() {
 		return this.businessIdentifiers;
 	}
@@ -145,6 +148,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<DiscoveryUrl> getDiscoveryUrls() {
 		return this.discoveryUrls;
 	}
@@ -153,6 +157,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<BusinessName> getBusinessNames() {
 		return this.businessNames;
 	}
@@ -170,6 +175,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<BusinessCategory> getBusinessCategories() {
 		return this.businessCategories;
 	}
@@ -186,6 +192,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	@OrderBy
 	public Set<BusinessDescr> getBusinessDescrs() {
 		return this.businessDescrs;
 	}
