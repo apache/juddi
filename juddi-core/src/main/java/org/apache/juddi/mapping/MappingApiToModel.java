@@ -117,7 +117,7 @@ public class MappingApiToModel {
 			while (apiContactListItr.hasNext()) {
 				org.uddi.api_v3.Contact apiContact = apiContactListItr.next();
 				
-				// The model only supports one personName per contact and it is just a string value (no language code).
+				// TODO: The model only supports one personName per contact and it is just a string value (no language code).
 				List<org.uddi.api_v3.PersonName> apiNameList = apiContact.getPersonName();
 				String personName = null;
 				if (apiNameList != null && apiNameList.size() > 0)
@@ -370,10 +370,10 @@ public class MappingApiToModel {
 	}
 
 	public static void mapBindingTemplates(org.uddi.api_v3.BindingTemplates apiBindingTemplates, 
-										   Set<org.apache.juddi.model.BindingTemplate> modelBusinessTemplateList,
+										   Set<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList,
 										   org.apache.juddi.model.BusinessService modelBusinessService) 
 				   throws DispositionReportFaultMessage {
-		modelBusinessTemplateList.clear();
+		modelBindingTemplateList.clear();
 
 		if (apiBindingTemplates != null) {
 			List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = apiBindingTemplates.getBindingTemplate();
@@ -384,7 +384,7 @@ public class MappingApiToModel {
 
 				mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 
-				modelBusinessTemplateList.add(modelBindingTemplate);
+				modelBindingTemplateList.add(modelBindingTemplate);
 			}
 		}
 	}
@@ -496,11 +496,11 @@ public class MappingApiToModel {
 
 		if (apiInstanceDetails != null) {
 			List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
-			Iterator<JAXBElement<?>> aapiInstanceDetailsContentItr = apiInstanceDetailsContent.iterator();
+			Iterator<JAXBElement<?>> apiInstanceDetailsContentItr = apiInstanceDetailsContent.iterator();
 			int docId = 0;
 			int descId = 0;
-			while (aapiInstanceDetailsContentItr.hasNext()) {
-				JAXBElement<?> elem = aapiInstanceDetailsContentItr.next();
+			while (apiInstanceDetailsContentItr.hasNext()) {
+				JAXBElement<?> elem = apiInstanceDetailsContentItr.next();
 				
 				if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
 					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
@@ -534,7 +534,7 @@ public class MappingApiToModel {
 		mapTModelDescriptions(apiTModel.getDescription(), modelTModel.getTmodelDescrs(), modelTModel);
 		mapTModelIdentifiers(apiTModel.getIdentifierBag(), modelTModel.getTmodelIdentifiers(), modelTModel);
 		mapTModelCategories(apiTModel.getCategoryBag(), modelTModel.getTmodelCategories(), modelTModel);
-		//TODO: OverviewDoc - requires handling the JAXBElement catch-all issue, also, model doesn't have logical mapping
+		//TODO: OverviewDoc - model doesn't have logical mapping
 
 	}
 

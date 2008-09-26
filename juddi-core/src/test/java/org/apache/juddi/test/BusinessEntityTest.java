@@ -1,39 +1,51 @@
 package org.apache.juddi.test;
 
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
+import java.util.List;
+import java.util.Iterator;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
+import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.testng.annotations.*;
 import static junit.framework.Assert.fail;
+import static junit.framework.Assert.assertEquals;
 
-import org.uddi.api_v3.DeleteBusiness;
-import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class BusinessEntityTest {
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
+	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
-	@Parameters({ "businessFile" })
+	@Parameters({ "businessFile", "businessKey" })
 	@Test
-	public void saveBusiness(String businessFile) {
+	public void saveBusiness(String businessFile, String businessKey) {
 		try {
 			SaveBusiness sb = new SaveBusiness();
-			org.uddi.api_v3.BusinessEntity be = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(businessFile);
-			sb.getBusinessEntity().add(be);
+			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(businessFile);
+			sb.getBusinessEntity().add(beIn);
 			publish.saveBusiness(sb);
 	
 			// Now get the entity and check the values
+			GetBusinessDetail gb = new GetBusinessDetail();
+			gb.getBusinessKey().add(businessKey);
+			BusinessDetail bd = inquiry.getBusinessDetail(gb);
+			List<BusinessEntity> beOutList = bd.getBusinessEntity();
+			BusinessEntity beOut = beOutList.get(0);
+
+			assertEquals(beIn.getBusinessKey(), beOut.getBusinessKey());
+			
+			UDDIApiTestHelper.checkNames(beIn.getName(), beOut.getName());
+			UDDIApiTestHelper.checkDescriptions(beIn.getDescription(), beOut.getDescription());
+			UDDIApiTestHelper.checkDiscoveryUrls(beIn.getDiscoveryURLs(), beOut.getDiscoveryURLs());
+			UDDIApiTestHelper.checkContacts(beIn.getContacts(), beOut.getContacts());
+			UDDIApiTestHelper.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
 		}
 		catch(DispositionReportFaultMessage dr) {
-			
+			fail("No exception should be thrown");
 		}
 		catch(JAXBException je) {
-			
+			fail("No exception should be thrown");
 		}
 
 	}
@@ -51,13 +63,6 @@ public class BusinessEntityTest {
 			
 		}
 		
-	}
-
-	public static Object buildEntityFromDoc(String fileName) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance("org.uddi.api_v3");
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		Object obj = ((JAXBElement)unmarshaller.unmarshal(new File(fileName))).getValue();
-		return obj;
 	}
 
 }
