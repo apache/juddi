@@ -23,7 +23,7 @@ import java.util.Locale;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class Configuration {
+public class ResourceConfig {
 	public static final String GLOBAL_MESSAGES_FILE = "messages";
 
 	private static final ResourceBundle globalMessages;

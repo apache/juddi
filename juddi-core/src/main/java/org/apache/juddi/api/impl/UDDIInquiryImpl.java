@@ -25,7 +25,7 @@ import javax.jws.WebService;
 import javax.persistence.EntityTransaction;
 import javax.persistence.EntityManager;
 
-import org.apache.juddi.config.Configuration;
+import org.apache.juddi.config.ResourceConfig;
 import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.util.JPAUtil;
@@ -105,7 +105,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
 			if (modelBindingTemplate == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.BindingTemplateNotFound") + ":  " + bindingKey, 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.BindingTemplateNotFound") + ":  " + bindingKey, 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			
@@ -142,7 +142,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
 			if (modelBusinessEntity == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.BusinessNotFound") + ":  " + businessKey, 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.BusinessNotFound") + ":  " + businessKey, 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			
@@ -185,7 +185,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			
 			org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
 			if (modelBusinessService == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.ServiceNotFound") + ":  " + serviceKey, 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.ServiceNotFound") + ":  " + serviceKey, 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			
@@ -222,7 +222,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			
 			org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
 			if (modelTModel == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.TModelNotFound") + ":  " + tmodelKey, 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.TModelNotFound") + ":  " + tmodelKey, 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			

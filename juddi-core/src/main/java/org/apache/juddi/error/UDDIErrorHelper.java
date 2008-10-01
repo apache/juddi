@@ -17,7 +17,7 @@
 
 package org.apache.juddi.error;
 
-import org.apache.juddi.config.Configuration;
+import org.apache.juddi.config.ResourceConfig;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
 import org.uddi.api_v3.ErrInfo;
@@ -104,7 +104,7 @@ public class UDDIErrorHelper {
 		String errCode = lookupErrCode(errno);
 		if (errCode == null)
 			return null;
-		return Configuration.getGlobalMessage(errCode);
+		return ResourceConfig.getGlobalMessage(errCode);
 	}    
 
 	public static final DispositionReport buildDispositionReport(int errNo) {

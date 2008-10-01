@@ -48,7 +48,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.error.UDDIErrorHelper;
-import org.apache.juddi.config.Configuration;
+import org.apache.juddi.config.ResourceConfig;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -194,7 +194,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			
 			//TODO:  Validate the input here
 			if (JPAUtil.getEntity(org.apache.juddi.model.BusinessService.class, apiBindingTemplate.getServiceKey()) == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.ServiceNotFound") + ":  " + apiBindingTemplate.getServiceKey(), 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.ServiceNotFound") + ":  " + apiBindingTemplate.getServiceKey(), 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			//TODO:  Test if key is null, and if so, apply key-generation strategy
@@ -258,7 +258,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			
 			//TODO:  Validate the input here
 			if (JPAUtil.getEntity(org.apache.juddi.model.BusinessEntity.class, apiBusinessService.getBusinessKey()) == null) {
-				throw new DispositionReportFaultMessage(Configuration.getGlobalMessage("errors.invalidkey.BusinessNotFound") + ":  " + apiBusinessService.getBusinessKey(), 
+				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.BusinessNotFound") + ":  " + apiBusinessService.getBusinessKey(), 
 														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
 			}
 			//TODO:  Test if key is null, and if so, apply key-generation strategy
