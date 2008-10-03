@@ -17,7 +17,6 @@
 
 package org.apache.juddi.mapping;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Date;
@@ -59,11 +58,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelNameList.clear();
 
-		Iterator<org.uddi.api_v3.Name> apiNameListItr = apiNameList.iterator();
 		int id = 0;
-		while (apiNameListItr.hasNext()) {
-			org.uddi.api_v3.Name apiName = apiNameListItr.next();
-			
+		for (org.uddi.api_v3.Name apiName : apiNameList) {
 			org.apache.juddi.model.BusinessNameId businessNameId = new org.apache.juddi.model.BusinessNameId(modelBusinessEntity.getBusinessKey(), id++);
 			modelNameList.add(new org.apache.juddi.model.BusinessName(businessNameId, modelBusinessEntity, apiName.getLang(), apiName.getValue()));
 		}
@@ -75,11 +71,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-			
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.BusinessDescrId businessDescId = new org.apache.juddi.model.BusinessDescrId(modelBusinessEntity.getBusinessKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.BusinessDescr(businessDescId, modelBusinessEntity, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -93,11 +86,8 @@ public class MappingApiToModel {
 		
 		if (apiDiscUrls != null) {
 			List<org.uddi.api_v3.DiscoveryURL> apiDiscUrlList = apiDiscUrls.getDiscoveryURL();
-			Iterator<org.uddi.api_v3.DiscoveryURL> apiDiscUrlListItr = apiDiscUrlList.iterator();
 			int id = 0;
-			while (apiDiscUrlListItr.hasNext()) {
-				org.uddi.api_v3.DiscoveryURL apiDiscUrl = apiDiscUrlListItr.next();
-				
+			for (org.uddi.api_v3.DiscoveryURL apiDiscUrl : apiDiscUrlList) {
 				org.apache.juddi.model.DiscoveryUrlId discUrlId = new org.apache.juddi.model.DiscoveryUrlId(modelBusinessEntity.getBusinessKey(), id++);
 				modelDiscUrlList.add(new org.apache.juddi.model.DiscoveryUrl(discUrlId, modelBusinessEntity, apiDiscUrl.getUseType(), apiDiscUrl.getValue()));
 			}
@@ -112,11 +102,8 @@ public class MappingApiToModel {
 		
 		if (apiContacts != null) {
 			List<org.uddi.api_v3.Contact> apiContactList = apiContacts.getContact();
-			Iterator<org.uddi.api_v3.Contact> apiContactListItr = apiContactList.iterator();
 			int id = 0;
-			while (apiContactListItr.hasNext()) {
-				org.uddi.api_v3.Contact apiContact = apiContactListItr.next();
-				
+			for (org.uddi.api_v3.Contact apiContact : apiContactList) {
 				// TODO: The model only supports one personName per contact and it is just a string value (no language code).
 				List<org.uddi.api_v3.PersonName> apiNameList = apiContact.getPersonName();
 				String personName = null;
@@ -144,11 +131,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.ContactDescrId contactDescId = new org.apache.juddi.model.ContactDescrId(businessKey, modelContact.getId().getContactId(), id++);
 			modelDescList.add(new org.apache.juddi.model.ContactDescr(contactDescId, modelContact, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -161,11 +145,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelEmailList.clear();
 
-		Iterator<org.uddi.api_v3.Email> apiEmailListItr = apiEmailList.iterator();
 		int id = 0;
-		while (apiEmailListItr.hasNext()) {
-			org.uddi.api_v3.Email apiEmail = apiEmailListItr.next();
-
+		for (org.uddi.api_v3.Email apiEmail : apiEmailList) {
 			org.apache.juddi.model.EmailId emailId = new org.apache.juddi.model.EmailId(businessKey, modelContact.getId().getContactId(), id++);
 			modelEmailList.add(new org.apache.juddi.model.Email(emailId, modelContact, apiEmail.getUseType(), apiEmail.getValue()));
 		}
@@ -178,11 +159,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelPhoneList.clear();
 
-		Iterator<org.uddi.api_v3.Phone> apiPhoneListItr = apiPhoneList.iterator();
 		int id = 0;
-		while (apiPhoneListItr.hasNext()) {
-			org.uddi.api_v3.Phone apiPhone = apiPhoneListItr.next();
-
+		for (org.uddi.api_v3.Phone apiPhone : apiPhoneList) {
 			org.apache.juddi.model.PhoneId phoneId = new org.apache.juddi.model.PhoneId(businessKey, modelContact.getId().getContactId(), id++);
 			modelPhoneList.add(new org.apache.juddi.model.Phone(phoneId, modelContact, apiPhone.getUseType(), apiPhone.getValue()));
 		}
@@ -195,11 +173,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelAddressList.clear();
 
-		Iterator<org.uddi.api_v3.Address> apiAddressListItr = apiAddressList.iterator();
 		int id = 0;
-		while (apiAddressListItr.hasNext()) {
-			org.uddi.api_v3.Address apiAddress = apiAddressListItr.next();
-
+		for (org.uddi.api_v3.Address apiAddress : apiAddressList) {
 			org.apache.juddi.model.AddressId addressId = new org.apache.juddi.model.AddressId(businessKey, modelContact.getId().getContactId(), id++);
 			org.apache.juddi.model.Address modelAddress = new org.apache.juddi.model.Address(addressId, modelContact);
 			modelAddress.setSortCode(apiAddress.getSortCode());
@@ -220,11 +195,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelAddressLineList.clear();
 
-		Iterator<org.uddi.api_v3.AddressLine> apiAddressLineListItr = apiAddressLineList.iterator();
 		int id = 0;
-		while (apiAddressLineListItr.hasNext()) {
-			org.uddi.api_v3.AddressLine apiAddressLine = apiAddressLineListItr.next();
-
+		for (org.uddi.api_v3.AddressLine apiAddressLine : apiAddressLineList) {
 			org.apache.juddi.model.AddressLineId addressLineId = new org.apache.juddi.model.AddressLineId(businessKey, contactId, modelAddress.getId().getAddressId(), id++);
 			modelAddressLineList.add(new org.apache.juddi.model.AddressLine(addressLineId, modelAddress, apiAddressLine.getValue(), apiAddressLine.getKeyName(), apiAddressLine.getKeyValue()));
 		}
@@ -239,11 +211,8 @@ public class MappingApiToModel {
 
 		if (apiIdentifierBag != null) {
 			List<org.uddi.api_v3.KeyedReference> apiKeyedRefList = apiIdentifierBag.getKeyedReference();
-			Iterator<org.uddi.api_v3.KeyedReference> apiKeyedRefListItr = apiKeyedRefList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				org.uddi.api_v3.KeyedReference apiKeyedRef = apiKeyedRefListItr.next();
-
+			for (org.uddi.api_v3.KeyedReference apiKeyedRef : apiKeyedRefList) {
 				org.apache.juddi.model.BusinessIdentifierId identifierId = new org.apache.juddi.model.BusinessIdentifierId(modelBusinessEntity.getBusinessKey(), id++);
 				modelIdentifierList.add(new org.apache.juddi.model.BusinessIdentifier(identifierId, modelBusinessEntity, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 			}
@@ -258,11 +227,8 @@ public class MappingApiToModel {
 
 		if (apiCategoryBag != null) {
 			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			Iterator<JAXBElement<?>> apiKeyedRefListItr = apiCategoryList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				JAXBElement<?> elem = apiKeyedRefListItr.next();
-				
+			for (JAXBElement<?> elem : apiCategoryList) {
 				// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
 				// the KeyedReferenceGroups are ignored.
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
@@ -275,7 +241,7 @@ public class MappingApiToModel {
 		}
 	}
 	
-	public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices, 
+	public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices,
 										   Set<org.apache.juddi.model.BusinessService> modelBusinessServiceList,
 										   org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
@@ -283,9 +249,7 @@ public class MappingApiToModel {
 
 		if (apiBusinessServices != null) {
 			List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = apiBusinessServices.getBusinessService();
-			Iterator<org.uddi.api_v3.BusinessService> apiBusinessServiceListItr = apiBusinessServiceList.iterator();
-			while (apiBusinessServiceListItr.hasNext()) {
-				org.uddi.api_v3.BusinessService apiBusinessService = apiBusinessServiceListItr.next();
+			for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
 				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 
 				mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
@@ -318,11 +282,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelNameList.clear();
 
-		Iterator<org.uddi.api_v3.Name> apiNameListItr = apiNameList.iterator();
 		int id = 0;
-		while (apiNameListItr.hasNext()) {
-			org.uddi.api_v3.Name apiName = apiNameListItr.next();
-
+		for (org.uddi.api_v3.Name apiName : apiNameList) {
 			org.apache.juddi.model.ServiceNameId serviceNameId = new org.apache.juddi.model.ServiceNameId(modelBusinessService.getServiceKey(), id++);
 			modelNameList.add(new org.apache.juddi.model.ServiceName(serviceNameId, modelBusinessService, apiName.getLang(), apiName.getValue()));
 		}
@@ -334,11 +295,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.ServiceDescrId serviceDescId = new org.apache.juddi.model.ServiceDescrId(modelBusinessService.getServiceKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.ServiceDescr(serviceDescId, modelBusinessService, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -352,11 +310,8 @@ public class MappingApiToModel {
 
 		if (apiCategoryBag != null) {
 			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			Iterator<JAXBElement<?>> apiKeyedRefListItr = apiCategoryList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				JAXBElement<?> elem = apiKeyedRefListItr.next();
-
+			for (JAXBElement<?> elem : apiCategoryList) {
 				// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
 				// the KeyedReferenceGroups are ignored.
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
@@ -377,9 +332,7 @@ public class MappingApiToModel {
 
 		if (apiBindingTemplates != null) {
 			List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = apiBindingTemplates.getBindingTemplate();
-			Iterator<org.uddi.api_v3.BindingTemplate> apiBindingTemplateListItr = apiBindingTemplateList.iterator();
-			while (apiBindingTemplateListItr.hasNext()) {
-				org.uddi.api_v3.BindingTemplate apiBindingTemplate = apiBindingTemplateListItr.next();
+			for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
 				org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
 
 				mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
@@ -412,11 +365,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.BindingDescrId bindingDescId = new org.apache.juddi.model.BindingDescrId(modelBindingTemplate.getBindingKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.BindingDescr(bindingDescId, modelBindingTemplate, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -430,11 +380,8 @@ public class MappingApiToModel {
 
 		if (apiCategoryBag != null) {
 			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			Iterator<JAXBElement<?>> apiKeyedRefListItr = apiCategoryList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				JAXBElement<?> elem = apiKeyedRefListItr.next();
-
+			for (JAXBElement<?> elem : apiCategoryList) {
 				// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
 				// the KeyedReferenceGroups are ignored.
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
@@ -455,11 +402,8 @@ public class MappingApiToModel {
 
 		if (apiTModelInstDetails != null) {
 			List<org.uddi.api_v3.TModelInstanceInfo> apiTModelInstInfoList = apiTModelInstDetails.getTModelInstanceInfo();
-			Iterator<org.uddi.api_v3.TModelInstanceInfo> apiTModelInstInfoListItr = apiTModelInstInfoList.iterator();
 			int id = 0;
-			while (apiTModelInstInfoListItr.hasNext()) {
-				org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo = apiTModelInstInfoListItr.next();
-
+			for (org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo : apiTModelInstInfoList) {
 				org.apache.juddi.model.TmodelInstanceInfoId tmodelInstInfoId = new org.apache.juddi.model.TmodelInstanceInfoId(modelBindingTemplate.getBindingKey(), id++);
 				org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo = new org.apache.juddi.model.TmodelInstanceInfo(tmodelInstInfoId, modelBindingTemplate, apiTModelInstInfo.getTModelKey());
 				
@@ -478,11 +422,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.TmodelInstanceInfoDescrId tmodelInstInfoDescId = new org.apache.juddi.model.TmodelInstanceInfoDescrId(bindingKey, modelTModelInstInfo.getId().getTmodelInstanceInfoId(), id++);
 			modelDescList.add(new org.apache.juddi.model.TmodelInstanceInfoDescr(tmodelInstInfoDescId, modelTModelInstInfo, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -496,12 +437,9 @@ public class MappingApiToModel {
 
 		if (apiInstanceDetails != null) {
 			List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
-			Iterator<JAXBElement<?>> apiInstanceDetailsContentItr = apiInstanceDetailsContent.iterator();
 			int docId = 0;
 			int descId = 0;
-			while (apiInstanceDetailsContentItr.hasNext()) {
-				JAXBElement<?> elem = apiInstanceDetailsContentItr.next();
-				
+			for (JAXBElement<?> elem : apiInstanceDetailsContent) {
 				if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
 					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
 					// TODO: OverviewDoc is not mapped properly in the model.
@@ -544,11 +482,8 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		Iterator<org.uddi.api_v3.Description> apiDescListItr = apiDescList.iterator();
 		int id = 0;
-		while (apiDescListItr.hasNext()) {
-			org.uddi.api_v3.Description apiDesc = apiDescListItr.next();
-
+		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.TmodelDescrId tmodelDescId = new org.apache.juddi.model.TmodelDescrId(modelTModel.getTmodelKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.TmodelDescr(tmodelDescId, modelTModel, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -562,11 +497,8 @@ public class MappingApiToModel {
 
 		if (apiIdentifierBag != null) {
 			List<org.uddi.api_v3.KeyedReference> apiKeyedRefList = apiIdentifierBag.getKeyedReference();
-			Iterator<org.uddi.api_v3.KeyedReference> apiKeyedRefListItr = apiKeyedRefList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				org.uddi.api_v3.KeyedReference apiKeyedRef = apiKeyedRefListItr.next();
-
+			for (org.uddi.api_v3.KeyedReference apiKeyedRef : apiKeyedRefList) {
 				org.apache.juddi.model.TmodelIdentifierId identifierId = new org.apache.juddi.model.TmodelIdentifierId(modelTModel.getTmodelKey(), id++);
 				modelIdentifierList.add(new org.apache.juddi.model.TmodelIdentifier(identifierId, modelTModel, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 			}
@@ -581,11 +513,8 @@ public class MappingApiToModel {
 
 		if (apiCategoryBag != null) {
 			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			Iterator<JAXBElement<?>> apiKeyedRefListItr = apiCategoryList.iterator();
 			int id = 0;
-			while (apiKeyedRefListItr.hasNext()) {
-				JAXBElement<?> elem = apiKeyedRefListItr.next();
-
+			for (JAXBElement<?> elem : apiCategoryList) {
 				// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
 				// the KeyedReferenceGroups are ignored.
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
