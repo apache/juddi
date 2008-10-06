@@ -57,7 +57,7 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
-		long refreshDelay = propConfig.getLong(Property.JUDDI_RELOAD_DELAY, 1000l);
+		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
 		fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);

@@ -1,16 +1,14 @@
-package org.apache.juddi.test;
+package org.apache.juddi.config;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.config.AppConfig;
-import org.apache.juddi.config.Property;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class ApplicationConfigurationTest 
 {
 	@Test
 	public void readPropertyFromFile() throws ConfigurationException
 	{
-		long refreshDelay = AppConfig.getConfiguration().getLong(Property.JUDDI_RELOAD_DELAY);
+		long refreshDelay = AppConfig.getConfiguration().getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY);
 		System.out.println(refreshDelay);
 	}
 	
