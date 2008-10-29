@@ -47,7 +47,7 @@ public class TmodelOverview implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "tmodel_overview_id", unique = true, nullable = false)
+	@Column(name = "tmodel_overview_id", nullable = false)
 
 	public int getTmodelOverviewId() {
 		return this.tmodelOverviewId;

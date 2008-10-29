@@ -67,6 +67,12 @@
 			<scope>test</scope>
 			<classifier>jdk15</classifier>
 		</dependency>
+                <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derby</artifactId>
+                        <version>10.1.2.1</version>
+                        <scope>test</scope>
+                </dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>

@@ -61,7 +61,7 @@ public class Publisher implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "publisher_id", unique = true, nullable = false, length = 20)
+	@Column(name = "publisher_id", nullable = false, length = 20)
 	public String getPublisherId() {
 		return this.publisherId;
 	}

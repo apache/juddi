@@ -43,7 +43,7 @@ public class Subscription implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "subscription_key", unique = true, nullable = false, length = 255)
+	@Column(name = "subscription_key", nullable = false, length = 255)
 	public String getSubscriptionKey() {
 		return this.subscriptionKey;
 	}

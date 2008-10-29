@@ -43,7 +43,7 @@ public class CategoryBagGroup implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "bag_group_id", unique = true, nullable = false)
+	@Column(name = "bag_group_id", nullable = false)
 
 	public int getBagGroupId() {
 		return this.bagGroupId;

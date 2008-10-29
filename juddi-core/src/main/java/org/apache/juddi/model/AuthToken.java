@@ -56,7 +56,7 @@ public class AuthToken implements java.io.Serializable {
 	}
 
 	@Id
-	@Column(name = "auth_token", unique = true, nullable = false, length = 51)
+	@Column(name = "auth_token", nullable = false, length = 51)
 	public String getAuthToken() {
 		return this.authToken;
 	}

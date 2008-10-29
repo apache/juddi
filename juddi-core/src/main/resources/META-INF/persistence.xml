@@ -14,12 +14,13 @@
       <property name="hibernate.archive.autodetection" value="class"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="true"/>
-       
+
       <!-- connection properties -->
-      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/juddi?autoReconnect=true"/>
-      <property name="hibernate.connection.username" value="juddi"/>
-      <property name="hibernate.connection.password" value="juddi"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+       <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="hibernate.connection.url" value="jdbc:derby:juddi-derby-test-db;create=true"/>
+      <property name="hibernate.connection.username" value=""/>
+      <property name="hibernate.connection.password" value=""/>
 
       <!-- connection pool properties -->
       <property name="hibernate.dbcp.maxActive" value="100"/>
