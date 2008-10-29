@@ -28,6 +28,20 @@ import javax.persistence.EntityManager;
 import org.apache.juddi.config.ResourceConfig;
 import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.query.FetchBindingTemplatesQuery;
+import org.apache.juddi.query.FetchBusinessEntitiesQuery;
+import org.apache.juddi.query.FetchBusinessServicesQuery;
+import org.apache.juddi.query.FetchTModelsQuery;
+import org.apache.juddi.query.FindBindingByTModelKeyQuery;
+import org.apache.juddi.query.BindingTemplateQuery;
+import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
+import org.apache.juddi.query.FindBusinessByIdentifierQuery;
+import org.apache.juddi.query.FindBusinessByNameQuery;
+import org.apache.juddi.query.FindServiceByNameQuery;
+import org.apache.juddi.query.BusinessServiceQuery;
+import org.apache.juddi.query.FindTModelByIdentifierQuery;
+import org.apache.juddi.query.FindTModelByNameQuery;
+import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.util.JPAUtil;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BusinessDetail;
@@ -51,20 +65,106 @@ import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 
+/**
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ */
 @WebService(serviceName="UDDIInquiryService", 
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType")
 public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+
+		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+		
+		// TODO: Validate input here
+		org.uddi.api_v3.TModelBag tmodelKeys = body.getTModelBag();
+		org.uddi.api_v3.CategoryBag categories = body.getCategoryBag();
+		
+		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+		
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		List<?> keysFound = null;
+		if (body.getServiceKey() == null || body.getServiceKey().length() == 0) {
+			keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, tmodelKeys, keysFound);
+			//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, keysFound);
+		}
+		else {
+			DynamicQuery.Parameter keyRestriction = new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME, body.getServiceKey(), DynamicQuery.PREDICATE_EQUALS);
+			keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, tmodelKeys, keysFound, keyRestriction);
+			//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, keysFound, keyRestriction);
+		}
+		
+		// Sort and retrieve the final results with paging taken into account
+		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
+			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
+			
+			MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
+			
+			result.getBindingTemplate().add(apiBindingTemplate);
+		}
+		
+		tx.commit();
+		em.close();
+		
+		return result;
 	}
 
 	public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+
+		org.uddi.api_v3.BusinessList result = new org.uddi.api_v3.BusinessList();
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+		
+		// TODO: Validate input here
+		org.uddi.api_v3.IdentifierBag identifiers = body.getIdentifierBag();
+		org.uddi.api_v3.DiscoveryURLs discURLs = body.getDiscoveryURLs();
+		org.uddi.api_v3.CategoryBag categories = body.getCategoryBag();
+		List<org.uddi.api_v3.Name> names = body.getName();
+		
+		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+		
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		List<?> keysFound = null;
+		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, identifiers, keysFound);
+		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, discURLs, keysFound);
+		//keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, categories, keysFound);
+		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, names, keysFound);
+
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		if (queryResults != null && queryResults.size() > 0)
+			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
+			org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+			
+			MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
+			
+			result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+		}
+		
+		tx.commit();
+		em.close();
+		
+		return result;
 	}
 
 	public RelatedBusinessesList findRelatedBusinesses(
@@ -75,14 +175,91 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+
+		org.uddi.api_v3.ServiceList result = new org.uddi.api_v3.ServiceList();
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+		
+		// TODO: Validate input here
+		org.uddi.api_v3.CategoryBag categories = body.getCategoryBag();
+		List<org.uddi.api_v3.Name> names = body.getName();
+		
+		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+		
+		
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		List<?> keysFound = null;
+		//keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, categories, keysFound);
+		keysFound = FindServiceByNameQuery.select(em, findQualifiers, names, keysFound);
+
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		if (queryResults != null && queryResults.size() > 0)
+			result.setServiceInfos(new org.uddi.api_v3.ServiceInfos());
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
+			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
+			
+			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
+			
+			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
+		}
+		
+		tx.commit();
+		em.close();
+		
+		return result;
 	}
 
 	public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+
+		org.uddi.api_v3.TModelList result = new org.uddi.api_v3.TModelList();
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+		
+		// TODO: Validate input here
+		org.uddi.api_v3.IdentifierBag identifiers = body.getIdentifierBag();
+		org.uddi.api_v3.CategoryBag categories = body.getCategoryBag();
+		org.uddi.api_v3.Name name = body.getName();
+		
+		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+		
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		List<?> keysFound = null;
+		keysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, identifiers, keysFound);
+		//keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, identifiers, keysFound);
+		keysFound = FindTModelByNameQuery.select(em, findQualifiers, name, keysFound);
+
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		if (queryResults != null && queryResults.size() > 0)
+			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
+		
+		for (Object item : queryResults) {
+			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
+			org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
+			
+			MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
+			
+			result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+		}
+		
+		tx.commit();
+		em.close();
+		
+		return result;
 	}
 
 	public BindingDetail getBindingDetail(GetBindingDetail body)

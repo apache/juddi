@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<find_tModel xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <findQualifiers>
+    <findQualifier>caseInsensitiveMatch</findQualifier>
+    <findQualifier>approximateMatch</findQualifier>
+    <findQualifier>andAllKeys</findQualifier>
+  </findQualifiers>
+  <name xml:lang="en">tmodel</name>
+  <identifierBag>
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
+    <keyedReference tModelKey="uddi:tmodelkey:identifierx" keyName="identify" keyValue="identity" />
+  </identifierBag>
+</find_tModel>

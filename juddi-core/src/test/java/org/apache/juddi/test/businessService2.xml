@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessService xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:businessone.com" serviceKey="uddi:businessone.com:services:servicetwo">
+  <name xml:lang="en">Service Two</name>
+  <name xml:lang="en">Second Service</name>
+  <description xml:lang="en">This is the description of service two.</description>
+  <description xml:lang="es">Ésta es la descripción del servicio dos.</description>
+  <bindingTemplates>
+    <bindingTemplate bindingKey="uddi:businessone.com:services:servicetwo:accesspoint">
+      <description xml:lang="en">This is the access point for service two.</description>
+      <accessPoint useType="endPoint">http://businessone.com/services/servicetwo</accessPoint>
+      <tModelInstanceDetails>
+        <tModelInstanceInfo tModelKey="uddi:businessone.com:services:servicetwo:wsdlSpec">
+          <description xml:lang="en">The wsdl for this service: service two</description>
+          <instanceDetails>
+            <overviewDoc>
+              <description xml:lang="en">Help document to describe the WSDL</description>
+              <overviewURL useType="text">http://www.w3.org/TR/wsdl</overviewURL>
+            </overviewDoc>
+            <instanceParms>instanceParms</instanceParms>
+          </instanceDetails>
+        </tModelInstanceInfo>
+      </tModelInstanceDetails>
+	  <categoryBag>
+	    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="accesspoint" />
+	  </categoryBag>
+    </bindingTemplate>
+  </bindingTemplates>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="bananas" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="strawberries" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    </keyedReferenceGroup>
+  </categoryBag>
+</businessService>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<find_business xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" maxRows="1" listHead="0">
+  <findQualifiers>
+    <findQualifier>orLikeKeys</findQualifier>
+    <findQualifier>caseInsensitiveMatch</findQualifier>
+    <findQualifier>approximateMatch</findQualifier>
+  </findQualifiers>
+  <name xml:lang="en">John</name>
+  <name xml:lang="en">A-1</name>
+  <identifierBag>
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identityX" />
+  </identifierBag>
+  <discoveryURLs>
+    <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
+    <discoveryURL useType="serviceList">http://www.businessthree.com/services</discoveryURL>
+  </discoveryURLs>
+</find_business>

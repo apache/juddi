@@ -22,6 +22,10 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 
+import javax.persistence.Query;
+import java.util.List;
+
+
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
@@ -84,4 +88,17 @@ public class JPAUtil {
 		em.close();
 	}
 	
+	public static List runQuery(String qry, int maxRows, int listHead) {
+		EntityManager em = getEntityManager();
+		
+		Query q = em.createQuery(qry);
+		q.setMaxResults(maxRows);
+		q.setFirstResult(listHead);
+		List<?> ret =  q.getResultList();
+		
+		em.close();
+		
+		return ret;
+		
+	}
 }

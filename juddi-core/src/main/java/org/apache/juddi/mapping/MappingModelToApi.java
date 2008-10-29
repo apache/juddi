@@ -528,5 +528,60 @@ public class MappingModelToApi {
 		apiTModel.setCategoryBag(apiCategoryBag);
 	}
 
+	public static void mapBusinessInfo(org.apache.juddi.model.BusinessEntity modelBusinessEntity, 
+									   org.uddi.api_v3.BusinessInfo apiBusinessInfo) 
+				   throws DispositionReportFaultMessage {
+		
+		apiBusinessInfo.setBusinessKey(modelBusinessEntity.getBusinessKey());
+		
+		mapBusinessNames(modelBusinessEntity.getBusinessNames(), apiBusinessInfo.getName());
+		mapBusinessDescriptions(modelBusinessEntity.getBusinessDescrs(), apiBusinessInfo.getDescription());
+		
+		mapServiceInfos(modelBusinessEntity.getBusinessServices(), apiBusinessInfo.getServiceInfos(), apiBusinessInfo);
+		
+	}
+
+	public static void mapServiceInfos(Set<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
+									   org.uddi.api_v3.ServiceInfos apiServiceInfos,
+									   org.uddi.api_v3.BusinessInfo apiBusinessInfo) 
+				   throws DispositionReportFaultMessage {
+		if (apiServiceInfos == null)
+			apiServiceInfos = new org.uddi.api_v3.ServiceInfos();
+		
+		List<org.uddi.api_v3.ServiceInfo> apiServiceInfoList = apiServiceInfos.getServiceInfo();
+		apiServiceInfoList.clear();
+		
+		for (org.apache.juddi.model.BusinessService modelBusinessService : modelBusinessServiceList) {
+			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
+
+			mapServiceInfo(modelBusinessService, apiServiceInfo);
+
+			apiServiceInfos.getServiceInfo().add(apiServiceInfo);
+		}
+		apiBusinessInfo.setServiceInfos(apiServiceInfos);
+	}
+	
+	public static void mapServiceInfo(org.apache.juddi.model.BusinessService modelBusinessService, 
+									  org.uddi.api_v3.ServiceInfo apiServiceInfo) 
+				   throws DispositionReportFaultMessage {
+
+		apiServiceInfo.setBusinessKey(modelBusinessService.getBusinessEntity().getBusinessKey());
+		apiServiceInfo.setServiceKey(modelBusinessService.getServiceKey());
+
+		mapServiceNames(modelBusinessService.getServiceNames(), apiServiceInfo.getName());
+	}
+	
+	public static void mapTModelInfo(org.apache.juddi.model.Tmodel modelTModel, 
+									 org.uddi.api_v3.TModelInfo apiTModelInfo) 
+				   throws DispositionReportFaultMessage {
+
+		apiTModelInfo.setTModelKey(modelTModel.getTmodelKey());
+		org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();
+		apiName.setValue(modelTModel.getName());
+		apiTModelInfo.setName(apiName);
+
+		mapTModelDescriptions(modelTModel.getTmodelDescrs(), apiTModelInfo.getDescription());
+
+	}
 	
 }

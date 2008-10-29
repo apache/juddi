@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<find_service xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <findQualifiers>
+    <findQualifier>caseInsensitiveMatch</findQualifier>
+    <findQualifier>approximateMatch</findQualifier>
+  </findQualifiers>
+  <name xml:lang="en">service</name>
+</find_service>

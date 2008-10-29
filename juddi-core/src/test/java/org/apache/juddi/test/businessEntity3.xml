@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:businessthree.com">
+  <discoveryURLs>
+    <discoveryURL useType="home">http://www.businessthree.com</discoveryURL>
+    <discoveryURL useType="serviceList">http://www.businessthree.com/services</discoveryURL>
+  </discoveryURLs>
+  <name xml:lang="en">A-1 Solutions</name>
+  <name xml:lang="es">Negocio Tres</name>
+  <description xml:lang="en">This is the description for Business Three.</description>
+  <contacts>
+    <contact useType="administrator">
+      <personName xml:lang="en">Luke Skywalker</personName>
+      <description xml:lang="en">This is the administrator of the service offerings.</description>
+      <phtwo useType="office">123-456-7890</phtwo>
+      <phtwo useType="mobile">987-654-3210</phtwo>
+      <email useType="work">lskywalker@businessthree.com</email>
+      <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelKey:address">
+        <addressLine keyName="street" keyValue="street">2 Briar</addressLine>
+        <addressLine keyName="citystatezip" keyValue="citystatezip">Chicago, IL 60657</addressLine>
+        <addressLine keyName="country" keyValue="country">USA</addressLine>
+      </address>
+    </contact>
+  </contacts>
+  <businessServices>
+  </businessServices>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="jazz" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues-rock" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    </keyedReferenceGroup>
+  </categoryBag>
+  <identifierBag>
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
+  </identifierBag>
+</businessEntity>

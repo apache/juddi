@@ -4,7 +4,8 @@
     <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
     <discoveryURL useType="serviceList">http://www.businessone.com/services</discoveryURL>
   </discoveryURLs>
-  <name xml:lang="en">Business One</name>
+  <name xml:lang="en">John Doe Enterprises</name>
+  <name xml:lang="es">Negocio Uno</name>
   <description xml:lang="en">This is the description for Business One.</description>
   <contacts>
     <contact useType="administrator">
@@ -31,8 +32,10 @@
   <businessServices>
   </businessServices>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="apples" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="oranges" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="oranges" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:sports" keyName="category" keyValue="football" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
     <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
       <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>

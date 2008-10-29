@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<find_binding xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <findQualifiers>
+    <findQualifier>orAllKeys</findQualifier>
+  </findQualifiers>
+  <tModelBag>
+    <tModelKey>uddi:businessone.com:services:serviceone:wsdlSpec</tModelKey>
+  </tModelBag>
+</find_binding>
