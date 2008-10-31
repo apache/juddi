@@ -1,13 +1,12 @@
 package org.apache.juddi.test;
 
 import java.util.List;
-import java.util.Iterator;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
+import org.testng.Assert;
 import org.testng.annotations.*;
-import static junit.framework.Assert.fail;
 import static junit.framework.Assert.assertEquals;
 
 import org.uddi.api_v3.*;
@@ -42,10 +41,10 @@ public class BusinessEntityTest {
 			UDDIApiTestHelper.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
 		}
 		catch(DispositionReportFaultMessage dr) {
-			fail("No exception should be thrown");
+			Assert.fail("No exception should be thrown", dr);
 		}
 		catch(JAXBException je) {
-			fail("No exception should be thrown");
+			Assert.fail("No exception should be thrown", je);
 		}
 
 	}
@@ -60,7 +59,7 @@ public class BusinessEntityTest {
 			publish.deleteBusiness(db);
 		}
 		catch(DispositionReportFaultMessage dr) {
-			
+			Assert.fail("No exception should be thrown", dr);
 		}
 		
 	}

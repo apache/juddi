@@ -29,8 +29,6 @@
       <email useType="work">ssmith@businessone.com</email>
     </contact>
   </contacts>
-  <businessServices>
-  </businessServices>
   <categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="oranges" />

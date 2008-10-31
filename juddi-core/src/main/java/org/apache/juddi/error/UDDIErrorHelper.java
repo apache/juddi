@@ -40,7 +40,9 @@ public class UDDIErrorHelper {
 	public static final int E_INVALID_COMPLETION_STATUS = 30100;
 	public static final int E_INVALID_URL_PASSED = 10220;
 	public static final int E_INVALID_VALUE = 20200;
+	public static final int E_INVALID_COMBINATION = 40500;
 	public static final int E_KEY_RETIRED = 10310;
+	public static final int E_KEY_UNAVAILABLE = 40100;
 	public static final int E_LANGUAGE_ERROR = 10060;
 	public static final int E_MESSAGE_TOO_LARGE = 30110;
 	public static final int E_NAME_TOO_LONG = 10020;
@@ -70,9 +72,11 @@ public class UDDIErrorHelper {
 			case E_BUSY                       : return "E_busy";
 			case E_CATEGORIZATION_NOT_ALLOWED : return "E_categorizationNotAllowed";
 			case E_FATAL_ERROR                : return "E_fatalError";
+			case E_INVALID_COMBINATION        : return "E_invalidCombination";
 			case E_INVALID_CATEGORY           : return "E_invalidCategory";
 			case E_INVALID_COMPLETION_STATUS  : return "E_invalidCompletionStatus";
 			case E_INVALID_KEY_PASSED         : return "E_invalidKeyPassed";
+			case E_KEY_UNAVAILABLE         	  : return "E_keyUnavailable";
 			case E_INVALID_PROJECTION         : return "E_invalidProjection";
 			case E_INVALID_TIME               : return "E_invalidTime";
 			case E_INVALID_URL_PASSED         : return "E_invalidURLPassed";

@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Iterator;
 
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
 
 import org.uddi.api_v3.AddPublisherAssertions;
@@ -49,6 +51,7 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.config.ResourceConfig;
+import org.apache.juddi.validation.ValidatePublish;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -82,78 +85,114 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
 
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeleteBinding(em, body);
+
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
 		List<String> entityKeyList = body.getBindingKey();
-		Iterator<String> entityKeyListListItr = entityKeyList.iterator();
-		while (entityKeyListListItr.hasNext()) {
-			String entityKey = entityKeyListListItr.next();
-			
-			JPAUtil.deleteEntity(org.apache.juddi.model.BindingTemplate.class, entityKey);
+		for (String entityKey : entityKeyList) {
+			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
+			em.remove(obj);
 		}
+
+		tx.commit();
+		em.close();
 	}
 
 	public void deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
 
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeleteBusiness(em, body);
+		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
-		
+
 		List<String> entityKeyList = body.getBusinessKey();
-		Iterator<String> entityKeyListListItr = entityKeyList.iterator();
-		while (entityKeyListListItr.hasNext()) {
-			String entityKey = entityKeyListListItr.next();
-			
-			JPAUtil.deleteEntity(org.apache.juddi.model.BusinessEntity.class, entityKey);
+		for (String entityKey : entityKeyList) {
+			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
+			em.remove(obj);
 		}
+
+		tx.commit();
+		em.close();
 	}
 
 	public void deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
 
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeletePublisherAssertions(em, body);
+		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
-		
-		List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = body.getPublisherAssertion();
-		Iterator<org.uddi.api_v3.PublisherAssertion> apiPubAssertionListItr = apiPubAssertionList.iterator();
-		while (apiPubAssertionListItr.hasNext()) {
-			org.uddi.api_v3.PublisherAssertion apiPubAssertion = apiPubAssertionListItr.next();
-			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(apiPubAssertion.getFromKey(), apiPubAssertion.getToKey());
 
-			JPAUtil.deleteEntity(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
+		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
+		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
+			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
+			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, pubAssertionId);
+			em.remove(obj);
 		}
+
+		tx.commit();
+		em.close();
 	}
 
 	public void deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
 
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeleteService(em, body);
+		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
-		
+
 		List<String> entityKeyList = body.getServiceKey();
-		Iterator<String> entityKeyListListItr = entityKeyList.iterator();
-		while (entityKeyListListItr.hasNext()) {
-			String entityKey = entityKeyListListItr.next();
-			
-			JPAUtil.deleteEntity(org.apache.juddi.model.BusinessService.class, entityKey);
+		for (String entityKey : entityKeyList) {
+			Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
+			em.remove(obj);
 		}
+
+		tx.commit();
+		em.close();
 	}
 
 
 	public void deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
 
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeleteTModel(em, body);
+		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
-		
+
+		// tModels are only lazily deleted!
 		List<String> entityKeyList = body.getTModelKey();
-		Iterator<String> entityKeyListListItr = entityKeyList.iterator();
-		while (entityKeyListListItr.hasNext()) {
-			String entityKey = entityKeyListListItr.next();
-			
-			JPAUtil.deleteEntity(org.apache.juddi.model.Tmodel.class, entityKey);
+		for (String entityKey : entityKeyList) {
+			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+			((org.apache.juddi.model.Tmodel)obj).setDeleted(true);
 		}
+
+		tx.commit();
+		em.close();
 	}
 
 
@@ -182,23 +221,19 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public BindingDetail saveBinding(SaveBinding body)
 			throws DispositionReportFaultMessage {
 
-		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		ValidatePublish.validateSaveBinding(em, body);
 
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
+		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		
 		List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
-		Iterator<org.uddi.api_v3.BindingTemplate> apiBindingTemplateListItr = apiBindingTemplateList.iterator();
-		while (apiBindingTemplateListItr.hasNext()) {
-			org.uddi.api_v3.BindingTemplate apiBindingTemplate = apiBindingTemplateListItr.next();
-			
-			//TODO:  Validate the input here
-			if (JPAUtil.getEntity(org.apache.juddi.model.BusinessService.class, apiBindingTemplate.getServiceKey()) == null) {
-				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.ServiceNotFound") + ":  " + apiBindingTemplate.getServiceKey(), 
-														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
-			}
-			//TODO:  Test if key is null, and if so, apply key-generation strategy
-			String bindingKey = apiBindingTemplate.getBindingKey();
+		for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
 			
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
 			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
@@ -206,10 +241,18 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			
 			MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 			
-			JPAUtil.persistEntity(modelBindingTemplate, modelBindingTemplate.getBindingKey());
+			Object existingUddiEntity = em.find(modelBindingTemplate.getClass(), modelBindingTemplate.getBindingKey());
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(modelBindingTemplate);
 			
 			result.getBindingTemplate().add(apiBindingTemplate);
 		}
+
+		tx.commit();
+		em.close();
+		
 		return result;
 	}
 
@@ -217,28 +260,36 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public BusinessDetail saveBusiness(SaveBusiness body)
 			throws DispositionReportFaultMessage {
 
-		org.uddi.api_v3.BusinessDetail result = new org.uddi.api_v3.BusinessDetail();
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		ValidatePublish.validateSaveBusiness(em, body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
+		org.uddi.api_v3.BusinessDetail result = new org.uddi.api_v3.BusinessDetail();
+		
 		List<org.uddi.api_v3.BusinessEntity> apiBusinessEntityList = body.getBusinessEntity();
-		Iterator<org.uddi.api_v3.BusinessEntity> apiBusinessEntityListItr = apiBusinessEntityList.iterator();
-		while (apiBusinessEntityListItr.hasNext()) {
-			org.uddi.api_v3.BusinessEntity apiBusinessEntity = apiBusinessEntityListItr.next();
-			
-			//TODO:  Validate the input here
-			//TODO:  Test if key is null, and if so, apply key-generation strategy
-			String businessKey = apiBusinessEntity.getBusinessKey();
+		for (org.uddi.api_v3.BusinessEntity apiBusinessEntity : apiBusinessEntityList) {
 			
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 			
 			MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
 			
-			JPAUtil.persistEntity(modelBusinessEntity, modelBusinessEntity.getBusinessKey());
+			Object existingUddiEntity = em.find(modelBusinessEntity.getClass(), modelBusinessEntity.getBusinessKey());
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(modelBusinessEntity);
 
 			result.getBusinessEntity().add(apiBusinessEntity);
 		}
+
+		tx.commit();
+		em.close();
+		
 		return result;
 	}
 
@@ -246,23 +297,19 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public ServiceDetail saveService(SaveService body)
 			throws DispositionReportFaultMessage {
 
-		org.uddi.api_v3.ServiceDetail result = new org.uddi.api_v3.ServiceDetail();
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		ValidatePublish.validateSaveService(em, body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
+		org.uddi.api_v3.ServiceDetail result = new org.uddi.api_v3.ServiceDetail();
+
 		List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = body.getBusinessService();
-		Iterator<org.uddi.api_v3.BusinessService> apiBusinessServiceListItr = apiBusinessServiceList.iterator();
-		while (apiBusinessServiceListItr.hasNext()) {
-			org.uddi.api_v3.BusinessService apiBusinessService = apiBusinessServiceListItr.next();
-			
-			//TODO:  Validate the input here
-			if (JPAUtil.getEntity(org.apache.juddi.model.BusinessEntity.class, apiBusinessService.getBusinessKey()) == null) {
-				throw new DispositionReportFaultMessage(ResourceConfig.getGlobalMessage("errors.invalidkey.BusinessNotFound") + ":  " + apiBusinessService.getBusinessKey(), 
-														UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));
-			}
-			//TODO:  Test if key is null, and if so, apply key-generation strategy
-			String serviceKey = apiBusinessService.getServiceKey();
+		for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
 			
 			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
@@ -270,10 +317,18 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			
 			MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
 			
-			JPAUtil.persistEntity(modelBusinessService, modelBusinessService.getServiceKey());
+			Object existingUddiEntity = em.find(modelBusinessService.getClass(), modelBusinessService.getServiceKey());
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(modelBusinessService);
 			
 			result.getBusinessService().add(apiBusinessService);
 		}
+
+		tx.commit();
+		em.close();
+
 		return result;
 	}
 

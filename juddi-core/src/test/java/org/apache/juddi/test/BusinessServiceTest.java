@@ -1,18 +1,13 @@
 package org.apache.juddi.test;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
-
-import java.io.File;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
+import org.testng.Assert;
 import org.testng.annotations.*;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.BusinessService;
@@ -49,10 +44,10 @@ public class BusinessServiceTest {
 			UDDIApiTestHelper.checkCategories(bsIn.getCategoryBag(), bsOut.getCategoryBag());
 		}
 		catch(DispositionReportFaultMessage dr) {
-			fail("No exception should be thrown");
+			Assert.fail("No exception should be thrown", dr);
 		}
 		catch(JAXBException je) {
-			fail("No exception should be thrown");
+			Assert.fail("No exception should be thrown", je);
 		}
 		
 	}
@@ -67,7 +62,7 @@ public class BusinessServiceTest {
 			publish.deleteService(ds);
 		}
 		catch(DispositionReportFaultMessage dr) {
-			fail("No exception should be thrown");
+			Assert.fail("No exception should be thrown", dr);
 		}
 		
 	}
