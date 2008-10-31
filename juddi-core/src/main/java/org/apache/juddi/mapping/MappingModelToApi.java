@@ -584,4 +584,12 @@ public class MappingModelToApi {
 
 	}
 	
+	public static void mapAuthToken(org.apache.juddi.model.AuthToken modelAuthToken, 
+									org.uddi.api_v3.AuthToken apiAuthToken) 
+				   throws DispositionReportFaultMessage {
+		apiAuthToken.setAuthInfo(modelAuthToken.getAuthToken());
+	
+	}
+
+	
 }

@@ -13,6 +13,8 @@ public interface Property
 	public final static String JUDDI_MAX_TMODELS_PER_PUBLISHER   ="juddi.maxTModelsPerPublisher";
 	public final static String JUDDI_AUTHENTICATOR               ="juddi.authenticator";
 	public final static String JUDDI_UUID_GENERATOR              ="juddi.uuidgen";
+	public final static String JUDDI_UUID_COMMAND                ="juddi.uuidgenCommand";
 	public final static String JUDDI_CRYPTOR                     ="juddi.cryptor";
 	public final static String JUDDI_VALIDATOR                   ="juddi.validator";
+	public final static String JUDDI_USERSFILE                   ="juddi.usersfile";
 }
