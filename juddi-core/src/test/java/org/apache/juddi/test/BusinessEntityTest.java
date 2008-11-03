@@ -21,7 +21,7 @@ public class BusinessEntityTest {
 	public void saveBusiness(String businessFile, String businessKey) {
 		try {
 			SaveBusiness sb = new SaveBusiness();
-			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(businessFile);
+			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(businessFile, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
 			publish.saveBusiness(sb);
 	

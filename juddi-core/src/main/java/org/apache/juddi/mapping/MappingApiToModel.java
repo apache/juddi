@@ -31,6 +31,21 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class MappingApiToModel {
 
+	public static void mapPublisher(org.apache.juddi.api.datatype.Publisher apiPublisher, 
+									org.apache.juddi.model.Publisher modelPublisher) 
+				   throws DispositionReportFaultMessage {
+
+		modelPublisher.setPublisherId(apiPublisher.getPublisherId());
+		modelPublisher.setPublisherName(apiPublisher.getPublisherName());
+		modelPublisher.setEmailAddress(apiPublisher.getEmailAddress());
+		modelPublisher.setIsAdmin(apiPublisher.getIsAdmin());
+		modelPublisher.setIsEnabled(apiPublisher.getIsEnabled());
+		modelPublisher.setMaxBindingsPerService(apiPublisher.getMaxBindingsPerService());
+		modelPublisher.setMaxBusinesses(apiPublisher.getMaxBusinesses());
+		modelPublisher.setMaxServicesPerBusiness(apiPublisher.getMaxServicePerBusiness());
+		modelPublisher.setMaxTmodels(apiPublisher.getMaxTModels());
+	}
+	
 	public static void mapBusinessEntity(org.uddi.api_v3.BusinessEntity apiBusinessEntity, 
 										 org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {

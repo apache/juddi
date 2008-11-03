@@ -26,7 +26,7 @@ public class BusinessServiceTest {
 		try {
 			// First save the entity
 			SaveService ss = new SaveService();
-			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)UDDIApiTestHelper.buildEntityFromDoc(serviceFile);
+			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)UDDIApiTestHelper.buildEntityFromDoc(serviceFile, "org.uddi.api_v3");
 			ss.getBusinessService().add(bsIn);
 			publish.saveService(ss);
 			

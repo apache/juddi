@@ -62,6 +62,9 @@ import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
+import org.apache.juddi.api.datatype.GetPublisherDetail;
+import org.apache.juddi.api.datatype.PublisherDetail;
+
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -100,7 +103,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// Sort and retrieve the final results with paging taken into account
 		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
 
-		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		BindingDetail result = new BindingDetail();
 		for (Object item : queryResults) {
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
 			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
@@ -137,7 +140,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		//keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
-		org.uddi.api_v3.BusinessList result = new org.uddi.api_v3.BusinessList();
+		BusinessList result = new BusinessList();
 
 		// Sort and retrieve the final results taking paging into account
 		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
@@ -184,7 +187,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		//keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
-		org.uddi.api_v3.ServiceList result = new org.uddi.api_v3.ServiceList();
+		ServiceList result = new ServiceList();
 		
 		// Sort and retrieve the final results taking paging into account
 		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
@@ -226,7 +229,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		//keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
-		org.uddi.api_v3.TModelList result = new org.uddi.api_v3.TModelList();
+		TModelList result = new TModelList();
 
 		// Sort and retrieve the final results taking paging into account
 		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
@@ -260,7 +263,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
-		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		BindingDetail result = new BindingDetail();
 
 		List<String> bindingKeyList = body.getBindingKey();
 		for (String bindingKey : bindingKeyList) {
@@ -294,7 +297,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		org.uddi.api_v3.BusinessDetail result = new org.uddi.api_v3.BusinessDetail();
+		BusinessDetail result = new BusinessDetail();
 		
 		List<String> businessKeyList = body.getBusinessKey();
 		for (String businessKey : businessKeyList) {
@@ -334,7 +337,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		org.uddi.api_v3.ServiceDetail result = new org.uddi.api_v3.ServiceDetail();
+		ServiceDetail result = new ServiceDetail();
 
 		List<String> serviceKeyList = body.getServiceKey();
 		for (String serviceKey : serviceKeyList) {
@@ -368,7 +371,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		org.uddi.api_v3.TModelDetail result = new org.uddi.api_v3.TModelDetail();
+		TModelDetail result = new TModelDetail();
 		
 		List<String> tmodelKeyList = body.getTModelKey();
 		for (String tmodelKey : tmodelKeyList) {
@@ -391,4 +394,43 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		return result;
 	}
 
+	/*
+	 * Retrieves publisher(s) from the persistence layer.  This method is specific to jUDDI.
+	 */
+	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
+			throws DispositionReportFaultMessage {
+
+		ValidateInquiry.validateGetPublisherDetail(body);
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		PublisherDetail result = new PublisherDetail();
+		
+		List<String> publisherIdList = body.getPublisherId();
+		for (String publisherId : publisherIdList) {
+			
+			org.apache.juddi.model.Publisher modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
+			if (modelPublisher == null) {
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
+			}
+			
+			org.apache.juddi.api.datatype.Publisher apiPublisher = new org.apache.juddi.api.datatype.Publisher();
+			
+			MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
+			
+			result.getPublisher().add(apiPublisher);
+		}
+
+		tx.commit();
+		em.close();
+		
+		return result;
+
+	}
+	
 }

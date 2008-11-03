@@ -16,15 +16,16 @@ import org.uddi.api_v3.*;
 
 public class UDDIApiTestHelper {
 
-	public static Object buildEntityFromDoc(String fileName) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance("org.uddi.api_v3");
+
+	public static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException {
+		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		Object obj = ((JAXBElement)unmarshaller.unmarshal(new File(fileName))).getValue();
 		return obj;
 	}
-	
-	public static void outputEntity(Object obj) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance("org.uddi.api_v3");
+
+	public static void outputEntity(Object obj, String thePackage) throws JAXBException {
+		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.marshal( new JAXBElement<Object>(new javax.xml.namespace.QName("uri","local"), Object.class, obj), System.out);
 		

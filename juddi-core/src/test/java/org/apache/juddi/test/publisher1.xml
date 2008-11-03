@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<publisher xmlns="urn:apache-org:juddi_v3" publisherId="admin">
+  <publisherName>Administrator</publisherName>
+  <emailAddress>admin@juddi.apache.org</emailAddress>
+  <isAdmin>TrUe</isAdmin>
+  <isEnabled>TrUe</isEnabled>
+  <maxBindingsPerService>199</maxBindingsPerService>
+  <maxBusinesses>100</maxBusinesses>
+  <maxServicePerBusiness>100</maxServicePerBusiness>
+  <maxTModels>100</maxTModels>
+</publisher>

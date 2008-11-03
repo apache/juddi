@@ -49,9 +49,11 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.util.JPAUtil;
-import org.apache.juddi.error.UDDIErrorHelper;
-import org.apache.juddi.config.ResourceConfig;
 import org.apache.juddi.validation.ValidatePublish;
+
+import org.apache.juddi.api.datatype.PublisherDetail;
+import org.apache.juddi.api.datatype.SavePublisher;
+import org.apache.juddi.api.datatype.DeletePublisher;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -230,7 +232,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
-		org.uddi.api_v3.BindingDetail result = new org.uddi.api_v3.BindingDetail();
+		BindingDetail result = new BindingDetail();
 		
 		List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
 		for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
@@ -269,7 +271,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
-		org.uddi.api_v3.BusinessDetail result = new org.uddi.api_v3.BusinessDetail();
+		BusinessDetail result = new BusinessDetail();
 		
 		List<org.uddi.api_v3.BusinessEntity> apiBusinessEntityList = body.getBusinessEntity();
 		for (org.uddi.api_v3.BusinessEntity apiBusinessEntity : apiBusinessEntityList) {
@@ -306,7 +308,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		org.uddi.api_v3.ServiceDetail result = new org.uddi.api_v3.ServiceDetail();
+		ServiceDetail result = new ServiceDetail();
 
 		List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = body.getBusinessService();
 		for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
@@ -336,28 +338,36 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public TModelDetail saveTModel(SaveTModel body)
 			throws DispositionReportFaultMessage {
 
-		org.uddi.api_v3.TModelDetail result = new org.uddi.api_v3.TModelDetail();
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateSaveTModel(em, body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
+		TModelDetail result = new TModelDetail();
+
 		List<org.uddi.api_v3.TModel> apiTModelList = body.getTModel();
-		Iterator<org.uddi.api_v3.TModel> apiTModelListItr = apiTModelList.iterator();
-		while (apiTModelListItr.hasNext()) {
-			org.uddi.api_v3.TModel apiTModel = apiTModelListItr.next();
-			
-			//TODO:  Validate the input here
-			//TODO:  Test if key is null, and if so, apply key-generation strategy
-			String tmodelKey = apiTModel.getTModelKey();
+		for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
 			
 			org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 			
 			MappingApiToModel.mapTModel(apiTModel, modelTModel);
 			
-			JPAUtil.persistEntity(modelTModel, modelTModel.getTmodelKey());
+			Object existingUddiEntity = em.find(modelTModel.getClass(), modelTModel.getTmodelKey());
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(modelTModel);
 			
 			result.getTModel().add(apiTModel);
 		}
+
+		tx.commit();
+		em.close();
+		
 		return result;
 	}
 
@@ -369,4 +379,70 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 
 	}
 
+	
+	/*
+	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
+	 */
+	public PublisherDetail savePublisher(SavePublisher body)
+			throws DispositionReportFaultMessage {
+
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateSavePublisher(em, body);
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+
+		PublisherDetail result = new PublisherDetail();
+
+		List<org.apache.juddi.api.datatype.Publisher> apiPublisherList = body.getPublisher();
+		for (org.apache.juddi.api.datatype.Publisher apiPublisher : apiPublisherList) {
+			
+			org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
+			
+			MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
+			
+			Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getPublisherId());
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(modelPublisher);
+			
+			result.getPublisher().add(apiPublisher);
+		}
+
+		tx.commit();
+		em.close();
+		
+		return result;
+	}
+
+	/*
+	 * Deletes publisher(s) from the persistence layer.  This method is specific to jUDDI.
+	 */
+	public void deletePublisher(DeletePublisher body)
+			throws DispositionReportFaultMessage {
+
+		EntityManager em = JPAUtil.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		ValidatePublish.validateDeletePublisher(em, body);
+
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+		
+		List<String> entityKeyList = body.getPublisherId();
+		for (String entityKey : entityKeyList) {
+			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+			em.remove(obj);
+		}
+
+		tx.commit();
+		em.close();
+	}
+
+	
 }

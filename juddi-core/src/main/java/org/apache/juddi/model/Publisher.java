@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
@@ -98,6 +99,16 @@ public class Publisher implements java.io.Serializable {
 		this.isAdmin = isAdmin;
 	}
 
+	@Transient
+	public boolean isAdmin() {
+		boolean ret = false;
+		if (this.isAdmin != null) {
+			if (this.isAdmin.equalsIgnoreCase("true"))
+				ret = true;
+		}
+		return ret;
+	}
+	
 	@Column(name = "is_enabled", length = 5)
 	public String getIsEnabled() {
 		return this.isEnabled;
@@ -107,6 +118,16 @@ public class Publisher implements java.io.Serializable {
 		this.isEnabled = isEnabled;
 	}
 
+	@Transient
+	public boolean isEnabled() {
+		boolean ret = false;
+		if (this.isEnabled != null) {
+			if (this.isEnabled.equalsIgnoreCase("true"))
+				ret = true;
+		}
+		return ret;
+	}
+	
 	@Column(name = "max_businesses")
 	public Integer getMaxBusinesses() {
 		return this.maxBusinesses;

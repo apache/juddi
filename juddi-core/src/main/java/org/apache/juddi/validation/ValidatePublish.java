@@ -33,6 +33,8 @@ import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.apache.juddi.api.datatype.SavePublisher;
+import org.apache.juddi.api.datatype.DeletePublisher;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -47,6 +49,30 @@ import org.apache.juddi.error.InvalidProjectionException;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class ValidatePublish {
+
+	public static void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<String> entityKeyList = body.getPublisherId();
+		if (entityKeyList == null || entityKeyList.size() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
+
+		HashSet<String> dupCheck = new HashSet<String>();
+		for (String entityKey : entityKeyList) {
+			boolean inserted = dupCheck.add(entityKey);
+			if (!inserted)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+			
+			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+			if (obj == null)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", entityKey));
+			
+		}
+	}
 
 	public static void validateDeleteBusiness(EntityManager em, DeleteBusiness body) throws DispositionReportFaultMessage {
 
@@ -167,6 +193,25 @@ public class ValidatePublish {
 		}
 	}
 
+	public static void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<org.apache.juddi.api.datatype.Publisher> entityList = body.getPublisher();
+		if (entityList == null || entityList.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.savepublisher.NoInput"));
+		
+		// TODO: only an admin can save a publisher
+		
+		for (org.apache.juddi.api.datatype.Publisher entity : entityList) {
+			validatePublisher(em, entity);
+		}
+	}
+	
+	
 	public static void validateSaveBusiness(EntityManager em, SaveBusiness body) throws DispositionReportFaultMessage {
 
 		// No null input
@@ -231,6 +276,19 @@ public class ValidatePublish {
 			validateTModel(em, entity);
 		}
 	}
+
+	public static void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (publisher == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NullInput"));
+		
+		String publisherId = publisher.getPublisherId();
+		if (publisherId == null || publisherId.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherId"));
+	
+	}
+
 	
 	public static void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
 		

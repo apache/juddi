@@ -1,9 +1,20 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="suite-one" verbose="1">
+  <parameter name="publisherFile" value="./src/test/java/org/apache/juddi/test/publisher1.xml" />
   <parameter name="businessFile" value="./src/test/java/org/apache/juddi/test/businessEntity1.xml" />
   <parameter name="serviceFile" value="./src/test/java/org/apache/juddi/test/businessService1.xml" />
+  <parameter name="publisherId" value="admin" />
   <parameter name="businessKey" value="uddi:businessone.com" />
   <parameter name="serviceKey" value="uddi:businessone.com:services:serviceone" />
+  <test name="savePublisher">
+    <classes>
+      <class name="org.apache.juddi.test.PublisherTest">
+        <methods>
+          <include name="savePublisher" />
+        </methods>
+      </class>
+    </classes>
+  </test>
   <test name="saveBusiness">
     <classes>
       <class name="org.apache.juddi.test.BusinessEntityTest">
@@ -36,6 +47,15 @@
       <class name="org.apache.juddi.test.BusinessEntityTest">
         <methods>
           <include name="deleteBusiness" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="deletePublisher">
+    <classes>
+      <class name="org.apache.juddi.test.PublisherTest">
+        <methods>
+          <include name="deletePublisher" />
         </methods>
       </class>
     </classes>
