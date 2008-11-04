@@ -25,31 +25,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
+import org.apache.juddi.query.PersistenceManager;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class JPAUtil {
-	public static final String PERSISTENCE_UNIT_NAME = "juddiDatabase";
-
-	private static final EntityManagerFactory emf;
-	
-	static {
-		try {
-			emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		}
-		catch (Throwable t) {
-			System.err.println("Initial entityManagerFactory creation failed:" + t);
-			throw new ExceptionInInitializerError(t);
-		}
-	}
-
-	public static EntityManager getEntityManager() {
-		return emf.createEntityManager();
-	}
 	
 	public static void persistEntity(Object uddiEntity, Object entityKey) {
-		EntityManager em = getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -64,7 +48,7 @@ public class JPAUtil {
 	}
 	
 	public static Object getEntity(Class<?> entityClass, Object entityKey) {
-		EntityManager em = getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -77,7 +61,7 @@ public class JPAUtil {
 	}
 
 	public static void deleteEntity(Class<?> entityClass, Object entityKey) {
-		EntityManager em = getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -89,7 +73,7 @@ public class JPAUtil {
 	}
 	
 	public static List runQuery(String qry, int maxRows, int listHead) {
-		EntityManager em = getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		
 		Query q = em.createQuery(qry);
 		q.setMaxResults(maxRows);

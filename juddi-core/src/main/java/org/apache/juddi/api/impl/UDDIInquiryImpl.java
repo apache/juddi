@@ -37,6 +37,7 @@ import org.apache.juddi.query.BusinessServiceQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
 import org.apache.juddi.query.util.DynamicQuery;
+import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.validation.ValidateInquiry;
 import org.apache.juddi.error.InvalidKeyPassedException;
@@ -81,7 +82,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -127,7 +128,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -176,7 +177,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 		
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -217,7 +218,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -259,7 +260,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -293,7 +294,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -333,7 +334,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -367,7 +368,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -405,7 +406,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 

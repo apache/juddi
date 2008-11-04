@@ -38,6 +38,7 @@ import org.apache.juddi.uuidgen.UUIDGenFactory;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.validation.ValidateAuth;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.query.PersistenceManager;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -51,7 +52,7 @@ public class UDDISecurityImpl implements UDDISecurityPortType {
 	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -79,7 +80,7 @@ public class UDDISecurityImpl implements UDDISecurityPortType {
 		if (publisherId == null || publisherId.length() == 0)
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials", publisherId));
 		
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 

@@ -50,6 +50,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.validation.ValidatePublish;
+import org.apache.juddi.query.PersistenceManager;
 
 import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.juddi.api.datatype.SavePublisher;
@@ -87,7 +88,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -109,7 +110,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -131,7 +132,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -154,7 +155,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -177,7 +178,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -223,7 +224,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public BindingDetail saveBinding(SaveBinding body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -262,7 +263,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public BusinessDetail saveBusiness(SaveBusiness body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -299,7 +300,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public ServiceDetail saveService(SaveService body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
@@ -338,7 +339,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public TModelDetail saveTModel(SaveTModel body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -386,7 +387,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public PublisherDetail savePublisher(SavePublisher body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
@@ -425,7 +426,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	public void deletePublisher(DeletePublisher body)
 			throws DispositionReportFaultMessage {
 
-		EntityManager em = JPAUtil.getEntityManager();
+		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
