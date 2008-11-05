@@ -395,6 +395,10 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		return result;
 	}
 
+	/*-------------------------------------------------------------------
+	 Publisher functions are specific to jUDDI.
+	 --------------------------------------------------------------------*/
+	
 	/*
 	 * Retrieves publisher(s) from the persistence layer.  This method is specific to jUDDI.
 	 */

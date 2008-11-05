@@ -29,6 +29,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "tmodel")
@@ -163,6 +164,14 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public void setTmodelCategories(Set<TmodelCategory> tmodelCategories) {
 		this.tmodelCategories = tmodelCategories;
+	}
+
+	public String retrievePublisherId() {
+		return this.publisherId;
+	}
+	public void assignPublisherId(String id) {
+		if (id != null)
+			this.publisherId = id;
 	}
 
 }

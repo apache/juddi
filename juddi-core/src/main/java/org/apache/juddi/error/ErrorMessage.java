@@ -52,6 +52,10 @@ public class ErrorMessage {
 	}
 	
 	public String toString() {
-		return message + ":  " + value;
+		if (value == null || value.length() == 0)
+			return message;
+		else
+			return message + ":  " + value;
+			
 	}
 }

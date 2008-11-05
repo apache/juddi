@@ -32,11 +32,9 @@ import org.apache.juddi.auth.AuthenticatorFactory;
 import org.apache.juddi.auth.Authenticator;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.uuidgen.UUIDGen;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.validation.ValidateAuth;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.query.PersistenceManager;
 
@@ -45,7 +43,7 @@ import org.apache.juddi.query.PersistenceManager;
  */
 @WebService(serviceName="UDDISecurityService", 
 			endpointInterface="org.uddi.v3_service.UDDISecurityPortType")
-public class UDDISecurityImpl implements UDDISecurityPortType {
+public class UDDISecurityImpl extends AuthenticatedService implements UDDISecurityPortType {
 
 	public static final String AUTH_TOKEN_PREFIX = "authtoken:";
 
@@ -56,13 +54,13 @@ public class UDDISecurityImpl implements UDDISecurityPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
-		ValidateAuth.getPublisher(em, body.getAuthInfo());
+		this.getEntityPublisher(em, body.getAuthInfo());
 		
 		org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, body.getAuthInfo());
 		if (modelAuthToken != null) {
 			modelAuthToken.setLastUsed(new Date());
 			modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
-			modelAuthToken.setTokenState(ValidateAuth.AUTHTOKEN_RETIRED);
+			modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
 		}
 
 		tx.commit();
@@ -100,7 +98,7 @@ public class UDDISecurityImpl implements UDDISecurityPortType {
 			modelAuthToken.setPublisherId(publisherId);
 			modelAuthToken.setPublisherName(publisher.getPublisherName());
 			modelAuthToken.setNumberOfUses(0);
-			modelAuthToken.setTokenState(ValidateAuth.AUTHTOKEN_ACTIVE);
+			modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
 			
 			em.persist(modelAuthToken);
 		}

@@ -36,6 +36,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
 
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
@@ -43,6 +46,7 @@ import org.apache.juddi.error.AssertionNotFoundException;
 import org.apache.juddi.error.KeyUnavailableException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.error.InvalidProjectionException;
+import org.apache.juddi.error.UserMismatchException;
 
 
 /**
@@ -50,31 +54,7 @@ import org.apache.juddi.error.InvalidProjectionException;
  */
 public class ValidatePublish {
 
-	public static void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
-
-		// No null input
-		if (body == null)
-			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
-		
-		// No null or empty list
-		List<String> entityKeyList = body.getPublisherId();
-		if (entityKeyList == null || entityKeyList.size() == 0)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
-
-		HashSet<String> dupCheck = new HashSet<String>();
-		for (String entityKey : entityKeyList) {
-			boolean inserted = dupCheck.add(entityKey);
-			if (!inserted)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
-			
-			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-			if (obj == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", entityKey));
-			
-		}
-	}
-
-	public static void validateDeleteBusiness(EntityManager em, DeleteBusiness body) throws DispositionReportFaultMessage {
+	public static void validateDeleteBusiness(EntityManager em, UddiEntityPublisher publisher, DeleteBusiness body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -95,10 +75,13 @@ public class ValidatePublish {
 			if (obj == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", entityKey));
 			
+			if (!publisher.isOwner((UddiEntity)obj))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			
 		}
 	}
 
-	public static void validateDeleteService(EntityManager em, DeleteService body) throws DispositionReportFaultMessage {
+	public static void validateDeleteService(EntityManager em, UddiEntityPublisher publisher, DeleteService body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -119,10 +102,13 @@ public class ValidatePublish {
 			if (obj == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", entityKey));
 			
+			if (!publisher.isOwner((UddiEntity)obj))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			
 		}
 	}
 
-	public static void validateDeleteBinding(EntityManager em, DeleteBinding body) throws DispositionReportFaultMessage {
+	public static void validateDeleteBinding(EntityManager em, UddiEntityPublisher publisher, DeleteBinding body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -144,10 +130,13 @@ public class ValidatePublish {
 			if (obj == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingNotFound", entityKey));
 			
+			if (!publisher.isOwner((UddiEntity)obj))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+
 		}
 	}
 	
-	public static void validateDeleteTModel(EntityManager em, DeleteTModel body) throws DispositionReportFaultMessage {
+	public static void validateDeleteTModel(EntityManager em, UddiEntityPublisher publisher, DeleteTModel body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -168,6 +157,8 @@ public class ValidatePublish {
 			if (obj == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
 			
+			if (!publisher.isOwner((UddiEntity)obj))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 		}
 	}
 
@@ -193,26 +184,8 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
-
-		// No null input
-		if (body == null)
-			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
-		
-		// No null or empty list
-		List<org.apache.juddi.api.datatype.Publisher> entityList = body.getPublisher();
-		if (entityList == null || entityList.size() == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.savepublisher.NoInput"));
-		
-		// TODO: only an admin can save a publisher
-		
-		for (org.apache.juddi.api.datatype.Publisher entity : entityList) {
-			validatePublisher(em, entity);
-		}
-	}
 	
-	
-	public static void validateSaveBusiness(EntityManager em, SaveBusiness body) throws DispositionReportFaultMessage {
+	public static void validateSaveBusiness(EntityManager em, UddiEntityPublisher publisher, SaveBusiness body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -224,11 +197,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savebusiness.NoInput"));
 		
 		for (org.uddi.api_v3.BusinessEntity entity : entityList) {
-			validateBusinessEntity(em, entity);
+			validateBusinessEntity(em, publisher, entity);
 		}
 	}
 	
-	public static void validateSaveService(EntityManager em, SaveService body) throws DispositionReportFaultMessage {
+	public static void validateSaveService(EntityManager em, UddiEntityPublisher publisher, SaveService body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -241,11 +214,11 @@ public class ValidatePublish {
 		
 		for (org.uddi.api_v3.BusinessService entity : entityList) {
 			// Entity specific data validation
-			validateBusinessService(em, entity, null);
+			validateBusinessService(em, publisher, entity, null);
 		}
 	}
 	
-	public static void validateSaveBinding(EntityManager em, SaveBinding body) throws DispositionReportFaultMessage {
+	public static void validateSaveBinding(EntityManager em, UddiEntityPublisher publisher, SaveBinding body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -257,11 +230,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savebinding.NoInput"));
 		
 		for (org.uddi.api_v3.BindingTemplate entity : entityList) {
-			validateBindingTemplate(em, entity, null);
+			validateBindingTemplate(em, publisher, entity, null);
 		}
 	}
 
-	public static void validateSaveTModel(EntityManager em, SaveTModel body) throws DispositionReportFaultMessage {
+	public static void validateSaveTModel(EntityManager em, UddiEntityPublisher publisher, SaveTModel body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -273,24 +246,12 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savetmodel.NoInput"));
 		
 		for (org.uddi.api_v3.TModel entity : entityList) {
-			validateTModel(em, entity);
+			validateTModel(em, publisher, entity);
 		}
 	}
 
-	public static void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
-
-		// No null input
-		if (publisher == null)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NullInput"));
-		
-		String publisherId = publisher.getPublisherId();
-		if (publisherId == null || publisherId.length() == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherId"));
 	
-	}
-
-	
-	public static void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
+	public static void validateBusinessEntity(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
 		
 		// A supplied businessService can't be null
 		if (businessEntity == null)
@@ -308,8 +269,13 @@ public class ValidatePublish {
 			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
-			if (obj != null)
+			if (obj != null) {
 				entityExists = true;
+
+				// Make sure publisher owns this entity.
+				if (!publisher.isOwner((UddiEntity)obj))
+					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			}
 		}
 
 		if (!entityExists) {
@@ -326,11 +292,11 @@ public class ValidatePublish {
 		validateCategoryBag(businessEntity.getCategoryBag());
 		validateIdentifierBag(businessEntity.getIdentifierBag());
 
-		validateBusinessServices(em, businessEntity.getBusinessServices(), businessEntity);
+		validateBusinessServices(em, publisher, businessEntity.getBusinessServices(), businessEntity);
 		
 	}
 
-	public static void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices, org.uddi.api_v3.BusinessEntity parent) 
+	public static void validateBusinessServices(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessServices businessServices, org.uddi.api_v3.BusinessEntity parent) 
 					throws DispositionReportFaultMessage {
 		// Business services is optional
 		if (businessServices == null)
@@ -341,12 +307,12 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.businessservices.NoInput"));
 		
 		for (org.uddi.api_v3.BusinessService businessService : businessServiceList) {
-			validateBusinessService(em, businessService, parent);
+			validateBusinessService(em, publisher, businessService, parent);
 		}
 			
 	}
 
-	public static void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent) 
+	public static void validateBusinessService(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent) 
 					throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -408,6 +374,11 @@ public class ValidatePublish {
 					org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
 					if (!parentKey.equals(bs.getBusinessEntity().getBusinessKey()))
 						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getBusinessKey()));
+					
+					// Make sure publisher owns this entity.
+					if (!publisher.isOwner((UddiEntity)obj))
+						throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+					
 				}
 				
 			}
@@ -426,8 +397,9 @@ public class ValidatePublish {
 					if (parentTemp == null)
 						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
 
-					// TODO: Test that publisher is owner of parent: UserMismatchException 
-
+					// Make sure publisher owns this parent entity.
+					if (!publisher.isOwner((UddiEntity)parentTemp))
+						throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
 				}
 			}
 
@@ -442,12 +414,12 @@ public class ValidatePublish {
 			validateNames(businessService.getName());
 			validateCategoryBag(businessService.getCategoryBag());
 			
-			validateBindingTemplates(em, businessService.getBindingTemplates(), businessService);
+			validateBindingTemplates(em, publisher, businessService.getBindingTemplates(), businessService);
 		}
 		
 	}
 
-	public static void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates, org.uddi.api_v3.BusinessService parent) 
+	public static void validateBindingTemplates(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BindingTemplates bindingTemplates, org.uddi.api_v3.BusinessService parent) 
 					throws DispositionReportFaultMessage {
 		// Binding templates is optional
 		if (bindingTemplates == null)
@@ -458,12 +430,12 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.bindingtemplates.NoInput"));
 	
 		for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
-			validateBindingTemplate(em, bindingTemplate, parent);
+			validateBindingTemplate(em, publisher, bindingTemplate, parent);
 		}
 	
 	}
 	
-	public static void validateBindingTemplate(EntityManager em, org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent) 
+	public static void validateBindingTemplate(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent) 
 					throws DispositionReportFaultMessage {
 
 		// A supplied bindingTemplate can't be null
@@ -502,6 +474,11 @@ public class ValidatePublish {
 				org.apache.juddi.model.BindingTemplate bt = (org.apache.juddi.model.BindingTemplate)obj;
 				if (!parentKey.equals(bt.getBusinessService().getServiceKey()))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + bt.getBusinessService().getServiceKey()));
+				
+				// Make sure publisher owns this entity.
+				if (!publisher.isOwner((UddiEntity)obj))
+					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+
 			}
 			
 		}
@@ -520,7 +497,9 @@ public class ValidatePublish {
 				if (parentTemp == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
 
-				// TODO: Test that publisher is owner of parent: UserMismatchException 
+				// Make sure publisher owns this parent entity.
+				if (!publisher.isOwner((UddiEntity)parentTemp))
+					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwnerParent", parentKey));
 
 			}
 		}
@@ -543,7 +522,7 @@ public class ValidatePublish {
 		
 	}
 
-	public static void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
+	public static void validateTModel(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
 		// A supplied tModel can't be null
 		if (tModel == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NullInput"));
@@ -560,8 +539,13 @@ public class ValidatePublish {
 			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
-			if (obj != null)
+			if (obj != null) {
 				entityExists = true;
+
+				// Make sure publisher owns this entity.
+				if (!publisher.isOwner((UddiEntity)obj))
+					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			}
 		}
 
 		if (!entityExists) {
@@ -763,4 +747,70 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.overviewdoc.NoDescOrUrl"));
 	}
 
+	/*-------------------------------------------------------------------
+	 Publisher functions are specific to jUDDI.
+	 --------------------------------------------------------------------*/
+	
+	public static void validateDeletePublisher(EntityManager em, Publisher publisher, DeletePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<String> entityKeyList = body.getPublisherId();
+		if (entityKeyList == null || entityKeyList.size() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
+		
+		if (!publisher.isAdmin())
+			throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+
+		HashSet<String> dupCheck = new HashSet<String>();
+		for (String entityKey : entityKeyList) {
+			boolean inserted = dupCheck.add(entityKey);
+			if (!inserted)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+			
+			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+			if (obj == null)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", entityKey));
+			
+		}
+	}
+
+	public static void validateSavePublisher(EntityManager em, Publisher publisher, SavePublisher body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<org.apache.juddi.api.datatype.Publisher> entityList = body.getPublisher();
+		if (entityList == null || entityList.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.savepublisher.NoInput"));
+		
+		if (!publisher.isAdmin())
+			throw new UserMismatchException(new ErrorMessage("errors.savepublisher.AdminReqd"));
+		
+		for (org.apache.juddi.api.datatype.Publisher entity : entityList) {
+			validatePublisher(em, entity);
+		}
+	}
+
+	public static void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (publisher == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NullInput"));
+		
+		String publisherId = publisher.getPublisherId();
+		if (publisherId == null || publisherId.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherId"));
+	
+		String publisherName = publisher.getPublisherName();
+		if (publisherName == null || publisherName.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherName"));
+
+	}
+	
 }

@@ -17,19 +17,18 @@ package org.apache.juddi.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "publisher")
-public class Publisher implements java.io.Serializable {
+public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String publisherId;
 	private String publisherName;
 	private String emailAddress;
 	private String isAdmin;
@@ -61,15 +60,6 @@ public class Publisher implements java.io.Serializable {
 		this.maxTmodels = maxTmodels;
 	}
 
-	@Id
-	@Column(name = "publisher_id", nullable = false, length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
-	}
-
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
-	}
 
 	@Column(name = "publisher_name", nullable = false)
 

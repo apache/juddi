@@ -20,12 +20,16 @@ public class BusinessServiceTest {
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
-	@Parameters({ "serviceFile", "serviceKey" })
+	@Parameters({ "serviceFile", "serviceKey", "publisherId" })
 	@Test
-	public void saveService(String serviceFile, String serviceKey) {
+	public void saveService(String serviceFile, String serviceKey, String publisherId) {
 		try {
+			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
+
 			// First save the entity
 			SaveService ss = new SaveService();
+			ss.setAuthInfo(authInfo);
+			
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)UDDIApiTestHelper.buildEntityFromDoc(serviceFile, "org.uddi.api_v3");
 			ss.getBusinessService().add(bsIn);
 			publish.saveService(ss);
@@ -52,12 +56,16 @@ public class BusinessServiceTest {
 		
 	}
 	
-	@Parameters({ "serviceKey" })
+	@Parameters({ "serviceKey", "publisherId" })
 	@Test
-	public void deleteService(String serviceKey) {
+	public void deleteService(String serviceKey, String publisherId) {
 		try {
+			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
+	
 			// Delete the entity and make sure it is removed
 			DeleteService ds = new DeleteService();
+			ds.setAuthInfo(authInfo);
+			
 			ds.getServiceKey().add(serviceKey);
 			publish.deleteService(ds);
 		}

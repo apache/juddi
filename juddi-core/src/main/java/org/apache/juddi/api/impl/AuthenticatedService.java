@@ -15,26 +15,26 @@
  *
  */
 
-package org.apache.juddi.validation;
+package org.apache.juddi.api.impl;
 
 import java.util.Date;
+
 import javax.persistence.EntityManager;
 
-import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.AuthTokenRequiredException;
+import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class ValidateAuth {
-	
+public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
 	
-	public static Publisher getPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {
-
+	public UddiEntityPublisher getEntityPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {
 		
 		if (authInfo == null || authInfo.length() == 0)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthRequired"));
@@ -43,18 +43,20 @@ public class ValidateAuth {
 		if (modelAuthToken == null)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
-		Publisher publisher = em.find(Publisher.class, modelAuthToken.getPublisherId());
-		if (publisher == null)
+		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
+			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
+		
+		UddiEntityPublisher entityPublisher = em.find(Publisher.class, modelAuthToken.getPublisherId());
+		if (entityPublisher == null)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
 		// Auth token is being used.  Adjust appropriate values so that it's internal 'expiration clock' is reset.
 		modelAuthToken.setLastUsed(new Date());
 		modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
 		
-		return publisher;
+		return entityPublisher;
 			
 				   
 	}
-			
 
 }

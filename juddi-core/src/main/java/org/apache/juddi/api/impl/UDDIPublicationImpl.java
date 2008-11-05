@@ -51,7 +51,9 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.query.PersistenceManager;
+import org.apache.juddi.model.UddiEntityPublisher;
 
+import org.apache.juddi.model.Publisher;
 import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
@@ -61,7 +63,7 @@ import org.apache.juddi.api.datatype.DeletePublisher;
  */
 @WebService(serviceName="UDDIPublicationService", 
 			endpointInterface="org.uddi.v3_service.UDDIPublicationPortType")
-public class UDDIPublicationImpl implements UDDIPublicationPortType {
+public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
 
 	
 	public void addPublisherAssertions(AddPublisherAssertions body)
@@ -92,10 +94,9 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateDeleteBinding(em, body);
-
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+		
+		ValidatePublish.validateDeleteBinding(em, publisher, body);
 		
 		List<String> entityKeyList = body.getBindingKey();
 		for (String entityKey : entityKeyList) {
@@ -114,11 +115,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateDeleteBusiness(em, body);
-		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
+		ValidatePublish.validateDeleteBusiness(em, publisher, body);
+		
 		List<String> entityKeyList = body.getBusinessKey();
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
@@ -136,11 +136,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
 		ValidatePublish.validateDeletePublisherAssertions(em, body);
 		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
-
 		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
 		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
 			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
@@ -159,11 +158,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateDeleteService(em, body);
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
-
+		ValidatePublish.validateDeleteService(em, publisher, body);
+		
 		List<String> entityKeyList = body.getServiceKey();
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
@@ -182,10 +180,9 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateDeleteTModel(em, body);
-		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+		ValidatePublish.validateDeleteTModel(em, publisher, body);
 
 		// tModels are only lazily deleted!
 		List<String> entityKeyList = body.getTModelKey();
@@ -228,11 +225,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
-		ValidatePublish.validateSaveBinding(em, body);
-
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
+		ValidatePublish.validateSaveBinding(em, publisher, body);
+
 		BindingDetail result = new BindingDetail();
 		
 		List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
@@ -248,6 +244,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
+			modelBindingTemplate.assignPublisherId(publisher.getPublisherId());
 			em.persist(modelBindingTemplate);
 			
 			result.getBindingTemplate().add(apiBindingTemplate);
@@ -267,11 +264,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
-		ValidatePublish.validateSaveBusiness(em, body);
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
-		
+		ValidatePublish.validateSaveBusiness(em, publisher, body);
+
 		BusinessDetail result = new BusinessDetail();
 		
 		List<org.uddi.api_v3.BusinessEntity> apiBusinessEntityList = body.getBusinessEntity();
@@ -285,6 +281,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
+			modelBusinessEntity.assignPublisherId(publisher.getPublisherId());
 			em.persist(modelBusinessEntity);
 
 			result.getBusinessEntity().add(apiBusinessEntity);
@@ -303,12 +300,11 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
-		
-		ValidatePublish.validateSaveService(em, body);
-		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
 
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+		
+		ValidatePublish.validateSaveService(em, publisher, body);
+		
 		ServiceDetail result = new ServiceDetail();
 
 		List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = body.getBusinessService();
@@ -324,6 +320,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
+			modelBusinessService.assignPublisherId(publisher.getPublisherId());
 			em.persist(modelBusinessService);
 			
 			result.getBusinessService().add(apiBusinessService);
@@ -343,10 +340,9 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateSaveTModel(em, body);
-		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+		ValidatePublish.validateSaveTModel(em, publisher, body);
 
 		TModelDetail result = new TModelDetail();
 
@@ -361,6 +357,7 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
+			modelTModel.assignPublisherId(publisher.getPublisherId());
 			em.persist(modelTModel);
 			
 			result.getTModel().add(apiTModel);
@@ -381,6 +378,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 	}
 
 	
+	/*-------------------------------------------------------------------
+	 Publisher functions are specific to jUDDI.
+	 --------------------------------------------------------------------*/
+	
 	/*
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
 	 */
@@ -391,11 +392,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateSavePublisher(em, body);
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
-
+		ValidatePublish.validateSavePublisher(em, (Publisher)publisher, body);
+		
 		PublisherDetail result = new PublisherDetail();
 
 		List<org.apache.juddi.api.datatype.Publisher> apiPublisherList = body.getPublisher();
@@ -430,11 +430,10 @@ public class UDDIPublicationImpl implements UDDIPublicationPortType {
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		ValidatePublish.validateDeletePublisher(em, body);
-
-		// TODO: Perform necessary authentication logic
-		String authInfo = body.getAuthInfo();
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
+		ValidatePublish.validateDeletePublisher(em, (Publisher)publisher, body);
+
 		List<String> entityKeyList = body.getPublisherId();
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);

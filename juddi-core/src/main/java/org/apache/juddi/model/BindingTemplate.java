@@ -31,6 +31,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "binding_template")
@@ -135,6 +136,13 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 	public void setBindingDescrs(Set<BindingDescr> bindingDescrs) {
 		this.bindingDescrs = bindingDescrs;
+	}
+
+	public String retrievePublisherId() {
+		return this.getBusinessService().getBusinessEntity().getPublisherId();
+	}
+	public void assignPublisherId(String id) {
+		// Do nothing, the publisher id is set in the parent.
 	}
 
 }

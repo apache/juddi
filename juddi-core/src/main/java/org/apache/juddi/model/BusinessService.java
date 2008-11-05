@@ -31,6 +31,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "business_service")
@@ -113,6 +114,13 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	}
 	public void setServiceCategories(Set<ServiceCategory> serviceCategories) {
 		this.serviceCategories = serviceCategories;
+	}
+
+	public String retrievePublisherId() {
+		return this.getBusinessEntity().getPublisherId();
+	}
+	public void assignPublisherId(String id) {
+		// Do nothing, the publisher id is set in the parent.
 	}
 
 }

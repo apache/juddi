@@ -30,6 +30,7 @@ import javax.persistence.OrderBy;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "business_entity")
@@ -200,4 +201,12 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.businessDescrs = businessDescrs;
 	}
 
+	public String retrievePublisherId() {
+		return this.publisherId;
+	}
+	public void assignPublisherId(String id) {
+		if (id != null)
+			this.publisherId = id;
+	}
+	
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<publisher xmlns="urn:apache-org:juddi_v3" publisherId="admin">
-  <publisherName>Administrator</publisherName>
-  <emailAddress>admin@juddi.apache.org</emailAddress>
-  <isAdmin>TrUe</isAdmin>
+<publisher xmlns="urn:apache-org:juddi_v3" publisherId="jpublisher">
+  <publisherName>Joe Publisher</publisherName>
+  <emailAddress>jpublisher@business.com</emailAddress>
+  <isAdmin>false</isAdmin>
   <isEnabled>TrUe</isEnabled>
   <maxBindingsPerService>199</maxBindingsPerService>
   <maxBusinesses>100</maxBusinesses>

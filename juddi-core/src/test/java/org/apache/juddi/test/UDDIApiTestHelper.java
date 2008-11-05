@@ -6,13 +6,19 @@ import java.io.File;
 import java.util.List;
 import java.util.Iterator;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.api.impl.UDDISecurityImpl;
+import org.apache.juddi.query.PersistenceManager;
 import org.uddi.api_v3.*;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIApiTestHelper {
 
@@ -29,6 +35,64 @@ public class UDDIApiTestHelper {
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.marshal( new JAXBElement<Object>(new javax.xml.namespace.QName("uri","local"), Object.class, obj), System.out);
 		
+	}
+
+	public static void addAdminPublisher(String pubId) {
+		org.apache.juddi.model.Publisher pub = new org.apache.juddi.model.Publisher();
+		pub.setPublisherId(pubId);
+		pub.setPublisherName("Administrator");
+		pub.setIsAdmin("true");
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		em.persist(pub);
+		
+		tx.commit();
+		em.close();
+
+	}
+	
+	public static void removeAdminPublisher(String pubId) {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		Object obj = em.find(org.apache.juddi.model.Publisher.class, pubId);
+		em.remove(obj);
+		
+		tx.commit();
+		em.close();
+
+	}
+	
+	public static void removeAuthTokens() {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		Query qry = em.createQuery("delete from AuthToken");
+		qry.executeUpdate();
+		
+		tx.commit();
+		em.close();
+
+	}
+
+	
+	public static String getAuthToken(String pubId) throws DispositionReportFaultMessage {
+		UDDISecurityImpl securityService = new UDDISecurityImpl();
+
+		org.uddi.api_v3.GetAuthToken ga = new org.uddi.api_v3.GetAuthToken();
+		ga.setUserID(pubId);
+		ga.setCred("");
+
+		org.uddi.api_v3.AuthToken token = securityService.getAuthToken(ga);
+		
+		return token.getAuthInfo();
 	}
 
 

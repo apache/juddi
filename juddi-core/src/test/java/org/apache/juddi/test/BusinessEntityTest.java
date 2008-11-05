@@ -16,11 +16,15 @@ public class BusinessEntityTest {
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
-	@Parameters({ "businessFile", "businessKey" })
+	@Parameters({ "businessFile", "businessKey", "publisherId" })
 	@Test
-	public void saveBusiness(String businessFile, String businessKey) {
+	public void saveBusiness(String businessFile, String businessKey, String publisherId) {
 		try {
+			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
+			
 			SaveBusiness sb = new SaveBusiness();
+			sb.setAuthInfo(authInfo);
+
 			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(businessFile, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
 			publish.saveBusiness(sb);
@@ -49,12 +53,16 @@ public class BusinessEntityTest {
 
 	}
 
-	@Parameters({ "businessKey" })
+	@Parameters({ "businessKey", "publisherId" })
 	@Test
-	public void deleteBusiness(String businessKey) {
+	public void deleteBusiness(String businessKey, String publisherId) {
 		try {
+			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
+			
 			// Delete the entity and make sure it is removed
 			DeleteBusiness db = new DeleteBusiness();
+			db.setAuthInfo(authInfo);
+			
 			db.getBusinessKey().add(businessKey);
 			publish.deleteBusiness(db);
 		}
