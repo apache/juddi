@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<save_business xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <businessEntity businessKey="">
+    <name xml:lang="en">An Apache jUDDI Node</name>
+    <description xml:lang="en">
+      This is a UDDI v3 registry node as implemented by Apache jUDDI.
+	</description>
+    <discoveryURLs>
+      <discoveryURL useType="home">http://localhost:8080/juddi
+		</discoveryURL>
+    </discoveryURLs>
+    <categoryBag>
+      <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node" />
+    </categoryBag>
+    <businessServices>
+      <businessService serviceKey="" businessKey="">
+        <name xml:lang="en">UDDI Inquiry Service</name>
+        <description xml:lang="en">Web Service supporting UDDI
+          Inquiry API</description>
+        <bindingTemplate bindingKey="" serviceKey="">
+          <description>UDDI Inquiry API V3</description>
+          <accessPoint useType="endpoint">
+            http://localhost:8080/juddi/inquiry
+          </accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                  <?xml version="1.0" encoding="utf-8" ?>
+                  <UDDIinstanceParmsContainer xmlns="urn:uddi-org:policy_v3_instanceParms">
+                    <defaultSortOrder>
+                      uddi:uddi.org:sortorder:binarysort
+                    </defaultSortOrder>
+                  </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+          </tModelInstanceDetails>
+        </bindingTemplate>
+      </businessService>
+      <businessService serviceKey="" businessKey="">
+        <name xml:lang="en">UDDI Publish Service</name>
+        <description xml:lang="en">Web Service supporting UDDI
+          Publish API</description>
+        <bindingTemplate bindingKey="" serviceKey="">
+          <description>UDDI Publication API V3</description>
+          <accessPoint useType="endpoint">
+            http://localhost:8080/juddi/publish
+          </accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_publication">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                  <?xml version="1.0" encoding="utf-8" ?>
+                  <UDDIinstanceParmsContainer xmlns="urn:uddi-org:policy_v3_instanceParms">
+                    <authInfoUse>required</authInfoUse>
+                  </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+          </tModelInstanceDetails>
+        </bindingTemplate>
+      </businessService>
+      <businessService serviceKey="" businessKey="">
+        <name xml:lang="en">UDDI Security Service</name>
+        <description xml:lang="en">Web Service supporting UDDI
+          Security API</description>
+        <bindingTemplate bindingKey="" serviceKey="">
+          <description>UDDI Security API V3</description>
+          <accessPoint useType="endpoint">
+            http://localhost:8080/security
+          </accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+          </tModelInstanceDetails>
+        </bindingTemplate>
+      </businessService>
+    </businessServices>
+  </businessEntity>
+</save_business>
+
+
+
+

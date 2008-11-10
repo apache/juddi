@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<save_publisher xmlns="urn:apache-org:juddi_v3">
+  <publisher publisherId="root">
+    <publisherName>root publisher</publisherName>
+    <isAdmin>true</isAdmin>
+  </publisher>
+</save_publisher>
