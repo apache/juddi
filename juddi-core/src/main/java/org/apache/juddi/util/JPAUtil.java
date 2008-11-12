@@ -85,4 +85,19 @@ public class JPAUtil {
 		return ret;
 		
 	}
+	
+	public static void runUpdateQuery(String qry) {
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		Query q = em.createQuery(qry);
+		q.executeUpdate();
+
+		tx.commit();
+		em.close();
+		
+		
+	}
+
 }

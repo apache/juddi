@@ -36,6 +36,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
 
+import org.apache.juddi.keygen.KeyGeneratorFactory;
+import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntity;
@@ -159,6 +161,10 @@ public class ValidatePublish {
 			
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			
+			// Must check if tModel is a Key Generator, and if so, removed from publisher collection
+			if (entityKey.toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase()))
+				publisher.removeKeyGeneratorKey(entityKey);
 		}
 	}
 
@@ -260,14 +266,11 @@ public class ValidatePublish {
 		boolean entityExists = false;
 		String entityKey = businessEntity.getBusinessKey();
 		if (entityKey == null || entityKey.length() == 0) {
-			// TODO: apply key generation strategy
-			entityKey = "";
+			KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
+			entityKey = keyGen.generate();
 			businessEntity.setBusinessKey(entityKey);
 		}
 		else {
-			// TODO: Test that key value is valid for publisher
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
@@ -275,6 +278,15 @@ public class ValidatePublish {
 				// Make sure publisher owns this entity.
 				if (!publisher.isOwner((UddiEntity)obj))
 					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			}
+			else {
+				// Inside this block, we have a key proposed by the publisher on a new entity
+
+				// Validate key and then check to see that the proposed key is valid for this publisher
+				ValidateUDDIKey.validateUDDIv3Key(entityKey);
+				if (!publisher.isValidPublisherKey(entityKey))
+					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
+
 			}
 		}
 
@@ -358,14 +370,11 @@ public class ValidatePublish {
 
 			boolean entityExists = false;
 			if (entityKey == null || entityKey.length() == 0) {
-				// TODO: apply key generation strategy
-				entityKey = "";
+				KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
+				entityKey = keyGen.generate();
 				businessService.setServiceKey(entityKey);
 			}
 			else {
-				// TODO: Test that key value is valid for publisher
-				//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-				
 				Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
 				if (obj != null) {
 					entityExists = true;
@@ -379,6 +388,15 @@ public class ValidatePublish {
 					if (!publisher.isOwner((UddiEntity)obj))
 						throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 					
+				}
+				else {
+					// Inside this block, we have a key proposed by the publisher on a new entity
+
+					// Validate key and then check to see that the proposed key is valid for this publisher
+					ValidateUDDIKey.validateUDDIv3Key(entityKey);
+					if (!publisher.isValidPublisherKey(entityKey))
+						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
+
 				}
 				
 			}
@@ -459,13 +477,11 @@ public class ValidatePublish {
 		
 		boolean entityExists = false;
 		if (entityKey == null || entityKey.length() == 0) {
-			// TODO: apply key generation strategy
-			entityKey = "";
+			KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
+			entityKey = keyGen.generate();
+			bindingTemplate.setBindingKey(entityKey);
 		}
 		else {
-			// TODO: Test that key value is valid for publisher
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-			
 			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
@@ -478,6 +494,15 @@ public class ValidatePublish {
 				// Make sure publisher owns this entity.
 				if (!publisher.isOwner((UddiEntity)obj))
 					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+
+			}
+			else {
+				// Inside this block, we have a key proposed by the publisher on a new entity
+
+				// Validate key and then check to see that the proposed key is valid for this publisher
+				ValidateUDDIKey.validateUDDIv3Key(entityKey);
+				if (!publisher.isValidPublisherKey(entityKey))
+					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 			}
 			
@@ -530,14 +555,11 @@ public class ValidatePublish {
 		boolean entityExists = false;
 		String entityKey = tModel.getTModelKey();
 		if (entityKey == null || entityKey.length() == 0) {
-			// TODO: apply key generation strategy
-			entityKey = "";
+			KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
+			entityKey = keyGen.generate();
 			tModel.setTModelKey(entityKey);
 		}
 		else {
-			// TODO: Test that key value is valid for publisher
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
@@ -545,6 +567,30 @@ public class ValidatePublish {
 				// Make sure publisher owns this entity.
 				if (!publisher.isOwner((UddiEntity)obj))
 					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			}
+			else {
+				// Inside this block, we have a key proposed by the publisher on a new entity
+				
+				// First test to see if this is a Key Generator tModel. The keyGenerator suffix appearing in the key is the indicator, since this is not
+				// allowed *unless* it's a key generator.
+				if (entityKey.toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase())) {
+					ValidateUDDIKey.validateUDDIv3KeyGeneratorTModel(tModel);
+					
+					// It's a valid Key Generator, but is it available for this publisher?
+					if (!publisher.isKeyGeneratorAvailable(em, entityKey))
+						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
+					else {
+						// The key generator is available, must now add it to the publisher's key generators.
+						publisher.addKeyGeneratorKey(entityKey);
+					}
+				
+				}
+				else {
+					// If not a key generator, then simply validate key and then check to see that the proposed key is valid for this publisher
+					ValidateUDDIKey.validateUDDIv3Key(entityKey);
+					if (!publisher.isValidPublisherKey(entityKey))
+						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
+				}
 			}
 		}
 

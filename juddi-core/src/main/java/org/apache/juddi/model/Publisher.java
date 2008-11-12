@@ -15,10 +15,12 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
@@ -26,6 +28,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "publisher")
+@PrimaryKeyJoinColumn(name = "publisher_id")
 public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -48,7 +51,8 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public Publisher(String publisherId, String publisherName,
 			String emailAddress, String isAdmin, String isEnabled,
 			Integer maxBusinesses, Integer maxServicesPerBusiness,
-			Integer maxBindingsPerService, Integer maxTmodels) {
+			Integer maxBindingsPerService, Integer maxTmodels,
+			Set<KeyGeneratorKey> keyGenerators) {
 		this.publisherId = publisherId;
 		this.publisherName = publisherName;
 		this.emailAddress = emailAddress;
@@ -58,6 +62,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 		this.maxServicesPerBusiness = maxServicesPerBusiness;
 		this.maxBindingsPerService = maxBindingsPerService;
 		this.maxTmodels = maxTmodels;
+		this.keyGeneratorKeys = keyGenerators;
 	}
 
 

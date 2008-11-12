@@ -15,13 +15,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.api.datatype.Publisher;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.query.PersistenceManager;
+import org.apache.juddi.mapping.MappingApiToModel;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIApiTestHelper {
 
+	public static final String ROOT_PUBLISHER = "root";
+	public static final String ROOT_PUBLISHER_KEYGEN = "uddi:juddi.apache.org:keygenerator";
 
 	public static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContext.newInstance(thePackage);
@@ -37,37 +41,74 @@ public class UDDIApiTestHelper {
 		
 	}
 
-	public static void addAdminPublisher(String pubId) {
-		org.apache.juddi.model.Publisher pub = new org.apache.juddi.model.Publisher();
-		pub.setPublisherId(pubId);
-		pub.setPublisherName("Administrator");
-		pub.setIsAdmin("true");
+	public static void installRootPublisher(String sourceDir) throws JAXBException, DispositionReportFaultMessage {
+		Publisher apiPub = (Publisher)buildEntityFromDoc(sourceDir + "root_Publisher.xml", "org.apache.juddi.api.datatype");
+		
+		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
+		
+		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		em.persist(pub);
+		em.persist(modelPub);
 		
 		tx.commit();
 		em.close();
 
 	}
-	
-	public static void removeAdminPublisher(String pubId) {
+
+	public static void installRootPublisherKeyGen(String sourceDir) throws JAXBException, DispositionReportFaultMessage {
+
+		TModel apiTModel = (TModel)buildEntityFromDoc(sourceDir + "root_tModelKeyGen.xml", "org.uddi.api_v3");
+		
+		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
+
+		MappingApiToModel.mapTModel(apiTModel, modelTModel);
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		Object obj = em.find(org.apache.juddi.model.Publisher.class, pubId);
-		em.remove(obj);
+		em.persist(modelTModel);
 		
 		tx.commit();
 		em.close();
 
 	}
+
 	
+	public static void removeRootPublisher() {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		Object obj = em.find(org.apache.juddi.model.UddiEntityPublisher.class, ROOT_PUBLISHER);
+		if (obj != null)
+			em.remove(obj);
+		
+		tx.commit();
+		em.close();
+
+	}
+
+	public static void removeRootPublisherKeyGen() {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		Object obj = em.find(org.apache.juddi.model.Tmodel.class, ROOT_PUBLISHER_KEYGEN);
+		if (obj != null)
+			em.remove(obj);
+		
+		tx.commit();
+		em.close();
+
+	}
+
 	public static void removeAuthTokens() {
 		
 		EntityManager em = PersistenceManager.getEntityManager();

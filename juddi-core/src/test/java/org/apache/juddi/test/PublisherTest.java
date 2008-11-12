@@ -14,23 +14,24 @@ import org.apache.juddi.api.datatype.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class PublisherTest {
-	private static final String ADMIN_PUBID = "admin";
 	
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
-	@Parameters({ "publisherFile", "publisherId" })
+	@Parameters({ "sourceDir", "publisherFile", "publisherId" })
 	@Test
-	public void savePublisher(String publisherFile, String publisherId) {
+	public void savePublisher(String sourceDir, String publisherFile, String publisherId) {
 		try {
-			// An admin publisher must exist to add publisher accounts
-			UDDIApiTestHelper.addAdminPublisher(ADMIN_PUBID);
+			// The root publisher with admin rights must exist to publish another publisher.
+			UDDIApiTestHelper.installRootPublisher(sourceDir);
+			// Install the root Key Generator
+			UDDIApiTestHelper.installRootPublisherKeyGen(sourceDir);
 
-			String authInfo = UDDIApiTestHelper.getAuthToken(ADMIN_PUBID);
+			String authInfo = UDDIApiTestHelper.getAuthToken(UDDIApiTestHelper.ROOT_PUBLISHER);
 			
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
-			Publisher pubIn = (Publisher)UDDIApiTestHelper.buildEntityFromDoc(publisherFile, "org.apache.juddi.api.datatype");
+			Publisher pubIn = (Publisher)UDDIApiTestHelper.buildEntityFromDoc(sourceDir + publisherFile, "org.apache.juddi.api.datatype");
 			sp.getPublisher().add(pubIn);
 			publish.savePublisher(sp);
 	
@@ -65,7 +66,7 @@ public class PublisherTest {
 	@Test
 	public void deletePublisher(String publisherId) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(ADMIN_PUBID);
+			String authInfo = UDDIApiTestHelper.getAuthToken(UDDIApiTestHelper.ROOT_PUBLISHER);
 			
 			// Delete the entity and make sure it is removed
 			DeletePublisher dp = new DeletePublisher();
@@ -74,7 +75,8 @@ public class PublisherTest {
 			dp.getPublisherId().add(publisherId);
 			publish.deletePublisher(dp);
 			
-			UDDIApiTestHelper.removeAdminPublisher(ADMIN_PUBID);
+			UDDIApiTestHelper.removeRootPublisherKeyGen();
+			UDDIApiTestHelper.removeRootPublisher();
 			UDDIApiTestHelper.removeAuthTokens();
 		}
 		catch(DispositionReportFaultMessage dr) {

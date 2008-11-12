@@ -20,9 +20,9 @@ public class BusinessServiceTest {
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
-	@Parameters({ "serviceFile", "serviceKey", "publisherId" })
+	@Parameters({ "sourceDir", "serviceFile", "serviceKey", "publisherId" })
 	@Test
-	public void saveService(String serviceFile, String serviceKey, String publisherId) {
+	public void saveService(String sourceDir, String serviceFile, String serviceKey, String publisherId) {
 		try {
 			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
 
@@ -30,7 +30,7 @@ public class BusinessServiceTest {
 			SaveService ss = new SaveService();
 			ss.setAuthInfo(authInfo);
 			
-			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)UDDIApiTestHelper.buildEntityFromDoc(serviceFile, "org.uddi.api_v3");
+			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)UDDIApiTestHelper.buildEntityFromDoc(sourceDir + serviceFile, "org.uddi.api_v3");
 			ss.getBusinessService().add(bsIn);
 			publish.saveService(ss);
 			

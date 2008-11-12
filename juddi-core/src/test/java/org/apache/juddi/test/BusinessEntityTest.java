@@ -16,16 +16,16 @@ public class BusinessEntityTest {
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
-	@Parameters({ "businessFile", "businessKey", "publisherId" })
+	@Parameters({ "sourceDir", "businessFile", "businessKey", "publisherId" })
 	@Test
-	public void saveBusiness(String businessFile, String businessKey, String publisherId) {
+	public void saveBusiness(String sourceDir, String businessFile, String businessKey, String publisherId) {
 		try {
 			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
 			
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
 
-			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(businessFile, "org.uddi.api_v3");
+			BusinessEntity beIn = (BusinessEntity)UDDIApiTestHelper.buildEntityFromDoc(sourceDir + businessFile, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
 			publish.saveBusiness(sb);
 	

@@ -23,7 +23,6 @@ import javax.persistence.EntityManager;
 
 import org.apache.juddi.error.AuthTokenRequiredException;
 import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -46,7 +45,7 @@ public abstract class AuthenticatedService {
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
-		UddiEntityPublisher entityPublisher = em.find(Publisher.class, modelAuthToken.getPublisherId());
+		UddiEntityPublisher entityPublisher = em.find(UddiEntityPublisher.class, modelAuthToken.getPublisherId());
 		if (entityPublisher == null)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
@@ -55,7 +54,6 @@ public abstract class AuthenticatedService {
 		modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
 		
 		return entityPublisher;
-			
 				   
 	}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:businessone.com">
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:joepublisher:businessone">
   <discoveryURLs>
     <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
     <discoveryURL useType="serviceList">http://www.businessone.com/services</discoveryURL>
