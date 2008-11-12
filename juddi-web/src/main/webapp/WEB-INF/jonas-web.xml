@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE jonas-web-app PUBLIC 
+    "-//ObjectWeb//DTD JOnAS Web App 3.1//EN"
+    "http://jonas.objectweb.org/dtds/jonas-web-app_3_1.dtd">
+
+<jonas-web-app>
+
+    <jonas-resource>
+        <res-ref-name>jdbc/juddiDB</res-ref-name>
+        <jndi-name>jdbc/juddiDB</jndi-name>
+    </jonas-resource>
+
+</jonas-web-app>
