@@ -24,6 +24,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -38,7 +40,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private String tmodelKey;
 	private String authorizedName;
-	private String publisherId;
+	private UddiEntityPublisher publisher;
 	private String operator;
 	private String name;
 	private String langCode;
@@ -58,14 +60,14 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.name = name;
 		this.lastUpdate = lastUpdate;
 	}
-	public Tmodel(String tmodelKey, String authorizedName, String publisherId, String operator,
+	public Tmodel(String tmodelKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
 			Set<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
 			Set<TmodelIdentifier> tmodelIdentifiers,
 			Set<TmodelCategory> tmodelCategories) {
 		this.tmodelKey = tmodelKey;
 		this.authorizedName = authorizedName;
-		this.publisherId = publisherId;
+		this.publisher = publisher;
 		this.operator = operator;
 		this.name = name;
 		this.langCode = langCode;
@@ -94,12 +96,13 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.authorizedName = authorizedName;
 	}
 
-	@Column(name = "publisher_id", length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "publisher_id", nullable = false)
+	public UddiEntityPublisher getPublisher() {
+		return this.publisher;
 	}
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setPublisher(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
 	}
 
 	@Column(name = "operator", nullable = false)
@@ -167,11 +170,14 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 
 	public String retrievePublisherId() {
-		return this.publisherId;
+		return this.publisher.getPublisherId();
 	}
 	public void assignPublisherId(String id) {
-		if (id != null)
-			this.publisherId = id;
+		if (id != null) {
+			Publisher pub = new Publisher();
+			pub.setPublisherId(id);
+			this.setPublisher(pub);
+		}
 	}
 
 }

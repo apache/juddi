@@ -64,6 +64,9 @@ public class TModelTest {
 			
 			dt.getTModelKey().add(tmodelKey);
 			publish.deleteTModel(dt);
+			
+			// Above call will only do a lazy deletion.  Must remove outside of API to clean database.
+			UDDIApiTestHelper.deleteEntity(org.apache.juddi.model.Tmodel.class, tmodelKey);
 		}
 		catch(DispositionReportFaultMessage dr) {
 			Assert.fail("No exception should be thrown", dr);

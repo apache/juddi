@@ -24,6 +24,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.OrderBy;
@@ -39,8 +41,8 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private String businessKey;
 	private String authorizedName;
-	private String publisherId;
 	private String operator;
+	private UddiEntityPublisher publisher;
 	private Set<Contact> contacts = new HashSet<Contact>(0);
 	private Set<BusinessIdentifier> businessIdentifiers = new HashSet<BusinessIdentifier>(0);
 	private Set<PublisherAssertion> publisherAssertionsForFromKey = new HashSet<PublisherAssertion>(0);
@@ -61,7 +63,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.lastUpdate = lastUpdate;
 	}
 	public BusinessEntity(String businessKey, String authorizedName, 
-			String publisherId, String operator,
+			UddiEntityPublisher publisher, String operator,
 			Date lastUpdate, Set<Contact> contacts,
 			Set<BusinessIdentifier> businessIdentifiers,
 			Set<PublisherAssertion> publisherAssertionsForFromKey,
@@ -72,7 +74,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			Set<BusinessDescr> businessDescrs) {
 		this.businessKey = businessKey;
 		this.authorizedName = authorizedName;
-		this.publisherId = publisherId;
+		this.publisher = publisher;
 		this.operator = operator;
 		this.lastUpdate = lastUpdate;
 		this.contacts = contacts;
@@ -104,12 +106,13 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.authorizedName = authorizedName;
 	}
 
-	@Column(name = "publisher_id", length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "publisher_id", nullable = false)
+	public UddiEntityPublisher getPublisher() {
+		return this.publisher;
 	}
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setPublisher(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
 	}
 
 	@Column(name = "operator", nullable = false)
@@ -202,11 +205,14 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	public String retrievePublisherId() {
-		return this.publisherId;
+		return this.publisher.getPublisherId();
 	}
 	public void assignPublisherId(String id) {
-		if (id != null)
-			this.publisherId = id;
+		if (id != null) {
+			Publisher pub = new Publisher();
+			pub.setPublisherId(id);
+			this.setPublisher(pub);
+		}
 	}
 	
 }

@@ -64,8 +64,10 @@ public class UDDIApiTestHelper {
 		TModel apiTModel = (TModel)buildEntityFromDoc(sourceDir + "root_tModelKeyGen.xml", "org.uddi.api_v3");
 		
 		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
-
+		
 		MappingApiToModel.mapTModel(apiTModel, modelTModel);
+		
+		modelTModel.assignPublisherId(ROOT_PUBLISHER);
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -80,33 +82,23 @@ public class UDDIApiTestHelper {
 
 	
 	public static void removeRootPublisher() {
-		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Object obj = em.find(org.apache.juddi.model.UddiEntityPublisher.class, ROOT_PUBLISHER);
-		if (obj != null)
-			em.remove(obj);
-		
-		tx.commit();
-		em.close();
-
+		deleteEntity(org.apache.juddi.model.UddiEntityPublisher.class, ROOT_PUBLISHER);
 	}
 
 	public static void removeRootPublisherKeyGen() {
-		
+		deleteEntity(org.apache.juddi.model.Tmodel.class, ROOT_PUBLISHER_KEYGEN);
+	}
+
+	public static void deleteEntity(Class<?> entityClass, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		Object obj = em.find(org.apache.juddi.model.Tmodel.class, ROOT_PUBLISHER_KEYGEN);
-		if (obj != null)
-			em.remove(obj);
+		Object obj = em.find(entityClass, entityKey);
+		em.remove(obj);
 		
 		tx.commit();
 		em.close();
-
 	}
 
 	public static void removeAuthTokens() {
