@@ -20,6 +20,8 @@ package org.apache.juddi.api.impl;
 import java.util.List;
 
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
 
 import org.uddi.sub_v3.DeleteSubscription;
@@ -28,6 +30,9 @@ import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.PersistenceManager;
+
 
 @WebService(serviceName="UDDISubscriptionService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType")
@@ -36,21 +41,48 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 
 	public void deleteSubscription(DeleteSubscription body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
 
+        List<String> subscriptionKeyList = body.getSubscriptionKey();
+        for (String subscriptionKey : subscriptionKeyList) {
+                Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
+                em.remove(obj);
+        }
+
+        tx.commit();
+        em.close();
 	}
 
 
 	public SubscriptionResultsList getSubscriptionResults(
 			GetSubscriptionResults body) throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+        String authInfo = body.getAuthInfo();
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        tx.commit();
+        em.close();
+        return null;
 	}
 
 
 	public List<Subscription> getSubscriptions(String authInfo)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+        EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        
+        List<?> keysFound = null;
+
+        // TODO : find the subscriptions
+        
+        tx.commit();
+        em.close();
+		
 		return null;
 	}
 
@@ -58,7 +90,13 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		
+        EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+                
+        tx.commit();
+        em.close();
 
 	}
 

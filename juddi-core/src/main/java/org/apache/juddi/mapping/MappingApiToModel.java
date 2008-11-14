@@ -564,6 +564,12 @@ public class MappingApiToModel {
 		}
 	}
 
-
+	public static void mapSubscription(org.uddi.sub_v3.Subscription apiSubscription,
+			org.apache.juddi.model.Subscription modelSubscription) throws DispositionReportFaultMessage {
+		modelSubscription.setBindingKey(apiSubscription.getBindingKey());
+		modelSubscription.setSubscriptionKey(apiSubscription.getSubscriptionKey());
+		modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+	}
+	
 }
 	
