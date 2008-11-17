@@ -105,6 +105,8 @@
   <modules>
     <module>uddi-ws</module>
     <module>juddi-core</module>
+    <module>juddi-web</module>
+    <module>juddi-cargo</module>
   </modules>
   
   <distributionManagement>
