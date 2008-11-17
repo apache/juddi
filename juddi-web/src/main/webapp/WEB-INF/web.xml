@@ -27,61 +27,19 @@
     jUDDI is Java-based implmementation of a UDDI version 2.0 registry.
   </description>
 
-  <!--
-    This Servlet is used to create, initialize and cleanup 
-    resources used by jUDDI. It ABSOLUTELY MUST be loaded first.
-   -->
-  <servlet>
-    <servlet-name>jUDDIRegistryServlet</servlet-name>
-    <display-name>jUDDI Registry Servlet</display-name>
-    <servlet-class>org.apache.juddi.registry.RegistryServlet</servlet-class>
-    <init-param>
-      <param-name>juddi.propertiesFile</param-name>
-      <param-value>/WEB-INF/juddi.properties</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <display-name>Apache-Axis Servlet</display-name>
+        <servlet-class>
+            org.apache.axis2.transport.http.AxisServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-  <servlet>
-    <servlet-name>jUDDIAdminService</servlet-name>
-    <display-name>jUDDI Admin Service</display-name>
-    <servlet-class>org.apache.juddi.registry.service.AdminService</servlet-class>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>UDDIV2InquiryService</servlet-name>
-    <display-name>UDDI Version 2.0 Inquiry Service</display-name>
-    <servlet-class>org.apache.juddi.registry.service.InquiryService</servlet-class>
-  </servlet>
-  
-  <servlet>
-    <servlet-name>UDDIV2PublishService</servlet-name>
-    <display-name>UDDI Version 2.0 Publish Service</display-name>
-    <servlet-class>org.apache.juddi.registry.service.PublishService</servlet-class>
-  </servlet>
-  
-  <!--  uncomment if you want to enable making calls in juddi with rmi 
-  <servlet>
-  	<servlet-name>RegisterServicesWithJNDI</servlet-name>
-  	<servlet-class>org.apache.juddi.registry.rmi.RegistrationService</servlet-class>
-  	<load-on-startup>1</load-on-startup>
-  </servlet> 
-  -->
- 
   <servlet-mapping>
-    <servlet-name>jUDDIAdminService</servlet-name>
-    <url-pattern>/admin</url-pattern>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
   </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>UDDIV2InquiryService</servlet-name>
-    <url-pattern>/inquiry</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-    <servlet-name>UDDIV2PublishService</servlet-name>
-    <url-pattern>/publish</url-pattern>
-  </servlet-mapping>
+
 
   <welcome-file-list id="WelcomeFileList">
     <welcome-file>index.jsp</welcome-file>
