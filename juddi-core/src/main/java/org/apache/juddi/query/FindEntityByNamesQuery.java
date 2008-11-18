@@ -95,7 +95,7 @@ public class FindEntityByNamesQuery extends EntityQuery {
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 
 		// TODO: Break up the IN clause into an amount that is configurable (see JUDDI-146)
-		dynamicQry.appendInList(entityAlias + "." + keyName, keysIn);
+		dynamicQry.appendInListWithAnd(entityAlias + "." + keyName, keysIn);
 		
 		log.debug(dynamicQry);
 		

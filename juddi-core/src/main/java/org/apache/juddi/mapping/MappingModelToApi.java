@@ -17,10 +17,13 @@
 
 package org.apache.juddi.mapping;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
+
+import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -606,5 +609,59 @@ public class MappingModelToApi {
 	
 	}
 
+	public static void mapPublisherAssertion(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion, 
+											 org.uddi.api_v3.PublisherAssertion apiPublisherAssertion) 
+				   throws DispositionReportFaultMessage {
+
+		apiPublisherAssertion.setFromKey(modelPublisherAssertion.getId().getFromKey());
+		apiPublisherAssertion.setToKey(modelPublisherAssertion.getId().getToKey());
+		
+		org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();
+		keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());
+		keyedRef.setKeyName(modelPublisherAssertion.getKeyName());
+		keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());
+		
+		apiPublisherAssertion.setKeyedReference(keyedRef);
+		
+	}
+	
+	public static void mapAssertionStatusItem(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion, 
+											  org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem,
+											  List<?> businessKeys) 
+				   throws DispositionReportFaultMessage {
+
+		apiAssertionStatusItem.setFromKey(modelPublisherAssertion.getId().getFromKey());
+		apiAssertionStatusItem.setToKey(modelPublisherAssertion.getId().getToKey());
+		
+		org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();
+		keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());
+		keyedRef.setKeyName(modelPublisherAssertion.getKeyName());
+		keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());
+		
+		apiAssertionStatusItem.setKeyedReference(keyedRef);
+		
+		if ("true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && 
+			"true".equalsIgnoreCase(modelPublisherAssertion.getToCheck()))
+			apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
+		else if(!"true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && 
+				"true".equalsIgnoreCase(modelPublisherAssertion.getToCheck()))
+			apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+		else if("true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && 
+				!"true".equalsIgnoreCase(modelPublisherAssertion.getToCheck()))
+			apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+		else if(!"true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && 
+				!"true".equalsIgnoreCase(modelPublisherAssertion.getToCheck()))
+			apiAssertionStatusItem.setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+		
+		org.uddi.api_v3.KeysOwned keysOwned = new org.uddi.api_v3.KeysOwned();
+		
+		Collections.sort((List<String>)businessKeys);
+		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getBusinessKey()) >= 0)
+			keysOwned.getContent().add(new ObjectFactory().createFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getBusinessKey()));
+		
+		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getBusinessKey()) >= 0)
+			keysOwned.getContent().add(new ObjectFactory().createToKey(modelPublisherAssertion.getBusinessEntityByToKey().getBusinessKey()));
+		
+	}
 	
 }

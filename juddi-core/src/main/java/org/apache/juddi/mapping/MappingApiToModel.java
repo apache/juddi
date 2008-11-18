@@ -560,7 +560,7 @@ public class MappingApiToModel {
 		if (apiKeyedRef != null) {
 			modelPubAssertion.setTmodelKey(apiKeyedRef.getTModelKey());
 			modelPubAssertion.setKeyName(apiKeyedRef.getKeyName());
-			modelPubAssertion.setKeyValue(apiKeyedRef.getKeyName());
+			modelPubAssertion.setKeyValue(apiKeyedRef.getKeyValue());
 		}
 	}
 

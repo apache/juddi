@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.HashSet;
 import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBElement;
+import javax.xml.ws.Holder;
 
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.DeleteBusiness;
@@ -32,6 +33,7 @@ import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveTModel;
+import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
@@ -168,7 +170,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateDeletePublisherAssertions(EntityManager em, DeletePublisherAssertions body) throws DispositionReportFaultMessage {
+	public static void validateDeletePublisherAssertions(EntityManager em, UddiEntityPublisher publisher, DeletePublisherAssertions body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -177,15 +179,28 @@ public class ValidatePublish {
 		// No null or empty list
 		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
 		if (entityList == null || entityList.size() == 0)
-			throw new AssertionNotFoundException(new ErrorMessage("errors.assertion.NoPubAssertions"));
+			throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.NoPubAssertions"));
 
 		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-			// TODO: duplicate check?
+			
+			validatePublisherAssertion(em, publisher, entity);
 			
 			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
-			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, pubAssertionId);
+			Object obj = em.find(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
 			if (obj == null)
-				throw new AssertionNotFoundException(new ErrorMessage("errors.assertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
+				throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
+			else {
+				org.apache.juddi.model.PublisherAssertion pubAssertion = (org.apache.juddi.model.PublisherAssertion)obj;
+				org.uddi.api_v3.KeyedReference keyedRef = entity.getKeyedReference();
+				if (keyedRef == null)
+					throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
+
+				if (!pubAssertion.getTmodelKey().equalsIgnoreCase(keyedRef.getTModelKey()) || 
+					!pubAssertion.getKeyName().equalsIgnoreCase(keyedRef.getKeyName()) || 
+					!pubAssertion.getKeyValue().equalsIgnoreCase(keyedRef.getKeyValue()))
+					throw new AssertionNotFoundException(new ErrorMessage("errors.pubassertion.AssertionNotFound", entity.getFromKey() + ", " + entity.getToKey()));
+
+			}
 			
 		}
 	}
@@ -253,6 +268,38 @@ public class ValidatePublish {
 		
 		for (org.uddi.api_v3.TModel entity : entityList) {
 			validateTModel(em, publisher, entity);
+		}
+	}
+
+	public static void validateAddPublisherAssertions(EntityManager em, UddiEntityPublisher publisher, AddPublisherAssertions body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
+		if (entityList == null || entityList.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.addpublisherassertions.NoInput"));
+		
+		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
+			validatePublisherAssertion(em, publisher, entity);
+		}
+	}
+	
+	public static void validateSetPublisherAssertions(EntityManager em, UddiEntityPublisher publisher, Holder<List<org.uddi.api_v3.PublisherAssertion>> body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// Assertion list can be null or empty - it signifies that publisher is deleting all their assertions
+		List<org.uddi.api_v3.PublisherAssertion> entityList = body.value;
+		if (entityList != null && entityList.size() > 0) {
+		
+			for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
+				validatePublisherAssertion(em, publisher, entity);
+			}
 		}
 	}
 
@@ -614,6 +661,43 @@ public class ValidatePublish {
 				validateOverviewDoc(overviewDoc);
 		}
 
+	}
+	
+	public static void validatePublisherAssertion(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.PublisherAssertion pubAssertion) throws DispositionReportFaultMessage {
+		// A supplied publisher assertion can't be null
+		if (pubAssertion == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.NullInput"));
+		
+		// The keyedRef must not be blank and every field must contain data.
+		org.uddi.api_v3.KeyedReference keyedRef = pubAssertion.getKeyedReference();
+		if (keyedRef == null || 
+			keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0 ||
+			keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0 ||
+			keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankKeyedRef"));
+		
+		String fromKey = pubAssertion.getFromKey();
+		if (fromKey == null || fromKey.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankFromKey"));
+
+		String toKey = pubAssertion.getToKey();
+		if (toKey == null || toKey.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankToKey"));
+		
+		if (fromKey.equals(toKey))
+			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.SameBusinessKey"));
+		
+		Object fromObj = em.find(org.apache.juddi.model.BusinessEntity.class, fromKey);
+		if (fromObj == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", fromKey));
+
+		Object toObj = em.find(org.apache.juddi.model.BusinessEntity.class, pubAssertion.getToKey());
+		if (toObj == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", toKey));
+		
+		if (!publisher.isOwner((UddiEntity)fromObj) && !publisher.isOwner((UddiEntity)toObj))
+			throw new UserMismatchException(new ErrorMessage("errors.pubassertion.UserMismatch", fromKey + " & " + toKey));
+			
 	}
 	
 	public static void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {

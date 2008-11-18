@@ -57,7 +57,7 @@ public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendSortTables(dynamicQry);
-		dynamicQry.appendInList(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
 		appendSortCriteria(dynamicQry, fq);
 
 		log.debug(dynamicQry);

@@ -37,7 +37,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class FetchTModelsQuery extends BusinessEntityQuery {
+public class FetchTModelsQuery extends TModelQuery {
 
 	private static Logger log = Logger.getLogger(FetchTModelsQuery.class);
 
@@ -57,7 +57,7 @@ public class FetchTModelsQuery extends BusinessEntityQuery {
 
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendSortTables(dynamicQry);
-		dynamicQry.appendInList(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
 		appendSortCriteria(dynamicQry, fq);
 
 		log.debug(dynamicQry);

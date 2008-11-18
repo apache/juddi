@@ -147,11 +147,20 @@ public class DynamicQuery {
 		
 	}
 	
-	public void appendInList(String term, List<?> list) {
+	public DynamicQuery appendInListWithAnd(String term, List<?> list) {
 		if (list == null || list.size() == 0)
-			return;
+			return this;
 		
-		AND().pad().append(term).pad().IN().pad().openParen().pad();
+		AND().pad();
+		
+		return appendInList(term, list);
+	}
+	
+	public DynamicQuery appendInList(String term, List<?> list) {
+		if (list == null || list.size() == 0)
+			return this;
+		
+		append(term).pad().IN().pad().openParen().pad();
 		int count = 0;
 		for (Object item : list) {
 			param();
@@ -163,8 +172,9 @@ public class DynamicQuery {
 			count++;
 		}
 		closeParen().pad();
+		return this;
 	}
-	
+
 	public void addValue(Object obj) {
 		this.values.addElement(obj);
 	}

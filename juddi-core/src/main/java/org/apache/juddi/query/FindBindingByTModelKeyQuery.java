@@ -72,7 +72,7 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 		
 		// TODO: Break up the IN clause into an amount that is configurable (see JUDDI-146)
-		dynamicQry.appendInList(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
 		
 		log.debug(dynamicQry);
 		

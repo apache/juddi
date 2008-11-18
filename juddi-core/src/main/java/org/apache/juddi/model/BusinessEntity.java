@@ -205,7 +205,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	public String retrievePublisherId() {
-		return this.publisher.getPublisherId();
+		return getPublisher().getPublisherId();
 	}
 	public void assignPublisherId(String id) {
 		if (id != null) {

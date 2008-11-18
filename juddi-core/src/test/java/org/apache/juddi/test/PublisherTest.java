@@ -22,11 +22,6 @@ public class PublisherTest {
 	@Test
 	public void savePublisher(String sourceDir, String publisherFile, String publisherId) {
 		try {
-			// The root publisher with admin rights must exist to publish another publisher.
-			UDDIApiTestHelper.installRootPublisher(sourceDir);
-			// Install the root Key Generator
-			UDDIApiTestHelper.installRootPublisherKeyGen(sourceDir);
-
 			String authInfo = UDDIApiTestHelper.getAuthToken(UDDIApiTestHelper.ROOT_PUBLISHER);
 			
 			SavePublisher sp = new SavePublisher();
@@ -73,11 +68,7 @@ public class PublisherTest {
 			dp.setAuthInfo(authInfo);
 			
 			dp.getPublisherId().add(publisherId);
-			publish.deletePublisher(dp);
-			
-			UDDIApiTestHelper.removeRootPublisherKeyGen();
-			UDDIApiTestHelper.removeRootPublisher();
-			UDDIApiTestHelper.removeAuthTokens();
+			publish.deletePublisher(dp);			
 		}
 		catch(DispositionReportFaultMessage dr) {
 			Assert.fail("No exception should be thrown", dr);

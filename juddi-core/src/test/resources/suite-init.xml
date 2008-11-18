@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite-init" verbose="1">
+  <parameter name="sourceDir" value="./src/test/java/org/apache/juddi/test/" />
+
+  <test name="initializeTests">
+    <classes>
+      <class name="org.apache.juddi.test.JUDDITest">
+        <methods>
+          <include name="initializeTests" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

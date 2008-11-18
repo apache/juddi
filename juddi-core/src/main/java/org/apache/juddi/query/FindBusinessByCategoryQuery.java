@@ -126,7 +126,7 @@ public class FindBusinessByCategoryQuery {
 		}
 		qry.closeParen().pad();
 		
-		qry.appendInList("bc.id.businessKey", keysIn);
+		qry.appendInListWithAnd("bc.id.businessKey", keysIn);
 	}
 	
 	public static void appendGrouping(DynamicQuery qry, FindQualifiers fq, int elemCount) {

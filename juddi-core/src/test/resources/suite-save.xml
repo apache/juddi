@@ -1,0 +1,120 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite-jpublisher" verbose="1">
+  <parameter name="sourceDir" value="./src/test/java/org/apache/juddi/test/" />
+  <parameter name="pubassertFile" value="jpublisher-ssyndicator_publisherAssertion.xml" />
+
+  <test name="savePublisher-jpublisher">
+    <parameter name="publisherFile" value="jpublisher_publisher.xml" />
+    <parameter name="publisherId" value="jpublisher" />
+    <classes>
+      <class name="org.apache.juddi.test.PublisherTest">
+        <methods>
+          <include name="savePublisher" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="savePublisher-ssyndicator">
+    <parameter name="publisherFile" value="ssyndicator_publisher.xml" />
+    <parameter name="publisherId" value="ssyndicator" />
+    <classes>
+      <class name="org.apache.juddi.test.PublisherTest">
+        <methods>
+          <include name="savePublisher" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveTModel-jpublisher">
+    <parameter name="publisherId" value="jpublisher" />
+    <parameter name="tmodelFile" value="jpublisher_tModelKeyGen.xml" />
+    <parameter name="tmodelKey" value="uddi:juddi.apache.org:joepublisher:KEYGENERATOR" />
+    <classes>
+      <class name="org.apache.juddi.test.TModelTest">
+        <methods>
+          <include name="saveTModel" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveTModel-ssyndicator">
+    <parameter name="publisherId" value="ssyndicator" />
+    <parameter name="tmodelFile" value="ssyndicator_tModelKeyGen.xml" />
+    <parameter name="tmodelKey" value="uddi:juddi.apache.org:samco:repository:keygenerator" />
+    <classes>
+      <class name="org.apache.juddi.test.TModelTest">
+        <methods>
+          <include name="saveTModel" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveBusiness-jpublisher">
+    <parameter name="publisherId" value="jpublisher" />
+    <parameter name="businessFile" value="jpublisher_businessEntity1.xml" />
+    <parameter name="businessKey" value="uddi:juddi.apache.org:joepublisher:businessone" />
+    <classes>
+      <class name="org.apache.juddi.test.BusinessEntityTest">
+        <methods>
+          <include name="saveBusiness" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveBusiness-ssyndicator">
+    <parameter name="publisherId" value="ssyndicator" />
+    <parameter name="businessFile" value="ssyndicator_businessEntity1.xml" />
+    <parameter name="businessKey" value="uddi:juddi.apache.org:samco:repository:samco" />
+    <classes>
+      <class name="org.apache.juddi.test.BusinessEntityTest">
+        <methods>
+          <include name="saveBusiness" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveService-jpublisher">
+    <parameter name="publisherId" value="jpublisher" />
+    <parameter name="serviceFile" value="jpublisher_businessService1.xml" />
+    <parameter name="serviceKey" value="uddi:juddi.apache.org:joepublisher:serviceone" />
+    <classes>
+       <class name="org.apache.juddi.test.BusinessServiceTest">
+        <methods>
+          <include name="saveService" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="saveService-ssyndicator">
+    <parameter name="publisherId" value="ssyndicator" />
+    <parameter name="serviceFile" value="ssyndicator_businessService1.xml" />
+    <parameter name="serviceKey" value="uddi:juddi.apache.org:samco:repository:listingservice" />
+    <classes>
+       <class name="org.apache.juddi.test.BusinessServiceTest">
+        <methods>
+          <include name="saveService" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="addPublisherAssertion-jpublisher">
+    <parameter name="publisherId" value="jpublisher" />
+    <classes>
+      <class name="org.apache.juddi.test.PublisherAssertionTest">
+        <methods>
+          <include name="addPublisherAssertion" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+  <test name="addPublisherAssertion-ssyndicator">
+    <parameter name="publisherId" value="ssyndicator" />
+    <classes>
+      <class name="org.apache.juddi.test.PublisherAssertionTest">
+        <methods>
+          <include name="addPublisherAssertion" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

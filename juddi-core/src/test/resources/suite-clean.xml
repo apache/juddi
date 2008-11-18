@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite-clean" verbose="1">
+
+  <test name="cleanupTests">
+    <classes>
+      <class name="org.apache.juddi.test.JUDDITest">
+        <methods>
+          <include name="cleanupTests" />
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>
