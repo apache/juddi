@@ -4,7 +4,7 @@
   <parameter name="pubassertFile" value="jpublisher-ssyndicator_publisherAssertion.xml" />
 
   <test name="savePublisher-jpublisher">
-    <parameter name="publisherFile" value="jpublisher_publisher.xml" />
+    <parameter name="publisherFile" value="jpublisher_Publisher.xml" />
     <parameter name="publisherId" value="jpublisher" />
     <classes>
       <class name="org.apache.juddi.test.PublisherTest">
