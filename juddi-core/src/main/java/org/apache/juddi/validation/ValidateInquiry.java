@@ -152,7 +152,7 @@ public class ValidateInquiry {
 
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
-		validateFindTModel(body.getFindTModel());
+		validateFindTModel(body.getFindTModel(), true);
 		ValidatePublish.validateDiscoveryUrls(body.getDiscoveryURLs());
 		ValidatePublish.validateIdentifierBag(body.getIdentifierBag());
 		ValidatePublish.validateCategoryBag(body.getCategoryBag());
@@ -169,7 +169,7 @@ public class ValidateInquiry {
 
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
-		validateFindTModel(body.getFindTModel());
+		validateFindTModel(body.getFindTModel(), true);
 		ValidatePublish.validateCategoryBag(body.getCategoryBag());
 		
 	}
@@ -184,16 +184,20 @@ public class ValidateInquiry {
 
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
-		validateFindTModel(body.getFindTModel());
+		validateFindTModel(body.getFindTModel(), true);
 		ValidatePublish.validateCategoryBag(body.getCategoryBag());
 		
 		
 	}
 	
-	public static void validateFindTModel(FindTModel body) throws DispositionReportFaultMessage  {
-		// No null input
-		//if (body == null)
-		//	throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+	public static void validateFindTModel(FindTModel body, boolean nullAllowed) throws DispositionReportFaultMessage  {
+		if (body == null) {
+			// When FindTModel objects are embedded in other find calls, null is allowed.
+			if (nullAllowed)
+				return;
+			else
+				throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		}
 
 		if (body.getCategoryBag() == null && body.getIdentifierBag() == null && body.getName() == null)
 			throw new FatalErrorException(new ErrorMessage("errors.findtmodel.NoInput"));

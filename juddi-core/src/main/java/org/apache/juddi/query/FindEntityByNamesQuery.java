@@ -19,7 +19,6 @@ package org.apache.juddi.query;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
@@ -94,15 +93,7 @@ public class FindEntityByNamesQuery extends EntityQuery {
 		if (restrictions != null && restrictions.length > 0)
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 
-		// TODO: Break up the IN clause into an amount that is configurable (see JUDDI-146)
-		dynamicQry.appendInListWithAnd(entityAlias + "." + keyName, keysIn);
-		
-		log.debug(dynamicQry);
-		
-		Query qry = dynamicQry.buildJPAQuery(em);
-		List<?> result = qry.getResultList();
-		
-		return result;
+		return getQueryResult(em, dynamicQry, keysIn, entityAlias + "." + keyName);
 	}
 	
 	/*

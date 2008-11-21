@@ -20,6 +20,7 @@ package org.apache.juddi.query;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.uddi.api_v3.Name;
 
@@ -52,8 +53,14 @@ public class FindServiceByNameQuery {
 		findQuery = new FindEntityByNamesQuery(BusinessServiceQuery.ENTITY_NAME, BusinessServiceQuery.ENTITY_ALIAS, BusinessServiceQuery.KEY_NAME, ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn) {
-		return findQuery.select(em, fq, names, keysIn);
+	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, String parentKey, List<?> keysIn) {
+		if (parentKey != null && parentKey.length() > 0) {
+			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
+			return findQuery.select(em, fq, names, keysIn, param);
+		}
+		else
+			return findQuery.select(em, fq, names, keysIn);
+			
 	}
 	
 }

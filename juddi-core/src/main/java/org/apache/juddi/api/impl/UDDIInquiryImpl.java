@@ -28,17 +28,13 @@ import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchBusinessServicesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
 import org.apache.juddi.query.FindBindingByTModelKeyQuery;
-import org.apache.juddi.query.BindingTemplateQuery;
 import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
 import org.apache.juddi.query.FindBusinessByIdentifierQuery;
 import org.apache.juddi.query.FindBusinessByNameQuery;
 import org.apache.juddi.query.FindServiceByNameQuery;
-import org.apache.juddi.query.BusinessServiceQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
-import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.PersistenceManager;
-import org.apache.juddi.util.JPAUtil;
 import org.apache.juddi.validation.ValidateInquiry;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ErrorMessage;
@@ -61,6 +57,7 @@ import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
+import org.uddi.api_v3.ListDescription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
@@ -90,21 +87,16 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
 		List<?> keysFound = null;
-		if (body.getServiceKey() == null || body.getServiceKey().length() == 0) {
-			keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
-			//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, keysFound);
-		}
-		else {
-			DynamicQuery.Parameter keyRestriction = new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME, body.getServiceKey(), DynamicQuery.PREDICATE_EQUALS);
-			if (body.getTModelBag() != null)
-				keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound, keyRestriction);
-			//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, keysFound, keyRestriction);
-		}
-		
-		// Sort and retrieve the final results with paging taken into account
-		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
+		//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, body.getServiceKey(), keysFound);
 
 		BindingDetail result = new BindingDetail();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+		
+		// Sort and retrieve the final results with paging taken into account
+		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+
 		for (Object item : queryResults) {
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
 			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
@@ -142,9 +134,11 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
 		BusinessList result = new BusinessList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
 
 		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
 		if (queryResults != null && queryResults.size() > 0)
 			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 
@@ -185,13 +179,15 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
 		List<?> keysFound = null;
-		//keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
+		//keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey, keysFound);
+		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 
 		ServiceList result = new ServiceList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
 		
 		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
 		if (queryResults != null && queryResults.size() > 0)
 			result.setServiceInfos(new org.uddi.api_v3.ServiceInfos());
 
@@ -213,7 +209,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindTModel(body);
+		ValidateInquiry.validateFindTModel(body, false);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -231,9 +227,11 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
 		TModelList result = new TModelList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
 
 		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead());
+		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
 		if (queryResults != null && queryResults.size() > 0)
 			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
 		

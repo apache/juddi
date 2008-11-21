@@ -19,7 +19,6 @@ package org.apache.juddi.query;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
@@ -54,7 +53,7 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
@@ -68,18 +67,13 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendConditions(dynamicQry, fq, tmodelKeys);
+		if (parentKey != null && parentKey.length() > 0)
+			dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));
+		
 		if (restrictions != null && restrictions.length > 0)
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 		
-		// TODO: Break up the IN clause into an amount that is configurable (see JUDDI-146)
-		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
-		
-		log.debug(dynamicQry);
-		
-		Query qry = dynamicQry.buildJPAQuery(em);
-		List<?> result = qry.getResultList();
-		
-		return result;
+		return getQueryResult(em, dynamicQry, keysIn, ENTITY_ALIAS + "." + KEY_NAME);
 	}
 	
 	

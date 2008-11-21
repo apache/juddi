@@ -25,6 +25,7 @@ import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.log4j.Logger;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.api_v3.ListDescription;
 
 /**
  * The "select" method retrieves all the entities for the input key list and sorts according to the user settings.  Paging is taken into account when retrieving 
@@ -49,7 +50,7 @@ public class FetchTModelsQuery extends TModelQuery {
 		selectSQL = sql.toString();
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRows, Integer listHead) throws DispositionReportFaultMessage {
+	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRows, Integer listHead, ListDescription listDesc) throws DispositionReportFaultMessage {
 		
 		// If keysIn is null or empty, then nothing to fetch.
 		if ((keysIn == null) || (keysIn.size() == 0))
@@ -62,7 +63,7 @@ public class FetchTModelsQuery extends TModelQuery {
 
 		log.debug(dynamicQry);
 		
-		return getPagedResult(em, dynamicQry, maxRows, listHead);
+		return getPagedResult(em, dynamicQry, maxRows, listHead, listDesc);
 	}
 	
 	private static void appendSortTables(DynamicQuery qry) {

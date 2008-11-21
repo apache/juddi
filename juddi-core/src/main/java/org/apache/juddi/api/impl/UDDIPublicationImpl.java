@@ -323,7 +323,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		RegisteredInfo result = new RegisteredInfo();
 		
 		// Sort and retrieve the final results
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null);
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);
 		if (queryResults != null && queryResults.size() > 0)
 			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 		
@@ -337,7 +337,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		}
 
 		// Sort and retrieve the final results
-		queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null);
+		queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);
 		if (queryResults != null && queryResults.size() > 0)
 			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
 		

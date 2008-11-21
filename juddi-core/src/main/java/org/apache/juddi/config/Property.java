@@ -18,4 +18,6 @@ public interface Property
 	public final static String JUDDI_KEYGENERATOR                ="juddi.keygenerator";
 	public final static String JUDDI_VALIDATOR                   ="juddi.validator";
 	public final static String JUDDI_USERSFILE                   ="juddi.usersfile";
+	public final static String JUDDI_MAX_ROWS                    ="juddi.maxRows";
+	public final static String JUDDI_MAX_IN_CLAUSE               ="juddi.maxInClause";
 }

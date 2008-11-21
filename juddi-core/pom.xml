@@ -47,7 +47,12 @@
         <version>2.4.2</version>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>src/test/resources/suite-init.xml,src/test/resources/suite-save.xml,src/test/resources/suite-delete.xml,src/test/resources/suite-clean.xml</suiteXmlFile>
+            <suiteXmlFile>
+              src/test/resources/suite-init.xml,
+              src/test/resources/suite-save.xml,
+              src/test/resources/suite-delete.xml,
+              src/test/resources/suite-clean.xml
+            </suiteXmlFile>
           </suiteXmlFiles>
         </configuration>
       </plugin>
