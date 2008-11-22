@@ -26,29 +26,29 @@ import org.apache.log4j.Logger;
 import org.uddi.api_v3.TModelBag;
 
 /**
- * Returns the list of binding keys possessing the tModels in the passed tModelBag.
- * Output is restricted by list of binding keys passed in.  If null, all bindings are searched.
+ * Returns the list of business keys with services that have bindings that possess the tModels in the passed tModelBag.
+ * Output is restricted by list of service keys passed in.  If null, all services are searched.
  * Output is produced by building the appropriate JPA query based on input and find qualifiers.
  * 
  * From specification:
- * "This collection of tModelKey elements represent in part or in whole the technical fingerprint of the bindingTemplate 
- * structures for which the search is being performed. At least one of either a tModelBag or a find_tModel argument SHOULD be 
- * supplied, unless a categoryBag based search is being used.  
-
- * If a find_tModel argument is specified (see above), it is treated as an embedded inquiry.  The tModelKeys returned as a 
- * result of this embedded find_tModel argument are used as if they had been 
- * supplied in a tModelBag argument. Changing the order of the keys in the collection or specifying the same tModelKey more than 
- * once does not change the behavior of the find.  
+ * "Every Web service instance exposed by a registered businessEntity is represented in UDDI by a bindingTemplate contained 
+ * within the businessEntity. Each bindingTemplate contains a collection of tModel references called its "technical fingerprint" 
+ * that specifies its type.  The tModelBag argument is a collection of tModelKey elements specifying that the search results are 
+ * to be limited to businesses that expose Web services with technical fingerprints that match.
+ *
+ * If a find_tModel argument is specified (see above), it is treated as an embedded inquiry.  The tModelKeys returned as a result 
+ * of this embedded find_tModel argument are used as if they had been supplied in a tModelBag argument. Changing the order of the 
+ * keys in the collection or specifying the same tModelKey more than once does not change the behavior of the find. 
+ *
+ * By default, only bindingTemplates that contain all of the tModelKeys in the technical fingerprint match (logical AND). Specifying 
+ * appropriate findQualifiers can override this behavior so that bindingTemplates containing any of the specified tModelKeys match 
+ * (logical OR)."
  * 
- * By default, only bindingTemplates that have a technical fingerprint containing 
- * all of the supplied tModelKeys match (logical AND). Specifying appropriate findQualifiers can override this behavior so that 
- * bindingTemplates with a technical fingerprint containing any of the specified tModelKeys are returned (logical OR)." 
- *  
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
+public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 	
-	private static Logger log = Logger.getLogger(FindBindingByTModelKeyQuery.class);
+	private static Logger log = Logger.getLogger(FindBusinessByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
 
@@ -58,7 +58,7 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
@@ -72,8 +72,6 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendConditions(dynamicQry, fq, tmodelKeys);
-		if (parentKey != null && parentKey.length() > 0)
-			dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));
 		
 		if (restrictions != null && restrictions.length > 0)
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
@@ -120,8 +118,11 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 	 */
 	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<String> tmodelKeys) {
 		
-		if (tmodelKeys != null & tmodelKeys.size() > 0) {
 
+		if (tmodelKeys != null & tmodelKeys.size() > 0) {
+			qry.comma().pad().append(BusinessServiceQuery.ENTITY_NAME + " " + BusinessServiceQuery.ENTITY_ALIAS).pad();
+			qry.comma().pad().append(BindingTemplateQuery.ENTITY_NAME + " " + BindingTemplateQuery.ENTITY_ALIAS).pad();
+			
 			StringBuffer thetaJoins = new StringBuffer(200);
 			int tblCount = 0;
 			for(int count = 0; count < tmodelKeys.size(); count++) {
@@ -129,19 +130,23 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 					if (!fq.isOrAllKeys()) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-						thetaJoins.append(entityAliasChild + (tblCount - 1) + ".id." + KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + KEY_NAME + " ");
+						thetaJoins.append(entityAliasChild + (tblCount - 1) + ".id." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + BindingTemplateQuery.KEY_NAME + " ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 					}
 				}
 				else {
 					qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-					thetaJoins.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + KEY_NAME + " ");
+					thetaJoins.append(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + BindingTemplateQuery.KEY_NAME + " ");
 					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 				}
 			}
 			
 			qry.WHERE().pad().openParen().pad();
-
+			
+			qry.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + BusinessServiceQuery.ENTITY_ALIAS + ".businessEntity." + KEY_NAME).pad();
+			qry.AND().pad().append(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME + " = " + BindingTemplateQuery.ENTITY_ALIAS + ".businessService." + BusinessServiceQuery.KEY_NAME).pad();
+			qry.AND().pad();
+			
 			String thetaJoinsStr = thetaJoins.toString();
 			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + " "))
 				thetaJoinsStr = thetaJoinsStr.substring(0, thetaJoinsStr.length() - (DynamicQuery.OPERATOR_AND + " ").length());

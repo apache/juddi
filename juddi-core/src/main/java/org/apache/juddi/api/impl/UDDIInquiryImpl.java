@@ -31,7 +31,9 @@ import org.apache.juddi.query.FindBindingByTModelKeyQuery;
 import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
 import org.apache.juddi.query.FindBusinessByIdentifierQuery;
 import org.apache.juddi.query.FindBusinessByNameQuery;
+import org.apache.juddi.query.FindBusinessByTModelKeyQuery;
 import org.apache.juddi.query.FindServiceByNameQuery;
+import org.apache.juddi.query.FindServiceByTModelKeyQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
 import org.apache.juddi.query.PersistenceManager;
@@ -58,6 +60,7 @@ import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.api_v3.ListDescription;
+import org.uddi.api_v3.TModelBag;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
@@ -87,6 +90,12 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
 		List<?> keysFound = null;
+
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
 		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
 		//keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, tmodelKeys, body.getServiceKey(), keysFound);
 
@@ -127,7 +136,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
 		List<?> keysFound = null;
+		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
 		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
 		//keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
@@ -178,7 +193,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
 		List<?> keysFound = null;
+		FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
 		//keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey, keysFound);
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 
@@ -436,4 +457,31 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	}
 	
+	/*
+	 * Performs the necessary queries for the find_tModel search and adds resulting tModel keys to the tModelBag provided.
+	 */
+	private void doFindTModelEmbeddedSearch(EntityManager em, 
+											org.uddi.api_v3.FindQualifiers fq, 
+											FindTModel findTmodel, 
+											TModelBag tmodelBag)
+			throws DispositionReportFaultMessage {
+
+		
+		if (findTmodel != null && tmodelBag != null) {
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(fq);
+
+			
+			List<?> tmodelKeysFound = null;
+			tmodelKeysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, findTmodel.getIdentifierBag(), tmodelKeysFound);
+			//tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByNameQuery.select(em, findQualifiers, findTmodel.getName(), tmodelKeysFound);
+			
+			if (tmodelKeysFound != null && tmodelKeysFound.size() > 0) {
+				for (Object item : tmodelKeysFound)
+					tmodelBag.getTModelKey().add((String)item);
+			}
+		}
+	}
+
 }
