@@ -26,6 +26,7 @@ import javax.xml.ws.Holder;
 
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.SaveSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -89,6 +90,19 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
+			throws DispositionReportFaultMessage {
+		
+        EntityManager em = PersistenceManager.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+                
+        tx.commit();
+        em.close();
+
+	}
+	
+	public void saveSubscription(String authInfo,
+			SaveSubscription subscription)
 			throws DispositionReportFaultMessage {
 		
         EntityManager em = PersistenceManager.getEntityManager();
