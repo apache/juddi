@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="suite-subscribe" verbose="1">
+  <parameter name="sourceDir" value="./src/test/java/org/apache/juddi/test/" />
+  <parameter name="subscriptionFile" value="subscription1.xml" />
+  <test name="savePublisher-jpublisher">
+    <classes>
+      <class name="org.apache.juddi.test.SubscriberSaveTest">
+        <methods>
+          <include name="saveSubscriber"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>
