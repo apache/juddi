@@ -17,7 +17,9 @@
 
 package org.apache.juddi.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.jws.WebService;
 import javax.persistence.EntityTransaction;
 import javax.persistence.EntityManager;
@@ -61,6 +63,7 @@ import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.api_v3.ListDescription;
 import org.uddi.api_v3.TModelBag;
+import org.uddi.api_v3.Direction;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
@@ -142,6 +145,29 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
 		
 		List<?> keysFound = null;
+		
+		// The embedded find_relatedBusinesses search is performed first.  This is done the same as the actual API call, except the resulting business keys are 
+		// extracted and placed in the keysFound array to restrict future searches to only those keys.
+		if (body.getFindRelatedBusinesses() != null) {
+			FindRelatedBusinesses frb = body.getFindRelatedBusinesses();
+			
+			org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+			if (body.getFindRelatedBusinesses().getBusinessKey() != null ) {
+				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
+				getRelatedBusinesses(em, Direction.TO_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			}
+			else if (body.getFindRelatedBusinesses().getFromKey() != null)
+				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getFromKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			else if (body.getFindRelatedBusinesses().getToKey() != null)
+				getRelatedBusinesses(em, Direction.TO_KEY, frb.getToKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			
+			List<String> relatedBusinessKeys = new ArrayList<String>(0);
+			for (org.uddi.api_v3.RelatedBusinessInfo rbi : relatedBusinessInfos.getRelatedBusinessInfo())
+				relatedBusinessKeys.add(rbi.getBusinessKey());
+			
+			keysFound = relatedBusinessKeys;
+		}
+		
 		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
 		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
@@ -172,10 +198,106 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		return result;
 	}
 
-	public RelatedBusinessesList findRelatedBusinesses(
-			FindRelatedBusinesses body) throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+	public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) 
+			throws DispositionReportFaultMessage {
+
+		ValidateInquiry.validateFindRelatedBusinesses(body, false);
+		
+		// TODO: Perform necessary authentication logic
+		String authInfo = body.getAuthInfo();
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		// TODO: findQualifiers aren't really used for this call, except maybe for sorting.  Sorting must be done in Java due to the retrieval method used.  Right now
+		// no sorting is performed.
+		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+		
+		RelatedBusinessesList result = new RelatedBusinessesList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+		
+		// Either one of the businessKey, fromKey or toKey will be passed.  This is considered the "focal" business to which related businesses must be
+		// found.  Rather than use a query, it seems simpler to take advantage of the model's publisher assertion collections.
+		org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+		if (body.getBusinessKey() != null ) {
+			getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
+			getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
+		}
+		else if (body.getFromKey() != null)
+			getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos);
+		else if (body.getToKey() != null)
+			getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos);
+
+		if (relatedBusinessInfos.getRelatedBusinessInfo().size() > 0) {
+			// TODO: Do proper pagination!
+			listDesc.setActualCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
+			listDesc.setIncludeCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
+			listDesc.setListHead(1);
+			
+			result.setRelatedBusinessInfos(relatedBusinessInfos);
+		}
+		
+		tx.commit();
+		em.close();
+		
+		return result;
+		
+	}
+	
+	/*
+	 * Retrieves related businesses based on the focal business and the direction (fromKey or toKey).  The focal business is retrieved and then the
+	 * appropriate publisher assertion collection is examined for matches.  The assertion must be "completed" and if a keyedReference is passed, it must
+	 * match exactly.  Successful assertion matches are mapped to a RelationBusinessInfo structure and added to the passed in RelationalBusinessInfos 
+	 * structure.
+	 */
+	private void getRelatedBusinesses(EntityManager em, 
+									  Direction direction, 
+									  String focalKey, 
+									  org.uddi.api_v3.KeyedReference keyedRef,
+									  org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos)
+			 throws DispositionReportFaultMessage {
+		if (relatedBusinessInfos == null)
+			relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+		
+		org.apache.juddi.model.BusinessEntity focalBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, focalKey);
+		if (focalBusiness == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", focalKey));
+
+		Set<org.apache.juddi.model.PublisherAssertion> pubAssertList = null;
+		if (direction == Direction.FROM_KEY)
+			pubAssertList = focalBusiness.getPublisherAssertionsForFromKey();
+		else
+			pubAssertList = focalBusiness.getPublisherAssertionsForToKey();
+		
+		if (pubAssertList != null) {
+			for (org.apache.juddi.model.PublisherAssertion modelPublisherAssertion : pubAssertList) {
+				if ("true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && "true".equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {
+					if (keyedRef != null) {
+						if(!keyedRef.getTModelKey().equals(modelPublisherAssertion.getTmodelKey()) || 
+						   !keyedRef.getKeyName().equals(modelPublisherAssertion.getKeyName()) || 
+						   !keyedRef.getKeyValue().equals(modelPublisherAssertion.getKeyValue())) {
+							continue;
+						}
+					}
+					
+					org.apache.juddi.model.BusinessEntity modelRelatedBusiness  = null;
+					if (direction == Direction.FROM_KEY)
+						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getToKey());
+					else
+						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getFromKey());
+					
+					org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo = new org.uddi.api_v3.RelatedBusinessInfo();
+
+					MappingModelToApi.mapRelatedBusinessInfo(modelPublisherAssertion, modelRelatedBusiness, direction, apiRelatedBusinessInfo);
+					
+					relatedBusinessInfos.getRelatedBusinessInfo().add(apiRelatedBusinessInfo);
+				}
+			}
+		}
+		
 	}
 
 	public ServiceList findService(FindService body)

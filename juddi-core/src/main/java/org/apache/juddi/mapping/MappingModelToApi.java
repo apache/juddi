@@ -663,5 +663,28 @@ public class MappingModelToApi {
 			keysOwned.getContent().add(new ObjectFactory().createToKey(modelPublisherAssertion.getBusinessEntityByToKey().getBusinessKey()));
 		
 	}
-	
+
+	public static void mapRelatedBusinessInfo(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
+											  org.apache.juddi.model.BusinessEntity modelRelatedBusiness,
+											  org.uddi.api_v3.Direction direction,
+											  org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo) 
+				   throws DispositionReportFaultMessage {
+
+		apiRelatedBusinessInfo.setBusinessKey(modelRelatedBusiness.getBusinessKey());
+		
+		mapBusinessNames(modelRelatedBusiness.getBusinessNames(), apiRelatedBusinessInfo.getName());
+		mapBusinessDescriptions(modelRelatedBusiness.getBusinessDescrs(), apiRelatedBusinessInfo.getDescription());
+		
+		org.uddi.api_v3.SharedRelationships sharedRelationships = new org.uddi.api_v3.SharedRelationships();
+		sharedRelationships.setDirection(direction);
+		
+		org.uddi.api_v3.KeyedReference keyedRef = new org.uddi.api_v3.KeyedReference();
+		keyedRef.setTModelKey(modelPublisherAssertion.getTmodelKey());
+		keyedRef.setKeyName(modelPublisherAssertion.getKeyName());
+		keyedRef.setKeyValue(modelPublisherAssertion.getKeyValue());
+		sharedRelationships.getKeyedReference().add(keyedRef);
+		
+		apiRelatedBusinessInfo.getSharedRelationships().add(sharedRelationships);
+	}
+
 }

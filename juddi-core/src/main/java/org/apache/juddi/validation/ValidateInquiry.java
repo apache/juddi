@@ -30,6 +30,8 @@ import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.TModelBag;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -153,6 +155,7 @@ public class ValidateInquiry {
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
+		validateFindRelatedBusinesses(body.getFindRelatedBusinesses(), true);
 		ValidatePublish.validateDiscoveryUrls(body.getDiscoveryURLs());
 		ValidatePublish.validateIdentifierBag(body.getIdentifierBag());
 		ValidatePublish.validateCategoryBag(body.getCategoryBag());
@@ -205,6 +208,47 @@ public class ValidateInquiry {
 		validateFindQualifiers(body.getFindQualifiers());
 		ValidatePublish.validateIdentifierBag(body.getIdentifierBag());
 		ValidatePublish.validateCategoryBag(body.getCategoryBag());
+	}
+	
+	public static void validateFindRelatedBusinesses(FindRelatedBusinesses body, boolean nullAllowed) throws DispositionReportFaultMessage  {
+		if (body == null) {
+			// When FindRelatedBusinesses objects are embedded in other find calls, null is allowed.
+			if (nullAllowed)
+				return;
+			else
+				throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		}
+
+		if ((body.getBusinessKey() == null  || body.getBusinessKey().length() == 0 ) && 
+			(body.getFromKey() == null || body.getFromKey().length() == 0) && 
+			(body.getToKey() == null || body.getToKey().length() == 0))
+			throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.NoInput"));
+		
+		boolean businessKeyExists = false;
+		boolean fromKeyExists = false;
+		if (body.getBusinessKey() != null && body.getBusinessKey().length() > 0) {
+			businessKeyExists = true;
+
+		}
+		if (body.getFromKey() != null && body.getFromKey().length() > 0) {
+			fromKeyExists = true;
+			if (businessKeyExists)
+				throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.MultipleInput"));
+			
+		}
+		if (body.getToKey() != null && body.getToKey().length() > 0) {
+			if (businessKeyExists || fromKeyExists)
+				throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.MultipleInput"));
+		}
+		
+		KeyedReference keyedRef = body.getKeyedReference();
+		if (keyedRef != null) {
+			if (keyedRef.getTModelKey() == null || keyedRef.getTModelKey().length() == 0 ||
+				keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0 ||
+				keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.findrelatedbusiness.BlankKeyedRef"));
+		}
+			
 	}
 	
 	public static void validateTModelBag(TModelBag tmodelBag) throws DispositionReportFaultMessage {
