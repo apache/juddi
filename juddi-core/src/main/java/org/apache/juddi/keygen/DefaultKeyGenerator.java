@@ -17,8 +17,14 @@
 
 package org.apache.juddi.keygen;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.uuidgen.UUIDGenFactory;
 import org.apache.juddi.uuidgen.UUIDGen;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * The default jUDDI key generator.  Generates a key like this:
@@ -29,8 +35,14 @@ import org.apache.juddi.uuidgen.UUIDGen;
  */
 public class DefaultKeyGenerator implements KeyGenerator {
 
-	public String generate() {
+	public String generate() throws DispositionReportFaultMessage {
+		String rootDomain = "";
+		try 
+		{ rootDomain = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_DOMAIN); }
+		catch(ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_DOMAIN));}
+		
 		UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
-		return UDDI_SCHEME + PARTITION_SEPARATOR + ROOT_DOMAIN + PARTITION_SEPARATOR + uuidgen.uuidgen();
+		return UDDI_SCHEME + PARTITION_SEPARATOR + rootDomain + PARTITION_SEPARATOR + uuidgen.uuidgen();
 	}
 }

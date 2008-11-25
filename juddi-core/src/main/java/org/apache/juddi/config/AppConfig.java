@@ -16,18 +16,30 @@
  */
 package org.apache.juddi.config;
 
+import java.util.Properties;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.model.KeyGeneratorKey;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.PersistenceManager;
 import org.apache.log4j.Logger;
 
 /**
  * Handles the application level configuration for jUDDI. By default it first
  * looks at system properties
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class AppConfig 
 {
@@ -57,15 +69,53 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+		// Properties from the persistence layer 
+		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration());
+		
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
 		fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);
 		propConfig.setReloadingStrategy(fileChangedReloadingStrategy);
 		compositeConfig.addConfiguration(propConfig);
+		compositeConfig.addConfiguration(persistentConfig);
 		//Making the new configuration globally accessible.
 		config = compositeConfig;
 	}
+
+	/*
+	 * This method will build any "persisted" properties. Persisted properties are those that are stored in the database.  These values
+	 * should be stored when the application is installed.  If they don't exist, then an error should occur.
+	 */
+	private Properties getPersistentConfiguration() throws ConfigurationException {
+		Properties result = new Properties();
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, "root");
+		if (rootPublisher == null)
+			throw new ConfigurationException("The 'root' publisher was not found.  Please make sure that the application is properly installed.");
+		
+		Set<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
+		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
+			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");
+		
+		String rootKeyGen = rootKeyGenList.iterator().next().getKeygenTModelKey();
+		rootKeyGen = rootKeyGen.substring((KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR).length());
+		rootKeyGen = rootKeyGen.substring(0, rootKeyGen.length() - (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).length());
+		log.debug("root domain:  " + rootKeyGen);
+		
+		result.setProperty(Property.JUDDI_ROOT_DOMAIN, rootKeyGen);
+		
+		tx.commit();
+		em.close();
+		
+		return result;
+	}
+	
+	
 	/**
 	 * Obtains the reference to the Singleton instance.
 	 * 

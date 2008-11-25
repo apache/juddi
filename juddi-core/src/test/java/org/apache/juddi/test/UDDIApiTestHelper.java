@@ -19,6 +19,9 @@ import org.apache.juddi.api.datatype.Publisher;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.model.KeyGeneratorKey;
+import org.apache.juddi.model.KeyGeneratorKeyId;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -74,6 +77,13 @@ public class UDDIApiTestHelper {
 		tx.begin();
 
 		em.persist(modelTModel);
+		
+		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, ROOT_PUBLISHER);
+		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
+		keyGenKey.setId(new KeyGeneratorKeyId(rootPublisher.getPublisherId(), 0));
+		keyGenKey.setPublisher(rootPublisher);
+		keyGenKey.setKeygenTModelKey(modelTModel.getTmodelKey());
+		rootPublisher.getKeyGeneratorKeys().add(keyGenKey);
 		
 		tx.commit();
 		em.close();

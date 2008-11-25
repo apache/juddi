@@ -23,8 +23,12 @@ import java.util.StringTokenizer;
 import javax.xml.bind.JAXBElement;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ValueNotAllowedException;
 
@@ -57,8 +61,13 @@ public class ValidateUDDIKey {
 				if(!ValidateUDDIKey.isValidDomainKey(nextToken))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 				
-				// TODO: This is temporary until JUDDI-155 is worked out.
-				if (!org.apache.juddi.keygen.KeyGenerator.ROOT_DOMAIN.equalsIgnoreCase(nextToken))
+				String rootDomain = "";
+				try 
+				{ rootDomain = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_DOMAIN); }
+				catch(ConfigurationException ce) 
+				{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_DOMAIN));}
+				
+				if (!rootDomain.equalsIgnoreCase(nextToken))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 
 			}

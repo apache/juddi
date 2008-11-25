@@ -17,21 +17,18 @@
 
 package org.apache.juddi.keygen;
 
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public interface KeyGenerator {
-	// TODO: This is temporary until JUDDI-155 is worked out.
-	public static String ROOT_DOMAIN = "juddi.apache.org";
-	
-	
-	public static String UDDI_SCHEME = "uddi";
-	public static String PARTITION_SEPARATOR = ":";
-	public static String KEYGENERATOR_SUFFIX = "keygenerator";
+	public static final String UDDI_SCHEME = "uddi";
+	public static final String PARTITION_SEPARATOR = ":";
+	public static final String KEYGENERATOR_SUFFIX = "keygenerator";
 
 	/*
 	 * Generates a key that is used to save a UDDI entity.
 	 */
-	public String generate();
+	public String generate() throws DispositionReportFaultMessage;
 }
