@@ -81,8 +81,8 @@
         </dependency>
         <dependency>
             <groupId>woodstox</groupId>
-            <artifactId>wstx</artifactId>
-            <version>asl-3.2.4</version>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.7</version>
         </dependency>
         <dependency>
             <groupId>stax</groupId>
