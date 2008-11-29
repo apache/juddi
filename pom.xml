@@ -107,6 +107,7 @@
     <module>juddi-core</module>
     <module>juddi-web</module>
     <module>juddi-cargo</module>
+    <module>juddi-tomcat</module>
   </modules>
   
   <distributionManagement>
