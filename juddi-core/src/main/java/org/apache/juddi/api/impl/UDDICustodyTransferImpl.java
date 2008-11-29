@@ -21,6 +21,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 
+import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
@@ -33,21 +34,17 @@ public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
 
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateCustodyTransfer.unsupportedAPICall();
 	}
 
 	public void getTransferToken(String authInfo, KeyBag keyBag,
 			Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
 			Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateCustodyTransfer.unsupportedAPICall();	
 	}
 
 	public void transferEntities(TransferEntities body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateCustodyTransfer.unsupportedAPICall();
 	}
-
 }

@@ -19,6 +19,7 @@ package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
 
+import org.apache.juddi.validation.ValidateValueSetValidation;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetValidationPortType;
@@ -28,12 +29,9 @@ import org.uddi.vs_v3.ValidateValues;
 			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType")
 public class UDDIValueSetValidationImpl implements
 		UDDIValueSetValidationPortType {
-
-
 	public DispositionReport validateValues(ValidateValues body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		ValidateValueSetValidation.unsupportedAPICall();
 		return null;
 	}
-
 }

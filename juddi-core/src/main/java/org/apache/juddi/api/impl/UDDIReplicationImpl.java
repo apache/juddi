@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.juddi.validation.ValidateReplication;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.DoPing;
@@ -37,7 +38,7 @@ public class UDDIReplicationImpl implements UDDIReplicationPortType {
 
 
 	public String doPing(DoPing body) throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
 
@@ -47,29 +48,26 @@ public class UDDIReplicationImpl implements UDDIReplicationPortType {
 			BigInteger responseLimitCount,
 			HighWaterMarkVectorType responseLimitVector)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
 
 
 	public List<ChangeRecordIDType> getHighWaterMarks()
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
 
 
 	public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateReplication.unsupportedAPICall();
 	}
 
 
 	public void transferCustody(TransferCustody body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateReplication.unsupportedAPICall();
 	}
-
 }

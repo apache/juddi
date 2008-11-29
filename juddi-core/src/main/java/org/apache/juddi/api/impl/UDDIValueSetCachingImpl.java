@@ -22,6 +22,7 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import org.apache.juddi.validation.ValidateValueSetCaching;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetCachingPortType;
 import org.uddi.vscache_v3.ValidValue;
@@ -29,13 +30,9 @@ import org.uddi.vscache_v3.ValidValue;
 @WebService(serviceName="UDDIValueSetCachingService", 
 			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType")
 public class UDDIValueSetCachingImpl implements UDDIValueSetCachingPortType {
-
-
 	public void getAllValidValues(String authInfo, String modelKey,
 			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-
+		ValidateValueSetCaching.unsupportedAPICall();
 	}
-
 }

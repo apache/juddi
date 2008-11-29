@@ -19,6 +19,7 @@ package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
 
+import org.apache.juddi.validation.ValidateSubscriptionListener;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -29,12 +30,10 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class UDDISubscriptionListenerImpl implements
 		UDDISubscriptionListenerPortType {
 
-
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
+		ValidateSubscriptionListener.unsupportedAPICall();
 		return null;
 	}
-
 }
