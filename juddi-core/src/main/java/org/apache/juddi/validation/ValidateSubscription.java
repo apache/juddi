@@ -1,5 +1,11 @@
 package org.apache.juddi.validation;
 
-public class ValidateSubscription {
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
+public class ValidateSubscription {
+	public static void unsupportedAPICall() throws DispositionReportFaultMessage {
+		throw new FatalErrorException(new ErrorMessage("This API is not supported in this release of jUDDI"));
+	}
 }
