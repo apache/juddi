@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.juddi</groupId>
+  <artifactId>juddi-tomcat</artifactId>
+  <version>3.0.0.SNAPSHOT</version>
+  <name>juddi-tomcat Maven Packaging</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>commons-discovery</groupId>
+      <artifactId>commons-discovery</artifactId>
+      <version>0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis-saaj</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis-jaxrpc</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <artifactId>apache-tomcat</artifactId>
+      <groupId>tomcat</groupId>
+      <version>5.5.23</version> 
+      <type>zip</type>
+    </dependency>
+    <dependency>
+     <artifactId>juddi-web</artifactId>
+     <groupId>org.apache.juddi</groupId>
+     <version>3.0.0.SNAPSHOT</version> 
+     <type>war</type>
+    </dependency>
+    <dependency>
+     <artifactId>juddi-core</artifactId>
+     <groupId>org.apache.juddi</groupId>
+     <version>3.0.0.SNAPSHOT</version>
+     <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.1.2.1</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test</id>
+            <phase>integration-test</phase>
+            <configuration>
+              <tasks>
+
+                        <property name="compile_classpath" refid="maven.compile.classpath"/>
+                        <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                        <property name="test_classpath" refid="maven.test.classpath"/>
+                        <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                        <property name="project.version" value="${project.version}"/>
+
+		<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
+		<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
+		<property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
+		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-web.war.path}"/>
+		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
+		<ant antfile="${basedir}/build.xml">
+                  <target name="package-tomcat"/>
+                </ant>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

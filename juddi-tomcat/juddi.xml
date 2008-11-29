@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<!DOCTYPE weblogic-web-app PUBLIC "-//BEA Systems, Inc.//DTD Web Application 
+6.0//EN" "http://www.bea.com/servers/wls600/dtd/weblogic-web-jar.dtd"> 
+<Context path="/juddi" docBase="juddi" debug="5" reloadable="true" 
+crossContext="true"> 
+<Logger className="org.apache.catalina.logger.FileLogger" 
+prefix="localhost_juddiDB_log" suffix=".txt" timestamp="true"/> 
+<!-- the Resource element will probably work better for you on Tomcat 5+ if you 
+simply use a Resource only tag with xml attributes as opposed to the nested 
+ResourceParams and parameter 
+elements --> 
+<Resource name="jdbc/juddiDB" auth="Container" type="javax.sql.DataSource" 
+maxActive="100" maxIdle="30" maxWait="10000" username="juddi" password="123456" 
+driverClassName="org.apache.derby.jdbc.EmbeddedDriver" 
+url="jdbc:derby:juddi-derby-test-db;create=true">
+</Resource>
+</Context> 
+
