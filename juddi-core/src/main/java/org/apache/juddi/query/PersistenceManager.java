@@ -18,12 +18,8 @@
 package org.apache.juddi.query;
 
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
-
-import javax.persistence.Query;
-import java.util.List;
 
 public class PersistenceManager {
 	public static final String PERSISTENCE_UNIT_NAME = "juddiDatabase";
@@ -43,4 +39,10 @@ public class PersistenceManager {
 	public static EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
+	
+	public static void closeEntityManager() {
+		if (emf.isOpen())
+			emf.close();
+	}
+	
 }

@@ -519,7 +519,7 @@ public class ValidatePublish {
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + parent.getBusinessKey()));
 			}
 			else
-				parentKey = parent.getBusinessKey();
+				parentKey = parent.getServiceKey();
 		}
 		
 		boolean entityExists = false;

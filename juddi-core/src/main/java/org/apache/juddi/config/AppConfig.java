@@ -33,6 +33,7 @@ import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
+import org.apache.juddi.util.Constants;
 import org.apache.log4j.Logger;
 
 /**
@@ -94,7 +95,7 @@ public class AppConfig
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, "root");
+		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
 		if (rootPublisher == null)
 			throw new ConfigurationException("The 'root' publisher was not found.  Please make sure that the application is properly installed.");
 		

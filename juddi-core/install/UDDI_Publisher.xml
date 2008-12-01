@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<save_publisher xmlns="urn:apache-org:juddi_v3">
-  <publisher publisherId="uddi">
-    <publisherName>UDDI publisher</publisherName>
-    <isAdmin>false</isAdmin>
-  </publisher>
-</save_publisher>
+<publisher xmlns="urn:apache-org:juddi_v3" publisherId="uddi">
+  <publisherName>UDDI publisher</publisherName>
+  <isAdmin>false</isAdmin>
+</publisher>
 
