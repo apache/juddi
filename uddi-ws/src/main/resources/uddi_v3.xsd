@@ -777,6 +777,12 @@
 		</xsd:sequence>
 		<xsd:attribute name="truncated" type="uddi:truncated" use="optional"/>
 	</xsd:complexType>
+	<xsd:element name="publisherAssertionsResponse" type="uddi:publisherAssertionsResponse" final="restriction"/>
+	<xsd:complexType name="publisherAssertionsResponse" final="restriction">
+		<xsd:sequence>
+			<xsd:element ref="uddi:publisherAssertion" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 	<xsd:element name="publisherAssertions" type="uddi:publisherAssertions" final="restriction"/>
 	<xsd:complexType name="publisherAssertions" final="restriction">
 		<xsd:sequence>

@@ -17,3 +17,7 @@ import lines were added to the schema tag in this file:
 
 - In util\copylic\ there is a DOS batch file, copylic.bat that will copy the lic.txt file on top of each java file in the generated target directory and
 move them over to the appropriate source folder under uddi-ws.
+
+- JAX-WS produced an error when generating the WSDL for the publication SEI.  This is because setPublisherAssertions and getPublisherAsertions both were
+generated with a ResponseWrapper attribute with the same localName and className.  To fix this, the return type of getPublisherAssertions was changed
+slightly.  Basically, the word "Response" was appended to message and type for this operation.

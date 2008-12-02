@@ -109,6 +109,9 @@
 	<message name="get_registeredInfoMessage">
 		<part name="body" element="uddi:get_registeredInfo"/>
 	</message>
+	<message name="publisherAssertionsResponseMessage">
+		<part name="body" element="uddi:publisherAssertionsResponse"/>
+	</message>
 	<message name="publisherAssertionsMessage">
 		<part name="body" element="uddi:publisherAssertions"/>
 	</message>
@@ -231,7 +234,7 @@
 		</operation>
 		<operation name="get_publisherAssertions">
 			<input message="tns:get_publisherAssertionsMessage"/>
-			<output message="tns:publisherAssertionsMessage"/>
+			<output message="tns:publisherAssertionsResponseMessage"/>
 			<fault name="error" message="tns:dispositionReportFaultMessage"/>
 		</operation>
 		<operation name="get_registeredInfo">
