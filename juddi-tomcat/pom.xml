@@ -4,7 +4,7 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-tomcat</artifactId>
   <version>3.0.0.SNAPSHOT</version>
-  <name>juddi-tomcat Maven Packaging</name>
+  <name>jUDDI Tomcat Packaging</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>

@@ -6,7 +6,7 @@
   <artifactId>uddi-ws</artifactId>
   <version>3.0.0.SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>UDDI v3 Web Service Stubs and Schema bindings generated from wsdl</name>
+  <name>UDDI v3 Web Service Stubs and Schema bindings generated from WSDL</name>
   
   <repositories>
     <repository>

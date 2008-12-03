@@ -10,7 +10,7 @@
   <artifactId>juddi-web</artifactId>
   <packaging>war</packaging>
   <version>3.0.0.SNAPSHOT</version>
-  <name>juddi-web Maven Webapp</name>
+  <name>jUDDI Axis2 Deployment</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
