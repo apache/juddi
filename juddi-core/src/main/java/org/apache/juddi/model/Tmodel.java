@@ -39,9 +39,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String tmodelKey;
-	private String authorizedName;
 	private UddiEntityPublisher publisher;
-	private String operator;
 	private String name;
 	private String langCode;
 	private boolean deleted;
@@ -53,10 +51,8 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	public Tmodel() {
 	}
 
-	public Tmodel(String tmodelKey, String authorizedName, String operator, String name, Date lastUpdate) {
+	public Tmodel(String tmodelKey, String name, Date lastUpdate) {
 		this.tmodelKey = tmodelKey;
-		this.authorizedName = authorizedName;
-		this.operator = operator;
 		this.name = name;
 		this.lastUpdate = lastUpdate;
 	}
@@ -66,9 +62,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 			Set<TmodelIdentifier> tmodelIdentifiers,
 			Set<TmodelCategory> tmodelCategories) {
 		this.tmodelKey = tmodelKey;
-		this.authorizedName = authorizedName;
 		this.publisher = publisher;
-		this.operator = operator;
 		this.name = name;
 		this.langCode = langCode;
 		this.deleted = deleted;
@@ -88,14 +82,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.tmodelKey = tmodelKey;
 	}
 
-	@Column(name = "authorized_name", nullable = false)
-	public String getAuthorizedName() {
-		return this.authorizedName;
-	}
-	public void setAuthorizedName(String authorizedName) {
-		this.authorizedName = authorizedName;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "publisher_id", nullable = false)
 	public UddiEntityPublisher getPublisher() {
@@ -103,14 +89,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public void setPublisher(UddiEntityPublisher publisher) {
 		this.publisher = publisher;
-	}
-
-	@Column(name = "operator", nullable = false)
-	public String getOperator() {
-		return this.operator;
-	}
-	public void setOperator(String operator) {
-		this.operator = operator;
 	}
 
 	@Column(name = "name", nullable = false)

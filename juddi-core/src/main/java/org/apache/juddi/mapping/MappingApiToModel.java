@@ -52,9 +52,6 @@ public class MappingApiToModel {
 
 		modelBusinessEntity.setBusinessKey(apiBusinessEntity.getBusinessKey());
 		modelBusinessEntity.setLastUpdate(new Date());
-		// TODO:  Theses fields no longer exist in UDDIv3.  Are they here for backwards compatibility or can we get rid of them?
-		modelBusinessEntity.setAuthorizedName("authorizedName");
-		modelBusinessEntity.setOperator("operator");
 		
 		mapBusinessNames(apiBusinessEntity.getName(), modelBusinessEntity.getBusinessNames(), modelBusinessEntity);
 		mapBusinessDescriptions(apiBusinessEntity.getDescription(), modelBusinessEntity.getBusinessDescrs(), modelBusinessEntity);
@@ -480,9 +477,6 @@ public class MappingApiToModel {
 		modelTModel.setLastUpdate(new Date());
 		modelTModel.setName(apiTModel.getName().getValue());
 		modelTModel.setDeleted(apiTModel.isDeleted());
-		// TODO:  Theses fields no longer exist in UDDIv3.  Are they here for backwards compatibility or can we get rid of them?
-		modelTModel.setAuthorizedName("authorizedName");
-		modelTModel.setOperator("operator");
 
 		mapTModelDescriptions(apiTModel.getDescription(), modelTModel.getTmodelDescrs(), modelTModel);
 		mapTModelIdentifiers(apiTModel.getIdentifierBag(), modelTModel.getTmodelIdentifiers(), modelTModel);

@@ -40,8 +40,6 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String businessKey;
-	private String authorizedName;
-	private String operator;
 	private UddiEntityPublisher publisher;
 	private Set<Contact> contacts = new HashSet<Contact>(0);
 	private Set<BusinessIdentifier> businessIdentifiers = new HashSet<BusinessIdentifier>(0);
@@ -56,10 +54,8 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public BusinessEntity() {
 	}
 
-	public BusinessEntity(String businessKey, String authorizedName, String operator, Date lastUpdate) {
+	public BusinessEntity(String businessKey, Date lastUpdate) {
 		this.businessKey = businessKey;
-		this.authorizedName = authorizedName;
-		this.operator = operator;
 		this.lastUpdate = lastUpdate;
 	}
 	public BusinessEntity(String businessKey, String authorizedName, 
@@ -73,9 +69,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			Set<BusinessService> businessServices,
 			Set<BusinessDescr> businessDescrs) {
 		this.businessKey = businessKey;
-		this.authorizedName = authorizedName;
 		this.publisher = publisher;
-		this.operator = operator;
 		this.lastUpdate = lastUpdate;
 		this.contacts = contacts;
 		this.businessIdentifiers = businessIdentifiers;
@@ -96,15 +90,6 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public void setBusinessKey(String businessKey) {
 		this.businessKey = businessKey;
 	}
-	
-
-	@Column(name = "authorized_name", nullable = false)
-	public String getAuthorizedName() {
-		return this.authorizedName;
-	}
-	public void setAuthorizedName(String authorizedName) {
-		this.authorizedName = authorizedName;
-	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "publisher_id", nullable = false)
@@ -113,14 +98,6 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 	public void setPublisher(UddiEntityPublisher publisher) {
 		this.publisher = publisher;
-	}
-
-	@Column(name = "operator", nullable = false)
-	public String getOperator() {
-		return this.operator;
-	}
-	public void setOperator(String operator) {
-		this.operator = operator;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
