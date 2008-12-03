@@ -17,11 +17,15 @@
    </appender>
    
     <logger name="org">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
+    </logger>
+    
+    <logger name="org.hibernate">
+        <level value="WARN"/>
     </logger>
 
     <logger name="com">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
     
     <root>        
