@@ -26,7 +26,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 @WebService(serviceName="UDDISubscriptionListenerService", 
-			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType")
+			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
+			targetNamespace = "urn:uddi-org:subr_v3_portType")
 public class UDDISubscriptionListenerImpl implements
 		UDDISubscriptionListenerPortType {
 

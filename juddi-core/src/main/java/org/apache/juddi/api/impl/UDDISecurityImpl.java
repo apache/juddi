@@ -42,7 +42,8 @@ import org.apache.juddi.query.PersistenceManager;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @WebService(serviceName="UDDISecurityService", 
-			endpointInterface="org.uddi.v3_service.UDDISecurityPortType")
+			endpointInterface="org.uddi.v3_service.UDDISecurityPortType",
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDISecurityImpl extends AuthenticatedService implements UDDISecurityPortType {
 
 	public static final String AUTH_TOKEN_PREFIX = "authtoken:";

@@ -29,7 +29,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 
 @WebService(serviceName="UDDICustodyTransferService", 
-			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType")
+			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType",
+			targetNamespace = "urn:uddi-org:custody_v3_portType")
 public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
 
 	public void discardTransferToken(DiscardTransferToken body)

@@ -26,7 +26,8 @@ import org.uddi.v3_service.UDDIValueSetValidationPortType;
 import org.uddi.vs_v3.ValidateValues;
 
 @WebService(serviceName="UDDIValueSetValidationService", 
-			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType")
+			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
+			targetNamespace = "urn:uddi-org:vs_v3_portType")
 public class UDDIValueSetValidationImpl implements
 		UDDIValueSetValidationPortType {
 	public DispositionReport validateValues(ValidateValues body)

@@ -39,7 +39,8 @@ import org.apache.juddi.validation.ValidateSubscription;
 
 
 @WebService(serviceName="UDDISubscriptionService", 
-			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType")
+			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType",
+			targetNamespace = "urn:uddi-org:sub_v3_portType")
 public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 
 

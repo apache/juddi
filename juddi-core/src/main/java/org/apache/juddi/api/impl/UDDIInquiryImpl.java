@@ -74,7 +74,8 @@ import org.apache.juddi.api.datatype.PublisherDetail;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @WebService(serviceName="UDDIInquiryService", 
-			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType")
+			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType",
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	public BindingDetail findBinding(FindBinding body)

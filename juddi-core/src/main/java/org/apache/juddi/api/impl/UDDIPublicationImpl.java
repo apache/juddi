@@ -68,7 +68,8 @@ import org.apache.juddi.query.util.FindQualifiers;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @WebService(serviceName="UDDIPublicationService", 
-			endpointInterface="org.uddi.v3_service.UDDIPublicationPortType")
+			endpointInterface="org.uddi.v3_service.UDDIPublicationPortType",
+			targetNamespace = "urn:uddi-org:api_v3_portType")
 public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
 
 	
