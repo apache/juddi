@@ -66,7 +66,7 @@ public abstract class EntityQuery {
 			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_MAX_ROWS);
 		}
 		
-		if (maxRowsUser == null || maxRowsUser <= 0) {
+		if (maxRowsUser != null && maxRowsUser > 0) {
 			if (maxRowsUser < maxRows)
 				maxRows = maxRowsUser;
 		}

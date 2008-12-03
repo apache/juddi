@@ -56,7 +56,15 @@ public class Install {
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	
-	public static void install() throws JAXBException, DispositionReportFaultMessage {
+	public static void install(String srcDir) throws JAXBException, DispositionReportFaultMessage {
+		if (srcDir != null) {
+			if (!srcDir.endsWith("\\"))
+				srcDir = srcDir + "\\";
+		}
+		else
+			srcDir = "";
+			
+		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
@@ -64,21 +72,21 @@ public class Install {
 		if (alreadyInstalled(em))
 			throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 		
-		UddiEntityPublisher rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER);
-		UddiEntityPublisher uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER);
+		UddiEntityPublisher rootPublisher = installPublisher(em, srcDir + FILE_ROOT_PUBLISHER);
+		UddiEntityPublisher uddiPublisher = installPublisher(em, srcDir + FILE_UDDI_PUBLISHER);
 		
-		installPublisherKeyGen(em, FILE_ROOT_TMODELKEYGEN, rootPublisher);
+		installPublisherKeyGen(em, srcDir + FILE_ROOT_TMODELKEYGEN, rootPublisher);
 		
-		installUDDITModels(em, FILE_UDDI_TMODELS, uddiPublisher);
+		installUDDITModels(em, srcDir + FILE_UDDI_TMODELS, uddiPublisher);
 		
 		tx.commit();
 		em.close();
 
-		installRootBusinessEntity(em, FILE_ROOT_BUSINESSENTITY, rootPublisher);
+		installRootBusinessEntity(em, srcDir + FILE_ROOT_BUSINESSENTITY, rootPublisher);
 		
 	}
 
-	public static  void uninstall() {
+	public static void uninstall() {
 		// Close the open emf, open a new one with Persistence.create...(String, Map) and overwrite the property that handles the table 
 		// generation. The persistence.xml file will have to be read in to determine which property
 		// to overwrite.  The property will be specific to the provider.  
@@ -87,6 +95,34 @@ public class Install {
 		// etc...(find more)
 		// Then close this emf.  Question:  is the original emf reusable or will closing it cause problems?
 		
+	}
+	
+	public static boolean alreadyInstalled() {
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		boolean result = alreadyInstalled(em);
+		
+		tx.commit();
+		em.close();
+		
+		return result;
+	}
+	
+	public static org.uddi.api_v3.RegisteredInfo getRootRegisteredInfo() throws DispositionReportFaultMessage {
+		UDDIPublicationImpl publish = new UDDIPublicationImpl();
+		UDDISecurityImpl security = new UDDISecurityImpl();
+
+		// TODO:  What if user configures a different authenticator?  Passing no credentials will not work.
+		org.uddi.api_v3.GetAuthToken gat = new org.uddi.api_v3.GetAuthToken();
+		gat.setUserID(Constants.ROOT_PUBLISHER);
+		org.uddi.api_v3.AuthToken authToken = security.getAuthToken(gat);
+		
+		org.uddi.api_v3.GetRegisteredInfo gri = new org.uddi.api_v3.GetRegisteredInfo();
+		gri.setAuthInfo(authToken.getAuthInfo());
+
+		return publish.getRegisteredInfo(gri);
 	}
 	
 	private static boolean alreadyInstalled(EntityManager em) {
@@ -106,6 +142,7 @@ public class Install {
 		UDDIPublicationImpl publish = new UDDIPublicationImpl();
 		UDDISecurityImpl security = new UDDISecurityImpl();
 
+		// TODO:  What if user configures a different authenticator?  Passing no credentials will not work.
 		org.uddi.api_v3.GetAuthToken gat = new org.uddi.api_v3.GetAuthToken();
 		gat.setUserID(publisher.getPublisherId());
 		org.uddi.api_v3.AuthToken authToken = security.getAuthToken(gat);
