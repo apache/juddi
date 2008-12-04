@@ -105,12 +105,11 @@
   <modules>
     <module>uddi-ws</module>
     <module>juddi-core</module>
-    <module>juddi-web</module>
     <module>juddi-cxf</module>
+    <module>juddi-web</module>
     <module>juddi-cargo</module>
     <module>juddi-tomcat</module>
   </modules>
-  
   <distributionManagement>
     <repository>
       <id>apache-repo</id>
@@ -197,4 +196,7 @@
 	      <version>1.2.13</version>
 	    </dependency>
   </dependencies>
+  <properties>
+    <persistence>hibernate</persistence>
+  </properties>
 </project>
