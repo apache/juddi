@@ -76,13 +76,18 @@
 	<artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-          <phase>compile</phase>
+          <phase>generate-resources</phase>
           <configuration>
             <tasks>
-	      <echo>PERSISTENCE=${persistence}</echo>
-	      <copy file="src/main/resources/persistence/${persistence}-persistence.xml" 
-		tofile="target/classes/META-INF/persistence.xml" 
-		overwrite="true"/>
+		<copy file="src/main/resources/version/Release.java"
+			tofile="src/main/java/org/apache/juddi/util/Release.java">
+			<filterset>
+			<filter token="juddi.version" value="${project.version}"/>	
+			</filterset>	
+		</copy>
+              <copy file="src/main/resources/persistence/${persistence}-persistence.xml" 
+                tofile="target/classes/META-INF/persistence.xml" 
+                overwrite="true"/>
               <delete dir="juddi-derby-test-db"/>
             </tasks>
           </configuration>
@@ -137,6 +142,11 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
 		</dependency>
 		<dependency>
 	      <groupId>log4j</groupId>
@@ -210,6 +220,6 @@
 </plugin>
 </plugins>
 </build>
-  </profile>    
-  </profiles>
+</profile>    
+</profiles>
 </project>
