@@ -245,8 +245,9 @@ public class RegistryEngine extends AbstractRegistry
       String tablePrefix = Config.getStringProperty(
               RegistryEngine.PROPNAME_TABLE_PREFIX,RegistryEngine.DEFAULT_TABLE_PREFIX);
       
+      Connection conn=null;
       try {
-          Connection conn = ConnectionManager.acquireConnection();
+          conn = ConnectionManager.acquireConnection();
           boolean create = false;
 
           Statement st = conn.createStatement();
@@ -270,6 +271,12 @@ public class RegistryEngine extends AbstractRegistry
           }
       } catch (Exception e) {
           log.error("Could not create jUDDI database " + e.getMessage(), e);
+      } finally {
+    	  if (conn!=null) {
+    		  try {
+    			  if (!conn.isClosed()) conn.close();
+    		  } catch (SQLException e) {}
+    	  }
       }
   }
   
