@@ -80,7 +80,8 @@
           <configuration>
             <tasks>
 		<copy file="src/main/resources/version/Release.java"
-			tofile="src/main/java/org/apache/juddi/util/Release.java">
+			tofile="src/main/java/org/apache/juddi/util/Release.java"
+			overwrite="true">
 			<filterset>
 			<filter token="juddi.version" value="${project.version}"/>	
 			</filterset>	
