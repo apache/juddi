@@ -1,4 +1,3 @@
-package org.apache.juddi.model;
 /*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
@@ -13,44 +12,28 @@ package org.apache.juddi.model;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-import java.util.Date;
+package org.apache.juddi.model;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.MappedSuperclass;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @MappedSuperclass
-public abstract class UddiEntity {
+public class Id {
 
 	protected String entityKey;
-	protected Date lastUpdate;
-	
-	@Id
+
 	@Column(name = "entity_key", nullable = false, length = 255)
 	public String getEntityKey() {
-		return entityKey;
+		return this.entityKey;
 	}
 	public void setEntityKey(String entityKey) {
 		this.entityKey = entityKey;
 	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_update", nullable = false, length = 29)
-	public Date getLastUpdate() {
-		return this.lastUpdate;
-	}
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
-	public abstract String retrievePublisherId();
-	public abstract void assignPublisherId(String id);
-
+	
 }

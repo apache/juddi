@@ -18,8 +18,6 @@ package org.apache.juddi.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -32,6 +30,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "tmodel_instance_info")
@@ -71,24 +70,18 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "tmodelInstanceInfoId", column = @Column(name = "tmodel_instance_info_id", nullable = false))})
-
 	public TmodelInstanceInfoId getId() {
 		return this.id;
 	}
-
 	public void setId(TmodelInstanceInfoId id) {
 		this.id = id;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "binding_key", nullable = false, insertable = false, updatable = false)
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
 	public BindingTemplate getBindingTemplate() {
 		return this.bindingTemplate;
 	}
-
 	public void setBindingTemplate(BindingTemplate bindingTemplate) {
 		this.bindingTemplate = bindingTemplate;
 	}
@@ -97,7 +90,6 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}
-
 	public void setTmodelKey(String tmodelKey) {
 		this.tmodelKey = tmodelKey;
 	}
@@ -106,33 +98,32 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	public String getInstanceParms() {
 		return this.instanceParms;
 	}
-
 	public void setInstanceParms(String instanceParms) {
 		this.instanceParms = instanceParms;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
 	public Set<InstanceDetailsDocDescr> getInstanceDetailsDocDescrs() {
 		return this.instanceDetailsDocDescrs;
 	}
-
 	public void setInstanceDetailsDocDescrs(
 			Set<InstanceDetailsDocDescr> instanceDetailsDocDescrs) {
 		this.instanceDetailsDocDescrs = instanceDetailsDocDescrs;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
 	public Set<InstanceDetailsDescr> getInstanceDetailsDescrs() {
 		return this.instanceDetailsDescrs;
 	}
-
 	public void setInstanceDetailsDescrs(
 			Set<InstanceDetailsDescr> instanceDetailsDescrs) {
 		this.instanceDetailsDescrs = instanceDetailsDescrs;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
 	public Set<TmodelInstanceInfoDescr> getTmodelInstanceInfoDescrs() {
 		return this.tmodelInstanceInfoDescrs;
 	}
-
 	public void setTmodelInstanceInfoDescrs(
 			Set<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
 		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;

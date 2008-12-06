@@ -52,7 +52,7 @@ public class MappingModelToApi {
 										 org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 
-		apiBusinessEntity.setBusinessKey(modelBusinessEntity.getBusinessKey());
+		apiBusinessEntity.setBusinessKey(modelBusinessEntity.getEntityKey());
 		
 		mapBusinessNames(modelBusinessEntity.getBusinessNames(), apiBusinessEntity.getName());
 		mapBusinessDescriptions(modelBusinessEntity.getBusinessDescrs(), apiBusinessEntity.getDescription());
@@ -276,8 +276,8 @@ public class MappingModelToApi {
 										  org.uddi.api_v3.BusinessService apiBusinessService) 
 				   throws DispositionReportFaultMessage {
 
-		apiBusinessService.setBusinessKey(modelBusinessService.getBusinessEntity().getBusinessKey());
-		apiBusinessService.setServiceKey(modelBusinessService.getServiceKey());
+		apiBusinessService.setBusinessKey(modelBusinessService.getBusinessEntity().getEntityKey());
+		apiBusinessService.setServiceKey(modelBusinessService.getEntityKey());
 
 		mapServiceNames(modelBusinessService.getServiceNames(), apiBusinessService.getName());
 		mapServiceDescriptions(modelBusinessService.getServiceDescrs(), apiBusinessService.getDescription());
@@ -358,8 +358,8 @@ public class MappingModelToApi {
 										  org.uddi.api_v3.BindingTemplate apiBindingTemplate) 
 				   throws DispositionReportFaultMessage {
 
-		apiBindingTemplate.setServiceKey(modelBindingTemplate.getBusinessService().getServiceKey());
-		apiBindingTemplate.setBindingKey(modelBindingTemplate.getBindingKey());
+		apiBindingTemplate.setServiceKey(modelBindingTemplate.getBusinessService().getEntityKey());
+		apiBindingTemplate.setBindingKey(modelBindingTemplate.getEntityKey());
 		org.uddi.api_v3.AccessPoint apiAccessPoint = new org.uddi.api_v3.AccessPoint();
 		apiAccessPoint.setUseType(modelBindingTemplate.getAccessPointType());
 		apiAccessPoint.setValue(modelBindingTemplate.getAccessPointUrl());
@@ -475,7 +475,7 @@ public class MappingModelToApi {
 								 org.uddi.api_v3.TModel apiTModel) 
 				   throws DispositionReportFaultMessage {
 
-		apiTModel.setTModelKey(modelTModel.getTmodelKey());
+		apiTModel.setTModelKey(modelTModel.getEntityKey());
 		org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();
 		apiName.setValue(modelTModel.getName());
 		apiTModel.setName(apiName);
@@ -550,7 +550,7 @@ public class MappingModelToApi {
 									   org.uddi.api_v3.BusinessInfo apiBusinessInfo) 
 				   throws DispositionReportFaultMessage {
 		
-		apiBusinessInfo.setBusinessKey(modelBusinessEntity.getBusinessKey());
+		apiBusinessInfo.setBusinessKey(modelBusinessEntity.getEntityKey());
 		
 		mapBusinessNames(modelBusinessEntity.getBusinessNames(), apiBusinessInfo.getName());
 		mapBusinessDescriptions(modelBusinessEntity.getBusinessDescrs(), apiBusinessInfo.getDescription());
@@ -583,8 +583,8 @@ public class MappingModelToApi {
 									  org.uddi.api_v3.ServiceInfo apiServiceInfo) 
 				   throws DispositionReportFaultMessage {
 
-		apiServiceInfo.setBusinessKey(modelBusinessService.getBusinessEntity().getBusinessKey());
-		apiServiceInfo.setServiceKey(modelBusinessService.getServiceKey());
+		apiServiceInfo.setBusinessKey(modelBusinessService.getBusinessEntity().getEntityKey());
+		apiServiceInfo.setServiceKey(modelBusinessService.getEntityKey());
 
 		mapServiceNames(modelBusinessService.getServiceNames(), apiServiceInfo.getName());
 	}
@@ -593,7 +593,7 @@ public class MappingModelToApi {
 									 org.uddi.api_v3.TModelInfo apiTModelInfo) 
 				   throws DispositionReportFaultMessage {
 
-		apiTModelInfo.setTModelKey(modelTModel.getTmodelKey());
+		apiTModelInfo.setTModelKey(modelTModel.getEntityKey());
 		org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();
 		apiName.setValue(modelTModel.getName());
 		apiTModelInfo.setName(apiName);
@@ -656,11 +656,11 @@ public class MappingModelToApi {
 		org.uddi.api_v3.KeysOwned keysOwned = new org.uddi.api_v3.KeysOwned();
 		
 		Collections.sort((List<String>)businessKeys);
-		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getBusinessKey()) >= 0)
-			keysOwned.getContent().add(new ObjectFactory().createFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getBusinessKey()));
+		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) >= 0)
+			keysOwned.getContent().add(new ObjectFactory().createFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()));
 		
-		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getBusinessKey()) >= 0)
-			keysOwned.getContent().add(new ObjectFactory().createToKey(modelPublisherAssertion.getBusinessEntityByToKey().getBusinessKey()));
+		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) >= 0)
+			keysOwned.getContent().add(new ObjectFactory().createToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()));
 		
 	}
 
@@ -670,7 +670,7 @@ public class MappingModelToApi {
 											  org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo) 
 				   throws DispositionReportFaultMessage {
 
-		apiRelatedBusinessInfo.setBusinessKey(modelRelatedBusiness.getBusinessKey());
+		apiRelatedBusinessInfo.setBusinessKey(modelRelatedBusiness.getEntityKey());
 		
 		mapBusinessNames(modelRelatedBusiness.getBusinessNames(), apiRelatedBusinessInfo.getName());
 		mapBusinessDescriptions(modelRelatedBusiness.getBusinessDescrs(), apiRelatedBusinessInfo.getDescription());

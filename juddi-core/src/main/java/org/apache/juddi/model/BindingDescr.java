@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "binding_descr")
@@ -56,24 +55,18 @@ public class BindingDescr implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "bindingDescrId", column = @Column(name = "binding_descr_id", nullable = false))})
-
 	public BindingDescrId getId() {
 		return this.id;
 	}
-
 	public void setId(BindingDescrId id) {
 		this.id = id;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "binding_key", nullable = false, insertable = false, updatable = false)
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
 	public BindingTemplate getBindingTemplate() {
 		return this.bindingTemplate;
 	}
-
 	public void setBindingTemplate(BindingTemplate bindingTemplate) {
 		this.bindingTemplate = bindingTemplate;
 	}
@@ -82,17 +75,14 @@ public class BindingDescr implements java.io.Serializable {
 	public String getLangCode() {
 		return this.langCode;
 	}
-
 	public void setLangCode(String langCode) {
 		this.langCode = langCode;
 	}
 
 	@Column(name = "descr", nullable = false)
-
 	public String getDescr() {
 		return this.descr;
 	}
-
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}

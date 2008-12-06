@@ -20,49 +20,27 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class EmailId implements java.io.Serializable {
+public class EmailId extends ContactId implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
-	private int contactId;
 	private int emailId;
 
 	public EmailId() {
 	}
 
-	public EmailId(String businessKey, int contactId, int emailId) {
-		this.businessKey = businessKey;
+	public EmailId(String entityKey, int contactId, int emailId) {
+		this.entityKey = entityKey;
 		this.contactId = contactId;
 		this.emailId = emailId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
-	@Column(name = "contact_id", nullable = false)
-
-	public int getContactId() {
-		return this.contactId;
-	}
-
-	public void setContactId(int contactId) {
-		this.contactId = contactId;
-	}
-
 	@Column(name = "email_id", nullable = false)
-
 	public int getEmailId() {
 		return this.emailId;
 	}
-
 	public void setEmailId(int emailId) {
 		this.emailId = emailId;
 	}
@@ -76,10 +54,10 @@ public class EmailId implements java.io.Serializable {
 			return false;
 		EmailId castOther = (EmailId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getContactId() == castOther.getContactId())
 				&& (this.getEmailId() == castOther.getEmailId());
 	}
@@ -89,7 +67,7 @@ public class EmailId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getContactId();
 		result = 37 * result + this.getEmailId();

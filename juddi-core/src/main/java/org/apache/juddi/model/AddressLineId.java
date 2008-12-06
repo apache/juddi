@@ -20,62 +20,29 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class AddressLineId implements java.io.Serializable {
+public class AddressLineId extends AddressId implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
-	private int contactId;
-	private int addressId;
 	private int addressLineId;
 
 	public AddressLineId() {
 	}
 
-	public AddressLineId(String businessKey, int contactId, int addressId,
+	public AddressLineId(String entityKey, int contactId, int addressId,
 			int addressLineId) {
-		this.businessKey = businessKey;
+		this.entityKey = entityKey;
 		this.contactId = contactId;
 		this.addressId = addressId;
 		this.addressLineId = addressLineId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
-	@Column(name = "contact_id", nullable = false)
-
-	public int getContactId() {
-		return this.contactId;
-	}
-
-	public void setContactId(int contactId) {
-		this.contactId = contactId;
-	}
-
-	@Column(name = "address_id", nullable = false)
-
-	public int getAddressId() {
-		return this.addressId;
-	}
-
-	public void setAddressId(int addressId) {
-		this.addressId = addressId;
-	}
-
-	@Column(name = "address_line_id", nullable = false)
-
+	@Column(name = "line_id", nullable = false)
 	public int getAddressLineId() {
 		return this.addressLineId;
 	}
-
 	public void setAddressLineId(int addressLineId) {
 		this.addressLineId = addressLineId;
 	}
@@ -89,10 +56,10 @@ public class AddressLineId implements java.io.Serializable {
 			return false;
 		AddressLineId castOther = (AddressLineId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getContactId() == castOther.getContactId())
 				&& (this.getAddressId() == castOther.getAddressId())
 				&& (this.getAddressLineId() == castOther.getAddressLineId());
@@ -103,7 +70,7 @@ public class AddressLineId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getContactId();
 		result = 37 * result + this.getAddressId();

@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class BusinessCategoryId implements java.io.Serializable {
+public class BusinessCategoryId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
 	private int categoryId;
 
 	public BusinessCategoryId() {
 	}
 
-	public BusinessCategoryId(String businessKey, int categoryId) {
-		this.businessKey = businessKey;
+	public BusinessCategoryId(String entityKey, int categoryId) {
+		this.entityKey = entityKey;
 		this.categoryId = categoryId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
 	@Column(name = "category_id", nullable = false)
-
 	public int getCategoryId() {
 		return this.categoryId;
 	}
-
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
@@ -64,10 +53,10 @@ public class BusinessCategoryId implements java.io.Serializable {
 			return false;
 		BusinessCategoryId castOther = (BusinessCategoryId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getCategoryId() == castOther.getCategoryId());
 	}
 
@@ -76,7 +65,7 @@ public class BusinessCategoryId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getCategoryId();
 		return result;

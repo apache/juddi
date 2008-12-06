@@ -24,7 +24,6 @@ public class BusinessServiceQuery extends EntityQuery {
 
 	public static final String ENTITY_NAME = "BusinessService";
 	public static final String ENTITY_ALIAS = "bs";
-	public static final String KEY_NAME = "serviceKey";
 	public static final String KEY_NAME_PARENT = "businessEntity." + BusinessEntityQuery.KEY_NAME;
 	
 	protected static String selectSQL;

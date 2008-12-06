@@ -50,7 +50,7 @@ public class MappingApiToModel {
 										 org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 
-		modelBusinessEntity.setBusinessKey(apiBusinessEntity.getBusinessKey());
+		modelBusinessEntity.setEntityKey(apiBusinessEntity.getBusinessKey());
 		modelBusinessEntity.setLastUpdate(new Date());
 		
 		mapBusinessNames(apiBusinessEntity.getName(), modelBusinessEntity.getBusinessNames(), modelBusinessEntity);
@@ -72,7 +72,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Name apiName : apiNameList) {
-			org.apache.juddi.model.BusinessNameId businessNameId = new org.apache.juddi.model.BusinessNameId(modelBusinessEntity.getBusinessKey(), id++);
+			org.apache.juddi.model.BusinessNameId businessNameId = new org.apache.juddi.model.BusinessNameId(modelBusinessEntity.getEntityKey(), id++);
 			modelNameList.add(new org.apache.juddi.model.BusinessName(businessNameId, modelBusinessEntity, apiName.getLang(), apiName.getValue()));
 		}
 	}
@@ -85,7 +85,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
-			org.apache.juddi.model.BusinessDescrId businessDescId = new org.apache.juddi.model.BusinessDescrId(modelBusinessEntity.getBusinessKey(), id++);
+			org.apache.juddi.model.BusinessDescrId businessDescId = new org.apache.juddi.model.BusinessDescrId(modelBusinessEntity.getEntityKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.BusinessDescr(businessDescId, modelBusinessEntity, apiDesc.getLang(), apiDesc.getValue()));
 		}
 	}
@@ -100,7 +100,7 @@ public class MappingApiToModel {
 			List<org.uddi.api_v3.DiscoveryURL> apiDiscUrlList = apiDiscUrls.getDiscoveryURL();
 			int id = 0;
 			for (org.uddi.api_v3.DiscoveryURL apiDiscUrl : apiDiscUrlList) {
-				org.apache.juddi.model.DiscoveryUrlId discUrlId = new org.apache.juddi.model.DiscoveryUrlId(modelBusinessEntity.getBusinessKey(), id++);
+				org.apache.juddi.model.DiscoveryUrlId discUrlId = new org.apache.juddi.model.DiscoveryUrlId(modelBusinessEntity.getEntityKey(), id++);
 				modelDiscUrlList.add(new org.apache.juddi.model.DiscoveryUrl(discUrlId, modelBusinessEntity, apiDiscUrl.getUseType(), apiDiscUrl.getValue()));
 			}
 		}
@@ -122,14 +122,14 @@ public class MappingApiToModel {
 				if (apiNameList != null && apiNameList.size() > 0)
 					personName = ((org.uddi.api_v3.PersonName)apiNameList.get(0)).getValue();
 
-				org.apache.juddi.model.ContactId contactId = new org.apache.juddi.model.ContactId(modelBusinessEntity.getBusinessKey(), id++);
+				org.apache.juddi.model.ContactId contactId = new org.apache.juddi.model.ContactId(modelBusinessEntity.getEntityKey(), id++);
 				org.apache.juddi.model.Contact modelContact = new org.apache.juddi.model.Contact(contactId, modelBusinessEntity, personName);
 				modelContact.setUseType(apiContact.getUseType());
 				
-				mapContactDescriptions(apiContact.getDescription(), modelContact.getContactDescrs(), modelContact, modelBusinessEntity.getBusinessKey());
-				mapContactEmails(apiContact.getEmail(), modelContact.getEmails(), modelContact, modelBusinessEntity.getBusinessKey());
-				mapContactPhones(apiContact.getPhone(), modelContact.getPhones(), modelContact, modelBusinessEntity.getBusinessKey());
-				mapContactAddresses(apiContact.getAddress(), modelContact.getAddresses(), modelContact, modelBusinessEntity.getBusinessKey());
+				mapContactDescriptions(apiContact.getDescription(), modelContact.getContactDescrs(), modelContact, modelBusinessEntity.getEntityKey());
+				mapContactEmails(apiContact.getEmail(), modelContact.getEmails(), modelContact, modelBusinessEntity.getEntityKey());
+				mapContactPhones(apiContact.getPhone(), modelContact.getPhones(), modelContact, modelBusinessEntity.getEntityKey());
+				mapContactAddresses(apiContact.getAddress(), modelContact.getAddresses(), modelContact, modelBusinessEntity.getEntityKey());
 				
 				modelContactList.add(modelContact);
 			}
@@ -225,7 +225,7 @@ public class MappingApiToModel {
 			List<org.uddi.api_v3.KeyedReference> apiKeyedRefList = apiIdentifierBag.getKeyedReference();
 			int id = 0;
 			for (org.uddi.api_v3.KeyedReference apiKeyedRef : apiKeyedRefList) {
-				org.apache.juddi.model.BusinessIdentifierId identifierId = new org.apache.juddi.model.BusinessIdentifierId(modelBusinessEntity.getBusinessKey(), id++);
+				org.apache.juddi.model.BusinessIdentifierId identifierId = new org.apache.juddi.model.BusinessIdentifierId(modelBusinessEntity.getEntityKey(), id++);
 				modelIdentifierList.add(new org.apache.juddi.model.BusinessIdentifier(identifierId, modelBusinessEntity, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 			}
 		}
@@ -246,7 +246,7 @@ public class MappingApiToModel {
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
 					org.uddi.api_v3.KeyedReference apiKeyedRef = (org.uddi.api_v3.KeyedReference)elem.getValue();
 					
-					org.apache.juddi.model.BusinessCategoryId categoryId = new org.apache.juddi.model.BusinessCategoryId(modelBusinessEntity.getBusinessKey(), id++);
+					org.apache.juddi.model.BusinessCategoryId categoryId = new org.apache.juddi.model.BusinessCategoryId(modelBusinessEntity.getEntityKey(), id++);
 					modelCategoryList.add(new org.apache.juddi.model.BusinessCategory(categoryId, modelBusinessEntity, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 				}
 			}
@@ -277,7 +277,7 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 
 		modelBusinessService.setBusinessEntity(modelBusinessEntity);
-		modelBusinessService.setServiceKey(apiBusinessService.getServiceKey());
+		modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
 		modelBusinessService.setLastUpdate(new Date());
 		
 		mapServiceNames(apiBusinessService.getName(), modelBusinessService.getServiceNames(), modelBusinessService);
@@ -296,7 +296,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Name apiName : apiNameList) {
-			org.apache.juddi.model.ServiceNameId serviceNameId = new org.apache.juddi.model.ServiceNameId(modelBusinessService.getServiceKey(), id++);
+			org.apache.juddi.model.ServiceNameId serviceNameId = new org.apache.juddi.model.ServiceNameId(modelBusinessService.getEntityKey(), id++);
 			modelNameList.add(new org.apache.juddi.model.ServiceName(serviceNameId, modelBusinessService, apiName.getLang(), apiName.getValue()));
 		}
 	}
@@ -309,7 +309,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
-			org.apache.juddi.model.ServiceDescrId serviceDescId = new org.apache.juddi.model.ServiceDescrId(modelBusinessService.getServiceKey(), id++);
+			org.apache.juddi.model.ServiceDescrId serviceDescId = new org.apache.juddi.model.ServiceDescrId(modelBusinessService.getEntityKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.ServiceDescr(serviceDescId, modelBusinessService, apiDesc.getLang(), apiDesc.getValue()));
 		}
 	}
@@ -329,7 +329,7 @@ public class MappingApiToModel {
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
 					org.uddi.api_v3.KeyedReference apiKeyedRef = (org.uddi.api_v3.KeyedReference)elem.getValue();
 
-					org.apache.juddi.model.ServiceCategoryId categoryId = new org.apache.juddi.model.ServiceCategoryId(modelBusinessService.getServiceKey(), id++);
+					org.apache.juddi.model.ServiceCategoryId categoryId = new org.apache.juddi.model.ServiceCategoryId(modelBusinessService.getEntityKey(), id++);
 					modelCategoryList.add(new org.apache.juddi.model.ServiceCategory(categoryId, modelBusinessService, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 				}
 			}
@@ -360,7 +360,7 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 
 		modelBindingTemplate.setBusinessService(modelBusinessService);
-		modelBindingTemplate.setBindingKey(apiBindingTemplate.getBindingKey());
+		modelBindingTemplate.setEntityKey(apiBindingTemplate.getBindingKey());
 		modelBindingTemplate.setLastUpdate(new Date());
 		modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
 		modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
@@ -379,7 +379,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
-			org.apache.juddi.model.BindingDescrId bindingDescId = new org.apache.juddi.model.BindingDescrId(modelBindingTemplate.getBindingKey(), id++);
+			org.apache.juddi.model.BindingDescrId bindingDescId = new org.apache.juddi.model.BindingDescrId(modelBindingTemplate.getEntityKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.BindingDescr(bindingDescId, modelBindingTemplate, apiDesc.getLang(), apiDesc.getValue()));
 		}
 	}
@@ -399,7 +399,7 @@ public class MappingApiToModel {
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
 					org.uddi.api_v3.KeyedReference apiKeyedRef = (org.uddi.api_v3.KeyedReference)elem.getValue();
 
-					org.apache.juddi.model.BindingCategoryId categoryId = new org.apache.juddi.model.BindingCategoryId(modelBindingTemplate.getBindingKey(), id++);
+					org.apache.juddi.model.BindingCategoryId categoryId = new org.apache.juddi.model.BindingCategoryId(modelBindingTemplate.getEntityKey(), id++);
 					modelCategoryList.add(new org.apache.juddi.model.BindingCategory(categoryId, modelBindingTemplate, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 				}
 			}
@@ -416,11 +416,11 @@ public class MappingApiToModel {
 			List<org.uddi.api_v3.TModelInstanceInfo> apiTModelInstInfoList = apiTModelInstDetails.getTModelInstanceInfo();
 			int id = 0;
 			for (org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo : apiTModelInstInfoList) {
-				org.apache.juddi.model.TmodelInstanceInfoId tmodelInstInfoId = new org.apache.juddi.model.TmodelInstanceInfoId(modelBindingTemplate.getBindingKey(), id++);
+				org.apache.juddi.model.TmodelInstanceInfoId tmodelInstInfoId = new org.apache.juddi.model.TmodelInstanceInfoId(modelBindingTemplate.getEntityKey(), id++);
 				org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo = new org.apache.juddi.model.TmodelInstanceInfo(tmodelInstInfoId, modelBindingTemplate, apiTModelInstInfo.getTModelKey());
 				
-				mapTModelInstanceInfoDescriptions(apiTModelInstInfo.getDescription(), modelTModelInstInfo.getTmodelInstanceInfoDescrs(), modelTModelInstInfo, modelBindingTemplate.getBindingKey());
-				mapInstanceDetails(apiTModelInstInfo.getInstanceDetails(), modelTModelInstInfo, modelBindingTemplate.getBindingKey());
+				mapTModelInstanceInfoDescriptions(apiTModelInstInfo.getDescription(), modelTModelInstInfo.getTmodelInstanceInfoDescrs(), modelTModelInstInfo, modelBindingTemplate.getEntityKey());
+				mapInstanceDetails(apiTModelInstInfo.getInstanceDetails(), modelTModelInstInfo, modelBindingTemplate.getEntityKey());
 				
 				modelTModelInstInfoList.add(modelTModelInstInfo);
 			}
@@ -473,7 +473,7 @@ public class MappingApiToModel {
 								 org.apache.juddi.model.Tmodel modelTModel) 
 				   throws DispositionReportFaultMessage {
 
-		modelTModel.setTmodelKey(apiTModel.getTModelKey());
+		modelTModel.setEntityKey(apiTModel.getTModelKey());
 		modelTModel.setLastUpdate(new Date());
 		modelTModel.setName(apiTModel.getName().getValue());
 		modelTModel.setDeleted(apiTModel.isDeleted());
@@ -493,7 +493,7 @@ public class MappingApiToModel {
 
 		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
-			org.apache.juddi.model.TmodelDescrId tmodelDescId = new org.apache.juddi.model.TmodelDescrId(modelTModel.getTmodelKey(), id++);
+			org.apache.juddi.model.TmodelDescrId tmodelDescId = new org.apache.juddi.model.TmodelDescrId(modelTModel.getEntityKey(), id++);
 			modelDescList.add(new org.apache.juddi.model.TmodelDescr(tmodelDescId, modelTModel, apiDesc.getLang(), apiDesc.getValue()));
 		}
 	}
@@ -508,7 +508,7 @@ public class MappingApiToModel {
 			List<org.uddi.api_v3.KeyedReference> apiKeyedRefList = apiIdentifierBag.getKeyedReference();
 			int id = 0;
 			for (org.uddi.api_v3.KeyedReference apiKeyedRef : apiKeyedRefList) {
-				org.apache.juddi.model.TmodelIdentifierId identifierId = new org.apache.juddi.model.TmodelIdentifierId(modelTModel.getTmodelKey(), id++);
+				org.apache.juddi.model.TmodelIdentifierId identifierId = new org.apache.juddi.model.TmodelIdentifierId(modelTModel.getEntityKey(), id++);
 				modelIdentifierList.add(new org.apache.juddi.model.TmodelIdentifier(identifierId, modelTModel, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 			}
 		}
@@ -529,7 +529,7 @@ public class MappingApiToModel {
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
 					org.uddi.api_v3.KeyedReference apiKeyedRef = (org.uddi.api_v3.KeyedReference)elem.getValue();
 
-					org.apache.juddi.model.TmodelCategoryId categoryId = new org.apache.juddi.model.TmodelCategoryId(modelTModel.getTmodelKey(), id++);
+					org.apache.juddi.model.TmodelCategoryId categoryId = new org.apache.juddi.model.TmodelCategoryId(modelTModel.getEntityKey(), id++);
 					modelCategoryList.add(new org.apache.juddi.model.TmodelCategory(categoryId, modelTModel, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 				}
 			}
@@ -543,11 +543,11 @@ public class MappingApiToModel {
 		modelPubAssertion.setId(new org.apache.juddi.model.PublisherAssertionId(apiPubAssertion.getFromKey(), apiPubAssertion.getToKey()));
 
 		org.apache.juddi.model.BusinessEntity beFrom = new org.apache.juddi.model.BusinessEntity();
-		beFrom.setBusinessKey(apiPubAssertion.getFromKey());
+		beFrom.setEntityKey(apiPubAssertion.getFromKey());
 		modelPubAssertion.setBusinessEntityByFromKey(beFrom);
 		
 		org.apache.juddi.model.BusinessEntity beTo = new org.apache.juddi.model.BusinessEntity();
-		beFrom.setBusinessKey(apiPubAssertion.getToKey());
+		beFrom.setEntityKey(apiPubAssertion.getToKey());
 		modelPubAssertion.setBusinessEntityByToKey(beTo);
 		
 		org.uddi.api_v3.KeyedReference apiKeyedRef = apiPubAssertion.getKeyedReference();

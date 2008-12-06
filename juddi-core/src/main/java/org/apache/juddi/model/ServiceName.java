@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "service_name")
@@ -56,24 +55,18 @@ public class ServiceName implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "serviceKey", column = @Column(name = "service_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "serviceNameId", column = @Column(name = "service_name_id", nullable = false))})
-
 	public ServiceNameId getId() {
 		return this.id;
 	}
-
 	public void setId(ServiceNameId id) {
 		this.id = id;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "service_key", nullable = false, insertable = false, updatable = false)
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
 	public BusinessService getBusinessService() {
 		return this.businessService;
 	}
-
 	public void setBusinessService(BusinessService businessService) {
 		this.businessService = businessService;
 	}
@@ -82,17 +75,14 @@ public class ServiceName implements java.io.Serializable {
 	public String getLangCode() {
 		return this.langCode;
 	}
-
 	public void setLangCode(String langCode) {
 		this.langCode = langCode;
 	}
 
 	@Column(name = "name", nullable = false)
-
 	public String getName() {
 		return this.name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}

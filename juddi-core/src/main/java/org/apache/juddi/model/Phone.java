@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -28,6 +26,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "phone")
@@ -55,27 +54,20 @@ public class Phone implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false)),
-			@AttributeOverride(name = "phoneId", column = @Column(name = "phone_id", nullable = false))})
-
 	public PhoneId getId() {
 		return this.id;
 	}
-
 	public void setId(PhoneId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "business_key", referencedColumnName = "business_key", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
 			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false)})
-
 	public Contact getContact() {
 		return this.contact;
 	}
-
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
@@ -84,7 +76,6 @@ public class Phone implements java.io.Serializable {
 	public String getUseType() {
 		return this.useType;
 	}
-
 	public void setUseType(String useType) {
 		this.useType = useType;
 	}
@@ -93,7 +84,6 @@ public class Phone implements java.io.Serializable {
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
-
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}

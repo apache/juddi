@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -28,6 +26,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "tmodel_instance_info_descr")
@@ -57,27 +56,20 @@ public class TmodelInstanceInfoDescr implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "bindingKey", column = @Column(name = "binding_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "tmodelInstanceInfoId", column = @Column(name = "tmodel_instance_info_id", nullable = false)),
-			@AttributeOverride(name = "tmodelInstanceInfoDescrId", column = @Column(name = "tmodel_instance_info_descr_id", nullable = false))})
-
 	public TmodelInstanceInfoDescrId getId() {
 		return this.id;
 	}
-
 	public void setId(TmodelInstanceInfoDescrId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "binding_key", referencedColumnName = "binding_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "tmodel_instance_info_id", referencedColumnName = "tmodel_instance_info_id", nullable = false, insertable = false, updatable = false)})
-
+			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "instance_info_id", referencedColumnName = "instance_info_id", nullable = false, insertable = false, updatable = false)})
 	public TmodelInstanceInfo getTmodelInstanceInfo() {
 		return this.tmodelInstanceInfo;
 	}
-
 	public void setTmodelInstanceInfo(TmodelInstanceInfo tmodelInstanceInfo) {
 		this.tmodelInstanceInfo = tmodelInstanceInfo;
 	}
@@ -86,17 +78,14 @@ public class TmodelInstanceInfoDescr implements java.io.Serializable {
 	public String getLangCode() {
 		return this.langCode;
 	}
-
 	public void setLangCode(String langCode) {
 		this.langCode = langCode;
 	}
 
 	@Column(name = "descr", nullable = false)
-
 	public String getDescr() {
 		return this.descr;
 	}
-
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}

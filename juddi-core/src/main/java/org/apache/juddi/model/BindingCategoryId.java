@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class BindingCategoryId implements java.io.Serializable {
+public class BindingCategoryId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String bindingKey;
 	private int categoryId;
 
 	public BindingCategoryId() {
 	}
 
-	public BindingCategoryId(String bindingKey, int categoryId) {
-		this.bindingKey = bindingKey;
+	public BindingCategoryId(String entityKey, int categoryId) {
+		this.entityKey = entityKey;
 		this.categoryId = categoryId;
 	}
 
-	@Column(name = "binding_key", nullable = false, length = 255)
-	public String getBindingKey() {
-		return this.bindingKey;
-	}
-
-	public void setBindingKey(String bindingKey) {
-		this.bindingKey = bindingKey;
-	}
-
 	@Column(name = "category_id", nullable = false)
-
 	public int getCategoryId() {
 		return this.categoryId;
 	}
-
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
@@ -64,10 +53,10 @@ public class BindingCategoryId implements java.io.Serializable {
 			return false;
 		BindingCategoryId castOther = (BindingCategoryId) other;
 
-		return ((this.getBindingKey() == castOther.getBindingKey()) || (this
-				.getBindingKey() != null
-				&& castOther.getBindingKey() != null && this.getBindingKey()
-				.equals(castOther.getBindingKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getCategoryId() == castOther.getCategoryId());
 	}
 
@@ -76,7 +65,7 @@ public class BindingCategoryId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBindingKey() == null ? 0 : this.getBindingKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getCategoryId();
 		return result;

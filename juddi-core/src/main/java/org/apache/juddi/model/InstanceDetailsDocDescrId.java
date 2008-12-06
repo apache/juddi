@@ -20,50 +20,28 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class InstanceDetailsDocDescrId implements java.io.Serializable {
+public class InstanceDetailsDocDescrId extends TmodelInstanceInfoId implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String bindingKey;
-	private int tmodelInstanceInfoId;
 	private int instanceDetailsDocDescrId;
 
 	public InstanceDetailsDocDescrId() {
 	}
 
-	public InstanceDetailsDocDescrId(String bindingKey,
+	public InstanceDetailsDocDescrId(String entityKey,
 			int tmodelInstanceInfoId, int instanceDetailsDocDescrId) {
-		this.bindingKey = bindingKey;
+		this.entityKey = entityKey;
 		this.tmodelInstanceInfoId = tmodelInstanceInfoId;
 		this.instanceDetailsDocDescrId = instanceDetailsDocDescrId;
 	}
 
-	@Column(name = "binding_key", nullable = false, length = 255)
-	public String getBindingKey() {
-		return this.bindingKey;
-	}
-
-	public void setBindingKey(String bindingKey) {
-		this.bindingKey = bindingKey;
-	}
-
-	@Column(name = "tmodel_instance_info_id", nullable = false)
-
-	public int getTmodelInstanceInfoId() {
-		return this.tmodelInstanceInfoId;
-	}
-
-	public void setTmodelInstanceInfoId(int tmodelInstanceInfoId) {
-		this.tmodelInstanceInfoId = tmodelInstanceInfoId;
-	}
-
-	@Column(name = "instance_details_doc_descr_id", nullable = false)
-
+	@Column(name = "descr_id", nullable = false)
 	public int getInstanceDetailsDocDescrId() {
 		return this.instanceDetailsDocDescrId;
 	}
-
 	public void setInstanceDetailsDocDescrId(int instanceDetailsDocDescrId) {
 		this.instanceDetailsDocDescrId = instanceDetailsDocDescrId;
 	}
@@ -77,10 +55,10 @@ public class InstanceDetailsDocDescrId implements java.io.Serializable {
 			return false;
 		InstanceDetailsDocDescrId castOther = (InstanceDetailsDocDescrId) other;
 
-		return ((this.getBindingKey() == castOther.getBindingKey()) || (this
-				.getBindingKey() != null
-				&& castOther.getBindingKey() != null && this.getBindingKey()
-				.equals(castOther.getBindingKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getTmodelInstanceInfoId() == castOther
 						.getTmodelInstanceInfoId())
 				&& (this.getInstanceDetailsDocDescrId() == castOther
@@ -92,7 +70,7 @@ public class InstanceDetailsDocDescrId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBindingKey() == null ? 0 : this.getBindingKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getTmodelInstanceInfoId();
 		result = 37 * result + this.getInstanceDetailsDocDescrId();

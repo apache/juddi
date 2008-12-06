@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class TmodelCategoryId implements java.io.Serializable {
+public class TmodelCategoryId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String tmodelKey;
 	private int categoryId;
 
 	public TmodelCategoryId() {
 	}
 
-	public TmodelCategoryId(String tmodelKey, int categoryId) {
-		this.tmodelKey = tmodelKey;
+	public TmodelCategoryId(String entityKey, int categoryId) {
+		this.entityKey = entityKey;
 		this.categoryId = categoryId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
-	}
-
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
-	}
-
 	@Column(name = "category_id", nullable = false)
-
 	public int getCategoryId() {
 		return this.categoryId;
 	}
-
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
@@ -64,10 +53,10 @@ public class TmodelCategoryId implements java.io.Serializable {
 			return false;
 		TmodelCategoryId castOther = (TmodelCategoryId) other;
 
-		return ((this.getTmodelKey() == castOther.getTmodelKey()) || (this
-				.getTmodelKey() != null
-				&& castOther.getTmodelKey() != null && this.getTmodelKey()
-				.equals(castOther.getTmodelKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getCategoryId() == castOther.getCategoryId());
 	}
 
@@ -75,7 +64,7 @@ public class TmodelCategoryId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result
-				+ (getTmodelKey() == null ? 0 : this.getTmodelKey().hashCode());
+				+ (getEntityKey() == null ? 0 : this.getEntityKey().hashCode());
 		result = 37 * result + this.getCategoryId();
 		return result;
 	}

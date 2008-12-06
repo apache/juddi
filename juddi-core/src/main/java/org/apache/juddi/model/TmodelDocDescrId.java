@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class TmodelDocDescrId implements java.io.Serializable {
+public class TmodelDocDescrId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String tmodelKey;
 	private int tmodelDocDescrId;
 
 	public TmodelDocDescrId() {
 	}
 
-	public TmodelDocDescrId(String tmodelKey, int tmodelDocDescrId) {
-		this.tmodelKey = tmodelKey;
+	public TmodelDocDescrId(String entityKey, int tmodelDocDescrId) {
+		this.entityKey = entityKey;
 		this.tmodelDocDescrId = tmodelDocDescrId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
-	}
-
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
-	}
-
-	@Column(name = "tmodel_doc_descr_id", nullable = false)
-
+	@Column(name = "descr_id", nullable = false)
 	public int getTmodelDocDescrId() {
 		return this.tmodelDocDescrId;
 	}
-
 	public void setTmodelDocDescrId(int tmodelDocDescrId) {
 		this.tmodelDocDescrId = tmodelDocDescrId;
 	}
@@ -64,10 +53,10 @@ public class TmodelDocDescrId implements java.io.Serializable {
 			return false;
 		TmodelDocDescrId castOther = (TmodelDocDescrId) other;
 
-		return ((this.getTmodelKey() == castOther.getTmodelKey()) || (this
-				.getTmodelKey() != null
-				&& castOther.getTmodelKey() != null && this.getTmodelKey()
-				.equals(castOther.getTmodelKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getTmodelDocDescrId() == castOther
 						.getTmodelDocDescrId());
 	}
@@ -76,7 +65,7 @@ public class TmodelDocDescrId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result
-				+ (getTmodelKey() == null ? 0 : this.getTmodelKey().hashCode());
+				+ (getEntityKey() == null ? 0 : this.getEntityKey().hashCode());
 		result = 37 * result + this.getTmodelDocDescrId();
 		return result;
 	}

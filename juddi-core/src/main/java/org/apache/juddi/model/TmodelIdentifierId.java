@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class TmodelIdentifierId implements java.io.Serializable {
+public class TmodelIdentifierId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String tmodelKey;
 	private int identifierId;
 
 	public TmodelIdentifierId() {
 	}
 
-	public TmodelIdentifierId(String tmodelKey, int identifierId) {
-		this.tmodelKey = tmodelKey;
+	public TmodelIdentifierId(String entityKey, int identifierId) {
+		this.entityKey = entityKey;
 		this.identifierId = identifierId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
-	}
-
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
-	}
-
 	@Column(name = "identifier_id", nullable = false)
-
 	public int getIdentifierId() {
 		return this.identifierId;
 	}
-
 	public void setIdentifierId(int identifierId) {
 		this.identifierId = identifierId;
 	}
@@ -64,10 +53,10 @@ public class TmodelIdentifierId implements java.io.Serializable {
 			return false;
 		TmodelIdentifierId castOther = (TmodelIdentifierId) other;
 
-		return ((this.getTmodelKey() == castOther.getTmodelKey()) || (this
-				.getTmodelKey() != null
-				&& castOther.getTmodelKey() != null && this.getTmodelKey()
-				.equals(castOther.getTmodelKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getIdentifierId() == castOther.getIdentifierId());
 	}
 
@@ -75,7 +64,7 @@ public class TmodelIdentifierId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result
-				+ (getTmodelKey() == null ? 0 : this.getTmodelKey().hashCode());
+				+ (getEntityKey() == null ? 0 : this.getEntityKey().hashCode());
 		result = 37 * result + this.getIdentifierId();
 		return result;
 	}

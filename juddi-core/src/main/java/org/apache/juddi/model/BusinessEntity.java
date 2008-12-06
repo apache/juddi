@@ -20,10 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -39,7 +37,6 @@ import javax.persistence.OrderBy;
 public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
 	private UddiEntityPublisher publisher;
 	private Set<Contact> contacts = new HashSet<Contact>(0);
 	private Set<BusinessIdentifier> businessIdentifiers = new HashSet<BusinessIdentifier>(0);
@@ -54,11 +51,11 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public BusinessEntity() {
 	}
 
-	public BusinessEntity(String businessKey, Date lastUpdate) {
-		this.businessKey = businessKey;
+	public BusinessEntity(String entityKey, Date lastUpdate) {
+		this.entityKey = entityKey;
 		this.lastUpdate = lastUpdate;
 	}
-	public BusinessEntity(String businessKey, String authorizedName, 
+	public BusinessEntity(String entityKey, String authorizedName, 
 			UddiEntityPublisher publisher, String operator,
 			Date lastUpdate, Set<Contact> contacts,
 			Set<BusinessIdentifier> businessIdentifiers,
@@ -68,7 +65,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			Set<BusinessCategory> businessCategories,
 			Set<BusinessService> businessServices,
 			Set<BusinessDescr> businessDescrs) {
-		this.businessKey = businessKey;
+		this.entityKey = entityKey;
 		this.publisher = publisher;
 		this.lastUpdate = lastUpdate;
 		this.contacts = contacts;
@@ -80,15 +77,6 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.businessCategories = businessCategories;
 		this.businessServices = businessServices;
 		this.businessDescrs = businessDescrs;
-	}
-
-	@Id
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

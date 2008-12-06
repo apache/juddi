@@ -409,8 +409,8 @@ public class ValidatePublish {
 			else {
 				// If the supplied business key doesn't match the existing service's business key, the projection is invalid.
 				org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
-				if (!businessService.getBusinessKey().equals(bs.getBusinessEntity().getBusinessKey()))
-					throw new InvalidProjectionException(new ErrorMessage("errors.invalidprojection.ParentMismatch", businessService.getBusinessKey() + ", " + bs.getBusinessEntity().getBusinessKey()));
+				if (!businessService.getBusinessKey().equals(bs.getBusinessEntity().getEntityKey()))
+					throw new InvalidProjectionException(new ErrorMessage("errors.invalidprojection.ParentMismatch", businessService.getBusinessKey() + ", " + bs.getBusinessEntity().getEntityKey()));
 			}
 		}
 		else {
@@ -428,8 +428,8 @@ public class ValidatePublish {
 					// If existing service trying to be saved has a different parent key, then we have a problem
 					// TODO: moving services is allowed according to spec?
 					org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
-					if (!parentKey.equals(bs.getBusinessEntity().getBusinessKey()))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getBusinessKey()));
+					if (!parentKey.equals(bs.getBusinessEntity().getEntityKey()))
+						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getEntityKey()));
 					
 					// Make sure publisher owns this entity.
 					if (!publisher.isOwner((UddiEntity)obj))
@@ -535,8 +535,8 @@ public class ValidatePublish {
 				// If existing binding trying to be saved has a different parent key, then we have a problem
 				// TODO: moving bindings is allowed according to spec?
 				org.apache.juddi.model.BindingTemplate bt = (org.apache.juddi.model.BindingTemplate)obj;
-				if (!parentKey.equals(bt.getBusinessService().getServiceKey()))
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + bt.getBusinessService().getServiceKey()));
+				if (!parentKey.equals(bt.getBusinessService().getEntityKey()))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + bt.getBusinessService().getEntityKey()));
 				
 				// Make sure publisher owns this entity.
 				if (!publisher.isOwner((UddiEntity)obj))

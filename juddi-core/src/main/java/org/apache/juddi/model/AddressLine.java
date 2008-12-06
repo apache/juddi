@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -28,6 +26,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "address_line")
@@ -58,29 +57,21 @@ public class AddressLine implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false)),
-			@AttributeOverride(name = "addressId", column = @Column(name = "address_id", nullable = false)),
-			@AttributeOverride(name = "addressLineId", column = @Column(name = "address_line_id", nullable = false))})
-
 	public AddressLineId getId() {
 		return this.id;
 	}
-
 	public void setId(AddressLineId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "business_key", referencedColumnName = "business_key", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
 			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false),
 			@JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false, insertable = false, updatable = false)})
-
 	public Address getAddress() {
 		return this.address;
 	}
-
 	public void setAddress(Address address) {
 		this.address = address;
 	}
@@ -89,7 +80,6 @@ public class AddressLine implements java.io.Serializable {
 	public String getLine() {
 		return this.line;
 	}
-
 	public void setLine(String line) {
 		this.line = line;
 	}
@@ -98,7 +88,6 @@ public class AddressLine implements java.io.Serializable {
 	public String getKeyName() {
 		return this.keyName;
 	}
-
 	public void setKeyName(String keyName) {
 		this.keyName = keyName;
 	}
@@ -107,7 +96,6 @@ public class AddressLine implements java.io.Serializable {
 	public String getKeyValue() {
 		return this.keyValue;
 	}
-
 	public void setKeyValue(String keyValue) {
 		this.keyValue = keyValue;
 	}

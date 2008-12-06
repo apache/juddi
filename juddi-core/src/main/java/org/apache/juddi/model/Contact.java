@@ -18,8 +18,6 @@ package org.apache.juddi.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -33,6 +31,7 @@ import javax.persistence.OrderBy;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "contact")
@@ -71,10 +70,6 @@ public class Contact implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false))})
-
 	public ContactId getId() {
 		return this.id;
 	}
@@ -83,7 +78,7 @@ public class Contact implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "business_key", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
 	public BusinessEntity getBusinessEntity() {
 		return this.businessEntity;
 	}

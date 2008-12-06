@@ -82,7 +82,7 @@ public class UDDIApiTestHelper {
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
 		keyGenKey.setId(new KeyGeneratorKeyId(rootPublisher.getPublisherId(), 0));
 		keyGenKey.setPublisher(rootPublisher);
-		keyGenKey.setKeygenTModelKey(modelTModel.getTmodelKey());
+		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
 		rootPublisher.getKeyGeneratorKeys().add(keyGenKey);
 		
 		tx.commit();

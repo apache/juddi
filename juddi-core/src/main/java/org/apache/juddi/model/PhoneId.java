@@ -20,49 +20,27 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class PhoneId implements java.io.Serializable {
+public class PhoneId extends ContactId implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
-	private int contactId;
 	private int phoneId;
 
 	public PhoneId() {
 	}
 
-	public PhoneId(String businessKey, int contactId, int phoneId) {
-		this.businessKey = businessKey;
+	public PhoneId(String entityKey, int contactId, int phoneId) {
+		this.entityKey = entityKey;
 		this.contactId = contactId;
 		this.phoneId = phoneId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
-	@Column(name = "contact_id", nullable = false)
-
-	public int getContactId() {
-		return this.contactId;
-	}
-
-	public void setContactId(int contactId) {
-		this.contactId = contactId;
-	}
-
 	@Column(name = "phone_id", nullable = false)
-
 	public int getPhoneId() {
 		return this.phoneId;
 	}
-
 	public void setPhoneId(int phoneId) {
 		this.phoneId = phoneId;
 	}
@@ -76,10 +54,10 @@ public class PhoneId implements java.io.Serializable {
 			return false;
 		PhoneId castOther = (PhoneId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getContactId() == castOther.getContactId())
 				&& (this.getPhoneId() == castOther.getPhoneId());
 	}
@@ -89,7 +67,7 @@ public class PhoneId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getContactId();
 		result = 37 * result + this.getPhoneId();

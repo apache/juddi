@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class BindingDescrId implements java.io.Serializable {
+public class BindingDescrId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String bindingKey;
 	private int bindingDescrId;
 
 	public BindingDescrId() {
 	}
 
-	public BindingDescrId(String bindingKey, int bindingDescrId) {
-		this.bindingKey = bindingKey;
+	public BindingDescrId(String entityKey, int bindingDescrId) {
+		this.entityKey = entityKey;
 		this.bindingDescrId = bindingDescrId;
 	}
 
-	@Column(name = "binding_key", nullable = false, length = 255)
-	public String getBindingKey() {
-		return this.bindingKey;
-	}
-
-	public void setBindingKey(String bindingKey) {
-		this.bindingKey = bindingKey;
-	}
-
-	@Column(name = "binding_descr_id", nullable = false)
-
+	@Column(name = "descr_id", nullable = false)
 	public int getBindingDescrId() {
 		return this.bindingDescrId;
 	}
-
 	public void setBindingDescrId(int bindingDescrId) {
 		this.bindingDescrId = bindingDescrId;
 	}
@@ -64,10 +53,10 @@ public class BindingDescrId implements java.io.Serializable {
 			return false;
 		BindingDescrId castOther = (BindingDescrId) other;
 
-		return ((this.getBindingKey() == castOther.getBindingKey()) || (this
-				.getBindingKey() != null
-				&& castOther.getBindingKey() != null && this.getBindingKey()
-				.equals(castOther.getBindingKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getBindingDescrId() == castOther.getBindingDescrId());
 	}
 
@@ -76,7 +65,7 @@ public class BindingDescrId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBindingKey() == null ? 0 : this.getBindingKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getBindingDescrId();
 		return result;

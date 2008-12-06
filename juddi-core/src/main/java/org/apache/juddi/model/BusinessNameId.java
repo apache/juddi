@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class BusinessNameId implements java.io.Serializable {
+public class BusinessNameId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
 	private int businessNameId;
 
 	public BusinessNameId() {
 	}
 
-	public BusinessNameId(String businessKey, int businessNameId) {
-		this.businessKey = businessKey;
+	public BusinessNameId(String entityKey, int businessNameId) {
+		this.entityKey = entityKey;
 		this.businessNameId = businessNameId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
 	@Column(name = "business_name_id", nullable = false)
-
 	public int getBusinessNameId() {
 		return this.businessNameId;
 	}
-
 	public void setBusinessNameId(int businessNameId) {
 		this.businessNameId = businessNameId;
 	}
@@ -64,10 +53,10 @@ public class BusinessNameId implements java.io.Serializable {
 			return false;
 		BusinessNameId castOther = (BusinessNameId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getBusinessNameId() == castOther.getBusinessNameId());
 	}
 
@@ -76,7 +65,7 @@ public class BusinessNameId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getBusinessNameId();
 		return result;

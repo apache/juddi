@@ -20,10 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,7 +36,6 @@ import javax.persistence.Table;
 public class BusinessService extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String serviceKey;
 	private BusinessEntity businessEntity;
 	private Set<ServiceName> serviceNames = new HashSet<ServiceName>(0);
 	private Set<ServiceDescr> serviceDescrs = new HashSet<ServiceDescr>(0);
@@ -48,31 +45,22 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public BusinessService() {
 	}
 
-	public BusinessService(String serviceKey, BusinessEntity businessEntity, Date lastUpdate) {
-		this.serviceKey = serviceKey;
+	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate) {
+		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
 		this.lastUpdate = lastUpdate;
 	}
-	public BusinessService(String serviceKey, BusinessEntity businessEntity, Date lastUpdate,
+	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate,
 			Set<ServiceName> serviceNames, Set<ServiceDescr> serviceDescrs,
 			Set<BindingTemplate> bindingTemplates,
 			Set<ServiceCategory> serviceCategories) {
-		this.serviceKey = serviceKey;
+		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
 		this.lastUpdate = lastUpdate;
 		this.serviceNames = serviceNames;
 		this.serviceDescrs = serviceDescrs;
 		this.bindingTemplates = bindingTemplates;
 		this.serviceCategories = serviceCategories;
-	}
-
-	@Id
-	@Column(name = "service_key", nullable = false, length = 255)
-	public String getServiceKey() {
-		return this.serviceKey;
-	}
-	public void setServiceKey(String serviceKey) {
-		this.serviceKey = serviceKey;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

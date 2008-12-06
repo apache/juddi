@@ -20,37 +20,26 @@ import javax.persistence.Embeddable;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class ServiceDescrId implements java.io.Serializable {
+public class ServiceDescrId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String serviceKey;
 	private int serviceDescrId;
 
 	public ServiceDescrId() {
 	}
 
-	public ServiceDescrId(String serviceKey, int serviceDescrId) {
-		this.serviceKey = serviceKey;
+	public ServiceDescrId(String entityKey, int serviceDescrId) {
+		this.entityKey = entityKey;
 		this.serviceDescrId = serviceDescrId;
 	}
 
-	@Column(name = "service_key", nullable = false, length = 255)
-	public String getServiceKey() {
-		return this.serviceKey;
-	}
-
-	public void setServiceKey(String serviceKey) {
-		this.serviceKey = serviceKey;
-	}
-
-	@Column(name = "service_descr_id", nullable = false)
-
+	@Column(name = "descr_id", nullable = false)
 	public int getServiceDescrId() {
 		return this.serviceDescrId;
 	}
-
 	public void setServiceDescrId(int serviceDescrId) {
 		this.serviceDescrId = serviceDescrId;
 	}
@@ -64,10 +53,10 @@ public class ServiceDescrId implements java.io.Serializable {
 			return false;
 		ServiceDescrId castOther = (ServiceDescrId) other;
 
-		return ((this.getServiceKey() == castOther.getServiceKey()) || (this
-				.getServiceKey() != null
-				&& castOther.getServiceKey() != null && this.getServiceKey()
-				.equals(castOther.getServiceKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getServiceDescrId() == castOther.getServiceDescrId());
 	}
 
@@ -76,7 +65,7 @@ public class ServiceDescrId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getServiceKey() == null ? 0 : this.getServiceKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getServiceDescrId();
 		return result;

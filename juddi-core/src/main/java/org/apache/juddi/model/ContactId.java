@@ -17,40 +17,31 @@ package org.apache.juddi.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Embeddable
-public class ContactId implements java.io.Serializable {
+@MappedSuperclass
+public class ContactId extends Id implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String businessKey;
-	private int contactId;
+	protected int contactId;
 
 	public ContactId() {
 	}
 
-	public ContactId(String businessKey, int contactId) {
-		this.businessKey = businessKey;
+	public ContactId(String entityKey, int contactId) {
+		this.entityKey = entityKey;
 		this.contactId = contactId;
 	}
 
-	@Column(name = "business_key", nullable = false, length = 255)
-	public String getBusinessKey() {
-		return this.businessKey;
-	}
-
-	public void setBusinessKey(String businessKey) {
-		this.businessKey = businessKey;
-	}
-
 	@Column(name = "contact_id", nullable = false)
-
 	public int getContactId() {
 		return this.contactId;
 	}
-
 	public void setContactId(int contactId) {
 		this.contactId = contactId;
 	}
@@ -64,10 +55,10 @@ public class ContactId implements java.io.Serializable {
 			return false;
 		ContactId castOther = (ContactId) other;
 
-		return ((this.getBusinessKey() == castOther.getBusinessKey()) || (this
-				.getBusinessKey() != null
-				&& castOther.getBusinessKey() != null && this.getBusinessKey()
-				.equals(castOther.getBusinessKey())))
+		return ((this.getEntityKey() == castOther.getEntityKey()) || (this
+				.getEntityKey() != null
+				&& castOther.getEntityKey() != null && this.getEntityKey()
+				.equals(castOther.getEntityKey())))
 				&& (this.getContactId() == castOther.getContactId());
 	}
 
@@ -76,7 +67,7 @@ public class ContactId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getBusinessKey() == null ? 0 : this.getBusinessKey()
+				+ (getEntityKey() == null ? 0 : this.getEntityKey()
 						.hashCode());
 		result = 37 * result + this.getContactId();
 		return result;

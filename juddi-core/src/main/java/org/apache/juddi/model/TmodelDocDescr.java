@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "tmodel_doc_descr")
@@ -46,6 +45,7 @@ public class TmodelDocDescr implements java.io.Serializable {
 		this.tmodel = tmodel;
 		this.descr = descr;
 	}
+
 	public TmodelDocDescr(TmodelDocDescrId id, Tmodel tmodel, String langCode,
 			String descr) {
 		this.id = id;
@@ -55,24 +55,18 @@ public class TmodelDocDescr implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "tmodelKey", column = @Column(name = "tmodel_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "tmodelDocDescrId", column = @Column(name = "tmodel_doc_descr_id", nullable = false))})
-
 	public TmodelDocDescrId getId() {
 		return this.id;
 	}
-
 	public void setId(TmodelDocDescrId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tmodel_key", nullable = false, insertable = false, updatable = false)
-
 	public Tmodel getTmodel() {
 		return this.tmodel;
 	}
-
 	public void setTmodel(Tmodel tmodel) {
 		this.tmodel = tmodel;
 	}
@@ -81,17 +75,14 @@ public class TmodelDocDescr implements java.io.Serializable {
 	public String getLangCode() {
 		return this.langCode;
 	}
-
 	public void setLangCode(String langCode) {
 		this.langCode = langCode;
 	}
 
 	@Column(name = "descr", nullable = false)
-
 	public String getDescr() {
 		return this.descr;
 	}
-
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}

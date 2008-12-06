@@ -23,7 +23,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,7 +37,6 @@ import javax.persistence.Table;
 public class BindingTemplate extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String bindingKey;
 	private BusinessService businessService;
 	private String accessPointType;
 	private String accessPointUrl;
@@ -50,17 +48,17 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	public BindingTemplate() {
 	}
 
-	public BindingTemplate(String bindingKey, BusinessService businessService, Date lastUpdate) {
-		this.bindingKey = bindingKey;
+	public BindingTemplate(String entityKey, BusinessService businessService, Date lastUpdate) {
+		this.entityKey = entityKey;
 		this.businessService = businessService;
 		this.lastUpdate = lastUpdate;
 	}
-	public BindingTemplate(String bindingKey, BusinessService businessService, String accessPointType,
+	public BindingTemplate(String entityKey, BusinessService businessService, String accessPointType,
 			String accessPointUrl, String hostingRedirector, Date lastUpdate,
 			Set<BindingCategory> bindingCategories,
 			Set<TmodelInstanceInfo> tmodelInstanceInfos,
 			Set<BindingDescr> bindingDescrs) {
-		this.bindingKey = bindingKey;
+		this.entityKey = entityKey;
 		this.businessService = businessService;
 		this.accessPointType = accessPointType;
 		this.accessPointUrl = accessPointUrl;
@@ -69,15 +67,6 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.bindingCategories = bindingCategories;
 		this.tmodelInstanceInfos = tmodelInstanceInfos;
 		this.bindingDescrs = bindingDescrs;
-	}
-
-	@Id
-	@Column(name = "binding_key", nullable = false, length = 255)
-	public String getBindingKey() {
-		return this.bindingKey;
-	}
-	public void setBindingKey(String bindingKey) {
-		this.bindingKey = bindingKey;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

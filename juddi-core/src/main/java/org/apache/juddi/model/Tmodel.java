@@ -23,7 +23,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,7 +37,6 @@ import javax.persistence.Table;
 public class Tmodel extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String tmodelKey;
 	private UddiEntityPublisher publisher;
 	private String name;
 	private String langCode;
@@ -51,17 +49,17 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	public Tmodel() {
 	}
 
-	public Tmodel(String tmodelKey, String name, Date lastUpdate) {
-		this.tmodelKey = tmodelKey;
+	public Tmodel(String entityKey, String name, Date lastUpdate) {
+		this.entityKey = entityKey;
 		this.name = name;
 		this.lastUpdate = lastUpdate;
 	}
-	public Tmodel(String tmodelKey, String authorizedName, UddiEntityPublisher publisher, String operator,
+	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
 			Set<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
 			Set<TmodelIdentifier> tmodelIdentifiers,
 			Set<TmodelCategory> tmodelCategories) {
-		this.tmodelKey = tmodelKey;
+		this.entityKey = entityKey;
 		this.publisher = publisher;
 		this.name = name;
 		this.langCode = langCode;
@@ -71,15 +69,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.tmodelDocDescrs = tmodelDocDescrs;
 		this.tmodelIdentifiers = tmodelIdentifiers;
 		this.tmodelCategories = tmodelCategories;
-	}
-
-	@Id
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
-	}
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

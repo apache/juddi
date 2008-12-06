@@ -24,8 +24,8 @@ public class PublisherAssertionQuery extends EntityQuery {
 
 	public static final String ENTITY_NAME = "PublisherAssertion";
 	public static final String ENTITY_ALIAS = "pa";
-	public static final String FROM_KEY_NAME = "businessEntityByFromKey.businessKey";
-	public static final String TO_KEY_NAME = "businessEntityByToKey.businessKey";
+	public static final String FROM_KEY_NAME = "businessEntityByFromKey." + KEY_NAME;
+	public static final String TO_KEY_NAME = "businessEntityByToKey." + KEY_NAME;
 	
 	protected static String selectSQL;
 	protected static String deleteSQL;

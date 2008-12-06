@@ -32,6 +32,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "address")
@@ -63,27 +64,20 @@ public class Address implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "contactId", column = @Column(name = "contact_id", nullable = false)),
-			@AttributeOverride(name = "addressId", column = @Column(name = "address_id", nullable = false))})
-
 	public AddressId getId() {
 		return this.id;
 	}
-
 	public void setId(AddressId id) {
 		this.id = id;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({
-			@JoinColumn(name = "business_key", referencedColumnName = "business_key", nullable = false, insertable = false, updatable = false),
+			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
 			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false)})
-
 	public Contact getContact() {
 		return this.contact;
 	}
-
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
@@ -92,7 +86,6 @@ public class Address implements java.io.Serializable {
 	public String getUseType() {
 		return this.useType;
 	}
-
 	public void setUseType(String useType) {
 		this.useType = useType;
 	}
@@ -101,7 +94,6 @@ public class Address implements java.io.Serializable {
 	public String getSortCode() {
 		return this.sortCode;
 	}
-
 	public void setSortCode(String sortCode) {
 		this.sortCode = sortCode;
 	}
@@ -110,15 +102,14 @@ public class Address implements java.io.Serializable {
 	public String getTmodelKey() {
 		return this.tmodelKey;
 	}
-
 	public void setTmodelKey(String tmodelKey) {
 		this.tmodelKey = tmodelKey;
 	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "address")
 	public Set<AddressLine> getAddressLines() {
 		return this.addressLines;
 	}
-
 	public void setAddressLines(Set<AddressLine> addressLines) {
 		this.addressLines = addressLines;
 	}

@@ -376,11 +376,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
 			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
-			modelBusinessService.setServiceKey(apiBindingTemplate.getServiceKey());
+			modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
 			
 			MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 			
-			Object existingUddiEntity = em.find(modelBindingTemplate.getClass(), modelBindingTemplate.getBindingKey());
+			Object existingUddiEntity = em.find(modelBindingTemplate.getClass(), modelBindingTemplate.getEntityKey());
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
@@ -417,7 +417,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
 			
-			Object existingUddiEntity = em.find(modelBusinessEntity.getClass(), modelBusinessEntity.getBusinessKey());
+			Object existingUddiEntity = em.find(modelBusinessEntity.getClass(), modelBusinessEntity.getEntityKey());
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
@@ -452,11 +452,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
-			modelBusinessEntity.setBusinessKey(apiBusinessService.getBusinessKey());
+			modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
 			
 			MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
 			
-			Object existingUddiEntity = em.find(modelBusinessService.getClass(), modelBusinessService.getServiceKey());
+			Object existingUddiEntity = em.find(modelBusinessService.getClass(), modelBusinessService.getEntityKey());
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
@@ -493,7 +493,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			MappingApiToModel.mapTModel(apiTModel, modelTModel);
 			
-			Object existingUddiEntity = em.find(modelTModel.getClass(), modelTModel.getTmodelKey());
+			Object existingUddiEntity = em.find(modelTModel.getClass(), modelTModel.getEntityKey());
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			

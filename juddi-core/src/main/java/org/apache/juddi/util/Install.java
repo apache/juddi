@@ -212,7 +212,7 @@ public class Install {
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
 		keyGenKey.setId(new KeyGeneratorKeyId(publisher.getPublisherId(), id));
 		keyGenKey.setPublisher(publisher);
-		keyGenKey.setKeygenTModelKey(modelTModel.getTmodelKey());
+		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
 		publisher.getKeyGeneratorKeys().add(keyGenKey);
 		
 	}

@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
 @Table(name = "discovery_url")
@@ -50,44 +49,34 @@ public class DiscoveryUrl implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "businessKey", column = @Column(name = "business_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "discoveryUrlId", column = @Column(name = "discovery_url_id", nullable = false))})
-
 	public DiscoveryUrlId getId() {
 		return this.id;
 	}
-
 	public void setId(DiscoveryUrlId id) {
 		this.id = id;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "business_key", nullable = false, insertable = false, updatable = false)
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
 	public BusinessEntity getBusinessEntity() {
 		return this.businessEntity;
 	}
-
 	public void setBusinessEntity(BusinessEntity businessEntity) {
 		this.businessEntity = businessEntity;
 	}
 
 	@Column(name = "use_type", nullable = false)
-
 	public String getUseType() {
 		return this.useType;
 	}
-
 	public void setUseType(String useType) {
 		this.useType = useType;
 	}
 
 	@Column(name = "url", nullable = false)
-
 	public String getUrl() {
 		return this.url;
 	}
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
