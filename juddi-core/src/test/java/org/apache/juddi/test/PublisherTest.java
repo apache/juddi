@@ -37,7 +37,7 @@ public class PublisherTest {
 			List<Publisher> pubOutList = pd.getPublisher();
 			Publisher pubOut = pubOutList.get(0);
 
-			assertEquals(pubIn.getPublisherId(), pubOut.getPublisherId());
+			assertEquals(pubIn.getAuthorizedName(), pubOut.getAuthorizedName());
 			assertEquals(pubIn.getPublisherName(), pubOut.getPublisherName());
 			assertEquals(pubIn.getEmailAddress(), pubOut.getEmailAddress());
 			assertEquals(pubIn.getIsAdmin(), pubOut.getIsAdmin());

@@ -50,7 +50,7 @@ public abstract class UddiEntity {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public abstract String retrievePublisherId();
-	public abstract void assignPublisherId(String id);
+	public abstract String retrieveAuthorizedName();
+	public abstract void assignAuthorizedName(String authName);
 
 }

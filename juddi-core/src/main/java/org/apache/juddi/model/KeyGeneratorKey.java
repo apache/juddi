@@ -15,8 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -47,23 +45,18 @@ public class KeyGeneratorKey implements java.io.Serializable {
 	}
 
 	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "publisherId", column = @Column(name = "publisher_id", nullable = false, length = 255)),
-			@AttributeOverride(name = "keygeneratorId", column = @Column(name = "keygenerator_id", nullable = false))})
 	public KeyGeneratorKeyId getId() {
 		return this.id;
 	}
-
 	public void setId(KeyGeneratorKeyId id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "publisher_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "authorized_name", nullable = false, insertable = false, updatable = false)
 	public UddiEntityPublisher getPublisher() {
 		return this.publisher;
 	}
-
 	public void setPublisher(UddiEntityPublisher publisher) {
 		this.publisher = publisher;
 	}
@@ -72,7 +65,6 @@ public class KeyGeneratorKey implements java.io.Serializable {
 	public String getKeygenTModelKey() {
 		return this.keygenTModelKey;
 	}
-
 	public void setKeygenTModelKey(String keygenTModelKey) {
 		this.keygenTModelKey = keygenTModelKey;
 	}

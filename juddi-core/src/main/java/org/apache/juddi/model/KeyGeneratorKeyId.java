@@ -25,24 +25,24 @@ import javax.persistence.Embeddable;
 public class KeyGeneratorKeyId implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String publisherId;
+	private String authorizedName;
 	private int keygeneratorId;
 
 	public KeyGeneratorKeyId() {
 	}
 
-	public KeyGeneratorKeyId(String publisherId, int keygeneratorId) {
-		this.publisherId = publisherId;
+	public KeyGeneratorKeyId(String authorizedName, int keygeneratorId) {
+		this.authorizedName = authorizedName;
 		this.keygeneratorId = keygeneratorId;
 	}
 
-	@Column(name = "publisher_id", nullable = false, length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
+	@Column(name = "authorized_name", nullable = false, length = 20)
+	public String getAuthorizedName() {
+		return this.authorizedName;
 	}
 
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setAuthorizedName(String publisherId) {
+		this.authorizedName = publisherId;
 	}
 
 	@Column(name = "category_id", nullable = false)
@@ -63,9 +63,9 @@ public class KeyGeneratorKeyId implements java.io.Serializable {
 			return false;
 		KeyGeneratorKeyId castOther = (KeyGeneratorKeyId) other;
 
-		return ((this.getPublisherId() == castOther.getPublisherId()) || (this.getPublisherId() != null
-				&& castOther.getPublisherId() != null && this.getPublisherId()
-				.equals(castOther.getPublisherId())))
+		return ((this.getAuthorizedName() == castOther.getAuthorizedName()) || (this.getAuthorizedName() != null
+				&& castOther.getAuthorizedName() != null && this.getAuthorizedName()
+				.equals(castOther.getAuthorizedName())))
 				&& (this.getKeygeneratorId() == castOther.getKeygeneratorId());
 	}
 
@@ -74,7 +74,7 @@ public class KeyGeneratorKeyId implements java.io.Serializable {
 
 		result = 37
 				* result
-				+ (getPublisherId() == null ? 0 : this.getPublisherId()
+				+ (getAuthorizedName() == null ? 0 : this.getAuthorizedName()
 						.hashCode());
 		result = 37 * result + this.getKeygeneratorId();
 		return result;

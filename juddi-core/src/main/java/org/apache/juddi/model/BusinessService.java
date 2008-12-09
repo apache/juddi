@@ -104,10 +104,10 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 		this.serviceCategories = serviceCategories;
 	}
 
-	public String retrievePublisherId() {
-		return this.getBusinessEntity().getPublisher().getPublisherId();
+	public String retrieveAuthorizedName() {
+		return this.getBusinessEntity().getPublisher().getAuthorizedName();
 	}
-	public void assignPublisherId(String id) {
+	public void assignAuthorizedName(String id) {
 		// Do nothing, the publisher id is set in the parent.
 	}
 

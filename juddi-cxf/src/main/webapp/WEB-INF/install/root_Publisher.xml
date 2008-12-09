@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<publisher xmlns="urn:apache-org:juddi_v3" publisherId="root">
+<publisher xmlns="urn:apache-org:juddi_v3" authorizedName="root">
   <publisherName>root publisher</publisherName>
   <isAdmin>true</isAdmin>
 </publisher>

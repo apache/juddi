@@ -28,7 +28,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
  */
 @Entity
 @Table(name = "publisher")
-@PrimaryKeyJoinColumn(name = "publisher_id")
+@PrimaryKeyJoinColumn(name = "authorized_name")
 public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	}
 
 	public Publisher(String publisherId, String publisherName) {
-		this.publisherId = publisherId;
+		this.authorizedName = publisherId;
 		this.publisherName = publisherName;
 	}
 	public Publisher(String publisherId, String publisherName,
@@ -53,7 +53,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 			Integer maxBusinesses, Integer maxServicesPerBusiness,
 			Integer maxBindingsPerService, Integer maxTmodels,
 			Set<KeyGeneratorKey> keyGenerators) {
-		this.publisherId = publisherId;
+		this.authorizedName = publisherId;
 		this.publisherName = publisherName;
 		this.emailAddress = emailAddress;
 		this.isAdmin = isAdmin;
@@ -67,11 +67,9 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 
 
 	@Column(name = "publisher_name", nullable = false)
-
 	public String getPublisherName() {
 		return this.publisherName;
 	}
-
 	public void setPublisherName(String publisherName) {
 		this.publisherName = publisherName;
 	}
@@ -80,7 +78,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public String getEmailAddress() {
 		return this.emailAddress;
 	}
-
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
@@ -89,7 +86,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public String getIsAdmin() {
 		return this.isAdmin;
 	}
-
 	public void setIsAdmin(String isAdmin) {
 		this.isAdmin = isAdmin;
 	}
@@ -108,7 +104,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public String getIsEnabled() {
 		return this.isEnabled;
 	}
-
 	public void setIsEnabled(String isEnabled) {
 		this.isEnabled = isEnabled;
 	}
@@ -127,7 +122,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public Integer getMaxBusinesses() {
 		return this.maxBusinesses;
 	}
-
 	public void setMaxBusinesses(Integer maxBusinesses) {
 		this.maxBusinesses = maxBusinesses;
 	}
@@ -136,7 +130,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public Integer getMaxServicesPerBusiness() {
 		return this.maxServicesPerBusiness;
 	}
-
 	public void setMaxServicesPerBusiness(Integer maxServicesPerBusiness) {
 		this.maxServicesPerBusiness = maxServicesPerBusiness;
 	}
@@ -145,7 +138,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public Integer getMaxBindingsPerService() {
 		return this.maxBindingsPerService;
 	}
-
 	public void setMaxBindingsPerService(Integer maxBindingsPerService) {
 		this.maxBindingsPerService = maxBindingsPerService;
 	}
@@ -154,7 +146,6 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	public Integer getMaxTmodels() {
 		return this.maxTmodels;
 	}
-
 	public void setMaxTmodels(Integer maxTmodels) {
 		this.maxTmodels = maxTmodels;
 	}

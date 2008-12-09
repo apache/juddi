@@ -933,9 +933,9 @@ public class ValidatePublish {
 		if (publisher == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NullInput"));
 		
-		String publisherId = publisher.getPublisherId();
-		if (publisherId == null || publisherId.length() == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherId"));
+		String authorizedName = publisher.getAuthorizedName();
+		if (authorizedName == null || authorizedName.length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoAuthorizedName"));
 	
 		String publisherName = publisher.getPublisherName();
 		if (publisherName == null || publisherName.length() == 0)

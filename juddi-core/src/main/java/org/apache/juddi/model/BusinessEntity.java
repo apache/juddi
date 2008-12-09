@@ -80,7 +80,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "publisher_id", nullable = false)
+	@JoinColumn(name = "authorized_name", nullable = false)
 	public UddiEntityPublisher getPublisher() {
 		return this.publisher;
 	}
@@ -169,13 +169,13 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.businessDescrs = businessDescrs;
 	}
 
-	public String retrievePublisherId() {
-		return getPublisher().getPublisherId();
+	public String retrieveAuthorizedName() {
+		return getPublisher().getAuthorizedName();
 	}
-	public void assignPublisherId(String id) {
-		if (id != null) {
+	public void assignAuthorizedName(String authName) {
+		if (authName != null) {
 			Publisher pub = new Publisher();
-			pub.setPublisherId(id);
+			pub.setAuthorizedName(authName);
 			this.setPublisher(pub);
 		}
 	}

@@ -51,17 +51,17 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public abstract class UddiEntityPublisher {
 	
 
-	protected String publisherId;
+	protected String authorizedName;
 	protected Set<KeyGeneratorKey> keyGeneratorKeys = new HashSet<KeyGeneratorKey>(0);
 
 	@Id
-	@Column(name = "publisher_id", nullable = false, length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
+	@Column(name = "authorized_name", nullable = false, length = 20)
+	public String getAuthorizedName() {
+		return this.authorizedName;
 	}
 
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setAuthorizedName(String authorizedName) {
+		this.authorizedName = authorizedName;
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "publisher")
@@ -73,7 +73,7 @@ public abstract class UddiEntityPublisher {
 		this.keyGeneratorKeys = keyGeneratorKeys;
 	}
 	public void addKeyGeneratorKey(String keygenTModelKey) {
-		KeyGeneratorKeyId keyGenKeyId = new KeyGeneratorKeyId(this.publisherId, this.keyGeneratorKeys.size());
+		KeyGeneratorKeyId keyGenKeyId = new KeyGeneratorKeyId(this.authorizedName, this.keyGeneratorKeys.size());
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey(keyGenKeyId, this, keygenTModelKey);
 		keyGeneratorKeys.add(keyGenKey);
 	}
@@ -90,7 +90,7 @@ public abstract class UddiEntityPublisher {
 	public boolean isOwner(UddiEntity entity){
 		boolean ret = false;
 		if (entity != null) {
-			if (entity.retrievePublisherId().equals(this.publisherId))
+			if (entity.retrieveAuthorizedName().equals(this.authorizedName))
 				ret = true;
 		}
 		return ret;
@@ -154,8 +154,8 @@ public abstract class UddiEntityPublisher {
 		DynamicQuery checkTokensQry = new DynamicQuery();
 		checkTokensQry.append("select k.keygenTModelKey from KeyGeneratorKey k ");
 
-		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("k.id.publisherId", 
-																	 this.publisherId, 
+		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("k.id.authorizedName", 
+																	 this.authorizedName, 
 																	 DynamicQuery.PREDICATE_NOTEQUALS);
 		checkTokensQry.WHERE().pad().appendGroupedAnd(pubParam).pad();
 		checkTokensQry.AND().pad();

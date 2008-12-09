@@ -68,7 +68,7 @@ public class Publisher {
     @XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
     protected List<SignatureType> signature;
     @XmlAttribute
-    protected String publisherId;
+    protected String authorizedName;
 
     
     /**
@@ -184,17 +184,17 @@ public class Publisher {
 	}
 
 	/**
-	 * @return the publisherId
+	 * @return the authorizedName
 	 */
-	public String getPublisherId() {
-		return publisherId;
+	public String getAuthorizedName() {
+		return authorizedName;
 	}
 
 	/**
-	 * @param publisherId the publisherId to set
+	 * @param authorizedName the authorizedName to set
 	 */
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setAuthorizedName(String authorizedName) {
+		this.authorizedName = authorizedName;
 	}
 
 	/**

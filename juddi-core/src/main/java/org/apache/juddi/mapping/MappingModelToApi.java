@@ -37,7 +37,7 @@ public class MappingModelToApi {
 									org.apache.juddi.api.datatype.Publisher apiPublisher) 
 				   throws DispositionReportFaultMessage {
 
-		apiPublisher.setPublisherId(modelPublisher.getPublisherId());
+		apiPublisher.setAuthorizedName(modelPublisher.getAuthorizedName());
 		apiPublisher.setPublisherName(modelPublisher.getPublisherName());
 		apiPublisher.setEmailAddress(modelPublisher.getEmailAddress());
 		apiPublisher.setIsAdmin(modelPublisher.getIsAdmin());

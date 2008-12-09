@@ -127,11 +127,10 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.bindingDescrs = bindingDescrs;
 	}
 
-	public String retrievePublisherId() {
-		return this.getBusinessService().getBusinessEntity().getPublisher().getPublisherId();
+	public String retrieveAuthorizedName() {
+		return this.getBusinessService().getBusinessEntity().getPublisher().getAuthorizedName();
 	}
-	public void assignPublisherId(String id) {
+	public void assignAuthorizedName(String id) {
 		// Do nothing, the publisher id is set in the parent.
 	}
-
 }

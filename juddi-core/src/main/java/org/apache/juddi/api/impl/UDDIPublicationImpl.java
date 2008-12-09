@@ -384,7 +384,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
-			modelBindingTemplate.assignPublisherId(publisher.getPublisherId());
+			modelBindingTemplate.assignAuthorizedName(publisher.getAuthorizedName());
 			em.persist(modelBindingTemplate);
 			
 			result.getBindingTemplate().add(apiBindingTemplate);
@@ -421,7 +421,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
-			modelBusinessEntity.assignPublisherId(publisher.getPublisherId());
+			modelBusinessEntity.assignAuthorizedName(publisher.getAuthorizedName());
 			em.persist(modelBusinessEntity);
 
 			result.getBusinessEntity().add(apiBusinessEntity);
@@ -460,7 +460,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
-			modelBusinessService.assignPublisherId(publisher.getPublisherId());
+			modelBusinessService.assignAuthorizedName(publisher.getAuthorizedName());
 			em.persist(modelBusinessService);
 			
 			result.getBusinessService().add(apiBusinessService);
@@ -497,7 +497,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			
-			modelTModel.assignPublisherId(publisher.getPublisherId());
+			modelTModel.assignAuthorizedName(publisher.getAuthorizedName());
 			em.persist(modelTModel);
 			
 			result.getTModel().add(apiTModel);
@@ -585,7 +585,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
 			
-			Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getPublisherId());
+			Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
 			if (existingUddiEntity != null)
 				em.remove(existingUddiEntity);
 			

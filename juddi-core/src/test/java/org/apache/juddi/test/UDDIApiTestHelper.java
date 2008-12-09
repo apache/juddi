@@ -70,7 +70,7 @@ public class UDDIApiTestHelper {
 		
 		MappingApiToModel.mapTModel(apiTModel, modelTModel);
 		
-		modelTModel.assignPublisherId(ROOT_PUBLISHER);
+		modelTModel.assignAuthorizedName(ROOT_PUBLISHER);
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -80,7 +80,7 @@ public class UDDIApiTestHelper {
 		
 		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, ROOT_PUBLISHER);
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
-		keyGenKey.setId(new KeyGeneratorKeyId(rootPublisher.getPublisherId(), 0));
+		keyGenKey.setId(new KeyGeneratorKeyId(rootPublisher.getAuthorizedName(), 0));
 		keyGenKey.setPublisher(rootPublisher);
 		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
 		rootPublisher.getKeyGeneratorKeys().add(keyGenKey);

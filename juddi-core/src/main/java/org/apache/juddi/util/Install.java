@@ -144,7 +144,7 @@ public class Install {
 
 		// TODO:  What if user configures a different authenticator?  Passing no credentials will not work.
 		org.uddi.api_v3.GetAuthToken gat = new org.uddi.api_v3.GetAuthToken();
-		gat.setUserID(publisher.getPublisherId());
+		gat.setUserID(publisher.getAuthorizedName());
 		org.uddi.api_v3.AuthToken authToken = security.getAuthToken(gat);
 		
 		org.uddi.api_v3.SaveBusiness sb = new org.uddi.api_v3.SaveBusiness();
@@ -210,7 +210,7 @@ public class Install {
 			id = keyGenList.size();
 		
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
-		keyGenKey.setId(new KeyGeneratorKeyId(publisher.getPublisherId(), id));
+		keyGenKey.setId(new KeyGeneratorKeyId(publisher.getAuthorizedName(), id));
 		keyGenKey.setPublisher(publisher);
 		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
 		publisher.getKeyGeneratorKeys().add(keyGenKey);
