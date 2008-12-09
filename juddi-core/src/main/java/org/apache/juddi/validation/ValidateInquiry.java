@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.juddi.api.datatype.GetPublisherDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
@@ -32,6 +34,7 @@ import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.TModelBag;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -41,14 +44,19 @@ import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.error.InvalidCombinationException;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.util.FindQualifiers;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class ValidateInquiry {
+public class ValidateInquiry extends ValidateUDDIApi {
 
-	public static void validateGetPublisherDetail(GetPublisherDetail body) throws DispositionReportFaultMessage {
+	public ValidateInquiry(UddiEntityPublisher publisher) {
+		super(publisher);
+	}
+
+	public void validateGetPublisherDetail(GetPublisherDetail body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -67,7 +75,7 @@ public class ValidateInquiry {
 		}
 	}
 	
-	public static void validateGetBusinessDetail(GetBusinessDetail body) throws DispositionReportFaultMessage {
+	public void validateGetBusinessDetail(GetBusinessDetail body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -86,7 +94,7 @@ public class ValidateInquiry {
 		}
 	}
 	
-	public static void validateGetServiceDetail(GetServiceDetail body) throws DispositionReportFaultMessage {
+	public void validateGetServiceDetail(GetServiceDetail body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -105,7 +113,7 @@ public class ValidateInquiry {
 		}
 	}
 	
-	public static void validateGetBindingDetail(GetBindingDetail body) throws DispositionReportFaultMessage {
+	public void validateGetBindingDetail(GetBindingDetail body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -124,7 +132,7 @@ public class ValidateInquiry {
 		}
 	}
 	
-	public static void validateGetTModelDetail(GetTModelDetail body) throws DispositionReportFaultMessage {
+	public void validateGetTModelDetail(GetTModelDetail body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -143,7 +151,7 @@ public class ValidateInquiry {
 		}
 	}
 	
-	public static void validateFindBusiness(FindBusiness body) throws DispositionReportFaultMessage  {
+	public void validateFindBusiness(FindBusiness body) throws DispositionReportFaultMessage  {
 		// No null input
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
@@ -156,13 +164,13 @@ public class ValidateInquiry {
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
 		validateFindRelatedBusinesses(body.getFindRelatedBusinesses(), true);
-		ValidatePublish.validateDiscoveryUrls(body.getDiscoveryURLs());
-		ValidatePublish.validateIdentifierBag(body.getIdentifierBag());
-		ValidatePublish.validateCategoryBag(body.getCategoryBag());
+		validateDiscoveryUrls(body.getDiscoveryURLs());
+		validateIdentifierBag(body.getIdentifierBag());
+		validateCategoryBag(body.getCategoryBag());
 		
 	}
 	
-	public static void validateFindService(FindService body) throws DispositionReportFaultMessage  {
+	public void validateFindService(FindService body) throws DispositionReportFaultMessage  {
 		// No null input
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
@@ -173,11 +181,11 @@ public class ValidateInquiry {
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
-		ValidatePublish.validateCategoryBag(body.getCategoryBag());
+		validateCategoryBag(body.getCategoryBag());
 		
 	}
 	
-	public static void validateFindBinding(FindBinding body) throws DispositionReportFaultMessage  {
+	public void validateFindBinding(FindBinding body) throws DispositionReportFaultMessage  {
 		// No null input
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
@@ -188,12 +196,12 @@ public class ValidateInquiry {
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
-		ValidatePublish.validateCategoryBag(body.getCategoryBag());
+		validateCategoryBag(body.getCategoryBag());
 		
 		
 	}
 	
-	public static void validateFindTModel(FindTModel body, boolean nullAllowed) throws DispositionReportFaultMessage  {
+	public void validateFindTModel(FindTModel body, boolean nullAllowed) throws DispositionReportFaultMessage  {
 		if (body == null) {
 			// When FindTModel objects are embedded in other find calls, null is allowed.
 			if (nullAllowed)
@@ -206,11 +214,11 @@ public class ValidateInquiry {
 			throw new FatalErrorException(new ErrorMessage("errors.findtmodel.NoInput"));
 
 		validateFindQualifiers(body.getFindQualifiers());
-		ValidatePublish.validateIdentifierBag(body.getIdentifierBag());
-		ValidatePublish.validateCategoryBag(body.getCategoryBag());
+		validateIdentifierBag(body.getIdentifierBag());
+		validateCategoryBag(body.getCategoryBag());
 	}
 	
-	public static void validateFindRelatedBusinesses(FindRelatedBusinesses body, boolean nullAllowed) throws DispositionReportFaultMessage  {
+	public void validateFindRelatedBusinesses(FindRelatedBusinesses body, boolean nullAllowed) throws DispositionReportFaultMessage  {
 		if (body == null) {
 			// When FindRelatedBusinesses objects are embedded in other find calls, null is allowed.
 			if (nullAllowed)
@@ -251,7 +259,7 @@ public class ValidateInquiry {
 			
 	}
 	
-	public static void validateTModelBag(TModelBag tmodelBag) throws DispositionReportFaultMessage {
+	public void validateTModelBag(TModelBag tmodelBag) throws DispositionReportFaultMessage {
 		// tmodelBag is optional
 		if (tmodelBag == null)
 			return;
@@ -261,7 +269,73 @@ public class ValidateInquiry {
 		
 	}
 	
-	private static void validateFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws DispositionReportFaultMessage {
+	public void validateDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs discUrls) throws DispositionReportFaultMessage {
+		// Discovery Urls is optional
+		if (discUrls == null)
+			return;
+
+		// If discUrls does exist, it must have at least one element
+		List<org.uddi.api_v3.DiscoveryURL> discUrlList = discUrls.getDiscoveryURL();
+		if (discUrlList == null || discUrlList.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.discurls.NoInput"));
+	}	
+	
+	public void validateCategoryBag(org.uddi.api_v3.CategoryBag categories) throws DispositionReportFaultMessage {
+		
+		// Category bag is optional
+		if (categories == null)
+			return;
+		
+		// If category bag does exist, it must have at least one element
+		List<JAXBElement<?>> elems = categories.getContent();
+		if (elems == null || elems.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
+		
+		for (JAXBElement<?> elem : elems) {
+			validateKeyedReferenceTypes(elem);
+		}
+	}
+
+	public void validateIdentifierBag(org.uddi.api_v3.IdentifierBag identifiers) throws DispositionReportFaultMessage {
+		
+		// Identifier bag is optional
+		if (identifiers == null)
+			return;
+		
+		// If category bag does exist, it must have at least one element
+		List<org.uddi.api_v3.KeyedReference> keyedRefList = identifiers.getKeyedReference();
+		if (keyedRefList == null || keyedRefList.size() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.identifierbag.NoInput"));
+		
+		for (org.uddi.api_v3.KeyedReference keyedRef : keyedRefList) {
+			validateKeyedReferenceTypes(new ObjectFactory().createKeyedReference(keyedRef));
+		}
+	}
+	
+	public void validateKeyedReferenceTypes(JAXBElement<?> elem) throws DispositionReportFaultMessage {
+		if (elem == null || elem.getValue() == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
+		
+		// Keyed reference groups must contain a tModelKey
+		if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
+			org.uddi.api_v3.KeyedReferenceGroup krg = (org.uddi.api_v3.KeyedReferenceGroup)elem.getValue();
+			if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		}
+		// Keyed references must contain a tModelKey and keyValue
+		else if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
+			org.uddi.api_v3.KeyedReference kr = (org.uddi.api_v3.KeyedReference)elem.getValue();
+			if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+			
+			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
+			
+		}
+	}
+	
+	
+	private void validateFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws DispositionReportFaultMessage {
 		if (findQualifiers == null)
 			return;
 		

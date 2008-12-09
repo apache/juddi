@@ -82,7 +82,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateAddPublisherAssertions(em, publisher, body);		
+		new ValidatePublish(publisher).validateAddPublisherAssertions(em, body);
 
 		List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = body.getPublisherAssertion();
 		for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
@@ -145,7 +145,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateDeleteBinding(em, publisher, body);
+		new ValidatePublish(publisher).validateDeleteBinding(em, body);
 		
 		List<String> entityKeyList = body.getBindingKey();
 		for (String entityKey : entityKeyList) {
@@ -166,7 +166,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-		ValidatePublish.validateDeleteBusiness(em, publisher, body);
+		new ValidatePublish(publisher).validateDeleteBusiness(em, body);
 		
 		List<String> entityKeyList = body.getBusinessKey();
 		for (String entityKey : entityKeyList) {
@@ -187,7 +187,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-		ValidatePublish.validateDeletePublisherAssertions(em, publisher, body);
+		new ValidatePublish(publisher).validateDeletePublisherAssertions(em, body);
 		
 		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
 		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
@@ -209,7 +209,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateDeleteService(em, publisher, body);
+		new ValidatePublish(publisher).validateDeleteService(em, body);
 		
 		List<String> entityKeyList = body.getServiceKey();
 		for (String entityKey : entityKeyList) {
@@ -231,7 +231,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-		ValidatePublish.validateDeleteTModel(em, publisher, body);
+		new ValidatePublish(publisher).validateDeleteTModel(em, body);
 
 		// tModels are only lazily deleted!
 		List<String> entityKeyList = body.getTModelKey();
@@ -367,7 +367,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateSaveBinding(em, publisher, body);
+		new ValidatePublish(publisher).validateSaveBinding(em, body);
 
 		BindingDetail result = new BindingDetail();
 		
@@ -406,7 +406,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateSaveBusiness(em, publisher, body);
+		new ValidatePublish(publisher).validateSaveBusiness(em, body);
 
 		BusinessDetail result = new BusinessDetail();
 		
@@ -443,7 +443,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateSaveService(em, publisher, body);
+		new ValidatePublish(publisher).validateSaveService(em, body);
 		
 		ServiceDetail result = new ServiceDetail();
 
@@ -482,7 +482,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-		ValidatePublish.validateSaveTModel(em, publisher, body);
+		new ValidatePublish(publisher).validateSaveTModel(em, body);
 
 		TModelDetail result = new TModelDetail();
 
@@ -520,7 +520,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 		
-		ValidatePublish.validateSetPublisherAssertions(em, publisher, publisherAssertion);
+		new ValidatePublish(publisher).validateSetPublisherAssertions(em, publisherAssertion);
 		
 		List<?> businessKeysFound = null;
 		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
@@ -574,7 +574,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateSavePublisher(em, (Publisher)publisher, body);
+		new ValidatePublish(publisher).validateSavePublisher(em, (Publisher)publisher, body);
 		
 		PublisherDetail result = new PublisherDetail();
 
@@ -612,7 +612,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		ValidatePublish.validateDeletePublisher(em, (Publisher)publisher, body);
+		new ValidatePublish(publisher).validateDeletePublisher(em, (Publisher)publisher, body);
 
 		List<String> entityKeyList = body.getPublisherId();
 		for (String entityKey : entityKeyList) {

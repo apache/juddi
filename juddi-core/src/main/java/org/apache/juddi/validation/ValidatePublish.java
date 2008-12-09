@@ -43,6 +43,7 @@ import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.util.Constants;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
@@ -56,9 +57,13 @@ import org.apache.juddi.error.UserMismatchException;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class ValidatePublish {
+public class ValidatePublish extends ValidateUDDIApi {
 
-	public static void validateDeleteBusiness(EntityManager em, UddiEntityPublisher publisher, DeleteBusiness body) throws DispositionReportFaultMessage {
+	public ValidatePublish(UddiEntityPublisher publisher) {
+		super(publisher);
+	}
+
+	public void validateDeleteBusiness(EntityManager em, DeleteBusiness body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -85,7 +90,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateDeleteService(EntityManager em, UddiEntityPublisher publisher, DeleteService body) throws DispositionReportFaultMessage {
+	public void validateDeleteService(EntityManager em, DeleteService body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -112,7 +117,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateDeleteBinding(EntityManager em, UddiEntityPublisher publisher, DeleteBinding body) throws DispositionReportFaultMessage {
+	public void validateDeleteBinding(EntityManager em, DeleteBinding body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -140,7 +145,7 @@ public class ValidatePublish {
 		}
 	}
 	
-	public static void validateDeleteTModel(EntityManager em, UddiEntityPublisher publisher, DeleteTModel body) throws DispositionReportFaultMessage {
+	public void validateDeleteTModel(EntityManager em, DeleteTModel body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -170,7 +175,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateDeletePublisherAssertions(EntityManager em, UddiEntityPublisher publisher, DeletePublisherAssertions body) throws DispositionReportFaultMessage {
+	public void validateDeletePublisherAssertions(EntityManager em, DeletePublisherAssertions body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -183,7 +188,7 @@ public class ValidatePublish {
 
 		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
 			
-			validatePublisherAssertion(em, publisher, entity);
+			validatePublisherAssertion(em, entity);
 			
 			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
 			Object obj = em.find(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
@@ -206,7 +211,7 @@ public class ValidatePublish {
 	}
 
 	
-	public static void validateSaveBusiness(EntityManager em, UddiEntityPublisher publisher, SaveBusiness body) throws DispositionReportFaultMessage {
+	public void validateSaveBusiness(EntityManager em, SaveBusiness body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -218,11 +223,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savebusiness.NoInput"));
 		
 		for (org.uddi.api_v3.BusinessEntity entity : entityList) {
-			validateBusinessEntity(em, publisher, entity);
+			validateBusinessEntity(em, entity);
 		}
 	}
 	
-	public static void validateSaveService(EntityManager em, UddiEntityPublisher publisher, SaveService body) throws DispositionReportFaultMessage {
+	public void validateSaveService(EntityManager em, SaveService body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -235,11 +240,11 @@ public class ValidatePublish {
 		
 		for (org.uddi.api_v3.BusinessService entity : entityList) {
 			// Entity specific data validation
-			validateBusinessService(em, publisher, entity, null);
+			validateBusinessService(em, entity, null);
 		}
 	}
 	
-	public static void validateSaveBinding(EntityManager em, UddiEntityPublisher publisher, SaveBinding body) throws DispositionReportFaultMessage {
+	public void validateSaveBinding(EntityManager em, SaveBinding body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -251,11 +256,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savebinding.NoInput"));
 		
 		for (org.uddi.api_v3.BindingTemplate entity : entityList) {
-			validateBindingTemplate(em, publisher, entity, null);
+			validateBindingTemplate(em, entity, null);
 		}
 	}
 
-	public static void validateSaveTModel(EntityManager em, UddiEntityPublisher publisher, SaveTModel body) throws DispositionReportFaultMessage {
+	public void validateSaveTModel(EntityManager em, SaveTModel body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -267,11 +272,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savetmodel.NoInput"));
 		
 		for (org.uddi.api_v3.TModel entity : entityList) {
-			validateTModel(em, publisher, entity);
+			validateTModel(em, entity);
 		}
 	}
 
-	public static void validateAddPublisherAssertions(EntityManager em, UddiEntityPublisher publisher, AddPublisherAssertions body) throws DispositionReportFaultMessage {
+	public void validateAddPublisherAssertions(EntityManager em, AddPublisherAssertions body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -283,11 +288,11 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.addpublisherassertions.NoInput"));
 		
 		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-			validatePublisherAssertion(em, publisher, entity);
+			validatePublisherAssertion(em, entity);
 		}
 	}
 	
-	public static void validateSetPublisherAssertions(EntityManager em, UddiEntityPublisher publisher, Holder<List<org.uddi.api_v3.PublisherAssertion>> body) throws DispositionReportFaultMessage {
+	public void validateSetPublisherAssertions(EntityManager em, Holder<List<org.uddi.api_v3.PublisherAssertion>> body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -298,13 +303,13 @@ public class ValidatePublish {
 		if (entityList != null && entityList.size() > 0) {
 		
 			for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-				validatePublisherAssertion(em, publisher, entity);
+				validatePublisherAssertion(em, entity);
 			}
 		}
 	}
 
 	
-	public static void validateBusinessEntity(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
+	public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
 		
 		// A supplied businessService can't be null
 		if (businessEntity == null)
@@ -351,11 +356,11 @@ public class ValidatePublish {
 		validateCategoryBag(businessEntity.getCategoryBag());
 		validateIdentifierBag(businessEntity.getIdentifierBag());
 
-		validateBusinessServices(em, publisher, businessEntity.getBusinessServices(), businessEntity);
+		validateBusinessServices(em, businessEntity.getBusinessServices(), businessEntity);
 		
 	}
 
-	public static void validateBusinessServices(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessServices businessServices, org.uddi.api_v3.BusinessEntity parent) 
+	public void validateBusinessServices(EntityManager em, org.uddi.api_v3.BusinessServices businessServices, org.uddi.api_v3.BusinessEntity parent) 
 					throws DispositionReportFaultMessage {
 		// Business services is optional
 		if (businessServices == null)
@@ -366,12 +371,12 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.businessservices.NoInput"));
 		
 		for (org.uddi.api_v3.BusinessService businessService : businessServiceList) {
-			validateBusinessService(em, publisher, businessService, parent);
+			validateBusinessService(em, businessService, parent);
 		}
 			
 	}
 
-	public static void validateBusinessService(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent) 
+	public void validateBusinessService(EntityManager em, org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent) 
 					throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -479,12 +484,12 @@ public class ValidatePublish {
 			validateNames(businessService.getName());
 			validateCategoryBag(businessService.getCategoryBag());
 			
-			validateBindingTemplates(em, publisher, businessService.getBindingTemplates(), businessService);
+			validateBindingTemplates(em, businessService.getBindingTemplates(), businessService);
 		}
 		
 	}
 
-	public static void validateBindingTemplates(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BindingTemplates bindingTemplates, org.uddi.api_v3.BusinessService parent) 
+	public void validateBindingTemplates(EntityManager em, org.uddi.api_v3.BindingTemplates bindingTemplates, org.uddi.api_v3.BusinessService parent) 
 					throws DispositionReportFaultMessage {
 		// Binding templates is optional
 		if (bindingTemplates == null)
@@ -495,12 +500,12 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.bindingtemplates.NoInput"));
 	
 		for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
-			validateBindingTemplate(em, publisher, bindingTemplate, parent);
+			validateBindingTemplate(em, bindingTemplate, parent);
 		}
 	
 	}
 	
-	public static void validateBindingTemplate(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent) 
+	public void validateBindingTemplate(EntityManager em, org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent) 
 					throws DispositionReportFaultMessage {
 
 		// A supplied bindingTemplate can't be null
@@ -594,7 +599,7 @@ public class ValidatePublish {
 		
 	}
 
-	public static void validateTModel(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
+	public void validateTModel(EntityManager em, org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
 		// A supplied tModel can't be null
 		if (tModel == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NullInput"));
@@ -663,7 +668,7 @@ public class ValidatePublish {
 
 	}
 	
-	public static void validatePublisherAssertion(EntityManager em, UddiEntityPublisher publisher, org.uddi.api_v3.PublisherAssertion pubAssertion) throws DispositionReportFaultMessage {
+	public void validatePublisherAssertion(EntityManager em, org.uddi.api_v3.PublisherAssertion pubAssertion) throws DispositionReportFaultMessage {
 		// A supplied publisher assertion can't be null
 		if (pubAssertion == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.NullInput"));
@@ -700,14 +705,14 @@ public class ValidatePublish {
 			
 	}
 	
-	public static void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {
+	public void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {
 		// At least one name is required
 		if (names == null || names.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.names.NoInput"));
 		
 	}
 	
-	public static void validateContacts(org.uddi.api_v3.Contacts contacts) throws DispositionReportFaultMessage {
+	public void validateContacts(org.uddi.api_v3.Contacts contacts) throws DispositionReportFaultMessage {
 		// Contacts is optional
 		if (contacts == null)
 			return;
@@ -723,7 +728,7 @@ public class ValidatePublish {
 		
 	}
 
-	public static void validateContact(org.uddi.api_v3.Contact contact) throws DispositionReportFaultMessage {
+	public void validateContact(org.uddi.api_v3.Contact contact) throws DispositionReportFaultMessage {
 		// A supplied contact can't be null
 		if (contact == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.contact.NullInput"));
@@ -744,7 +749,7 @@ public class ValidatePublish {
 		}
 	}
 	
-	public static void validateDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs discUrls) throws DispositionReportFaultMessage {
+	public void validateDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs discUrls) throws DispositionReportFaultMessage {
 		// Discovery Urls is optional
 		if (discUrls == null)
 			return;
@@ -755,7 +760,7 @@ public class ValidatePublish {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.discurls.NoInput"));
 	}	
 	
-	public static void validateCategoryBag(org.uddi.api_v3.CategoryBag categories) throws DispositionReportFaultMessage {
+	public void validateCategoryBag(org.uddi.api_v3.CategoryBag categories) throws DispositionReportFaultMessage {
 		
 		// Category bag is optional
 		if (categories == null)
@@ -771,7 +776,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateIdentifierBag(org.uddi.api_v3.IdentifierBag identifiers) throws DispositionReportFaultMessage {
+	public void validateIdentifierBag(org.uddi.api_v3.IdentifierBag identifiers) throws DispositionReportFaultMessage {
 		
 		// Identifier bag is optional
 		if (identifiers == null)
@@ -788,7 +793,7 @@ public class ValidatePublish {
 	}
 	
 	
-	public static void validateKeyedReferenceTypes(JAXBElement<?> elem) throws DispositionReportFaultMessage {
+	public void validateKeyedReferenceTypes(JAXBElement<?> elem) throws DispositionReportFaultMessage {
 		if (elem == null || elem.getValue() == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
 		
@@ -806,10 +811,16 @@ public class ValidatePublish {
 			
 			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
+			
+			// Per section 6.2.2.1 of the specification, no publishers (except the root) are allowed to use the node categorization tmodelKey
+			if (Constants.NODE_CATEGORY_TMODEL.equalsIgnoreCase(kr.getTModelKey())) {
+				if (!Constants.ROOT_PUBLISHER.equals(publisher.getAuthorizedName()))
+					throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NodeCategoryTModel", Constants.NODE_CATEGORY_TMODEL));
+			}
 		}
 	}
 
-	public static void validateTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails tmodelInstDetails) throws DispositionReportFaultMessage {
+	public void validateTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails tmodelInstDetails) throws DispositionReportFaultMessage {
 
 		// tModel Instance Details is optional
 		if (tmodelInstDetails == null)
@@ -825,7 +836,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateTModelInstanceInfo(org.uddi.api_v3.TModelInstanceInfo tmodelInstInfo) throws DispositionReportFaultMessage {
+	public void validateTModelInstanceInfo(org.uddi.api_v3.TModelInstanceInfo tmodelInstInfo) throws DispositionReportFaultMessage {
 		// tModel Instance Info can't be null
 		if (tmodelInstInfo == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodelinstinfo.NullInput"));
@@ -838,7 +849,7 @@ public class ValidatePublish {
 		
 	}
 
-	public static void validateInstanceDetails(org.uddi.api_v3.InstanceDetails instDetails) throws DispositionReportFaultMessage {
+	public void validateInstanceDetails(org.uddi.api_v3.InstanceDetails instDetails) throws DispositionReportFaultMessage {
 		// Instance Details is optional
 		if (instDetails == null)
 			return;
@@ -866,7 +877,7 @@ public class ValidatePublish {
 
 	}
 	
-	public static void validateOverviewDoc(org.uddi.api_v3.OverviewDoc overviewDoc) throws DispositionReportFaultMessage {
+	public void validateOverviewDoc(org.uddi.api_v3.OverviewDoc overviewDoc) throws DispositionReportFaultMessage {
 		// OverviewDoc can't be null
 		if (overviewDoc == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.overviewdoc.NullInput"));
@@ -881,7 +892,7 @@ public class ValidatePublish {
 	 Publisher functions are specific to jUDDI.
 	 --------------------------------------------------------------------*/
 	
-	public static void validateDeletePublisher(EntityManager em, Publisher publisher, DeletePublisher body) throws DispositionReportFaultMessage {
+	public void validateDeletePublisher(EntityManager em, Publisher publisher, DeletePublisher body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -908,7 +919,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validateSavePublisher(EntityManager em, Publisher publisher, SavePublisher body) throws DispositionReportFaultMessage {
+	public void validateSavePublisher(EntityManager em, Publisher publisher, SavePublisher body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -927,7 +938,7 @@ public class ValidatePublish {
 		}
 	}
 
-	public static void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
+	public void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (publisher == null)

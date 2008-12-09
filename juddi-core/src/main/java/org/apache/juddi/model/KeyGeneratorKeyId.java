@@ -45,7 +45,7 @@ public class KeyGeneratorKeyId implements java.io.Serializable {
 		this.authorizedName = publisherId;
 	}
 
-	@Column(name = "category_id", nullable = false)
+	@Column(name = "keygenerator_id", nullable = false)
 	public int getKeygeneratorId() {
 		return this.keygeneratorId;
 	}

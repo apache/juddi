@@ -37,7 +37,6 @@ public abstract class EntityQuery {
 	private static Logger log = Logger.getLogger(EntityQuery.class);
 
 	public static final String KEY_NAME = "entityKey";
-	public static final String GENERAL_KEYWORD_TMODEL = "uddi:uddi-org:general_keywords";
 
 	public static final int DEFAULT_MAXROWS = 100;
 	public static final int DEFAULT_MAXINCLAUSE = 1000;

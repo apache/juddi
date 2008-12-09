@@ -96,7 +96,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			modelAuthToken.setAuthToken(authInfo);
 			modelAuthToken.setCreated(new Date());
 			modelAuthToken.setLastUsed(new Date());
-			modelAuthToken.setPublisherId(publisherId);
+			modelAuthToken.setAuthorizedName(publisherId);
 			modelAuthToken.setPublisherName(publisher.getPublisherName());
 			modelAuthToken.setNumberOfUses(0);
 			modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);

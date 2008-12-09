@@ -15,17 +15,33 @@
  *
  */
 
- package org.apache.juddi.validation;
+package org.apache.juddi.validation;
 
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class ValidateSubscriptionListener extends ValidateUDDIApi {
+public abstract class ValidateUDDIApi {
 
-	public ValidateSubscriptionListener(UddiEntityPublisher publisher) {
-		super(publisher);
+	protected UddiEntityPublisher publisher;
+		
+	public ValidateUDDIApi(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
 	}
 
+	public UddiEntityPublisher getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
+	}
+	
+	public static void unsupportedAPICall() throws DispositionReportFaultMessage {
+		throw new UnsupportedException(new ErrorMessage("errors.Unsupported"));
+	}
 }

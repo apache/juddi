@@ -33,7 +33,7 @@ public class AuthToken implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String authToken;
-	private String publisherId;
+	private String authorizedName;
 	private String publisherName;
 	private Date created;
 	private Date lastUsed;
@@ -43,11 +43,11 @@ public class AuthToken implements java.io.Serializable {
 	public AuthToken() {
 	}
 
-	public AuthToken(String authToken, String publisherId,
+	public AuthToken(String authToken, String authorizedName,
 			String publisherName, Date created, Date lastUsed,
 			int numberOfUses, int tokenState) {
 		this.authToken = authToken;
-		this.publisherId = publisherId;
+		this.authorizedName = authorizedName;
 		this.publisherName = publisherName;
 		this.created = created;
 		this.lastUsed = lastUsed;
@@ -60,66 +60,56 @@ public class AuthToken implements java.io.Serializable {
 	public String getAuthToken() {
 		return this.authToken;
 	}
-
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
 
-	@Column(name = "publisher_id", nullable = false, length = 20)
-	public String getPublisherId() {
-		return this.publisherId;
+	@Column(name = "authorized_name", nullable = false, length = 20)
+	public String getAuthorizedName() {
+		return this.authorizedName;
 	}
-
-	public void setPublisherId(String publisherId) {
-		this.publisherId = publisherId;
+	public void setAuthorizedName(String authorizedName) {
+		this.authorizedName = authorizedName;
 	}
 
 	@Column(name = "publisher_name", nullable = false)
-
 	public String getPublisherName() {
 		return this.publisherName;
 	}
-
 	public void setPublisherName(String publisherName) {
 		this.publisherName = publisherName;
 	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created", nullable = false, length = 29)
-
 	public Date getCreated() {
 		return this.created;
 	}
-
 	public void setCreated(Date created) {
 		this.created = created;
 	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_used", nullable = false, length = 29)
-
 	public Date getLastUsed() {
 		return this.lastUsed;
 	}
-
 	public void setLastUsed(Date lastUsed) {
 		this.lastUsed = lastUsed;
 	}
 
 	@Column(name = "number_of_uses", nullable = false)
-
 	public int getNumberOfUses() {
 		return this.numberOfUses;
 	}
-
 	public void setNumberOfUses(int numberOfUses) {
 		this.numberOfUses = numberOfUses;
 	}
 
 	@Column(name = "token_state", nullable = false)
-
 	public int getTokenState() {
 		return this.tokenState;
 	}
-
 	public void setTokenState(int tokenState) {
 		this.tokenState = tokenState;
 	}

@@ -15,17 +15,18 @@
  *
  */
 
-package org.apache.juddi.util;
+package org.apache.juddi.error;
 
 /**
- * Contains all the system constants
+ * E_unsupported: (10050) Signifies that the implementer does not support a feature or API.
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class Constants {
-	public static final String ROOT_PUBLISHER = "root";
-	public static final String UDDI_PUBLISHER = "uddi";
-	
-	public static final String GENERAL_KEYWORD_TMODEL = "uddi:uddi-org:general_keywords";
-	public static final String NODE_CATEGORY_TMODEL = "uddi:uddi.org:categorization:nodes";
+public class UnsupportedException extends RegistryException {
+
+	private static final long serialVersionUID = 1L;
+
+	public UnsupportedException(ErrorMessage message) {
+		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_UNSUPPORTED));
+	}
 }

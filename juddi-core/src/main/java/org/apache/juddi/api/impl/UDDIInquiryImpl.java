@@ -81,7 +81,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindBinding(body);
+		new ValidateInquiry(null).validateFindBinding(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -128,7 +128,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindBusiness(body);
+		new ValidateInquiry(null).validateFindBusiness(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -202,7 +202,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) 
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindRelatedBusinesses(body, false);
+		new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -304,7 +304,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindService(body);
+		new ValidateInquiry(null).validateFindService(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -353,7 +353,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateFindTModel(body, false);
+		new ValidateInquiry(null).validateFindTModel(body, false);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -397,7 +397,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public BindingDetail getBindingDetail(GetBindingDetail body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateGetBindingDetail(body);
+		new ValidateInquiry(null).validateGetBindingDetail(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -431,7 +431,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public BusinessDetail getBusinessDetail(GetBusinessDetail body)
 			throws DispositionReportFaultMessage {
 		
-		ValidateInquiry.validateGetBusinessDetail(body);
+		new ValidateInquiry(null).validateGetBusinessDetail(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -471,7 +471,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateGetServiceDetail(body);
+		new ValidateInquiry(null).validateGetServiceDetail(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -505,7 +505,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public TModelDetail getTModelDetail(GetTModelDetail body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateGetTModelDetail(body);
+		new ValidateInquiry(null).validateGetTModelDetail(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();
@@ -547,7 +547,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
 			throws DispositionReportFaultMessage {
 
-		ValidateInquiry.validateGetPublisherDetail(body);
+		new ValidateInquiry(null).validateGetPublisherDetail(body);
 		
 		// TODO: Perform necessary authentication logic
 		String authInfo = body.getAuthInfo();

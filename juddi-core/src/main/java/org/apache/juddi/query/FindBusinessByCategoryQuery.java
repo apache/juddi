@@ -24,6 +24,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.util.Constants;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.KeyedReferenceGroup;
@@ -32,8 +33,6 @@ import org.uddi.api_v3.KeyedReferenceGroup;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class FindBusinessByCategoryQuery {
-	// TODO:  Move this value somewhere else
-	private static String GENERAL_KEYWORD_TMODEL = "uddi:uddi-org:general_keywords";
 	
 	private static String selectSQL;
 	
@@ -104,7 +103,7 @@ public class FindBusinessByCategoryQuery {
 				keyName = keyName.toUpperCase();
 			}
 			
-			if (GENERAL_KEYWORD_TMODEL.equals(tmodelKey)) {
+			if (Constants.GENERAL_KEYWORD_TMODEL.equalsIgnoreCase(tmodelKey)) {
 				qry.appendGroupedAnd(new DynamicQuery.Parameter("bc.tmodelKeyRef", tmodelKey, DynamicQuery.PREDICATE_EQUALS),
 									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate),
 									 new DynamicQuery.Parameter(keyNameTerm, keyName, predicate));

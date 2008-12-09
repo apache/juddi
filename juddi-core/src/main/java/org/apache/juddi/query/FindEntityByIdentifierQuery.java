@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.query.util.KeyedRefTModelComparator;
+import org.apache.juddi.util.Constants;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.IdentifierBag;
 import org.uddi.api_v3.KeyedReference;
@@ -180,7 +181,7 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 			
 			
 			// According to specification, if the "general keyword" tmodel is used, then the keyName must be part of the query.
-			if (GENERAL_KEYWORD_TMODEL.equals(tmodelKey)) {
+			if (Constants.GENERAL_KEYWORD_TMODEL.equalsIgnoreCase(tmodelKey)) {
 				qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),
 									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate),
 									 new DynamicQuery.Parameter(keyNameTerm, keyName, predicate));
