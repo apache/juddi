@@ -50,7 +50,7 @@
               <containerId>tomcat5x</containerId>
 			  <zipUrlInstaller>
                 <url>
-http://apache.speedbone.de/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.zip
+https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/apache-tomcat-5.5.25.zip
                 </url>
                 <installDir>${installDir}</installDir>
               </zipUrlInstaller>	
