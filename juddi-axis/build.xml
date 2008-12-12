@@ -1,0 +1,7 @@
+<project name="juddi-web" default="package-web" basedir=".">
+	<target name="package-web">
+		<echo>${juddi.jar.path}</echo>
+		<unzip src="${juddi.jar.path}"
+			dest="target/juddi/WEB-INF/classes"/>
+	</target>
+</project>
