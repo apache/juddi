@@ -116,16 +116,11 @@ public class MappingApiToModel {
 			List<org.uddi.api_v3.Contact> apiContactList = apiContacts.getContact();
 			int id = 0;
 			for (org.uddi.api_v3.Contact apiContact : apiContactList) {
-				// TODO: The model only supports one personName per contact and it is just a string value (no language code).
-				List<org.uddi.api_v3.PersonName> apiNameList = apiContact.getPersonName();
-				String personName = null;
-				if (apiNameList != null && apiNameList.size() > 0)
-					personName = ((org.uddi.api_v3.PersonName)apiNameList.get(0)).getValue();
-
 				org.apache.juddi.model.ContactId contactId = new org.apache.juddi.model.ContactId(modelBusinessEntity.getEntityKey(), id++);
-				org.apache.juddi.model.Contact modelContact = new org.apache.juddi.model.Contact(contactId, modelBusinessEntity, personName);
+				org.apache.juddi.model.Contact modelContact = new org.apache.juddi.model.Contact(contactId, modelBusinessEntity);
 				modelContact.setUseType(apiContact.getUseType());
 				
+				mapPersonNames(apiContact.getPersonName(), modelContact.getPersonNames(), modelContact, modelBusinessEntity.getEntityKey());
 				mapContactDescriptions(apiContact.getDescription(), modelContact.getContactDescrs(), modelContact, modelBusinessEntity.getEntityKey());
 				mapContactEmails(apiContact.getEmail(), modelContact.getEmails(), modelContact, modelBusinessEntity.getEntityKey());
 				mapContactPhones(apiContact.getPhone(), modelContact.getPhones(), modelContact, modelBusinessEntity.getEntityKey());
@@ -147,6 +142,20 @@ public class MappingApiToModel {
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			org.apache.juddi.model.ContactDescrId contactDescId = new org.apache.juddi.model.ContactDescrId(businessKey, modelContact.getId().getContactId(), id++);
 			modelDescList.add(new org.apache.juddi.model.ContactDescr(contactDescId, modelContact, apiDesc.getLang(), apiDesc.getValue()));
+		}
+	}
+	
+	public static void mapPersonNames(List<org.uddi.api_v3.PersonName> apiPersonNameList, 
+			  						  Set<org.apache.juddi.model.PersonName> modelPersonNameList,
+			  						  org.apache.juddi.model.Contact modelContact,
+			  						  String businessKey) 
+				throws DispositionReportFaultMessage {
+		modelPersonNameList.clear();
+		
+		int id = 0;
+		for (org.uddi.api_v3.PersonName apiPersonName : apiPersonNameList) {
+		org.apache.juddi.model.PersonNameId personNameId = new org.apache.juddi.model.PersonNameId(businessKey, modelContact.getId().getContactId(), id++);
+		modelPersonNameList.add(new org.apache.juddi.model.PersonName(personNameId, modelContact, apiPersonName.getLang(), apiPersonName.getValue()));
 		}
 	}
 	

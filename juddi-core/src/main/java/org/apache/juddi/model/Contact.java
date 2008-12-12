@@ -41,7 +41,7 @@ public class Contact implements java.io.Serializable {
 	private ContactId id;
 	private BusinessEntity businessEntity;
 	private String useType;
-	private String personName;
+	private Set<PersonName> personNames = new HashSet<PersonName>(0);
 	private Set<ContactDescr> contactDescrs = new HashSet<ContactDescr>(0);
 	private Set<Email> emails = new HashSet<Email>(0);
 	private Set<Phone> phones = new HashSet<Phone>(0);
@@ -50,19 +50,17 @@ public class Contact implements java.io.Serializable {
 	public Contact() {
 	}
 
-	public Contact(ContactId id, BusinessEntity businessEntity,
-			String personName) {
+	public Contact(ContactId id, BusinessEntity businessEntity) {
 		this.id = id;
 		this.businessEntity = businessEntity;
-		this.personName = personName;
 	}
 	public Contact(ContactId id, BusinessEntity businessEntity, String useType,
-			String personName, Set<ContactDescr> contactDescrs,
+			Set<PersonName> personNames, Set<ContactDescr> contactDescrs,
 			Set<Email> emails, Set<Phone> phones, Set<Address> addresses) {
 		this.id = id;
 		this.businessEntity = businessEntity;
 		this.useType = useType;
-		this.personName = personName;
+		this.personNames = personNames;
 		this.contactDescrs = contactDescrs;
 		this.emails = emails;
 		this.phones = phones;
@@ -94,12 +92,13 @@ public class Contact implements java.io.Serializable {
 		this.useType = useType;
 	}
 
-	@Column(name = "person_name", nullable = false)
-	public String getPersonName() {
-		return this.personName;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
+	@OrderBy
+	public Set<PersonName> getPersonNames() {
+		return this.personNames;
 	}
-	public void setPersonName(String personName) {
-		this.personName = personName;
+	public void setPersonNames(Set<PersonName> personNames) {
+		this.personNames = personNames;
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")

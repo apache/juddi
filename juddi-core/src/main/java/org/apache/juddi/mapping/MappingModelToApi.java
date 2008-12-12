@@ -124,11 +124,8 @@ public class MappingModelToApi {
 		for (org.apache.juddi.model.Contact modelContact : modelContactList) {
 			org.uddi.api_v3.Contact apiContact = new org.uddi.api_v3.Contact();
 			apiContact.setUseType(modelContact.getUseType());
-			// TODO: The model only supports one person name, needs to support collection.
-			org.uddi.api_v3.PersonName apiPersonName = new org.uddi.api_v3.PersonName();
-			apiPersonName.setValue(modelContact.getPersonName());
-			apiContact.getPersonName().add(apiPersonName);
 			
+			mapPersonNames(modelContact.getPersonNames(), apiContact.getPersonName());
 			mapContactDescriptions(modelContact.getContactDescrs(), apiContact.getDescription());
 			mapContactEmails(modelContact.getEmails(), apiContact.getEmail());
 			mapContactPhones(modelContact.getPhones(), apiContact.getPhone());
@@ -149,6 +146,19 @@ public class MappingModelToApi {
 			apiDesc.setLang(modelDesc.getLangCode());
 			apiDesc.setValue(modelDesc.getDescr());
 			apiDescList.add(apiDesc);
+		}
+	}
+	
+	public static void mapPersonNames(Set<org.apache.juddi.model.PersonName> modelPersonNameList, 
+			  List<org.uddi.api_v3.PersonName> apiPersonNameList) 
+	throws DispositionReportFaultMessage {
+		apiPersonNameList.clear();
+		
+		for (org.apache.juddi.model.PersonName personName : modelPersonNameList) {
+			org.uddi.api_v3.PersonName apiPersonName = new org.uddi.api_v3.PersonName();
+			apiPersonName.setLang(personName.getLangCode());
+			apiPersonName.setValue(personName.getName());
+			apiPersonNameList.add(apiPersonName);
 		}
 	}
 
