@@ -79,7 +79,7 @@
           <phase>generate-resources</phase>
           <configuration>
             <tasks>
-		<copy file="src/main/resources/version/Release.java"
+		<copy file="src/main/resources/version/Release.java.template"
 			tofile="src/main/java/org/apache/juddi/util/Release.java"
 			overwrite="true">
 			<filterset>
