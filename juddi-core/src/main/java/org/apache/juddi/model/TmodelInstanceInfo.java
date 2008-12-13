@@ -20,9 +20,11 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,7 +39,7 @@ import javax.persistence.Table;
 public class TmodelInstanceInfo implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private TmodelInstanceInfoId id;
+	private Long id;
 	private BindingTemplate bindingTemplate;
 	private String tmodelKey;
 	private String instanceParms;
@@ -48,19 +50,15 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	public TmodelInstanceInfo() {
 	}
 
-	public TmodelInstanceInfo(TmodelInstanceInfoId id,
-			BindingTemplate bindingTemplate, String tmodelKey) {
-		this.id = id;
+	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey) {
 		this.bindingTemplate = bindingTemplate;
 		this.tmodelKey = tmodelKey;
 	}
-	public TmodelInstanceInfo(TmodelInstanceInfoId id,
-			BindingTemplate bindingTemplate, String tmodelKey,
+	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey,
 			String instanceParms,
 			Set<InstanceDetailsDocDescr> instanceDetailsDocDescrs,
 			Set<InstanceDetailsDescr> instanceDetailsDescrs,
 			Set<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
-		this.id = id;
 		this.bindingTemplate = bindingTemplate;
 		this.tmodelKey = tmodelKey;
 		this.instanceParms = instanceParms;
@@ -69,11 +67,12 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;
 	}
 
-	@EmbeddedId
-	public TmodelInstanceInfoId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(TmodelInstanceInfoId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

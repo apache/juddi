@@ -16,9 +16,11 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import javax.persistence.Table;
 public class BusinessDescr implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private BusinessDescrId id;
+	private Long id;
 	private BusinessEntity businessEntity;
 	private String langCode;
 	private String descr;
@@ -40,25 +42,24 @@ public class BusinessDescr implements java.io.Serializable {
 	public BusinessDescr() {
 	}
 
-	public BusinessDescr(BusinessDescrId id, BusinessEntity businessEntity,
+	public BusinessDescr(BusinessEntity businessEntity,
 			String descr) {
-		this.id = id;
 		this.businessEntity = businessEntity;
 		this.descr = descr;
 	}
-	public BusinessDescr(BusinessDescrId id, BusinessEntity businessEntity,
+	public BusinessDescr(BusinessEntity businessEntity,
 			String langCode, String descr) {
-		this.id = id;
 		this.businessEntity = businessEntity;
 		this.langCode = langCode;
 		this.descr = descr;
 	}
 
-	@EmbeddedId
-	public BusinessDescrId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(BusinessDescrId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

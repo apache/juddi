@@ -16,64 +16,63 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "tmodel_category")
-public class TmodelCategory implements java.io.Serializable {
+@Table(name = "keyed_reference")
+public class KeyedReference implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private TmodelCategoryId id;
-	private Tmodel tmodel;
+	private Long id;
+	private CategoryBag categoryBag;
 	private String tmodelKeyRef;
 	private String keyName;
 	private String keyValue;
 
-	public TmodelCategory() {
+	public KeyedReference() {
 	}
 
-	public TmodelCategory(TmodelCategoryId id, Tmodel tmodel, String keyValue) {
-		this.id = id;
-		this.tmodel = tmodel;
+	public KeyedReference(CategoryBag categoryBag, String keyValue) {
+		this.categoryBag = categoryBag;
 		this.keyValue = keyValue;
 	}
-
-	public TmodelCategory(TmodelCategoryId id, Tmodel tmodel,
-			String tmodelKeyRef, String keyName, String keyValue) {
-		this.id = id;
-		this.tmodel = tmodel;
+	public KeyedReference(CategoryBag categoryBag, String tmodelKeyRef,
+			String keyName, String keyValue) {
+		this.categoryBag = categoryBag;
 		this.tmodelKeyRef = tmodelKeyRef;
 		this.keyName = keyName;
 		this.keyValue = keyValue;
 	}
 
-	@EmbeddedId
-	public TmodelCategoryId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(TmodelCategoryId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
-	public Tmodel getTmodel() {
-		return this.tmodel;
+	@JoinColumn(name = "category_bag_id", nullable = false, insertable = false, updatable = false)
+	public CategoryBag getCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setTmodel(Tmodel tmodel) {
-		this.tmodel = tmodel;
+	public void setCategoryBag(CategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 
-	@Column(name = "tmodel_key_ref")
+	@Column(name = "tmodel_key_ref", length = 255)
 	public String getTmodelKeyRef() {
 		return this.tmodelKeyRef;
 	}

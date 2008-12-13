@@ -16,11 +16,12 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -32,7 +33,7 @@ import javax.persistence.Table;
 public class PersonName implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private PersonNameId id;
+	private Long id;
 	private Contact contact;
 	private String langCode;
 	private String name;
@@ -40,31 +41,28 @@ public class PersonName implements java.io.Serializable {
 	public PersonName() {
 	}
 
-	public PersonName(PersonNameId id, Contact contact, String name) {
-		this.id = id;
+	public PersonName(Contact contact, String name) {
 		this.contact = contact;
 		this.name = name;
 	}
-	public PersonName(PersonNameId id, Contact contact, String langCode,
+	public PersonName(Contact contact, String langCode,
 			String name) {
-		this.id = id;
 		this.contact = contact;
 		this.langCode = langCode;
 		this.name = name;
 	}
 
-	@EmbeddedId
-	public PersonNameId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(PersonNameId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false)})
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
 	public Contact getContact() {
 		return this.contact;
 	}

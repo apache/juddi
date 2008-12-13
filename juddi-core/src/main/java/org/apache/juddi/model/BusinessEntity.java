@@ -25,6 +25,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.OrderBy;
 
@@ -44,7 +45,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private Set<DiscoveryUrl> discoveryUrls = new HashSet<DiscoveryUrl>(0);
 	private Set<BusinessName> businessNames = new HashSet<BusinessName>(0);
 	private Set<PublisherAssertion> publisherAssertionsForToKey = new HashSet<PublisherAssertion>(0);
-	private Set<BusinessCategory> businessCategories = new HashSet<BusinessCategory>(0);
+	private BusinessCategoryBag categoryBag = new BusinessCategoryBag();
 	private Set<BusinessService> businessServices = new HashSet<BusinessService>(0);
 	private Set<BusinessDescr> businessDescrs = new HashSet<BusinessDescr>(0);
 
@@ -62,7 +63,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			Set<PublisherAssertion> publisherAssertionsForFromKey,
 			Set<DiscoveryUrl> discoveryUrls, Set<BusinessName> businessNames,
 			Set<PublisherAssertion> publisherAssertionsForToKey,
-			Set<BusinessCategory> businessCategories,
+			BusinessCategoryBag categoryBag,
 			Set<BusinessService> businessServices,
 			Set<BusinessDescr> businessDescrs) {
 		this.entityKey = entityKey;
@@ -74,7 +75,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.discoveryUrls = discoveryUrls;
 		this.businessNames = businessNames;
 		this.publisherAssertionsForToKey = publisherAssertionsForToKey;
-		this.businessCategories = businessCategories;
+		this.categoryBag = categoryBag;
 		this.businessServices = businessServices;
 		this.businessDescrs = businessDescrs;
 	}
@@ -143,13 +144,12 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.publisherAssertionsForToKey = publisherAssertionsForToKey;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
-	@OrderBy
-	public Set<BusinessCategory> getBusinessCategories() {
-		return this.businessCategories;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
+	public BusinessCategoryBag getCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setBusinessCategories(Set<BusinessCategory> businessCategories) {
-		this.businessCategories = businessCategories;
+	public void setCategoryBag(BusinessCategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")

@@ -15,11 +15,18 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -27,29 +34,48 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "category_bag")
+@Inheritance(strategy = InheritanceType.JOINED)
+
 public class CategoryBag implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private CategoryBagId id;
-
+	private Long id;
+	private Set<KeyedReference> keyedReferences = new HashSet<KeyedReference>(0);
+	private Set<KeyedReferenceGroup> keyedReferenceGroups = new HashSet<KeyedReferenceGroup>(0);
+	
 	public CategoryBag() {
 	}
 
-	public CategoryBag(CategoryBagId id) {
+	public CategoryBag(Long id) {
 		this.id = id;
 	}
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "categoryBagKey", column = @Column(name = "category_bag_key", nullable = false, length = 255)),
-			@AttributeOverride(name = "tmodelKeyRef", column = @Column(name = "tmodel_key_ref", length = 255))})
-
-	public CategoryBagId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(CategoryBagId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBag")
+	public Set<KeyedReference> getKeyedReferences() {
+		return keyedReferences;
+	}
+	public void setKeyedReferences(Set<KeyedReference> keyedReferences) {
+		this.keyedReferences = keyedReferences;
+	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBag")
+	public Set<KeyedReferenceGroup> getKeyedReferenceGroups() {
+		return keyedReferenceGroups;
+	}
+	public void setKeyedReferenceGroups(
+			Set<KeyedReferenceGroup> keyedReferenceGroups) {
+		this.keyedReferenceGroups = keyedReferenceGroups;
+	}
+
 
 }

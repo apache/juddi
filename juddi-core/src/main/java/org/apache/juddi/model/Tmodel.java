@@ -26,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -44,7 +45,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private Set<TmodelDescr> tmodelDescrs = new HashSet<TmodelDescr>(0);
 	private Set<TmodelDocDescr> tmodelDocDescrs = new HashSet<TmodelDocDescr>(0);
 	private Set<TmodelIdentifier> tmodelIdentifiers = new HashSet<TmodelIdentifier>(0);
-	private Set<TmodelCategory> tmodelCategories = new HashSet<TmodelCategory>(0);
+	private TmodelCategoryBag categoryBag = new TmodelCategoryBag();
 
 	public Tmodel() {
 	}
@@ -58,7 +59,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 			String name, String langCode, boolean deleted, Date lastUpdate,
 			Set<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
 			Set<TmodelIdentifier> tmodelIdentifiers,
-			Set<TmodelCategory> tmodelCategories) {
+			TmodelCategoryBag categoryBag) {
 		this.entityKey = entityKey;
 		this.publisher = publisher;
 		this.name = name;
@@ -68,7 +69,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.tmodelDescrs = tmodelDescrs;
 		this.tmodelDocDescrs = tmodelDocDescrs;
 		this.tmodelIdentifiers = tmodelIdentifiers;
-		this.tmodelCategories = tmodelCategories;
+		this.categoryBag = categoryBag;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -128,12 +129,12 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.tmodelIdentifiers = tmodelIdentifiers;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
-	public Set<TmodelCategory> getTmodelCategories() {
-		return this.tmodelCategories;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
+	public TmodelCategoryBag getCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setTmodelCategories(Set<TmodelCategory> tmodelCategories) {
-		this.tmodelCategories = tmodelCategories;
+	public void setCategoryBag(TmodelCategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 
 	public String retrieveAuthorizedName() {

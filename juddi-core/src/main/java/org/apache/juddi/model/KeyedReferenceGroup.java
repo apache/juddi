@@ -15,7 +15,6 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,26 +26,22 @@ import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "discovery_url")
-public class DiscoveryUrl implements java.io.Serializable {
+@Table(name = "keyed_reference_group")
+public class KeyedReferenceGroup implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private BusinessEntity businessEntity;
-	private String useType;
-	private String url;
+	private CategoryBag categoryBag;
+	
 
-	public DiscoveryUrl() {
+	public KeyedReferenceGroup() {
 	}
 
-	public DiscoveryUrl(BusinessEntity businessEntity,
-			String useType, String url) {
-		this.businessEntity = businessEntity;
-		this.useType = useType;
-		this.url = url;
+	public KeyedReferenceGroup(CategoryBag categoryBag, String keyValue) {
+		this.categoryBag = categoryBag;
+	
 	}
 
 	@Id
@@ -59,28 +54,12 @@ public class DiscoveryUrl implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
-	public BusinessEntity getBusinessEntity() {
-		return this.businessEntity;
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
+	public CategoryBag getCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setBusinessEntity(BusinessEntity businessEntity) {
-		this.businessEntity = businessEntity;
-	}
-
-	@Column(name = "use_type", nullable = false)
-	public String getUseType() {
-		return this.useType;
-	}
-	public void setUseType(String useType) {
-		this.useType = useType;
-	}
-
-	@Column(name = "url", nullable = false)
-	public String getUrl() {
-		return this.url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setCategoryBag(CategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 
 }

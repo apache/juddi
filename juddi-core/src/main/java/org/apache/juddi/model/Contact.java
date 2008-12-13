@@ -20,9 +20,11 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,7 +40,7 @@ import javax.persistence.OrderBy;
 public class Contact implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ContactId id;
+	private Long id;
 	private BusinessEntity businessEntity;
 	private String useType;
 	private Set<PersonName> personNames = new HashSet<PersonName>(0);
@@ -50,14 +52,12 @@ public class Contact implements java.io.Serializable {
 	public Contact() {
 	}
 
-	public Contact(ContactId id, BusinessEntity businessEntity) {
-		this.id = id;
+	public Contact(BusinessEntity businessEntity) {
 		this.businessEntity = businessEntity;
 	}
-	public Contact(ContactId id, BusinessEntity businessEntity, String useType,
+	public Contact(BusinessEntity businessEntity, String useType,
 			Set<PersonName> personNames, Set<ContactDescr> contactDescrs,
 			Set<Email> emails, Set<Phone> phones, Set<Address> addresses) {
-		this.id = id;
 		this.businessEntity = businessEntity;
 		this.useType = useType;
 		this.personNames = personNames;
@@ -67,11 +67,12 @@ public class Contact implements java.io.Serializable {
 		this.addresses = addresses;
 	}
 
-	@EmbeddedId
-	public ContactId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(ContactId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -25,6 +25,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -40,7 +41,7 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	private Set<ServiceName> serviceNames = new HashSet<ServiceName>(0);
 	private Set<ServiceDescr> serviceDescrs = new HashSet<ServiceDescr>(0);
 	private Set<BindingTemplate> bindingTemplates = new HashSet<BindingTemplate>(0);
-	private Set<ServiceCategory> serviceCategories = new HashSet<ServiceCategory>(0);
+	private ServiceCategoryBag categoryBag = new ServiceCategoryBag();
 
 	public BusinessService() {
 	}
@@ -53,14 +54,14 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate,
 			Set<ServiceName> serviceNames, Set<ServiceDescr> serviceDescrs,
 			Set<BindingTemplate> bindingTemplates,
-			Set<ServiceCategory> serviceCategories) {
+			ServiceCategoryBag categoryBag) {
 		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
 		this.lastUpdate = lastUpdate;
 		this.serviceNames = serviceNames;
 		this.serviceDescrs = serviceDescrs;
 		this.bindingTemplates = bindingTemplates;
-		this.serviceCategories = serviceCategories;
+		this.categoryBag = categoryBag;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -96,12 +97,12 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 		this.bindingTemplates = bindingTemplates;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
-	public Set<ServiceCategory> getServiceCategories() {
-		return this.serviceCategories;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
+	public ServiceCategoryBag getCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setServiceCategories(Set<ServiceCategory> serviceCategories) {
-		this.serviceCategories = serviceCategories;
+	public void setCategoryBag(ServiceCategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 
 	public String retrieveAuthorizedName() {

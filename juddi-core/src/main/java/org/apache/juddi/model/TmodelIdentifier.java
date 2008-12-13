@@ -16,9 +16,11 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import javax.persistence.Table;
 public class TmodelIdentifier implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private TmodelIdentifierId id;
+	private Long id;
 	private Tmodel tmodel;
 	private String tmodelKeyRef;
 	private String keyName;
@@ -41,27 +43,26 @@ public class TmodelIdentifier implements java.io.Serializable {
 	public TmodelIdentifier() {
 	}
 
-	public TmodelIdentifier(TmodelIdentifierId id, Tmodel tmodel,
+	public TmodelIdentifier(Tmodel tmodel,
 			String keyValue) {
-		this.id = id;
 		this.tmodel = tmodel;
 		this.keyValue = keyValue;
 	}
 
-	public TmodelIdentifier(TmodelIdentifierId id, Tmodel tmodel,
+	public TmodelIdentifier(Tmodel tmodel,
 			String tmodelKeyRef, String keyName, String keyValue) {
-		this.id = id;
 		this.tmodel = tmodel;
 		this.tmodelKeyRef = tmodelKeyRef;
 		this.keyName = keyName;
 		this.keyValue = keyValue;
 	}
 
-	@EmbeddedId
-	public TmodelIdentifierId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(TmodelIdentifierId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

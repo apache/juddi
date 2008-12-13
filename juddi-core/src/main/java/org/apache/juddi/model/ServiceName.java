@@ -16,9 +16,11 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import javax.persistence.Table;
 public class ServiceName implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ServiceNameId id;
+	private Long id;
 	private BusinessService businessService;
 	private String langCode;
 	private String name;
@@ -40,25 +42,23 @@ public class ServiceName implements java.io.Serializable {
 	public ServiceName() {
 	}
 
-	public ServiceName(ServiceNameId id, BusinessService businessService,
-			String name) {
-		this.id = id;
+	public ServiceName(BusinessService businessService, String name) {
 		this.businessService = businessService;
 		this.name = name;
 	}
-	public ServiceName(ServiceNameId id, BusinessService businessService,
+	public ServiceName(BusinessService businessService,
 			String langCode, String name) {
-		this.id = id;
 		this.businessService = businessService;
 		this.langCode = langCode;
 		this.name = name;
 	}
 
-	@EmbeddedId
-	public ServiceNameId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(ServiceNameId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

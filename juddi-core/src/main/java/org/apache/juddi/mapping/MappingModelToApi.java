@@ -60,7 +60,7 @@ public class MappingModelToApi {
 		mapDiscoveryUrls(modelBusinessEntity.getDiscoveryUrls(), apiBusinessEntity.getDiscoveryURLs(), apiBusinessEntity);
 		mapContacts(modelBusinessEntity.getContacts(), apiBusinessEntity.getContacts(), apiBusinessEntity);
 		mapBusinessIdentifiers(modelBusinessEntity.getBusinessIdentifiers(), apiBusinessEntity.getIdentifierBag(), apiBusinessEntity);
-		mapBusinessCategories(modelBusinessEntity.getBusinessCategories(), apiBusinessEntity.getCategoryBag(), apiBusinessEntity);
+		apiBusinessEntity.setCategoryBag(mapCategoryBag(modelBusinessEntity.getCategoryBag(), apiBusinessEntity.getCategoryBag()));
 		
 		mapBusinessServices(modelBusinessEntity.getBusinessServices(), apiBusinessEntity.getBusinessServices(), apiBusinessEntity);
 	
@@ -239,29 +239,6 @@ public class MappingModelToApi {
 		}
 		apiBusinessEntity.setIdentifierBag(apiIdentifierBag);
 	}
-	
-	public static void mapBusinessCategories(Set<org.apache.juddi.model.BusinessCategory> modelCategoryList, 
-											 org.uddi.api_v3.CategoryBag apiCategoryBag,
-											 org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
-				   throws DispositionReportFaultMessage {
-		if (apiCategoryBag == null)
-			apiCategoryBag = new org.uddi.api_v3.CategoryBag();
-
-		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-		apiCategoryList.clear();
-
-		for (org.apache.juddi.model.BusinessCategory modelCategory : modelCategoryList) {
-			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-			// the KeyedReferenceGroups are ignored.
-
-			org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();
-			apiKeyedRef.setTModelKey(modelCategory.getTmodelKeyRef());
-			apiKeyedRef.setKeyName(modelCategory.getKeyName());
-			apiKeyedRef.setKeyValue(modelCategory.getKeyValue());
-			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedRef));
-		}
-		apiBusinessEntity.setCategoryBag(apiCategoryBag);
-	}
 
 	public static void mapBusinessServices(Set<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
 										   org.uddi.api_v3.BusinessServices apiBusinessServices,
@@ -292,7 +269,7 @@ public class MappingModelToApi {
 		mapServiceNames(modelBusinessService.getServiceNames(), apiBusinessService.getName());
 		mapServiceDescriptions(modelBusinessService.getServiceDescrs(), apiBusinessService.getDescription());
 
-		mapServiceCategories(modelBusinessService.getServiceCategories(), apiBusinessService.getCategoryBag(), apiBusinessService);
+		apiBusinessService.setCategoryBag(mapCategoryBag(modelBusinessService.getCategoryBag(), apiBusinessService.getCategoryBag()));
 
 	}
 
@@ -320,29 +297,6 @@ public class MappingModelToApi {
 			apiDesc.setValue(modelDesc.getDescr());
 			apiDescList.add(apiDesc);
 		}
-	}
-	
-	public static void mapServiceCategories(Set<org.apache.juddi.model.ServiceCategory> modelCategoryList, 
-											org.uddi.api_v3.CategoryBag apiCategoryBag,
-											org.uddi.api_v3.BusinessService apiBusinessService) 
-				   throws DispositionReportFaultMessage {
-		if (apiCategoryBag == null)
-			apiCategoryBag = new org.uddi.api_v3.CategoryBag();
-
-		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-		apiCategoryList.clear();
-
-		for (org.apache.juddi.model.ServiceCategory modelCategory : modelCategoryList) {
-			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-			// the KeyedReferenceGroups are ignored.
-
-			org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();
-			apiKeyedRef.setTModelKey(modelCategory.getTmodelKeyRef());
-			apiKeyedRef.setKeyName(modelCategory.getKeyName());
-			apiKeyedRef.setKeyValue(modelCategory.getKeyValue());
-			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedRef));
-		}
-		apiBusinessService.setCategoryBag(apiCategoryBag);
 	}
 
 	public static void mapBindingTemplates(Set<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList, 
@@ -380,7 +334,7 @@ public class MappingModelToApi {
 
 		mapBindingDescriptions(modelBindingTemplate.getBindingDescrs(), apiBindingTemplate.getDescription());
 
-		mapBindingCategories(modelBindingTemplate.getBindingCategories(), apiBindingTemplate.getCategoryBag(), apiBindingTemplate);
+		apiBindingTemplate.setCategoryBag(mapCategoryBag(modelBindingTemplate.getBindingTemplateCategoryBag(), apiBindingTemplate.getCategoryBag()));
 
 	}
 
@@ -397,9 +351,8 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapBindingCategories(Set<org.apache.juddi.model.BindingCategory> modelCategoryList, 
-											org.uddi.api_v3.CategoryBag apiCategoryBag,
-											org.uddi.api_v3.BindingTemplate apiBindingTemplate) 
+	public static org.uddi.api_v3.CategoryBag mapCategoryBag(org.apache.juddi.model.CategoryBag modelCategoryBag, 
+											org.uddi.api_v3.CategoryBag apiCategoryBag) 
 				   throws DispositionReportFaultMessage {
 		if (apiCategoryBag == null)
 			apiCategoryBag = new org.uddi.api_v3.CategoryBag();
@@ -407,17 +360,18 @@ public class MappingModelToApi {
 		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
 		apiCategoryList.clear();
 
-		for (org.apache.juddi.model.BindingCategory modelCategory : modelCategoryList) {
-			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-			// the KeyedReferenceGroups are ignored.
-
+		for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
 			org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();
-			apiKeyedRef.setTModelKey(modelCategory.getTmodelKeyRef());
-			apiKeyedRef.setKeyName(modelCategory.getKeyName());
-			apiKeyedRef.setKeyValue(modelCategory.getKeyValue());
+			apiKeyedRef.setTModelKey(modelKeyedReference.getTmodelKeyRef());
+			apiKeyedRef.setKeyName(modelKeyedReference.getKeyName());
+			apiKeyedRef.setKeyValue(modelKeyedReference.getKeyValue());
 			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedRef));
 		}
-		apiBindingTemplate.setCategoryBag(apiCategoryBag);
+		for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
+			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
+			// the KeyedReferenceGroups are ignored.
+		}
+		return apiCategoryBag;
 	}
 
 	public static void mapTModelInstanceDetails(Set<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList, 
@@ -494,7 +448,7 @@ public class MappingModelToApi {
 		mapTModelDescriptions(modelTModel.getTmodelDescrs(), apiTModel.getDescription());
 
 		mapTModelIdentifiers(modelTModel.getTmodelIdentifiers(), apiTModel.getIdentifierBag(), apiTModel);
-		mapTModelCategories(modelTModel.getTmodelCategories(), apiTModel.getCategoryBag(), apiTModel);
+		apiTModel.setCategoryBag(mapCategoryBag(modelTModel.getCategoryBag(), apiTModel.getCategoryBag()));
 		//TODO: OverviewDoc - model doesn't have logical mapping
 		apiTModel.getOverviewDoc();
 
@@ -531,29 +485,6 @@ public class MappingModelToApi {
 			apiKeyedRefList.add(apiKeyedRef);
 		}
 		apiTModel.setIdentifierBag(apiIdentifierBag);
-	}
-	
-	public static void mapTModelCategories(Set<org.apache.juddi.model.TmodelCategory> modelCategoryList, 
-										   org.uddi.api_v3.CategoryBag apiCategoryBag,
-										   org.uddi.api_v3.TModel apiTModel) 
-				   throws DispositionReportFaultMessage {
-		if (apiCategoryBag == null)
-			apiCategoryBag = new org.uddi.api_v3.CategoryBag();
-
-		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-		apiCategoryList.clear();
-
-		for (org.apache.juddi.model.TmodelCategory modelCategory : modelCategoryList) {
-			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-			// the KeyedReferenceGroups are ignored.
-
-			org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();
-			apiKeyedRef.setTModelKey(modelCategory.getTmodelKeyRef());
-			apiKeyedRef.setKeyName(modelCategory.getKeyName());
-			apiKeyedRef.setKeyValue(modelCategory.getKeyValue());
-			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedRef));
-		}
-		apiTModel.setCategoryBag(apiCategoryBag);
 	}
 
 	public static void mapBusinessInfo(org.apache.juddi.model.BusinessEntity modelBusinessEntity, 

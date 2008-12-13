@@ -16,11 +16,12 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,7 +34,7 @@ import javax.persistence.Table;
 public class InstanceDetailsDocDescr implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private InstanceDetailsDocDescrId id;
+	private Long id;
 	private TmodelInstanceInfo tmodelInstanceInfo;
 	private String langCode;
 	private String descr;
@@ -41,14 +42,14 @@ public class InstanceDetailsDocDescr implements java.io.Serializable {
 	public InstanceDetailsDocDescr() {
 	}
 
-	public InstanceDetailsDocDescr(InstanceDetailsDocDescrId id,
+	public InstanceDetailsDocDescr(Long id,
 			TmodelInstanceInfo tmodelInstanceInfo, String descr) {
 		this.id = id;
 		this.tmodelInstanceInfo = tmodelInstanceInfo;
 		this.descr = descr;
 	}
 
-	public InstanceDetailsDocDescr(InstanceDetailsDocDescrId id,
+	public InstanceDetailsDocDescr(Long id,
 			TmodelInstanceInfo tmodelInstanceInfo, String langCode, String descr) {
 		this.id = id;
 		this.tmodelInstanceInfo = tmodelInstanceInfo;
@@ -56,18 +57,17 @@ public class InstanceDetailsDocDescr implements java.io.Serializable {
 		this.descr = descr;
 	}
 
-	@EmbeddedId
-	public InstanceDetailsDocDescrId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(InstanceDetailsDocDescrId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "instance_info_id", referencedColumnName = "instance_info_id", nullable = false, insertable = false, updatable = false)})
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
 	public TmodelInstanceInfo getTmodelInstanceInfo() {
 		return this.tmodelInstanceInfo;
 	}

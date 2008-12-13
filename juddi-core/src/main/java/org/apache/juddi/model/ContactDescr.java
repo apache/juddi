@@ -16,11 +16,12 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,7 +34,7 @@ import javax.persistence.Table;
 public class ContactDescr implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ContactDescrId id;
+	private Long id;
 	private Contact contact;
 	private String langCode;
 	private String descr;
@@ -41,31 +42,28 @@ public class ContactDescr implements java.io.Serializable {
 	public ContactDescr() {
 	}
 
-	public ContactDescr(ContactDescrId id, Contact contact, String descr) {
-		this.id = id;
+	public ContactDescr(Contact contact, String descr) {
 		this.contact = contact;
 		this.descr = descr;
 	}
-	public ContactDescr(ContactDescrId id, Contact contact, String langCode,
+	public ContactDescr(Contact contact, String langCode,
 			String descr) {
-		this.id = id;
 		this.contact = contact;
 		this.langCode = langCode;
 		this.descr = descr;
 	}
 
-	@EmbeddedId
-	public ContactDescrId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(ContactDescrId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false)})
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
 	public Contact getContact() {
 		return this.contact;
 	}

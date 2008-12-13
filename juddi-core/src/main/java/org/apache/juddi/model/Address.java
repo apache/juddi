@@ -17,15 +17,14 @@ package org.apache.juddi.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -39,7 +38,7 @@ import javax.persistence.Table;
 public class Address implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private AddressId id;
+	private Long id;
 	private Contact contact;
 	private String useType;
 	private String sortCode;
@@ -49,13 +48,11 @@ public class Address implements java.io.Serializable {
 	public Address() {
 	}
 
-	public Address(AddressId id, Contact contact) {
-		this.id = id;
+	public Address(Contact contact) {
 		this.contact = contact;
 	}
-	public Address(AddressId id, Contact contact, String useType,
+	public Address(Long id, Contact contact, String useType,
 			String sortCode, String tmodelKey, Set<AddressLine> addressLines) {
-		this.id = id;
 		this.contact = contact;
 		this.useType = useType;
 		this.sortCode = sortCode;
@@ -63,18 +60,17 @@ public class Address implements java.io.Serializable {
 		this.addressLines = addressLines;
 	}
 
-	@EmbeddedId
-	public AddressId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(AddressId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false)})
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
 	public Contact getContact() {
 		return this.contact;
 	}

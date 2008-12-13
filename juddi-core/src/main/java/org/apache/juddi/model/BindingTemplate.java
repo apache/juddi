@@ -26,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -41,7 +42,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	private String accessPointType;
 	private String accessPointUrl;
 	private String hostingRedirector;
-	private Set<BindingCategory> bindingCategories = new HashSet<BindingCategory>(0);
+	private BindingCategoryBag categoryBag = new BindingCategoryBag();
 	private Set<TmodelInstanceInfo> tmodelInstanceInfos = new HashSet<TmodelInstanceInfo>(0);
 	private Set<BindingDescr> bindingDescrs = new HashSet<BindingDescr>(0);
 
@@ -55,7 +56,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 	public BindingTemplate(String entityKey, BusinessService businessService, String accessPointType,
 			String accessPointUrl, String hostingRedirector, Date lastUpdate,
-			Set<BindingCategory> bindingCategories,
+			BindingCategoryBag categoryBag,
 			Set<TmodelInstanceInfo> tmodelInstanceInfos,
 			Set<BindingDescr> bindingDescrs) {
 		this.entityKey = entityKey;
@@ -64,7 +65,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.accessPointUrl = accessPointUrl;
 		this.hostingRedirector = hostingRedirector;
 		this.lastUpdate = lastUpdate;
-		this.bindingCategories = bindingCategories;
+		this.categoryBag = categoryBag;
 		this.tmodelInstanceInfos = tmodelInstanceInfos;
 		this.bindingDescrs = bindingDescrs;
 	}
@@ -101,13 +102,13 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	public void setHostingRedirector(String hostingRedirector) {
 		this.hostingRedirector = hostingRedirector;
 	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
-	public Set<BindingCategory> getBindingCategories() {
-		return this.bindingCategories;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
+	public BindingCategoryBag getBindingTemplateCategoryBag() {
+		return this.categoryBag;
 	}
-	public void setBindingCategories(Set<BindingCategory> bindingCategories) {
-		this.bindingCategories = bindingCategories;
+	public void setBindingTemplateCategoryBag(BindingCategoryBag categoryBag) {
+		this.categoryBag = categoryBag;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")

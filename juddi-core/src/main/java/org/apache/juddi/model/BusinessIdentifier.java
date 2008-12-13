@@ -16,9 +16,11 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import javax.persistence.Table;
 public class BusinessIdentifier implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private BusinessIdentifierId id;
+	private Long id;
 	private BusinessEntity businessEntity;
 	private String tmodelKeyRef;
 	private String keyName;
@@ -41,27 +43,24 @@ public class BusinessIdentifier implements java.io.Serializable {
 	public BusinessIdentifier() {
 	}
 
-	public BusinessIdentifier(BusinessIdentifierId id,
-			BusinessEntity businessEntity, String keyValue) {
-		this.id = id;
+	public BusinessIdentifier(BusinessEntity businessEntity, String keyValue) {
 		this.businessEntity = businessEntity;
 		this.keyValue = keyValue;
 	}
-	public BusinessIdentifier(BusinessIdentifierId id,
-			BusinessEntity businessEntity, String tmodelKeyRef, String keyName,
+	public BusinessIdentifier(BusinessEntity businessEntity, String tmodelKeyRef, String keyName,
 			String keyValue) {
-		this.id = id;
 		this.businessEntity = businessEntity;
 		this.tmodelKeyRef = tmodelKeyRef;
 		this.keyName = keyName;
 		this.keyValue = keyValue;
 	}
 
-	@EmbeddedId
-	public BusinessIdentifierId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(BusinessIdentifierId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

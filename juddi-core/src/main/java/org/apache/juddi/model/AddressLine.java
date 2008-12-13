@@ -16,11 +16,12 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,7 +34,7 @@ import javax.persistence.Table;
 public class AddressLine implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private AddressLineId id;
+	private Long id;
 	private Address address;
 	private String line;
 	private String keyName;
@@ -42,33 +43,29 @@ public class AddressLine implements java.io.Serializable {
 	public AddressLine() {
 	}
 
-	public AddressLine(AddressLineId id, Address address, String line) {
-		this.id = id;
+	public AddressLine(Address address, String line) {
 		this.address = address;
 		this.line = line;
 	}
-	public AddressLine(AddressLineId id, Address address, String line,
+	public AddressLine(Address address, String line,
 			String keyName, String keyValue) {
-		this.id = id;
 		this.address = address;
 		this.line = line;
 		this.keyName = keyName;
 		this.keyValue = keyValue;
 	}
 
-	@EmbeddedId
-	public AddressLineId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(AddressLineId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "entity_key", referencedColumnName = "entity_key", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "contact_id", referencedColumnName = "contact_id", nullable = false, insertable = false, updatable = false),
-			@JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false, insertable = false, updatable = false)})
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
 	public Address getAddress() {
 		return this.address;
 	}

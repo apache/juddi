@@ -16,39 +16,42 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 @Entity
 @Table(name = "transfer_token_keys")
 public class TransferTokenKey implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private TransferTokenKeyId id;
+	private Long id;
 	private TransferToken transferToken;
 	private String entityKey;
 
 	public TransferTokenKey() {
 	}
 
-	public TransferTokenKey(TransferTokenKeyId id, TransferToken transferToken, String entityKey) {
-		this.id = id;
+	public TransferTokenKey(TransferToken transferToken, String entityKey) {
 		this.transferToken = transferToken;
 		this.entityKey = entityKey;
 	}
 
-	@EmbeddedId
-	public TransferTokenKeyId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(TransferTokenKeyId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
