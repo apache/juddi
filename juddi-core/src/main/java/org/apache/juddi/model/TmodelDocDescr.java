@@ -28,6 +28,7 @@ import javax.persistence.Table;
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
 @Table(name = "tmodel_doc_descr")
@@ -36,20 +37,23 @@ public class TmodelDocDescr implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Tmodel tmodel;
+	private TmodelOverview tmodeloverview;
 	private String langCode;
 	private String descr;
 
 	public TmodelDocDescr() {
 	}
 
-	public TmodelDocDescr(Tmodel tmodel, String descr) {
+	public TmodelDocDescr(Tmodel tmodel, TmodelOverview tmodeloverview, String descr) {
 		this.tmodel = tmodel;
+		this.tmodeloverview = tmodeloverview;
 		this.descr = descr;
 	}
 
-	public TmodelDocDescr(Tmodel tmodel, String langCode,
+	public TmodelDocDescr(Tmodel tmodel, TmodelOverview tmodeloverview, String langCode,
 			String descr) {
 		this.tmodel = tmodel;
+		this.tmodeloverview = tmodeloverview;
 		this.langCode = langCode;
 		this.descr = descr;
 	}
@@ -72,6 +76,15 @@ public class TmodelDocDescr implements java.io.Serializable {
 		this.tmodel = tmodel;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tmodel_doc_descr", nullable = false, insertable = false, updatable = false)
+	public TmodelOverview getTmodeloverview() {
+		return this.tmodeloverview;
+	}
+	public void setTmodeloverview(TmodelOverview tmodeloverview) {
+		this.tmodeloverview = tmodeloverview;
+	}
+	
 	@Column(name = "lang_code", length = 5)
 	public String getLangCode() {
 		return this.langCode;

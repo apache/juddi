@@ -15,13 +15,21 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
 @Table(name = "tmodel_overview")
@@ -29,21 +37,24 @@ public class TmodelOverview implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int tmodelOverviewId;
-	private String tmodelKey;
+	private Tmodel tmodel;
 	private String overviewUrl;
+	private Set<TmodelDocDescr> docDescrs = new HashSet<TmodelDocDescr>(0);
 
 	public TmodelOverview() {
 	}
 
-	public TmodelOverview(int tmodelOverviewId, String tmodelKey) {
+	public TmodelOverview(int tmodelOverviewId, Tmodel tmodel) {
 		this.tmodelOverviewId = tmodelOverviewId;
-		this.tmodelKey = tmodelKey;
+		this.tmodel = tmodel;
 	}
-	public TmodelOverview(int tmodelOverviewId, String tmodelKey,
-			String overviewUrl) {
+	
+	public TmodelOverview(int tmodelOverviewId, Tmodel tmodel,
+			String overviewUrl, Set<TmodelDocDescr> docDescrs) {
 		this.tmodelOverviewId = tmodelOverviewId;
-		this.tmodelKey = tmodelKey;
+		this.tmodel = tmodel;
 		this.overviewUrl = overviewUrl;
+		this.docDescrs = docDescrs;
 	}
 
 	@Id
@@ -57,13 +68,13 @@ public class TmodelOverview implements java.io.Serializable {
 		this.tmodelOverviewId = tmodelOverviewId;
 	}
 
-	@Column(name = "tmodel_key", nullable = false, length = 255)
-	public String getTmodelKey() {
-		return this.tmodelKey;
+	@Column(name = "tmodel", nullable = false, length = 255)
+	public Tmodel getTmodel() {
+		return this.tmodel;
 	}
 
-	public void setTmodelKey(String tmodelKey) {
-		this.tmodelKey = tmodelKey;
+	public void setTmodel(Tmodel tmodel) {
+		this.tmodel = tmodel;
 	}
 
 	@Column(name = "overview_url")
@@ -75,4 +86,13 @@ public class TmodelOverview implements java.io.Serializable {
 		this.overviewUrl = overviewUrl;
 	}
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodeloverview")
+	@OrderBy
+	public Set<TmodelDocDescr> getDocDescriptions() {
+		return this.docDescrs;
+	}
+	
+	public void setDocDescriptions(Set<TmodelDocDescr> docDescrs) {
+		this.docDescrs = docDescrs;
+	}	
 }

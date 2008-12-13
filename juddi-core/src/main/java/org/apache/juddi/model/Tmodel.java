@@ -27,11 +27,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import org.uddi.api_v3.OverviewDoc;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
 @Table(name = "tmodel")
@@ -42,6 +46,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private String name;
 	private String langCode;
 	private boolean deleted;
+	private Set<TmodelOverview> overviewDocs = new HashSet<TmodelOverview>(0);
 	private Set<TmodelDescr> tmodelDescrs = new HashSet<TmodelDescr>(0);
 	private Set<TmodelDocDescr> tmodelDocDescrs = new HashSet<TmodelDocDescr>(0);
 	private Set<TmodelIdentifier> tmodelIdentifiers = new HashSet<TmodelIdentifier>(0);
@@ -57,6 +62,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
+			Set<TmodelOverview> overviewDocs,
 			Set<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
 			Set<TmodelIdentifier> tmodelIdentifiers,
 			TmodelCategoryBag categoryBag) {
@@ -66,6 +72,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.langCode = langCode;
 		this.deleted = deleted;
 		this.lastUpdate = lastUpdate;
+		this.overviewDocs = overviewDocs;
 		this.tmodelDescrs = tmodelDescrs;
 		this.tmodelDocDescrs = tmodelDocDescrs;
 		this.tmodelIdentifiers = tmodelIdentifiers;
@@ -103,6 +110,16 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
+	@OrderBy
+	public Set<TmodelOverview> getOverviewDocs() {
+		return this.overviewDocs;
+	}
+	
+	public void setOverviewDocs(Set<TmodelOverview> overviewDocs) {
+		this.overviewDocs = overviewDocs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
