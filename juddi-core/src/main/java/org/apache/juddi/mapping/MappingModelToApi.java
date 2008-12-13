@@ -361,15 +361,23 @@ public class MappingModelToApi {
 		apiCategoryList.clear();
 
 		for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
-			org.uddi.api_v3.KeyedReference apiKeyedRef = new org.uddi.api_v3.KeyedReference();
-			apiKeyedRef.setTModelKey(modelKeyedReference.getTmodelKeyRef());
-			apiKeyedRef.setKeyName(modelKeyedReference.getKeyName());
-			apiKeyedRef.setKeyValue(modelKeyedReference.getKeyValue());
-			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedRef));
+			org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
+			apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
+			apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
+			apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
+			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedReference));
 		}
 		for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
-			// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-			// the KeyedReferenceGroups are ignored.
+			org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();
+			apiKeyedReferenceGroup.setTModelKey(modelKeyedReferenceGroup.getTmodelKey());
+			for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelKeyedReferenceGroup.getKeyedReferences()) {
+				org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
+				apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
+				apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
+				apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
+				apiKeyedReferenceGroup.getKeyedReference().add(apiKeyedReference);
+			}
+			apiCategoryList.add(new ObjectFactory().createKeyedReferenceGroup(apiKeyedReferenceGroup));
 		}
 		return apiCategoryBag;
 	}

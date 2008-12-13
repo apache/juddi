@@ -15,6 +15,11 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +27,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -34,14 +40,16 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private CategoryBag categoryBag;
+	private String tmodelKey;
+	private Set<KeyedReference> keyedReferences = new HashSet<KeyedReference>(0);
 	
 
 	public KeyedReferenceGroup() {
 	}
 
-	public KeyedReferenceGroup(CategoryBag categoryBag, String keyValue) {
+	public KeyedReferenceGroup(CategoryBag categoryBag, String tmodelKey) {
 		this.categoryBag = categoryBag;
-	
+		this.tmodelKey = tmodelKey;
 	}
 
 	@Id
@@ -52,6 +60,14 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	@Column(name = "tmodel_key", length = 255)
+	public String getTmodelKey() {
+		return this.tmodelKey;
+	}
+	public void setTmodelKey(String tmodelKey) {
+		this.tmodelKey = tmodelKey;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
@@ -60,6 +76,14 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 	}
 	public void setCategoryBag(CategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
+	}
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBag")
+	public Set<KeyedReference> getKeyedReferences() {
+		return keyedReferences;
+	}
+	public void setKeyedReferences(Set<KeyedReference> keyedReferences) {
+		this.keyedReferences = keyedReferences;
 	}
 
 }

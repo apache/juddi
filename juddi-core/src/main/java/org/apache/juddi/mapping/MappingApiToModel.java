@@ -94,7 +94,6 @@ public class MappingApiToModel {
 		
 		if (apiDiscUrls != null) {
 			List<org.uddi.api_v3.DiscoveryURL> apiDiscUrlList = apiDiscUrls.getDiscoveryURL();
-			int id = 0;
 			for (org.uddi.api_v3.DiscoveryURL apiDiscUrl : apiDiscUrlList) {
 				modelDiscUrlList.add(new org.apache.juddi.model.DiscoveryUrl(modelBusinessEntity, apiDiscUrl.getUseType(), apiDiscUrl.getValue()));
 			}
@@ -109,7 +108,6 @@ public class MappingApiToModel {
 		
 		if (apiContacts != null) {
 			List<org.uddi.api_v3.Contact> apiContactList = apiContacts.getContact();
-			int id = 0;
 			for (org.uddi.api_v3.Contact apiContact : apiContactList) {
 				org.apache.juddi.model.Contact modelContact = new org.apache.juddi.model.Contact(modelBusinessEntity);
 				modelContact.setUseType(apiContact.getUseType());
@@ -132,7 +130,6 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			modelDescList.add(new org.apache.juddi.model.ContactDescr(modelContact, apiDesc.getLang(), apiDesc.getValue()));
 		}
@@ -326,24 +323,31 @@ public class MappingApiToModel {
 	public static void mapCategoryBag(org.uddi.api_v3.CategoryBag apiCategoryBag,
 											org.apache.juddi.model.CategoryBag modelCategoryBag)
 				   throws DispositionReportFaultMessage {
-		Set<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
-		modelKeyedReferences.clear();
-		Set<org.apache.juddi.model.KeyedReferenceGroup> modelKeyedReferenceGroups=modelCategoryBag.getKeyedReferenceGroups();
-		modelKeyedReferenceGroups.clear();
 
 		if (apiCategoryBag != null) {
 			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
 			for (JAXBElement<?> elem : apiCategoryList) {
 				
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
+					Set<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
+					modelKeyedReferences.clear();
 					org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference)elem.getValue();
 					modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelCategoryBag, 
-							apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
+						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
 				}
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
+					Set<org.apache.juddi.model.KeyedReferenceGroup> modelKeyedReferenceGroups=modelCategoryBag.getKeyedReferenceGroups();
+					modelKeyedReferenceGroups.clear();
 					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem.getValue();
-					// TODO:  Currently, the model doesn't allow for the persistence of keyedReference groups.  This must be incorporated into the model.  For now
-					// the KeyedReferenceGroups are ignored.
+					org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup = new org.apache.juddi.model.KeyedReferenceGroup(modelCategoryBag,apiKeyedReferenceGroup.getTModelKey());
+					modelKeyedReferenceGroups.add(modelKeyedReferenceGroup);
+					if (apiKeyedReferenceGroup.getKeyedReference() != null) {
+						Set<org.apache.juddi.model.KeyedReference> modelKeyedReferences = modelKeyedReferenceGroup.getKeyedReferences();
+						for (org.uddi.api_v3.KeyedReference apiKeyedReference : apiKeyedReferenceGroup.getKeyedReference()) {
+							modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelCategoryBag, 
+								apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
+						}
+					}
 				}
 			}
 		}
@@ -375,7 +379,6 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
-		int id = 0;
 		for (org.uddi.api_v3.Description apiDesc : apiDescList) {
 			modelDescList.add(new org.apache.juddi.model.TmodelInstanceInfoDescr(modelTModelInstInfo, apiDesc.getLang(), apiDesc.getValue()));
 		}
