@@ -87,7 +87,7 @@
 			</filterset>	
 		</copy>
               <copy file="src/main/resources/persistence/${persistence}-persistence.xml" 
-                tofile="target/classes/META-INF/persistence.xml" 
+                tofile="src/main/resources/META-INF/persistence.xml" 
                 overwrite="true"/>
               <delete dir="juddi-derby-test-db"/>
             </tasks>
