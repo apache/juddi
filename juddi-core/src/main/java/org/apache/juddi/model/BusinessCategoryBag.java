@@ -30,6 +30,11 @@ public class BusinessCategoryBag extends CategoryBag {
 	private static final long serialVersionUID = 1L;
 	private BusinessEntity businessEntity;
 	
+	public BusinessCategoryBag(BusinessEntity businessEntity) {
+		super();
+		this.businessEntity = businessEntity;
+	}
+	
 	@OneToOne(optional=false)
     @JoinColumn(name = "business_entity_id")
 	public BusinessEntity getBusinessEntity() {

@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.util;
+package org.apache.juddi.config;
 
 /**
  * Contains all the system constants

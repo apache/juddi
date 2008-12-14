@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Collections;
 import javax.persistence.EntityManager;
 
+import org.apache.juddi.config.Constants;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.query.util.KeyedRefTModelComparator;
-import org.apache.juddi.util.Constants;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.IdentifierBag;
 import org.uddi.api_v3.KeyedReference;

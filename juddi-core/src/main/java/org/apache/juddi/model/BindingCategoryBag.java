@@ -30,6 +30,11 @@ public class BindingCategoryBag extends CategoryBag {
 	private static final long serialVersionUID = 1L;
 	private BindingTemplate bindingTemplate;
 
+	public BindingCategoryBag(BindingTemplate bindingTemplate) {
+		super();
+		this.bindingTemplate = bindingTemplate;
+	} 
+	
 	@OneToOne(optional=false)
     @JoinColumn(name = "binding_template_id")
 	public BindingTemplate getBindingTemplate() {

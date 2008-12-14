@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.util;
+package org.apache.juddi.config;
 
 public class Release {
 	private static final String REGISTRY_VERSION = "@juddi.version@";

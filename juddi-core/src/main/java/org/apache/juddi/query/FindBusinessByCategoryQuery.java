@@ -22,9 +22,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBElement;
 
+import org.apache.juddi.config.Constants;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.juddi.util.Constants;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.KeyedReferenceGroup;

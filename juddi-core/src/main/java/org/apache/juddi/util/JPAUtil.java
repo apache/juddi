@@ -17,9 +17,7 @@
 
 package org.apache.juddi.util;
 
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 
 import javax.persistence.Query;
@@ -31,6 +29,7 @@ import org.apache.juddi.query.PersistenceManager;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class JPAUtil {
+	//TODO Comment from Code Review: This class does not seem to be in use. Do we need it?
 	
 	public static void persistEntity(Object uddiEntity, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();

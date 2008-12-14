@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.util;
+package org.apache.juddi.config;
 
 import java.io.IOException;
 import java.io.InputStream;

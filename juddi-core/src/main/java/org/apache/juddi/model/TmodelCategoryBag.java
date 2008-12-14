@@ -30,6 +30,11 @@ public class TmodelCategoryBag extends CategoryBag {
 	private static final long serialVersionUID = 1L;
 	private Tmodel tmodel;
 	
+	public TmodelCategoryBag(Tmodel tmodel) {
+		super();
+		this.tmodel = tmodel;
+	}
+	
 	@OneToOne(optional=false)
     @JoinColumn(name = "tmodel_id")
 	public Tmodel getTmodel() {

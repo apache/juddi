@@ -162,8 +162,8 @@
 
 <h4>jUDDI Version Information</h4>
 <pre>
-<b>jUDDI Version:</b> <%= org.apache.juddi.util.Release.getRegistryVersion() %>
-<b>UDDI Version:</b>  <%= org.apache.juddi.util.Release.getUDDIVersion() %>
+<b>jUDDI Version:</b> <%=org.apache.juddi.config.Release.getRegistryVersion()%>
+<b>UDDI Version:</b>  <%=org.apache.juddi.config.Release.getUDDIVersion()%>
 </pre>
         
 <h4>jUDDI Dependencies: Class Files &amp; Libraries</h4>

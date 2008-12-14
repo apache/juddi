@@ -37,13 +37,13 @@ import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
+import org.apache.juddi.config.Constants;
 
 import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntity;
-import org.apache.juddi.util.Constants;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;

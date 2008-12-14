@@ -34,8 +34,6 @@ import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
-import org.apache.juddi.util.Constants;
-import org.apache.juddi.util.Install;
 import org.apache.log4j.Logger;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -104,11 +102,9 @@ public class AppConfig
 			try {
 				Install.install();
 			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ConfigurationException(e);
 			} catch (DispositionReportFaultMessage e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ConfigurationException(e);
 			}
 		}
 		tx.commit();
