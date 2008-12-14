@@ -104,10 +104,10 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
-	public BindingCategoryBag getBindingTemplateCategoryBag() {
+	public BindingCategoryBag getCategoryBag() {
 		return this.categoryBag;
 	}
-	public void setBindingTemplateCategoryBag(BindingCategoryBag categoryBag) {
+	public void setCategoryBag(BindingCategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
 	}
 

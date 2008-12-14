@@ -334,7 +334,7 @@ public class MappingModelToApi {
 
 		mapBindingDescriptions(modelBindingTemplate.getBindingDescrs(), apiBindingTemplate.getDescription());
 
-		apiBindingTemplate.setCategoryBag(mapCategoryBag(modelBindingTemplate.getBindingTemplateCategoryBag(), apiBindingTemplate.getCategoryBag()));
+		apiBindingTemplate.setCategoryBag(mapCategoryBag(modelBindingTemplate.getCategoryBag(), apiBindingTemplate.getCategoryBag()));
 
 	}
 

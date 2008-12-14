@@ -35,6 +35,7 @@ public class KeyedReference implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private CategoryBag categoryBag;
+	private KeyedReferenceGroup keyedReferenceGroup;
 	private String tmodelKeyRef;
 	private String keyName;
 	private String keyValue;
@@ -46,6 +47,15 @@ public class KeyedReference implements java.io.Serializable {
 		this.categoryBag = categoryBag;
 		this.keyValue = keyValue;
 	}
+	
+	public KeyedReference(KeyedReferenceGroup keyedReferenceGroup, String tmodelKeyRef,
+			String keyName, String keyValue) {
+		this.keyedReferenceGroup = keyedReferenceGroup;
+		this.tmodelKeyRef = tmodelKeyRef;
+		this.keyName = keyName;
+		this.keyValue = keyValue;
+	}
+	
 	public KeyedReference(CategoryBag categoryBag, String tmodelKeyRef,
 			String keyName, String keyValue) {
 		this.categoryBag = categoryBag;
@@ -64,12 +74,21 @@ public class KeyedReference implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_bag_id", nullable = false)
+	@JoinColumn(name = "category_bag_id", nullable = true)
 	public CategoryBag getCategoryBag() {
 		return this.categoryBag;
 	}
 	public void setCategoryBag(CategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "keyed_reference_group_id", nullable = true)
+	public KeyedReferenceGroup getKeyedReferenceGroup() {
+		return keyedReferenceGroup;
+	}
+	public void setKeyedReferenceGroup(KeyedReferenceGroup keyedReferenceGroup) {
+		this.keyedReferenceGroup = keyedReferenceGroup;
 	}
 
 	@Column(name = "tmodel_key_ref", length = 255)

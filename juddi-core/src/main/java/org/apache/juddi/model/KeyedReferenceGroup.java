@@ -78,7 +78,7 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 		this.categoryBag = categoryBag;
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBag")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "keyedReferenceGroup")
 	public Set<KeyedReference> getKeyedReferences() {
 		return keyedReferences;
 	}
