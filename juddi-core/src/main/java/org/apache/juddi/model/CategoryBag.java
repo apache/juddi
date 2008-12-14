@@ -46,10 +46,6 @@ public class CategoryBag implements java.io.Serializable {
 	public CategoryBag() {
 	}
 
-	public CategoryBag(Long id) {
-		this.id = id;
-	}
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getId() {

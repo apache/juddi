@@ -42,7 +42,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	private String accessPointType;
 	private String accessPointUrl;
 	private String hostingRedirector;
-	private BindingCategoryBag categoryBag = new BindingCategoryBag();
+	private BindingCategoryBag categoryBag;
 	private Set<TmodelInstanceInfo> tmodelInstanceInfos = new HashSet<TmodelInstanceInfo>(0);
 	private Set<BindingDescr> bindingDescrs = new HashSet<BindingDescr>(0);
 

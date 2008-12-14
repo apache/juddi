@@ -50,7 +50,7 @@ public class KeyedReference implements java.io.Serializable {
 	
 	public KeyedReference(KeyedReferenceGroup keyedReferenceGroup, String tmodelKeyRef,
 			String keyName, String keyValue) {
-		this.keyedReferenceGroup = keyedReferenceGroup;
+		//this.keyedReferenceGroup = keyedReferenceGroup;
 		this.tmodelKeyRef = tmodelKeyRef;
 		this.keyName = keyName;
 		this.keyValue = keyValue;
@@ -58,7 +58,7 @@ public class KeyedReference implements java.io.Serializable {
 	
 	public KeyedReference(CategoryBag categoryBag, String tmodelKeyRef,
 			String keyName, String keyValue) {
-		this.categoryBag = categoryBag;
+		//this.categoryBag = categoryBag;
 		this.tmodelKeyRef = tmodelKeyRef;
 		this.keyName = keyName;
 		this.keyValue = keyValue;

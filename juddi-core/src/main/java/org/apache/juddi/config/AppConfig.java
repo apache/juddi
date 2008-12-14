@@ -111,6 +111,9 @@ public class AppConfig
 				e.printStackTrace();
 			}
 		}
+		tx.commit();
+		tx.begin();
+		rootPublisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
 		Set<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
 		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
 			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");

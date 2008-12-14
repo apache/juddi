@@ -77,7 +77,7 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entity_key", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "entity_key", nullable = false)
 	public BindingTemplate getBindingTemplate() {
 		return this.bindingTemplate;
 	}
