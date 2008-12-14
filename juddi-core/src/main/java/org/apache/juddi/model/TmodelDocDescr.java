@@ -68,7 +68,7 @@ public class TmodelDocDescr implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tmodel_key", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "tmodel_key", nullable = false)
 	public Tmodel getTmodel() {
 		return this.tmodel;
 	}

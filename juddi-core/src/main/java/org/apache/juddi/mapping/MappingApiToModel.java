@@ -28,6 +28,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class MappingApiToModel {
 
@@ -58,7 +59,10 @@ public class MappingApiToModel {
 		mapDiscoveryUrls(apiBusinessEntity.getDiscoveryURLs(), modelBusinessEntity.getDiscoveryUrls(), modelBusinessEntity);
 		mapContacts(apiBusinessEntity.getContacts(), modelBusinessEntity.getContacts(), modelBusinessEntity);
 		mapBusinessIdentifiers(apiBusinessEntity.getIdentifierBag(), modelBusinessEntity.getBusinessIdentifiers(), modelBusinessEntity);
-		mapCategoryBag(apiBusinessEntity.getCategoryBag(), modelBusinessEntity.getCategoryBag());
+		if (apiBusinessEntity.getCategoryBag()!=null) {
+			//TODO put the mapping back
+			//mapCategoryBag(apiBusinessEntity.getCategoryBag(), modelBusinessEntity.getCategoryBag());
+		}
 		
 		mapBusinessServices(apiBusinessEntity.getBusinessServices(), modelBusinessEntity.getBusinessServices(), modelBusinessEntity);
 	}
@@ -247,7 +251,9 @@ public class MappingApiToModel {
 		
 		mapServiceNames(apiBusinessService.getName(), modelBusinessService.getServiceNames(), modelBusinessService);
 		mapServiceDescriptions(apiBusinessService.getDescription(), modelBusinessService.getServiceDescrs(), modelBusinessService);
-		mapCategoryBag(apiBusinessService.getCategoryBag(), modelBusinessService.getCategoryBag());
+		if (apiBusinessService.getCategoryBag()!=null) {
+		//	mapCategoryBag(apiBusinessService.getCategoryBag(), modelBusinessService.getCategoryBag());
+		}
 		
 		mapBindingTemplates(apiBusinessService.getBindingTemplates(), modelBusinessService.getBindingTemplates(), modelBusinessService);
 
@@ -306,7 +312,7 @@ public class MappingApiToModel {
 		//modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
 		
 		mapBindingDescriptions(apiBindingTemplate.getDescription(), modelBindingTemplate.getBindingDescrs(), modelBindingTemplate);
-		mapCategoryBag(apiBindingTemplate.getCategoryBag(), modelBindingTemplate.getBindingTemplateCategoryBag());
+		//mapCategoryBag(apiBindingTemplate.getCategoryBag(), modelBindingTemplate.getBindingTemplateCategoryBag());
 		mapTModelInstanceDetails(apiBindingTemplate.getTModelInstanceDetails(), modelBindingTemplate.getTmodelInstanceInfos(), modelBindingTemplate);
 	}
 	
@@ -422,7 +428,10 @@ public class MappingApiToModel {
 
 		mapTModelDescriptions(apiTModel.getDescription(), modelTModel.getTmodelDescrs(), modelTModel);
 		mapTModelIdentifiers(apiTModel.getIdentifierBag(), modelTModel.getTmodelIdentifiers(), modelTModel);
-		mapCategoryBag(apiTModel.getCategoryBag(), modelTModel.getCategoryBag());
+		if (apiTModel.getCategoryBag()!=null) {
+			//modelTModel.setCategoryBag(new org.apache.juddi.model.TmodelCategoryBag());
+			//mapCategoryBag(apiTModel.getCategoryBag(), modelTModel.getCategoryBag());
+		}
 		//TODO: OverviewDoc - model doesn't have logical mapping
 
 	}

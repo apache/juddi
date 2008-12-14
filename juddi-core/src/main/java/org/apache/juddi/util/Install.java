@@ -17,7 +17,8 @@
 
 package org.apache.juddi.util;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.KeyGeneratorKeyId;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
+import org.apache.log4j.Logger;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -55,34 +57,40 @@ public class Install {
 	public static final String FILE_UDDI_TMODELS = "UDDI_tModels.xml";
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
+	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
+	public static Logger log = Logger.getLogger(Install.class);
 	
-	public static void install(String srcDir) throws JAXBException, DispositionReportFaultMessage {
-		if (srcDir != null) {
-			if (!srcDir.endsWith("\\"))
-				srcDir = srcDir + "\\";
-		}
-		else
-			srcDir = "";
-			
+	public static void install() throws JAXBException, DispositionReportFaultMessage {
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
+		try {
+			tx.begin();
+	
+			if (alreadyInstalled(em))
+				throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
+			
+			UddiEntityPublisher rootPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_PUBLISHER);
+			UddiEntityPublisher uddiPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_PUBLISHER);
+			
+			installPublisherKeyGen(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_TMODELKEYGEN, rootPublisher);
+			
+			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher);
+			tx.commit();
+			//TODO why does this need it's own tx?
+			tx.begin();
+			installRootBusinessEntity(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_BUSINESSENTITY, rootPublisher);
+			tx.commit();
+		} catch (Exception e) {
+			log .error(e.getMessage(),e);
+			tx.rollback();
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
 
-		if (alreadyInstalled(em))
-			throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 		
-		UddiEntityPublisher rootPublisher = installPublisher(em, srcDir + FILE_ROOT_PUBLISHER);
-		UddiEntityPublisher uddiPublisher = installPublisher(em, srcDir + FILE_UDDI_PUBLISHER);
-		
-		installPublisherKeyGen(em, srcDir + FILE_ROOT_TMODELKEYGEN, rootPublisher);
-		
-		installUDDITModels(em, srcDir + FILE_UDDI_TMODELS, uddiPublisher);
-		
-		tx.commit();
-		em.close();
-
-		installRootBusinessEntity(em, srcDir + FILE_ROOT_BUSINESSENTITY, rootPublisher);
 		
 	}
 
@@ -138,7 +146,8 @@ public class Install {
 		return false;
 	}
 	
-	private static void installRootBusinessEntity(EntityManager em, String file, UddiEntityPublisher publisher) throws JAXBException, DispositionReportFaultMessage {
+	private static void installRootBusinessEntity(EntityManager em, String resource, UddiEntityPublisher publisher) 
+	throws JAXBException, DispositionReportFaultMessage, IOException {
 		UDDIPublicationImpl publish = new UDDIPublicationImpl();
 		UDDISecurityImpl security = new UDDISecurityImpl();
 
@@ -149,21 +158,23 @@ public class Install {
 		
 		org.uddi.api_v3.SaveBusiness sb = new org.uddi.api_v3.SaveBusiness();
 
-		org.uddi.api_v3.BusinessEntity apiBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(file, "org.uddi.api_v3");
+		org.uddi.api_v3.BusinessEntity apiBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(resource, "org.uddi.api_v3");
 		sb.getBusinessEntity().add(apiBusinessEntity);
 		sb.setAuthInfo(authToken.getAuthInfo());
 		
 		publish.saveBusiness(sb);
 	}
 	
-	private static void installUDDITModels(EntityManager em, String file, UddiEntityPublisher publisher) throws JAXBException, DispositionReportFaultMessage {
-		SaveTModel apiSaveTModel = (SaveTModel)buildEntityFromDoc(file, "org.uddi.api_v3");
+	private static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher) 
+		throws JAXBException, DispositionReportFaultMessage, IOException {
+		SaveTModel apiSaveTModel = (SaveTModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
 		installTModels(em, apiSaveTModel.getTModel(), publisher);
 		
 	}
 	
-	private static UddiEntityPublisher installPublisher(EntityManager em, String file) throws JAXBException, DispositionReportFaultMessage {
-		Publisher apiPub = (Publisher)buildEntityFromDoc(file, "org.apache.juddi.api.datatype");
+	private static UddiEntityPublisher installPublisher(EntityManager em, String resource) 
+		throws JAXBException, DispositionReportFaultMessage, IOException {
+		Publisher apiPub = (Publisher)buildEntityFromDoc(resource, "org.apache.juddi.api.datatype");
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
 		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		em.persist(modelPub);
@@ -191,8 +202,9 @@ public class Install {
 		
 	}
 
-	private static void installPublisherKeyGen(EntityManager em, String file, UddiEntityPublisher publisher) throws JAXBException, DispositionReportFaultMessage {
-		TModel apiTModel = (TModel)buildEntityFromDoc(file, "org.uddi.api_v3");
+	private static void installPublisherKeyGen(EntityManager em, String resource, UddiEntityPublisher publisher) 
+		throws JAXBException, DispositionReportFaultMessage, IOException {
+		TModel apiTModel = (TModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
 		installPublisherKeyGen(em, apiTModel, publisher);
 	}
 
@@ -217,10 +229,12 @@ public class Install {
 		
 	}
 	
-	private static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException {
+	private static Object buildEntityFromDoc(String resource, String thePackage) throws JAXBException, IOException {
+		InputStream resourceStream =Thread.currentThread().getContextClassLoader().getResource(resource).openStream();
+
 		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		Object obj = ((JAXBElement)unmarshaller.unmarshal(new File(fileName))).getValue();
+		Object obj = ((JAXBElement)unmarshaller.unmarshal(resourceStream)).getValue();
 		return obj;
 	}
 

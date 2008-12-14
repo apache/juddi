@@ -45,7 +45,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private Set<DiscoveryUrl> discoveryUrls = new HashSet<DiscoveryUrl>(0);
 	private Set<BusinessName> businessNames = new HashSet<BusinessName>(0);
 	private Set<PublisherAssertion> publisherAssertionsForToKey = new HashSet<PublisherAssertion>(0);
-	private BusinessCategoryBag categoryBag = new BusinessCategoryBag();
+	private BusinessCategoryBag categoryBag;
 	private Set<BusinessService> businessServices = new HashSet<BusinessService>(0);
 	private Set<BusinessDescr> businessDescrs = new HashSet<BusinessDescr>(0);
 

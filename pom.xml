@@ -150,6 +150,12 @@
 			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
+	      <groupId>junit</groupId>
+	      <artifactId>junit</artifactId>
+	      <version>4.5</version>
+	      <scope>test</scope>
+	    </dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>
 			<version>3.2.5.ga</version>

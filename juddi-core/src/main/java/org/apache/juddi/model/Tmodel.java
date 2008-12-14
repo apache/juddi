@@ -30,8 +30,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.uddi.api_v3.OverviewDoc;
-
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -50,7 +48,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private Set<TmodelDescr> tmodelDescrs = new HashSet<TmodelDescr>(0);
 	private Set<TmodelDocDescr> tmodelDocDescrs = new HashSet<TmodelDocDescr>(0);
 	private Set<TmodelIdentifier> tmodelIdentifiers = new HashSet<TmodelIdentifier>(0);
-	private TmodelCategoryBag categoryBag = new TmodelCategoryBag();
+	private TmodelCategoryBag categoryBag;
 
 	public Tmodel() {
 	}

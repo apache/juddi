@@ -63,7 +63,7 @@ public class InstanceDetailsDescr implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "tmodel_instance_info_id", nullable = false)
 	public TmodelInstanceInfo getTmodelInstanceInfo() {
 		return this.tmodelInstanceInfo;
 	}

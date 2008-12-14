@@ -64,7 +64,7 @@ public class KeyedReference implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_bag_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "category_bag_id", nullable = false)
 	public CategoryBag getCategoryBag() {
 		return this.categoryBag;
 	}

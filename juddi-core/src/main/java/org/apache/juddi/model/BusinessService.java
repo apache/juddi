@@ -41,7 +41,7 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	private Set<ServiceName> serviceNames = new HashSet<ServiceName>(0);
 	private Set<ServiceDescr> serviceDescrs = new HashSet<ServiceDescr>(0);
 	private Set<BindingTemplate> bindingTemplates = new HashSet<BindingTemplate>(0);
-	private ServiceCategoryBag categoryBag = new ServiceCategoryBag();
+	private ServiceCategoryBag categoryBag;
 
 	public BusinessService() {
 	}

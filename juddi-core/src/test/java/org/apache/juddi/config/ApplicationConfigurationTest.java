@@ -1,7 +1,7 @@
 package org.apache.juddi.config;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.testng.annotations.*;
+import org.junit.Test;
 
 public class ApplicationConfigurationTest 
 {

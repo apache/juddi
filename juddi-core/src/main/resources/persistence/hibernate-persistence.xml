@@ -15,12 +15,19 @@
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="false"/>
 
-      <!-- connection properties -->
+      <!-- derby connection properties 
       <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
-       <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="hibernate.connection.url" value="jdbc:derby:juddi-derby-test-db;create=true"/>
       <property name="hibernate.connection.username" value=""/>
       <property name="hibernate.connection.password" value=""/>
+      -->
+      <!--  mysql connection properties -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+      <property name="hibernate.connection.username" value="kstam" />
+      <property name="hibernate.connection.password" value="" />
+      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/juddiv3" />
 
       <!-- connection pool properties -->
       <property name="hibernate.dbcp.maxActive" value="100"/>
@@ -29,4 +36,6 @@
       
     </properties>
   </persistence-unit>
+
+  
 </persistence>

@@ -65,7 +65,7 @@ public class AddressLine implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "address_id", nullable = false)
 	public Address getAddress() {
 		return this.address;
 	}

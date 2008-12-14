@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -34,7 +35,9 @@ import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.util.Constants;
+import org.apache.juddi.util.Install;
 import org.apache.log4j.Logger;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * Handles the application level configuration for jUDDI. By default it first
@@ -96,9 +99,18 @@ public class AppConfig
 		tx.begin();
 
 		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
-		if (rootPublisher == null)
-			throw new ConfigurationException("The 'root' publisher was not found.  Please make sure that the application is properly installed.");
-		
+		if (rootPublisher == null) {
+			log.info("The 'root' publisher was not found, loading...");
+			try {
+				Install.install();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DispositionReportFaultMessage e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Set<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
 		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
 			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");

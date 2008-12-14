@@ -62,7 +62,7 @@ public class Phone implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "contact_id", nullable = false)
 	public Contact getContact() {
 		return this.contact;
 	}

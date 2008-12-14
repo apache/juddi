@@ -47,7 +47,7 @@ public class AuthInfoTest {
 			JAXBElement<AuthToken> element = new JAXBElement<AuthToken>(new QName("","fragment"),AuthToken.class,authToken);
 			marshaller.marshal(element,writer);
 			String actualXml=writer.toString();
-			//assertEquals(EXPECTED_XML_FRAGMENT, actualXml);
+			assertEquals(EXPECTED_XML_FRAGMENT, actualXml);
 		} catch (JAXBException jaxbe) {
 			fail("No exception should be thrown");
 		}
@@ -64,7 +64,7 @@ public class AuthInfoTest {
 			StringReader reader = new StringReader(EXPECTED_XML_FRAGMENT);
 			JAXBElement<AuthToken> element = unMarshaller.unmarshal(new StreamSource(reader),AuthToken.class);
 			String infoString = element.getValue().getAuthInfo();
-			//assertEquals("AuthInfo String", infoString);
+			assertEquals("AuthInfo String", infoString);
 		} catch (JAXBException jaxbe) {
 			fail("No exception should be thrown");
 		}
@@ -88,7 +88,7 @@ public class AuthInfoTest {
 			JAXBElement<AuthToken> element = new JAXBElement<AuthToken>(new QName("","fragment"),AuthToken.class,authToken);
 			marshaller.marshal(element,writer);
 			String actualXml=writer.toString();
-			//assertEquals(EXPECTED_UTF8_XML_FRAGMENT, actualXml);
+			assertEquals(EXPECTED_UTF8_XML_FRAGMENT, actualXml);
 		} catch (JAXBException jaxbe) {
 			fail("No exception should be thrown");
 		}
@@ -106,7 +106,7 @@ public class AuthInfoTest {
 			StringReader reader = new StringReader(EXPECTED_UTF8_XML_FRAGMENT);
 			JAXBElement<AuthToken> utf8Element = unMarshaller.unmarshal(new StreamSource(reader),AuthToken.class);
 			String infoString = utf8Element.getValue().getAuthInfo();
-			//assertEquals(UTF8_WORD, infoString);
+			assertEquals(UTF8_WORD, infoString);
 		} catch (JAXBException jaxbe) {
 			fail("No exception should be thrown");
 		}
