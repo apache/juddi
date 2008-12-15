@@ -15,8 +15,8 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -41,7 +42,7 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 	private Long id;
 	private CategoryBag categoryBag;
 	private String tmodelKey;
-	private Set<KeyedReference> keyedReferences = new HashSet<KeyedReference>(0);
+	private List<KeyedReference> keyedReferences = new ArrayList<KeyedReference>(0);
 	
 
 	public KeyedReferenceGroup() {
@@ -79,10 +80,11 @@ public class KeyedReferenceGroup implements java.io.Serializable {
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "keyedReferenceGroup")
-	public Set<KeyedReference> getKeyedReferences() {
+	@OrderBy
+	public List<KeyedReference> getKeyedReferences() {
 		return keyedReferences;
 	}
-	public void setKeyedReferences(Set<KeyedReference> keyedReferences) {
+	public void setKeyedReferences(List<KeyedReference> keyedReferences) {
 		this.keyedReferences = keyedReferences;
 	}
 

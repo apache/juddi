@@ -16,9 +16,7 @@ package org.apache.juddi.model;
  */
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -44,7 +42,7 @@ public class CategoryBag implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private List<KeyedReference> keyedReferences = new ArrayList<KeyedReference>(0);
-	private Set<KeyedReferenceGroup> keyedReferenceGroups = new HashSet<KeyedReferenceGroup>(0);
+	private List<KeyedReferenceGroup> keyedReferenceGroups = new ArrayList<KeyedReferenceGroup>(0);
 	
 	public CategoryBag() {
 	}
@@ -69,11 +67,12 @@ public class CategoryBag implements java.io.Serializable {
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBag")
-	public Set<KeyedReferenceGroup> getKeyedReferenceGroups() {
+	@OrderBy
+	public List<KeyedReferenceGroup> getKeyedReferenceGroups() {
 		return keyedReferenceGroups;
 	}
 	public void setKeyedReferenceGroups(
-			Set<KeyedReferenceGroup> keyedReferenceGroups) {
+			List<KeyedReferenceGroup> keyedReferenceGroups) {
 		this.keyedReferenceGroups = keyedReferenceGroups;
 	}
 

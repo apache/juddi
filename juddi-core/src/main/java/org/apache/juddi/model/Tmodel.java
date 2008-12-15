@@ -17,9 +17,7 @@ package org.apache.juddi.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,10 +44,10 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private String name;
 	private String langCode;
 	private boolean deleted;
-	private Set<TmodelOverview> overviewDocs = new HashSet<TmodelOverview>(0);
+	private List<TmodelOverview> overviewDocs = new ArrayList<TmodelOverview>(0);
 	private List<TmodelDescr> tmodelDescrs = new ArrayList<TmodelDescr>(0);
-	private Set<TmodelDocDescr> tmodelDocDescrs = new HashSet<TmodelDocDescr>(0);
-	private Set<TmodelIdentifier> tmodelIdentifiers = new HashSet<TmodelIdentifier>(0);
+	private List<TmodelDocDescr> tmodelDocDescrs = new ArrayList<TmodelDocDescr>(0);
+	private List<TmodelIdentifier> tmodelIdentifiers = new ArrayList<TmodelIdentifier>(0);
 	private TmodelCategoryBag categoryBag;
 
 	public Tmodel() {
@@ -62,9 +60,9 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
-			Set<TmodelOverview> overviewDocs,
-			List<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
-			Set<TmodelIdentifier> tmodelIdentifiers,
+			List<TmodelOverview> overviewDocs,
+			List<TmodelDescr> tmodelDescrs, List<TmodelDocDescr> tmodelDocDescrs,
+			List<TmodelIdentifier> tmodelIdentifiers,
 			TmodelCategoryBag categoryBag) {
 		this.entityKey = entityKey;
 		this.publisher = publisher;
@@ -114,11 +112,11 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
 	@OrderBy
-	public Set<TmodelOverview> getOverviewDocs() {
+	public List<TmodelOverview> getOverviewDocs() {
 		return this.overviewDocs;
 	}
 	
-	public void setOverviewDocs(Set<TmodelOverview> overviewDocs) {
+	public void setOverviewDocs(List<TmodelOverview> overviewDocs) {
 		this.overviewDocs = overviewDocs;
 	}
 
@@ -132,18 +130,20 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
-	public Set<TmodelDocDescr> getTmodelDocDescrs() {
+	@OrderBy
+	public List<TmodelDocDescr> getTmodelDocDescrs() {
 		return this.tmodelDocDescrs;
 	}
-	public void setTmodelDocDescrs(Set<TmodelDocDescr> tmodelDocDescrs) {
+	public void setTmodelDocDescrs(List<TmodelDocDescr> tmodelDocDescrs) {
 		this.tmodelDocDescrs = tmodelDocDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
-	public Set<TmodelIdentifier> getTmodelIdentifiers() {
+	@OrderBy
+	public List<TmodelIdentifier> getTmodelIdentifiers() {
 		return this.tmodelIdentifiers;
 	}
-	public void setTmodelIdentifiers(Set<TmodelIdentifier> tmodelIdentifiers) {
+	public void setTmodelIdentifiers(List<TmodelIdentifier> tmodelIdentifiers) {
 		this.tmodelIdentifiers = tmodelIdentifiers;
 	}
 

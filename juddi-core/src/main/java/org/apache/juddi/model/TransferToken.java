@@ -17,9 +17,9 @@
 
 package org.apache.juddi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,13 +40,13 @@ public class TransferToken implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	private String transferToken;
 	private Date expirationDate;
-	protected Set<TransferTokenKey> transferKeys = new HashSet<TransferTokenKey>(0);
+	protected List<TransferTokenKey> transferKeys = new ArrayList<TransferTokenKey>(0);
 	
 	public TransferToken() {
 	}
 
 	public TransferToken(String transferToken, Date expirationDate,
-			Set<TransferTokenKey> transferKeys) {
+			List<TransferTokenKey> transferKeys) {
 		this.transferToken = transferToken;
 		this.expirationDate = expirationDate;
 		this.transferKeys = transferKeys;
@@ -71,10 +71,10 @@ public class TransferToken implements java.io.Serializable{
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "transferToken")
 	@OrderBy
-	public Set<TransferTokenKey> getTransferKeys() {
+	public List<TransferTokenKey> getTransferKeys() {
 		return transferKeys;
 	}
-	public void setTransferKeys(Set<TransferTokenKey> transferKeys) {
+	public void setTransferKeys(List<TransferTokenKey> transferKeys) {
 		this.transferKeys = transferKeys;
 	}
 	

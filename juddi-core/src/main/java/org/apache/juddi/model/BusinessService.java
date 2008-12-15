@@ -15,9 +15,9 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,6 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -38,9 +39,9 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 
 	private static final long serialVersionUID = 1L;
 	private BusinessEntity businessEntity;
-	private Set<ServiceName> serviceNames = new HashSet<ServiceName>(0);
-	private Set<ServiceDescr> serviceDescrs = new HashSet<ServiceDescr>(0);
-	private Set<BindingTemplate> bindingTemplates = new HashSet<BindingTemplate>(0);
+	private List<ServiceName> serviceNames = new ArrayList<ServiceName>(0);
+	private List<ServiceDescr> serviceDescrs = new ArrayList<ServiceDescr>(0);
+	private List<BindingTemplate> bindingTemplates = new ArrayList<BindingTemplate>(0);
 	private ServiceCategoryBag categoryBag;
 
 	public BusinessService() {
@@ -52,8 +53,8 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 		this.lastUpdate = lastUpdate;
 	}
 	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate,
-			Set<ServiceName> serviceNames, Set<ServiceDescr> serviceDescrs,
-			Set<BindingTemplate> bindingTemplates,
+			List<ServiceName> serviceNames, List<ServiceDescr> serviceDescrs,
+			List<BindingTemplate> bindingTemplates,
 			ServiceCategoryBag categoryBag) {
 		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
@@ -74,26 +75,29 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
-	public Set<ServiceName> getServiceNames() {
+	@OrderBy
+	public List<ServiceName> getServiceNames() {
 		return this.serviceNames;
 	}
-	public void setServiceNames(Set<ServiceName> serviceNames) {
+	public void setServiceNames(List<ServiceName> serviceNames) {
 		this.serviceNames = serviceNames;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
-	public Set<ServiceDescr> getServiceDescrs() {
+	@OrderBy
+	public List<ServiceDescr> getServiceDescrs() {
 		return this.serviceDescrs;
 	}
-	public void setServiceDescrs(Set<ServiceDescr> serviceDescrs) {
+	public void setServiceDescrs(List<ServiceDescr> serviceDescrs) {
 		this.serviceDescrs = serviceDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
-	public Set<BindingTemplate> getBindingTemplates() {
+	@OrderBy
+	public List<BindingTemplate> getBindingTemplates() {
 		return this.bindingTemplates;
 	}
-	public void setBindingTemplates(Set<BindingTemplate> bindingTemplates) {
+	public void setBindingTemplates(List<BindingTemplate> bindingTemplates) {
 		this.bindingTemplates = bindingTemplates;
 	}
 

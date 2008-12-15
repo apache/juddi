@@ -19,7 +19,6 @@ package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.jws.WebService;
 import javax.persistence.EntityTransaction;
 import javax.persistence.EntityManager;
@@ -267,7 +266,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		if (focalBusiness == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", focalKey));
 
-		Set<org.apache.juddi.model.PublisherAssertion> pubAssertList = null;
+		List<org.apache.juddi.model.PublisherAssertion> pubAssertList = null;
 		if (direction == Direction.FROM_KEY)
 			pubAssertList = focalBusiness.getPublisherAssertionsForFromKey();
 		else

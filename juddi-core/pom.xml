@@ -46,34 +46,19 @@
           <target>1.5</target>
         </configuration>
       </plugin>
-	<!--
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.2</version>
+        <version>2.4</version>
         <configuration>
-          <suiteXmlFiles>
-            <suiteXmlFile>
-              src/test/resources/suite-init.xml,
-              src/test/resources/suite-save.xml,
-              src/test/resources/suite-delete.xml,
-              src/test/resources/suite-clean.xml
-            </suiteXmlFile>
-          </suiteXmlFiles>
-        </configuration>
-      </plugin>
-	-->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.2</version>
-        <configuration>
-          <suiteXmlFiles>
-            <suiteXmlFile>src/test/resources/suite-subscribe.xml</suiteXmlFile>
-          </suiteXmlFiles>
+          <skip>false</skip>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-antrun-plugin</artifactId>
+	    <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
           <phase>generate-resources</phase>

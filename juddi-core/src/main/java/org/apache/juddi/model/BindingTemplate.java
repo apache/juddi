@@ -15,9 +15,9 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -43,8 +44,8 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	private String accessPointUrl;
 	private String hostingRedirector;
 	private BindingCategoryBag categoryBag;
-	private Set<TmodelInstanceInfo> tmodelInstanceInfos = new HashSet<TmodelInstanceInfo>(0);
-	private Set<BindingDescr> bindingDescrs = new HashSet<BindingDescr>(0);
+	private List<TmodelInstanceInfo> tmodelInstanceInfos = new ArrayList<TmodelInstanceInfo>(0);
+	private List<BindingDescr> bindingDescrs = new ArrayList<BindingDescr>(0);
 
 	public BindingTemplate() {
 	}
@@ -57,8 +58,8 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	public BindingTemplate(String entityKey, BusinessService businessService, String accessPointType,
 			String accessPointUrl, String hostingRedirector, Date lastUpdate,
 			BindingCategoryBag categoryBag,
-			Set<TmodelInstanceInfo> tmodelInstanceInfos,
-			Set<BindingDescr> bindingDescrs) {
+			List<TmodelInstanceInfo> tmodelInstanceInfos,
+			List<BindingDescr> bindingDescrs) {
 		this.entityKey = entityKey;
 		this.businessService = businessService;
 		this.accessPointType = accessPointType;
@@ -112,19 +113,21 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
-	public Set<TmodelInstanceInfo> getTmodelInstanceInfos() {
+	@OrderBy
+	public List<TmodelInstanceInfo> getTmodelInstanceInfos() {
 		return this.tmodelInstanceInfos;
 	}
 	public void setTmodelInstanceInfos(
-			Set<TmodelInstanceInfo> tmodelInstanceInfos) {
+			List<TmodelInstanceInfo> tmodelInstanceInfos) {
 		this.tmodelInstanceInfos = tmodelInstanceInfos;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
-	public Set<BindingDescr> getBindingDescrs() {
+	@OrderBy
+	public List<BindingDescr> getBindingDescrs() {
 		return this.bindingDescrs;
 	}
-	public void setBindingDescrs(Set<BindingDescr> bindingDescrs) {
+	public void setBindingDescrs(List<BindingDescr> bindingDescrs) {
 		this.bindingDescrs = bindingDescrs;
 	}
 

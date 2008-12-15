@@ -18,28 +18,28 @@
 package org.apache.juddi.model;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.Table;
 
+import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.validation.ValidateUDDIKey;
-import org.apache.juddi.keygen.KeyGenerator;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**

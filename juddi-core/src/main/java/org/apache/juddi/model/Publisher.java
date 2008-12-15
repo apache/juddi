@@ -16,11 +16,12 @@ package org.apache.juddi.model;
  */
 
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>

@@ -19,17 +19,16 @@ package org.apache.juddi.mapping;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
-
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class MappingModelToApi {
 	
@@ -206,7 +205,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapAddressLines(Set<org.apache.juddi.model.AddressLine> modelAddressLineList, 
+	public static void mapAddressLines(List<org.apache.juddi.model.AddressLine> modelAddressLineList, 
 									   List<org.uddi.api_v3.AddressLine> apiAddressLineList) 
 				   throws DispositionReportFaultMessage {
 		apiAddressLineList.clear();
@@ -220,7 +219,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapBusinessIdentifiers(Set<org.apache.juddi.model.BusinessIdentifier> modelIdentifierList, 
+	public static void mapBusinessIdentifiers(List<org.apache.juddi.model.BusinessIdentifier> modelIdentifierList, 
 											  org.uddi.api_v3.IdentifierBag apiIdentifierBag,
 											  org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
@@ -240,7 +239,7 @@ public class MappingModelToApi {
 		apiBusinessEntity.setIdentifierBag(apiIdentifierBag);
 	}
 
-	public static void mapBusinessServices(Set<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
+	public static void mapBusinessServices(List<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
 										   org.uddi.api_v3.BusinessServices apiBusinessServices,
 										   org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
@@ -273,7 +272,7 @@ public class MappingModelToApi {
 
 	}
 
-	public static void mapServiceNames(Set<org.apache.juddi.model.ServiceName> modelNameList, 
+	public static void mapServiceNames(List<org.apache.juddi.model.ServiceName> modelNameList, 
 									   List<org.uddi.api_v3.Name> apiNameList) 
 				   throws DispositionReportFaultMessage {
 		apiNameList.clear();
@@ -286,7 +285,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapServiceDescriptions(Set<org.apache.juddi.model.ServiceDescr> modelDescList, 
+	public static void mapServiceDescriptions(List<org.apache.juddi.model.ServiceDescr> modelDescList, 
 											  List<org.uddi.api_v3.Description> apiDescList) 
 				   throws DispositionReportFaultMessage {
 		apiDescList.clear();
@@ -299,7 +298,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapBindingTemplates(Set<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList, 
+	public static void mapBindingTemplates(List<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList, 
 										   org.uddi.api_v3.BindingTemplates apiBindingTemplates,
 										   org.uddi.api_v3.BusinessService apiBusinessService) 
 				   throws DispositionReportFaultMessage {
@@ -338,7 +337,7 @@ public class MappingModelToApi {
 
 	}
 
-	public static void mapBindingDescriptions(Set<org.apache.juddi.model.BindingDescr> modelDescList, 
+	public static void mapBindingDescriptions(List<org.apache.juddi.model.BindingDescr> modelDescList, 
 											  List<org.uddi.api_v3.Description> apiDescList) 
 				   throws DispositionReportFaultMessage {
 		apiDescList.clear();
@@ -382,7 +381,7 @@ public class MappingModelToApi {
 		return apiCategoryBag;
 	}
 
-	public static void mapTModelInstanceDetails(Set<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList, 
+	public static void mapTModelInstanceDetails(List<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList, 
 												org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails,
 												org.uddi.api_v3.BindingTemplate apiBindingTemplate) 
 				   throws DispositionReportFaultMessage {
@@ -403,7 +402,7 @@ public class MappingModelToApi {
 		apiBindingTemplate.setTModelInstanceDetails(apiTModelInstDetails);
 	}
 	
-	public static void mapTModelInstanceInfoDescriptions(Set<org.apache.juddi.model.TmodelInstanceInfoDescr> modelDescList, 
+	public static void mapTModelInstanceInfoDescriptions(List<org.apache.juddi.model.TmodelInstanceInfoDescr> modelDescList, 
 														 List<org.uddi.api_v3.Description> apiDescList) 
 				   throws DispositionReportFaultMessage {
 		apiDescList.clear();
@@ -428,7 +427,7 @@ public class MappingModelToApi {
 
 		apiInstanceDetailsContent.add(new ObjectFactory().createInstanceParms(modelTModelInstInfo.getInstanceParms()));
 		
-		Set<org.apache.juddi.model.InstanceDetailsDescr> modelInstDetailsDescrList = modelTModelInstInfo.getInstanceDetailsDescrs();
+		List<org.apache.juddi.model.InstanceDetailsDescr> modelInstDetailsDescrList = modelTModelInstInfo.getInstanceDetailsDescrs();
 		for (org.apache.juddi.model.InstanceDetailsDescr modelInstDetailDescr : modelInstDetailsDescrList) {
 			org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();
 			apiDesc.setLang(modelInstDetailDescr.getLangCode());
@@ -475,7 +474,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapTModelIdentifiers(Set<org.apache.juddi.model.TmodelIdentifier> modelIdentifierList, 
+	public static void mapTModelIdentifiers(List<org.apache.juddi.model.TmodelIdentifier> modelIdentifierList, 
 											org.uddi.api_v3.IdentifierBag apiIdentifierBag,
 											org.uddi.api_v3.TModel apiTModel) 
 				   throws DispositionReportFaultMessage {
@@ -508,7 +507,7 @@ public class MappingModelToApi {
 		
 	}
 
-	public static void mapServiceInfos(Set<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
+	public static void mapServiceInfos(List<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
 									   org.uddi.api_v3.ServiceInfos apiServiceInfos,
 									   org.uddi.api_v3.BusinessInfo apiBusinessInfo) 
 				   throws DispositionReportFaultMessage {

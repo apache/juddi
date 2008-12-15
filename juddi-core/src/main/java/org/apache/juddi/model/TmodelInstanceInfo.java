@@ -15,8 +15,8 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -43,9 +44,9 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	private BindingTemplate bindingTemplate;
 	private String tmodelKey;
 	private String instanceParms;
-	private Set<InstanceDetailsDocDescr> instanceDetailsDocDescrs = new HashSet<InstanceDetailsDocDescr>(0);
-	private Set<InstanceDetailsDescr> instanceDetailsDescrs = new HashSet<InstanceDetailsDescr>(0);
-	private Set<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs = new HashSet<TmodelInstanceInfoDescr>(0);
+	private List<InstanceDetailsDocDescr> instanceDetailsDocDescrs = new ArrayList<InstanceDetailsDocDescr>(0);
+	private List<InstanceDetailsDescr> instanceDetailsDescrs = new ArrayList<InstanceDetailsDescr>(0);
+	private List<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs = new ArrayList<TmodelInstanceInfoDescr>(0);
 
 	public TmodelInstanceInfo() {
 	}
@@ -56,9 +57,9 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	}
 	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey,
 			String instanceParms,
-			Set<InstanceDetailsDocDescr> instanceDetailsDocDescrs,
-			Set<InstanceDetailsDescr> instanceDetailsDescrs,
-			Set<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
+			List<InstanceDetailsDocDescr> instanceDetailsDocDescrs,
+			List<InstanceDetailsDescr> instanceDetailsDescrs,
+			List<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
 		this.bindingTemplate = bindingTemplate;
 		this.tmodelKey = tmodelKey;
 		this.instanceParms = instanceParms;
@@ -102,29 +103,32 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
-	public Set<InstanceDetailsDocDescr> getInstanceDetailsDocDescrs() {
+	@OrderBy
+	public List<InstanceDetailsDocDescr> getInstanceDetailsDocDescrs() {
 		return this.instanceDetailsDocDescrs;
 	}
 	public void setInstanceDetailsDocDescrs(
-			Set<InstanceDetailsDocDescr> instanceDetailsDocDescrs) {
+			List<InstanceDetailsDocDescr> instanceDetailsDocDescrs) {
 		this.instanceDetailsDocDescrs = instanceDetailsDocDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
-	public Set<InstanceDetailsDescr> getInstanceDetailsDescrs() {
+	@OrderBy
+	public List<InstanceDetailsDescr> getInstanceDetailsDescrs() {
 		return this.instanceDetailsDescrs;
 	}
 	public void setInstanceDetailsDescrs(
-			Set<InstanceDetailsDescr> instanceDetailsDescrs) {
+			List<InstanceDetailsDescr> instanceDetailsDescrs) {
 		this.instanceDetailsDescrs = instanceDetailsDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
-	public Set<TmodelInstanceInfoDescr> getTmodelInstanceInfoDescrs() {
+	@OrderBy
+	public List<TmodelInstanceInfoDescr> getTmodelInstanceInfoDescrs() {
 		return this.tmodelInstanceInfoDescrs;
 	}
 	public void setTmodelInstanceInfoDescrs(
-			Set<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
+			List<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
 		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;
 	}
 

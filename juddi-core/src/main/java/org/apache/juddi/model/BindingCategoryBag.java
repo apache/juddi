@@ -30,6 +30,10 @@ public class BindingCategoryBag extends CategoryBag {
 	private static final long serialVersionUID = 1L;
 	private BindingTemplate bindingTemplate;
 
+	public BindingCategoryBag() {
+		super();
+	}
+	
 	public BindingCategoryBag(BindingTemplate bindingTemplate) {
 		super();
 		this.bindingTemplate = bindingTemplate;

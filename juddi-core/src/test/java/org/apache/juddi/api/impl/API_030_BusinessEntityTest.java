@@ -18,7 +18,6 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
-import org.apache.juddi.test.UDDIApiTestHelper;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -106,7 +105,7 @@ public class API_030_BusinessEntityTest {
 			UDDIApiTestHelper.checkContacts(beIn.getContacts(), beOut.getContacts());
 			UDDIApiTestHelper.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
 			
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");
 		}

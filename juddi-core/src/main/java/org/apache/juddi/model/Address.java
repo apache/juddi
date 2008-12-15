@@ -14,8 +14,8 @@ package org.apache.juddi.model;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 /**
@@ -43,7 +44,7 @@ public class Address implements java.io.Serializable {
 	private String useType;
 	private String sortCode;
 	private String tmodelKey;
-	private Set<AddressLine> addressLines = new HashSet<AddressLine>(0);
+	private List<AddressLine> addressLines = new ArrayList<AddressLine>(0);
 
 	public Address() {
 	}
@@ -52,7 +53,7 @@ public class Address implements java.io.Serializable {
 		this.contact = contact;
 	}
 	public Address(Long id, Contact contact, String useType,
-			String sortCode, String tmodelKey, Set<AddressLine> addressLines) {
+			String sortCode, String tmodelKey, List<AddressLine> addressLines) {
 		this.contact = contact;
 		this.useType = useType;
 		this.sortCode = sortCode;
@@ -103,10 +104,11 @@ public class Address implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "address")
-	public Set<AddressLine> getAddressLines() {
+	@OrderBy
+	public List<AddressLine> getAddressLines() {
 		return this.addressLines;
 	}
-	public void setAddressLines(Set<AddressLine> addressLines) {
+	public void setAddressLines(List<AddressLine> addressLines) {
 		this.addressLines = addressLines;
 	}
 

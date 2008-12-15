@@ -1,12 +1,12 @@
-package org.apache.juddi.test;
+package org.apache.juddi.api.impl;
 
 import static junit.framework.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -14,19 +14,20 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
-import org.apache.juddi.api.datatype.Publisher;
-import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.query.PersistenceManager;
-import org.apache.juddi.mapping.MappingApiToModel;
-import org.apache.juddi.model.KeyGeneratorKey;
-import org.apache.juddi.model.KeyGeneratorKeyId;
-import org.apache.juddi.model.UddiEntityPublisher;
-import org.testng.log4testng.Logger;
-import org.testng.v6.Sets;
-import org.uddi.api_v3.*;
+import org.apache.log4j.Logger;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.Contact;
+import org.uddi.api_v3.Contacts;
+import org.uddi.api_v3.Description;
+import org.uddi.api_v3.DiscoveryURL;
+import org.uddi.api_v3.DiscoveryURLs;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.PersonName;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIApiTestHelper {

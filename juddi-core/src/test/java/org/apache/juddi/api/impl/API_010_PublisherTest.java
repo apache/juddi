@@ -25,7 +25,6 @@ import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.test.UDDIApiTestHelper;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;

@@ -17,9 +17,7 @@ package org.apache.juddi.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -28,8 +26,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
@@ -42,13 +40,13 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private UddiEntityPublisher publisher;
 	private List<Contact> contacts = new ArrayList<Contact>(0);
-	private Set<BusinessIdentifier> businessIdentifiers = new HashSet<BusinessIdentifier>(0);
-	private Set<PublisherAssertion> publisherAssertionsForFromKey = new HashSet<PublisherAssertion>(0);
+	private List<BusinessIdentifier> businessIdentifiers = new ArrayList<BusinessIdentifier>(0);
+	private List<PublisherAssertion> publisherAssertionsForFromKey = new ArrayList<PublisherAssertion>(0);
 	private List<DiscoveryUrl> discoveryUrls = new ArrayList<DiscoveryUrl>(0);
 	private List<BusinessName> businessNames = new ArrayList<BusinessName>(0);
-	private Set<PublisherAssertion> publisherAssertionsForToKey = new HashSet<PublisherAssertion>(0);
+	private List<PublisherAssertion> publisherAssertionsForToKey = new ArrayList<PublisherAssertion>(0);
 	private BusinessCategoryBag categoryBag;
-	private Set<BusinessService> businessServices = new HashSet<BusinessService>(0);
+	private List<BusinessService> businessServices = new ArrayList<BusinessService>(0);
 	private List<BusinessDescr> businessDescrs = new ArrayList<BusinessDescr>(0);
 
 	public BusinessEntity() {
@@ -61,12 +59,12 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public BusinessEntity(String entityKey, String authorizedName, 
 			UddiEntityPublisher publisher, String operator,
 			Date lastUpdate, List<Contact> contacts,
-			Set<BusinessIdentifier> businessIdentifiers,
-			Set<PublisherAssertion> publisherAssertionsForFromKey,
+			List<BusinessIdentifier> businessIdentifiers,
+			List<PublisherAssertion> publisherAssertionsForFromKey,
 			List<DiscoveryUrl> discoveryUrls, List<BusinessName> businessNames,
-			Set<PublisherAssertion> publisherAssertionsForToKey,
+			List<PublisherAssertion> publisherAssertionsForToKey,
 			BusinessCategoryBag categoryBag,
-			Set<BusinessService> businessServices,
+			List<BusinessService> businessServices,
 			List<BusinessDescr> businessDescrs) {
 		this.entityKey = entityKey;
 		this.publisher = publisher;
@@ -102,20 +100,21 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
-	public Set<BusinessIdentifier> getBusinessIdentifiers() {
+	public List<BusinessIdentifier> getBusinessIdentifiers() {
 		return this.businessIdentifiers;
 	}
 	public void setBusinessIdentifiers(
-			Set<BusinessIdentifier> businessIdentifiers) {
+			List<BusinessIdentifier> businessIdentifiers) {
 		this.businessIdentifiers = businessIdentifiers;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntityByFromKey")
-	public Set<PublisherAssertion> getPublisherAssertionsForFromKey() {
+	@OrderBy
+	public List<PublisherAssertion> getPublisherAssertionsForFromKey() {
 		return this.publisherAssertionsForFromKey;
 	}
 	public void setPublisherAssertionsForFromKey(
-			Set<PublisherAssertion> publisherAssertionsForFromKey) {
+			List<PublisherAssertion> publisherAssertionsForFromKey) {
 		this.publisherAssertionsForFromKey = publisherAssertionsForFromKey;
 	}
 
@@ -138,11 +137,12 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntityByToKey")
-	public Set<PublisherAssertion> getPublisherAssertionsForToKey() {
+	@OrderBy
+	public List<PublisherAssertion> getPublisherAssertionsForToKey() {
 		return this.publisherAssertionsForToKey;
 	}
 	public void setPublisherAssertionsForToKey(
-			Set<PublisherAssertion> publisherAssertionsForToKey) {
+			List<PublisherAssertion> publisherAssertionsForToKey) {
 		this.publisherAssertionsForToKey = publisherAssertionsForToKey;
 	}
 
@@ -155,10 +155,11 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
-	public Set<BusinessService> getBusinessServices() {
+	@OrderBy
+	public List<BusinessService> getBusinessServices() {
 		return this.businessServices;
 	}
-	public void setBusinessServices(Set<BusinessService> businessServices) {
+	public void setBusinessServices(List<BusinessService> businessServices) {
 		this.businessServices = businessServices;
 	}
 

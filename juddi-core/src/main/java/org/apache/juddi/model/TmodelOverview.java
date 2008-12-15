@@ -15,8 +15,8 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,7 +43,7 @@ public class TmodelOverview implements java.io.Serializable {
 	private Long id;
 	private Tmodel tmodel;
 	private String overviewUrl;
-	private Set<TmodelDocDescr> docDescrs = new HashSet<TmodelDocDescr>(0);
+	private List<TmodelDocDescr> docDescrs = new ArrayList<TmodelDocDescr>(0);
 
 	public TmodelOverview() {
 	}
@@ -53,7 +53,7 @@ public class TmodelOverview implements java.io.Serializable {
 	}
 	
 	public TmodelOverview(Tmodel tmodel,
-			String overviewUrl, Set<TmodelDocDescr> docDescrs) {
+			String overviewUrl, List<TmodelDocDescr> docDescrs) {
 		this.tmodel = tmodel;
 		this.overviewUrl = overviewUrl;
 		this.docDescrs = docDescrs;
@@ -90,11 +90,11 @@ public class TmodelOverview implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodeloverview")
 	@OrderBy
-	public Set<TmodelDocDescr> getDocDescriptions() {
+	public List<TmodelDocDescr> getDocDescriptions() {
 		return this.docDescrs;
 	}
 	
-	public void setDocDescriptions(Set<TmodelDocDescr> docDescrs) {
+	public void setDocDescriptions(List<TmodelDocDescr> docDescrs) {
 		this.docDescrs = docDescrs;
 	}	
 }
