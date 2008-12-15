@@ -15,8 +15,10 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -45,7 +47,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private String langCode;
 	private boolean deleted;
 	private Set<TmodelOverview> overviewDocs = new HashSet<TmodelOverview>(0);
-	private Set<TmodelDescr> tmodelDescrs = new HashSet<TmodelDescr>(0);
+	private List<TmodelDescr> tmodelDescrs = new ArrayList<TmodelDescr>(0);
 	private Set<TmodelDocDescr> tmodelDocDescrs = new HashSet<TmodelDocDescr>(0);
 	private Set<TmodelIdentifier> tmodelIdentifiers = new HashSet<TmodelIdentifier>(0);
 	private TmodelCategoryBag categoryBag;
@@ -61,7 +63,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
 			Set<TmodelOverview> overviewDocs,
-			Set<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
+			List<TmodelDescr> tmodelDescrs, Set<TmodelDocDescr> tmodelDocDescrs,
 			Set<TmodelIdentifier> tmodelIdentifiers,
 			TmodelCategoryBag categoryBag) {
 		this.entityKey = entityKey;
@@ -103,7 +105,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 
 	@Column(name = "deleted")
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 	public void setDeleted(boolean deleted) {
@@ -121,10 +123,11 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
-	public Set<TmodelDescr> getTmodelDescrs() {
+	@OrderBy
+	public List<TmodelDescr> getTmodelDescrs() {
 		return this.tmodelDescrs;
 	}
-	public void setTmodelDescrs(Set<TmodelDescr> tmodelDescrs) {
+	public void setTmodelDescrs(List<TmodelDescr> tmodelDescrs) {
 		this.tmodelDescrs = tmodelDescrs;
 	}
 

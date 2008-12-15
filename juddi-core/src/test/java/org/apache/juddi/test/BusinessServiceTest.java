@@ -50,7 +50,7 @@ public class BusinessServiceTest {
 		catch(DispositionReportFaultMessage dr) {
 			Assert.fail("No exception should be thrown", dr);
 		}
-		catch(JAXBException je) {
+		catch(Exception je) {
 			Assert.fail("No exception should be thrown", je);
 		}
 		

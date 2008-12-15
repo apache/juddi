@@ -82,8 +82,10 @@ public abstract class UddiEntityPublisher {
 		Iterator<KeyGeneratorKey> keyGenItr = keyGeneratorKeys.iterator();
 		while(keyGenItr.hasNext()) {
 			KeyGeneratorKey keyGen = keyGenItr.next();
-			if (keyGen.getKeygenTModelKey().equalsIgnoreCase(keygenTModelKey))
+			if (keyGen.getKeygenTModelKey().equalsIgnoreCase(keygenTModelKey)) {
+				keyGenItr.remove();
 				keyGeneratorKeys.remove(keyGen);
+			}
 		}
 	}
 	
@@ -100,10 +102,10 @@ public abstract class UddiEntityPublisher {
 		if (key == null)
 			return false;
 
-		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR) - 1);
+		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
 		for (KeyGeneratorKey keyGenKey : keyGeneratorKeys) {
-			String keyGenPartition = keyGenKey.getKeygenTModelKey().substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR) - 1);
+			String keyGenPartition = keyGenKey.getKeygenTModelKey().substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (keyGenPartition.equalsIgnoreCase(keyPartition))
 				return true;
 		}

@@ -66,7 +66,7 @@ public class MappingModelToApi {
 	
 	}
 
-	public static void mapBusinessNames(Set<org.apache.juddi.model.BusinessName> modelNameList, 
+	public static void mapBusinessNames(List<org.apache.juddi.model.BusinessName> modelNameList, 
 										List<org.uddi.api_v3.Name> apiNameList) 
 				   throws DispositionReportFaultMessage {
 		apiNameList.clear();
@@ -79,7 +79,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapBusinessDescriptions(Set<org.apache.juddi.model.BusinessDescr> modelDescList, 
+	public static void mapBusinessDescriptions(List<org.apache.juddi.model.BusinessDescr> modelDescList, 
 											   List<org.uddi.api_v3.Description> apiDescList) 
 				   throws DispositionReportFaultMessage {
 		apiDescList.clear();
@@ -92,7 +92,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapDiscoveryUrls(Set<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList, 
+	public static void mapDiscoveryUrls(List<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList, 
 										org.uddi.api_v3.DiscoveryURLs apiDiscUrls,
 										org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
@@ -111,7 +111,7 @@ public class MappingModelToApi {
 		apiBusinessEntity.setDiscoveryURLs(apiDiscUrls);
 	}
 	
-	public static void mapContacts(Set<org.apache.juddi.model.Contact> modelContactList, 
+	public static void mapContacts(List<org.apache.juddi.model.Contact> modelContactList, 
 								   org.uddi.api_v3.Contacts apiContacts,
 								   org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
@@ -136,7 +136,7 @@ public class MappingModelToApi {
 		apiBusinessEntity.setContacts(apiContacts);
 	}
 
-	public static void mapContactDescriptions(Set<org.apache.juddi.model.ContactDescr> modelDescList, 
+	public static void mapContactDescriptions(List<org.apache.juddi.model.ContactDescr> modelDescList, 
 											  List<org.uddi.api_v3.Description> apiDescList) 
 	throws DispositionReportFaultMessage {
 		apiDescList.clear();
@@ -149,7 +149,7 @@ public class MappingModelToApi {
 		}
 	}
 	
-	public static void mapPersonNames(Set<org.apache.juddi.model.PersonName> modelPersonNameList, 
+	public static void mapPersonNames(List<org.apache.juddi.model.PersonName> modelPersonNameList, 
 			  List<org.uddi.api_v3.PersonName> apiPersonNameList) 
 	throws DispositionReportFaultMessage {
 		apiPersonNameList.clear();
@@ -162,7 +162,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapContactEmails(Set<org.apache.juddi.model.Email> modelEmailList, 
+	public static void mapContactEmails(List<org.apache.juddi.model.Email> modelEmailList, 
 										List<org.uddi.api_v3.Email> apiEmailList) 
 				   throws DispositionReportFaultMessage {
 		apiEmailList.clear();
@@ -175,7 +175,7 @@ public class MappingModelToApi {
 		}
 	}
 	
-	public static void mapContactPhones(Set<org.apache.juddi.model.Phone> modelPhoneList, 
+	public static void mapContactPhones(List<org.apache.juddi.model.Phone> modelPhoneList, 
 										List<org.uddi.api_v3.Phone> apiPhoneList) 
 				   throws DispositionReportFaultMessage {
 		apiPhoneList.clear();
@@ -188,7 +188,7 @@ public class MappingModelToApi {
 		}
 	}
 
-	public static void mapContactAddresses(Set<org.apache.juddi.model.Address> modelAddressList, 
+	public static void mapContactAddresses(List<org.apache.juddi.model.Address> modelAddressList, 
 										   List<org.uddi.api_v3.Address> apiAddressList) 
 				   throws DispositionReportFaultMessage {
 		apiAddressList.clear();
@@ -451,7 +451,7 @@ public class MappingModelToApi {
 		org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();
 		apiName.setValue(modelTModel.getName());
 		apiTModel.setName(apiName);
-		apiTModel.setDeleted(modelTModel.isDeleted());
+		apiTModel.setDeleted(modelTModel.getDeleted());
 		
 		mapTModelDescriptions(modelTModel.getTmodelDescrs(), apiTModel.getDescription());
 
@@ -462,7 +462,7 @@ public class MappingModelToApi {
 
 	}
 
-	public static void mapTModelDescriptions(Set<org.apache.juddi.model.TmodelDescr> modelDescList, 
+	public static void mapTModelDescriptions(List<org.apache.juddi.model.TmodelDescr> modelDescList, 
 											 List<org.uddi.api_v3.Description> apiDescList) 
 			    throws DispositionReportFaultMessage {
 		apiDescList.clear();

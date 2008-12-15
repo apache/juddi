@@ -69,7 +69,7 @@ public class MappingApiToModel {
 	
 
 	public static void mapBusinessNames(List<org.uddi.api_v3.Name> apiNameList, 
-										Set<org.apache.juddi.model.BusinessName> modelNameList,
+										List<org.apache.juddi.model.BusinessName> modelNameList,
 										org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 		modelNameList.clear();
@@ -80,7 +80,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapBusinessDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
-			  								   Set<org.apache.juddi.model.BusinessDescr> modelDescList,
+			  								   List<org.apache.juddi.model.BusinessDescr> modelDescList,
 			  								   org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
@@ -91,7 +91,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapDiscoveryUrls(org.uddi.api_v3.DiscoveryURLs apiDiscUrls, 
-										Set<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList,
+										List<org.apache.juddi.model.DiscoveryUrl> modelDiscUrlList,
 										org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 		modelDiscUrlList.clear();
@@ -105,7 +105,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapContacts(org.uddi.api_v3.Contacts apiContacts, 
-								   Set<org.apache.juddi.model.Contact> modelContactList,
+								   List<org.apache.juddi.model.Contact> modelContactList,
 								   org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 		modelContactList.clear();
@@ -128,7 +128,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapContactDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
-											  Set<org.apache.juddi.model.ContactDescr> modelDescList,
+											  List<org.apache.juddi.model.ContactDescr> modelDescList,
 											  org.apache.juddi.model.Contact modelContact,
 											  String businessKey) 
 				   throws DispositionReportFaultMessage {
@@ -140,7 +140,7 @@ public class MappingApiToModel {
 	}
 	
 	public static void mapPersonNames(List<org.uddi.api_v3.PersonName> apiPersonNameList, 
-			  						  Set<org.apache.juddi.model.PersonName> modelPersonNameList,
+			  						  List<org.apache.juddi.model.PersonName> modelPersonNameList,
 			  						  org.apache.juddi.model.Contact modelContact,
 			  						  String businessKey) 
 				throws DispositionReportFaultMessage {
@@ -152,7 +152,7 @@ public class MappingApiToModel {
 	}
 	
 	public static void mapContactEmails(List<org.uddi.api_v3.Email> apiEmailList, 
-										Set<org.apache.juddi.model.Email> modelEmailList,
+										List<org.apache.juddi.model.Email> modelEmailList,
 										org.apache.juddi.model.Contact modelContact,
 										String businessKey) 
 				   throws DispositionReportFaultMessage {
@@ -164,7 +164,7 @@ public class MappingApiToModel {
 	}
 	
 	public static void mapContactPhones(List<org.uddi.api_v3.Phone> apiPhoneList, 
-										Set<org.apache.juddi.model.Phone> modelPhoneList,
+										List<org.apache.juddi.model.Phone> modelPhoneList,
 										org.apache.juddi.model.Contact modelContact,
 										String businessKey) 
 				   throws DispositionReportFaultMessage {
@@ -176,7 +176,7 @@ public class MappingApiToModel {
 	}
 	
 	public static void mapContactAddresses(List<org.uddi.api_v3.Address> apiAddressList, 
-										   Set<org.apache.juddi.model.Address> modelAddressList,
+										   List<org.apache.juddi.model.Address> modelAddressList,
 										   org.apache.juddi.model.Contact modelContact,
 										   String businessKey) 
 				   throws DispositionReportFaultMessage {
@@ -339,15 +339,15 @@ public class MappingApiToModel {
 			for (JAXBElement<?> elem : apiCategoryList) {
 				
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
-					Set<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
-					modelKeyedReferences.clear();
+					List<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
+					//modelKeyedReferences.clear();
 					org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference)elem.getValue();
 					modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelCategoryBag, 
 						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
 				}
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
 					Set<org.apache.juddi.model.KeyedReferenceGroup> modelKeyedReferenceGroups=modelCategoryBag.getKeyedReferenceGroups();
-					modelKeyedReferenceGroups.clear();
+					//modelKeyedReferenceGroups.clear();
 					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem.getValue();
 					org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup = new org.apache.juddi.model.KeyedReferenceGroup(modelCategoryBag,apiKeyedReferenceGroup.getTModelKey());
 					modelKeyedReferenceGroups.add(modelKeyedReferenceGroup);
@@ -441,7 +441,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapTModelDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
-											 Set<org.apache.juddi.model.TmodelDescr> modelDescList,
+											 List<org.apache.juddi.model.TmodelDescr> modelDescList,
 											 org.apache.juddi.model.Tmodel modelTModel) 
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();

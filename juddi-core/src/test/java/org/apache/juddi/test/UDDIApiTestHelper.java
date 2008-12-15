@@ -2,7 +2,9 @@ package org.apache.juddi.test;
 
 import static junit.framework.Assert.assertEquals;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Iterator;
 
@@ -22,18 +24,28 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.KeyGeneratorKeyId;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.testng.log4testng.Logger;
+import org.testng.v6.Sets;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIApiTestHelper {
 
-	public static final String ROOT_PUBLISHER = "root";
-	public static final String ROOT_PUBLISHER_KEYGEN = "uddi:juddi.apache.org:keygenerator";
-
-	public static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(thePackage);
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		Object obj = ((JAXBElement)unmarshaller.unmarshal(new File(fileName))).getValue();
+	private static Logger logger = Logger.getLogger(UDDIApiTestHelper.class);
+	
+	@SuppressWarnings("unchecked")
+	public static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException, IOException {
+		Object obj = null;
+		URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+		if (url==null) {
+			logger.error("Could not find resource: " + fileName);
+		} else {
+			InputStream resourceStream =url.openStream();
+	
+			JAXBContext jc = JAXBContext.newInstance(thePackage);
+			Unmarshaller unmarshaller = jc.createUnmarshaller();
+			obj = ((JAXBElement)unmarshaller.unmarshal(resourceStream)).getValue();
+		}
 		return obj;
 	}
 
@@ -42,61 +54,6 @@ public class UDDIApiTestHelper {
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.marshal( new JAXBElement<Object>(new javax.xml.namespace.QName("uri","local"), Object.class, obj), System.out);
 		
-	}
-
-	public static void installRootPublisher(String sourceDir) throws JAXBException, DispositionReportFaultMessage {
-		Publisher apiPub = (Publisher)buildEntityFromDoc(sourceDir + "root_Publisher.xml", "org.apache.juddi.api.datatype");
-		
-		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
-		
-		MappingApiToModel.mapPublisher(apiPub, modelPub);
-		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		em.persist(modelPub);
-		
-		tx.commit();
-		em.close();
-
-	}
-
-	public static void installRootPublisherKeyGen(String sourceDir) throws JAXBException, DispositionReportFaultMessage {
-
-		TModel apiTModel = (TModel)buildEntityFromDoc(sourceDir + "root_tModelKeyGen.xml", "org.uddi.api_v3");
-		
-		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
-		
-		MappingApiToModel.mapTModel(apiTModel, modelTModel);
-		
-		modelTModel.assignAuthorizedName(ROOT_PUBLISHER);
-		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		em.persist(modelTModel);
-		
-		UddiEntityPublisher rootPublisher = em.find(UddiEntityPublisher.class, ROOT_PUBLISHER);
-		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
-		keyGenKey.setId(new KeyGeneratorKeyId(rootPublisher.getAuthorizedName(), 0));
-		keyGenKey.setPublisher(rootPublisher);
-		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
-		rootPublisher.getKeyGeneratorKeys().add(keyGenKey);
-		
-		tx.commit();
-		em.close();
-
-	}
-
-	
-	public static void removeRootPublisher() {
-		deleteEntity(org.apache.juddi.model.UddiEntityPublisher.class, ROOT_PUBLISHER);
-	}
-
-	public static void removeRootPublisherKeyGen() {
-		deleteEntity(org.apache.juddi.model.Tmodel.class, ROOT_PUBLISHER_KEYGEN);
 	}
 
 	public static void deleteEntity(Class<?> entityClass, Object entityKey) {
@@ -178,6 +135,7 @@ public class UDDIApiTestHelper {
 		}
 		List<DiscoveryURL> discList1 = discs1.getDiscoveryURL();
 		List<DiscoveryURL> discList2 = discs2.getDiscoveryURL();
+		
 		if (discList1 == null || discList2 == null) {
 			assertEquals(discList1, discList2);
 			return;

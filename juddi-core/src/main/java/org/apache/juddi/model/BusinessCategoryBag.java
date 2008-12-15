@@ -30,6 +30,10 @@ public class BusinessCategoryBag extends CategoryBag {
 	private static final long serialVersionUID = 1L;
 	private BusinessEntity businessEntity;
 	
+	public BusinessCategoryBag() {
+		super();
+	}
+	
 	public BusinessCategoryBag(BusinessEntity businessEntity) {
 		super();
 		this.businessEntity = businessEntity;

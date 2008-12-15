@@ -45,7 +45,7 @@ public class PublisherAssertionTest {
 		catch(DispositionReportFaultMessage dr) {
 			Assert.fail("No exception should be thrown", dr);
 		}
-		catch(JAXBException je) {
+		catch(Exception je) {
 			Assert.fail("No exception should be thrown", je);
 		}
 
@@ -69,7 +69,7 @@ public class PublisherAssertionTest {
 		catch(DispositionReportFaultMessage dr) {
 			Assert.fail("No exception should be thrown", dr);
 		}
-		catch(JAXBException je) {
+		catch(Exception je) {
 			Assert.fail("No exception should be thrown", je);
 		}
 		

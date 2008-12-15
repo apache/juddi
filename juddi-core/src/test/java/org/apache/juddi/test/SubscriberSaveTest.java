@@ -13,6 +13,7 @@ import org.testng.annotations.*;
 import static junit.framework.Assert.assertEquals;
 
 import org.apache.juddi.api.datatype.*;
+import org.apache.juddi.config.Constants;
 import org.uddi.sub_v3.SaveSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -27,7 +28,7 @@ public class SubscriberSaveTest {
 	@Test
 	public void saveSubscriber(String sourceDir, String subscriptionFile) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(UDDIApiTestHelper.ROOT_PUBLISHER);
+			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
 			System.out.println("AUTHINFO=" + authInfo);
 			SaveSubscription ss = new SaveSubscription();
 			ss.setAuthInfo(authInfo);
@@ -42,7 +43,7 @@ public class SubscriberSaveTest {
 		catch(DispositionReportFaultMessage dr) {
 			dr.printStackTrace();
 			Assert.fail("No exception should be thrown", dr);
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("No exception should be thrown", e);		
 		}
@@ -52,7 +53,7 @@ public class SubscriberSaveTest {
 	@Test
 	public void deleteSubscriber(String subscriptionFile) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(UDDIApiTestHelper.ROOT_PUBLISHER);
+			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
 			System.out.println("AUTHINFO=" + authInfo);
 			
 		}

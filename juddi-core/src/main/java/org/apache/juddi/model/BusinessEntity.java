@@ -15,8 +15,10 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -39,15 +41,15 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private UddiEntityPublisher publisher;
-	private Set<Contact> contacts = new HashSet<Contact>(0);
+	private List<Contact> contacts = new ArrayList<Contact>(0);
 	private Set<BusinessIdentifier> businessIdentifiers = new HashSet<BusinessIdentifier>(0);
 	private Set<PublisherAssertion> publisherAssertionsForFromKey = new HashSet<PublisherAssertion>(0);
-	private Set<DiscoveryUrl> discoveryUrls = new HashSet<DiscoveryUrl>(0);
-	private Set<BusinessName> businessNames = new HashSet<BusinessName>(0);
+	private List<DiscoveryUrl> discoveryUrls = new ArrayList<DiscoveryUrl>(0);
+	private List<BusinessName> businessNames = new ArrayList<BusinessName>(0);
 	private Set<PublisherAssertion> publisherAssertionsForToKey = new HashSet<PublisherAssertion>(0);
 	private BusinessCategoryBag categoryBag;
 	private Set<BusinessService> businessServices = new HashSet<BusinessService>(0);
-	private Set<BusinessDescr> businessDescrs = new HashSet<BusinessDescr>(0);
+	private List<BusinessDescr> businessDescrs = new ArrayList<BusinessDescr>(0);
 
 	public BusinessEntity() {
 	}
@@ -58,14 +60,14 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 	public BusinessEntity(String entityKey, String authorizedName, 
 			UddiEntityPublisher publisher, String operator,
-			Date lastUpdate, Set<Contact> contacts,
+			Date lastUpdate, List<Contact> contacts,
 			Set<BusinessIdentifier> businessIdentifiers,
 			Set<PublisherAssertion> publisherAssertionsForFromKey,
-			Set<DiscoveryUrl> discoveryUrls, Set<BusinessName> businessNames,
+			List<DiscoveryUrl> discoveryUrls, List<BusinessName> businessNames,
 			Set<PublisherAssertion> publisherAssertionsForToKey,
 			BusinessCategoryBag categoryBag,
 			Set<BusinessService> businessServices,
-			Set<BusinessDescr> businessDescrs) {
+			List<BusinessDescr> businessDescrs) {
 		this.entityKey = entityKey;
 		this.publisher = publisher;
 		this.lastUpdate = lastUpdate;
@@ -91,10 +93,10 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
-	public Set<Contact> getContacts() {
+	public List<Contact> getContacts() {
 		return this.contacts;
 	}
-	public void setContacts(Set<Contact> contacts) {
+	public void setContacts(List<Contact> contacts) {
 		this.contacts = contacts;
 	}
 
@@ -119,19 +121,19 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
-	public Set<DiscoveryUrl> getDiscoveryUrls() {
+	public List<DiscoveryUrl> getDiscoveryUrls() {
 		return this.discoveryUrls;
 	}
-	public void setDiscoveryUrls(Set<DiscoveryUrl> discoveryUrls) {
+	public void setDiscoveryUrls(List<DiscoveryUrl> discoveryUrls) {
 		this.discoveryUrls = discoveryUrls;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
-	public Set<BusinessName> getBusinessNames() {
+	public List<BusinessName> getBusinessNames() {
 		return this.businessNames;
 	}
-	public void setBusinessNames(Set<BusinessName> businessNames) {
+	public void setBusinessNames(List<BusinessName> businessNames) {
 		this.businessNames = businessNames;
 	}
 
@@ -162,10 +164,10 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
 	@OrderBy
-	public Set<BusinessDescr> getBusinessDescrs() {
+	public List<BusinessDescr> getBusinessDescrs() {
 		return this.businessDescrs;
 	}
-	public void setBusinessDescrs(Set<BusinessDescr> businessDescrs) {
+	public void setBusinessDescrs(List<BusinessDescr> businessDescrs) {
 		this.businessDescrs = businessDescrs;
 	}
 

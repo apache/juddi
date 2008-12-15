@@ -15,7 +15,9 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,11 +45,11 @@ public class Contact implements java.io.Serializable {
 	private Long id;
 	private BusinessEntity businessEntity;
 	private String useType;
-	private Set<PersonName> personNames = new HashSet<PersonName>(0);
-	private Set<ContactDescr> contactDescrs = new HashSet<ContactDescr>(0);
-	private Set<Email> emails = new HashSet<Email>(0);
-	private Set<Phone> phones = new HashSet<Phone>(0);
-	private Set<Address> addresses = new HashSet<Address>(0);
+	private List<PersonName> personNames = new ArrayList<PersonName>(0);
+	private List<ContactDescr> contactDescrs = new ArrayList<ContactDescr>(0);
+	private List<Email> emails = new ArrayList<Email>(0);
+	private List<Phone> phones = new ArrayList<Phone>(0);
+	private List<Address> addresses = new ArrayList<Address>(0);
 
 	public Contact() {
 	}
@@ -56,8 +58,8 @@ public class Contact implements java.io.Serializable {
 		this.businessEntity = businessEntity;
 	}
 	public Contact(BusinessEntity businessEntity, String useType,
-			Set<PersonName> personNames, Set<ContactDescr> contactDescrs,
-			Set<Email> emails, Set<Phone> phones, Set<Address> addresses) {
+			List<PersonName> personNames, List<ContactDescr> contactDescrs,
+			List<Email> emails, List<Phone> phones, List<Address> addresses) {
 		this.businessEntity = businessEntity;
 		this.useType = useType;
 		this.personNames = personNames;
@@ -95,46 +97,46 @@ public class Contact implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
 	@OrderBy
-	public Set<PersonName> getPersonNames() {
+	public List<PersonName> getPersonNames() {
 		return this.personNames;
 	}
-	public void setPersonNames(Set<PersonName> personNames) {
+	public void setPersonNames(List<PersonName> personNames) {
 		this.personNames = personNames;
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
 	@OrderBy
-	public Set<ContactDescr> getContactDescrs() {
+	public List<ContactDescr> getContactDescrs() {
 		return this.contactDescrs;
 	}
-	public void setContactDescrs(Set<ContactDescr> contactDescrs) {
+	public void setContactDescrs(List<ContactDescr> contactDescrs) {
 		this.contactDescrs = contactDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
 	@OrderBy
-	public Set<Email> getEmails() {
+	public List<Email> getEmails() {
 		return this.emails;
 	}
-	public void setEmails(Set<Email> emails) {
+	public void setEmails(List<Email> emails) {
 		this.emails = emails;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
 	@OrderBy
-	public Set<Phone> getPhones() {
+	public List<Phone> getPhones() {
 		return this.phones;
 	}
-	public void setPhones(Set<Phone> phones) {
+	public void setPhones(List<Phone> phones) {
 		this.phones = phones;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "contact")
 	@OrderBy
-	public Set<Address> getAddresses() {
+	public List<Address> getAddresses() {
 		return this.addresses;
 	}
-	public void setAddresses(Set<Address> addresses) {
+	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
 
