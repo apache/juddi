@@ -37,19 +37,37 @@ public class API_020_TmodelTest {
 	final static String JOE_PUBLISHER_TMODEL_XML      = "api_xml_data/joepublisher/tModelKeyGen.xml";
     final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:juddi.apache.org:joepublisher:KEYGENERATOR";
     
+    final static String SAM_SYNDICATOR_TMODEL_XML     = "api_xml_data/samsyndicator/tModelKeyGen.xml";
+    final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:juddi.apache.org:samco:repository:keygenerator";
+    
 	private static UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private static UDDIInquiryImpl inquiry     = new UDDIInquiryImpl();
 	private static Logger logger               = Logger.getLogger(API_020_TmodelTest.class);
 	
 	@Test
 	public void joePublisher() {
+		String publisherId  = API_010_PublisherTest.JOE_PUBLISHER_ID;
+		String publisherXML = API_010_PublisherTest.JOE_PUBLISHER_XML;
 		API_010_PublisherTest api010 = new API_010_PublisherTest();
-		if (!api010.isExistPublisher(API_010_PublisherTest.JOE_PUBLISHER_ID)) {
+		if (!api010.isExistPublisher(publisherId)) {
 			//Add the Publisher
-			api010.savePublisher(API_010_PublisherTest.JOE_PUBLISHER_ID, API_010_PublisherTest.JOE_PUBLISHER_XML);
+			api010.savePublisher(publisherId, publisherXML);
 		}
-		saveTModel(API_010_PublisherTest.JOE_PUBLISHER_ID, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
-		deleteTModel(API_010_PublisherTest.JOE_PUBLISHER_ID, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+		saveTModel(publisherId, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+		deleteTModel(publisherId, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	@Test
+	public void samSyndicator() {
+		String publisherId  = API_010_PublisherTest.SAM_SYNDICATOR_ID;
+		String publisherXML = API_010_PublisherTest.SAM_SYNDICATOR_XML;
+		API_010_PublisherTest api010 = new API_010_PublisherTest();
+		if (!api010.isExistPublisher(publisherId)) {
+			//Add the Publisher
+			api010.savePublisher(publisherId, publisherXML);
+		}
+		saveTModel(publisherId, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
+		deleteTModel(publisherId, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
 	}
 	
 	public void saveTModel(String publisherId, String tModelXml, String tModelKey) {

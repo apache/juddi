@@ -34,8 +34,12 @@ import org.uddi.api_v3.SaveBusiness;
  */
 public class API_030_BusinessEntityTest {
 	
-	final static String BUSINESS_XML    = "api_xml_data/joepublisher/businessEntity.xml";
-    final static String BUSINESS_KEY    = "uddi:juddi.apache.org:joepublisher:businessone";
+	final static String JOE_BUSINESS_XML    = "api_xml_data/joepublisher/businessEntity.xml";
+    final static String JOE_BUSINESS_KEY    = "uddi:juddi.apache.org:joepublisher:businessone";
+    
+    final static String SAM_BUSINESS_XML    = "api_xml_data/samsyndicator/businessEntity.xml";
+    final static String SAM_BUSINESS_KEY    = "uddi:juddi.apache.org:samco:repository:samco";
+    
     
 	private static UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	private static UDDIInquiryImpl inquiry     = new UDDIInquiryImpl();
@@ -43,18 +47,35 @@ public class API_030_BusinessEntityTest {
 	
 	@Test
 	public void joePublisher() {
-		
+		String publisherId = API_010_PublisherTest.JOE_PUBLISHER_ID;
 		try {
 			API_010_PublisherTest api010 = new API_010_PublisherTest();
-			if (!api010.isExistPublisher(API_010_PublisherTest.JOE_PUBLISHER_ID)) {
+			if (!api010.isExistPublisher(publisherId)) {
 				//Add the Publisher
-				api010.savePublisher(API_010_PublisherTest.JOE_PUBLISHER_ID, API_010_PublisherTest.JOE_PUBLISHER_XML);
+				api010.savePublisher(publisherId, API_010_PublisherTest.JOE_PUBLISHER_XML);
 			}
-			new API_020_TmodelTest().saveTModel(API_010_PublisherTest.JOE_PUBLISHER_ID, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
-			saveBusiness(API_010_PublisherTest.JOE_PUBLISHER_ID, BUSINESS_XML, BUSINESS_KEY);
-			deleteBusiness(API_010_PublisherTest.JOE_PUBLISHER_ID, BUSINESS_XML, BUSINESS_KEY);
+			new API_020_TmodelTest().saveTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
+			saveBusiness(publisherId, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+			deleteBusiness(publisherId, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
 		} finally {
-			new API_020_TmodelTest().deleteTModel(API_010_PublisherTest.JOE_PUBLISHER_ID, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
+			new API_020_TmodelTest().deleteTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
+		}
+	}
+	
+	@Test
+	public void samSyndicator() {
+		String publisherId = API_010_PublisherTest.SAM_SYNDICATOR_ID;
+		try {
+			API_010_PublisherTest api010 = new API_010_PublisherTest();
+			if (!api010.isExistPublisher(publisherId)) {
+				//Add the Publisher
+				api010.savePublisher(publisherId, API_010_PublisherTest.SAM_SYNDICATOR_XML);
+			}
+			new API_020_TmodelTest().saveTModel(publisherId, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
+			saveBusiness(publisherId, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+			deleteBusiness(publisherId, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+		} finally {
+			new API_020_TmodelTest().deleteTModel(publisherId, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
 		}
 	}
 	
