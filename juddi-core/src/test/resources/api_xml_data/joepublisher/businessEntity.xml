@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:joepublisher:businessone">
+  <discoveryURLs>
+    <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
+    <discoveryURL useType="serviceList">http://www.businessone.com/services</discoveryURL>
+  </discoveryURLs>
+  <name xml:lang="en">John Doe Enterprises</name>
+  <name xml:lang="es">Negocio Uno</name>
+  <description xml:lang="en">This is the description for Business One.</description>
+  <contacts>
+    <contact useType="administrator">
+      <personName xml:lang="en">John Doe</personName>
+      <personName xml:lang="es">Juan Doe</personName>
+      <description xml:lang="en">This is the administrator of the service offerings.</description>
+      <description xml:lang="es">Éste es el administrador de las ofrendas del servicio.</description>
+      <phone useType="office">123-456-7890</phone>
+      <phone useType="mobile">987-654-3210</phone>
+      <email useType="work">jdoe@businessone.com</email>
+      <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelKey:address">
+        <addressLine keyName="suite" keyValue="suite">Suite 1500</addressLine>
+        <addressLine keyName="street" keyValue="street">1515 Main St.</addressLine>
+        <addressLine keyName="citystatezip" keyValue="citystatezip">Chicago, IL 60614</addressLine>
+        <addressLine keyName="country" keyValue="country">USA</addressLine>
+      </address>
+    </contact>
+    <contact useType="engineer">
+      <personName xml:lang="en">Steve Smith</personName>
+      <phone useType="office">555-111-2222</phone>
+      <email useType="work">ssmith@businessone.com</email>
+    </contact>
+  </contacts>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="oranges" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:sports" keyName="category" keyValue="football" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    </keyedReferenceGroup>
+  </categoryBag>
+  <identifierBag>
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
+  </identifierBag>
+</businessEntity>

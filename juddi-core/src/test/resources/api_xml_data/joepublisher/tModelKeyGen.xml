@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tModel tModelKey="uddi:juddi.apache.org:joepublisher:KEYGENERATOR" xmlns="urn:uddi-org:api_v3">
+  <name>Joe Publisher's Key Generator</name>
+  <description>This is the key generator for Joe Publisher's UDDI entities!</description>
+  <overviewDoc>
+    <overviewURL useType="text">
+      http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
+  </overviewDoc>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+      keyValue="keyGenerator" />
+  </categoryBag>
+</tModel>

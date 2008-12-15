@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessService xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+     businessKey="uddi:juddi.apache.org:joepublisher:businessone" serviceKey="uddi:juddi.apache.org:joepublisher:serviceone">
+  <name xml:lang="en">Service One</name>
+  <name xml:lang="es">Servicio Uno</name>
+  <description xml:lang="en">This is the description of service one.</description>
+  <description xml:lang="es">Ésta es la descripción del servicio uno.</description>
+  <bindingTemplates>
+    <bindingTemplate bindingKey="uddi:juddi.apache.org:joepublisher:bindingone">
+      <description xml:lang="en">This is the access point for service one.</description>
+      <accessPoint useType="endPoint">http://businessone.com/services/serviceone</accessPoint>
+      <tModelInstanceDetails>
+        <tModelInstanceInfo tModelKey="uddi:businessone.com:services:serviceone:wsdlSpec">
+          <description xml:lang="en">The wsdl for this service: service one</description>
+          <instanceDetails>
+            <overviewDoc>
+              <description xml:lang="en">Help document to describe the WSDL</description>
+              <overviewURL useType="text">http://www.w3.org/TR/wsdl</overviewURL>
+            </overviewDoc>
+            <instanceParms>instanceParms</instanceParms>
+          </instanceDetails>
+        </tModelInstanceInfo>
+      </tModelInstanceDetails>
+	  <categoryBag>
+	    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="accesspoint" />
+	  </categoryBag>
+    </bindingTemplate>
+  </bindingTemplates>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    </keyedReferenceGroup>
+  </categoryBag>
+</businessService>
