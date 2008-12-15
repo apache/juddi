@@ -121,6 +121,12 @@ public class AppConfig
 		
 		result.setProperty(Property.JUDDI_ROOT_DOMAIN, rootKeyGen);
 		
+		// Get node id.  Do a findBusinessByCategory query and look for the node category key. It's ok if the value isn't found because on 
+		// initial startup, the node business entity won't exist.
+		String nodeId = "";
+		result.setProperty(Property.JUDDI_NODE_ID, nodeId);
+		
+		
 		tx.commit();
 		em.close();
 		

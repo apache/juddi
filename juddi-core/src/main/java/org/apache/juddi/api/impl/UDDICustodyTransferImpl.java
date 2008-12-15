@@ -18,10 +18,15 @@
 package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
+import org.apache.juddi.validation.ValidatePublish;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
@@ -31,7 +36,7 @@ import org.uddi.v3_service.UDDICustodyTransferPortType;
 @WebService(serviceName="UDDICustodyTransferService", 
 			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType",
 			targetNamespace = "urn:uddi-org:custody_v3_portType")
-public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
+public class UDDICustodyTransferImpl extends AuthenticatedService implements UDDICustodyTransferPortType {
 
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
@@ -41,7 +46,18 @@ public class UDDICustodyTransferImpl implements UDDICustodyTransferPortType {
 	public void getTransferToken(String authInfo, KeyBag keyBag,
 			Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
 			Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
-		ValidateCustodyTransfer.unsupportedAPICall();	
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+		
+		new ValidateCustodyTransfer(publisher).validateGetTransferToken(em, keyBag);
+
+
+		tx.commit();
+		em.close();
 	}
 
 	public void transferEntities(TransferEntities body)
