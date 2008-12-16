@@ -43,11 +43,12 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	private Long id;
 	private BindingTemplate bindingTemplate;
 	private String tmodelKey;
-	private String instanceParms;
-	private List<InstanceDetailsDocDescr> instanceDetailsDocDescrs = new ArrayList<InstanceDetailsDocDescr>(0);
-	private List<InstanceDetailsDescr> instanceDetailsDescrs = new ArrayList<InstanceDetailsDescr>(0);
 	private List<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs = new ArrayList<TmodelInstanceInfoDescr>(0);
 
+	private String instanceParms;
+	private List<OverviewDoc> overviewDocs = new ArrayList<OverviewDoc>(0);
+	private List<InstanceDetailsDescr> instanceDetailsDescrs = new ArrayList<InstanceDetailsDescr>(0);
+	
 	public TmodelInstanceInfo() {
 	}
 
@@ -57,13 +58,13 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 	}
 	public TmodelInstanceInfo(BindingTemplate bindingTemplate, String tmodelKey,
 			String instanceParms,
-			List<InstanceDetailsDocDescr> instanceDetailsDocDescrs,
+			List<OverviewDoc> overviewDocs,
 			List<InstanceDetailsDescr> instanceDetailsDescrs,
 			List<TmodelInstanceInfoDescr> tmodelInstanceInfoDescrs) {
 		this.bindingTemplate = bindingTemplate;
 		this.tmodelKey = tmodelKey;
 		this.instanceParms = instanceParms;
-		this.instanceDetailsDocDescrs = instanceDetailsDocDescrs;
+		this.overviewDocs = overviewDocs;
 		this.instanceDetailsDescrs = instanceDetailsDescrs;
 		this.tmodelInstanceInfoDescrs = tmodelInstanceInfoDescrs;
 	}
@@ -104,12 +105,12 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")
 	@OrderBy
-	public List<InstanceDetailsDocDescr> getInstanceDetailsDocDescrs() {
-		return this.instanceDetailsDocDescrs;
+	public List<OverviewDoc> getOverviewDocs() {
+		return this.overviewDocs;
 	}
-	public void setInstanceDetailsDocDescrs(
-			List<InstanceDetailsDocDescr> instanceDetailsDocDescrs) {
-		this.instanceDetailsDocDescrs = instanceDetailsDocDescrs;
+	public void setOverviewDocs(
+			List<OverviewDoc> overviewDocs) {
+		this.overviewDocs = overviewDocs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodelInstanceInfo")

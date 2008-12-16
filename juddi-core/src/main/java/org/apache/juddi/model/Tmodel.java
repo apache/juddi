@@ -44,9 +44,8 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private String name;
 	private String langCode;
 	private boolean deleted;
-	private List<TmodelOverview> overviewDocs = new ArrayList<TmodelOverview>(0);
+	private List<OverviewDoc> overviewDocs = new ArrayList<OverviewDoc>(0);
 	private List<TmodelDescr> tmodelDescrs = new ArrayList<TmodelDescr>(0);
-	private List<TmodelDocDescr> tmodelDocDescrs = new ArrayList<TmodelDocDescr>(0);
 	private List<TmodelIdentifier> tmodelIdentifiers = new ArrayList<TmodelIdentifier>(0);
 	private TmodelCategoryBag categoryBag;
 
@@ -60,8 +59,8 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
 			String name, String langCode, boolean deleted, Date lastUpdate,
-			List<TmodelOverview> overviewDocs,
-			List<TmodelDescr> tmodelDescrs, List<TmodelDocDescr> tmodelDocDescrs,
+			List<OverviewDoc> overviewDocs,
+			List<TmodelDescr> tmodelDescrs,
 			List<TmodelIdentifier> tmodelIdentifiers,
 			TmodelCategoryBag categoryBag) {
 		this.entityKey = entityKey;
@@ -72,7 +71,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.lastUpdate = lastUpdate;
 		this.overviewDocs = overviewDocs;
 		this.tmodelDescrs = tmodelDescrs;
-		this.tmodelDocDescrs = tmodelDocDescrs;
 		this.tmodelIdentifiers = tmodelIdentifiers;
 		this.categoryBag = categoryBag;
 	}
@@ -112,11 +110,11 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
 	@OrderBy
-	public List<TmodelOverview> getOverviewDocs() {
+	public List<OverviewDoc> getOverviewDocs() {
 		return this.overviewDocs;
 	}
 	
-	public void setOverviewDocs(List<TmodelOverview> overviewDocs) {
+	public void setOverviewDocs(List<OverviewDoc> overviewDocs) {
 		this.overviewDocs = overviewDocs;
 	}
 
@@ -127,15 +125,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public void setTmodelDescrs(List<TmodelDescr> tmodelDescrs) {
 		this.tmodelDescrs = tmodelDescrs;
-	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
-	@OrderBy
-	public List<TmodelDocDescr> getTmodelDocDescrs() {
-		return this.tmodelDocDescrs;
-	}
-	public void setTmodelDocDescrs(List<TmodelDocDescr> tmodelDocDescrs) {
-		this.tmodelDocDescrs = tmodelDocDescrs;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")

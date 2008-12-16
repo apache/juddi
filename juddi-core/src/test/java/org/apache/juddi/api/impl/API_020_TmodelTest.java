@@ -73,7 +73,7 @@ public class API_020_TmodelTest {
 		
 		// Add the tModel
 		try {
-			logger.info("Getting auth token..");
+			logger.debug("Getting auth token..");
 			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
 			
 			SaveTModel st = new SaveTModel();
@@ -105,7 +105,7 @@ public class API_020_TmodelTest {
 	public void deleteTModel(String publisherId, String tModelXml, String tModelKey) {
 		
 		try {
-			logger.info("Getting auth token..");
+			logger.debug("Getting auth token..");
 			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
 			//Now deleting the TModel
 			// Delete the entity and make sure it is removed

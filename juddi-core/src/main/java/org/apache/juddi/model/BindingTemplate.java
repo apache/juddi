@@ -40,13 +40,14 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 
 	private static final long serialVersionUID = 1L;
 	private BusinessService businessService;
+	private List<BindingDescr> bindingDescrs = new ArrayList<BindingDescr>(0);
+
 	private String accessPointType;
 	private String accessPointUrl;
 	private String hostingRedirector;
 	private BindingCategoryBag categoryBag;
 	private List<TmodelInstanceInfo> tmodelInstanceInfos = new ArrayList<TmodelInstanceInfo>(0);
-	private List<BindingDescr> bindingDescrs = new ArrayList<BindingDescr>(0);
-
+	
 	public BindingTemplate() {
 	}
 

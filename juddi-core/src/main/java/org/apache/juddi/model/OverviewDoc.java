@@ -36,27 +36,35 @@ import javax.persistence.Table;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
-@Table(name = "tmodel_overview")
-public class TmodelOverview implements java.io.Serializable {
+@Table(name = "overview_doc")
+public class OverviewDoc implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	private TmodelInstanceInfo tmodelInstanceInfo;
 	private Tmodel tmodel;
 	private String overviewUrl;
-	private List<TmodelDocDescr> docDescrs = new ArrayList<TmodelDocDescr>(0);
+	private String overviewUrlUseType;
+	private List<OverviewDocDescr> overviewDocDescrs = new ArrayList<OverviewDocDescr>(0);
 
-	public TmodelOverview() {
+	public OverviewDoc() {
 	}
 
-	public TmodelOverview(Tmodel tmodel) {
+	public OverviewDoc(TmodelInstanceInfo tmodelInstanceInfo) {
+		this.tmodelInstanceInfo = tmodelInstanceInfo;
+	}
+	
+	public OverviewDoc(Tmodel tmodel) {
 		this.tmodel = tmodel;
 	}
 	
-	public TmodelOverview(Tmodel tmodel,
-			String overviewUrl, List<TmodelDocDescr> docDescrs) {
+	public OverviewDoc(TmodelInstanceInfo tmodelInstanceInfo, Tmodel tmodel,
+			String overviewUrl, String overviewUrlUseType, List<OverviewDocDescr> overviewDocDescrs) {
+		this.tmodelInstanceInfo = tmodelInstanceInfo;
 		this.tmodel = tmodel;
 		this.overviewUrl = overviewUrl;
-		this.docDescrs = docDescrs;
+		this.overviewUrlUseType = overviewUrlUseType;
+		this.overviewDocDescrs = overviewDocDescrs;
 	}
 
 	@Id
@@ -70,7 +78,17 @@ public class TmodelOverview implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "entity_key", nullable = false)
+	@JoinColumn(name = "tomodel_instance_info_id", nullable = true)
+	public TmodelInstanceInfo getTmodelInstanceInfo() {
+		return this.tmodelInstanceInfo;
+	}
+
+	public void setTmodelInstanceInfo(TmodelInstanceInfo tmodelInstanceInfo) {
+		this.tmodelInstanceInfo = tmodelInstanceInfo;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tmodel_id", nullable = true)
 	public Tmodel getTmodel() {
 		return this.tmodel;
 	}
@@ -79,7 +97,7 @@ public class TmodelOverview implements java.io.Serializable {
 		this.tmodel = tmodel;
 	}
 
-	@Column(name = "overview_url")
+	@Column(name = "overview_url", nullable = false)
 	public String getOverviewUrl() {
 		return this.overviewUrl;
 	}
@@ -87,14 +105,23 @@ public class TmodelOverview implements java.io.Serializable {
 	public void setOverviewUrl(String overviewUrl) {
 		this.overviewUrl = overviewUrl;
 	}
+	
+	@Column(name = "overview_url_use_type", nullable = true)
+	public String getOverviewUrlUseType() {
+		return this.overviewUrlUseType;
+	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodeloverview")
+	public void setOverviewUrlUseType(String overviewUrlUseType) {
+		this.overviewUrlUseType = overviewUrlUseType;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "overviewDoc")
 	@OrderBy
-	public List<TmodelDocDescr> getDocDescriptions() {
-		return this.docDescrs;
+	public List<OverviewDocDescr> getOverviewDocDescrs() {
+		return this.overviewDocDescrs;
 	}
 	
-	public void setDocDescriptions(List<TmodelDocDescr> docDescrs) {
-		this.docDescrs = docDescrs;
+	public void setOverviewDocDescrs(List<OverviewDocDescr> overviewDocDescrs) {
+		this.overviewDocDescrs = overviewDocDescrs;
 	}	
 }

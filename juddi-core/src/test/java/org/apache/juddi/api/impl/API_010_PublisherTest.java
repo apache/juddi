@@ -66,7 +66,7 @@ public class API_010_PublisherTest {
 	
 	public void savePublisher(String publisherId, String publisherXML) {
 		try {
-			logger.info("Getting auth token..");
+			logger.debug("Getting auth token..");
 			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
 			
 			logger.debug("Saving new publisher: " + publisherXML);
@@ -93,7 +93,7 @@ public class API_010_PublisherTest {
 			assertEquals(pubIn.getMaxServicePerBusiness(), pubOut.getMaxServicePerBusiness());
 			assertEquals(pubIn.getMaxTModels(), pubOut.getMaxTModels());
 			
-			logger.info("Querying for publisher: " + publisherXML);
+			logger.debug("Querying for publisher: " + publisherXML);
 			//Querying for this publisher to make sure it's really gone
 			//We're expecting a invalid Key exception at this point.
 			PublisherDetail pdBeforeDelete =null;
@@ -112,10 +112,10 @@ public class API_010_PublisherTest {
 	
 	public void deletePublisher(String publisherId) {
 		try {
-			logger.info("Getting auth token..");
+			logger.debug("Getting auth token..");
 			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
 			
-			logger.info("Delete publisher: " + publisherId);
+			logger.debug("Delete publisher: " + publisherId);
 			//Now deleting this publisher
 			DeletePublisher dp = new DeletePublisher();
 			dp.setAuthInfo(authInfo);

@@ -373,8 +373,8 @@ public class MappingApiToModel {
 			for (org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo : apiTModelInstInfoList) {
 				org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo = new org.apache.juddi.model.TmodelInstanceInfo(modelBindingTemplate, apiTModelInstInfo.getTModelKey());
 				
-				mapTModelInstanceInfoDescriptions(apiTModelInstInfo.getDescription(), modelTModelInstInfo.getTmodelInstanceInfoDescrs(), modelTModelInstInfo, modelBindingTemplate.getEntityKey());
-				mapInstanceDetails(apiTModelInstInfo.getInstanceDetails(), modelTModelInstInfo, modelBindingTemplate.getEntityKey());
+				mapTModelInstanceInfoDescriptions(apiTModelInstInfo.getDescription(), modelTModelInstInfo.getTmodelInstanceInfoDescrs(), modelTModelInstInfo);
+				mapInstanceDetails(apiTModelInstInfo.getInstanceDetails(), modelTModelInstInfo);
 				
 				modelTModelInstInfoList.add(modelTModelInstInfo);
 			}
@@ -383,8 +383,7 @@ public class MappingApiToModel {
 
 	public static void mapTModelInstanceInfoDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
 														 List<org.apache.juddi.model.TmodelInstanceInfoDescr> modelDescList,
-														 org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo,
-														 String bindingKey) 
+														 org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo) 
 				   throws DispositionReportFaultMessage {
 		modelDescList.clear();
 
@@ -394,31 +393,53 @@ public class MappingApiToModel {
 	}
 
 	public static void mapInstanceDetails(org.uddi.api_v3.InstanceDetails apiInstanceDetails, 
-										  org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo,
-										  String bindingKey) 
+										  org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo) 
 				   throws DispositionReportFaultMessage {
 		modelTModelInstInfo.getInstanceDetailsDescrs().clear();
 
 		if (apiInstanceDetails != null) {
 			List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
-			int docId = 0;
-			int descId = 0;
 			for (JAXBElement<?> elem : apiInstanceDetailsContent) {
-				if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
-					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
-					// TODO: OverviewDoc is not mapped properly in the model.
-				}
-				else if (elem.getValue() instanceof org.uddi.api_v3.Description) {
+				if (elem.getValue() instanceof org.uddi.api_v3.Description) {
 					org.uddi.api_v3.Description apiDesc = (org.uddi.api_v3.Description)elem.getValue();
-					
-					modelTModelInstInfo.getInstanceDetailsDescrs().add(new org.apache.juddi.model.InstanceDetailsDescr(modelTModelInstInfo, apiDesc.getLang(), apiDesc.getValue()));
-				}
-				else if (elem.getValue() instanceof String) {
+					org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr = 
+							new org.apache.juddi.model.InstanceDetailsDescr(
+									modelTModelInstInfo, apiDesc.getLang(), apiDesc.getValue());
+					modelTModelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
+				} else if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
+					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
+					org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTModelInstInfo);
+					mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
+				} else if (elem.getValue() instanceof String) {
 					modelTModelInstInfo.setInstanceParms((String)elem.getValue());
 				}
 			}
 		}
 	}
+	
+	public static void mapOverviewDoc(org.uddi.api_v3.OverviewDoc apiOverviewDoc, 
+									  org.apache.juddi.model.OverviewDoc modelOverviewDoc)
+				throws DispositionReportFaultMessage {
+		if (apiOverviewDoc != null) {
+			
+			List<JAXBElement<?>> apiOverviewDocContent = apiOverviewDoc.getContent();
+			for (JAXBElement<?> elem : apiOverviewDocContent) {
+				if (elem.getValue() instanceof org.uddi.api_v3.AccessPoint) {
+					org.uddi.api_v3.AccessPoint accessPoint = (org.uddi.api_v3.AccessPoint) elem.getValue();
+					modelOverviewDoc.setOverviewUrl(accessPoint.getValue());
+					modelOverviewDoc.setOverviewUrlUseType(accessPoint.getUseType());
+				} else if (elem.getValue() instanceof org.uddi.api_v3.Description) {
+					org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem.getValue();
+					org.apache.juddi.model.OverviewDocDescr modelOverviewDocDescr 
+						= new org.apache.juddi.model.OverviewDocDescr(
+								modelOverviewDoc, description.getLang(), description.getValue());
+					modelOverviewDoc.getOverviewDocDescrs().add(modelOverviewDocDescr);
+				}
+			}
+		}
+	}
+	
+	
 	
 	public static void mapTModel(org.uddi.api_v3.TModel apiTModel, 
 								 org.apache.juddi.model.Tmodel modelTModel) 
@@ -435,8 +456,7 @@ public class MappingApiToModel {
 			modelTModel.setCategoryBag(new org.apache.juddi.model.TmodelCategoryBag(modelTModel));
 			mapCategoryBag(apiTModel.getCategoryBag(), modelTModel.getCategoryBag());
 		}
-		//TODO: OverviewDoc - model doesn't have logical mapping
-
+		mapTModelOverviewDocs(apiTModel.getOverviewDoc(), modelTModel.getOverviewDocs(), modelTModel);
 	}
 
 	public static void mapTModelDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
@@ -461,6 +481,18 @@ public class MappingApiToModel {
 			for (org.uddi.api_v3.KeyedReference apiKeyedRef : apiKeyedRefList) {
 				modelIdentifierList.add(new org.apache.juddi.model.TmodelIdentifier(modelTModel, apiKeyedRef.getTModelKey(), apiKeyedRef.getKeyName(), apiKeyedRef.getKeyValue()));
 			}
+		}
+	}
+	
+	public static void mapTModelOverviewDocs(List<org.uddi.api_v3.OverviewDoc> apiOverviewDocList, 
+			 List<org.apache.juddi.model.OverviewDoc> modelOverviewDocList,
+			 org.apache.juddi.model.Tmodel modelTModel)
+		throws DispositionReportFaultMessage {
+		modelOverviewDocList.clear();
+		
+		for (org.uddi.api_v3.OverviewDoc apiOverviewDoc : apiOverviewDocList) {
+			org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTModel);
+			mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
 		}
 	}
 	

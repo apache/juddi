@@ -31,29 +31,26 @@ import javax.persistence.Table;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
-@Table(name = "tmodel_doc_descr")
-public class TmodelDocDescr implements java.io.Serializable {
+@Table(name = "overview_doc_descr")
+public class OverviewDocDescr implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private Tmodel tmodel;
-	private TmodelOverview tmodeloverview;
+	private OverviewDoc overviewDoc;
 	private String langCode;
 	private String descr;
 
-	public TmodelDocDescr() {
+	public OverviewDocDescr() {
 	}
 
-	public TmodelDocDescr(Tmodel tmodel, TmodelOverview tmodeloverview, String descr) {
-		this.tmodel = tmodel;
-		this.tmodeloverview = tmodeloverview;
+	public OverviewDocDescr(OverviewDoc overviewDoc, String descr) {
+		this.overviewDoc = overviewDoc;
 		this.descr = descr;
 	}
 
-	public TmodelDocDescr(Tmodel tmodel, TmodelOverview tmodeloverview, String langCode,
+	public OverviewDocDescr(OverviewDoc overviewDoc, String langCode,
 			String descr) {
-		this.tmodel = tmodel;
-		this.tmodeloverview = tmodeloverview;
+		this.overviewDoc = overviewDoc;
 		this.langCode = langCode;
 		this.descr = descr;
 	}
@@ -68,21 +65,12 @@ public class TmodelDocDescr implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tmodel_key", nullable = false)
-	public Tmodel getTmodel() {
-		return this.tmodel;
+	@JoinColumn(name = "overview_doc_id", nullable = true)
+	public OverviewDoc getOverviewDoc() {
+		return this.overviewDoc;
 	}
-	public void setTmodel(Tmodel tmodel) {
-		this.tmodel = tmodel;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tmodel_doc_descr", nullable = false, insertable = false, updatable = false)
-	public TmodelOverview getTmodeloverview() {
-		return this.tmodeloverview;
-	}
-	public void setTmodeloverview(TmodelOverview tmodeloverview) {
-		this.tmodeloverview = tmodeloverview;
+	public void setOverviewDoc(OverviewDoc overviewDoc) {
+		this.overviewDoc = overviewDoc;
 	}
 	
 	@Column(name = "lang_code", length = 5)
