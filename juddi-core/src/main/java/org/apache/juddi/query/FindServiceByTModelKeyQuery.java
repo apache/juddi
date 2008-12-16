@@ -131,13 +131,13 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 					if (!fq.isOrAllKeys()) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-						thetaJoins.append(entityAliasChild + (tblCount - 1) + ".id." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + BindingTemplateQuery.KEY_NAME + " ");
+						thetaJoins.append(entityAliasChild + (tblCount - 1) + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 					}
 				}
 				else {
 					qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-					thetaJoins.append(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + ".id." + BindingTemplateQuery.KEY_NAME + " ");
+					thetaJoins.append(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
 					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 				}
 			}

@@ -43,7 +43,11 @@ public class FindTModelByIdentifierQuery {
 	private static FindEntityByIdentifierQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByIdentifierQuery(TModelQuery.ENTITY_NAME, TModelQuery.ENTITY_ALIAS, TModelQuery.KEY_NAME, ENTITY_NAME_CHILD);
+		findQuery = new FindEntityByIdentifierQuery(TModelQuery.ENTITY_NAME, 
+													TModelQuery.ENTITY_ALIAS, 
+													TModelQuery.KEY_NAME, 
+													TModelQuery.ENTITY_FIELD, 
+													ENTITY_NAME_CHILD);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {

@@ -70,7 +70,7 @@ public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 		qry.pad().comma().pad().append(FindBusinessByNameQuery.ENTITY_NAME_CHILD).pad().append(buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD)).pad();
 		qry.WHERE().pad().append(ENTITY_ALIAS + "." + KEY_NAME).pad();
 		qry.append(DynamicQuery.PREDICATE_EQUALS).pad();
-		qry.append(buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD) + ".id." + KEY_NAME).pad();
+		qry.append(buildAlias(FindBusinessByNameQuery.ENTITY_NAME_CHILD) + "." + ENTITY_FIELD + "." + KEY_NAME).pad();
 	}
 	
 	/*

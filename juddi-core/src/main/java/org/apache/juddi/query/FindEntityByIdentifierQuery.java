@@ -52,14 +52,16 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 	private String entityName;
 	private String entityAlias;
 	private String keyName;
+	private String entityField;
 	private String entityNameChild;
 	private String entityAliasChild;
 	private String selectSQL;
 
-	public FindEntityByIdentifierQuery(String entityName, String entityAlias, String keyName, String entityNameChild) {
+	public FindEntityByIdentifierQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
 		this.entityName = entityName;
 		this.entityAlias = entityAlias;
 		this.keyName = keyName;
+		this.entityField = entityField;
 		this.entityNameChild = entityNameChild;
 		this.entityAliasChild = buildAlias(entityNameChild);
 		
@@ -78,6 +80,10 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 
 	public String getKeyName() {
 		return keyName;
+	}
+
+	public String getEntityField() {
+		return entityField;
 	}
 
 	public String getEntityNameChild() {
@@ -235,14 +241,14 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 					else {
 						tblCount++;
 						qry.comma().pad().append(entityNameChild + " " + entityAliasChild + tblCount).pad();
-						thetaJoins.append(entityAliasChild + (tblCount - 1) + ".id." + keyName + " = " + entityAliasChild + tblCount + ".id." + keyName + " ");
+						thetaJoins.append(entityAliasChild + (tblCount - 1) + "." + entityField + "." + keyName + " = " + entityAliasChild + tblCount + "." + entityField + "." + keyName + " ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 					}
 
 				}
 				else {
 					qry.comma().pad().append(entityNameChild + " " + entityAliasChild + tblCount).pad();
-					thetaJoins.append(entityAlias + "." + keyName + " = " + entityAliasChild + tblCount + ".id." + keyName + " ");
+					thetaJoins.append(entityAlias + "." + keyName + " = " + entityAliasChild + tblCount + "." + entityField + "." + keyName + " ");
 					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 				}
 				prevTModelKey = curTModelKey;

@@ -39,14 +39,16 @@ public class FindEntityByNamesQuery extends EntityQuery {
 	private String entityName;
 	private String entityAlias;
 	private String keyName;
+	private String entityField;
 	private String entityNameChild;
 	private String entityAliasChild;
 	private String selectSQL;
 	
-	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityNameChild) {
+	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
 		this.entityName = entityName;
 		this.entityAlias = entityAlias;
 		this.keyName = keyName;
+		this.entityField = entityField;
 		this.entityNameChild = entityNameChild;
 		this.entityAliasChild = buildAlias(entityNameChild);
 		
@@ -65,6 +67,10 @@ public class FindEntityByNamesQuery extends EntityQuery {
 
 	public String getKeyName() {
 		return keyName;
+	}
+	
+	public String getEntityField() {
+		return entityField;
 	}
 
 	public String getEntityNameChild() {
@@ -145,7 +151,7 @@ public class FindEntityByNamesQuery extends EntityQuery {
 	public void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<Name> names) {
 		qry.comma().pad().append(entityNameChild + " " + entityAliasChild).pad();
 		qry.WHERE().pad().openParen().pad();
-		qry.append(entityAlias + "." + keyName + " = " + entityAliasChild + ".id." + keyName + " ");
+		qry.append(entityAlias + "." + keyName + " = " + entityAliasChild + "." + entityField + "." + keyName + " ");
 		qry.closeParen().pad();
 	}
 	

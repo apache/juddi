@@ -110,7 +110,7 @@ public class FindBusinessByDiscoveryURLQuery extends BusinessEntityQuery {
 	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<DiscoveryURL> discURLs) {
 		qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild).pad();
 		qry.WHERE().pad().openParen().pad();
-		qry.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + entityAliasChild + ".id." + KEY_NAME + " ");
+		qry.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + entityAliasChild + "." + ENTITY_FIELD + "." + KEY_NAME + " ");
 		qry.closeParen().pad();
 	}
 	

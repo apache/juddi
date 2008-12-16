@@ -50,7 +50,11 @@ public class FindBusinessByNameQuery {
 	private static FindEntityByNamesQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByNamesQuery(BusinessEntityQuery.ENTITY_NAME, BusinessEntityQuery.ENTITY_ALIAS, BusinessEntityQuery.KEY_NAME, ENTITY_NAME_CHILD);
+		findQuery = new FindEntityByNamesQuery(BusinessEntityQuery.ENTITY_NAME, 
+											   BusinessEntityQuery.ENTITY_ALIAS, 
+											   BusinessEntityQuery.KEY_NAME, 
+											   BusinessEntityQuery.ENTITY_FIELD, 
+											   ENTITY_NAME_CHILD);
 	}
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn) {

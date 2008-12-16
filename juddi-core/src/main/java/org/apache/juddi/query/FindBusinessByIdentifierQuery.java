@@ -42,7 +42,11 @@ public class FindBusinessByIdentifierQuery {
 	private static FindEntityByIdentifierQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByIdentifierQuery(BusinessEntityQuery.ENTITY_NAME, BusinessEntityQuery.ENTITY_ALIAS, BusinessEntityQuery.KEY_NAME, ENTITY_NAME_CHILD);
+		findQuery = new FindEntityByIdentifierQuery(BusinessEntityQuery.ENTITY_NAME, 
+													BusinessEntityQuery.ENTITY_ALIAS, 
+													BusinessEntityQuery.KEY_NAME, 
+													BusinessEntityQuery.ENTITY_FIELD, 
+													ENTITY_NAME_CHILD);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {

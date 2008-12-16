@@ -50,7 +50,11 @@ public class FindServiceByNameQuery {
 	private static FindEntityByNamesQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByNamesQuery(BusinessServiceQuery.ENTITY_NAME, BusinessServiceQuery.ENTITY_ALIAS, BusinessServiceQuery.KEY_NAME, ENTITY_NAME_CHILD);
+		findQuery = new FindEntityByNamesQuery(BusinessServiceQuery.ENTITY_NAME, 
+											   BusinessServiceQuery.ENTITY_ALIAS, 
+											   BusinessServiceQuery.KEY_NAME, 
+											   BusinessServiceQuery.ENTITY_FIELD, 
+											   ENTITY_NAME_CHILD);
 	}
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, String parentKey, List<?> keysIn) {

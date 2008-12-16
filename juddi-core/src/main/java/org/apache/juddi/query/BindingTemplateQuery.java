@@ -24,7 +24,8 @@ public class BindingTemplateQuery extends EntityQuery {
 
 	public static final String ENTITY_NAME = "BindingTemplate";
 	public static final String ENTITY_ALIAS = "bt";
-	public static final String KEY_NAME_PARENT = "businessService." + BusinessServiceQuery.KEY_NAME;
+	public static final String ENTITY_FIELD = "bindingTemplate";
+	public static final String KEY_NAME_PARENT = BusinessServiceQuery.ENTITY_FIELD + "." + BusinessServiceQuery.KEY_NAME;
 	
 	protected static String selectSQL;
 
