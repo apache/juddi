@@ -16,6 +16,7 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -39,7 +40,7 @@ public class ServiceCategoryBag extends CategoryBag {
 		this.businessService = businessService;
 	}
 	
-	@OneToOne(optional=false)
+	@OneToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name = "business_service_id")
 	public BusinessService getBusinessService() {
 		return businessService;

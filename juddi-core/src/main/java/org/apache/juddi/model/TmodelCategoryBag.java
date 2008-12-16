@@ -16,6 +16,7 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -37,7 +38,7 @@ public class TmodelCategoryBag extends CategoryBag {
 		this.tmodel = tmodel;
 	}
 	
-	@OneToOne(optional=false)
+	@OneToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name = "tmodel_id")
 	public Tmodel getTmodel() {
 		return tmodel;
