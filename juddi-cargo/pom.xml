@@ -67,7 +67,7 @@ https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/a
 			  <deployables>
 			    <deployable>
 				  <groupId>org.apache.juddi</groupId>
-				  <artifactId>juddi-web</artifactId>
+				  <artifactId>juddi-cxf</artifactId>
 				  <type>war</type>
 				</deployable>
 			  </deployables>
