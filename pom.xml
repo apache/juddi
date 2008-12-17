@@ -80,9 +80,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/trunk/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/branches/v3_trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/branches/v3_trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/branches/v3_trunk/</url>
   </scm>
   <reporting>
     <plugins>
