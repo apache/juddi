@@ -1,3 +1,17 @@
+/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.uddi.api_v3;
 
 import java.io.StringReader;
@@ -19,7 +33,9 @@ import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.ObjectFactory;
 
-
+/**
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ */
 public class AuthInfoTest {
 
 	private final static String EXPECTED_XML_FRAGMENT1 = "<fragment xmlns:ns2=\"http://www.w3.org/2000/09/xmldsig#\" xmlns:ns3=\"urn:uddi-org:api_v3\">\n"
