@@ -15,13 +15,13 @@
   </issueManagement>
   <ciManagement>
     <system>Continuum</system>
-    <url>unknown</url>
+    <url>http://vmbuild.apache.org</url>
     <notifiers>
       <notifier>
-        <sendOnError>false</sendOnError>
-        <sendOnFailure>false</sendOnFailure>
-        <sendOnSuccess>false</sendOnSuccess>
-        <sendOnWarning>false</sendOnWarning>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>true</sendOnSuccess>
+        <sendOnWarning>true</sendOnWarning>
         <configuration>
           <address>juddi-dev@ws.apache.org</address>
         </configuration>
