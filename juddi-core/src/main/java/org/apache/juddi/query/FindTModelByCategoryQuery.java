@@ -25,28 +25,28 @@ import org.apache.juddi.query.util.FindQualifiers;
 import org.uddi.api_v3.CategoryBag;
 
 /**
- * Returns the list of business keys possessing the keyedReferences in the passed category bag.
- * Output is restricted by list of business keys passed in.  If null, all business entities are searched.
+ * Returns the list of tModel keys possessing the keyedReferences in the passed category bag.
+ * Output is restricted by list of tModel keys passed in.  If null, all tModels are searched.
  * Output is produced by building the appropriate JPA query based on input and find qualifiers.
  * 
  * From specification:
- * "This is a list of category references in the form of keyedReference elements and keyedReferenceGroup 
- * structures.  The returned businessList contains businessInfo elements matching all of the categories 
- * passed (logical AND by default).   Specifying the appropriate findQualifiers can override this behavior."
+ * "This is a list of category references.  The returned tModelList contains tModelInfo elements whose 
+ * associated tModels match all of the categories passed (logical AND by default).   Specifying the 
+ * appropriate findQualifiers can override this behavior."
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class FindBusinessByCategoryQuery {
+public class FindTModelByCategoryQuery {
 	
-	private static final String ENTITY_NAME_CHILD = "BusinessCategoryBag";
+	private static final String ENTITY_NAME_CHILD = "TmodelCategoryBag";
 	
 	private static FindEntityByCategoryQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByCategoryQuery(BusinessEntityQuery.ENTITY_NAME, 
-												  BusinessEntityQuery.ENTITY_ALIAS, 
-												  BusinessEntityQuery.KEY_NAME, 
-												  BusinessEntityQuery.ENTITY_FIELD, 
+		findQuery = new FindEntityByCategoryQuery(TModelQuery.ENTITY_NAME, 
+												  TModelQuery.ENTITY_ALIAS, 
+												  TModelQuery.KEY_NAME, 
+												  TModelQuery.ENTITY_FIELD, 
 												  ENTITY_NAME_CHILD);
 	}
 	

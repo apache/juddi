@@ -41,7 +41,7 @@ public class BusinessCategoryBag extends CategoryBag {
 	}
 	
 	@OneToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_entity_id")
+    @JoinColumn(name = "entity_key")
 	public BusinessEntity getBusinessEntity() {
 		return businessEntity;
 	}

@@ -130,21 +130,21 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 					if (!fq.isOrAllKeys()) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-						thetaJoins.append(entityAliasChild + (tblCount - 1) + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
+						thetaJoins.append(entityAliasChild + (tblCount - 1) + "." + BindingTemplateQuery.ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + BindingTemplateQuery.ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 					}
 				}
 				else {
 					qry.comma().pad().append(ENTITY_NAME_CHILD + " " + entityAliasChild + tblCount).pad();
-					thetaJoins.append(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
+					thetaJoins.append(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME + " = " + entityAliasChild + tblCount + "." + BindingTemplateQuery.ENTITY_FIELD + "." + BindingTemplateQuery.KEY_NAME + " ");
 					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 				}
 			}
 			
 			qry.WHERE().pad().openParen().pad();
 			
-			qry.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + BusinessServiceQuery.ENTITY_ALIAS + ".businessEntity." + KEY_NAME).pad();
-			qry.AND().pad().append(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME + " = " + BindingTemplateQuery.ENTITY_ALIAS + ".businessService." + BusinessServiceQuery.KEY_NAME).pad();
+			qry.append(ENTITY_ALIAS + "." + KEY_NAME + " = " + BusinessServiceQuery.ENTITY_ALIAS + "." + ENTITY_FIELD + "." + KEY_NAME).pad();
+			qry.AND().pad().append(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME + " = " + BindingTemplateQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.ENTITY_FIELD + "." + BusinessServiceQuery.KEY_NAME).pad();
 			qry.AND().pad();
 			
 			String thetaJoinsStr = thetaJoins.toString();

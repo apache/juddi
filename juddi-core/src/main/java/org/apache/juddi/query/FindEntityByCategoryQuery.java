@@ -17,38 +17,44 @@
 
 package org.apache.juddi.query;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import javax.persistence.EntityManager;
+import javax.xml.bind.JAXBElement;
 
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.query.util.KeyedRefTModelComparator;
 import org.apache.log4j.Logger;
-import org.uddi.api_v3.IdentifierBag;
+import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 
 /**
- * Returns the list of "entity" keys possessing the keyedReferences in the passed identifier bag.
+ * Returns the list of "entity" keys possessing the keyedReferences in the passed category bag.
  * Output is restricted by list of "entity" keys passed in.  If null, all entities are searched.
  * Output is produced by building the appropriate JPA query based on input and find qualifiers.
  * 
  * NOTES:
- * 1) Identifiers are grouped with a logical OR by default.
- * 2) In the case that the "andAllKeys" find qualifier is used the identifiers are AND'd together.  The only way this can be done
- *    with a single query was to create a self-join for each identifier.  If there are a lot of identifiers, the performance could suffer.
- *    TODO:  Test performance with multiple AND'd identifiers.  If too slow, look to process this query in multiple steps.
+ * 1) Identifiers are grouped with a logical AND by default.
+ * 2) Concerning when the categories are AND'd together - the only way this can be done with a single query was to create a self-join for 
+ *    each category.  If there are a lot of categories, the performance could suffer.
+ *    TODO:  Test performance with multiple AND'd categories.  If too slow, look to process this query in multiple steps.
  * 3) The "orLikeKeys" qualifier complicates matters.  The "like" keys are OR'd together and these groups of "like" keys are AND'd together.
  *    As with "andAllKeys", self-joins are created but only one for each group of "like" keys.  If none of the keyedReferences passed are alike then this
- *    will reduce to an "andAllKeys" query.  If all are alike, then this will query will exhibit the default behavior of OR'ing all keys.
+ *    will reduce to an "andAllKeys" query.  If all are alike, then this will query will exhibit the behavior of OR'ing all keys.
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class FindEntityByIdentifierQuery extends EntityQuery {
+public class FindEntityByCategoryQuery extends EntityQuery {
 	
-	private Logger log = Logger.getLogger(FindEntityByIdentifierQuery.class);
+	private Logger log = Logger.getLogger(FindEntityByCategoryQuery.class);
 
+	private static final String ENTITY_KEYEDREFERENCE = "KeyedReference";
+	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);
+	private static final String FIELD_CATEGORYBAG = "categoryBag";
+	
 	private String entityName;
 	private String entityAlias;
 	private String keyName;
@@ -57,7 +63,7 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 	private String entityAliasChild;
 	private String selectSQL;
 
-	public FindEntityByIdentifierQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
+	public FindEntityByCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
 		this.entityName = entityName;
 		this.entityAlias = entityAlias;
 		this.keyName = keyName;
@@ -66,7 +72,7 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 		this.entityAliasChild = buildAlias(entityNameChild);
 		
 		StringBuffer sql = new StringBuffer(200);
-		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " ");
+		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " , " + entityNameChild + " " + entityAliasChild + " ");
 		selectSQL = sql.toString();
 	}
 	
@@ -99,17 +105,25 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 	}
 
 	
-	public List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
 		
-		if (identifiers == null)
+		if (categoryBag == null)
 			return keysIn;
 		
-		List<KeyedReference> keyedRefs = identifiers.getKeyedReference();
-		if (keyedRefs == null || keyedRefs.size() == 0)
+		List<JAXBElement<?>> categories = categoryBag.getContent();
+		if (categories == null || categories.size() == 0)
 			return keysIn;
+		
+		List<KeyedReference> keyedRefs = new ArrayList<KeyedReference>(0);
+		for (JAXBElement<?> elem : categories) {
+			if (elem.getValue() instanceof KeyedReference)
+				keyedRefs.add((KeyedReference)elem.getValue());
+		}
+		if (keyedRefs.size() == 0)
+			return keysIn;		
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendConditions(dynamicQry, fq, keyedRefs);
@@ -121,8 +135,8 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 	
 	
 	/*
-	 * Appends the conditions to the query based on the keyedReference list.  With the default or when "andAllKeys" is passed, the keyedReferences are autonomous and are
-	 * all OR'd or AND'd respectively.  However, "orLikeKeys" requires special treatment.  The goal is to create the conditions in this format:
+	 * Appends the conditions to the query based on the keyedReference list.  With the default or when "orAllKeys" is passed, the keyedReferences are autonomous and are
+	 * all AND'd or OR'd respectively.  However, "orLikeKeys" requires special treatment.  The goal is to create the conditions in this format:
 	 * 
 	 * (likeKey1 = X or likeKey1 = Y) and (likeKey2 = A or likeKey2 = B or likeKey2 = C) 
 	 * 
@@ -130,7 +144,7 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 	 */
 	public void appendConditions(DynamicQuery qry, FindQualifiers fq, List<KeyedReference> keyedRefs) {
 		
-		// Append the necessary tables (one will always be added connecting the entity to its identifier table).
+		// Append the necessary tables (two will always be added connecting the entity to its category table and then the category table to the keyed references).
 		appendJoinTables(qry, fq, keyedRefs);
 		qry.AND().pad().openParen().pad();
 		
@@ -174,9 +188,9 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 			else
 				tblCount++;
 			
-			String keyValueTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + "0") + ".keyValue";
-			String keyNameTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + "0") + ".keyName";
-			String tmodelKeyTerm = (fq.isAndAllKeys()||fq.isOrLikeKeys()?entityAliasChild + tblCount:entityAliasChild + "0") + ".tmodelKeyRef";
+			String keyValueTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".keyValue";
+			String keyNameTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".keyName";
+			String tmodelKeyTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".tmodelKeyRef";
 			if (fq.isCaseInsensitiveMatch()) {
 				keyValueTerm = "upper(" + keyValueTerm + ")";
 				keyValue = keyValue.toUpperCase();
@@ -199,12 +213,12 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 			}
 			
 			if (count + 1 < keyedRefs.size())
-				if (fq.isAndAllKeys())
-					qry.AND().pad();
+				if (fq.isOrAllKeys())
+					qry.OR().pad();
 				else if (fq.isOrLikeKeys()) {
 				}
 				else
-					qry.OR().pad();
+					qry.AND().pad();
 			
 			// The "orLikeKeys" will always leave an unclosed parenthesis.  This will close it.
 			if (fq.isOrLikeKeys() && (count + 1 == keyedRefs.size()))
@@ -216,6 +230,8 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 		qry.closeParen().pad();
 		
 	}
+
+	
 	
 	/*
 	 * Appends the necessary join table for the child entity and additional tables for when keys are AND'd.  When "orLikeKeys" is used, 
@@ -235,20 +251,22 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 			for(KeyedReference kr : keyedRefs) {
 				curTModelKey = kr.getTModelKey();
 				if (count != 0) {
-					if (fq.isOrLikeKeys() && curTModelKey.equals(prevTModelKey)) {
-						// Do nothing
-					}
-					else {
-						tblCount++;
-						qry.comma().pad().append(entityNameChild + " " + entityAliasChild + tblCount).pad();
-						thetaJoins.append(entityAliasChild + (tblCount - 1) + "." + entityField + "." + keyName + " = " + entityAliasChild + tblCount + "." + entityField + "." + keyName + " ");
-						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
+					if (!fq.isOrAllKeys()) {
+						if (fq.isOrLikeKeys() && curTModelKey.equals(prevTModelKey)) {
+							// Do nothing
+						}
+						else {
+							tblCount++;
+							qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
+							thetaJoins.append(ALIAS_KEYEDREFERENCE + (tblCount - 1) + "." + FIELD_CATEGORYBAG + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_CATEGORYBAG + ".id ");
+							thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
+						}
 					}
 
 				}
 				else {
-					qry.comma().pad().append(entityNameChild + " " + entityAliasChild + tblCount).pad();
-					thetaJoins.append(entityAlias + "." + keyName + " = " + entityAliasChild + tblCount + "." + entityField + "." + keyName + " ");
+					qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
+					thetaJoins.append(entityAliasChild + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_CATEGORYBAG + ".id ");
 					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 				}
 				prevTModelKey = curTModelKey;
@@ -256,6 +274,10 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 			}
 			
 			qry.WHERE().pad().openParen().pad();
+			
+			// Appending the middling entity-specific category table condition
+			qry.append(entityAlias + "." + keyName + " = " + entityAliasChild + "." + entityField + "." + KEY_NAME).pad();
+			qry.AND().pad();
 
 			String thetaJoinsStr = thetaJoins.toString();
 			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + " "))

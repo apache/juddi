@@ -41,11 +41,12 @@ public abstract class EntityQuery {
 	public static final int DEFAULT_MAXROWS = 100;
 	public static final int DEFAULT_MAXINCLAUSE = 1000;
 	
+	// TODO:  make this alias creator a little more unique
 	public static String buildAlias(String entityName) {
 		if (entityName == null || entityName.length() == 0)
 			return "x";
 		
-		return entityName.substring(0, entityName.length() - 3);
+		return entityName.substring(0, entityName.length() - 3) + "_";
 	}
 	
 	/*

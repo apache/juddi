@@ -90,7 +90,7 @@ public class OperationalInfo implements java.io.Serializable {
 		this.modifiedIncludingChildren = modifiedIncludingChildren;
 	}
 
-	@Column(name = "key_id", nullable = false, length = 255)
+	@Column(name = "node_id", nullable = false, length = 255)
 	public String getNodeId() {
 		return nodeId;
 	}

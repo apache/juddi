@@ -41,7 +41,7 @@ public class BindingCategoryBag extends CategoryBag {
 	} 
 	
 	@OneToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "binding_template_id")
+    @JoinColumn(name = "entity_key")
 	public BindingTemplate getBindingTemplate() {
 		return bindingTemplate;
 	}

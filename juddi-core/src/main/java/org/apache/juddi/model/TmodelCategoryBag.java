@@ -39,7 +39,7 @@ public class TmodelCategoryBag extends CategoryBag {
 	}
 	
 	@OneToOne(optional=false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "tmodel_id")
+    @JoinColumn(name = "entity_key")
 	public Tmodel getTmodel() {
 		return tmodel;
 	}
