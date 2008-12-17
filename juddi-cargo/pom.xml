@@ -57,7 +57,7 @@ https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/a
 		    </container>
 		    <configuration>
               <home>
-                  ${project.build.directory}/jboss4x/container
+                  ${project.build.directory}/tomcat5x/container
               </home>
 			  <deployables>
 			    <deployable>
