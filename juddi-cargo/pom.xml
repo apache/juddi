@@ -71,6 +71,9 @@ https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/a
 				  <type>war</type>
 				</deployable>
 			  </deployables>
+			  <properties>
+                <cargo.servlet.port>8181</cargo.servlet.port>
+              </properties>
 		    </configuration>
 		</configuration>
 		<executions>
@@ -108,7 +111,7 @@ https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/a
               <systemProperties>
                 <property>
                   <name>cactus.contextURL</name>
-                  <value>http://localhost:8080/juddi</value>
+                  <value>http://localhost:8181/juddi</value>
                 </property>
               </systemProperties>
             </configuration>
