@@ -24,53 +24,60 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class API_050_PublisherAssertionTest {
 	
 	final static String JOE_ASSERT_XML    = "api_xml_data/joepublisher/publisherAssertion.xml";
-	private Logger logger = Logger.getLogger(this.getClass());
+	private static Logger logger = Logger.getLogger(API_050_PublisherAssertionTest.class);
     
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	
-	@Test
-	public void joepublisherToSamSyndicator() {
-		String publisherId = API_010_PublisherTest.JOE_PUBLISHER_ID;
-		String publisherId2 = API_010_PublisherTest.SAM_SYNDICATOR_ID;
+	private static API_010_PublisherTest api010      = new API_010_PublisherTest();
+	private static API_020_TmodelTest api020         = new API_020_TmodelTest();
+	private static API_030_BusinessEntityTest api030 = new API_030_BusinessEntityTest();
+	private static String authInfoJoe                = null;
+	private static String authInfoSam                = null;
+	
+	@BeforeClass
+	public static void setup() {
+		logger.debug("Getting auth token..");
 		try {
-			API_010_PublisherTest api010 = new API_010_PublisherTest();
-			//joepublisher
-			if (!api010.isExistPublisher(publisherId)) {
-				//Add the Publisher
-				api010.savePublisher(publisherId, API_010_PublisherTest.JOE_PUBLISHER_XML);
-			}
-			new API_020_TmodelTest().saveTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
-			new API_030_BusinessEntityTest().saveBusiness(publisherId, API_030_BusinessEntityTest.JOE_BUSINESS_XML, API_030_BusinessEntityTest.JOE_BUSINESS_KEY);
-			//samsyndicator
-			if (!api010.isExistPublisher(publisherId2)) {
-				//Add the Publisher
-				api010.savePublisher(publisherId2, API_010_PublisherTest.SAM_SYNDICATOR_XML);
-			}
-			new API_020_TmodelTest().saveTModel(publisherId2, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
-			new API_030_BusinessEntityTest().saveBusiness(publisherId2, API_030_BusinessEntityTest.SAM_BUSINESS_XML, API_030_BusinessEntityTest.SAM_BUSINESS_KEY);
-			addPublisherAssertion(publisherId, JOE_ASSERT_XML);
-			deletePublisherAssertion(publisherId, JOE_ASSERT_XML);
-		} finally {
-			new API_030_BusinessEntityTest().deleteBusiness(publisherId, API_030_BusinessEntityTest.JOE_BUSINESS_XML, API_030_BusinessEntityTest.JOE_BUSINESS_KEY);
-			new API_020_TmodelTest().deleteTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
-			new API_030_BusinessEntityTest().deleteBusiness(publisherId2, API_030_BusinessEntityTest.SAM_BUSINESS_XML, API_030_BusinessEntityTest.SAM_BUSINESS_KEY);
-			new API_020_TmodelTest().deleteTModel(publisherId2, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
+			api010.saveJoePublisher();
+			api010.saveSamSyndicator();
+			authInfoJoe = API_010_PublisherTest.authInfoJoe();
+			authInfoSam = API_010_PublisherTest.authInfoSam();
+		} catch (DispositionReportFaultMessage e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
 		}
 	}
 	
-	public void addPublisherAssertion(String publisherId, String pubassertXML) {
+	@Test
+	public void testJoepublisherToSamSyndicator() {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
-			
+			api020.saveJoePublisherTmodel(authInfoJoe);
+			api020.saveSamSyndicatorTmodel(authInfoSam);
+			api030.saveJoePublisherBusiness(authInfoJoe);
+			api030.saveSamSyndicatorBusiness(authInfoSam);
+			addPublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
+			deletePublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
+		} finally {
+			api030.deleteJoePublisherBusiness(authInfoJoe);
+			api030.deleteSamSyndicatorBusiness(authInfoSam);
+			api020.deleteJoePublisherTmodel(authInfoJoe);
+			api020.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+	}
+	
+	private void addPublisherAssertion(String authInfo, String pubassertXML) {
+		try {
 			AddPublisherAssertions ap = new AddPublisherAssertions();
 			ap.setAuthInfo(authInfo);
 
@@ -100,10 +107,8 @@ public class API_050_PublisherAssertionTest {
 
 	}
 
-	public void deletePublisherAssertion(String publisherId, String pubassertXML) {
+	private void deletePublisherAssertion(String authInfo, String pubassertXML) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
-			
 			// Delete the entity and make sure it is removed
 			DeletePublisherAssertions dp = new DeletePublisherAssertions();
 			dp.setAuthInfo(authInfo);

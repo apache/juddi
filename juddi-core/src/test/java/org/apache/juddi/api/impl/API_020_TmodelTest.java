@@ -20,12 +20,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -39,43 +41,61 @@ public class API_020_TmodelTest {
     final static String SAM_SYNDICATOR_TMODEL_XML     = "api_xml_data/samsyndicator/tModelKeyGen.xml";
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:juddi.apache.org:samco:repository:keygenerator";
     
-	private static UDDIPublicationImpl publish = new UDDIPublicationImpl();
-	private static UDDIInquiryImpl inquiry     = new UDDIInquiryImpl();
-	private static Logger logger               = Logger.getLogger(API_020_TmodelTest.class);
+	private static UDDIPublicationImpl publish        = new UDDIPublicationImpl();
+	private static UDDIInquiryImpl inquiry            = new UDDIInquiryImpl();
 	
-	@Test
-	public void joePublisher() {
-		String publisherId  = API_010_PublisherTest.JOE_PUBLISHER_ID;
-		String publisherXML = API_010_PublisherTest.JOE_PUBLISHER_XML;
-		API_010_PublisherTest api010 = new API_010_PublisherTest();
-		if (!api010.isExistPublisher(publisherId)) {
-			//Add the Publisher
-			api010.savePublisher(publisherId, publisherXML);
+	private static Logger logger                      = Logger.getLogger(API_020_TmodelTest.class);
+	private static API_010_PublisherTest api010       = new API_010_PublisherTest();
+	private static String authInfoJoe                 = null;
+	private static String authInfoSam                 = null;
+	
+	@BeforeClass
+	public static void setup() {
+		logger.debug("Getting auth token..");
+		try {
+			api010.saveJoePublisher();
+			api010.saveSamSyndicator();
+			authInfoJoe = API_010_PublisherTest.authInfoJoe();
+			authInfoSam = API_010_PublisherTest.authInfoSam();
+		} catch (DispositionReportFaultMessage e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
 		}
-		saveTModel(publisherId, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
-		deleteTModel(publisherId, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
 	}
 	
 	@Test
-	public void samSyndicator() {
-		String publisherId  = API_010_PublisherTest.SAM_SYNDICATOR_ID;
-		String publisherXML = API_010_PublisherTest.SAM_SYNDICATOR_XML;
-		API_010_PublisherTest api010 = new API_010_PublisherTest();
-		if (!api010.isExistPublisher(publisherId)) {
-			//Add the Publisher
-			api010.savePublisher(publisherId, publisherXML);
-		}
-		saveTModel(publisherId, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
-		deleteTModel(publisherId, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
+	public void testJoePublisherTmodel() {
+		saveJoePublisherTmodel(authInfoJoe);
+		deleteJoePublisherTmodel(authInfoJoe);
 	}
 	
-	public void saveTModel(String publisherId, String tModelXml, String tModelKey) {
+	@Test
+	public void testSamSyndicatorTmodelTest() {
+		api010.saveSamSyndicator();
+		saveSamSyndicatorTmodel(authInfoSam);
+		deleteSamSyndicatorTmodel(authInfoSam);
+	}
+	
+	protected void saveJoePublisherTmodel(String authInfoJoe) {
+		saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	protected void deleteJoePublisherTmodel(String authInfoJoe) {
+		deleteTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	protected void saveSamSyndicatorTmodel(String authInfoSam) {
+		saveTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
+	}
+	
+	protected void deleteSamSyndicatorTmodel(String authInfoSam) {
+		deleteTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
+	}
+	
+	private void saveTModel(String authInfo, String tModelXml, String tModelKey) {
 		
 		// Add the tModel
 		try {
-			logger.debug("Getting auth token..");
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
-			
 			SaveTModel st = new SaveTModel();
 			st.setAuthInfo(authInfo);
 
@@ -102,11 +122,9 @@ public class API_020_TmodelTest {
 		}
 	}
 	
-	public void deleteTModel(String publisherId, String tModelXml, String tModelKey) {
+	private void deleteTModel(String authInfo, String tModelXml, String tModelKey) {
 		
 		try {
-			logger.debug("Getting auth token..");
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
 			//Now deleting the TModel
 			// Delete the entity and make sure it is removed
 			DeleteTModel dt = new DeleteTModel();
@@ -114,6 +132,7 @@ public class API_020_TmodelTest {
 			
 			dt.getTModelKey().add(tModelKey);
 			publish.deleteTModel(dt);
+			
 		} catch(Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");

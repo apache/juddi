@@ -21,6 +21,7 @@ import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.uddi.api_v3.ServiceDetail;
@@ -28,6 +29,7 @@ import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.SaveService;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -35,59 +37,82 @@ import org.uddi.api_v3.SaveService;
  */
 public class API_040_BusinessServiceTest 
 {
-	final static String JOE_SERVICE_XML    = "api_xml_data/joepublisher/businessService.xml";
-    final static String JOE_SERVICE_KEY    = "uddi:juddi.apache.org:joepublisher:serviceone";
+	final static String JOE_SERVICE_XML              = "api_xml_data/joepublisher/businessService.xml";
+    final static String JOE_SERVICE_KEY              = "uddi:juddi.apache.org:joepublisher:serviceone";
     
-    final static String SAM_SERVICE_XML    = "api_xml_data/samsyndicator/businessService.xml";
-    final static String SAM_SERVICE_KEY    = "uddi:juddi.apache.org:samco:repository:listingservice";
+    final static String SAM_SERVICE_XML              = "api_xml_data/samsyndicator/businessService.xml";
+    final static String SAM_SERVICE_KEY              = "uddi:juddi.apache.org:samco:repository:listingservice";
     
-    private Logger logger                  = Logger.getLogger(this.getClass());
-	private UDDIPublicationImpl publish    = new UDDIPublicationImpl();
-	private UDDIInquiryImpl inquiry        = new UDDIInquiryImpl();
-
+    private static Logger logger                     = Logger.getLogger(API_040_BusinessServiceTest.class);
+	private UDDIPublicationImpl publish              = new UDDIPublicationImpl();
+	private UDDIInquiryImpl inquiry                  = new UDDIInquiryImpl();
+	
+	private static API_010_PublisherTest api010      = new API_010_PublisherTest();
+	private static API_020_TmodelTest api020         = new API_020_TmodelTest();
+	private static API_030_BusinessEntityTest api030 = new API_030_BusinessEntityTest();
+	private static String authInfoJoe                = null;
+	private static String authInfoSam                = null;
+	
+	@BeforeClass
+	public static void setup() {
+		logger.debug("Getting auth token..");
+		try {
+			api010.saveJoePublisher();
+			api010.saveSamSyndicator();
+			authInfoJoe = API_010_PublisherTest.authInfoJoe();
+			authInfoSam = API_010_PublisherTest.authInfoSam();
+		} catch (DispositionReportFaultMessage e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
+		}
+	}
+	
 	@Test
 	public void joepublisher() {
-		String publisherId = API_010_PublisherTest.JOE_PUBLISHER_ID;
 		try {
-			API_010_PublisherTest api010 = new API_010_PublisherTest();
-			if (!api010.isExistPublisher(publisherId)) {
-				//Add the Publisher
-				api010.savePublisher(publisherId, API_010_PublisherTest.JOE_PUBLISHER_XML);
-			}
-			new API_020_TmodelTest().saveTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
-			new API_030_BusinessEntityTest().saveBusiness(publisherId, API_030_BusinessEntityTest.JOE_BUSINESS_XML, API_030_BusinessEntityTest.JOE_BUSINESS_KEY);
-			saveService(publisherId, JOE_SERVICE_XML, JOE_SERVICE_KEY);
-			deleteService(publisherId, JOE_SERVICE_KEY);
+			api020.saveJoePublisherTmodel(authInfoJoe);
+			api030.saveJoePublisherBusiness(authInfoJoe);
+			saveJoePublisherService(authInfoJoe);
+			deleteJoePublisherService(authInfoJoe);
 		} finally {
-			new API_030_BusinessEntityTest().deleteBusiness(publisherId, API_030_BusinessEntityTest.JOE_BUSINESS_XML, API_030_BusinessEntityTest.JOE_BUSINESS_KEY);
-			new API_020_TmodelTest().deleteTModel(publisherId, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_XML, API_020_TmodelTest.JOE_PUBLISHER_TMODEL_KEY);
+			api030.deleteJoePublisherBusiness(authInfoJoe);
+			api020.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}
 	
 	@Test
 	public void samsyndicator() {
-		String publisherId = API_010_PublisherTest.SAM_SYNDICATOR_ID;
 		try {
-			API_010_PublisherTest api010 = new API_010_PublisherTest();
-			if (!api010.isExistPublisher(publisherId)) {
-				//Add the Publisher
-				api010.savePublisher(publisherId, API_010_PublisherTest.SAM_SYNDICATOR_XML);
-			}
-			new API_020_TmodelTest().saveTModel(publisherId, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
-			new API_030_BusinessEntityTest().saveBusiness(publisherId, API_030_BusinessEntityTest.SAM_BUSINESS_XML, API_030_BusinessEntityTest.SAM_BUSINESS_KEY);
-			saveService(publisherId, SAM_SERVICE_XML, SAM_SERVICE_KEY);
-			deleteService(publisherId, SAM_SERVICE_KEY);
+			
+			api020.saveSamSyndicatorTmodel(authInfoSam);
+			api030.saveSamSyndicatorBusiness(authInfoSam);
+			saveSamSyndicatorService(authInfoSam);
+			deleteSamSyndicatorService(authInfoSam);
 		} finally {
-			new API_030_BusinessEntityTest().deleteBusiness(publisherId, API_030_BusinessEntityTest.SAM_BUSINESS_XML, API_030_BusinessEntityTest.SAM_BUSINESS_KEY);
-			new API_020_TmodelTest().deleteTModel(publisherId, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_XML, API_020_TmodelTest.SAM_SYNDICATOR_TMODEL_KEY);
+			api030.deleteSamSyndicatorBusiness(authInfoSam);
+			api020.deleteSamSyndicatorTmodel(authInfoSam);
 		}
 	}
 	
+	protected void saveJoePublisherService(String authInfoJoe) {
+		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
+	}
 	
-	public void saveService(String publisherId, String serviceXML, String serviceKey) {
+	protected void deleteJoePublisherService(String authInfoJoe) {
+		deleteService(authInfoJoe, JOE_SERVICE_KEY);
+	}
+	
+	protected void saveSamSyndicatorService(String authInfoSam) {
+		saveService(authInfoSam, SAM_SERVICE_XML, SAM_SERVICE_KEY);
+	}
+	
+	protected void deleteSamSyndicatorService(String authInfoSam) {
+		deleteService(authInfoSam, SAM_SERVICE_KEY);
+	}
+	
+	
+	private void saveService(String authInfo, String serviceXML, String serviceKey) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
-
 			// First save the entity
 			SaveService ss = new SaveService();
 			ss.setAuthInfo(authInfo);
@@ -116,10 +141,8 @@ public class API_040_BusinessServiceTest
 		
 	}
 	
-	public void deleteService(String publisherId, String serviceKey) {
+	private void deleteService(String authInfo, String serviceKey) {
 		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(publisherId);
-	
 			// Delete the entity and make sure it is removed
 			DeleteService ds = new DeleteService();
 			ds.setAuthInfo(authInfo);
