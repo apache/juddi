@@ -33,14 +33,6 @@ public interface Cryptor
   /**
    * Encrypt the string
    */
-  byte[] encrypt(byte[] bytes)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException;
-
   String encrypt(String str)
     throws  NoSuchPaddingException,
             NoSuchAlgorithmException,
@@ -49,22 +41,5 @@ public interface Cryptor
             IllegalBlockSizeException,
             BadPaddingException;
 
-  /**
-   * Decrypt the string
-   */
-  byte[] decrypt(byte[] bytes)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException;
-
-  String decrypt(String str)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException;
+  
 }

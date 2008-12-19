@@ -17,31 +17,30 @@
 
 package org.apache.juddi.auth;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.RegistryException;
-import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.error.AuthenticationException;
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.error.UnknownUserException;
 import org.apache.log4j.Logger;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
+import org.apache.log4j.helpers.Loader;
 
 /**
+ * TODO Kurt Switch over to use JAXB
+ * 
+ * 
  * This is a simple implementation of jUDDI's Authenticator interface. The credential
  * store is simply an unencrypted xml document called 'juddi.users' that can be
  * found in jUDDI's config directory. Below is an example of what you might find
@@ -57,308 +56,70 @@ import org.xml.sax.XMLReader;
  *     </juddi-users>
  *
  * @author Steve Viens (sviens@apache.org)
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class XMLDocAuthenticator implements ContentHandler, ErrorHandler, Authenticator
+public class XMLDocAuthenticator implements Authenticator
 {
 	private static Logger log = Logger.getLogger(AuthenticatorFactory.class);
+	/** Container for the user credentials */
+	Hashtable<String,User> userTable;
+	
+	/**
+	 *
+	 */
+	public XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
+		readUserFile();
+	}
+	
+	protected String getFilename() throws ConfigurationException {
+		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_XML_USERSFILE);
+	}
+	/**
+	 * Read user data from the juddi-users file.
+	 * 
+	 * @throws IOException when the file cannot be opened
+	 *         JAXBException when the content is misformed.
+	 * @throws ConfigurationException 
+	 */
+	public synchronized void readUserFile() throws JAXBException, IOException, ConfigurationException
+	{
+		userTable = new Hashtable<String,User>();
+		String usersFileName = getFilename();
+		log.info("Reading jUDDI Users File: " + usersFileName + "...");
+		InputStream stream = Loader.getResource(usersFileName).openStream();
+		JAXBContext jaxbContext=JAXBContext.newInstance(JuddiUsers.class);
+		Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
+		JAXBElement<JuddiUsers> element = unMarshaller.unmarshal(new StreamSource(stream),JuddiUsers.class);
+		JuddiUsers users = element.getValue();
+		for (User user : users.getUser()) {
+			userTable.put(user.getUserid(), user);
+			log.debug("Loading user credentials for user: " + user.getUserid());
+		}
+	}
 
-  // static default juddi users file name
-  private static final String FILE_NAME_KEY = "juddi.users";
-  private static final String DEFAULT_FILE_NAME = "juddi-users.xml";
+	/**
+	 *
+	 */
+	public String authenticate(String userID,String credential)
+	throws AuthenticationException, FatalErrorException
+	{
+		// a userID must be specified.
+		if (userID == null)
+			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
 
-  // hashtable of UserInfo objects
-  Hashtable userTable;
+		// credential (password) must be specified.
+		if (credential == null)
+			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
 
-  class UserInfo
-  {
-    public String userid;
-    public String password;
+		if (userTable.containsKey(userID))
+		{
+			User user = (User)userTable.get(userID);
+			if ((user.getPassword() == null) || (!credential.equals(user.getPassword())))
+				throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+		}
+		else
+			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
 
-    public String toString()
-    {
-      StringBuffer buff = new StringBuffer(75);
-      buff.append(userid);
-      buff.append(" | ");
-      buff.append(password);
-      return buff.toString();
-    }
-  }
-
-  /**
-   *
-   */
-  public XMLDocAuthenticator()
-  {
-    init();
-  }
-
-  /**
-   * Perform auth initialization tasks
-   */
-  public synchronized void init()
-  {
-    // create and populate a Hashtable of UserInfo objects (one per user)
-    try {
-      userTable = new Hashtable();
-
-      String usersFileName = AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE);
-
-      log.info("Using jUDDI Users File: "+usersFileName);
-
-      build(new FileInputStream(usersFileName));
-    }
-    catch (ConfigurationException ce) {
-        ce.printStackTrace();
-    }
-    catch (IOException ioex) {
-      ioex.printStackTrace();
-    }
-    catch (SAXException saxex) {
-      saxex.printStackTrace();
-    }
-    catch (ParserConfigurationException pcex) {
-      pcex.printStackTrace();
-    }
-  }
-
-  /**
-   *
-   */
-  public String authenticate(String userID,String credential)
-    throws RegistryException
-  {
-    // a userID must be specified.
-    if (userID == null)
-      throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
-
-    // credential (password) must be specified.
-    if (credential == null)
-      throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
-
-    if (userTable.containsKey(userID))
-    {
-      UserInfo userInfo = (UserInfo)userTable.get(userID);
-      if ((userInfo.password == null) || (!credential.equals(userInfo.password)))
-         throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
-    }
-    else
-      throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
-
-    return userID;
-  }
-
-  /**
-   *
-   */
-  public String toString()
-  {
-    StringBuffer buff = new StringBuffer(100);
-
-    Enumeration e = userTable.keys();
-    while (e.hasMoreElements())
-    {
-      UserInfo userInfo = (UserInfo)userTable.get(e.nextElement());
-      buff.append(userInfo.toString()+"\n");
-    }
-
-    return buff.toString();
-  }
-
-  /**
-   *
-   */
-  Hashtable build(InputStream istream)
-    throws ParserConfigurationException,SAXException,IOException
-  {
-    SAXParserFactory spf = SAXParserFactory.newInstance();
-    spf.setNamespaceAware(true);
-
-    XMLReader xr = spf.newSAXParser().getXMLReader();
-    xr.setContentHandler(this);
-    xr.setErrorHandler(this);
-    xr.parse(new InputSource(istream));
-
-    return (Hashtable)this.getObject();
-  }
-
-  /**
-   * handle setDocumentLocator event
-   */
-  public void setDocumentLocator(org.xml.sax.Locator locator)
-  {
-  }
-
-  /**
-   * handle startDocument event
-   */
-  public void startDocument()
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle endDocument event
-   */
-  public void endDocument()
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle startElement event
-   */
-  public void startElement(String uri,String name,String qName,Attributes attributes)
-    throws SAXException
-  {
-    if (name.equalsIgnoreCase("user"))
-    {
-      UserInfo userInfo = new UserInfo();
-
-      for(int i=0; i<attributes.getLength(); i++)
-      {
-        if (attributes.getQName(i).equalsIgnoreCase("userid"))
-          userInfo.userid = attributes.getValue(i);
-        else if (attributes.getQName(i).equalsIgnoreCase("password"))
-          userInfo.password = attributes.getValue(i);
-      }
-
-      userTable.put(userInfo.userid,userInfo);
-    }
-  }
-
-  /**
-   * handle endElement event
-   */
-  public void endElement(String name,String string2,String string3)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle characters event
-   */
-  public void characters(char[] chars,int int1, int int2)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle ignorableWhitespace event
-   */
-  public void ignorableWhitespace(char[] chars,int int1, int int2)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle processingInstruction event
-   */
-  public void processingInstruction(String string1,String string2)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle startPrefixMapping event
-   */
-  public void startPrefixMapping(String string1,String string2)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle endPrefixMapping event
-   */
-  public void endPrefixMapping(String string)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle skippedEntity event
-   */
-  public void skippedEntity(String string)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle warning event
-   */
-  public void warning(SAXParseException spex)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle error event
-   */
-  public void error(SAXParseException spex)
-    throws SAXException
-  {
-  }
-
-  /**
-   * handle fatalError event
-   */
-  public void fatalError(SAXParseException spex)
-    throws SAXException
-  {
-  }
-
-  /**
-   * Retrieve the object built by the handling of SAX events.
-   */
-  Object getObject()
-  {
-    return this.userTable;
-  }
-
-
-  /***************************************************************************/
-  /***************************** TEST DRIVER *********************************/
-  /***************************************************************************/
-
-
-  public static void main(String[] args)
-    throws Exception
-  {
-    Authenticator auth = new XMLDocAuthenticator();
-
-    try {
-      System.out.print("anou_mana/password: ");
-      auth.authenticate("anou_mana","password");
-      System.out.println("successfully authenticated");
-    }
-    catch(Exception ex) {
-      System.out.println(ex.getMessage());
-    }
-
-    try {
-      System.out.print("anou_mana/badpass: ");
-      auth.authenticate("anou_mana","badpass");
-      System.out.println("successfully authenticated");
-    }
-    catch(Exception ex) {
-      System.out.println(ex.getMessage());
-    }
-
-    try {
-      System.out.print("bozo/clown: ");
-      auth.authenticate("bozo","clown");
-      System.out.println("successfully authenticated");
-    }
-    catch(Exception ex) {
-      System.out.println(ex.getMessage());
-    }
-
-    try {
-      System.out.print("sviens/password: ");
-      auth.authenticate("sviens","password");
-      System.out.println("successfully authenticated");
-    }
-    catch(Exception ex) {
-      System.out.println(ex.getMessage());
-    }
-  }
+		return userID;
+	}
 }

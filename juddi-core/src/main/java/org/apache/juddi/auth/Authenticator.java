@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2008 The Apache Software Foundation.
+ * Copyright 2001-2009 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 
 package org.apache.juddi.auth;
 
+import org.apache.juddi.error.AuthenticationException;
+import org.apache.juddi.error.FatalErrorException;
+
 /**
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -24,11 +27,13 @@ package org.apache.juddi.auth;
 public interface Authenticator {
 
 	/**
-	*
-	* @param userID
-	* @param cred
-	* @return The publisherID for this user
-	* @throws RegistryException
-	*/
-	String authenticate(String userID,String cred) throws org.apache.juddi.error.RegistryException;
+	 * 
+	 * @param userID - userId of the user making the registry request
+	 * @param cred   - some authentical creditial (i.e. a password) which can be used to 
+	 * 		           authenticate the user.
+	 * 
+	 * @return The publisherID for this user
+	 * @throws {@link AuthenticationException}, {@link FatalErrorException}
+	 */
+	String authenticate(String userID,String cred) throws AuthenticationException, FatalErrorException;
 }

@@ -31,6 +31,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.apache.commons.codec.binary.Base64;
+
 /**
  * @author Anou Manavalan
  */
@@ -101,45 +103,7 @@ public class DefaultCryptor implements Cryptor
             BadPaddingException
   {
     byte[] encs = crypt(Cipher.ENCRYPT_MODE,str.getBytes());
+    encs = Base64.encodeBase64(encs);
     return new String(encs);
   }
-
-  public byte[] encrypt(byte[] bytes)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException
-  {
-    return crypt(Cipher.ENCRYPT_MODE, bytes);
-  }
-
-  /**
-   * Decrypt the string
-   */
-  public String decrypt(String str)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException
-  {
-    byte[] decs = crypt(Cipher.DECRYPT_MODE,str.getBytes());
-    return new String(decs);
-  }
-
-
-  public byte[] decrypt(byte[] bytes)
-    throws  NoSuchPaddingException,
-            NoSuchAlgorithmException,
-            InvalidAlgorithmParameterException,
-            InvalidKeyException,
-            IllegalBlockSizeException,
-            BadPaddingException
-  {
-    return crypt(Cipher.DECRYPT_MODE,bytes);
-  }
-
 }

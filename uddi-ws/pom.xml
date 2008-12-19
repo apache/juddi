@@ -80,9 +80,6 @@
         <version>2.4</version>
         <configuration>
           <skip>false</skip>
-          <excludes>
-            <exclude>**/*Abstract*.java</exclude>
-          </excludes>
           <includes>
             <include>**/*Test.java</include>
           </includes>
@@ -90,7 +87,6 @@
       </plugin>
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <groupId>com.sun.xml.ws</groupId>
@@ -98,10 +94,16 @@
       <version>2.1.4</version>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.5</version>
-    </dependency>
+		<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.1.9</version>
+		</dependency>
+		<scope>test</scope>
   </dependencies>
 
 </project>

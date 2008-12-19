@@ -35,8 +35,7 @@ import org.apache.log4j.Logger;
 public abstract class CryptorFactory {
 	private static Logger log = Logger.getLogger(CryptorFactory.class);
 
-	// Cryptor default implementation
-	private static final String DEFAULT_IMPL = "org.apache.juddi.cryptor.DefaultCryptor";
+	
 
 	// the shared Cryptor instance
 	private static Cryptor cryptor = null;
@@ -62,13 +61,13 @@ public abstract class CryptorFactory {
 			return cryptor;
 	
 		// grab class name of the Cryptor implementation to create
-		String className = DEFAULT_IMPL;
+		String className = Property.DEFAULT_CRYPTOR;
 		try {
 			// grab class name of the Authenticator implementation to create
-			className = AppConfig.getConfiguration().getString(Property.JUDDI_CRYPTOR, DEFAULT_IMPL);
+			className = AppConfig.getConfiguration().getString(Property.JUDDI_CRYPTOR, Property.DEFAULT_CRYPTOR);
 		}
 		catch(ConfigurationException ce) {
-			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_CRYPTOR);
+			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_CRYPTOR, ce);
 		}
 		
 		// write the Cryptor implementation name to the log

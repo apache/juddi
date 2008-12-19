@@ -22,7 +22,7 @@ package org.apache.juddi.error;
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class AuthTokenExpiredException extends RegistryException {
+public class AuthTokenExpiredException extends AuthenticationException {
 
 	private static final long serialVersionUID = 1L;
 

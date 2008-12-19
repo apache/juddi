@@ -17,20 +17,21 @@
 
 package org.apache.juddi.auth;
 
-import org.apache.juddi.error.RegistryException;
+import org.apache.juddi.error.AuthenticationException;
 
 /**
- * This is a simple implementation of jUDDI's Authenticator interface.
+ * This is the simplest (and default) implementation of jUDDI's Authenticator interface, which
+ * successfully authenticates any authentication request.
  *
  * @author Steve Viens (sviens@apache.org)
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class DefaultAuthenticator implements Authenticator {
-
-	public DefaultAuthenticator() {
-	}
-
-	public String authenticate(String userID, String credential) throws RegistryException {
+	/**
+	 * 
+	 * @return the same userId that came in on the request.
+	 */
+	public String authenticate(String userID, String credential) throws AuthenticationException {
 		return userID;
 	}
-
 }

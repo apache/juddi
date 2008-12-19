@@ -17,16 +17,18 @@
 
 package org.apache.juddi.error;
 
+import org.uddi.api_v3.DispositionReport;
+
 /**
- *   E_authTokenRequired: (10120) Signifies that an authentication token is missing or is invalid for an API call that requires authentication.
+ *  Parenent of all Authentication exceptions.
  * 
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class AuthTokenRequiredException extends AuthenticationException {
+public class AuthenticationException extends RegistryException {
 
 	private static final long serialVersionUID = 1L;
 
-	public AuthTokenRequiredException(ErrorMessage message) {
-		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_AUTH_TOKEN_REQUIRED));
+	public AuthenticationException(ErrorMessage message, DispositionReport dispositionReport) {
+		super(message, dispositionReport);
 	}
 }
