@@ -26,7 +26,6 @@ import javax.xml.ws.Holder;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
-import org.apache.juddi.validation.ValidatePublish;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;

@@ -71,7 +71,7 @@ public class JPAUtil {
 		em.close();
 	}
 	
-	public static List runQuery(String qry, int maxRows, int listHead) {
+	public static List<?> runQuery(String qry, int maxRows, int listHead) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		
 		Query q = em.createQuery(qry);

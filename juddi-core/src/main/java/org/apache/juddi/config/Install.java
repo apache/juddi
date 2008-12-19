@@ -234,7 +234,7 @@ public class Install {
 
 		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		Object obj = ((JAXBElement)unmarshaller.unmarshal(resourceStream)).getValue();
+		Object obj = ((JAXBElement<?>)unmarshaller.unmarshal(resourceStream)).getValue();
 		return obj;
 	}
 

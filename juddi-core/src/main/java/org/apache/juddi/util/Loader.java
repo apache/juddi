@@ -167,10 +167,10 @@ public class Loader
    * @throws ClassNotFoundException
    * @throws NoClassDefFoundError
    */
-  public static Class getClassForName(String name)
+  public static Class<?> getClassForName(String name)
     throws ClassNotFoundException, NoClassDefFoundError
   {
-    Class clazz = null;
+    Class<?> clazz = null;
 
     try
     {

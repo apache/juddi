@@ -104,6 +104,7 @@ public abstract class EntityQuery {
 	/*
 	 * Used for all the find operation sub-queries.  Restricts size of the IN clause based on global parameter
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<?> getQueryResult(EntityManager em, DynamicQuery dynamicQry, List<?> keysIn, String inListTerm) {
 		
 		List<Object> result = new ArrayList<Object>(0);

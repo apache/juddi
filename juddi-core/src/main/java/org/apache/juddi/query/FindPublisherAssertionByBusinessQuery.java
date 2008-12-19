@@ -36,6 +36,7 @@ public class FindPublisherAssertionByBusinessQuery extends PublisherAssertionQue
 
 	private static Logger log = Logger.getLogger(FindPublisherAssertionByBusinessQuery.class);
 
+	@SuppressWarnings("unchecked")
 	public static List<PublisherAssertion> select(EntityManager em, List<?> businessKeys, CompletionStatus completionStatus) {
 		if ((businessKeys == null) || (businessKeys.size() == 0))
 			return null;
