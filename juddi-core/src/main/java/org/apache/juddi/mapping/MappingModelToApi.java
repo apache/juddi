@@ -267,7 +267,7 @@ public class MappingModelToApi {
 
 		mapServiceNames(modelBusinessService.getServiceNames(), apiBusinessService.getName());
 		mapServiceDescriptions(modelBusinessService.getServiceDescrs(), apiBusinessService.getDescription());
-
+        mapBindingTemplates(modelBusinessService.getBindingTemplates(), apiBusinessService.getBindingTemplates(), apiBusinessService);
 		apiBusinessService.setCategoryBag(mapCategoryBag(modelBusinessService.getCategoryBag(), apiBusinessService.getCategoryBag()));
 
 	}
@@ -327,9 +327,11 @@ public class MappingModelToApi {
 		apiAccessPoint.setUseType(modelBindingTemplate.getAccessPointType());
 		apiAccessPoint.setValue(modelBindingTemplate.getAccessPointUrl());
 		apiBindingTemplate.setAccessPoint(apiAccessPoint);
-		org.uddi.api_v3.HostingRedirector apiHost = new org.uddi.api_v3.HostingRedirector();
-		apiHost.setBindingKey(modelBindingTemplate.getHostingRedirector());
-		apiBindingTemplate.setHostingRedirector(apiHost);
+		if (modelBindingTemplate.getHostingRedirector()!=null) {
+			org.uddi.api_v3.HostingRedirector apiHost = new org.uddi.api_v3.HostingRedirector();
+			apiHost.setBindingKey(modelBindingTemplate.getHostingRedirector());
+			apiBindingTemplate.setHostingRedirector(apiHost);
+		}
 
 		mapBindingDescriptions(modelBindingTemplate.getBindingDescrs(), apiBindingTemplate.getDescription());
 

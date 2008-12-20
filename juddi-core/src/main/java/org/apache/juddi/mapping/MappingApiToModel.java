@@ -309,7 +309,9 @@ public class MappingApiToModel {
 		modelBindingTemplate.setLastUpdate(new Date());
 		modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
 		modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
-		//modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
+		if (apiBindingTemplate.getHostingRedirector() != null) {
+			modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
+		}
 		
 		mapBindingDescriptions(apiBindingTemplate.getDescription(), modelBindingTemplate.getBindingDescrs(), modelBindingTemplate);
 		if (apiBindingTemplate.getCategoryBag()!=null) {

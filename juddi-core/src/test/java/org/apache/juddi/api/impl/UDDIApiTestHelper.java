@@ -33,18 +33,28 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElementRef;
 
+import org.apache.juddi.model.TmodelInstanceInfo;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.log4j.Logger;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Contact;
 import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DiscoveryURL;
 import org.uddi.api_v3.DiscoveryURLs;
+import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.HostingRedirector;
+import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.PersonName;
+import org.uddi.api_v3.TModelInstanceDetails;
+import org.uddi.api_v3.TModelInstanceInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIApiTestHelper {
@@ -234,8 +244,94 @@ public class UDDIApiTestHelper {
 				assertEquals(kr1.getKeyName(), kr2.getKeyName());
 				assertEquals(kr1.getKeyValue(), kr2.getKeyValue());
 			}
-			
+			// add comparing keyedReferenceGroup
 		}
+	}
+	
+	public static void checkBindingTemplates(BindingTemplates bts1, BindingTemplates bts2) {
+		if (bts1 == null || bts2 == null) {
+			assertEquals(bts1, bts2);
+			return;
+		}
+		assertEquals(bts1.getBindingTemplate().size(), bts2.getBindingTemplate().size());
+		Iterator<BindingTemplate> bt1Iter  = bts1.getBindingTemplate().iterator();
+		Iterator<BindingTemplate> bt2Iter  = bts2.getBindingTemplate().iterator();
+		while (bt1Iter.hasNext()) {
+			BindingTemplate bt1 = bt1Iter.next();
+			BindingTemplate bt2 = bt2Iter.next();
+			assertEquals(bt1.getAccessPoint().getValue(),bt2.getAccessPoint().getValue());
+			assertEquals(bt1.getAccessPoint().getUseType(),bt2.getAccessPoint().getUseType());
+			assertEquals(bt1.getBindingKey(),bt2.getBindingKey());
+			checkCategories(bt1.getCategoryBag(), bt2.getCategoryBag());
+			checkDescriptions(bt1.getDescription(),bt2.getDescription());
+			checkHostingRedirector(bt1.getHostingRedirector(),bt2.getHostingRedirector());
+			//TODO assertEquals(bt1.getServiceKey(),bt2.getServiceKey());
+			//TODO checkTModelInstanceDetails(bt1.getTModelInstanceDetails(),bt2.getTModelInstanceDetails());
+		}
+	}
+	
+	public static void checkTModelInstanceDetails(TModelInstanceDetails tmds1, TModelInstanceDetails tmds2) {
+		if (tmds1 == null || tmds2 == null) {
+			assertEquals(tmds1, tmds2);
+			return;
+		}
+		assertEquals(tmds1.getTModelInstanceInfo().size(),tmds2.getTModelInstanceInfo().size());
+		Iterator<TModelInstanceInfo> tmIter1 = tmds1.getTModelInstanceInfo().iterator();
+		Iterator<TModelInstanceInfo> tmIter2 = tmds2.getTModelInstanceInfo().iterator();
+		while (tmIter1.hasNext()) {
+			TModelInstanceInfo tmI1 = tmIter1.next();
+			TModelInstanceInfo tmI2 = tmIter2.next();
+			checkDescriptions(tmI1.getDescription(), tmI2.getDescription());
+			checkInstanceDetails(tmI1.getInstanceDetails(), tmI2.getInstanceDetails());
+			assertEquals(tmI1.getTModelKey(),tmI2.getTModelKey());
+		}
+	}
+	
+	public static void checkInstanceDetails(InstanceDetails ids1, InstanceDetails ids2) {
+		if (ids1 == null || ids2 == null) {
+			assertEquals(ids1, ids2);
+			return;
+		}
+		//@XmlElementRef(name = "instanceParms", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
+        //@XmlElementRef(name = "description", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
+        //@XmlElementRef(name = "overviewDoc", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class)
+        
+		List<JAXBElement<?>> elem1s =  ids1.getContent();
+		List<JAXBElement<?>> elem2s =  ids2.getContent();
+		Iterator<JAXBElement<?>> elem1 = elem1s.iterator();
+		Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+		while (elem1.hasNext()) {
+			JAXBElement<?> element1 = elem1.next();
+			JAXBElement<?> element2 = elem2.next();
+			if (element1.getValue() instanceof org.uddi.api_v3.Description) {
+				Description desc1 = (Description) element1.getValue();
+				Description desc2 = (Description) element2.getValue();
+				assertEquals(desc1.getValue(),desc2.getValue());
+				assertEquals(desc1.getLang(),desc2.getLang());
+			} else if (element1.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
+				OverviewDoc doc1 = (OverviewDoc) element1.getValue();
+				OverviewDoc doc2 = (OverviewDoc) element2.getValue();
+				checkOverviewDocs(doc1, doc2);
+			} else if (element1.getValue() instanceof String) {
+				//instanceParams
+				assertEquals((String)element1.getValue(),(String)element2.getValue());
+			}
+		}
+	}
+	
+	public static void checkOverviewDocs(OverviewDoc doc1, OverviewDoc doc2) {
+		if (doc1 == null || doc2 == null) {
+			assertEquals(doc1, doc2);
+			return;
+		}
+	}
+	
+	public static void checkHostingRedirector(HostingRedirector hr1, HostingRedirector hr2) {
+		if (hr1 == null || hr2 == null) {
+			assertEquals(hr1, hr2);
+			return;
+		}
+		assertEquals(hr1.getBindingKey(),hr2.getBindingKey());
 	}
 	
 }

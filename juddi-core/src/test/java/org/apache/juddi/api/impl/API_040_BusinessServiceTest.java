@@ -132,6 +132,7 @@ public class API_040_BusinessServiceTest
 			
 			UDDIApiTestHelper.checkNames(bsIn.getName(), bsOut.getName());
 			UDDIApiTestHelper.checkDescriptions(bsIn.getDescription(), bsOut.getDescription());
+			UDDIApiTestHelper.checkBindingTemplates(bsIn.getBindingTemplates(), bsOut.getBindingTemplates());
 			UDDIApiTestHelper.checkCategories(bsIn.getCategoryBag(), bsOut.getCategoryBag());
 		}
 		catch(Exception e) {
