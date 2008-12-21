@@ -38,9 +38,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 
 /**
- * TODO Kurt Switch over to use JAXB
- * 
- * 
  * This is a simple implementation of jUDDI's Authenticator interface. The credential
  * store is simply an unencrypted xml document called 'juddi.users' that can be
  * found in jUDDI's config directory. Below is an example of what you might find
