@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.juddi.model.OverviewDoc;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -332,7 +333,7 @@ public class MappingModelToApi {
 			apiHost.setBindingKey(modelBindingTemplate.getHostingRedirector());
 			apiBindingTemplate.setHostingRedirector(apiHost);
 		}
-
+        mapTModelInstanceDetails(modelBindingTemplate.getTmodelInstanceInfos(), apiBindingTemplate.getTModelInstanceDetails(),apiBindingTemplate);
 		mapBindingDescriptions(modelBindingTemplate.getBindingDescrs(), apiBindingTemplate.getDescription());
 
 		apiBindingTemplate.setCategoryBag(mapCategoryBag(modelBindingTemplate.getCategoryBag(), apiBindingTemplate.getCategoryBag()));
@@ -341,7 +342,7 @@ public class MappingModelToApi {
 
 	public static void mapBindingDescriptions(List<org.apache.juddi.model.BindingDescr> modelDescList, 
 											  List<org.uddi.api_v3.Description> apiDescList) 
-				   throws DispositionReportFaultMessage {
+			throws DispositionReportFaultMessage {
 		apiDescList.clear();
 
 		for (org.apache.juddi.model.BindingDescr modelDesc : modelDescList) {
@@ -426,23 +427,55 @@ public class MappingModelToApi {
 
 		List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
 		apiInstanceDetailsContent.clear();
-
+		//InstanceParms
 		apiInstanceDetailsContent.add(new ObjectFactory().createInstanceParms(modelTModelInstInfo.getInstanceParms()));
-		
+		//Descriptions
 		List<org.apache.juddi.model.InstanceDetailsDescr> modelInstDetailsDescrList = modelTModelInstInfo.getInstanceDetailsDescrs();
 		for (org.apache.juddi.model.InstanceDetailsDescr modelInstDetailDescr : modelInstDetailsDescrList) {
 			org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();
 			apiDesc.setLang(modelInstDetailDescr.getLangCode());
 			apiDesc.setValue(modelInstDetailDescr.getDescr());
 			apiInstanceDetailsContent.add(new ObjectFactory().createDescription(apiDesc));
-			
 		}
-		
-		// TODO: OverviewDoc is not mapped properly in the model.
-		apiInstanceDetailsContent.add(new ObjectFactory().createOverviewDoc(null));
-		
+		//OverviewDoc
+		mapOverviewDocs(modelTModelInstInfo.getOverviewDocs(),apiInstanceDetails,null);
+			
 		apiTModelInstInfo.setInstanceDetails(apiInstanceDetails);
 	}
+	
+	public static void mapOverviewDocs(List<org.apache.juddi.model.OverviewDoc> modelOverviewDocs,
+			                           org.uddi.api_v3.InstanceDetails apiInstanceDetails,
+			                           org.uddi.api_v3.TModel apiTModel)
+	{
+		for (OverviewDoc modelOverviewDoc : modelOverviewDocs) {
+			org.uddi.api_v3.OverviewDoc apiOverviewDoc = new org.uddi.api_v3.OverviewDoc();
+			List<JAXBElement<?>> apiOverviewDocContent = apiOverviewDoc.getContent();
+			apiOverviewDocContent.clear();
+			
+			//Descriptions
+			List<org.apache.juddi.model.OverviewDocDescr> overviewDocDescrList = modelOverviewDoc.getOverviewDocDescrs();
+			for (org.apache.juddi.model.OverviewDocDescr overviewDocDescr : overviewDocDescrList) {
+				org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();
+				apiDesc.setLang(overviewDocDescr.getLangCode());
+				apiDesc.setValue(overviewDocDescr.getDescr());
+				apiOverviewDocContent.add(new ObjectFactory().createDescription(apiDesc));
+			}
+			//OverviewURL
+			org.uddi.api_v3.OverviewURL apiOverviewURL = new org.uddi.api_v3.OverviewURL();
+			apiOverviewURL.setUseType(modelOverviewDoc.getOverviewUrlUseType());
+			apiOverviewURL.setValue(modelOverviewDoc.getOverviewUrl());
+			apiOverviewDocContent.add(new ObjectFactory().createOverviewURL(apiOverviewURL));
+			//Set the entity on the apiOverviewDoc
+			if (apiInstanceDetails!=null) {
+				apiOverviewDocContent.add( new ObjectFactory().createInstanceDetails(apiInstanceDetails));
+				apiInstanceDetails.getContent().add(new ObjectFactory().createOverviewDoc(apiOverviewDoc));
+			} else {
+				apiOverviewDocContent.add( new ObjectFactory().createTModel(apiTModel));
+				apiTModel.getOverviewDoc().add(apiOverviewDoc);
+			}
+		}
+	}
+	
 	
 	public static void mapTModel(org.apache.juddi.model.Tmodel modelTModel, 
 								 org.uddi.api_v3.TModel apiTModel) 
@@ -458,9 +491,8 @@ public class MappingModelToApi {
 
 		mapTModelIdentifiers(modelTModel.getTmodelIdentifiers(), apiTModel.getIdentifierBag(), apiTModel);
 		apiTModel.setCategoryBag(mapCategoryBag(modelTModel.getCategoryBag(), apiTModel.getCategoryBag()));
-		//TODO: OverviewDoc - model doesn't have logical mapping
-		apiTModel.getOverviewDoc();
-
+		
+		mapOverviewDocs(modelTModel.getOverviewDocs(), null, apiTModel);
 	}
 
 	public static void mapTModelDescriptions(List<org.apache.juddi.model.TmodelDescr> modelDescList, 

@@ -16,8 +16,10 @@ package org.apache.juddi.api.impl;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,9 +35,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElementRef;
 
-import org.apache.juddi.model.TmodelInstanceInfo;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingTemplate;
@@ -46,12 +46,12 @@ import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DiscoveryURL;
 import org.uddi.api_v3.DiscoveryURLs;
-import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.HostingRedirector;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
@@ -265,8 +265,11 @@ public class UDDIApiTestHelper {
 			checkCategories(bt1.getCategoryBag(), bt2.getCategoryBag());
 			checkDescriptions(bt1.getDescription(),bt2.getDescription());
 			checkHostingRedirector(bt1.getHostingRedirector(),bt2.getHostingRedirector());
-			//TODO assertEquals(bt1.getServiceKey(),bt2.getServiceKey());
-			//TODO checkTModelInstanceDetails(bt1.getTModelInstanceDetails(),bt2.getTModelInstanceDetails());
+			//the inbound apiBindingTemplate can have a null serviceKey
+			if (bt1.getServiceKey()!=null) {
+				assertEquals(bt1.getServiceKey(),bt2.getServiceKey());
+			}
+			checkTModelInstanceDetails(bt1.getTModelInstanceDetails(),bt2.getTModelInstanceDetails());
 		}
 	}
 	
@@ -292,39 +295,104 @@ public class UDDIApiTestHelper {
 			assertEquals(ids1, ids2);
 			return;
 		}
-		//@XmlElementRef(name = "instanceParms", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        //@XmlElementRef(name = "description", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        //@XmlElementRef(name = "overviewDoc", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class)
-        
 		List<JAXBElement<?>> elem1s =  ids1.getContent();
 		List<JAXBElement<?>> elem2s =  ids2.getContent();
 		Iterator<JAXBElement<?>> elem1 = elem1s.iterator();
-		Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+		
 		while (elem1.hasNext()) {
+			boolean isMatch=false;
 			JAXBElement<?> element1 = elem1.next();
-			JAXBElement<?> element2 = elem2.next();
+			
 			if (element1.getValue() instanceof org.uddi.api_v3.Description) {
+				//Descriptions
 				Description desc1 = (Description) element1.getValue();
-				Description desc2 = (Description) element2.getValue();
-				assertEquals(desc1.getValue(),desc2.getValue());
-				assertEquals(desc1.getLang(),desc2.getLang());
+				Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+				while (elem2.hasNext()) {
+					JAXBElement<?> element2 = elem2.next();
+					if (element2.getValue() instanceof org.uddi.api_v3.Description) {
+						Description desc2 = (Description) element2.getValue();
+						if (desc1.getLang().equals(desc2.getLang()) && desc1.getValue().equals(desc2.getValue())) {
+							isMatch=true;
+							break;
+						}
+					}
+				}
 			} else if (element1.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
+				//OverviewDocs
 				OverviewDoc doc1 = (OverviewDoc) element1.getValue();
-				OverviewDoc doc2 = (OverviewDoc) element2.getValue();
-				checkOverviewDocs(doc1, doc2);
+				checkOverviewDocs(doc1, elem2s);
+				isMatch=true;
 			} else if (element1.getValue() instanceof String) {
-				//instanceParams
-				assertEquals((String)element1.getValue(),(String)element2.getValue());
+				//InstanceParams
+				Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+				while (elem2.hasNext()) {
+					JAXBElement<?> element2 = elem2.next();
+					if (element1.getValue() instanceof String) {
+						assertEquals((String)element1.getValue(),(String)element2.getValue());
+					}
+					isMatch=true;
+					break;
+				}
 			}
+			assertTrue(isMatch);
 		}
 	}
 	
-	public static void checkOverviewDocs(OverviewDoc doc1, OverviewDoc doc2) {
-		if (doc1 == null || doc2 == null) {
-			assertEquals(doc1, doc2);
-			return;
+	public static void checkOverviewDocs(OverviewDoc doc1, List<JAXBElement<?>> elem2s) {
+		boolean isMatch=false;
+		Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+		//Match against any OverviewDocs in the elem2 list
+		while (elem2.hasNext()) {
+			JAXBElement<?> element2 = elem2.next();
+			if (element2.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
+				OverviewDoc doc2 = (OverviewDoc) element2.getValue();
+				//match doc1 against this doc2
+				boolean descMatch=false;
+				boolean urlMatch =false;
+				List<JAXBElement<?>> odElem1List = doc1.getContent();
+				Iterator<JAXBElement<?>> odElem1 = odElem1List.iterator();
+				while (odElem1.hasNext()) {
+					JAXBElement<?> odElement1 = odElem1.next();
+					if (odElement1.getValue() instanceof org.uddi.api_v3.Description) {
+						Description descr1 = (Description) odElement1.getValue();
+						List<JAXBElement<?>> odElem2List = doc2.getContent();
+						Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
+						while (odElem2.hasNext()) {
+							JAXBElement<?> odElement2 = odElem2.next();
+							if (odElement2.getValue() instanceof org.uddi.api_v3.Description) {
+								Description descr2 = (Description) odElement2.getValue();
+								if (descr1.getLang().equals(descr2.getLang()) && descr1.getValue().equals(descr2.getValue())) {
+									descMatch=true;
+									break;
+								}
+							}
+						}
+					} else if (odElement1.getValue() instanceof org.uddi.api_v3.OverviewURL) {
+						OverviewURL url1 = (OverviewURL) odElement1.getValue();
+						List<JAXBElement<?>> odElem2List = doc2.getContent();
+						Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
+						while (odElem2.hasNext()) {
+							JAXBElement<?> odElement2 = odElem2.next();
+							if (odElement2.getValue() instanceof org.uddi.api_v3.OverviewURL) {
+								OverviewURL url2 = (OverviewURL) odElement2.getValue();
+								if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
+									urlMatch=true;
+									break;
+								}
+							}
+						}
+					}
+					if (urlMatch && descMatch) {
+						isMatch=true;
+						break;
+					}
+				}
+			}
 		}
+		assertTrue(isMatch);
 	}
+	
+	
 	
 	public static void checkHostingRedirector(HostingRedirector hr1, HostingRedirector hr2) {
 		if (hr1 == null || hr2 == null) {

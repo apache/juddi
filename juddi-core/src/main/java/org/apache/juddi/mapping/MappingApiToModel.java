@@ -395,9 +395,9 @@ public class MappingApiToModel {
 	}
 
 	public static void mapInstanceDetails(org.uddi.api_v3.InstanceDetails apiInstanceDetails, 
-										  org.apache.juddi.model.TmodelInstanceInfo modelTModelInstInfo) 
+										  org.apache.juddi.model.TmodelInstanceInfo modelTmodelInstInfo) 
 				   throws DispositionReportFaultMessage {
-		modelTModelInstInfo.getInstanceDetailsDescrs().clear();
+		modelTmodelInstInfo.getInstanceDetailsDescrs().clear();
 
 		if (apiInstanceDetails != null) {
 			List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
@@ -406,14 +406,15 @@ public class MappingApiToModel {
 					org.uddi.api_v3.Description apiDesc = (org.uddi.api_v3.Description)elem.getValue();
 					org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr = 
 							new org.apache.juddi.model.InstanceDetailsDescr(
-									modelTModelInstInfo, apiDesc.getLang(), apiDesc.getValue());
-					modelTModelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
+									modelTmodelInstInfo, apiDesc.getLang(), apiDesc.getValue());
+					modelTmodelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
 				} else if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
 					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
-					org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTModelInstInfo);
+					org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTmodelInstInfo);
 					mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
+					modelTmodelInstInfo.getOverviewDocs().add(modelOverviewDoc);
 				} else if (elem.getValue() instanceof String) {
-					modelTModelInstInfo.setInstanceParms((String)elem.getValue());
+					modelTmodelInstInfo.setInstanceParms((String)elem.getValue());
 				}
 			}
 		}
@@ -426,10 +427,10 @@ public class MappingApiToModel {
 			
 			List<JAXBElement<?>> apiOverviewDocContent = apiOverviewDoc.getContent();
 			for (JAXBElement<?> elem : apiOverviewDocContent) {
-				if (elem.getValue() instanceof org.uddi.api_v3.AccessPoint) {
-					org.uddi.api_v3.AccessPoint accessPoint = (org.uddi.api_v3.AccessPoint) elem.getValue();
-					modelOverviewDoc.setOverviewUrl(accessPoint.getValue());
-					modelOverviewDoc.setOverviewUrlUseType(accessPoint.getUseType());
+				if (elem.getValue() instanceof org.uddi.api_v3.OverviewURL) {
+					org.uddi.api_v3.OverviewURL overviewURL = (org.uddi.api_v3.OverviewURL) elem.getValue();
+					modelOverviewDoc.setOverviewUrl(overviewURL.getValue());
+					modelOverviewDoc.setOverviewUrlUseType(overviewURL.getUseType());
 				} else if (elem.getValue() instanceof org.uddi.api_v3.Description) {
 					org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem.getValue();
 					org.apache.juddi.model.OverviewDocDescr modelOverviewDocDescr 
@@ -488,13 +489,14 @@ public class MappingApiToModel {
 	
 	public static void mapTModelOverviewDocs(List<org.uddi.api_v3.OverviewDoc> apiOverviewDocList, 
 			 List<org.apache.juddi.model.OverviewDoc> modelOverviewDocList,
-			 org.apache.juddi.model.Tmodel modelTModel)
+			 org.apache.juddi.model.Tmodel modelTmodel)
 		throws DispositionReportFaultMessage {
 		modelOverviewDocList.clear();
 		
 		for (org.uddi.api_v3.OverviewDoc apiOverviewDoc : apiOverviewDocList) {
-			org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTModel);
+			org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTmodel);
 			mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
+			modelTmodel.getOverviewDocs().add(modelOverviewDoc);
 		}
 	}
 	
