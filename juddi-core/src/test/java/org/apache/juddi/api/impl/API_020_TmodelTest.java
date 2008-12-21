@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
@@ -115,7 +116,10 @@ public class API_020_TmodelTest {
 			assertEquals(tmIn.getName().getValue(), tmOut.getName().getValue());
 			UDDIApiTestHelper.checkDescriptions(tmIn.getDescription(), tmOut.getDescription());
 			UDDIApiTestHelper.checkCategories(tmIn.getCategoryBag(), tmOut.getCategoryBag());
-		
+			for (OverviewDoc overviewDoc : tmIn.getOverviewDoc()) {
+				UDDIApiTestHelper.checkOverviewDocs(overviewDoc, tmOut.getOverviewDoc());
+			}
+			
 		} catch(Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");

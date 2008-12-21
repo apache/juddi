@@ -24,6 +24,7 @@ import static junit.framework.Assert.assertTrue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -347,49 +348,67 @@ public class UDDIApiTestHelper {
 			if (element2.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
 				OverviewDoc doc2 = (OverviewDoc) element2.getValue();
 				//match doc1 against this doc2
-				boolean descMatch=false;
-				boolean urlMatch =false;
-				List<JAXBElement<?>> odElem1List = doc1.getContent();
-				Iterator<JAXBElement<?>> odElem1 = odElem1List.iterator();
-				while (odElem1.hasNext()) {
-					JAXBElement<?> odElement1 = odElem1.next();
-					if (odElement1.getValue() instanceof org.uddi.api_v3.Description) {
-						Description descr1 = (Description) odElement1.getValue();
-						List<JAXBElement<?>> odElem2List = doc2.getContent();
-						Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
-						while (odElem2.hasNext()) {
-							JAXBElement<?> odElement2 = odElem2.next();
-							if (odElement2.getValue() instanceof org.uddi.api_v3.Description) {
-								Description descr2 = (Description) odElement2.getValue();
-								if (descr1.getLang().equals(descr2.getLang()) && descr1.getValue().equals(descr2.getValue())) {
-									descMatch=true;
-									break;
-								}
-							}
-						}
-					} else if (odElement1.getValue() instanceof org.uddi.api_v3.OverviewURL) {
-						OverviewURL url1 = (OverviewURL) odElement1.getValue();
-						List<JAXBElement<?>> odElem2List = doc2.getContent();
-						Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
-						while (odElem2.hasNext()) {
-							JAXBElement<?> odElement2 = odElem2.next();
-							if (odElement2.getValue() instanceof org.uddi.api_v3.OverviewURL) {
-								OverviewURL url2 = (OverviewURL) odElement2.getValue();
-								if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
-									urlMatch=true;
-									break;
-								}
-							}
-						}
-					}
-					if (urlMatch && descMatch) {
-						isMatch=true;
-						break;
-					}
-				}
+				isMatch = compareOverviewDocs(doc1, doc2);
+				if (isMatch) break;
 			}
 		}
 		assertTrue(isMatch);
+	}
+	
+	public static void checkOverviewDocs(OverviewDoc doc1, Collection<OverviewDoc> doc2s) {
+		boolean isMatch=false;
+		Iterator<OverviewDoc> docIter = doc2s.iterator();
+		while (docIter.hasNext()) {
+			OverviewDoc doc2 = docIter.next();
+			//match doc1 against this doc2
+			isMatch = compareOverviewDocs(doc1, doc2);
+			if (isMatch) break;
+		}
+		assertTrue(isMatch);
+	}
+	
+	public static boolean compareOverviewDocs(OverviewDoc doc1, OverviewDoc doc2) 
+	{	
+		boolean descMatch=false;
+		boolean urlMatch =false;
+		List<JAXBElement<?>> odElem1List = doc1.getContent();
+		Iterator<JAXBElement<?>> odElem1 = odElem1List.iterator();
+		while (odElem1.hasNext()) {
+			JAXBElement<?> odElement1 = odElem1.next();
+			if (odElement1.getValue() instanceof org.uddi.api_v3.Description) {
+				Description descr1 = (Description) odElement1.getValue();
+				List<JAXBElement<?>> odElem2List = doc2.getContent();
+				Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
+				while (odElem2.hasNext()) {
+					JAXBElement<?> odElement2 = odElem2.next();
+					if (odElement2.getValue() instanceof org.uddi.api_v3.Description) {
+						Description descr2 = (Description) odElement2.getValue();
+						if (descr1.getLang().equals(descr2.getLang()) && descr1.getValue().equals(descr2.getValue())) {
+							descMatch=true;
+							break;
+						}
+					}
+				}
+			} else if (odElement1.getValue() instanceof org.uddi.api_v3.OverviewURL) {
+				OverviewURL url1 = (OverviewURL) odElement1.getValue();
+				List<JAXBElement<?>> odElem2List = doc2.getContent();
+				Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
+				while (odElem2.hasNext()) {
+					JAXBElement<?> odElement2 = odElem2.next();
+					if (odElement2.getValue() instanceof org.uddi.api_v3.OverviewURL) {
+						OverviewURL url2 = (OverviewURL) odElement2.getValue();
+						if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
+							urlMatch=true;
+							break;
+						}
+					}
+				}
+			}
+			if (urlMatch && descMatch || ( odElem1List.size()==1 && (urlMatch || descMatch)) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
