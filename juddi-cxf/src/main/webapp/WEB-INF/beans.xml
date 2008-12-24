@@ -27,34 +27,64 @@
   <jaxws:endpoint id="inquiry" implementor="org.apache.juddi.api.impl.UDDIInquiryImpl" address="/inquiry"
    serviceName="a:InquiryService" endpointName="a:InquiryServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
     <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
   
   <jaxws:endpoint id="publish" implementor="org.apache.juddi.api.impl.UDDIPublicationImpl" address="/publish" 
    serviceName="a:PublishService" endpointName="a:PublishServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
     <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="security" implementor="org.apache.juddi.api.impl.UDDISecurityImpl" address="/security" 
-   serviceName="a:SecurityService" endpointName="a:SecurityServicePort" xmlns:a="urn:uddi-org:api_v3_portType" />
+   serviceName="a:SecurityService" endpointName="a:SecurityServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
    
   <jaxws:endpoint id="subscription" implementor="org.apache.juddi.api.impl.UDDISubscriptionImpl" address="/subscription" 
-   serviceName="a:SubscriptionService" endpointName="a:SubscriptionServicePort" xmlns:a="urn:uddi-org:sub_v3_portType" />
+   serviceName="a:SubscriptionService" endpointName="a:SubscriptionServicePort" xmlns:a="urn:uddi-org:sub_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
   
   <jaxws:endpoint id="supscription-listener" implementor="org.apache.juddi.api.impl.UDDISubscriptionListenerImpl" address="/supscription-listener" 
-   serviceName="a:SubscriptionListenerService" endpointName="a:SubscriptionListenerServicePort" xmlns:a="urn:uddi-org:subr_v3_portType" />
+   serviceName="a:SubscriptionListenerService" endpointName="a:SubscriptionListenerServicePort" xmlns:a="urn:uddi-org:subr_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
   <jaxws:endpoint id="custody-transfer" implementor="org.apache.juddi.api.impl.UDDICustodyTransferImpl" address="/custody-transfer" 
-   serviceName="a:CustodyTransferService" endpointName="a:CustodyTransferServicePort" xmlns:a="urn:uddi-org:custody_v3_portType" />
+   serviceName="a:CustodyTransferService" endpointName="a:CustodyTransferServicePort" xmlns:a="urn:uddi-org:custody_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
   <jaxws:endpoint id="replication" implementor="org.apache.juddi.api.impl.UDDIReplicationImpl" address="/replication" 
-   serviceName="a:ReplicationService" endpointName="a:ReplicationServicePort" xmlns:a="urn:uddi-org:repl_v3_portType" />
+   serviceName="a:ReplicationService" endpointName="a:ReplicationServicePort" xmlns:a="urn:uddi-org:repl_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
   <jaxws:endpoint id="valueset-validation" implementor="org.apache.juddi.api.impl.UDDIValueSetValidationImpl" address="/valueset-validation" 
-   serviceName="a:ValueSetValidationService" endpointName="a:ValudSetValidationServicePort" xmlns:a="urn:uddi-org:vs_v3_portType" />
+   serviceName="a:ValueSetValidationService" endpointName="a:ValudSetValidationServicePort" xmlns:a="urn:uddi-org:vs_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
   <jaxws:endpoint id="valueset-caching" implementor="org.apache.juddi.api.impl.UDDIValueSetCachingImpl" address="/valueset-caching"
-   serviceName="a:ValueSetCachingService" endpointName="a:ValudSetCachingServicePort" xmlns:a="urn:uddi-org:vscache_v3_portType" />
+   serviceName="a:ValueSetCachingService" endpointName="a:ValudSetCachingServicePort" xmlns:a="urn:uddi-org:vscache_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
 </beans>
