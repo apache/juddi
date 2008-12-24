@@ -40,6 +40,16 @@
       <artifactId>derby</artifactId>
       <version>10.1.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -53,20 +63,22 @@
             <configuration>
               <tasks>
 
-                        <property name="compile_classpath" refid="maven.compile.classpath"/>
-                        <property name="runtime_classpath" refid="maven.runtime.classpath"/>
-                        <property name="test_classpath" refid="maven.test.classpath"/>
-                        <property name="plugin_classpath" refid="maven.plugin.classpath"/>
-                        <property name="project.version" value="${project.version}"/>
+               <property name="compile_classpath" refid="maven.compile.classpath"/>
+               <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+               <property name="test_classpath" refid="maven.test.classpath"/>
+               <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+               <property name="project.version" value="${project.version}"/>
 
-		<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
-		<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
-		<property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
-		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
-		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
-		<ant antfile="${basedir}/build.xml">
+	       <property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}"/>
+	       <property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}"/>
+	       <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
+	       <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
+	       <property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
+	       <property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
+	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
+	       <ant antfile="${basedir}/build.xml">
                   <target name="package-tomcat"/>
-                </ant>
+               </ant>
               </tasks>
             </configuration>
             <goals>

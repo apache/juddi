@@ -8,12 +8,21 @@
 
 		<unzip dest="${basedir}/target/tomcat" src="${dependency.tomcat.zip}"/>
 		<copy file="${dependency.juddi.war}" tofile="${webapps.dir}/juddi.war"/>
+		<copy file="${basedir}/juddi.xml" tofile="${webapps.dir}"/>
 		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddi.war}"/>
+		<chmod perm="ugo+x">
+			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
+		<copy file="${dependency.mysql.jar}" todir="${common.lib.dir}"/>
+		<copy file="${dependency.log4j.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.derby.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${common.lib.dir}"/>
+		<!--
 		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
 			<replacetoken>juddi-sql/mysql</replacetoken>
 			<replacevalue>juddi-sql/derby</replacevalue>
@@ -26,6 +35,7 @@
                         <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
                         <replacevalue>juddi.jdbcDriver=org.apache.derby.jdbc.EmbeddedDriver</replacevalue>
                 </replace>	
+		-->
 	</target>
 	
 	<target name="package-tomcat" depends="copy-resources">

@@ -25,10 +25,16 @@
   <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
   <jaxws:endpoint id="inquiry" implementor="org.apache.juddi.api.impl.UDDIInquiryImpl" address="/inquiry"
-   serviceName="a:InquiryService" endpointName="a:InquiryServicePort" xmlns:a="urn:uddi-org:api_v3_portType" />
+   serviceName="a:InquiryService" endpointName="a:InquiryServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+    <jaxws:properties>
+    </jaxws:properties>
+  </jaxws:endpoint>
   
   <jaxws:endpoint id="publish" implementor="org.apache.juddi.api.impl.UDDIPublicationImpl" address="/publish" 
-   serviceName="a:PublishService" endpointName="a:PublishServicePort" xmlns:a="urn:uddi-org:api_v3_portType" />
+   serviceName="a:PublishService" endpointName="a:PublishServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+    <jaxws:properties>
+    </jaxws:properties>
+  </jaxws:endpoint>
 
   <jaxws:endpoint id="security" implementor="org.apache.juddi.api.impl.UDDISecurityImpl" address="/security" 
    serviceName="a:SecurityService" endpointName="a:SecurityServicePort" xmlns:a="urn:uddi-org:api_v3_portType" />

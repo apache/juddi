@@ -43,6 +43,17 @@
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-transports-http</artifactId>
       <version>${cxf.version}</version>
+      <exclusions>
+	<exclusion>
+	   <groupId>cglib</groupId>
+	   <artifactId>cglib</artifactId>
+	</exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>2.1_3</version>
     </dependency>
   </dependencies>
   <build>
