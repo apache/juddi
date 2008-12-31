@@ -361,7 +361,7 @@ public class MappingModelToApi {
 
 		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
 		apiCategoryList.clear();
-
+		
 		for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
 			org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
 			apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
@@ -371,19 +371,30 @@ public class MappingModelToApi {
 		}
 		for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
 			org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();
-			apiKeyedReferenceGroup.setTModelKey(modelKeyedReferenceGroup.getTmodelKey());
-			for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelKeyedReferenceGroup.getKeyedReferences()) {
-				org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
-				apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
-				apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
-				apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
-				apiKeyedReferenceGroup.getKeyedReference().add(apiKeyedReference);
-			}
+
+			mapKeyedReferenceGroup(modelKeyedReferenceGroup, apiKeyedReferenceGroup);
+			
 			apiCategoryList.add(new ObjectFactory().createKeyedReferenceGroup(apiKeyedReferenceGroup));
 		}
 		return apiCategoryBag;
 	}
 
+	public static void mapKeyedReferenceGroup(org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup, 
+											  org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup) 
+				   throws DispositionReportFaultMessage {
+
+		apiKeyedReferenceGroup.setTModelKey(modelKeyedReferenceGroup.getTmodelKey());
+
+		for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelKeyedReferenceGroup.getKeyedReferences()) {
+			org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
+			apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
+			apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
+			apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
+			apiKeyedReferenceGroup.getKeyedReference().add(apiKeyedReference);
+		}
+		
+	}
+	
 	public static void mapTModelInstanceDetails(List<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList, 
 												org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails,
 												org.uddi.api_v3.BindingTemplate apiBindingTemplate) 

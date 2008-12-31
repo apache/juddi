@@ -37,7 +37,7 @@ import org.uddi.api_v3.KeyedReference;
  * Output is produced by building the appropriate JPA query based on input and find qualifiers.
  * 
  * NOTES:
- * 1) Identifiers are grouped with a logical AND by default.
+ * 1) Categories are grouped with a logical AND by default.
  * 2) Concerning when the categories are AND'd together - the only way this can be done with a single query was to create a self-join for 
  *    each category.  If there are a lot of categories, the performance could suffer.
  *    TODO:  Test performance with multiple AND'd categories.  If too slow, look to process this query in multiple steps.
@@ -212,13 +212,14 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 				
 			}
 			
-			if (count + 1 < keyedRefs.size())
+			if (count + 1 < keyedRefs.size()) {
 				if (fq.isOrAllKeys())
 					qry.OR().pad();
 				else if (fq.isOrLikeKeys()) {
 				}
 				else
 					qry.AND().pad();
+			}
 			
 			// The "orLikeKeys" will always leave an unclosed parenthesis.  This will close it.
 			if (fq.isOrLikeKeys() && (count + 1 == keyedRefs.size()))

@@ -28,16 +28,20 @@ import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchBusinessServicesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
+import org.apache.juddi.query.FindBindingByCategoryGroupQuery;
 import org.apache.juddi.query.FindBindingByCategoryQuery;
 import org.apache.juddi.query.FindBindingByTModelKeyQuery;
+import org.apache.juddi.query.FindBusinessByCategoryGroupQuery;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
 import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
 import org.apache.juddi.query.FindBusinessByIdentifierQuery;
 import org.apache.juddi.query.FindBusinessByNameQuery;
 import org.apache.juddi.query.FindBusinessByTModelKeyQuery;
+import org.apache.juddi.query.FindServiceByCategoryGroupQuery;
 import org.apache.juddi.query.FindServiceByCategoryQuery;
 import org.apache.juddi.query.FindServiceByNameQuery;
 import org.apache.juddi.query.FindServiceByTModelKeyQuery;
+import org.apache.juddi.query.FindTModelByCategoryGroupQuery;
 import org.apache.juddi.query.FindTModelByCategoryQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
@@ -105,6 +109,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		
 		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
 		keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
+		keysFound = FindBindingByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
 
 		BindingDetail result = new BindingDetail();
 		ListDescription listDesc = new ListDescription();
@@ -176,6 +181,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
 		keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
 		BusinessList result = new BusinessList();
@@ -327,6 +333,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		List<?> keysFound = null;
 		FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
 		keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 
 		ServiceList result = new ServiceList();
@@ -371,6 +378,7 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		List<?> keysFound = null;
 		keysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 
 		TModelList result = new TModelList();

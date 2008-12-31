@@ -198,13 +198,14 @@ public class FindEntityByIdentifierQuery extends EntityQuery {
 				
 			}
 			
-			if (count + 1 < keyedRefs.size())
+			if (count + 1 < keyedRefs.size()) {
 				if (fq.isAndAllKeys())
 					qry.AND().pad();
 				else if (fq.isOrLikeKeys()) {
 				}
 				else
 					qry.OR().pad();
+			}
 			
 			// The "orLikeKeys" will always leave an unclosed parenthesis.  This will close it.
 			if (fq.isOrLikeKeys() && (count + 1 == keyedRefs.size()))

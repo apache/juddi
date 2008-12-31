@@ -332,7 +332,7 @@ public class MappingApiToModel {
 	}
 
 	public static void mapCategoryBag(org.uddi.api_v3.CategoryBag apiCategoryBag,
-											org.apache.juddi.model.CategoryBag modelCategoryBag)
+									  org.apache.juddi.model.CategoryBag modelCategoryBag)
 				   throws DispositionReportFaultMessage {
 
 		if (apiCategoryBag != null) {
@@ -347,23 +347,40 @@ public class MappingApiToModel {
 						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
 				}
 				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
+					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem.getValue();
+
+					org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup = new org.apache.juddi.model.KeyedReferenceGroup();
 					List<org.apache.juddi.model.KeyedReferenceGroup> modelKeyedReferenceGroups=modelCategoryBag.getKeyedReferenceGroups();
 					//modelKeyedReferenceGroups.clear();
-					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem.getValue();
-					org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup = new org.apache.juddi.model.KeyedReferenceGroup(modelCategoryBag,apiKeyedReferenceGroup.getTModelKey());
+					
+					mapKeyedReferenceGroup(apiKeyedReferenceGroup, modelKeyedReferenceGroup, modelCategoryBag);
+					
 					modelKeyedReferenceGroups.add(modelKeyedReferenceGroup);
-					if (apiKeyedReferenceGroup.getKeyedReference() != null) {
-						List<org.apache.juddi.model.KeyedReference> modelKeyedReferences = modelKeyedReferenceGroup.getKeyedReferences();
-						for (org.uddi.api_v3.KeyedReference apiKeyedReference : apiKeyedReferenceGroup.getKeyedReference()) {
-							modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelKeyedReferenceGroup, 
-								apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
-						}
-					}
 				}
 			}
 		}
 	}
 
+	public static void mapKeyedReferenceGroup(org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup,
+											  org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup,
+											  org.apache.juddi.model.CategoryBag modelCategoryBag)
+				   throws DispositionReportFaultMessage {
+		if (apiKeyedReferenceGroup != null) {
+			modelKeyedReferenceGroup.setCategoryBag(modelCategoryBag);
+			modelKeyedReferenceGroup.setTmodelKey(apiKeyedReferenceGroup.getTModelKey());
+			
+			if (apiKeyedReferenceGroup.getKeyedReference() != null) {
+				List<org.apache.juddi.model.KeyedReference> modelKeyedReferences = modelKeyedReferenceGroup.getKeyedReferences();
+				for (org.uddi.api_v3.KeyedReference apiKeyedReference : apiKeyedReferenceGroup.getKeyedReference()) {
+					modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelKeyedReferenceGroup, 
+						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
+				}
+			}
+			
+		}
+		
+	}
+	
 	public static void mapTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails, 
 												List<org.apache.juddi.model.TmodelInstanceInfo> modelTModelInstInfoList,
 												org.apache.juddi.model.BindingTemplate modelBindingTemplate) 
