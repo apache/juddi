@@ -21,6 +21,9 @@ import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.FatalErrorException;
 
 /**
+ * Authenticator interface. Any class implementing this interface can be invoked by
+ * the AuthenticatorFactory to handle authentication of the user executing a UDDI request.
+ * 
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
