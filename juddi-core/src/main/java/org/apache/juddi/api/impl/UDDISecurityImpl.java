@@ -18,6 +18,8 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
+import java.util.UUID;
+
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -32,8 +34,6 @@ import org.apache.juddi.auth.AuthenticatorFactory;
 import org.apache.juddi.auth.Authenticator;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.uuidgen.UUIDGen;
-import org.apache.juddi.uuidgen.UUIDGenFactory;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.query.PersistenceManager;
@@ -89,8 +89,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", publisherId));
 				
 		// Generate auth token and store it!
-		UUIDGen uuidgen = UUIDGenFactory.getUUIDGen();
-		String authInfo = AUTH_TOKEN_PREFIX + uuidgen.uuidgen();
+		String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
 		org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();
 		if (authInfo != null) {
 			modelAuthToken.setAuthToken(authInfo);
@@ -113,5 +112,4 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		
 		return apiAuthToken;
 	}
-
 }

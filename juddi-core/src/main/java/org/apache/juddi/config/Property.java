@@ -13,12 +13,10 @@ public interface Property
 	public final static String JUDDI_MAX_SERVICES_PER_BUSINESS   ="juddi.maxServicesPerBusiness";
 	public final static String JUDDI_MAX_BINDINGS_PER_SERVICE    ="juddi.maxBindingsPerService";
 	public final static String JUDDI_MAX_TMODELS_PER_PUBLISHER   ="juddi.maxTModelsPerPublisher";
-	public final static String JUDDI_UUID_GENERATOR              ="juddi.uuidgen";
-	public final static String JUDDI_UUID_COMMAND                ="juddi.uuidgenCommand";
 	public final static String JUDDI_CRYPTOR                     ="juddi.cryptor";
 	public final static String JUDDI_KEYGENERATOR                ="juddi.keygenerator";
 	public final static String JUDDI_VALIDATOR                   ="juddi.validator";
-	public static final String JUDDI_SECURITY_DOMAIN             ="juddi.securityDomain";
+	public final static String JUDDI_SECURITY_DOMAIN             ="juddi.securityDomain";
 	public final static String JUDDI_USERSFILE                   ="juddi.usersfile";
 	public final static String JUDDI_MAX_ROWS                    ="juddi.maxRows";
 	public final static String JUDDI_MAX_IN_CLAUSE               ="juddi.maxInClause";
