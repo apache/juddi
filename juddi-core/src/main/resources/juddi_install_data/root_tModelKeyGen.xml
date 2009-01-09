@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tModel tModelKey="uddi:juddi.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
   <name>uddi-org:keyGenerator</name>
-  <description>UDDI domain key generator</description>
+  <description>Root domain key generator</description>
   <overviewDoc>
     <overviewURL useType="text">
       http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>

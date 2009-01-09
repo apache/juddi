@@ -38,46 +38,42 @@ import org.apache.juddi.error.ValueNotAllowedException;
 public class ValidateUDDIKey {
 
 	public static void validateUDDIv3Key(String key) throws DispositionReportFaultMessage {
+		String rootPartition = "";
+		try 
+		{ rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION); }
+		catch(ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_PARTITION));}
+
+		validateUDDIv3Key(key, rootPartition);
+	}
+
+	public static void validateUDDIv3Key(String key, String rootPartition) throws DispositionReportFaultMessage {
 		if (key == null)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKeys"));
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey"));
 		
-		key = key.trim();
-		if (key.endsWith(KeyGenerator.PARTITION_SEPARATOR))
+		String keyToTest = key.trim();
+		if (keyToTest.endsWith(KeyGenerator.PARTITION_SEPARATOR))
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 		
+		// Key must be prefixed with the root partition
+		if (!keyToTest.toUpperCase().startsWith(rootPartition.toUpperCase()))
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+
+		// Key must have at least one more partition beyond the root.
+		keyToTest = keyToTest.substring(rootPartition.length());
+		if (keyToTest.length() == 0 || !keyToTest.startsWith(KeyGenerator.PARTITION_SEPARATOR))
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+		
+		keyToTest = keyToTest.substring(1);
 		StringTokenizer tokenizer = new StringTokenizer(key.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
-		int tokensCount = tokenizer.countTokens();
-		if(tokensCount <= 1)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 		for(int count = 0; tokenizer.hasMoreTokens(); count++) {
 			String nextToken = tokenizer.nextToken();
 
-
-			if (count == 0) {
-				if (!ValidateUDDIKey.isValidUDDIScheme(nextToken))
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-			}
-			else if (count == 1) {
-				if(!ValidateUDDIKey.isValidDomainKey(nextToken))
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-				
-				String rootDomain = "";
-				try 
-				{ rootDomain = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_DOMAIN); }
-				catch(ConfigurationException ce) 
-				{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_DOMAIN));}
-				
-				if (!rootDomain.equalsIgnoreCase(nextToken))
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-
-			}
-			else {
-				if (!isValidKSS(nextToken))
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-			}
+			if (!isValidKSS(nextToken))
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 		}
 	}
-
+	
 	public static void validateUDDIv3KeyGeneratorKey(String key) throws DispositionReportFaultMessage {
 		if (key == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKeys"));
@@ -85,7 +81,7 @@ public class ValidateUDDIKey {
 		if ( !(key.toUpperCase().endsWith(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase())) )
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.KeyGenSuffix", key));
 		
-		validateUDDIv3Key(key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR)- 1));
+		validateUDDIv3Key(key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR)));
 	}
 	
 	public static void validateUDDIv3KeyGeneratorTModel(org.uddi.api_v3.TModel tModel) throws DispositionReportFaultMessage {
@@ -115,8 +111,8 @@ public class ValidateUDDIKey {
 
 		throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.keygenerator.BadCategory"));
 	}
-
-	private static boolean isValidUDDIScheme(String token) {
+	
+	public static boolean isValidUDDIScheme(String token) {
 		if (token == null)
 			return false;
 		
@@ -127,7 +123,7 @@ public class ValidateUDDIKey {
 
 	}
 	
-	private static boolean isValidDomainKey(String token) {
+	public static boolean isValidDomainKey(String token) {
 		if(token.indexOf("..") != -1)
 			return false;
 
@@ -162,7 +158,7 @@ public class ValidateUDDIKey {
 		return Character.isLetter(token.charAt(0)) && (token.length() == 1 || isValidDomainLabel(token.substring(1)));
 	}
 	
-	private static boolean isValidKSS(String token) {
+	public static boolean isValidKSS(String token) {
 		if (token.length() == 0)
 			return false;
 

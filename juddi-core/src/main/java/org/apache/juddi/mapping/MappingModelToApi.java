@@ -354,27 +354,30 @@ public class MappingModelToApi {
 	}
 
 	public static org.uddi.api_v3.CategoryBag mapCategoryBag(org.apache.juddi.model.CategoryBag modelCategoryBag, 
-											org.uddi.api_v3.CategoryBag apiCategoryBag) 
+															 org.uddi.api_v3.CategoryBag apiCategoryBag) 
 				   throws DispositionReportFaultMessage {
-		if (apiCategoryBag == null)
-			apiCategoryBag = new org.uddi.api_v3.CategoryBag();
 
-		List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-		apiCategoryList.clear();
+		if (modelCategoryBag != null) {
+			if (apiCategoryBag == null)
+				apiCategoryBag = new org.uddi.api_v3.CategoryBag();
+	
+			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
+			apiCategoryList.clear();
 		
-		for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
-			org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
-			apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
-			apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
-			apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
-			apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedReference));
-		}
-		for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
-			org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();
-
-			mapKeyedReferenceGroup(modelKeyedReferenceGroup, apiKeyedReferenceGroup);
-			
-			apiCategoryList.add(new ObjectFactory().createKeyedReferenceGroup(apiKeyedReferenceGroup));
+			for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
+				org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
+				apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
+				apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
+				apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
+				apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedReference));
+			}
+			for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
+				org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();
+	
+				mapKeyedReferenceGroup(modelKeyedReferenceGroup, apiKeyedReferenceGroup);
+				
+				apiCategoryList.add(new ObjectFactory().createKeyedReferenceGroup(apiKeyedReferenceGroup));
+			}
 		}
 		return apiCategoryBag;
 	}

@@ -628,6 +628,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 				if (entityKey.toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase())) {
 					ValidateUDDIKey.validateUDDIv3KeyGeneratorTModel(tModel);
 					
+					// The root publisher is only allowed one key generator.  This is published in the installation.
+					if (publisher.getAuthorizedName().equals(Constants.ROOT_PUBLISHER))
+						throw new FatalErrorException(new ErrorMessage("errors.tmodel.keygenerator.RootKeyGen"));
+					
 					// It's a valid Key Generator, but is it available for this publisher?
 					if (!publisher.isKeyGeneratorAvailable(em, entityKey))
 						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));

@@ -147,3 +147,11 @@ div.header a {
 div.header a:hover { 
   color: #FFF;
 }
+
+div.error {
+  color: #F00;
+}
+
+div.install {width:650px; background-color: #00005a;}
+div.install h4 {margin:0; padding:0; color: #fff;}
+div.install .content {margin:0; padding:4px 4px 0 4px; border-style:solid; border-color:#bbb; border-width:0 1px 1px 1px; background-color: #fff;}

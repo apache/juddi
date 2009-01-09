@@ -20,7 +20,7 @@ public interface Property
 	public final static String JUDDI_USERSFILE                   ="juddi.usersfile";
 	public final static String JUDDI_MAX_ROWS                    ="juddi.maxRows";
 	public final static String JUDDI_MAX_IN_CLAUSE               ="juddi.maxInClause";
-	public final static String JUDDI_ROOT_DOMAIN                 ="juddi.rootDomain";
+	public final static String JUDDI_ROOT_PARTITION              ="juddi.rootPartition";
 	public final static String JUDDI_NODE_ID                     ="juddi.nodeId";
 	
 	

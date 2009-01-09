@@ -28,4 +28,5 @@ public class Constants {
 	
 	public static final String GENERAL_KEYWORD_TMODEL = "uddi:uddi-org:general_keywords";
 	public static final String NODE_CATEGORY_TMODEL = "uddi:uddi.org:categorization:nodes";
+	public static final String NODE_KEYVALUE = "node";
 }

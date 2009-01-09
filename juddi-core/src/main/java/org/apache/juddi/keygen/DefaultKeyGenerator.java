@@ -36,12 +36,12 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public class DefaultKeyGenerator implements KeyGenerator {
 
 	public String generate() throws DispositionReportFaultMessage {
-		String rootDomain = "";
+		String rootPartition = "";
 		try 
-		{ rootDomain = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_DOMAIN); }
+		{ rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION); }
 		catch(ConfigurationException ce) 
-		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_DOMAIN));}
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_PARTITION));}
 		
-		return UDDI_SCHEME + PARTITION_SEPARATOR + rootDomain + PARTITION_SEPARATOR +UUID.randomUUID();
+		return rootPartition + PARTITION_SEPARATOR + UUID.randomUUID();
 	}
 }
