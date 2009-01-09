@@ -430,9 +430,20 @@ public class ValidatePublish extends ValidateUDDIApi {
 				Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
 				if (obj != null) {
 					entityExists = true;
+
+					org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
+					
+					// If the object exists, and the parentKey was not found to this point, then a save on an existing service with a blank
+					// business key has occurred.  It is set here and added to the entity being saved - a necessary step for the object to be
+					// persisted properly. (This condition makes some validation tests below unnecessary as the parent is "verified" but it's OK to
+					// still run them).
+					if (parentKey == null || parentKey.length() == 0) {
+						parentKey = bs.getBusinessEntity().getEntityKey();
+						businessService.setBusinessKey(parentKey);
+					}
+					
 					// If existing service trying to be saved has a different parent key, then we have a problem
 					// TODO: moving services is allowed according to spec?
-					org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
 					if (!parentKey.equals(bs.getBusinessEntity().getEntityKey()))
 						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getEntityKey()));
 					
@@ -537,9 +548,20 @@ public class ValidatePublish extends ValidateUDDIApi {
 			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
+
+				org.apache.juddi.model.BindingTemplate bt = (org.apache.juddi.model.BindingTemplate)obj;
+
+				// If the object exists, and the parentKey was not found to this point, then a save on an existing binding with a blank
+				// service key has occurred.  It is set here and added to the entity being saved - a necessary step for the object to be
+				// persisted properly. (This condition makes some validation tests below unnecessary as the parent is "verified" but it's OK to
+				// still run them).
+				if (parentKey == null || parentKey.length() == 0) {
+					parentKey = bt.getBusinessService().getEntityKey();
+					bindingTemplate.setServiceKey(parentKey);
+				}
+				
 				// If existing binding trying to be saved has a different parent key, then we have a problem
 				// TODO: moving bindings is allowed according to spec?
-				org.apache.juddi.model.BindingTemplate bt = (org.apache.juddi.model.BindingTemplate)obj;
 				if (!parentKey.equals(bt.getBusinessService().getEntityKey()))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + bt.getBusinessService().getEntityKey()));
 				

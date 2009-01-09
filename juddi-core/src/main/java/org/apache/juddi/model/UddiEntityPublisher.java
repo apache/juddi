@@ -73,8 +73,7 @@ public abstract class UddiEntityPublisher {
 		this.keyGeneratorKeys = keyGeneratorKeys;
 	}
 	public void addKeyGeneratorKey(String keygenTModelKey) {
-		KeyGeneratorKeyId keyGenKeyId = new KeyGeneratorKeyId(this.authorizedName, this.keyGeneratorKeys.size());
-		KeyGeneratorKey keyGenKey = new KeyGeneratorKey(keyGenKeyId, this, keygenTModelKey);
+		KeyGeneratorKey keyGenKey = new KeyGeneratorKey(this, keygenTModelKey);
 		keyGeneratorKeys.add(keyGenKey);
 	}
 	public void removeKeyGeneratorKey(String keygenTModelKey) {
@@ -156,7 +155,7 @@ public abstract class UddiEntityPublisher {
 		DynamicQuery checkTokensQry = new DynamicQuery();
 		checkTokensQry.append("select k.keygenTModelKey from KeyGeneratorKey k ");
 
-		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("k.id.authorizedName", 
+		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("k.publisher.authorizedName", 
 																	 this.authorizedName, 
 																	 DynamicQuery.PREDICATE_NOTEQUALS);
 		checkTokensQry.WHERE().pad().appendGroupedAnd(pubParam).pad();

@@ -88,7 +88,7 @@ public class OverviewDoc implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tmodel_id", nullable = true)
+	@JoinColumn(name = "entity_key", nullable = true)
 	public Tmodel getTmodel() {
 		return this.tmodel;
 	}

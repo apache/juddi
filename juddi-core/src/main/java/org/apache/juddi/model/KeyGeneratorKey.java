@@ -16,9 +16,11 @@ package org.apache.juddi.model;
  */
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -31,29 +33,29 @@ import javax.persistence.Table;
 public class KeyGeneratorKey implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private KeyGeneratorKeyId id;
+	private Long id;
 	private UddiEntityPublisher publisher;
 	private String keygenTModelKey;
 
 	public KeyGeneratorKey() {
 	}
 
-	public KeyGeneratorKey(KeyGeneratorKeyId id, UddiEntityPublisher publisher, String keygenTModelKey) {
-		this.id = id;
+	public KeyGeneratorKey(UddiEntityPublisher publisher, String keygenTModelKey) {
 		this.publisher = publisher;
 		this.keygenTModelKey = keygenTModelKey;
 	}
 
-	@EmbeddedId
-	public KeyGeneratorKeyId getId() {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long getId() {
 		return this.id;
 	}
-	public void setId(KeyGeneratorKeyId id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "authorized_name", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "authorized_name", nullable = false)
 	public UddiEntityPublisher getPublisher() {
 		return this.publisher;
 	}

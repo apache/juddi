@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
@@ -45,7 +44,6 @@ import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.model.KeyGeneratorKey;
-import org.apache.juddi.model.KeyGeneratorKeyId;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidatePublish;
@@ -415,13 +413,7 @@ public class Install {
 		
 		em.persist(modelTModel);
 		
-		int id = 0;
-		Set<KeyGeneratorKey> keyGenList = publisher.getKeyGeneratorKeys();
-		if (keyGenList != null)
-			id = keyGenList.size();
-		
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
-		keyGenKey.setId(new KeyGeneratorKeyId(publisher.getAuthorizedName(), id));
 		keyGenKey.setPublisher(publisher);
 		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
 		publisher.getKeyGeneratorKeys().add(keyGenKey);
