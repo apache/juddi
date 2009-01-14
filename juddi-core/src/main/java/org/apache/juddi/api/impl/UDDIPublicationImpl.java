@@ -17,10 +17,12 @@
 
 package org.apache.juddi.api.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.jws.WebService;
+//import javax.naming.ConfigurationException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
@@ -47,6 +49,7 @@ import org.uddi.api_v3.TModelDetail;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.validation.ValidatePublish;
@@ -58,10 +61,13 @@ import org.apache.juddi.query.FindPublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.DeletePublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.model.Publisher;
 import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.api.datatype.DeletePublisher;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.query.util.FindQualifiers;
 
 /**
@@ -150,6 +156,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		List<String> entityKeyList = body.getBindingKey();
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
+
+			((org.apache.juddi.model.BindingTemplate)obj).getBusinessService().setModifiedIncludingChildren(new Date());
+			
 			em.remove(obj);
 		}
 
@@ -214,6 +223,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		List<String> entityKeyList = body.getServiceKey();
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
+			
+			((org.apache.juddi.model.BusinessService)obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
+			
 			em.remove(obj);
 		}
 
@@ -379,12 +391,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
 			
 			MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
-			
-			Object existingUddiEntity = em.find(modelBindingTemplate.getClass(), modelBindingTemplate.getEntityKey());
-			if (existingUddiEntity != null)
-				em.remove(existingUddiEntity);
-			
-			modelBindingTemplate.assignAuthorizedName(publisher.getAuthorizedName());
+
+			setOperationalInfo(em, modelBindingTemplate, publisher, false);
+
 			em.persist(modelBindingTemplate);
 			
 			result.getBindingTemplate().add(apiBindingTemplate);
@@ -417,11 +426,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
 			
-			Object existingUddiEntity = em.find(modelBusinessEntity.getClass(), modelBusinessEntity.getEntityKey());
-			if (existingUddiEntity != null)
-				em.remove(existingUddiEntity);
-			
-			modelBusinessEntity.assignAuthorizedName(publisher.getAuthorizedName());
+			setOperationalInfo(em, modelBusinessEntity, publisher);
+
 			em.persist(modelBusinessEntity);
 
 			result.getBusinessEntity().add(apiBusinessEntity);
@@ -455,12 +461,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
 			
 			MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
-			
-			Object existingUddiEntity = em.find(modelBusinessService.getClass(), modelBusinessService.getEntityKey());
-			if (existingUddiEntity != null)
-				em.remove(existingUddiEntity);
-			
-			modelBusinessService.assignAuthorizedName(publisher.getAuthorizedName());
+
+			setOperationalInfo(em, modelBusinessService, publisher, false);
+
 			em.persist(modelBusinessService);
 			
 			result.getBusinessService().add(apiBusinessService);
@@ -492,12 +495,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 			
 			MappingApiToModel.mapTModel(apiTModel, modelTModel);
-			
-			Object existingUddiEntity = em.find(modelTModel.getClass(), modelTModel.getEntityKey());
-			if (existingUddiEntity != null)
-				em.remove(existingUddiEntity);
-			
-			modelTModel.assignAuthorizedName(publisher.getAuthorizedName());
+
+			setOperationalInfo(em, modelTModel, publisher);
+
 			em.persist(modelTModel);
 			
 			result.getTModel().add(apiTModel);
@@ -557,6 +557,133 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		em.close();
 	}
 
+	private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BusinessEntity uddiEntity, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+		uddiEntity.setPublisher(publisher);
+
+		Date now = new Date();
+		uddiEntity.setModified(now);
+		uddiEntity.setModifiedIncludingChildren(now);
+
+		String nodeId = "";
+		try 
+		{ nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID); } 
+		catch (ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_NODE_ID)); }
+		uddiEntity.setNodeId(nodeId);
+		
+		org.apache.juddi.model.BusinessEntity existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());
+		if (existingUddiEntity != null)
+			uddiEntity.setCreated(existingUddiEntity.getCreated());
+		else
+			uddiEntity.setCreated(now);
+		
+		List<org.apache.juddi.model.BusinessService> serviceList = uddiEntity.getBusinessServices();
+		for (org.apache.juddi.model.BusinessService service : serviceList)
+			setOperationalInfo(em, service, publisher, true);
+		
+		
+		if (existingUddiEntity != null)
+			em.remove(existingUddiEntity);
+		
+	}
+
+	private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BusinessService uddiEntity, UddiEntityPublisher publisher, boolean isChild) throws DispositionReportFaultMessage {
+
+		uddiEntity.setPublisher(publisher);
+
+		Date now = new Date();
+		uddiEntity.setModified(now);
+		uddiEntity.setModifiedIncludingChildren(now);
+		
+		if(!isChild) {
+			org.apache.juddi.model.BusinessEntity parent = em.find(org.apache.juddi.model.BusinessEntity.class, uddiEntity.getBusinessEntity().getEntityKey());
+			parent.setModifiedIncludingChildren(now);
+			em.persist(parent);
+		}
+
+		String nodeId = "";
+		try 
+		{ nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID); } 
+		catch (ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_NODE_ID)); }
+		uddiEntity.setNodeId(nodeId);
+		
+		org.apache.juddi.model.BusinessService existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());
+		if (existingUddiEntity != null) {
+			uddiEntity.setCreated(existingUddiEntity.getCreated());
+		}
+		else
+			uddiEntity.setCreated(now);
+		
+		List<org.apache.juddi.model.BindingTemplate> bindingList = uddiEntity.getBindingTemplates();
+		for (org.apache.juddi.model.BindingTemplate binding : bindingList)
+			setOperationalInfo(em, binding, publisher, true);
+		
+		
+		if (existingUddiEntity != null)
+			em.remove(existingUddiEntity);
+		
+	}
+
+	private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BindingTemplate uddiEntity, UddiEntityPublisher publisher, boolean isChild) throws DispositionReportFaultMessage {
+
+		uddiEntity.setPublisher(publisher);
+
+		Date now = new Date();
+		uddiEntity.setModified(now);
+		uddiEntity.setModifiedIncludingChildren(now);
+
+		if(!isChild) {
+			org.apache.juddi.model.BusinessService parent = em.find(org.apache.juddi.model.BusinessService.class, uddiEntity.getBusinessService().getEntityKey());
+			parent.setModifiedIncludingChildren(now);
+			em.persist(parent);
+		}
+
+		String nodeId = "";
+		try 
+		{ nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID); } 
+		catch (ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_NODE_ID)); }
+		uddiEntity.setNodeId(nodeId);
+		
+		org.apache.juddi.model.BindingTemplate existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());
+		if (existingUddiEntity != null)
+			uddiEntity.setCreated(existingUddiEntity.getCreated());
+		else
+			uddiEntity.setCreated(now);
+		
+		if (existingUddiEntity != null)
+			em.remove(existingUddiEntity);
+		
+	}
+	
+	private void setOperationalInfo(EntityManager em, org.apache.juddi.model.Tmodel uddiEntity, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+
+		uddiEntity.setPublisher(publisher);
+		
+		Date now = new Date();
+		uddiEntity.setModified(now);
+		uddiEntity.setModifiedIncludingChildren(now);
+
+		String nodeId = "";
+		try 
+		{ nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID); } 
+		catch (ConfigurationException ce) 
+		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_NODE_ID)); }
+		uddiEntity.setNodeId(nodeId);
+		
+		org.apache.juddi.model.Tmodel existingUddiEntity = em.find(uddiEntity.getClass(), uddiEntity.getEntityKey());
+		if (existingUddiEntity != null)
+			uddiEntity.setCreated(existingUddiEntity.getCreated());
+		else
+			uddiEntity.setCreated(now);
+		
+		if (existingUddiEntity != null)
+			em.remove(existingUddiEntity);
+		
+	}
+
 	
 	/*-------------------------------------------------------------------
 	 Publisher functions are specific to jUDDI.
@@ -574,7 +701,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		new ValidatePublish(publisher).validateSavePublisher(em, (Publisher)publisher, body);
+		new ValidatePublish(publisher).validateSavePublisher(em, body);
 		
 		PublisherDetail result = new PublisherDetail();
 
@@ -612,7 +739,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 		
-		new ValidatePublish(publisher).validateDeletePublisher(em, (Publisher)publisher, body);
+		new ValidatePublish(publisher).validateDeletePublisher(em, body);
 
 		List<String> entityKeyList = body.getPublisherId();
 		for (String entityKey : entityKeyList) {

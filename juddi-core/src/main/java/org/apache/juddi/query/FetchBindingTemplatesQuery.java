@@ -79,9 +79,9 @@ public class FetchBindingTemplatesQuery extends BindingTemplateQuery {
 		qry.ORDERBY().pad();
 		
 		if (fq.isSortByDateAsc())
-			qry.append(ENTITY_ALIAS + ".lastUpdate").pad().append(DynamicQuery.SORT_ASC);
+			qry.append(ENTITY_ALIAS + ".modified").pad().append(DynamicQuery.SORT_ASC);
 		else
-			qry.append(ENTITY_ALIAS + ".lastUpdate").pad().append(DynamicQuery.SORT_DESC);
+			qry.append(ENTITY_ALIAS + ".modified").pad().append(DynamicQuery.SORT_DESC);
 		
 		qry.pad();
 		

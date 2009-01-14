@@ -91,7 +91,7 @@ public abstract class UddiEntityPublisher {
 	public boolean isOwner(UddiEntity entity){
 		boolean ret = false;
 		if (entity != null) {
-			if (entity.retrieveAuthorizedName().equals(this.authorizedName))
+			if (entity.getPublisher().getAuthorizedName().equals(this.authorizedName))
 				ret = true;
 		}
 		return ret;

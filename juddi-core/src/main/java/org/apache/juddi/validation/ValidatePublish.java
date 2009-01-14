@@ -343,9 +343,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 		}
 
 		if (!entityExists) {
-			// TODO: Check to make sure key isn't used by another entity.  If exists in operation info then it is.
-			//if (em.find(OperationalInfo.class, entityKey) != null)
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
+			// Check to make sure key isn't used by another entity.
+			if (em.find(UddiEntity.class, entityKey) != null)
+				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		
 		// TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
@@ -485,9 +485,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 
 			if (!entityExists) {
-				// TODO: Check to make sure key isn't used by another entity.  If exists in operation info then it is.
-				//if (em.find(OperationalInfo.class, entityKey) != null)
-				//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
+				// Check to make sure key isn't used by another entity.
+				if (em.find(UddiEntity.class, entityKey) != null)
+					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 			}
 			
 			// TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
@@ -604,9 +604,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 		}
 
 		if (!entityExists) {
-			// TODO: Check to make sure key isn't used by another entity.  If exists in operation info then it is.
-			//if (em.find(OperationalInfo.class, entityKey) != null)
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
+			// Check to make sure key isn't used by another entity.
+			if (em.find(UddiEntity.class, entityKey) != null)
+				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		
 		// TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
@@ -634,7 +634,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			tModel.setTModelKey(entityKey);
 		}
 		else {
-			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
+			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
 
@@ -673,9 +673,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 		}
 
 		if (!entityExists) {
-			// TODO: Check to make sure key isn't used by another entity.  If exists in operation info then it is.
-			//if (em.find(OperationalInfo.class, entityKey) != null)
-			//throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
+			// Check to make sure key isn't used by another entity.
+			if (em.find(UddiEntity.class, entityKey) != null)
+				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		
 		// TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
@@ -918,7 +918,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 	 Publisher functions are specific to jUDDI.
 	 --------------------------------------------------------------------*/
 	
-	public void validateDeletePublisher(EntityManager em, Publisher publisher, DeletePublisher body) throws DispositionReportFaultMessage {
+	public void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -929,7 +929,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (entityKeyList == null || entityKeyList.size() == 0)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 		
-		if (!publisher.isAdmin())
+		if (!((Publisher)publisher).isAdmin())
 			throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
@@ -945,7 +945,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		}
 	}
 
-	public void validateSavePublisher(EntityManager em, Publisher publisher, SavePublisher body) throws DispositionReportFaultMessage {
+	public void validateSavePublisher(EntityManager em, SavePublisher body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)
@@ -956,7 +956,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (entityList == null || entityList.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savepublisher.NoInput"));
 		
-		if (!publisher.isAdmin())
+		if (!((Publisher)publisher).isAdmin())
 			throw new UserMismatchException(new ErrorMessage("errors.savepublisher.AdminReqd"));
 		
 		for (org.apache.juddi.api.datatype.Publisher entity : entityList) {

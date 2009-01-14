@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -72,7 +73,7 @@ public class Install {
 		install(JUDDI_INSTALL_DATA_DIR, null, false);
 	}
 	
-	public static void install(String srcDir, String rootPartition, boolean reloadConfig) throws JAXBException, DispositionReportFaultMessage, IOException {
+	public static void install(String srcDir, String userPartition, boolean reloadConfig) throws JAXBException, DispositionReportFaultMessage, IOException {
 		if (srcDir != null) {
 			if (srcDir.endsWith("\\") || srcDir.endsWith("/")) {
 				// Do nothing
@@ -94,15 +95,22 @@ public class Install {
 			if (alreadyInstalled(em))
 				throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
+			TModel rootTModelKeyGen = (TModel)buildEntityFromDoc(JUDDI_INSTALL_DATA_DIR + FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3");
+			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(srcDir + FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3");
+			
+			String rootPartition = getRootPartition(rootTModelKeyGen, userPartition);
+			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
+			
 			rootPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_PUBLISHER);
 			uddiPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_PUBLISHER);
 
-			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher);
-			
-			installRootPublisherKeyGen(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_TMODELKEYGEN, rootPartition, rootPublisher);
+			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
-			// This entity is installed through the API so validation can be performed.
-			installRootBusinessEntity(em, srcDir + FILE_ROOT_BUSINESSENTITY, rootPublisher);
+			rootBusinessEntity.setBusinessKey(nodeId);
+			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher);
+
+			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher, nodeId);
+			
 			
 			tx.commit();
 		}
@@ -171,6 +179,50 @@ public class Install {
 		return false;
 	}
 	
+	public static String getRootPartition(TModel rootTModelKeyGen, String userPartition) throws JAXBException, IOException, DispositionReportFaultMessage {
+		String result = rootTModelKeyGen.getTModelKey().substring(0, rootTModelKeyGen.getTModelKey().lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+		
+		if (userPartition != null && userPartition.length() > 0) {
+			// A root partition was provided by the user.  Must validate it.  The first component should be a domain key and the any following
+			// tokens should be a valid KSS.
+			userPartition = userPartition.trim();
+			if (userPartition.endsWith(KeyGenerator.PARTITION_SEPARATOR) || userPartition.startsWith(KeyGenerator.PARTITION_SEPARATOR))
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
+			
+			StringTokenizer tokenizer = new StringTokenizer(userPartition.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
+			for(int count = 0; tokenizer.hasMoreTokens(); count++) {
+				String nextToken = tokenizer.nextToken();
+
+				if (count == 0) {
+					if(!ValidateUDDIKey.isValidDomainKey(nextToken))
+						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
+				}
+				else {
+					if (!ValidateUDDIKey.isValidKSS(nextToken))
+						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
+				}
+			}
+			// If the user-supplied root partition checks out, we can use that.
+			result = KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR + userPartition;
+		}
+		return result;
+	}
+	
+	public static String getNodeId(String userNodeId, String rootPartition) throws DispositionReportFaultMessage {
+
+		String result = userNodeId;
+		if (result == null || result.length() == 0) {
+			result = rootPartition + KeyGenerator.PARTITION_SEPARATOR + UUID.randomUUID();
+		}
+		else {
+			ValidateUDDIKey.validateUDDIv3Key(result, rootPartition);
+			String keyPartition = result.substring(0, result.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+			if (!rootPartition.equalsIgnoreCase(keyPartition))
+				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", userNodeId));
+		}
+		return result;
+	}
+	
 	public static org.uddi.api_v3.BusinessEntity getNodeBusinessEntity(String businessKey) throws DispositionReportFaultMessage {
 		UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 		
@@ -188,17 +240,44 @@ public class Install {
 	}
 	
 	
-	private static void installRootBusinessEntity(EntityManager em, String resource, UddiEntityPublisher rootPublisher) 
+	private static String installRootBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, UddiEntityPublisher rootPublisher) 
 	throws JAXBException, DispositionReportFaultMessage, IOException {
-
-		org.uddi.api_v3.BusinessEntity apiBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(resource, "org.uddi.api_v3");
-		validateRootBusinessEntity(apiBusinessEntity, rootPublisher);
+		
+		validateRootBusinessEntity(rootBusinessEntity, rootPublisher);
 		
 		org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
-		MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
+		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity);
 		
-		modelBusinessEntity.assignAuthorizedName(rootPublisher.getAuthorizedName());
+		modelBusinessEntity.setPublisher(rootPublisher);
+		
+		Date now = new Date();
+		modelBusinessEntity.setCreated(now);
+		modelBusinessEntity.setModified(now);
+		modelBusinessEntity.setModifiedIncludingChildren(now);
+		modelBusinessEntity.setNodeId(modelBusinessEntity.getEntityKey());
+		
+		for (org.apache.juddi.model.BusinessService service : modelBusinessEntity.getBusinessServices()) {
+			service.setPublisher(rootPublisher);
+			
+			service.setCreated(now);
+			service.setModified(now);
+			service.setModifiedIncludingChildren(now);
+			service.setNodeId(modelBusinessEntity.getEntityKey());
+			
+			for (org.apache.juddi.model.BindingTemplate binding : service.getBindingTemplates()) {
+				binding.setPublisher(rootPublisher);
+				
+				binding.setCreated(now);
+				binding.setModified(now);
+				binding.setModifiedIncludingChildren(now);
+				binding.setNodeId(modelBusinessEntity.getEntityKey());
+			}
+		}
+		
+		
 		em.persist(modelBusinessEntity);
+		
+		return modelBusinessEntity.getEntityKey();
 
 	}
 	
@@ -214,13 +293,14 @@ public class Install {
 		String rootPartition = rootPublisher.getKeyGeneratorKeys().iterator().next().getKeygenTModelKey();
 		rootPartition = rootPartition.substring(0, rootPartition.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
+		// The business key should already be set to the previously calculated and validated nodeId.  This validation is unnecessary but kept for 
+		// symmetry with the other entity validations.
 		String entityKey = businessEntity.getBusinessKey();
 		if (entityKey == null || entityKey.length() == 0) {
 			entityKey = rootPartition + KeyGenerator.PARTITION_SEPARATOR + UUID.randomUUID();
 			businessEntity.setBusinessKey(entityKey);
 		}
 		else {
-			
 			ValidateUDDIKey.validateUDDIv3Key(entityKey, rootPartition);
 			if (!rootPublisher.isValidPublisherKey(entityKey))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
@@ -335,10 +415,10 @@ public class Install {
 	
 	
 	
-	private static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher) 
+	private static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher, String nodeId) 
 		throws JAXBException, DispositionReportFaultMessage, IOException {
 		SaveTModel apiSaveTModel = (SaveTModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
-		installTModels(em, apiSaveTModel.getTModel(), publisher);
+		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
 		
 	}
 	
@@ -351,18 +431,25 @@ public class Install {
 		return modelPub;
 	}
 	
-	private static void installTModels(EntityManager em, List<org.uddi.api_v3.TModel> apiTModelList, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+	private static void installTModels(EntityManager em, List<org.uddi.api_v3.TModel> apiTModelList, UddiEntityPublisher publisher, String nodeId) throws DispositionReportFaultMessage {
 		if (apiTModelList != null) {
 			for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
 				String tModelKey = apiTModel.getTModelKey();
 
 				if (tModelKey.toUpperCase().endsWith(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase())) {
-					installPublisherKeyGen(em, apiTModel, publisher);
+					installPublisherKeyGen(em, apiTModel, publisher, nodeId);
 				}
 				else {
 					org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 					MappingApiToModel.mapTModel(apiTModel, modelTModel);
+
 					modelTModel.setPublisher(publisher);
+					
+					Date now = new Date();
+					modelTModel.setCreated(now);
+					modelTModel.setModified(now);
+					modelTModel.setModifiedIncludingChildren(now);
+					modelTModel.setNodeId(nodeId);
 					
 					em.persist(modelTModel);
 				}
@@ -372,44 +459,26 @@ public class Install {
 		
 	}
 
-	private static void installRootPublisherKeyGen(EntityManager em, String resource, String rootPartition, UddiEntityPublisher publisher) 
-		throws JAXBException, DispositionReportFaultMessage, IOException {
-		TModel apiTModel = (TModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
+	private static void installRootPublisherKeyGen(EntityManager em, TModel rootTModelKeyGen, String rootPartition, UddiEntityPublisher publisher, String nodeId) 
+		throws DispositionReportFaultMessage {
 		
-		if (rootPartition != null && rootPartition.length() > 0) {
-			// A root partition was provided by the user.  Must validate it.  The first component should be a domain key and the any following
-			// tokens should be a valid KSS.
-			rootPartition = rootPartition.trim();
-			if (rootPartition.endsWith(KeyGenerator.PARTITION_SEPARATOR) || rootPartition.startsWith(KeyGenerator.PARTITION_SEPARATOR))
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", rootPartition));
-			
-			StringTokenizer tokenizer = new StringTokenizer(rootPartition.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
-			for(int count = 0; tokenizer.hasMoreTokens(); count++) {
-				String nextToken = tokenizer.nextToken();
-
-				if (count == 0) {
-					if(!ValidateUDDIKey.isValidDomainKey(nextToken))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", rootPartition));
-				}
-				else {
-					if (!ValidateUDDIKey.isValidKSS(nextToken))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", rootPartition));
-				}
-			}
-			
-			// If the user-supplied root partition checks out, we can use that as the key.
-			apiTModel.setTModelKey(KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR + 
-					rootPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX);
-		}
+		rootTModelKeyGen.setTModelKey(rootPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX);
 		
-		installPublisherKeyGen(em, apiTModel, publisher);
+		installPublisherKeyGen(em, rootTModelKeyGen, publisher, nodeId);
 	}
 
-	private static void installPublisherKeyGen(EntityManager em, TModel apiTModel, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
+	private static void installPublisherKeyGen(EntityManager em, TModel apiTModel, UddiEntityPublisher publisher, String nodeId) throws DispositionReportFaultMessage {
 
 		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 		MappingApiToModel.mapTModel(apiTModel, modelTModel);
+		
 		modelTModel.setPublisher(publisher);
+
+		Date now = new Date();
+		modelTModel.setCreated(now);
+		modelTModel.setModified(now);
+		modelTModel.setModifiedIncludingChildren(now);
+		modelTModel.setNodeId(nodeId);
 		
 		em.persist(modelTModel);
 		

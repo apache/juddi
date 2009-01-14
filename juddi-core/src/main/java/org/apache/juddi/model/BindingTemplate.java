@@ -51,13 +51,13 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	public BindingTemplate() {
 	}
 
-	public BindingTemplate(String entityKey, BusinessService businessService, Date lastUpdate) {
+	public BindingTemplate(String entityKey, BusinessService businessService, Date modified) {
 		this.entityKey = entityKey;
 		this.businessService = businessService;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 	}
 	public BindingTemplate(String entityKey, BusinessService businessService, String accessPointType,
-			String accessPointUrl, String hostingRedirector, Date lastUpdate,
+			String accessPointUrl, String hostingRedirector, Date modified,
 			BindingCategoryBag categoryBag,
 			List<TmodelInstanceInfo> tmodelInstanceInfos,
 			List<BindingDescr> bindingDescrs) {
@@ -66,7 +66,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.accessPointType = accessPointType;
 		this.accessPointUrl = accessPointUrl;
 		this.hostingRedirector = hostingRedirector;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 		this.categoryBag = categoryBag;
 		this.tmodelInstanceInfos = tmodelInstanceInfos;
 		this.bindingDescrs = bindingDescrs;
@@ -130,12 +130,5 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	}
 	public void setBindingDescrs(List<BindingDescr> bindingDescrs) {
 		this.bindingDescrs = bindingDescrs;
-	}
-
-	public String retrieveAuthorizedName() {
-		return this.getBusinessService().getBusinessEntity().getPublisher().getAuthorizedName();
-	}
-	public void assignAuthorizedName(String id) {
-		// Do nothing, the publisher id is set in the parent.
 	}
 }

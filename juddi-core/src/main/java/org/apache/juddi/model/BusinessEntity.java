@@ -22,11 +22,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -38,7 +37,6 @@ import javax.persistence.Table;
 public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private UddiEntityPublisher publisher;
 	private List<Contact> contacts = new ArrayList<Contact>(0);
 	private List<BusinessIdentifier> businessIdentifiers = new ArrayList<BusinessIdentifier>(0);
 	private List<PublisherAssertion> publisherAssertionsForFromKey = new ArrayList<PublisherAssertion>(0);
@@ -52,13 +50,13 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public BusinessEntity() {
 	}
 
-	public BusinessEntity(String entityKey, Date lastUpdate) {
+	public BusinessEntity(String entityKey, Date modified) {
 		this.entityKey = entityKey;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 	}
 	public BusinessEntity(String entityKey, String authorizedName, 
 			UddiEntityPublisher publisher, String operator,
-			Date lastUpdate, List<Contact> contacts,
+			Date modified, List<Contact> contacts,
 			List<BusinessIdentifier> businessIdentifiers,
 			List<PublisherAssertion> publisherAssertionsForFromKey,
 			List<DiscoveryUrl> discoveryUrls, List<BusinessName> businessNames,
@@ -68,7 +66,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			List<BusinessDescr> businessDescrs) {
 		this.entityKey = entityKey;
 		this.publisher = publisher;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 		this.contacts = contacts;
 		this.businessIdentifiers = businessIdentifiers;
 		this.publisherAssertionsForFromKey = publisherAssertionsForFromKey;
@@ -78,15 +76,6 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.categoryBag = categoryBag;
 		this.businessServices = businessServices;
 		this.businessDescrs = businessDescrs;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "authorized_name", nullable = false)
-	public UddiEntityPublisher getPublisher() {
-		return this.publisher;
-	}
-	public void setPublisher(UddiEntityPublisher publisher) {
-		this.publisher = publisher;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessEntity")
@@ -172,15 +161,5 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.businessDescrs = businessDescrs;
 	}
 
-	public String retrieveAuthorizedName() {
-		return getPublisher().getAuthorizedName();
-	}
-	public void assignAuthorizedName(String authName) {
-		if (authName != null) {
-			Publisher pub = new Publisher();
-			pub.setAuthorizedName(authName);
-			this.setPublisher(pub);
-		}
-	}
 	
 }

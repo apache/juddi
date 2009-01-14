@@ -51,7 +51,6 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 
 		modelBusinessEntity.setEntityKey(apiBusinessEntity.getBusinessKey());
-		modelBusinessEntity.setLastUpdate(new Date());
 		
 		mapBusinessNames(apiBusinessEntity.getName(), modelBusinessEntity.getBusinessNames(), modelBusinessEntity);
 		mapBusinessDescriptions(apiBusinessEntity.getDescription(), modelBusinessEntity.getBusinessDescrs(), modelBusinessEntity);
@@ -246,7 +245,6 @@ public class MappingApiToModel {
 
 		modelBusinessService.setBusinessEntity(modelBusinessEntity);
 		modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
-		modelBusinessService.setLastUpdate(new Date());
 		
 		mapServiceNames(apiBusinessService.getName(), modelBusinessService.getServiceNames(), modelBusinessService);
 		mapServiceDescriptions(apiBusinessService.getDescription(), modelBusinessService.getServiceDescrs(), modelBusinessService);
@@ -306,7 +304,6 @@ public class MappingApiToModel {
 
 		modelBindingTemplate.setBusinessService(modelBusinessService);
 		modelBindingTemplate.setEntityKey(apiBindingTemplate.getBindingKey());
-		modelBindingTemplate.setLastUpdate(new Date());
 		modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
 		modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
 		if (apiBindingTemplate.getHostingRedirector() != null) {
@@ -459,14 +456,11 @@ public class MappingApiToModel {
 		}
 	}
 	
-	
-	
 	public static void mapTModel(org.uddi.api_v3.TModel apiTModel, 
 								 org.apache.juddi.model.Tmodel modelTModel) 
 				   throws DispositionReportFaultMessage {
 
 		modelTModel.setEntityKey(apiTModel.getTModelKey());
-		modelTModel.setLastUpdate(new Date());
 		modelTModel.setName(apiTModel.getName().getValue());
 		modelTModel.setDeleted(apiTModel.isDeleted());
 

@@ -81,7 +81,7 @@ public class FetchTModelsQuery extends TModelQuery {
 		if (fq.isCaseInsensitiveSort())
 			nameTerm = "upper(" + nameTerm + ")";
 		
-		String dateTerm = ENTITY_ALIAS + ".lastUpdate";
+		String dateTerm = ENTITY_ALIAS + ".modified";
 
 		String orderClause = nameTerm + " " + DynamicQuery.SORT_ASC + ", " + dateTerm + " " + DynamicQuery.SORT_DESC;
 		if (fq.isSortByNameAsc()) {

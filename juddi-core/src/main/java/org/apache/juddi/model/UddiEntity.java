@@ -18,19 +18,31 @@ package org.apache.juddi.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-@MappedSuperclass
+@Entity
+@Table(name = "uddi_entity")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UddiEntity {
 
 	protected String entityKey;
-	protected Date lastUpdate;
+	protected Date created;
+	protected Date modified;
+	protected Date modifiedIncludingChildren;
+	protected String nodeId;
+	protected UddiEntityPublisher publisher;
 	
 	@Id
 	@Column(name = "entity_key", nullable = false, length = 255)
@@ -42,15 +54,47 @@ public abstract class UddiEntity {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_update", nullable = false, length = 29)
-	public Date getLastUpdate() {
-		return this.lastUpdate;
+	@Column(name = "created", length = 29)
+	public Date getCreated() {
+		return created;
 	}
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modified", nullable = false, length = 29)
+	public Date getModified() {
+		return this.modified;
+	}
+	public void setModified(Date modified) {
+		this.modified = modified;
 	}
 
-	public abstract String retrieveAuthorizedName();
-	public abstract void assignAuthorizedName(String authName);
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modified_including_children", length = 29)
+	public Date getModifiedIncludingChildren() {
+		return modifiedIncludingChildren;
+	}
+	public void setModifiedIncludingChildren(Date modifiedIncludingChildren) {
+		this.modifiedIncludingChildren = modifiedIncludingChildren;
+	}
+	
+	@Column(name = "node_id", length = 255)
+	public String getNodeId() {
+		return nodeId;
+	}
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "authorized_name", nullable = false)
+	public UddiEntityPublisher getPublisher() {
+		return this.publisher;
+	}
+	public void setPublisher(UddiEntityPublisher publisher) {
+		this.publisher = publisher;
+	}
 
 }

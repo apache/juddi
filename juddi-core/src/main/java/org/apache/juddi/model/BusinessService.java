@@ -47,18 +47,18 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public BusinessService() {
 	}
 
-	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate) {
+	public BusinessService(String entityKey, BusinessEntity businessEntity, Date modified) {
 		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 	}
-	public BusinessService(String entityKey, BusinessEntity businessEntity, Date lastUpdate,
+	public BusinessService(String entityKey, BusinessEntity businessEntity, Date modified,
 			List<ServiceName> serviceNames, List<ServiceDescr> serviceDescrs,
 			List<BindingTemplate> bindingTemplates,
 			ServiceCategoryBag categoryBag) {
 		this.entityKey = entityKey;
 		this.businessEntity = businessEntity;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 		this.serviceNames = serviceNames;
 		this.serviceDescrs = serviceDescrs;
 		this.bindingTemplates = bindingTemplates;
@@ -108,12 +108,4 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public void setCategoryBag(ServiceCategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
 	}
-
-	public String retrieveAuthorizedName() {
-		return this.getBusinessEntity().getPublisher().getAuthorizedName();
-	}
-	public void assignAuthorizedName(String id) {
-		// Do nothing, the publisher id is set in the parent.
-	}
-
 }

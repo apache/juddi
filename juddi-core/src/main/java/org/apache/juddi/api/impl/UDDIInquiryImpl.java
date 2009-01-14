@@ -608,7 +608,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			
 			List<?> tmodelKeysFound = null;
 			tmodelKeysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, findTmodel.getIdentifierBag(), tmodelKeysFound);
-			//tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
 			tmodelKeysFound = FindTModelByNameQuery.select(em, findQualifiers, findTmodel.getName(), tmodelKeysFound);
 			
 			if (tmodelKeysFound != null && tmodelKeysFound.size() > 0) {

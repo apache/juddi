@@ -23,8 +23,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -40,7 +38,6 @@ import javax.persistence.Table;
 public class Tmodel extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private UddiEntityPublisher publisher;
 	private String name;
 	private String langCode;
 	private boolean deleted;
@@ -52,13 +49,13 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	public Tmodel() {
 	}
 
-	public Tmodel(String entityKey, String name, Date lastUpdate) {
+	public Tmodel(String entityKey, String name, Date modified) {
 		this.entityKey = entityKey;
 		this.name = name;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 	}
 	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
-			String name, String langCode, boolean deleted, Date lastUpdate,
+			String name, String langCode, boolean deleted, Date modified,
 			List<OverviewDoc> overviewDocs,
 			List<TmodelDescr> tmodelDescrs,
 			List<TmodelIdentifier> tmodelIdentifiers,
@@ -68,20 +65,11 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.name = name;
 		this.langCode = langCode;
 		this.deleted = deleted;
-		this.lastUpdate = lastUpdate;
+		this.modified = modified;
 		this.overviewDocs = overviewDocs;
 		this.tmodelDescrs = tmodelDescrs;
 		this.tmodelIdentifiers = tmodelIdentifiers;
 		this.categoryBag = categoryBag;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "authorized_name", nullable = false)
-	public UddiEntityPublisher getPublisher() {
-		return this.publisher;
-	}
-	public void setPublisher(UddiEntityPublisher publisher) {
-		this.publisher = publisher;
 	}
 
 	@Column(name = "name", nullable = false)
@@ -142,17 +130,6 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	}
 	public void setCategoryBag(TmodelCategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
-	}
-
-	public String retrieveAuthorizedName() {
-		return getPublisher().getAuthorizedName();
-	}
-	public void assignAuthorizedName(String authName) {
-		if (authName != null) {
-			Publisher pub = new Publisher();
-			pub.setAuthorizedName(authName);
-			this.setPublisher(pub);
-		}
 	}
 
 }
