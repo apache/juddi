@@ -56,7 +56,7 @@ public class TransferTokenKey implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "transfer_token", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "transfer_token", nullable = false)
 	public TransferToken getTransferToken() {
 		return this.transferToken;
 	}

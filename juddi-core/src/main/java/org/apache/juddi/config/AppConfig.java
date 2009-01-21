@@ -145,6 +145,8 @@ public class AppConfig
 		if (keyList != null && keyList.size() > 0) {
 			nodeId = (String)keyList.get(0);
 		}
+		else
+			throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
 		result.setProperty(Property.JUDDI_NODE_ID, nodeId);
 		
 		tx.commit();

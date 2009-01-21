@@ -111,7 +111,6 @@ public class Install {
 
 			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher, nodeId);
 			
-			
 			tx.commit();
 		}
 		catch(DispositionReportFaultMessage dr) {
@@ -339,7 +338,7 @@ public class Install {
 		// A business key doesn't have to be provided, but if it is, it should match the parent business's key
 		String parentKey = businessService.getBusinessKey();
 		if (parentKey != null && parentKey.length()> 0) {
-			if (!parentKey.equals(parent.getBusinessKey()))
+			if (!parentKey.equalsIgnoreCase(parent.getBusinessKey()))
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
 		}
 		
@@ -387,7 +386,7 @@ public class Install {
 		// A service key doesn't have to be provided, but if it is, it should match the parent service's key
 		String parentKey = bindingTemplate.getServiceKey();
 		if (parentKey != null && parentKey.length()> 0) {
-			if (!parentKey.equals(parent.getServiceKey()))
+			if (!parentKey.equalsIgnoreCase(parent.getServiceKey()))
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentServiceNotFound", parentKey));
 		}
 		

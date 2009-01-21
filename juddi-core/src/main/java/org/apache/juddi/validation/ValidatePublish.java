@@ -392,7 +392,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		boolean isProjection = false;
 		if (parent != null) {
 			if (parentKey != null && parentKey.length() > 0) {
-				if (!parentKey.equals(parent.getBusinessKey())) {
+				if (!parentKey.equalsIgnoreCase(parent.getBusinessKey())) {
 					// Possible projected service - if we have differing parent businesses but a service key was not provided, this is an error as it is not possible 
 					// for the business that doesn't "own" the service to generate the key for it.
 					if (entityKey == null || entityKey.length() == 0)
@@ -414,7 +414,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			else {
 				// If the supplied business key doesn't match the existing service's business key, the projection is invalid.
 				org.apache.juddi.model.BusinessService bs = (org.apache.juddi.model.BusinessService)obj;
-				if (!businessService.getBusinessKey().equals(bs.getBusinessEntity().getEntityKey()))
+				if (!businessService.getBusinessKey().equalsIgnoreCase(bs.getBusinessEntity().getEntityKey()))
 					throw new InvalidProjectionException(new ErrorMessage("errors.invalidprojection.ParentMismatch", businessService.getBusinessKey() + ", " + bs.getBusinessEntity().getEntityKey()));
 			}
 		}
@@ -444,7 +444,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 					
 					// If existing service trying to be saved has a different parent key, then we have a problem
 					// TODO: moving services is allowed according to spec?
-					if (!parentKey.equals(bs.getBusinessEntity().getEntityKey()))
+					if (!parentKey.equalsIgnoreCase(bs.getBusinessEntity().getEntityKey()))
 						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getEntityKey()));
 					
 					// Make sure publisher owns this entity.
@@ -531,7 +531,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		String parentKey = bindingTemplate.getServiceKey();
 		if (parent != null) {
 			if (parentKey != null && parentKey.length() > 0) {
-				if (!parentKey.equals(parent.getBusinessKey()))
+				if (!parentKey.equalsIgnoreCase(parent.getBusinessKey()))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + parent.getBusinessKey()));
 			}
 			else
@@ -562,7 +562,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 				
 				// If existing binding trying to be saved has a different parent key, then we have a problem
 				// TODO: moving bindings is allowed according to spec?
-				if (!parentKey.equals(bt.getBusinessService().getEntityKey()))
+				if (!parentKey.equalsIgnoreCase(bt.getBusinessService().getEntityKey()))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + bt.getBusinessService().getEntityKey()));
 				
 				// Make sure publisher owns this entity.
@@ -715,7 +715,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (toKey == null || toKey.length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.BlankToKey"));
 		
-		if (fromKey.equals(toKey))
+		if (fromKey.equalsIgnoreCase(toKey))
 			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.SameBusinessKey"));
 		
 		Object fromObj = em.find(org.apache.juddi.model.BusinessEntity.class, fromKey);

@@ -22,6 +22,7 @@ public interface Property
 	public final static String JUDDI_MAX_IN_CLAUSE               ="juddi.maxInClause";
 	public final static String JUDDI_ROOT_PARTITION              ="juddi.rootPartition";
 	public final static String JUDDI_NODE_ID                     ="juddi.nodeId";
+	public final static String JUDDI_TRANSFER_EXPIRATION_DAYS    ="juddi.transfer.expiration.days";
 	
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";

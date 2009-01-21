@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.juddi.query.PersistenceManager;
 
+
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
@@ -99,4 +100,5 @@ public class JPAUtil {
 		
 	}
 
+	
 }

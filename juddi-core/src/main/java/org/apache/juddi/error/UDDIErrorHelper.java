@@ -62,6 +62,8 @@ public class UDDIErrorHelper {
 	public static final int E_REQUEST_TIMEOUT = 20240;
 	public static final int E_INVALID_TIME = 40030;
 	public static final int E_RESULT_SET_TOO_LARGE = 40300;
+	public static final int E_TOKEN_ALREADY_EXISTS = 40070;
+	public static final int E_TRANSFER_NOT_ALLOWED = 40600;
 
 	public static final String lookupErrCode(int errno) {
 		switch (errno) {
@@ -100,6 +102,8 @@ public class UDDIErrorHelper {
 			case E_UNVALIDATABLE              : return "E_unvalidatable";
 			case E_USER_MISMATCH              : return "E_userMismatch";
 			case E_VALUE_NOT_ALLOWED          : return "E_valueNotAllowed";
+			case E_TOKEN_ALREADY_EXISTS       : return "E_tokenAlreadyExists";
+			case E_TRANSFER_NOT_ALLOWED       : return "E_transferNotAllowed";
 			default                           : return null;
 		}
 	}  
