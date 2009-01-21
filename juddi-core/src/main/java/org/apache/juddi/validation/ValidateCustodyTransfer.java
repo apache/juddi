@@ -1,6 +1,7 @@
 package org.apache.juddi.validation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -23,8 +24,6 @@ import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class ValidateCustodyTransfer extends ValidateUDDIApi {
 
