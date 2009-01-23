@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindingTemplate xmlns="urn:uddi-org:api_v3" serviceKey="uddi:juddi.apache.org:joepublisher:serviceone" bindingKey="uddi:juddi.apache.org:joepublisher:bindingtwo">
+  <description xml:lang="en">This is the secure access point for service one</description>
+  <accessPoint useType="endPoint">https://businessone.com/services/serviceone</accessPoint>
+  <tModelInstanceDetails>
+    <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+  </tModelInstanceDetails>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
+  </categoryBag>
+</bindingTemplate>

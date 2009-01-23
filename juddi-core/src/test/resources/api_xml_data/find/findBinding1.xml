@@ -4,6 +4,9 @@
     <findQualifier>orAllKeys</findQualifier>
   </findQualifiers>
   <tModelBag>
-    <tModelKey>uddi:businessone.com:services:serviceone:wsdlSpec</tModelKey>
+    <tModelKey>uddi:uddi.org:protocol:serverauthenticatedssl3</tModelKey>
   </tModelBag>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
+  </categoryBag>
 </find_binding>

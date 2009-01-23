@@ -32,10 +32,10 @@ import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
-public class API_050_PublisherAssertionTest {
+public class API_060_PublisherAssertionTest {
 	
 	final static String JOE_ASSERT_XML    = "api_xml_data/joepublisher/publisherAssertion.xml";
-	private static Logger logger = Logger.getLogger(API_050_PublisherAssertionTest.class);
+	private static Logger logger = Logger.getLogger(API_060_PublisherAssertionTest.class);
     
 	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
 	

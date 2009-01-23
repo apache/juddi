@@ -26,7 +26,7 @@ import org.uddi.sub_v3.Subscription;
  * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_060_SubscriberSaveTest {
+public class API_080_SubscriberSaveTest {
 	
 	final static String SUBSCRIPTION_XML    = "api_xml_data/subscription/subscription1.xml";
 	

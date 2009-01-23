@@ -5,9 +5,9 @@
     <findQualifier>approximateMatch</findQualifier>
     <findQualifier>andAllKeys</findQualifier>
   </findQualifiers>
-  <name xml:lang="en">tmodel</name>
-  <identifierBag>
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
-    <keyedReference tModelKey="uddi:tmodelkey:identifierx" keyName="identify" keyValue="identity" />
-  </identifierBag>
+  <name>Joe Publisher</name>
+  <categoryBag>
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+      keyValue="keyGenerator" />
+  </categoryBag>
 </find_tModel>
