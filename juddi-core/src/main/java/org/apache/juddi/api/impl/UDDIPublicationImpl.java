@@ -50,6 +50,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.validation.ValidatePublish;
@@ -250,8 +251,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		for (String entityKey : entityKeyList) {
 			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
 			((org.apache.juddi.model.Tmodel)obj).setDeleted(true);
-		}
 
+			// Must check if tModel is a Key Generator, and if so, it must be removed from publisher collection
+			if (entityKey.toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase()))
+				publisher.removeKeyGeneratorKey(em, entityKey);
+			
+		}
+		
 		tx.commit();
 		em.close();
 	}
@@ -501,6 +507,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			em.persist(modelTModel);
 			
 			result.getTModel().add(apiTModel);
+			
+			// If the TModel is a key generator, it must be added to the publisher's key generators.
+			if (modelTModel.getEntityKey().toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase()))
+				publisher.addKeyGeneratorKey(modelTModel.getEntityKey());
 		}
 
 		tx.commit();

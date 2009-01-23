@@ -169,9 +169,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
-			// Must check if tModel is a Key Generator, and if so, removed from publisher collection
-			if (entityKey.toUpperCase().contains(KeyGenerator.KEYGENERATOR_SUFFIX.toUpperCase()))
-				publisher.removeKeyGeneratorKey(entityKey);
 		}
 	}
 
@@ -657,10 +654,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 					// It's a valid Key Generator, but is it available for this publisher?
 					if (!publisher.isKeyGeneratorAvailable(em, entityKey))
 						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
-					else {
-						// The key generator is available, must now add it to the publisher's key generators.
-						publisher.addKeyGeneratorKey(entityKey);
-					}
 				
 				}
 				else {

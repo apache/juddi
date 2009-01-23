@@ -19,7 +19,6 @@ package org.apache.juddi.config;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -119,7 +118,7 @@ public class AppConfig
 		tx.commit();
 		tx.begin();
 		UddiEntityPublisher  rootPublisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
-		Set<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
+		List<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
 		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
 			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");
 		

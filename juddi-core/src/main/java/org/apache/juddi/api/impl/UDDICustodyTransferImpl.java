@@ -39,7 +39,6 @@ import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.model.BusinessService;
-import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.TransferTokenKey;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;

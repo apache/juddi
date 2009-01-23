@@ -15,7 +15,7 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,7 +53,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 			String emailAddress, String isAdmin, String isEnabled,
 			Integer maxBusinesses, Integer maxServicesPerBusiness,
 			Integer maxBindingsPerService, Integer maxTmodels,
-			Set<KeyGeneratorKey> keyGenerators) {
+			List<KeyGeneratorKey> keyGenerators) {
 		this.authorizedName = publisherId;
 		this.publisherName = publisherName;
 		this.emailAddress = emailAddress;

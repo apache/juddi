@@ -17,10 +17,9 @@
 
 package org.apache.juddi.model;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -52,7 +51,7 @@ public abstract class UddiEntityPublisher {
 	
 
 	protected String authorizedName;
-	protected Set<KeyGeneratorKey> keyGeneratorKeys = new HashSet<KeyGeneratorKey>(0);
+	protected List<KeyGeneratorKey> keyGeneratorKeys = new ArrayList<KeyGeneratorKey>(0);
 
 	@Id
 	@Column(name = "authorized_name", nullable = false, length = 20)
@@ -66,17 +65,17 @@ public abstract class UddiEntityPublisher {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "publisher")
 	@OrderBy
-	public Set<KeyGeneratorKey> getKeyGeneratorKeys() {
+	public List<KeyGeneratorKey> getKeyGeneratorKeys() {
 		return this.keyGeneratorKeys;
 	}
-	public void setKeyGeneratorKeys(Set<KeyGeneratorKey> keyGeneratorKeys) {
+	public void setKeyGeneratorKeys(List<KeyGeneratorKey> keyGeneratorKeys) {
 		this.keyGeneratorKeys = keyGeneratorKeys;
 	}
 	public void addKeyGeneratorKey(String keygenTModelKey) {
 		KeyGeneratorKey keyGenKey = new KeyGeneratorKey(this, keygenTModelKey);
 		keyGeneratorKeys.add(keyGenKey);
 	}
-	public void removeKeyGeneratorKey(String keygenTModelKey) {
+	public void removeKeyGeneratorKey(EntityManager em, String keygenTModelKey) {
 		// Must use iterator to remove while iterating.
 		Iterator<KeyGeneratorKey> keyGenItr = keyGeneratorKeys.iterator();
 		while(keyGenItr.hasNext()) {
@@ -84,6 +83,7 @@ public abstract class UddiEntityPublisher {
 			if (keyGen.getKeygenTModelKey().equalsIgnoreCase(keygenTModelKey)) {
 				keyGenItr.remove();
 				keyGeneratorKeys.remove(keyGen);
+				em.remove(keyGen);
 			}
 		}
 	}
