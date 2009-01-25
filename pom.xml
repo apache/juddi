@@ -107,8 +107,8 @@
     <module>juddi-core</module>
     <module>juddi-cxf</module>
     <module>juddi-axis</module>
-    <module>juddi-cargo</module>
     <module>juddi-tomcat</module>
+    <module>uddi-client</module>
   </modules>
   <distributionManagement>
     <repository>
@@ -161,7 +161,7 @@
         </exclusions> 
       </dependency>
       <dependency>
-	<groupId>cglib</groupId>
+		<groupId>cglib</groupId>
         <artifactId>cglib-nodep</artifactId>
         <version>2.1_3</version>
       </dependency>

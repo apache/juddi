@@ -1,0 +1,49 @@
+package org.uddi.api_v3.client.transport;
+
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
+import org.uddi.api_v3.client.config.ClientConfig;
+import org.uddi.api_v3.client.config.Property;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+
+
+public class JAXRPCTransport implements Transport {
+
+	UDDIInquiryPortType inquiryService = null;
+	UDDISecurityPortType securityService = null;
+
+	public UDDIInquiryPortType getInquiryService() throws TransportException {
+
+		if (inquiryService==null) {
+			try {
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_INQUIRY_URL);
+				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.INQUIRY_SERVICE);
+				Service service = Service.create(new URL(endpointURL), qName);
+				inquiryService = (UDDIInquiryPortType) service.getPort(UDDIInquiryPortType.class);
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(), e);
+			}
+		}
+		return inquiryService;
+	}
+	
+	public UDDISecurityPortType getSecurityService() throws TransportException {
+
+		if (securityService==null) {
+			try {
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SECURITY_URL);
+				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.SECURITY_SERVICE);
+				Service service = Service.create(new URL(endpointURL), qName);
+				securityService = (UDDISecurityPortType) service.getPort(UDDISecurityPortType.class);
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(), e);
+			}
+		}
+		return securityService;
+	}
+
+}
