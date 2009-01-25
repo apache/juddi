@@ -59,6 +59,7 @@
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
+    <!--  this can be any JAXRPC client, there is nothing axis specific in here -->
     <dependency>
     <groupId>org.apache.axis</groupId>
     <artifactId>axis</artifactId>
