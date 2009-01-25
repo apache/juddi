@@ -34,6 +34,8 @@ import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.ObjectFactory;
 
 /**
+ * Testing marshalling functionality, making sure UTF-8 is handled correctly.
+ * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class AuthInfoTest {
