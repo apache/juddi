@@ -1,0 +1,2 @@
+The JAXRPCTransport uses Axis however there is nothing Axis specific here, and
+any JAXRPC implementation can be used.
