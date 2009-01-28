@@ -50,6 +50,12 @@
      <version>2.0rc6</version>
      <type>jar</type>
     </dependency>
+      <dependency>
+    <artifactId>juddi-soapconsole</artifactId>
+     <groupId>org.apache.juddi</groupId>
+     <version>2.0rc6</version>
+     <type>war</type>
+    </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
