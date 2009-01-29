@@ -1,0 +1,15 @@
+<assembly>
+  <id>distribution</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+	<directory>${project.build.directory}/tomcat/apache-tomcat-5.5.23</directory>
+	<outputDirectory>apache-tomcat-5.5.23</outputDirectory>
+	<includes>
+	<include>**/**</include>
+	</includes>
+    </fileSet>
+  </fileSets>
+</assembly>

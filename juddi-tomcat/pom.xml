@@ -11,6 +11,7 @@
   <version>3.0.0.SNAPSHOT</version>
   <name>jUDDI Tomcat Packaging</name>
   <url>http://maven.apache.org</url>
+  <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>commons-discovery</groupId>
@@ -59,10 +60,9 @@
         <executions>
           <execution>
             <id>test</id>
-            <phase>integration-test</phase>
+            <phase>package</phase>
             <configuration>
               <tasks>
-
                <property name="compile_classpath" refid="maven.compile.classpath"/>
                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
                <property name="test_classpath" refid="maven.test.classpath"/>
@@ -86,6 +86,24 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-assembly-plugin</artifactId>
+	  <executions>
+	  <execution>
+          <id>make-assembly</id>
+          <phase>package</phase>
+          <goals>
+              <goal>attached</goal>
+          </goals>
+	  <configuration>
+	  <descriptors>
+	    <descriptor>assembly.xml</descriptor>
+	  </descriptors>
+	  </configuration>
+	  </execution>
+          </executions>
       </plugin>
     </plugins>
   </build>
