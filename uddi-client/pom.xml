@@ -78,9 +78,33 @@
         <version>4.5</version>
         <scope>test</scope>
      </dependency>
+    <dependency>
+	<groupId>org.apache.juddi</groupId>
+	<artifactId>juddi-tomcat</artifactId>
+	<version>3.0.0.SNAPSHOT</version>
+ 	<type>zip</type>
+    </dependency>
   </dependencies> 
   <build>
     <plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test</id>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <tasks>
+		<unzip dest="target" src="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
+	      </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+ 	</executions>	
+    </plugin>
     <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -91,27 +115,13 @@
 	  <plugin>
 	    <groupId>org.codehaus.cargo</groupId>
 	    <artifactId>cargo-maven2-plugin</artifactId>
-        <configuration>
-	      <wait>false</wait>
+            <configuration>
+		<wait>false</wait>
 	        <container>
-              <containerId>tomcat5x</containerId>
-			  <zipUrlInstaller>
-                <url>
-https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/apache-tomcat-5.5.25.zip
-                </url>
-                <installDir>${installDir}</installDir>
-              </zipUrlInstaller>	
-		    </container>
-		    <configuration>
-              <home>
-                  ${project.build.directory}/tomcat5x/container
-              </home>
-			  <deployables/>
-			  <properties>
-                <cargo.servlet.port>8181</cargo.servlet.port>
-              </properties>
-		    </configuration>
-		</configuration>
+		<containerId>tomcat5x</containerId>
+                <home>target/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23</home>
+		</container>
+	        </configuration>
 		<executions>
 		  <execution>
 			<id>start-container</id>
@@ -151,7 +161,7 @@ https://repository.atlassian.com/maven2/org/apache/tomcat/apache-tomcat/5.5.25/a
               <systemProperties>
                 <property>
                   <name>cactus.contextURL</name>
-                  <value>http://localhost:8181/juddi</value>
+                  <value>http://localhost:8080/juddi</value>
                 </property>
               </systemProperties>
             </configuration>
