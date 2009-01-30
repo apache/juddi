@@ -96,7 +96,7 @@
             <phase>pre-integration-test</phase>
             <configuration>
               <tasks>
-		<unzip dest="target" src="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
+		<unzip dest="target" src="${basedir}/../juddi-tomcat/target/juddi-tomcat-${maven.dependency.org.apache.juddi.juddi-tomcat.zip.version}.zip"/>
 	      </tasks>
             </configuration>
             <goals>
