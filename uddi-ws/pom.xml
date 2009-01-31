@@ -11,7 +11,7 @@
   <artifactId>uddi-ws</artifactId>
   <version>3.0.0.SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>UDDI_v3 WS Stubs & Schema Bindings Generated from WSDL</name>
+  <name>UDDI_v3 WS Stubs and Schema Bindings Generated from WSDL</name>
   
   <repositories>
     <repository>

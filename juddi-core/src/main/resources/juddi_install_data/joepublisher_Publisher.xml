@@ -3,7 +3,7 @@
   <publisherName>Joe Publisher</publisherName>
   <emailAddress>jpublisher@business.com</emailAddress>
   <isAdmin>true</isAdmin>
-  <isEnabled>True</isEnabled>
+  <isEnabled>true</isEnabled>
   <maxBindingsPerService>199</maxBindingsPerService>
   <maxBusinesses>100</maxBusinesses>
   <maxServicePerBusiness>100</maxServicePerBusiness>

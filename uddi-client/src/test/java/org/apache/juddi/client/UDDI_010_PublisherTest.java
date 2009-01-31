@@ -15,6 +15,7 @@
 package org.apache.juddi.client;
 
 import org.apache.log4j.helpers.Loader;
+import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.GetAuthToken;
@@ -29,7 +30,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class UDDI_010_PublisherTest {
 	
      @Test
-     public void test() {
+     public void testAuthToken() {
 	     try {
 	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
@@ -42,18 +43,13 @@ public class UDDI_010_PublisherTest {
 	        	 getAuthToken.setCred("");
 	        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
 	        	 System.out.println(authToken.getAuthInfo());
-	        	 
-	        	 //UDDIInquiryPortType inquiryService = transport.getInquiryService();
-	        	 
-	        	 //inquiryService.findTModel(body);
+	        	 Assert.assertNotNull(authToken);
 	         } else {
-	        	 
+	        	 Assert.fail();
 	         }
-	    
 	     } catch (Exception e) {
-	
 	         e.printStackTrace();
-	
+	         Assert.fail();
 	     } 
      }
 	

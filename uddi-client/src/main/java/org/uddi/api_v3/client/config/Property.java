@@ -3,8 +3,9 @@ package org.uddi.api_v3.client.config;
 public interface Property 
 {
 	public final static String UDDI_CONFIGURATION_RELOAD_DELAY  ="uddi.configuration.reload.delay";
-	public final static String UDDI_INQUIRY_URL                 ="uddi.inquery.url";
+	public final static String UDDI_INQUIRY_URL                 ="uddi.inquiry.url";
 	public final static String UDDI_SECURITY_URL                ="uddi.security.url";
+	public final static String UDDI_PUBLISH_URL                 ="uddi.publish.url";
 	public final static String UDDI_PROXY_TRANSPORT             ="uddi.proxy.transport";
 	
 	public final static String UDDI_PROXY_FACTORY_INITIAL       ="uddi.proxy.factory.initial";
