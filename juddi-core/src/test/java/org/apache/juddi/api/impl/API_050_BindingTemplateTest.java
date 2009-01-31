@@ -14,39 +14,34 @@
  */
 package org.apache.juddi.api.impl;
 
-import static junit.framework.Assert.assertEquals;
-import java.util.List;
-
-import org.apache.juddi.api.impl.UDDIInquiryImpl;
-import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.uddi.api_v3.BindingDetail;
-import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.DeleteBinding;
-import org.uddi.api_v3.GetBindingDetail;
-import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.tck.TckBindingTemplate;
+import org.uddi.api_v3.tck.TckBusiness;
+import org.uddi.api_v3.tck.TckBusinessService;
+import org.uddi.api_v3.tck.TckPublisher;
+import org.uddi.api_v3.tck.TckSecurity;
+import org.uddi.api_v3.tck.TckTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class API_050_BindingTemplateTest 
 {
-	final static String JOE_BINDING_XML               = "api_xml_data/joepublisher/bindingTemplate.xml";
-    final static String JOE_BINDING_KEY               = "uddi:juddi.apache.org:joepublisher:bindingtwo";
-    
-    private static Logger logger                      = Logger.getLogger(API_050_BindingTemplateTest.class);
-	private UDDIPublicationImpl publish               = new UDDIPublicationImpl();
-	private UDDIInquiryImpl inquiry                   = new UDDIInquiryImpl();
+   
+    private static Logger logger                          = Logger.getLogger(API_050_BindingTemplateTest.class);
 	
-	private static API_010_PublisherTest api010       = new API_010_PublisherTest();
-	private static API_020_TmodelTest api020          = new API_020_TmodelTest();
-	private static API_030_BusinessEntityTest api030  = new API_030_BusinessEntityTest();
-	private static API_040_BusinessServiceTest api040 = new API_040_BusinessServiceTest();
+	private static API_010_PublisherTest api010           = new API_010_PublisherTest();
+	private static TckTModel tckTModel                    = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusiness tckBusiness                = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusinessService tckBusinessService  = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBindingTemplate tckBindingTemplate  = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	
+	
 	private static String authInfoJoe                 = null;
 	
 	@BeforeClass
@@ -54,7 +49,7 @@ public class API_050_BindingTemplateTest
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
-			authInfoJoe = API_010_PublisherTest.authInfoJoe();
+			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
 		} catch (DispositionReportFaultMessage e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
@@ -64,70 +59,15 @@ public class API_050_BindingTemplateTest
 	@Test
 	public void joepublisher() {
 		try {
-			api020.saveJoePublisherTmodel(authInfoJoe);
-			api030.saveJoePublisherBusiness(authInfoJoe);
-			api040.saveJoePublisherService(authInfoJoe);
-			saveJoePublisherBinding(authInfoJoe);
-			deleteJoePublisherBinding(authInfoJoe);
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 		} finally {
-			api040.deleteJoePublisherService(authInfoJoe);
-			api030.deleteJoePublisherBusiness(authInfoJoe);
-			api020.deleteJoePublisherTmodel(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}
-		
-	protected void saveJoePublisherBinding(String authInfoJoe) {
-		saveBinding(authInfoJoe, JOE_BINDING_XML, JOE_BINDING_KEY);
-	}
-	
-	protected void deleteJoePublisherBinding(String authInfoJoe) {
-		deleteBinding(authInfoJoe, JOE_BINDING_KEY);
-	}
-	
-	private void saveBinding(String authInfo, String bindingXML, String bindingKey) {
-		try {
-			// First save the entity
-			SaveBinding sb = new SaveBinding();
-			sb.setAuthInfo(authInfo);
-			
-			BindingTemplate btIn = (BindingTemplate)UDDIApiTestHelper.buildEntityFromDoc(bindingXML, "org.uddi.api_v3");
-			sb.getBindingTemplate().add(btIn);
-			publish.saveBinding(sb);
-			
-			// Now get the entity and check the values
-			GetBindingDetail gb = new GetBindingDetail();
-			gb.getBindingKey().add(bindingKey);
-			BindingDetail bd = inquiry.getBindingDetail(gb);
-			List<BindingTemplate> btOutList = bd.getBindingTemplate();
-			BindingTemplate btOut = btOutList.get(0);
-
-			assertEquals(btIn.getServiceKey(), btOut.getServiceKey());
-			assertEquals(btIn.getBindingKey(), btOut.getBindingKey());
-			
-			UDDIApiTestHelper.checkDescriptions(btIn.getDescription(), btOut.getDescription());
-			UDDIApiTestHelper.checkCategories(btIn.getCategoryBag(), btOut.getCategoryBag());
-		}
-		catch(Exception e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("No exception should be thrown: " + e.getMessage());
-		}
-		
-	}
-	
-	private void deleteBinding(String authInfo, String bindingKey) {
-		try {
-			// Delete the entity and make sure it is removed
-			DeleteBinding db = new DeleteBinding();
-			db.setAuthInfo(authInfo);
-			
-			db.getBindingKey().add(bindingKey);
-			publish.deleteBinding(db);
-		}
-		catch(Exception e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("No exception should be thrown.");
-		}
-		
-	}
-
 }

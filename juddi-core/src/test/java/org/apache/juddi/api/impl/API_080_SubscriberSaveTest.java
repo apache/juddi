@@ -14,51 +14,24 @@
  */
 package org.apache.juddi.api.impl;
 
-import org.apache.juddi.api.impl.UDDISubscriptionImpl;
-
-import org.apache.juddi.config.Constants;
-import org.junit.Assert;
 import org.junit.Test;
-import org.uddi.sub_v3.SaveSubscription;
-import org.uddi.sub_v3.Subscription;
+import org.uddi.api_v3.tck.TckSubscriber;
 
 /**
  * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_080_SubscriberSaveTest {
-	
-	final static String SUBSCRIPTION_XML    = "api_xml_data/subscription/subscription1.xml";
-	
-	private UDDISubscriptionImpl subscribe = new UDDISubscriptionImpl();
+public class API_080_SubscriberSaveTest 
+{
+	private TckSubscriber tckSubscriber = new TckSubscriber(new UDDISubscriptionImpl(), new UDDISecurityImpl());
 	
 	@Test
 	public void saveSubscriber() {
-		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
-			
-			SaveSubscription ss = new SaveSubscription();
-			ss.setAuthInfo(authInfo);
-
-			Subscription subIn = (Subscription)UDDIApiTestHelper.buildEntityFromDoc(SUBSCRIPTION_XML, "org.uddi.sub_v3");
-			ss.getSubscription().add(subIn);
-			subscribe.saveSubscription(authInfo, ss);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail("No exception should be thrown");		
-		}
+		tckSubscriber.saveSubscriber();
 	}
 
 	@Test
 	public void deleteSubscriber() {
-		try {
-			String authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
-			System.out.println("AUTHINFO=" + authInfo);
-			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			Assert.fail("No exception should be thrown");
-		}
+		tckSubscriber.deleteSubscriber();
 	}
 }

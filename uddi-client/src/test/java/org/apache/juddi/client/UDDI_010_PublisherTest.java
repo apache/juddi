@@ -21,7 +21,6 @@ import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**

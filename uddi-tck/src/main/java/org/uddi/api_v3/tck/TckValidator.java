@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.api.impl;
+package org.uddi.api_v3.tck;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -21,24 +21,12 @@ package org.apache.juddi.api.impl;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
-import org.apache.juddi.query.PersistenceManager;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.CategoryBag;
@@ -56,74 +44,11 @@ import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
-import org.uddi.v3_service.DispositionReportFaultMessage;
 
-public class UDDIApiTestHelper {
-
-	private static Logger logger = Logger.getLogger(UDDIApiTestHelper.class);
-	
-	@SuppressWarnings("unchecked")
-	public static Object buildEntityFromDoc(String fileName, String thePackage) throws JAXBException, IOException {
-		Object obj = null;
-		URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
-		if (url==null) {
-			logger.error("Could not find resource: " + fileName);
-		} else {
-			InputStream resourceStream =url.openStream();
-	
-			JAXBContext jc = JAXBContext.newInstance(thePackage);
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			obj = ((JAXBElement)unmarshaller.unmarshal(resourceStream)).getValue();
-		}
-		return obj;
-	}
-
-	public static void outputEntity(Object obj, String thePackage) throws JAXBException {
-		JAXBContext jc = JAXBContext.newInstance(thePackage);
-		Marshaller marshaller = jc.createMarshaller();
-		marshaller.marshal( new JAXBElement<Object>(new javax.xml.namespace.QName("uri","local"), Object.class, obj), System.out);
-		
-	}
-
-	public static void deleteEntity(Class<?> entityClass, Object entityKey) {
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Object obj = em.find(entityClass, entityKey);
-		em.remove(obj);
-		
-		tx.commit();
-		em.close();
-	}
-
-	public static void removeAuthTokens() {
-		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Query qry = em.createQuery("delete from AuthToken");
-		qry.executeUpdate();
-		
-		tx.commit();
-		em.close();
-
-	}
+public class TckValidator {
 
 	
-	public static String getAuthToken(String pubId) throws DispositionReportFaultMessage {
-		UDDISecurityImpl securityService = new UDDISecurityImpl();
-
-		org.uddi.api_v3.GetAuthToken ga = new org.uddi.api_v3.GetAuthToken();
-		ga.setUserID(pubId);
-		ga.setCred("");
-
-		org.uddi.api_v3.AuthToken token = securityService.getAuthToken(ga);
-		
-		return token.getAuthInfo();
-	}
-
+	
 
 	public static void checkNames(List<Name> names1, List<Name> names2) {
 		if (names1 == null || names2 == null) {

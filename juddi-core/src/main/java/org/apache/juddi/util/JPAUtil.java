@@ -28,6 +28,12 @@ import org.apache.juddi.query.PersistenceManager;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * 
+ * Example use:
+	public void test() {
+		Object object = JPAUtil.getEntity(Tmodel.class, "uddi:juddi.apache.org:joepublisher:kEYGENERATOR");
+		System.out.println("object=" + object);
+	}
  */
 public class JPAUtil {
 	//TODO Comment from Code Review: This class does not seem to be in use. Do we need it?
@@ -99,6 +105,21 @@ public class JPAUtil {
 		
 		
 	}
+	
+	public static void removeAuthTokens() {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		Query qry = em.createQuery("delete from AuthToken");
+		qry.executeUpdate();
+		
+		tx.commit();
+		em.close();
+
+	}
+
 
 	
 }

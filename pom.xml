@@ -84,6 +84,17 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/branches/v3_trunk/</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/branches/v3_trunk/</url>
   </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <reporting>
     <plugins>
       <plugin>
@@ -104,6 +115,7 @@
   </reporting>
   <modules>
     <module>uddi-ws</module>
+    <module>uddi-tck</module>
     <module>juddi-core</module>
     <module>juddi-cxf</module>
     <module>juddi-axis</module>

@@ -90,7 +90,13 @@
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
         <version>3.0.0.SNAPSHOT</version>
-     </dependency> 
+     </dependency>
+     <dependency>
+        <groupId>org.apache.juddi</groupId>
+        <artifactId>uddi-tck</artifactId>
+        <version>3.0.0.SNAPSHOT</version>
+        <scope>test</scope>
+     </dependency>
      <dependency>
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>

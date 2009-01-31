@@ -28,23 +28,25 @@ import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.uddi.api_v3.tck.EntityCreator;
+import org.uddi.api_v3.tck.TckPublisher;
+import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
+ * This test is jUDDI specific, as the publisher methods are an extension
+ * to the UDDI api.
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class API_010_PublisherTest {
-	
-	final static String JOE_PUBLISHER_XML  = "api_xml_data/joepublisher/publisher.xml";
-    final static String JOE_PUBLISHER_ID   = "joepublisher";
-	final static String SAM_SYNDICATOR_XML = "api_xml_data/samsyndicator/publisher.xml";
-    final static String SAM_SYNDICATOR_ID  = "ssyndicator";
     
     private static Logger logger = Logger.getLogger(API_010_PublisherTest.class);
     
-	private UDDIPublicationImpl publish = new UDDIPublicationImpl();
-	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+	private UDDIPublicationImpl publish   = new UDDIPublicationImpl();
+	private UDDIInquiryImpl inquiry       = new UDDIInquiryImpl();
+	private UDDISecurityPortType security = new UDDISecurityImpl();
 	private static String authInfo = null;
 	
 	@Test
@@ -53,7 +55,7 @@ public class API_010_PublisherTest {
 		//If it already there is probably has foreign key relationships.
 		//This test should really only run on an empty database. Seed
 		//data will be added if the root publisher is missing.
-		if (!isExistPublisher(JOE_PUBLISHER_ID)) {
+		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
 			saveJoePublisher();
 			deleteJoePublisher();
 		}
@@ -62,7 +64,7 @@ public class API_010_PublisherTest {
 	@Test
 	public void testSamSyndicator() {
 		//We can only test this if the publisher is not there already.
-		if (!isExistPublisher(SAM_SYNDICATOR_ID)) {
+		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
 			saveSamSyndicator();
 			deleteSamSyndicator();
 		}
@@ -73,8 +75,8 @@ public class API_010_PublisherTest {
 	 * 		   - false in all other cases.
 	 */
 	protected boolean saveJoePublisher() {
-		if (!isExistPublisher(JOE_PUBLISHER_ID)) {
-			savePublisher(JOE_PUBLISHER_ID, JOE_PUBLISHER_XML);
+		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
+			savePublisher(TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_XML);
 			return true;
 		} else {
 			return false;
@@ -85,34 +87,34 @@ public class API_010_PublisherTest {
 	 * are child objects attached; think Services etc.
 	 */
 	protected void deleteJoePublisher() {
-		deletePublisher(JOE_PUBLISHER_ID);
+		deletePublisher(TckPublisher.JOE_PUBLISHER_ID);
 	}
 	/**
 	 * Persists Sam Syndicator to the database.
 	 * @return publisherId
 	 */
 	protected String saveSamSyndicator() {
-		if (!isExistPublisher(SAM_SYNDICATOR_ID)) {
-			savePublisher(SAM_SYNDICATOR_ID, SAM_SYNDICATOR_XML);
+		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
+			savePublisher(TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_XML);
 		}
-		return SAM_SYNDICATOR_ID;
+		return TckPublisher.SAM_SYNDICATOR_ID;
 	}
 	/**
 	 * Removes Sam Syndicator from the database, this will fail if there
 	 * are child objects attached; think Services etc.
 	 */
 	protected void deleteSamSyndicator() {
-		deletePublisher(SAM_SYNDICATOR_ID);
+		deletePublisher(TckPublisher.SAM_SYNDICATOR_ID);
 	}
 	
 	
 	private void savePublisher(String publisherId, String publisherXML) {
 		try {
-			authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
+			authInfo = TckSecurity.getAuthToken(security, Constants.ROOT_PUBLISHER, "");
 			logger.debug("Saving new publisher: " + publisherXML);
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
-			Publisher pubIn = (Publisher)UDDIApiTestHelper.buildEntityFromDoc(publisherXML, "org.apache.juddi.api.datatype");
+			Publisher pubIn = (Publisher)EntityCreator.buildFromDoc(publisherXML, "org.apache.juddi.api.datatype");
 			sp.getPublisher().add(pubIn);
 			publish.savePublisher(sp);
 	
@@ -152,7 +154,7 @@ public class API_010_PublisherTest {
 	
 	private void deletePublisher(String publisherId) {
 		try {
-			authInfo = UDDIApiTestHelper.getAuthToken(Constants.ROOT_PUBLISHER);
+			authInfo = TckSecurity.getAuthToken(security, Constants.ROOT_PUBLISHER, "");
 			logger.debug("Delete publisher: " + publisherId);
 			//Now deleting this publisher
 			DeletePublisher dp = new DeletePublisher();
@@ -190,12 +192,12 @@ public class API_010_PublisherTest {
 		}
 	}
 	
-	protected static String authInfoJoe() throws DispositionReportFaultMessage {
-		return UDDIApiTestHelper.getAuthToken(JOE_PUBLISHER_ID);
+	protected String authInfoJoe() throws DispositionReportFaultMessage {
+		return TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
 	}
 	
-	protected static String authInfoSam() throws DispositionReportFaultMessage {
-		return UDDIApiTestHelper.getAuthToken(SAM_SYNDICATOR_ID);
+	protected String authInfoSam() throws DispositionReportFaultMessage {
+		return TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
 	}
 	
 }

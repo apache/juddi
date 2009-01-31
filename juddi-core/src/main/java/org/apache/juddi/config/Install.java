@@ -64,6 +64,8 @@ public class Install {
 	public static final String FILE_ROOT_TMODELKEYGEN = "root_tModelKeyGen.xml";
 	public static final String FILE_UDDI_PUBLISHER = "UDDI_Publisher.xml";
 	public static final String FILE_UDDI_TMODELS = "UDDI_tModels.xml";
+	public static final String FILE_JOE_PUBLISHER = "joepublisher_Publisher.xml";
+	public static final String FILE_SSYNDICATOR = "ssyndicator_Publisher.xml";
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
@@ -103,6 +105,9 @@ public class Install {
 			
 			rootPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_PUBLISHER);
 			uddiPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_PUBLISHER);
+			//Inserting 2 test publishers
+			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_JOE_PUBLISHER);
+			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_SSYNDICATOR);
 
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
