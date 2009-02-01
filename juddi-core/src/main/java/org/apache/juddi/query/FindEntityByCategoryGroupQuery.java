@@ -276,7 +276,7 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 				int tblCount = 0;
 				int count = 0;
 				//TODO- JUDDI-177 Code Review; why is kr not used in the loop?
-				for(@SuppressWarnings("unused") KeyedReference kr : keyedRefs) {
+				for(KeyedReference kr : keyedRefs) {
 					if (count != 0) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
