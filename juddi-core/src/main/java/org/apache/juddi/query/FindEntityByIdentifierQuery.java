@@ -47,6 +47,7 @@ import org.uddi.api_v3.KeyedReference;
  */
 public class FindEntityByIdentifierQuery extends EntityQuery {
 	
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(FindEntityByIdentifierQuery.class);
 
 	private String entityName;

@@ -48,6 +48,7 @@ import org.uddi.api_v3.TModelBag;
  */
 public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 	
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(FindBindingByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";

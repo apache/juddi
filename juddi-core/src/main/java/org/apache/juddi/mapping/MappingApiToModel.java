@@ -17,7 +17,6 @@
 
 package org.apache.juddi.mapping;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;

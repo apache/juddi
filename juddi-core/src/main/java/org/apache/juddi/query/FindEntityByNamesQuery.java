@@ -34,6 +34,7 @@ import org.uddi.api_v3.Name;
  */
 public class FindEntityByNamesQuery extends EntityQuery {
 
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(FindEntityByNamesQuery.class);
 
 	private String entityName;

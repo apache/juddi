@@ -59,6 +59,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 	public static final String TRANSFER_TOKEN_PREFIX = "transfertoken:";
 	public static final int DEFAULT_TRANSFEREXPIRATION_DAYS = 3;
 
+	@SuppressWarnings("unchecked")
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
 

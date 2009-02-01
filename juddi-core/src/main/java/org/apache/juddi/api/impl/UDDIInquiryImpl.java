@@ -90,7 +90,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindBinding(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 		
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -138,7 +139,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindBusiness(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -213,7 +215,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -315,7 +318,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindService(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 		
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -365,7 +369,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindTModel(body, false);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -410,7 +415,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetBindingDetail(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -444,7 +450,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		
 		new ValidateInquiry(null).validateGetBusinessDetail(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -484,7 +491,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetServiceDetail(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -518,7 +526,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetTModelDetail(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -560,7 +569,8 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetPublisherDetail(body);
 		
-		// TODO: Perform necessary authentication logic
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();

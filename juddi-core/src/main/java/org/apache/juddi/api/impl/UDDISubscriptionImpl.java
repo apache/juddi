@@ -59,6 +59,9 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 
 	public SubscriptionResultsList getSubscriptionResults(
 			GetSubscriptionResults body) throws DispositionReportFaultMessage {
+		
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
 		String authInfo = body.getAuthInfo();
 		
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -77,9 +80,10 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         
-        List<?> keysFound = null;
+        @SuppressWarnings("unused")
+		List<?> keysFound = null;
 
-        // TODO : find the subscriptions
+        // TODO JUDDI-153 : find the subscriptions
         
         tx.commit();
         em.close();

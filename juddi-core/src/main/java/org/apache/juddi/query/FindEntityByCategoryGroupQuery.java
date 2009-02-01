@@ -19,7 +19,6 @@ package org.apache.juddi.query;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Collections;
 import java.util.Set;
@@ -28,7 +27,6 @@ import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.juddi.config.Constants;
-import org.apache.juddi.model.BusinessEntity;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.query.util.KeyedRefGroupTModelComparator;
@@ -55,6 +53,7 @@ import org.uddi.api_v3.KeyedReferenceGroup;
  */
 public class FindEntityByCategoryGroupQuery extends EntityQuery {
 	
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(FindEntityByCategoryGroupQuery.class);
 
 	private static final String ENTITY_KEYEDREFERENCEGROUP = "KeyedReferenceGroup";
@@ -117,6 +116,7 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 		return selectSQL;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
@@ -275,7 +275,8 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 				
 				int tblCount = 0;
 				int count = 0;
-				for(KeyedReference kr : keyedRefs) {
+				//TODO- JUDDI-177 Code Review; why is kr not used in the loop?
+				for(@SuppressWarnings("unused") KeyedReference kr : keyedRefs) {
 					if (count != 0) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();

@@ -46,6 +46,7 @@ import org.uddi.api_v3.Name;
  */
 public class FindTModelByNameQuery extends TModelQuery {
 
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(FindTModelByNameQuery.class);
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, Name name, List<?> keysIn, DynamicQuery.Parameter... restrictions) {

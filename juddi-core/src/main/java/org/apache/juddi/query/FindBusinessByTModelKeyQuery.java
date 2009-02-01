@@ -48,6 +48,7 @@ import org.uddi.api_v3.TModelBag;
  */
 public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 	
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(FindBusinessByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";

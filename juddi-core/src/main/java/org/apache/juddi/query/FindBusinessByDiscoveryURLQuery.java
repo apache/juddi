@@ -42,6 +42,7 @@ import org.uddi.api_v3.DiscoveryURL;
  */
 public class FindBusinessByDiscoveryURLQuery extends BusinessEntityQuery {
 
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(FindBusinessByDiscoveryURLQuery.class);
 
 	private static final String ENTITY_NAME_CHILD = "DiscoveryUrl";

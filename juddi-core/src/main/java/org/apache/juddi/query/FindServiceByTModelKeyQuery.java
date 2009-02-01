@@ -48,6 +48,7 @@ import org.uddi.api_v3.TModelBag;
  */
 public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 	
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(FindServiceByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
