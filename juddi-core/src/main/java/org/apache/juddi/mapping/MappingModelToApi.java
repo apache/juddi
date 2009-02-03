@@ -481,10 +481,8 @@ public class MappingModelToApi {
 			apiOverviewDocContent.add(new ObjectFactory().createOverviewURL(apiOverviewURL));
 			//Set the entity on the apiOverviewDoc
 			if (apiInstanceDetails!=null) {
-				apiOverviewDocContent.add( new ObjectFactory().createInstanceDetails(apiInstanceDetails));
 				apiInstanceDetails.getContent().add(new ObjectFactory().createOverviewDoc(apiOverviewDoc));
 			} else {
-				apiOverviewDocContent.add( new ObjectFactory().createTModel(apiTModel));
 				apiTModel.getOverviewDoc().add(apiOverviewDoc);
 			}
 		}
@@ -526,6 +524,9 @@ public class MappingModelToApi {
 											org.uddi.api_v3.IdentifierBag apiIdentifierBag,
 											org.uddi.api_v3.TModel apiTModel) 
 				   throws DispositionReportFaultMessage {
+		if (modelIdentifierList == null || modelIdentifierList.size() ==0)
+			return;
+		
 		if (apiIdentifierBag == null)
 			apiIdentifierBag = new org.uddi.api_v3.IdentifierBag();
 
