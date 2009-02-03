@@ -70,6 +70,7 @@ public class UDDI_070_FindEntityTest
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
 	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
+	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
 	        	 tckFindEntity = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
@@ -80,7 +81,7 @@ public class UDDI_070_FindEntityTest
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void findEntities() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);

@@ -96,6 +96,9 @@ public class MappingModelToApi {
 										org.uddi.api_v3.DiscoveryURLs apiDiscUrls,
 										org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
+		if (modelDiscUrlList == null || modelDiscUrlList.size() == 0)
+			return;
+		
 		if (apiDiscUrls == null)
 			apiDiscUrls = new org.uddi.api_v3.DiscoveryURLs();
 
@@ -115,6 +118,9 @@ public class MappingModelToApi {
 								   org.uddi.api_v3.Contacts apiContacts,
 								   org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
+		if (modelContactList == null || modelContactList.size() == 0)
+			return;
+		
 		if (apiContacts == null)
 			apiContacts = new org.uddi.api_v3.Contacts();
 
@@ -224,6 +230,9 @@ public class MappingModelToApi {
 											  org.uddi.api_v3.IdentifierBag apiIdentifierBag,
 											  org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
+		if (modelIdentifierList == null || modelIdentifierList.size() == 0)
+			return;
+		
 		if (apiIdentifierBag == null)
 			apiIdentifierBag = new org.uddi.api_v3.IdentifierBag();
 
@@ -244,7 +253,9 @@ public class MappingModelToApi {
 										   org.uddi.api_v3.BusinessServices apiBusinessServices,
 										   org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
-
+		if (modelBusinessServiceList == null || modelBusinessServiceList.size() == 0)
+			return;
+		
 		if (apiBusinessServices == null)
 			apiBusinessServices = new org.uddi.api_v3.BusinessServices();
 
@@ -303,7 +314,9 @@ public class MappingModelToApi {
 										   org.uddi.api_v3.BindingTemplates apiBindingTemplates,
 										   org.uddi.api_v3.BusinessService apiBusinessService) 
 				   throws DispositionReportFaultMessage {
-
+		if (modelBindingTemplateList == null || modelBindingTemplateList.size() == 0)
+			return;
+		
 		if (apiBindingTemplates == null)
 			apiBindingTemplates = new org.uddi.api_v3.BindingTemplates();
 
@@ -402,6 +415,9 @@ public class MappingModelToApi {
 												org.uddi.api_v3.TModelInstanceDetails apiTModelInstDetails,
 												org.uddi.api_v3.BindingTemplate apiBindingTemplate) 
 				   throws DispositionReportFaultMessage {
+		if (modelTModelInstInfoList == null || modelTModelInstInfoList.size() == 0)
+			return;
+		
 		if (apiTModelInstDetails == null)
 			apiTModelInstDetails = new org.uddi.api_v3.TModelInstanceDetails();
 
@@ -436,6 +452,9 @@ public class MappingModelToApi {
 										  org.uddi.api_v3.InstanceDetails apiInstanceDetails,
 										  org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo) 
 				   throws DispositionReportFaultMessage {
+		if (modelTModelInstInfo == null)
+			return;
+		
 		if (apiInstanceDetails == null)
 			apiInstanceDetails = new org.uddi.api_v3.InstanceDetails();
 

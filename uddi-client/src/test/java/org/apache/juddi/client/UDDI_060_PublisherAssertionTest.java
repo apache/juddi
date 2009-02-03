@@ -76,7 +76,7 @@ public class UDDI_060_PublisherAssertionTest {
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testJoepublisherToSamSyndicator() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);

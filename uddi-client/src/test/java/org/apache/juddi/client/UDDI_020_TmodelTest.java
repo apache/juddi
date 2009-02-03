@@ -69,13 +69,13 @@ public class UDDI_020_TmodelTest {
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testJoePublisherTmodel() {
 		tckTModel.saveJoePublisherTmodel(authInfoJoe);
 		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testSamSyndicatorTmodelTest() {
 		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
 		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);

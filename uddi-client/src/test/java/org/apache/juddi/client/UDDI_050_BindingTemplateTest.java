@@ -79,7 +79,7 @@ public class UDDI_050_BindingTemplateTest
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void joepublisher() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);

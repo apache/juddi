@@ -72,7 +72,7 @@ public class UDDI_030_BusinessEntityTest {
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void testJoePublisherBusinessEntity() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -83,7 +83,7 @@ public class UDDI_030_BusinessEntityTest {
 		}
 	}	
 	
-	@Test @Ignore
+	@Test
 	public void testSamSyndicatorBusiness() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);

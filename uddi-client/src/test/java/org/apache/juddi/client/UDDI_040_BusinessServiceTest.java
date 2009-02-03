@@ -78,7 +78,7 @@ public class UDDI_040_BusinessServiceTest
 	     } 
 	}
 	
-	@Test @Ignore
+	@Test
 	public void joepublisher() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -91,7 +91,7 @@ public class UDDI_040_BusinessServiceTest
 		}
 	}
 	
-	@Test @Ignore
+	@Test
 	public void samsyndicator() {
 		try {
 			
