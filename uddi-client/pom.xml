@@ -106,7 +106,7 @@
             <phase>pre-integration-test</phase>
             <configuration>
               <tasks>
-		<unzip dest="target" src="${basedir}/../juddi-tomcat/target/juddi-tomcat-${pom.version}.zip"/>
+		<unzip dest="target" src="${project.parent.basedir}/juddi-tomcat/target/juddi-tomcat-${pom.version}.zip"/>
 	      </tasks>
             </configuration>
             <goals>
