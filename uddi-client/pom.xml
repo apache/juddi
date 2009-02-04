@@ -107,6 +107,7 @@
             <configuration>
               <tasks>
 		<unzip dest="target" src="${project.parent.basedir}/juddi-tomcat/target/juddi-tomcat-${pom.version}.zip"/>
+	        <copy file="${basedir}/server.xml" todir="target/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23/conf"/>
 	      </tasks>
             </configuration>
             <goals>
@@ -126,7 +127,7 @@
 	    <groupId>org.codehaus.cargo</groupId>
 	    <artifactId>cargo-maven2-plugin</artifactId>
             <configuration>
-	      		<wait>false</wait>
+	      	<wait>false</wait>
 	      	<container>
 		<containerId>tomcat5x</containerId>
    		<home>${basedir}/target/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23</home>
@@ -134,6 +135,10 @@
 	      <configuration>
 	      <type>existing</type>
 	      <home>${project.build.directory}/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23</home>
+	      <properties>
+	      <cargo.hostname>localhost</cargo.hostname>
+	      <cargo.servlet.port>8880</cargo.servlet.port>
+	      </properties>
 	    </configuration>
 	    </configuration>
 		<executions>
@@ -182,6 +187,6 @@
           </execution>
         </executions>
       </plugin>
-	</plugins>
+     </plugins>
   </build>
 </project>
