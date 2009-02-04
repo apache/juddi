@@ -27,6 +27,8 @@ juddi-tomcat/target: juddi-tomcat-2.0rc6.zip
 
 On successfull vote:
 
-6. Run mvn clean deploy -Prelease
+6. Create a Tag in SVN for the 2.0rc6 release
 
-7. Update the website
+7. Run mvn clean deploy -Prelease
+
+8. Update the website
