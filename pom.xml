@@ -105,6 +105,29 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/trunk/</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/trunk/</url>
   </scm>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  </profile>
+  </profiles>
+  
   <reporting>
     <plugins>
       <plugin>
@@ -120,7 +143,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jxr-maven-plugin</artifactId>
-      </plugin>
+      </plugin>  
     </plugins>
   </reporting>
   <modules>
