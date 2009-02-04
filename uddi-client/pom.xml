@@ -103,6 +103,31 @@
   </dependencies> 
   <build>
     <plugins>
+<plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+ <artifactId>maven-dependency-plugin</artifactId>
+ <version>2.1</version>
+ <executions>
+   <execution>
+     <id>copy</id>
+     <phase>package</phase>
+     <goals>
+       <goal>copy</goal>
+     </goals>
+     <configuration>
+        <artifactItems>
+          <artifactItem>
+	     <groupId>org.apache.juddi</groupId>
+             <artifactId>juddi-tomcat</artifactId>
+             <version>3.0.0.SNAPSHOT</version>
+             <type>zip</type>
+             <outputDirectory>${basedir}/target</outputDirectory> 
+          </artifactItem>
+        </artifactItems>
+     </configuration>
+   </execution>
+ </executions>
+</plugin>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -113,7 +138,7 @@
             <phase>pre-integration-test</phase>
             <configuration>
               <tasks>
-		<unzip dest="target" src="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
+		<unzip dest="target" src="target/juddi-tomcat-3.0.0.SNAPSHOT.zip"/>
 	        <copy file="${basedir}/server.xml" todir="target/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23/conf"/>
 	      </tasks>
             </configuration>
