@@ -38,6 +38,12 @@
   </pluginRepositories>
   <dependencies>
     <dependency>
+	<groupId>org.apache.juddi</groupId>
+ 	<artifactId>juddi-tomcat</artifactId>
+	<version>3.0.0.SNAPSHOT</version>
+ 	<type>zip</type>
+    </dependency>
+    <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
         <version>3.0.0.SNAPSHOT</version>
@@ -106,7 +112,7 @@
             <phase>pre-integration-test</phase>
             <configuration>
               <tasks>
-		<unzip dest="target" src="${project.parent.basedir}/juddi-tomcat/target/juddi-tomcat-${pom.version}.zip"/>
+		<unzip dest="target" src="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
 	        <copy file="${basedir}/server.xml" todir="target/juddi-tomcat-3.0.0.SNAPSHOT/apache-tomcat-5.5.23/conf"/>
 	      </tasks>
             </configuration>
