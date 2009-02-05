@@ -1,0 +1,5 @@
+This module builds a zip that includes the WARs and JARs that are
+built within the jUDDI project.     Please run the following to package
+up the dependencies: 
+
+mvn assembly:attached

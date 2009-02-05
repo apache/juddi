@@ -1,0 +1,186 @@
+
+     <h1>   Release Notes - jUDDI - Version 2.0rc6</h1>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-109'>JUDDI-109</a>] -         jUDDI server does not work with Axis2 libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-110'>JUDDI-110</a>] -         jUDDI console does not with Axis2 libraries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-126'>JUDDI-126</a>] -         Issues publishing an external taxonomy
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-128'>JUDDI-128</a>] -         Connections leak at org.apache.juddi.registry.RegistryEngine.initializeDatabase(RegistryEngine.java:249)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-129'>JUDDI-129</a>] -         Paths in juddi-web to servlets is wrong.
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-125'>JUDDI-125</a>] -         Please reference Subversion source repository on project web page http://ws.apache.org/juddi/source-repository.html
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-127'>JUDDI-127</a>] -         Add mssql database schema files to juddi
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-130'>JUDDI-130</a>] -         Add tomcat bundle w/juddi
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-48'>JUDDI-48</a>] -         Ant tasks for managing juddi repository
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-169'>JUDDI-169</a>] -         Add support the Ingres RDBMS
+</li>
+</ul>
+                
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-124'>JUDDI-124</a>] -         Remove ant scripts from the project
+</li>
+</ul>
+            
+
+
+
+     <h1>   Release Notes - jUDDI - Version 2.0rc5</h1>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-5'>JUDDI-5</a>] -         Incomplete FindQualifiers processing in queries
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-6'>JUDDI-6</a>] -         find_business by tModelBag returns unexpected results
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-10'>JUDDI-10</a>] -         Null ptr exception with find_service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-12'>JUDDI-12</a>] -         FindServiceByNameQuery doesn't obey findQualifiers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-14'>JUDDI-14</a>] -         possible issue with find_service using CategoryBag
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-30'>JUDDI-30</a>] -         jUDDI fails to deploy on JOnAS 4.1
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-31'>JUDDI-31</a>] -         Automatically generated discoveryURL is incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-33'>JUDDI-33</a>] -         findTModel returns unexpected results when trying to filter results with categoryBag
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-35'>JUDDI-35</a>] -         The bindingTemplate element does contain a categoryBag element but should not.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-36'>JUDDI-36</a>] -         jaxax.xml.registry.JAXRException:javax.xml.bind.UnmarshalException:Unexpected Element {urn:uddi-org:api_v2}:description
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-37'>JUDDI-37</a>] -         Updating an existing tModel fails, and causes it to be removed from registry
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-41'>JUDDI-41</a>] -         getTModelDetail bug
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-42'>JUDDI-42</a>] -         FindRelatedBusinesses function miss businessKey
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-43'>JUDDI-43</a>] -         IdentifierBag and CategoryBag should not be empty
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-50'>JUDDI-50</a>] -         Pb with appendOrderBy() method of juddi/datastore/jdbc/FindServiceByNameQuery?
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-57'>JUDDI-57</a>] -         delete_business | service | binding do not return problem keys in error text
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-58'>JUDDI-58</a>] -         SOAP Fault Element is not qualified with the SOAP Envelope namespace
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-60'>JUDDI-60</a>] -         Database tables accomodate only 2-character language codes
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-62'>JUDDI-62</a>] -         LANG_CODE columns in Database DDL is too short
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-63'>JUDDI-63</a>] -         jUDDI responses are missing XML heading: &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-64'>JUDDI-64</a>] -         bindingTemplate does not check empty description
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-65'>JUDDI-65</a>] -         Searching for Business &amp; Service by LANG_CODE shouldn't require exact match
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-66'>JUDDI-66</a>] -         Ambiguous DispositionReport returned when invalid XML is sent in SOAP request.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-67'>JUDDI-67</a>] -         find_service should return matches when only businessKey is provided.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-68'>JUDDI-68</a>] -         ErrInfo element not found in E_success messages.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-69'>JUDDI-69</a>] -         The SharedRelationship class is missing support for the 'direction' attribute.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-70'>JUDDI-70</a>] -         FindBindingByTModelQuery returns bindingTemplates based on logical OR of tModel keys
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-76'>JUDDI-76</a>] -         The acquireConnection method in ConnectionManager is spelled incorrectly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-81'>JUDDI-81</a>] -         UDDI v2-compliant registry should come with tModels preloaded
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-83'>JUDDI-83</a>] -         jUDDI and MySQL 4.1 ubuntu release
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-97'>JUDDI-97</a>] -         invoking a juddi method from a web service
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-98'>JUDDI-98</a>] -         Result of sort by date is in reversed order in searching function.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-103'>JUDDI-103</a>] -          Transient registry errors caused by jUDDI race condition
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-106'>JUDDI-106</a>] -         xml:lang attribute is serialized without namespace
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-107'>JUDDI-107</a>] -         Language code of the name attribute of the TModel is not handled correctly
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-111'>JUDDI-111</a>] -         PUBLISHER table definition uses NULL in DB2 Database Script
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-112'>JUDDI-112</a>] -         jUDDI console - saveBinding pulls up the wrong XML; saveBinding XML is incomplete
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-113'>JUDDI-113</a>] -         jUDDI error in a transacted environment
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-114'>JUDDI-114</a>] -         Classcast Exception on JBoss, Tomcat 6 on geronimo
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-115'>JUDDI-115</a>] -         Problems with JUDDI Oracle scripts 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-116'>JUDDI-116</a>] -         Drop statements in create_database.sql scripts should be prefixed
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-117'>JUDDI-117</a>] -         juddi / JBossESB MySQL/PostGres ACCESS_POINT_URL size
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-118'>JUDDI-118</a>] -         Create two wars - one with axis jars (tomcat) one without (jboss)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-119'>JUDDI-119</a>] -         happyjuddi.jsp looking for stale dependencies
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-59'>JUDDI-59</a>] -         Rename ADMIN column of PUBLISHER table to support Firebird SQL
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-52'>JUDDI-52</a>] -         Make Registry Specific Request in JAXR
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-82'>JUDDI-82</a>] -         Scripts to create a jUDDI DataSource using Informix Dynamic Server
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-101'>JUDDI-101</a>] -         Axis2 Support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-108'>JUDDI-108</a>] -         Add ability to configure MessageFactory from juddi.properties
+</li>
+</ul>
+                
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-102'>JUDDI-102</a>] -         Convert site generation to Maven
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-104'>JUDDI-104</a>] -         Add Maven2 support
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-105'>JUDDI-105</a>] -         Adding option to create the database at runtime
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-120'>JUDDI-120</a>] -         Update the docs, to reflect changes in setup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-121'>JUDDI-121</a>] -         Update settings from 0.9rc4 to 2.0rc5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-123'>JUDDI-123</a>] -         Rolling back Axis2 until we get a good axis2 build
+</li>
+</ul>
+            
+<h2>        Wish
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-74'>JUDDI-74</a>] -         Make the Database tables used by jUDDI to be configurable
+</li>
+</ul>

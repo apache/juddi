@@ -10,4 +10,14 @@
 		</includes>
 	</dependencySet>
   </dependencySets>
+   <fileSets>
+    <fileSet>
+      <includes>
+        <include>LICENSE</include>
+        <include>README</include>
+        <include>RELEASE-NOTES*.*</include>
+        <include>docs/**</include>
+      </includes>
+    </fileSet>
+  </fileSets>
 </assembly>

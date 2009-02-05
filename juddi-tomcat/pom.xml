@@ -9,7 +9,7 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-tomcat</artifactId>
   <version>SNAPSHOT</version>
-  <name>juddi-tomcat Maven Packaging</name>
+  <name>juddi-tomcat packaging</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
