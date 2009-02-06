@@ -12,7 +12,7 @@ elements -->
 <Resource name="jdbc/juddiDB" auth="Container" type="javax.sql.DataSource" 
 maxActive="100" maxIdle="30" maxWait="10000" username="juddi" password="123456" 
 driverClassName="org.apache.derby.jdbc.EmbeddedDriver" 
-url="jdbc:derby:juddi-derby-test-db;create=true">
+url="jdbc:derby:juddi-derby-db;create=true">
 </Resource>
 </Context> 
 
