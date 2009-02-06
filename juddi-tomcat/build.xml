@@ -25,7 +25,7 @@
 		</replace>
 		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
 			<replacetoken>#juddi.jdbcUrl=jdbc:mysql://localhost/juddi</replacetoken>
-			<replacevalue>juddi.jdbcUrl=jdbc:derby:juddi-derby-test-db;create=true</replacevalue>
+			<replacevalue>juddi.jdbcUrl=jdbc:derby:juddi-derby-db;create=true</replacevalue>
 		</replace>
 	        <replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
                         <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
