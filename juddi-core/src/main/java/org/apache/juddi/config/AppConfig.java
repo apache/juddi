@@ -32,7 +32,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.juddi.keygen.KeyGenerator;
-import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
 import org.apache.juddi.query.PersistenceManager;
@@ -117,12 +116,14 @@ public class AppConfig
 		}
 		tx.commit();
 		tx.begin();
-		UddiEntityPublisher  rootPublisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
-		List<KeyGeneratorKey> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
+
+		UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(Constants.ROOT_PUBLISHER);
+		rootPublisher.populateKeyGeneratorKeys(em);
+		List<String> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
 		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
 			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");
 		
-		String rootKeyGen = rootKeyGenList.iterator().next().getKeygenTModelKey();
+		String rootKeyGen = rootKeyGenList.iterator().next();
 		//rootKeyGen = rootKeyGen.substring((KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR).length());
 		rootKeyGen = rootKeyGen.substring(0, rootKeyGen.length() - (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).length());
 		log.debug("root partition:  " + rootKeyGen);

@@ -19,10 +19,16 @@ package org.apache.juddi.auth;
 
 import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.model.UddiEntityPublisher;
 
 /**
  * Authenticator interface. Any class implementing this interface can be invoked by
  * the AuthenticatorFactory to handle authentication of the user executing a UDDI request.
+ * 
+ * This occurs in two steps:
+ * 
+ * 1) Authenticating the user based the passed credentials
+ * 2) Identifying the user by associating either the authorizationKey or user Id with publisher information
  * 
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -31,12 +37,22 @@ public interface Authenticator {
 
 	/**
 	 * 
-	 * @param userID - userId of the user making the registry request
+	 * @param authorizedName - userId of the user making the registry request
 	 * @param cred   - some authentical creditial (i.e. a password) which can be used to 
 	 * 		           authenticate the user.
 	 * 
 	 * @return The publisherID for this user
 	 * @throws {@link AuthenticationException}, {@link FatalErrorException}
 	 */
-	String authenticate(String userID,String cred) throws AuthenticationException, FatalErrorException;
+	String authenticate(String authorizedName, String cred) throws AuthenticationException, FatalErrorException;
+	
+	/*
+	 * Either input parameter can be used to populate the publisher object
+	 * 
+	 * @param authInfo - the authorization token
+	 * @param authorizedName - the authorized Name
+	 * 
+	 * @return - The entity publisher
+	 */
+	UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException, FatalErrorException;
 }

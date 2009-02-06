@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessService xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-     businessKey="uddi:juddi.apache.org:joepublisher:businessone" serviceKey="uddi:juddi.apache.org:joepublisher:serviceone">
+     businessKey="uddi:uddi.joepublisher.com:businessone" serviceKey="uddi:uddi.joepublisher.com:serviceone">
   <name xml:lang="en">Service One</name>
   <name xml:lang="es">Servicio Uno</name>
   <description xml:lang="en">This is the description of service one.</description>
   <description xml:lang="es">Ésta es la descripción del servicio uno.</description>
   <bindingTemplates>
-    <bindingTemplate bindingKey="uddi:juddi.apache.org:joepublisher:bindingone">
+    <bindingTemplate bindingKey="uddi:uddi.joepublisher.com:bindingone">
       <description xml:lang="en">This is the access point for service one.</description>
       <accessPoint useType="endPoint">http://businessone.com/services/serviceone</accessPoint>
       <tModelInstanceDetails>
-        <tModelInstanceInfo tModelKey="uddi:businessone.com:services:serviceone:wsdlSpec">
+        <tModelInstanceInfo tModelKey="uddi:uddi.joepublisher.com:services:serviceone:wsdlSpec">
           <description xml:lang="en">The wsdl for this service: service one</description>
           <instanceDetails>
             <overviewDoc>

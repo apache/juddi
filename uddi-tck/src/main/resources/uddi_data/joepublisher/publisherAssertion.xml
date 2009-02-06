@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <publisherAssertion xmlns="urn:uddi-org:api_v3">
-  <fromKey>uddi:juddi.apache.org:joepublisher:businessone</fromKey>
-  <toKey>uddi:juddi.apache.org:samco:repository:samco</toKey>
+  <fromKey>uddi:uddi.joepublisher.com:businessone</fromKey>
+  <toKey>uddi:www.samco.com:samco</toKey>
   <keyedReference tModelKey="uddi:uddi.org:relationships" keyName="Holding Company" keyValue="parent-child" />
 </publisherAssertion>

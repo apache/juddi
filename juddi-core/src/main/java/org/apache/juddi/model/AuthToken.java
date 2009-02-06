@@ -72,7 +72,7 @@ public class AuthToken implements java.io.Serializable {
 		this.authorizedName = authorizedName;
 	}
 
-	@Column(name = "publisher_name", nullable = false)
+	@Column(name = "publisher_name")
 	public String getPublisherName() {
 		return this.publisherName;
 	}

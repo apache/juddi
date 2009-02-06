@@ -21,6 +21,8 @@ import java.util.Date;
 
 import javax.persistence.EntityManager;
 
+import org.apache.juddi.auth.Authenticator;
+import org.apache.juddi.auth.AuthenticatorFactory;
 import org.apache.juddi.error.AuthTokenRequiredException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.model.UddiEntityPublisher;
@@ -45,10 +47,16 @@ public abstract class AuthenticatedService {
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
-		UddiEntityPublisher entityPublisher = em.find(UddiEntityPublisher.class, modelAuthToken.getAuthorizedName());
+		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
+		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
+		
+		// Must make sure the returned publisher has all the necessary fields filled
 		if (entityPublisher == null)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
-		
+
+		if (entityPublisher.getAuthorizedName() == null)
+			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
+
 		// Auth token is being used.  Adjust appropriate values so that it's internal 'expiration clock' is reset.
 		modelAuthToken.setLastUsed(new Date());
 		modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);

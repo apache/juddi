@@ -17,24 +17,16 @@
 
 package org.apache.juddi.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Query;
-import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.query.util.DynamicQuery;
@@ -44,67 +36,75 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-@Entity
-@Table(name = "uddi_publisher")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class UddiEntityPublisher {
+@MappedSuperclass
+public class UddiEntityPublisher {
 	
 
 	protected String authorizedName;
-	protected List<KeyGeneratorKey> keyGeneratorKeys = new ArrayList<KeyGeneratorKey>(0);
+	private List<String> keyGeneratorKeys = null;
 
+	public UddiEntityPublisher(String authorizedName) {
+		this.authorizedName = authorizedName;
+	}
+	
 	@Id
 	@Column(name = "authorized_name", nullable = false, length = 20)
 	public String getAuthorizedName() {
 		return this.authorizedName;
 	}
-
 	public void setAuthorizedName(String authorizedName) {
 		this.authorizedName = authorizedName;
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "publisher")
-	@OrderBy
-	public List<KeyGeneratorKey> getKeyGeneratorKeys() {
-		return this.keyGeneratorKeys;
+	@Transient
+	public List<String> getKeyGeneratorKeys() {
+		return keyGeneratorKeys;
 	}
-	public void setKeyGeneratorKeys(List<KeyGeneratorKey> keyGeneratorKeys) {
+	public void setKeyGeneratorKeys(List<String> keyGeneratorKeys) {
 		this.keyGeneratorKeys = keyGeneratorKeys;
 	}
-	public void addKeyGeneratorKey(String keygenTModelKey) {
-		KeyGeneratorKey keyGenKey = new KeyGeneratorKey(this, keygenTModelKey);
-		keyGeneratorKeys.add(keyGenKey);
-	}
-	public void removeKeyGeneratorKey(EntityManager em, String keygenTModelKey) {
-		// Must use iterator to remove while iterating.
-		Iterator<KeyGeneratorKey> keyGenItr = keyGeneratorKeys.iterator();
-		while(keyGenItr.hasNext()) {
-			KeyGeneratorKey keyGen = keyGenItr.next();
-			if (keyGen.getKeygenTModelKey().equalsIgnoreCase(keygenTModelKey)) {
-				keyGenItr.remove();
-				keyGeneratorKeys.remove(keyGen);
-				em.remove(keyGen);
-			}
-		}
+
+	@SuppressWarnings("unchecked")
+	public void populateKeyGeneratorKeys(EntityManager em) {
+		DynamicQuery getKeysQuery = new DynamicQuery();
+		getKeysQuery.append("select t.entityKey from Tmodel t").pad().WHERE().pad();
+
+		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("t.authorizedName", 
+				 this.authorizedName, 
+				 DynamicQuery.PREDICATE_EQUALS);
+
+		DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter("UPPER(t.entityKey)", 
+				 (DynamicQuery.WILDCARD + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), 
+				 DynamicQuery.PREDICATE_LIKE);
+		
+		getKeysQuery.appendGroupedAnd(pubParam, keyParam);
+		Query qry = getKeysQuery.buildJPAQuery(em);
+		
+		keyGeneratorKeys = qry.getResultList();
 	}
 	
 	public boolean isOwner(UddiEntity entity){
 		boolean ret = false;
 		if (entity != null) {
-			if (entity.getPublisher().getAuthorizedName().equals(this.authorizedName))
+			if (entity.getAuthorizedName().equals(this.authorizedName))
 				ret = true;
 		}
 		return ret;
 	}
 
-	public boolean isValidPublisherKey(String key) {
+	
+	public boolean isValidPublisherKey(EntityManager em, String key) {
 		if (key == null)
 			return false;
+		
+		if (keyGeneratorKeys == null)
+			populateKeyGeneratorKeys(em);
+		
 
 		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
-		for (KeyGeneratorKey keyGenKey : keyGeneratorKeys) {
-			String keyGenPartition = keyGenKey.getKeygenTModelKey().substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+		for (String keyGenKey : keyGeneratorKeys) {
+			String keyGenPartition = keyGenKey.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (keyGenPartition.equalsIgnoreCase(keyPartition))
 				return true;
 		}
@@ -117,56 +117,83 @@ public abstract class UddiEntityPublisher {
 	 */
 	public boolean isKeyGeneratorAvailable(EntityManager em, String keygenKey) throws DispositionReportFaultMessage {
 
-		// First make sure the key is a valid UDDIv3 key
+		// First make sure the key is a valid UDDIv3 key per the specification's rules
 		ValidateUDDIKey.validateUDDIv3KeyGeneratorKey(keygenKey);
 		
-		String keyGenSuffix = (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase();
-		if (!(keygenKey.toUpperCase().endsWith(keyGenSuffix)))
-			return false;
-		
-		String partition = keygenKey.toUpperCase().substring(0, keygenKey.length() - keyGenSuffix.length());
+		String partition = keygenKey.toUpperCase().substring(0, keygenKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
 		StringTokenizer tokenizer = new StringTokenizer(partition, KeyGenerator.PARTITION_SEPARATOR);
-		// Must have 3 or more tokens as the first is the uddi scheme and the second is the domain key.
-		if (tokenizer.countTokens() < 3)
+		int tokenCount = tokenizer.countTokens();
+		// Must have 2 or more tokens as the first is the uddi scheme and the second is the domain key.
+		if (tokenCount < 2)
 			return false;
+
+		String domainPartition = (String)tokenizer.nextElement() + KeyGenerator.PARTITION_SEPARATOR + (String)tokenizer.nextElement();
 		
-		Vector<DynamicQuery.Parameter> params = new Vector<DynamicQuery.Parameter>(0);
-		String subPartition = "";
-		for (int count = 0; tokenizer.hasMoreElements(); count++) {
-			String nextToken = (String)tokenizer.nextElement();
-			if (count == 0) {
-				subPartition = nextToken;
-			}
-			else {
+		// If three or more tokens then we need to make sure the current publisher has the parent partitions.  For example, you can't register the 
+		// uddi:domain:abc:123 key generator without having the uddi:domain and uddi:domain:abc key generators.  This implicitly checks if another
+		// publisher has any of these partitions since if they do, current publisher won't have them.
+		if (tokenCount > 2) {
+			Vector<DynamicQuery.Parameter> params = new Vector<DynamicQuery.Parameter>(0);
+
+			DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("t.authorizedName", 
+					 this.authorizedName, 
+					 DynamicQuery.PREDICATE_EQUALS);
+			
+			int requiredCount = 0;
+			params.add(new DynamicQuery.Parameter("UPPER(t.entityKey)", 
+					(domainPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), 
+					DynamicQuery.PREDICATE_EQUALS));
+			requiredCount++;
+			
+			String subPartition = domainPartition;
+			while (tokenizer.hasMoreElements()) {
+				// Don't need to add the last token as it is the proposed key generator.
+				if (tokenizer.countTokens() == 1)
+					break;
+
+				String nextToken = (String)tokenizer.nextElement();
 				subPartition = subPartition + KeyGenerator.PARTITION_SEPARATOR + nextToken;
-				if (count > 1) {
-					DynamicQuery.Parameter param = new DynamicQuery.Parameter("UPPER(k.keygenTModelKey)", 
-																			  subPartition + DynamicQuery.WILDCARD, 
-																			  DynamicQuery.PREDICATE_LIKE);
-					params.add(param);
-				}
+				DynamicQuery.Parameter param = new DynamicQuery.Parameter("UPPER(t.entityKey)", 
+						(subPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), 
+						DynamicQuery.PREDICATE_EQUALS);
+				params.add(param);
+				requiredCount++;
 			}
+			
+			DynamicQuery checkParentKeyQry = new DynamicQuery();
+			checkParentKeyQry.append("select COUNT(t.entityKey) from Tmodel t").pad();
+
+			checkParentKeyQry.WHERE().pad().appendGroupedAnd(pubParam);
+			checkParentKeyQry.AND().pad().appendGroupedOr(params.toArray(new DynamicQuery.Parameter[0]));
+			
+			Query qry = checkParentKeyQry.buildJPAQuery(em);			
+			Number resultCount = (Number)qry.getSingleResult();
+			if (resultCount.longValue() != requiredCount)
+				return false;
 		}
+		else {
+			// If only two tokens, then a domain key generator is being checked.  A domain key generator can only be registered if no other publishers
+			// own it.  For example, if trying to register the uddi:domain:abc:123 key then uddi:domain cannot be owned by another publisher.
+			DynamicQuery.Parameter notPubParam = new DynamicQuery.Parameter("t.authorizedName", 
+					 this.authorizedName, 
+					 DynamicQuery.PREDICATE_NOTEQUALS);
 
-		if (params.size() == 0)
-			return false;
+			DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter("UPPER(t.entityKey)", 
+					(domainPartition + KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), 
+					DynamicQuery.PREDICATE_EQUALS);
+			
+			DynamicQuery checkDomainKeyQry = new DynamicQuery();
+			checkDomainKeyQry.append("select t.entityKey from Tmodel t").pad();
+			
+			checkDomainKeyQry.WHERE().pad().appendGroupedAnd(notPubParam, keyParam);
 
-		DynamicQuery checkTokensQry = new DynamicQuery();
-		checkTokensQry.append("select k.keygenTModelKey from KeyGeneratorKey k ");
-
-		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("k.publisher.authorizedName", 
-																	 this.authorizedName, 
-																	 DynamicQuery.PREDICATE_NOTEQUALS);
-		checkTokensQry.WHERE().pad().appendGroupedAnd(pubParam).pad();
-		checkTokensQry.AND().pad();
-		checkTokensQry.appendGroupedOr(params.toArray(new DynamicQuery.Parameter[0])).pad();
-
-		Query qry = checkTokensQry.buildJPAQuery(em);
-		List<?> obj = qry.getResultList();
-		// If even one of the partitions are taken by another publisher, then the key generator is unavailable
-		if (obj != null && obj.size() > 0)
-			return false;
+			Query qry = checkDomainKeyQry.buildJPAQuery(em);
+			List<?> obj = qry.getResultList();
+			// If there are results then another publisher has the domain key and therefore the key generator is unavailable
+			if (obj != null && obj.size() > 0)
+				return false;
+		}
 		
 		return true;
 	}

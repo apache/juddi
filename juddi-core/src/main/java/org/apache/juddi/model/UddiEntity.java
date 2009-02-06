@@ -19,12 +19,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,7 +39,7 @@ public abstract class UddiEntity {
 	protected Date modified;
 	protected Date modifiedIncludingChildren;
 	protected String nodeId;
-	protected UddiEntityPublisher publisher;
+	protected String authorizedName;
 	
 	@Id
 	@Column(name = "entity_key", nullable = false, length = 255)
@@ -87,14 +84,14 @@ public abstract class UddiEntity {
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
 	}
+
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "authorized_name", nullable = false)
-	public UddiEntityPublisher getPublisher() {
-		return this.publisher;
+	@Column(name = "authorized_name", nullable=false, length = 255)
+	public String getAuthorizedName() {
+		return authorizedName;
 	}
-	public void setPublisher(UddiEntityPublisher publisher) {
-		this.publisher = publisher;
+	public void setAuthorizedName(String authorizedName) {
+		this.authorizedName = authorizedName;
 	}
 
 }

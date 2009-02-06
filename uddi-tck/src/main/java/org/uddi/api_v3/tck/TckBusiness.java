@@ -34,9 +34,9 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckBusiness 
 {
 	final static String JOE_BUSINESS_XML        = "uddi_data/joepublisher/businessEntity.xml";
-    final static String JOE_BUSINESS_KEY        = "uddi:juddi.apache.org:joepublisher:businessone";
+    final static String JOE_BUSINESS_KEY        = "uddi:uddi.joepublisher.com:businessone";
     final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
-    final static String SAM_BUSINESS_KEY        = "uddi:juddi.apache.org:samco:repository:samco";
+    final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
     
 	private Logger logger = Logger.getLogger(this.getClass());
 	private UDDIPublicationPortType publication = null;

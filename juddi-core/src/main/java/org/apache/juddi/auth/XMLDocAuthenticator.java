@@ -34,6 +34,7 @@ import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.UnknownUserException;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 
@@ -54,6 +55,7 @@ import org.apache.log4j.helpers.Loader;
  *
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class XMLDocAuthenticator implements Authenticator
 {
@@ -119,4 +121,9 @@ public class XMLDocAuthenticator implements Authenticator
 
 		return userID;
 	}
+	
+	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
+		return new UddiEntityPublisher(authorizedName);
+	}
+
 }

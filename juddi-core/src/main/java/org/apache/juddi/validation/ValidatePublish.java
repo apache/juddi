@@ -333,7 +333,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 				// Validate key and then check to see that the proposed key is valid for this publisher
 				ValidateUDDIKey.validateUDDIv3Key(entityKey);
-				if (!publisher.isValidPublisherKey(entityKey))
+				if (!publisher.isValidPublisherKey(em, entityKey))
 					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 			}
@@ -454,7 +454,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 					// Validate key and then check to see that the proposed key is valid for this publisher
 					ValidateUDDIKey.validateUDDIv3Key(entityKey);
-					if (!publisher.isValidPublisherKey(entityKey))
+					if (!publisher.isValidPublisherKey(em, entityKey))
 						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 				}
@@ -572,7 +572,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 				// Validate key and then check to see that the proposed key is valid for this publisher
 				ValidateUDDIKey.validateUDDIv3Key(entityKey);
-				if (!publisher.isValidPublisherKey(entityKey))
+				if (!publisher.isValidPublisherKey(em, entityKey))
 					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 
 			}
@@ -659,7 +659,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 				else {
 					// If not a key generator, then simply validate key and then check to see that the proposed key is valid for this publisher
 					ValidateUDDIKey.validateUDDIv3Key(entityKey);
-					if (!publisher.isValidPublisherKey(entityKey))
+					if (!publisher.isValidPublisherKey(em, entityKey))
 						throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 				}
 			}

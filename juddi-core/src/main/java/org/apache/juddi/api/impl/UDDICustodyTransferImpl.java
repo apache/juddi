@@ -176,18 +176,18 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 		List<String> keyList = keyBag.getKey();
 		for (String key : keyList) {
 			UddiEntity uddiEntity = em.find(UddiEntity.class, key);
-			uddiEntity.setPublisher(publisher);
+			uddiEntity.setAuthorizedName(publisher.getAuthorizedName());
 			
 			if (uddiEntity instanceof BusinessEntity) {
 				BusinessEntity be = (BusinessEntity)uddiEntity;
 				
 				List<BusinessService> bsList = be.getBusinessServices();
 				for (BusinessService bs : bsList) {
-					bs.setPublisher(publisher);
+					bs.setAuthorizedName(publisher.getAuthorizedName());
 					
 					List<BindingTemplate> btList = bs.getBindingTemplates();
 					for (BindingTemplate bt : btList)
-						bt.setPublisher(publisher);
+						bt.setAuthorizedName(publisher.getAuthorizedName());
 				}
 			}
 		}

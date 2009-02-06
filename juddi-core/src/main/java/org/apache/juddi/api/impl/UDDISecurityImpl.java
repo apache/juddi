@@ -35,7 +35,6 @@ import org.apache.juddi.auth.Authenticator;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.model.Publisher;
 import org.apache.juddi.query.PersistenceManager;
 
 /**
@@ -83,10 +82,6 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
-		// Verify that that user has a publisher account and thus the authority to publish
-		Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
-		if (publisher == null)
-			throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", publisherId));
 				
 		// Generate auth token and store it!
 		String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
@@ -96,7 +91,6 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			modelAuthToken.setCreated(new Date());
 			modelAuthToken.setLastUsed(new Date());
 			modelAuthToken.setAuthorizedName(publisherId);
-			modelAuthToken.setPublisherName(publisher.getPublisherName());
 			modelAuthToken.setNumberOfUses(0);
 			modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
 			

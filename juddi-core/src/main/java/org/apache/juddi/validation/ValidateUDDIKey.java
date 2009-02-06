@@ -23,12 +23,8 @@ import java.util.StringTokenizer;
 import javax.xml.bind.JAXBElement;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.keygen.KeyGenerator;
-import org.apache.juddi.config.AppConfig;
-import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ValueNotAllowedException;
 
@@ -38,39 +34,32 @@ import org.apache.juddi.error.ValueNotAllowedException;
 public class ValidateUDDIKey {
 
 	public static void validateUDDIv3Key(String key) throws DispositionReportFaultMessage {
-		String rootPartition = "";
-		try 
-		{ rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION); }
-		catch(ConfigurationException ce) 
-		{ throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval", Property.JUDDI_ROOT_PARTITION));}
-
-		validateUDDIv3Key(key, rootPartition);
-	}
-
-	public static void validateUDDIv3Key(String key, String rootPartition) throws DispositionReportFaultMessage {
 		if (key == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey"));
 		
 		String keyToTest = key.trim();
 		if (keyToTest.endsWith(KeyGenerator.PARTITION_SEPARATOR))
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-		
-		// Key must be prefixed with the root partition
-		if (!keyToTest.toUpperCase().startsWith(rootPartition.toUpperCase()))
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 
-		// Key must have at least one more partition beyond the root.
-		keyToTest = keyToTest.substring(rootPartition.length());
-		if (keyToTest.length() == 0 || !keyToTest.startsWith(KeyGenerator.PARTITION_SEPARATOR))
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
-		
-		keyToTest = keyToTest.substring(1);
 		StringTokenizer tokenizer = new StringTokenizer(key.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
+		int tokensCount = tokenizer.countTokens();
+		if(tokensCount <= 1)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 		for(int count = 0; tokenizer.hasMoreTokens(); count++) {
 			String nextToken = tokenizer.nextToken();
 
-			if (!isValidKSS(nextToken))
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+			if (count == 0) {
+				if (!ValidateUDDIKey.isValidUDDIScheme(nextToken))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+			}
+			else if (count == 1) {
+				if(!ValidateUDDIKey.isValidDomainKey(nextToken))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+			}
+			else {
+				if (!isValidKSS(nextToken))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+			}
 		}
 	}
 	

@@ -34,9 +34,9 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckTModel 
 {
 	final static String JOE_PUBLISHER_TMODEL_XML      = "uddi_data/joepublisher/tModelKeyGen.xml";
-    final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:juddi.apache.org:joepublisher:KEYGENERATOR";
+    final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:uddi.joepublisher.com:KEYGENERATOR";
     final static String SAM_SYNDICATOR_TMODEL_XML     = "uddi_data/samsyndicator/tModelKeyGen.xml";
-    final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:juddi.apache.org:samco:repository:keygenerator";
+    final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
  
     
 	private Logger logger = Logger.getLogger(this.getClass());

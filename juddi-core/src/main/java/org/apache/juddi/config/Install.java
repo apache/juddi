@@ -35,7 +35,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.api.datatype.Publisher;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -44,7 +43,6 @@ import org.apache.juddi.error.KeyUnavailableException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
-import org.apache.juddi.model.KeyGeneratorKey;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidatePublish;
@@ -105,14 +103,15 @@ public class Install {
 			
 			rootPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_PUBLISHER);
 			uddiPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_PUBLISHER);
-			//Inserting 2 test publishers
+			// TODO:  These do not belong here
+			// Inserting 2 test publishers
 			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_JOE_PUBLISHER);
 			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_SSYNDICATOR);
 
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
 			rootBusinessEntity.setBusinessKey(nodeId);
-			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher);
+			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher, rootPartition);
 
 			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher, nodeId);
 			
@@ -172,11 +171,11 @@ public class Install {
 
 	public static boolean alreadyInstalled(EntityManager em) {
 		
-		UddiEntityPublisher publisher = em.find(UddiEntityPublisher.class, Constants.ROOT_PUBLISHER);
+		org.apache.juddi.model.Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, Constants.ROOT_PUBLISHER);
 		if (publisher != null)
 			return true;
 
-		publisher = em.find(UddiEntityPublisher.class, Constants.UDDI_PUBLISHER);
+		publisher = em.find(org.apache.juddi.model.Publisher.class, Constants.UDDI_PUBLISHER);
 		if (publisher != null)
 			return true;
 		
@@ -219,7 +218,7 @@ public class Install {
 			result = rootPartition + KeyGenerator.PARTITION_SEPARATOR + UUID.randomUUID();
 		}
 		else {
-			ValidateUDDIKey.validateUDDIv3Key(result, rootPartition);
+			ValidateUDDIKey.validateUDDIv3Key(result);
 			String keyPartition = result.substring(0, result.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (!rootPartition.equalsIgnoreCase(keyPartition))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", userNodeId));
@@ -244,15 +243,15 @@ public class Install {
 	}
 	
 	
-	private static String installRootBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, UddiEntityPublisher rootPublisher) 
+	private static String installRootBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, UddiEntityPublisher rootPublisher, String rootPartition) 
 	throws JAXBException, DispositionReportFaultMessage, IOException {
 		
-		validateRootBusinessEntity(rootBusinessEntity, rootPublisher);
+		validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition);
 		
 		org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity);
 		
-		modelBusinessEntity.setPublisher(rootPublisher);
+		modelBusinessEntity.setAuthorizedName(rootPublisher.getAuthorizedName());
 		
 		Date now = new Date();
 		modelBusinessEntity.setCreated(now);
@@ -261,7 +260,7 @@ public class Install {
 		modelBusinessEntity.setNodeId(modelBusinessEntity.getEntityKey());
 		
 		for (org.apache.juddi.model.BusinessService service : modelBusinessEntity.getBusinessServices()) {
-			service.setPublisher(rootPublisher);
+			service.setAuthorizedName(rootPublisher.getAuthorizedName());
 			
 			service.setCreated(now);
 			service.setModified(now);
@@ -269,7 +268,7 @@ public class Install {
 			service.setNodeId(modelBusinessEntity.getEntityKey());
 			
 			for (org.apache.juddi.model.BindingTemplate binding : service.getBindingTemplates()) {
-				binding.setPublisher(rootPublisher);
+				binding.setAuthorizedName(rootPublisher.getAuthorizedName());
 				
 				binding.setCreated(now);
 				binding.setModified(now);
@@ -287,15 +286,12 @@ public class Install {
 	
 	// A watered down version of ValidatePublish's validateBusinessEntity, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBusinessEntity(org.uddi.api_v3.BusinessEntity businessEntity, UddiEntityPublisher rootPublisher) 
+	private static void validateRootBusinessEntity(org.uddi.api_v3.BusinessEntity businessEntity, UddiEntityPublisher rootPublisher, String rootPartition) 
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
 		if (businessEntity == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.businessentity.NullInput"));
-		
-		String rootPartition = rootPublisher.getKeyGeneratorKeys().iterator().next().getKeygenTModelKey();
-		rootPartition = rootPartition.substring(0, rootPartition.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
 		// The business key should already be set to the previously calculated and validated nodeId.  This validation is unnecessary but kept for 
 		// symmetry with the other entity validations.
@@ -305,8 +301,9 @@ public class Install {
 			businessEntity.setBusinessKey(entityKey);
 		}
 		else {
-			ValidateUDDIKey.validateUDDIv3Key(entityKey, rootPartition);
-			if (!rootPublisher.isValidPublisherKey(entityKey))
+			ValidateUDDIKey.validateUDDIv3Key(entityKey);
+			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+			if (!rootPartition.equalsIgnoreCase(keyPartition))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 
@@ -325,7 +322,7 @@ public class Install {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.businessservices.NoInput"));
 			
 			for (org.uddi.api_v3.BusinessService businessService : businessServiceList) {
-				validateRootBusinessService(businessService, businessEntity, rootPublisher);
+				validateRootBusinessService(businessService, businessEntity, rootPublisher, rootPartition);
 			}
 		}
 
@@ -333,7 +330,7 @@ public class Install {
 	
 	// A watered down version of ValidatePublish's validateBusinessService, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBusinessService(org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent, UddiEntityPublisher rootPublisher) 
+	private static void validateRootBusinessService(org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent, UddiEntityPublisher rootPublisher, String rootPartition) 
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -347,9 +344,6 @@ public class Install {
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
 		}
 		
-		String rootPartition = rootPublisher.getKeyGeneratorKeys().iterator().next().getKeygenTModelKey();
-		rootPartition = rootPartition.substring(0, rootPartition.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
-
 		// Retrieve the service's passed key
 		String entityKey = businessService.getServiceKey();
 		if (entityKey == null || entityKey.length() == 0) {
@@ -357,8 +351,9 @@ public class Install {
 			businessService.setServiceKey(entityKey);
 		}
 		else {
-			ValidateUDDIKey.validateUDDIv3Key(entityKey, rootPartition);
-			if (!rootPublisher.isValidPublisherKey(entityKey))
+			ValidateUDDIKey.validateUDDIv3Key(entityKey);
+			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+			if (!rootPartition.equalsIgnoreCase(keyPartition))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 		
@@ -374,14 +369,14 @@ public class Install {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.bindingtemplates.NoInput"));
 			
 			for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
-				validateRootBindingTemplate(bindingTemplate, businessService, rootPublisher);
+				validateRootBindingTemplate(bindingTemplate, businessService, rootPublisher, rootPartition);
 			}
 		}
 	}
 
 	// A watered down version of ValidatePublish's validatBindingTemplate, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBindingTemplate(org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent, UddiEntityPublisher rootPublisher) 
+	private static void validateRootBindingTemplate(org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent, UddiEntityPublisher rootPublisher, String rootPartition) 
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -395,9 +390,6 @@ public class Install {
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentServiceNotFound", parentKey));
 		}
 		
-		String rootPartition = rootPublisher.getKeyGeneratorKeys().iterator().next().getKeygenTModelKey();
-		rootPartition = rootPartition.substring(0, rootPartition.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
-
 		// Retrieve the service's passed key
 		String entityKey = bindingTemplate.getBindingKey();
 		if (entityKey == null || entityKey.length() == 0) {
@@ -405,8 +397,9 @@ public class Install {
 			bindingTemplate.setBindingKey(entityKey);
 		}
 		else {
-			ValidateUDDIKey.validateUDDIv3Key(entityKey, rootPartition);
-			if (!rootPublisher.isValidPublisherKey(entityKey))
+			ValidateUDDIKey.validateUDDIv3Key(entityKey);
+			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+			if (!rootPartition.equalsIgnoreCase(keyPartition))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.BadPartition", entityKey));
 		}
 		
@@ -428,7 +421,7 @@ public class Install {
 	
 	private static UddiEntityPublisher installPublisher(EntityManager em, String resource) 
 		throws JAXBException, DispositionReportFaultMessage, IOException {
-		Publisher apiPub = (Publisher)buildEntityFromDoc(resource, "org.apache.juddi.api.datatype");
+		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildEntityFromDoc(resource, "org.apache.juddi.api.datatype");
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
 		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		em.persist(modelPub);
@@ -447,7 +440,7 @@ public class Install {
 					org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 					MappingApiToModel.mapTModel(apiTModel, modelTModel);
 
-					modelTModel.setPublisher(publisher);
+					modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 					
 					Date now = new Date();
 					modelTModel.setCreated(now);
@@ -476,7 +469,7 @@ public class Install {
 		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 		MappingApiToModel.mapTModel(apiTModel, modelTModel);
 		
-		modelTModel.setPublisher(publisher);
+		modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 
 		Date now = new Date();
 		modelTModel.setCreated(now);
@@ -485,11 +478,6 @@ public class Install {
 		modelTModel.setNodeId(nodeId);
 		
 		em.persist(modelTModel);
-		
-		KeyGeneratorKey keyGenKey = new KeyGeneratorKey();
-		keyGenKey.setPublisher(publisher);
-		keyGenKey.setKeygenTModelKey(modelTModel.getEntityKey());
-		publisher.getKeyGeneratorKeys().add(keyGenKey);
 		
 	}
 	

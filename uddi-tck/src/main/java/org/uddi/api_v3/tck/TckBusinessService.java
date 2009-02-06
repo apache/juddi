@@ -34,9 +34,9 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckBusinessService 
 {
 	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
-    final static String JOE_SERVICE_KEY              = "uddi:juddi.apache.org:joepublisher:serviceone";
+    final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
     final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
-    final static String SAM_SERVICE_KEY              = "uddi:juddi.apache.org:samco:repository:listingservice";
+    final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
    
 	private Logger logger = Logger.getLogger(this.getClass());
 	private UDDIPublicationPortType publication = null;

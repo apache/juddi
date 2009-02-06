@@ -34,7 +34,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckBindingTemplate 
 {
 	final static String JOE_BINDING_XML               = "uddi_data/joepublisher/bindingTemplate.xml";
-    final static String JOE_BINDING_KEY               = "uddi:juddi.apache.org:joepublisher:bindingtwo";
+    final static String JOE_BINDING_KEY               = "uddi:uddi.joepublisher.com:bindingtwo";
   
 	private Logger logger = Logger.getLogger(this.getClass());
 	private UDDIPublicationPortType publication = null;

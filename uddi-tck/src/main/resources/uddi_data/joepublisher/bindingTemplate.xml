@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bindingTemplate xmlns="urn:uddi-org:api_v3" serviceKey="uddi:juddi.apache.org:joepublisher:serviceone" bindingKey="uddi:juddi.apache.org:joepublisher:bindingtwo">
+<bindingTemplate xmlns="urn:uddi-org:api_v3" serviceKey="uddi:uddi.joepublisher.com:serviceone" bindingKey="uddi:uddi.joepublisher.com:bindingtwo">
   <description xml:lang="en">This is the secure access point for service one</description>
   <accessPoint useType="endPoint">https://businessone.com/services/serviceone</accessPoint>
   <tModelInstanceDetails>

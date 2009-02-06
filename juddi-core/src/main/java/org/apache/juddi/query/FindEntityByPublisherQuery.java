@@ -37,7 +37,7 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 
 	private Logger log = Logger.getLogger(FindEntityByPublisherQuery.class);
 
-	public static final String PUBLISHER_ID_FIELD = "publisher.authorizedName";
+	public static final String AUTHORIZED_NAME_FIELD = "authorizedName";
 	
 	private String entityName;
 	private String entityAlias;
@@ -100,7 +100,7 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 	 */
 	public void appendConditions(DynamicQuery qry, FindQualifiers fq, UddiEntityPublisher publisher) {
 		qry.WHERE().pad();
-		qry.appendGroupedAnd(new DynamicQuery.Parameter(entityAlias + "." + PUBLISHER_ID_FIELD, publisher.getAuthorizedName(), DynamicQuery.PREDICATE_EQUALS));
+		qry.appendGroupedAnd(new DynamicQuery.Parameter(entityAlias + "." + AUTHORIZED_NAME_FIELD, publisher.getAuthorizedName(), DynamicQuery.PREDICATE_EQUALS));
 	}
 		
 }

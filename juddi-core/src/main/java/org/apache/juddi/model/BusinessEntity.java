@@ -54,7 +54,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 		this.modified = modified;
 	}
 	public BusinessEntity(String entityKey, String authorizedName, 
-			UddiEntityPublisher publisher, String operator,
+			String operator,
 			Date modified, List<Contact> contacts,
 			List<BusinessIdentifier> businessIdentifiers,
 			List<PublisherAssertion> publisherAssertionsForFromKey,
@@ -64,7 +64,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 			List<BusinessService> businessServices,
 			List<BusinessDescr> businessDescrs) {
 		this.entityKey = entityKey;
-		this.publisher = publisher;
+		this.authorizedName = authorizedName;
 		this.modified = modified;
 		this.contacts = contacts;
 		this.businessIdentifiers = businessIdentifiers;

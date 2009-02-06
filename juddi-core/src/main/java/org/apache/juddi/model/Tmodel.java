@@ -54,14 +54,14 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.name = name;
 		this.modified = modified;
 	}
-	public Tmodel(String entityKey, String authorizedName, UddiEntityPublisher publisher, String operator,
+	public Tmodel(String entityKey, String authorizedName, String operator,
 			String name, String langCode, boolean deleted, Date modified,
 			List<OverviewDoc> overviewDocs,
 			List<TmodelDescr> tmodelDescrs,
 			List<TmodelIdentifier> tmodelIdentifiers,
 			TmodelCategoryBag categoryBag) {
 		this.entityKey = entityKey;
-		this.publisher = publisher;
+		this.authorizedName = authorizedName;
 		this.name = name;
 		this.langCode = langCode;
 		this.deleted = deleted;

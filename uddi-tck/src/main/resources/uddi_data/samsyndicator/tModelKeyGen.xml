@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tModel tModelKey="uddi:juddi.apache.org:samco:repository:keygenerator" xmlns="urn:uddi-org:api_v3">
+<tModel tModelKey="uddi:www.samco.com:keygenerator" xmlns="urn:uddi-org:api_v3">
   <name>Sam Syndicator's Key Generator</name>
   <description>This is the key generator for Sam Syndicator's UDDI entities!</description>
   <overviewDoc>
