@@ -6,20 +6,19 @@
 	<target name="unzip-tomcat">
 		<mkdir dir="${basedir}/target/tomcat"/>
 
-		<unzip dest="${basedir}/target/tomcat" src="${dependency.tomcat.zip}"/>
-		<copy file="${dependency.juddi.war}" tofile="${webapps.dir}/juddi.war"/>
-		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddi.war}"/>
-		<copy file="${dependency.soap-console.war}" tofile="${webapps.dir}/juddi-console.war"/>
+		<unzip dest="${basedir}/target/tomcat" src="target/apache-tomcat-5.5.23.zip"/>
+		<unzip dest="${webapps.dir}/juddi" src="target/juddi-web-2.0rc6.war"/>
+		<copy file="${basedir}/target/juddi-soapconsole-2.0rc6.war" tofile="${webapps.dir}/juddi-console.war"/>
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
 	
 		<copy file="juddi.xml" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/conf/Catalina/localhost"/>
-		<copy file="${dependency.derby.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis-saaj.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis-jaxrpc.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.commons-discovery.jar}" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/target/derby-10.1.2.1.jar" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/target/axis-1.4.jar" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/target/axis-saaj-1.4.jar" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/target/axis-jaxrpc-1.4.jar" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/target/commons-discovery-0.2.jar" todir="${common.lib.dir}"/>
 		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
 			<replacetoken>juddi-sql/mysql</replacetoken>
 			<replacevalue>juddi-sql/derby</replacevalue>
