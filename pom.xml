@@ -75,6 +75,12 @@
       <organization>ASF</organization>
     </developer>
     <developer>
+      <id>tcunningham</id>
+      <name>Tom Cunningham</name>
+      <email>tcunningham AT apache.org</email>
+      <organization>ASF</organization>
+    </developer>
+    <developer>
       <id>acutright</id>
       <name>Andy Cutright</name>
       <email>acutright AT apache.org</email>
