@@ -38,6 +38,7 @@ under the License.
 	      <li>Platform Independent</li>
 	      <li>Supports for JDK 1.3.1 and later</li>
 	      <li>UDDI version 2.0 compliant implementation</li>
+	      <li>UDDI version 3.0 support is under active developement</li>
 	      <li>Use with any relational database that supports ANSI standard SQL (MySQL, DB2, Sybase, JDataStore, HSQLDB, etc.)</li>
 	      <li>Deployable on any Java application server that supports the Servlet 2.3 specification (Jakarta Tomcat, JOnAS, WebSphere, WebLogic, Borland Enterprise Server, JRun, etc.)</li>
 	      <li>jUDDI registry supports a clustered deployment configuration.</li>
@@ -46,6 +47,8 @@ under the License.
 	  </section>
       
 	  <section name="News">
+	    <p><strong>Feb 10, 2009</strong> Version 2.0rc6 is now available.</p>
+	    <p><strong>December 13, 2007</strong> Version 2.0rc5 is now available.</p>
 	    <p><strong>June 7, 2005</strong> Version 0.9rc4 is now available.</p>
 	    <p><strong>July 2, 2004</strong> Version 0.9rc3 is now available.</p>
 	    <p><strong>June 29, 2004</strong> Version 0.9rc2 is now available.</p>
@@ -67,12 +70,15 @@ under the License.
           be maintained for different purposes in different contexts. UDDI is a 
           cross-industry effort driven by major platform and software providers, 
           as well as marketplace operators and e-business leaders within the 
-          OASIS standards consortium.
+          OASIS standards consortium. jUDDI v3 is underactive development and supports
+          the UDDI v3 API. An alpha release is planned to come out early 2009.
         </p>
         <p>Additional information regarding UDDI can be found 
           at <a href="http://www.uddi.org/">UDDI.org</a>.
         </p>
       </section>
+      
+      
       
   </body>
 </document>
