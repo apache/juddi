@@ -3,12 +3,12 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.0.SNAPSHOT</version>
+    <version>3.0.0.alpha</version>
   </parent> 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.juddi</groupId>
   <artifactId>uddi-tck</artifactId>
-  <version>3.0.0.SNAPSHOT</version>
+  <version>3.0.0.alpha</version>
   <name>UDDI Technical Compatibility Kit (TCK)</name>
   <packaging>jar</packaging>  
   <repositories>
@@ -40,7 +40,7 @@
     <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
-        <version>3.0.0.SNAPSHOT</version>
+        <version>3.0.0.alpha</version>
      </dependency>
     <dependency>
         <groupId>log4j</groupId>
