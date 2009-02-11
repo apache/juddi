@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.api.impl.API_010_PublisherTest;
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.error.AuthenticationException;
@@ -28,7 +29,6 @@ import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,15 +41,18 @@ public class AuthenticatorTest
 	 * The DefaultAuthenticator is basically a pass-through.
 	 * @throws ConfigurationException
 	 */
-	@Test @Ignore
+	@Test
 	public void testDefaultAuthenticator()
 	{
 		Authenticator auth = new JUDDIAuthenticator();
 		try {
-			auth.authenticate("anou_mana","password");
-			auth.authenticate("anou_mana","badpass");
-			auth.authenticate("bozo","clown");
-			auth.authenticate("sviens","password");
+			API_010_PublisherTest api010 = new API_010_PublisherTest();
+			api010.saveJoePublisher();
+			api010.saveSamSyndicator();
+
+			auth.authenticate("joepublisher","password");
+			auth.authenticate("ssyndicator","badpass");
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");

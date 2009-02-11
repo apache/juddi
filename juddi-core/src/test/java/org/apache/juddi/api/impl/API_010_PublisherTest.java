@@ -74,7 +74,7 @@ public class API_010_PublisherTest {
 	 * @return - true if the published did not exist already, 
 	 * 		   - false in all other cases.
 	 */
-	protected boolean saveJoePublisher() {
+	public boolean saveJoePublisher() {
 		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
 			savePublisher(TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_XML);
 			return true;
@@ -86,14 +86,14 @@ public class API_010_PublisherTest {
 	 * Removes Joe Publisher from the database, this will fail if there
 	 * are child objects attached; think Services etc.
 	 */
-	protected void deleteJoePublisher() {
+	public void deleteJoePublisher() {
 		deletePublisher(TckPublisher.JOE_PUBLISHER_ID);
 	}
 	/**
 	 * Persists Sam Syndicator to the database.
 	 * @return publisherId
 	 */
-	protected String saveSamSyndicator() {
+	public String saveSamSyndicator() {
 		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
 			savePublisher(TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_XML);
 		}
@@ -103,7 +103,7 @@ public class API_010_PublisherTest {
 	 * Removes Sam Syndicator from the database, this will fail if there
 	 * are child objects attached; think Services etc.
 	 */
-	protected void deleteSamSyndicator() {
+	public void deleteSamSyndicator() {
 		deletePublisher(TckPublisher.SAM_SYNDICATOR_ID);
 	}
 	
