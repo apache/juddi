@@ -17,7 +17,7 @@
 		<tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.alpha</a></td>
           <td>Feb 13, 2009</td>
-          <td>Unstable Preview Release for Version 2.0.</td>
+          <td>Unstable Preview Release for Version 3.0.</td>
         </tr> 
         <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC6/">2.0rc6</a></td>
@@ -51,12 +51,7 @@
           <td>Release Candidate #1 for Version 0.9.</td>
         </tr>
 
-      </table>    
-
-      <note>
-       For nightly builds or nightly snapshots of the SVN tree see 
-       the <link href="interim.html">Interim Drops</link> page.
-	  </note>
+      </table>
 		
     </section>
   </body>
