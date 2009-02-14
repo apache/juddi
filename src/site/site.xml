@@ -72,6 +72,7 @@
     			<item name="Who We Are" href="who.html" description="Who We Are"/>
     			<item name="Committer Notes" href="committers.html" description="Committer Notes"/>
     			<item name="Legal" href="legal.html" description="Legal Stuff"/>
+    			<item name="License" href="license.html" description="Apache 2.0 License"/>
   			</item>
         </menu>
 
