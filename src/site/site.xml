@@ -46,7 +46,6 @@
             <item name="Welcome" href="index.html"/>
             <item name="Get jUDDI">
                 <item name="Releases" href="releases.html"/>
-                <item name="Interim" href="interim.html"/>
                 <item name="Source Code" href="source-repository.html"/>
             </item>
             <item name="Participation" href="participate.html" description="Participation"/>
@@ -68,7 +67,6 @@
             <item name="Related Projects">
     			<item name="Apache Axis" href="http://ws.apache.org/axis/" description="Apache Axis"/>
     			<item name="Apache Scout" href="http://ws.apache.org/scout/" description="Apache Scout"/>
-    			<item name="UDDI4J" href="http://www-124.ibm.com/developerworks/oss/uddi4j/" description="UDDI4J"/>
   			</item>
   			<item name="Misc">
     			<item name="Who We Are" href="who.html" description="Who We Are"/>

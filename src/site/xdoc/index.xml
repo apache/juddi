@@ -32,12 +32,13 @@ under the License.
 	      </p>
 	  </section>
     
-	  <section name="jUDDI Features">
+	 <section name="jUDDI Features">
 	    <ul>
 	      <li>Open Source</li>
 	      <li>Platform Independent</li>
 	      <li>Supports for JDK 1.3.1 and later</li>
-	      <li>UDDI version 2.0 compliant implementation</li>
+	      <li>UDDI version 2.0 compliant implementation jUDDI-2.*</li>
+	      <li>UDDI version 3.0 is supported by jUDDI-3.0.0.alpha</li>
 	      <li>Use with any relational database that supports ANSI standard SQL (MySQL, DB2, Sybase, JDataStore, HSQLDB, etc.)</li>
 	      <li>Deployable on any Java application server that supports the Servlet 2.3 specification (Jakarta Tomcat, JOnAS, WebSphere, WebLogic, Borland Enterprise Server, JRun, etc.)</li>
 	      <li>jUDDI registry supports a clustered deployment configuration.</li>
