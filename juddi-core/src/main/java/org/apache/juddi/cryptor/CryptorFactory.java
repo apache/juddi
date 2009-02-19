@@ -20,7 +20,6 @@ package org.apache.juddi.cryptor;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.util.Loader;
 import org.apache.log4j.Logger;
 
 /**
@@ -76,7 +75,7 @@ public abstract class CryptorFactory {
 		Class<?> cryptorClass = null;
 		try {
 			// Use Loader to locate & load the Cryptor implementation
-			cryptorClass = Loader.getClassForName(className);
+			cryptorClass = org.apache.log4j.helpers.Loader.loadClass(className);
 		}
 		catch(ClassNotFoundException e) {
 			log.error("The specified Cryptor class '" + className + "' was not found in classpath.");

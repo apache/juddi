@@ -20,7 +20,6 @@ package org.apache.juddi.keygen;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.util.Loader;
 import org.apache.log4j.Logger;
 
 /**
@@ -76,7 +75,7 @@ public abstract class KeyGeneratorFactory {
 		Class<?> keygenClass = null;
 		try {
 			// Use Loader to locate & load the Key Generator implementation
-			keygenClass = Loader.getClassForName(className);
+			keygenClass = org.apache.log4j.helpers.Loader.loadClass(className);
 		}
 		catch(ClassNotFoundException e) {
 			log.error("The specified Key Generator class '" + className + "' was not found in classpath.");

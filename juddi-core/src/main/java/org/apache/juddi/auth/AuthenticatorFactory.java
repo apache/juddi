@@ -17,11 +17,10 @@
 
 package org.apache.juddi.auth;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.util.Loader;
+import org.apache.log4j.Logger;
 
 /**
  * @author Steve Viens (sviens@apache.org)
@@ -72,7 +71,7 @@ public class AuthenticatorFactory {
 		Class<?> authClass = null;
 		try {
 			// Use Loader to locate & load the Authenticator implementation
-			authClass = Loader.getClassForName(className);
+			authClass = org.apache.log4j.helpers.Loader.loadClass(className);
 		}
 		catch(ClassNotFoundException e) {
 			log.error("The specified Authenticator class '" + className + "' was not found in classpath.");
