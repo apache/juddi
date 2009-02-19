@@ -35,7 +35,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "business_service")
+@Table(name = "juddiv3_business_service")
 public class BusinessService extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -35,7 +35,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "binding_template")
+@Table(name = "juddiv3_binding_template")
 public class BindingTemplate extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

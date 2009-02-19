@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "subscription")
+@Table(name = "juddiv3_subscription")
 public class Subscription implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

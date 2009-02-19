@@ -28,7 +28,7 @@ import javax.persistence.TemporalType;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "auth_token")
+@Table(name = "juddiv3_auth_token")
 public class AuthToken implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -34,7 +34,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "category_bag")
+@Table(name = "juddiv3_category_bag")
 @Inheritance(strategy = InheritanceType.JOINED)
 
 public class CategoryBag implements java.io.Serializable {

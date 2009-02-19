@@ -29,7 +29,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "publisher_assertion")
+@Table(name = "juddiv3_publisher_assertion")
 public class PublisherAssertion implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

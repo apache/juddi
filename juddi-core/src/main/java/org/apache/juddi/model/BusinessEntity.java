@@ -35,7 +35,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "business_entity")
+@Table(name = "juddiv3_business_entity")
 public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -166,7 +166,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	}
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name="service_projection", 
+	@JoinTable(name="juddiv3_service_projection", 
 			joinColumns = { @JoinColumn(name = "business_key") },
 			inverseJoinColumns = { @JoinColumn(name = "service_key") })
 	public List<BusinessService> getServiceProjections() {

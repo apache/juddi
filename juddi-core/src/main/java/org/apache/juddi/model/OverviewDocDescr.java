@@ -31,7 +31,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
-@Table(name = "overview_doc_descr")
+@Table(name = "juddiv3_overview_doc_descr")
 public class OverviewDocDescr implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
