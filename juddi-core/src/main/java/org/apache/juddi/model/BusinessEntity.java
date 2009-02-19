@@ -22,6 +22,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -45,6 +48,8 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private BusinessCategoryBag categoryBag;
 	private List<BusinessService> businessServices = new ArrayList<BusinessService>(0);
 	private List<BusinessDescr> businessDescrs = new ArrayList<BusinessDescr>(0);
+	
+	private List<BusinessService> serviceProjections = new ArrayList<BusinessService>(0);
 
 	public BusinessEntity() {
 	}
@@ -159,6 +164,16 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	public void setBusinessDescrs(List<BusinessDescr> businessDescrs) {
 		this.businessDescrs = businessDescrs;
 	}
-
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name="service_projection", 
+			joinColumns = { @JoinColumn(name = "business_key") },
+			inverseJoinColumns = { @JoinColumn(name = "service_key") })
+	public List<BusinessService> getServiceProjections() {
+		return this.serviceProjections;
+	}
+	public void setServiceProjections(List<BusinessService> serviceProjections) {
+		this.serviceProjections = serviceProjections;
+	}
 	
 }
