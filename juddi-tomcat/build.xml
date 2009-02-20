@@ -7,7 +7,6 @@
 		<mkdir dir="${basedir}/target/tomcat"/>
 
 		<unzip dest="${basedir}/target/tomcat" src="${dependency.tomcat.zip}"/>
-		<copy file="${dependency.juddi.war}" tofile="${webapps.dir}/juddi.war"/>
 		<copy file="${basedir}/juddi.xml" todir="${webapps.dir}"/>
 		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddi.war}"/>
 		<chmod perm="ugo+x">
