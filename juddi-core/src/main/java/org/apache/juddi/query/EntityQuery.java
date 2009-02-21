@@ -97,7 +97,11 @@ public abstract class EntityQuery {
 			if (listDesc != null)
 				listDesc.setIncludeCount(endIndex - startIndex);
 
-			return result.subList(startIndex, endIndex);
+			List<Object> subList = new ArrayList<Object>(endIndex);
+			for (int i=startIndex; i< endIndex; i++) {
+				subList.add(result.get(i));
+			}
+			return subList;
 		}
 	}
 	
@@ -129,7 +133,10 @@ public abstract class EntityQuery {
 			while(inParamsLeft > 0) {
 				int endIndex = startIndex + Math.min(inParamsLeft, maxInClause);
 				
-				List<?> subKeysIn = keysIn.subList(startIndex, endIndex);
+				List<Object> subKeysIn = new ArrayList<Object>(endIndex);
+				for (int i=startIndex; i< endIndex; i++) {
+					subKeysIn.add(keysIn.get(i));
+				}
 				dynamicQry.appendInListWithAnd(inListTerm, subKeysIn);
 				log.debug(dynamicQry);
 	
