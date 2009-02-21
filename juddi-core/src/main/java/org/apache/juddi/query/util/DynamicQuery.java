@@ -17,6 +17,7 @@
 
 package org.apache.juddi.query.util;
 
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.List;
 import javax.persistence.Query;
@@ -180,7 +181,14 @@ public class DynamicQuery {
 	}
 	
 	public Query buildJPAQuery(EntityManager em) {
-		Query qry = em.createQuery(sql.toString());
+		StringTokenizer tokenizer = new StringTokenizer(sql.toString(),"?");
+		StringBuffer sqlBuffer = new StringBuffer();
+		int numberOfTokens = tokenizer.countTokens();
+		for (int i=1; i<numberOfTokens; i++) {
+			sqlBuffer.append(tokenizer.nextToken() + "?" + i);
+		}
+		if (tokenizer.hasMoreTokens()) sqlBuffer.append(tokenizer.nextToken());
+		Query qry = em.createQuery(sqlBuffer.toString());
 		
 		for (int i = 0; i < values.size(); i++)
 			qry.setParameter(i + 1, values.elementAt(i));
