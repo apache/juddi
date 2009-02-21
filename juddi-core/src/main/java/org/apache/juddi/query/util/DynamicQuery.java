@@ -34,7 +34,7 @@ public class DynamicQuery {
 	public static String OPERATOR_OR = "or";
 	public static String OPERATOR_AND = "and";
 	public static String PREDICATE_EQUALS = "=";
-	public static String PREDICATE_NOTEQUALS = "!=";
+	public static String PREDICATE_NOTEQUALS = "<>";
 	public static String PREDICATE_LIKE = "like";
 	public static String PREDICATE_IN = "in";
 	public static String SORT_ASC = "asc";
