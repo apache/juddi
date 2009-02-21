@@ -93,8 +93,8 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	@Transient
 	public boolean isAdmin() {
 		boolean ret = false;
-		if (this.isAdmin != null) {
-			if (this.isAdmin.equalsIgnoreCase("true"))
+		if (getIsAdmin() != null) {
+			if (getIsAdmin().equalsIgnoreCase("true"))
 				ret = true;
 		}
 		return ret;
@@ -111,8 +111,8 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	@Transient
 	public boolean isEnabled() {
 		boolean ret = false;
-		if (this.isEnabled != null) {
-			if (this.isEnabled.equalsIgnoreCase("true"))
+		if (getIsEnabled() != null) {
+			if (getIsEnabled().equalsIgnoreCase("true"))
 				ret = true;
 		}
 		return ret;

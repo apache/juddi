@@ -43,6 +43,9 @@ public class UddiEntityPublisher {
 	protected String authorizedName;
 	private List<String> keyGeneratorKeys = null;
 
+	public UddiEntityPublisher() {
+	}
+	
 	public UddiEntityPublisher(String authorizedName) {
 		this.authorizedName = authorizedName;
 	}
@@ -70,12 +73,13 @@ public class UddiEntityPublisher {
 		getKeysQuery.append("select t.entityKey from Tmodel t").pad().WHERE().pad();
 
 		DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("t.authorizedName", 
-				 this.authorizedName, 
+				 getAuthorizedName(), 
 				 DynamicQuery.PREDICATE_EQUALS);
 
 		DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter("UPPER(t.entityKey)", 
 				 (DynamicQuery.WILDCARD + KeyGenerator.KEYGENERATOR_SUFFIX).toUpperCase(), 
 				 DynamicQuery.PREDICATE_LIKE);
+		
 		
 		getKeysQuery.appendGroupedAnd(pubParam, keyParam);
 		Query qry = getKeysQuery.buildJPAQuery(em);
@@ -86,7 +90,7 @@ public class UddiEntityPublisher {
 	public boolean isOwner(UddiEntity entity){
 		boolean ret = false;
 		if (entity != null) {
-			if (entity.getAuthorizedName().equals(this.authorizedName))
+			if (entity.getAuthorizedName().equals(getAuthorizedName()))
 				ret = true;
 		}
 		return ret;
@@ -137,7 +141,7 @@ public class UddiEntityPublisher {
 			Vector<DynamicQuery.Parameter> params = new Vector<DynamicQuery.Parameter>(0);
 
 			DynamicQuery.Parameter pubParam = new DynamicQuery.Parameter("t.authorizedName", 
-					 this.authorizedName, 
+					 getAuthorizedName(), 
 					 DynamicQuery.PREDICATE_EQUALS);
 			
 			int requiredCount = 0;
@@ -176,7 +180,7 @@ public class UddiEntityPublisher {
 			// If only two tokens, then a domain key generator is being checked.  A domain key generator can only be registered if no other publishers
 			// own it.  For example, if trying to register the uddi:domain:abc:123 key then uddi:domain cannot be owned by another publisher.
 			DynamicQuery.Parameter notPubParam = new DynamicQuery.Parameter("t.authorizedName", 
-					 this.authorizedName, 
+					 getAuthorizedName(), 
 					 DynamicQuery.PREDICATE_NOTEQUALS);
 
 			DynamicQuery.Parameter keyParam = new DynamicQuery.Parameter("UPPER(t.entityKey)", 
