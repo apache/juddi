@@ -272,24 +272,18 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 			List<KeyedReference> keyedRefs = keyedRefGroup.getKeyedReference();
 			StringBuffer thetaJoins = new StringBuffer(200);
 			if (keyedRefs != null && keyedRefs.size() > 0) {
-				
 				int tblCount = 0;
-				int count = 0;
-				//TODO- JUDDI-177 Code Review; why is kr not used in the loop?
-				for(KeyedReference kr : keyedRefs) {
+				for(int count = 0; count<keyedRefs.size(); count++) {
 					if (count != 0) {
 						tblCount++;
 						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
 						thetaJoins.append(ALIAS_KEYEDREFERENCE + (tblCount - 1) + "." + FIELD_KEYEDREFERENCEGROUP + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_KEYEDREFERENCEGROUP + ".id ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
-	
-					}
-					else {
+					} else {
 						qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
 						thetaJoins.append(ALIAS_KEYEDREFERENCEGROUP + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_KEYEDREFERENCEGROUP + ".id ");
 						thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
 					}
-					count++;
 				}
 			}
 			qry.WHERE().pad().openParen().pad();
