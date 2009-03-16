@@ -12,5 +12,5 @@
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src="Application.css"/>
 	
-	  <servlet path="/token" class="org.apache.juddi.portlets.server.GetTokenServiceImpl" />
+	  <servlet class="org.apache.juddi.portlets.server.SecurityServiceImpl" path="/security"/>
 </module>
