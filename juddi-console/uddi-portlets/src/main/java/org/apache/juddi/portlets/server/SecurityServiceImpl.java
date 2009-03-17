@@ -36,12 +36,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	     } catch (Exception e) {
 	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
 	    	 response.setSuccess(false);
-	    	 response.setResponse(e.getMessage());
+	    	 response.setMessage(e.getMessage());
 	    	 response.setErrorCode("101");
 	     }  catch (Throwable t) {
 	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
 	    	 response.setSuccess(false);
-	    	 response.setResponse(t.getMessage());
+	    	 response.setMessage(t.getMessage());
 	    	 response.setErrorCode("101");
 	     } 
 		 return response;

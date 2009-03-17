@@ -137,6 +137,7 @@
     <module>juddi-axis</module>
     <module>juddi-tomcat</module>
     <module>uddi-client</module>
+    <module>juddi-console/uddi-portlets</module>
   </modules>
   <distributionManagement>
     <repository>

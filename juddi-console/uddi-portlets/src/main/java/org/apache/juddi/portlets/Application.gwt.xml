@@ -13,4 +13,5 @@
       <stylesheet src="Application.css"/>
 	
 	  <servlet class="org.apache.juddi.portlets.server.SecurityServiceImpl" path="/security"/>
+	  <servlet class="org.apache.juddi.portlets.server.InquiryServiceImpl" path="/inquiry"/>
 </module>
