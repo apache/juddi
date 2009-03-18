@@ -203,6 +203,10 @@
         <mime-type>text/plain</mime-type>
     </mime-mapping>
     <mime-mapping>
+		<extension>jsp</extension>
+		<mime-type>text/html</mime-type>
+	</mime-mapping>
+    <mime-mapping>
         <extension>jspf</extension>
         <mime-type>text/plain</mime-type>
     </mime-mapping>
