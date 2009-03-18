@@ -44,8 +44,9 @@ public class Application implements EntryPoint, ClickListener {
 	Label tokenLabel = new Label("");
 	Label tmodelLabel = new Label("");
 	private VerticalPanel loginPanel = new VerticalPanel();
-	private Button getTokenButton = new Button("getToken");
-	private Button getTModelButton = new Button("getTModels");
+	private VerticalPanel browsePanel = new VerticalPanel();
+	private Button getTokenButton = new Button("Login");
+	private Button getTModelButton = new Button("getTModel");
 	private TextBox usernameBox = new TextBox();
 	private PasswordTextBox passwordBox = new PasswordTextBox();
 	private String token = null;
@@ -64,12 +65,15 @@ public class Application implements EntryPoint, ClickListener {
 		getTokenButton.addClickListener(this);
 		loginPanel.add(getTokenButton);
 		
-		RootPanel.get("login").add(loginPanel);
-		RootPanel.get().add(tokenLabel);
+		RootPanel.get("browser").add(loginPanel);
+		
 		getTModelButton.addClickListener(this);
-		RootPanel.get().add(tmodelKeyBox);
-		RootPanel.get().add(getTModelButton);
-		RootPanel.get().add(tmodelLabel);
+		browsePanel.add(new Label ("TModel Key:"));
+		browsePanel.add(tmodelKeyBox);
+		browsePanel.add(getTModelButton);
+		browsePanel.add(tmodelLabel);
+		
+		RootPanel.get("token").add(tokenLabel);
 	}
 
 	public void onClick(Widget sender) {
@@ -96,9 +100,11 @@ public class Application implements EntryPoint, ClickListener {
 
 			public void onSuccess(SecurityResponse response) {
 				if (response.isSuccess) {
+					RootPanel.get("browser").clear();
+					RootPanel.get("browser").add(browsePanel);
 					token = response.getResponse();
 					tokenLabel.setText("token: " + token);
-					//RootPanel.setVisible(loginPanel, false);
+					
 				} else {
 					tokenLabel.setText("error: " + response.getMessage());
 				}

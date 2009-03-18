@@ -146,7 +146,7 @@
 				<executions>
 					<execution>
 						<goals>
-							<!-- <goal>mergewebxml</goal>-->
+							<goal>mergewebxml</goal>
 							<!-- <goal>i18n</goal>-->
 							<goal>compile</goal>
 							<goal>test</goal>

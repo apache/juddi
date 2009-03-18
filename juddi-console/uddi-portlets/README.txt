@@ -13,9 +13,7 @@ mvn clean com.totsp.gwt:maven-googlewebtoolkit2-plugin:2.0-beta26:gwt
 To build the uddi-portlet.war use
 mvn package
 
-For now we build a first non-portlet as a war but we want to 
-turn it into a portlet like
-http://xantorohara.blogspot.com/2007/07/portlets-and-gwt.html
+
 
 juddi-tomcat should bundle up pluto and the portlets.
 
