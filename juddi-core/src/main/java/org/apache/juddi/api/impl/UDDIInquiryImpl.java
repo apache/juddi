@@ -482,8 +482,37 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	public OperationalInfos getOperationalInfo(GetOperationalInfo body)
 			throws DispositionReportFaultMessage {
-		// TODO Auto-generated method stub
-		return null;
+
+		new ValidateInquiry(null).validateGetOperationalInfo(body);
+		
+		// TODO JUDDI-178: Perform necessary authentication logic
+		@SuppressWarnings("unused")
+		String authInfo = body.getAuthInfo();
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+
+		OperationalInfos result = new OperationalInfos();
+		
+		List<String> entityKeyList = body.getEntityKey();
+		for (String entityKey : entityKeyList) {
+			
+			org.apache.juddi.model.UddiEntity modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);
+			if (modelUddiEntity == null)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.EntityNotFound", entityKey));
+			
+			org.uddi.api_v3.OperationalInfo apiOperationalInfo = new org.uddi.api_v3.OperationalInfo();
+			
+			MappingModelToApi.mapOperationalInfo(modelUddiEntity, apiOperationalInfo);
+			
+			result.getOperationalInfo().add(apiOperationalInfo);
+		}
+
+		tx.commit();
+		em.close();
+		
+		return result;
 	}
 
 	public ServiceDetail getServiceDetail(GetServiceDetail body)

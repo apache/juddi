@@ -17,6 +17,7 @@
 
 package org.apache.juddi.validation;
 
+
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.model.UddiEntityPublisher;
@@ -44,4 +45,5 @@ public abstract class ValidateUDDIApi {
 	public static void unsupportedAPICall() throws DispositionReportFaultMessage {
 		throw new UnsupportedException(new ErrorMessage("errors.Unsupported"));
 	}
+	
 }

@@ -18,14 +18,24 @@
 package org.apache.juddi.mapping;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.OverviewDoc;
+import org.apache.juddi.model.UddiEntity;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
+import org.uddi.api_v3.OperationalInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+
+import com.ibm.icu.util.Calendar;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -704,4 +714,40 @@ public class MappingModelToApi {
 		apiRelatedBusinessInfo.getSharedRelationships().add(sharedRelationships);
 	}
 
+	public static void mapOperationalInfo(UddiEntity modelUddiEntity,
+										  OperationalInfo apiOperationalInfo)
+				   throws DispositionReportFaultMessage {
+		
+		apiOperationalInfo.setCreated(convertDateToXMLGregorianCalendar(modelUddiEntity.getCreated()));
+		apiOperationalInfo.setModified(convertDateToXMLGregorianCalendar(modelUddiEntity.getModified()));
+		apiOperationalInfo.setModifiedIncludingChildren(convertDateToXMLGregorianCalendar(modelUddiEntity.getModifiedIncludingChildren()));
+		apiOperationalInfo.setNodeID(modelUddiEntity.getNodeId());
+		apiOperationalInfo.setAuthorizedName(modelUddiEntity.getAuthorizedName());
+	}
+
+	public static XMLGregorianCalendar convertDateToXMLGregorianCalendar(Date date) throws DispositionReportFaultMessage {
+		XMLGregorianCalendar result = null;
+		try { 
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			
+			DatatypeFactory df = DatatypeFactory.newInstance();
+			result = df.newXMLGregorianCalendar(calendar.get(Calendar.YEAR), 
+												calendar.get(Calendar.MONTH), 
+												calendar.get(Calendar.DAY_OF_MONTH), 
+												calendar.get(Calendar.HOUR), 
+												calendar.get(Calendar.MINUTE), 
+												calendar.get(Calendar.SECOND), 
+												calendar.get(Calendar.MILLISECOND), 
+												0);
+		}
+		catch(DatatypeConfigurationException ce) { 
+			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+		}
+		
+		return result;
+		
+	}
+
+	
 }
