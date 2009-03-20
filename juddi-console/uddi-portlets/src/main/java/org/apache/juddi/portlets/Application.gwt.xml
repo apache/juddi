@@ -3,14 +3,11 @@
       <!-- Inherit the core Web Toolkit stuff.                        -->
       <inherits name="com.google.gwt.user.User"/>   	
     
-      <!--  inherit css based theme -->
-      <inherits name="com.google.gwt.user.theme.standard.Standard"/>
-
       <!-- Specify the app entry point class.                         -->
       <entry-point class="org.apache.juddi.portlets.client.Application"/>
     
       <!-- Specify the application specific style sheet.              -->
-      <stylesheet src="Application.css"/>
+      <stylesheet src="uddiportlets.css"/>
 	
 	  <servlet class="org.apache.juddi.portlets.server.SecurityServiceImpl" path="/security"/>
 	  <servlet class="org.apache.juddi.portlets.server.InquiryServiceImpl" path="/inquiry"/>

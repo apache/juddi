@@ -20,7 +20,8 @@ public class UDDIBrowserPortlet extends GenericPortlet
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
 			  + renderRequest.getContextPath() 
 			  + "/org.apache.juddi.portlets.Application/org.apache.juddi.portlets.Application.nocache.js'></script>");
-	  writer.println("<div id='login'></div>");
+	  writer.println("<div id=\"token\"></div>");
+	  writer.println("<div id=\"browser\"></div>");
 	  writer.close();
 	}
 

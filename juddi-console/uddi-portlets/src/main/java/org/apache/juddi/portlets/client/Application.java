@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -43,7 +44,7 @@ public class Application implements EntryPoint, ClickListener {
 
 	Label tokenLabel = new Label("");
 	Label tmodelLabel = new Label("");
-	private VerticalPanel loginPanel = new VerticalPanel();
+	private FlowPanel loginPanel = new FlowPanel();
 	private VerticalPanel browsePanel = new VerticalPanel();
 	private Button getTokenButton = new Button("Login");
 	private Button getTModelButton = new Button("getTModel");
@@ -57,20 +58,32 @@ public class Application implements EntryPoint, ClickListener {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() { 
-
-		loginPanel.add(new Label ("Publisher:"));
+		loginPanel.getElement().setId("browser-body");
+		Label publisher = new Label ("Publisher:");
+		publisher.setStyleName("portlet-form-field-label");
+		loginPanel.add(publisher);
+		usernameBox.setStyleName("portlet-form-input-field");
 		loginPanel.add(usernameBox);
-		loginPanel.add(new Label ("Password:"));
+		Label password = new Label ("Password:");
+		password.setStyleName("portlet-form-field-label");
+		loginPanel.add(password);
+		passwordBox.setStyleName("portlet-form-input-field");
 		loginPanel.add(passwordBox);
 		getTokenButton.addClickListener(this);
+		getTokenButton.setStyleName(("portlet-form-button"));
 		loginPanel.add(getTokenButton);
 		
 		RootPanel.get("browser").add(loginPanel);
 		
 		getTModelButton.addClickListener(this);
-		browsePanel.add(new Label ("TModel Key:"));
+		Label tmodel = new Label ("TModel Key:");
+		tmodel.setStyleName("portlet-form-field-label");
+		browsePanel.add(tmodel);
+		tmodelKeyBox.setStyleName("portlet-form-input-field");
 		browsePanel.add(tmodelKeyBox);
+		getTModelButton.setStyleName(("portlet-form-button"));
 		browsePanel.add(getTModelButton);
+		tmodelLabel.setStyleName("portlet-form-field-label");
 		browsePanel.add(tmodelLabel);
 		
 		RootPanel.get("token").add(tokenLabel);
@@ -124,7 +137,6 @@ public class Application implements EntryPoint, ClickListener {
 				if (response.isSuccess) {
 					Map<String,String> tModelMap= response.getResponse();
 					tmodelLabel.setText("tmodelMap: " + tModelMap);
-					//RootPanel.setVisible(loginPanel, false);
 				} else {
 					tmodelLabel.setText("error: " + response.getMessage());
 				}
