@@ -45,7 +45,7 @@ if (request.getParameter("install") != null) {
 
 <h3><em>Welcome</em> to Apache jUDDI!</h3>
 <ul>
-    <li><a href="/pluto/portal/jUDDI">jUDDI Portlets</a></li>
+    <li><a href="/pluto/portal/jUDDI">jUDDI Portal</a></li>
     <li><a href="services">View</a> service listing</li>
     <li><a href="http://ws.apache.org/juddi/">Visit</a> the Apache-jUDDI Home Page</li>
 </ul>
