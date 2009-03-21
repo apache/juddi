@@ -127,6 +127,13 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>target/web.xml</webXml>
+				</configuration>
+			</plugin>
 		    <!--  configure the GWT-Maven plugin -->
 			<plugin>
 				<groupId>com.totsp.gwt</groupId>

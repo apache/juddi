@@ -138,6 +138,7 @@
     <module>juddi-tomcat</module>
     <module>uddi-client</module>
     <module>juddi-console/uddi-portlets</module>
+    <module>juddi-console/juddi-portal</module>
   </modules>
   <distributionManagement>
     <repository>

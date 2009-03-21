@@ -37,9 +37,6 @@
 		-->
 	</target>
 	
-	<target name="package-tomcat" depends="copy-resources">
-<!--		<zip destfile="target/juddi-tomcat-bundle.zip" 
-			basedir="target/tomcat"/>
--->			
-	</target>
+	<target name="package-tomcat" depends="copy-resources"/>
+
 </project>
