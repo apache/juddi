@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<tModel tModelKey="uddi:uddi.joepublisher.com:KEYGENERATOR" xmlns="urn:uddi-org:api_v3">
+<tModel tModelKey="uddi:uddi.joepublisher.com:keygenerator" xmlns="urn:uddi-org:api_v3">
   <name>Joe Publisher's Key Generator</name>
   <description>This is the key generator for Joe Publisher's UDDI entities!</description>
   <overviewDoc>
