@@ -17,6 +17,7 @@
 
 package org.apache.juddi.mapping;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +35,6 @@ import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-
-import com.ibm.icu.util.Calendar;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
