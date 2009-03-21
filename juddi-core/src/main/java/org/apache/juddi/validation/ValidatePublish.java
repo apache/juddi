@@ -137,7 +137,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			
 			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
 			if (obj == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingNotFound", entityKey));
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", entityKey));
 			
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
@@ -308,7 +308,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 	
 	public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
 		
-		// A supplied businessService can't be null
+		// A supplied businessEntity can't be null
 		if (businessEntity == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.businessentity.NullInput"));
 		
@@ -320,6 +320,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 			businessEntity.setBusinessKey(entityKey);
 		}
 		else {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			businessEntity.setBusinessKey(entityKey);
+			
 			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
@@ -382,10 +386,21 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		// Retrieve the service's passed key
 		String entityKey = businessService.getServiceKey();
+		if (entityKey != null && entityKey.length() > 0) {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			businessService.setServiceKey(entityKey);
+		}
 		
 		// The parent key is either supplied or provided by the higher call to the parent entity save.  If the passed-in parent's business key differs from 
 		// the (non-null) business key retrieved from the service, then we have a possible service projection.
 		String parentKey = businessService.getBusinessKey();
+		if (parentKey != null && parentKey.length() > 0) {
+			// Per section 4.4: keys must be case-folded
+			parentKey = parentKey.toLowerCase();
+			businessService.setBusinessKey(parentKey);
+		}
+		
 		boolean isProjection = false;
 		if (parent != null) {
 			if (parentKey != null && parentKey.length() > 0) {
@@ -416,7 +431,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		}
 		else {
-
 			boolean entityExists = false;
 			if (entityKey == null || entityKey.length() == 0) {
 				KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
@@ -424,6 +438,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 				businessService.setServiceKey(entityKey);
 			}
 			else {
+				
 				Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
 				if (obj != null) {
 					entityExists = true;
@@ -522,10 +537,21 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 		// Retrieve the binding's passed key
 		String entityKey = bindingTemplate.getBindingKey();
+		if (entityKey != null && entityKey.length() > 0) {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			bindingTemplate.setBindingKey(entityKey);
+		}
 
 		// The parent key is either supplied or provided by the higher call to the parent entity save.  If it is provided in both instances, if they differ, an 
 		// error occurs.
 		String parentKey = bindingTemplate.getServiceKey();
+		if (parentKey != null && parentKey.length() > 0) {
+			// Per section 4.4: keys must be case-folded
+			parentKey = parentKey.toLowerCase();
+			bindingTemplate.setServiceKey(parentKey);
+		}
+		
 		if (parent != null) {
 			if (parentKey != null && parentKey.length() > 0) {
 				if (!parentKey.equalsIgnoreCase(parent.getBusinessKey()))
@@ -542,6 +568,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			bindingTemplate.setBindingKey(entityKey);
 		}
 		else {
+			
 			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
@@ -631,6 +658,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 			tModel.setTModelKey(entityKey);
 		}
 		else {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			tModel.setTModelKey(entityKey);
+			
 			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
 			if (obj != null) {
 				entityExists = true;
