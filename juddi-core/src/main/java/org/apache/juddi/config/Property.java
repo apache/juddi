@@ -15,7 +15,6 @@ public interface Property
 	public final static String JUDDI_MAX_TMODELS_PER_PUBLISHER   ="juddi.maxTModelsPerPublisher";
 	public final static String JUDDI_CRYPTOR                     ="juddi.cryptor";
 	public final static String JUDDI_KEYGENERATOR                ="juddi.keygenerator";
-	public final static String JUDDI_VALIDATOR                   ="juddi.validator";
 	public final static String JUDDI_SECURITY_DOMAIN             ="juddi.securityDomain";
 	public final static String JUDDI_USERSFILE                   ="juddi.usersfile";
 	public final static String JUDDI_MAX_ROWS                    ="juddi.maxRows";
@@ -23,6 +22,7 @@ public interface Property
 	public final static String JUDDI_ROOT_PARTITION              ="juddi.rootPartition";
 	public final static String JUDDI_NODE_ID                     ="juddi.nodeId";
 	public final static String JUDDI_TRANSFER_EXPIRATION_DAYS    ="juddi.transfer.expiration.days";
+	public final static String JUDDI_AUTHENTICATE_INQUIRY        ="juddi.authenticate.Inquiry";
 	
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";

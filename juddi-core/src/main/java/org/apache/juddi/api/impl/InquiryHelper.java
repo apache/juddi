@@ -1,0 +1,230 @@
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.api.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.InvalidKeyPassedException;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.query.FindBindingByCategoryGroupQuery;
+import org.apache.juddi.query.FindBindingByCategoryQuery;
+import org.apache.juddi.query.FindBindingByTModelKeyQuery;
+import org.apache.juddi.query.FindBusinessByCategoryGroupQuery;
+import org.apache.juddi.query.FindBusinessByCategoryQuery;
+import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
+import org.apache.juddi.query.FindBusinessByIdentifierQuery;
+import org.apache.juddi.query.FindBusinessByNameQuery;
+import org.apache.juddi.query.FindBusinessByTModelKeyQuery;
+import org.apache.juddi.query.FindServiceByCategoryGroupQuery;
+import org.apache.juddi.query.FindServiceByCategoryQuery;
+import org.apache.juddi.query.FindServiceByNameQuery;
+import org.apache.juddi.query.FindServiceByTModelKeyQuery;
+import org.apache.juddi.query.FindTModelByCategoryGroupQuery;
+import org.apache.juddi.query.FindTModelByCategoryQuery;
+import org.apache.juddi.query.FindTModelByIdentifierQuery;
+import org.apache.juddi.query.FindTModelByNameQuery;
+import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.api_v3.Direction;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.TModelBag;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
+/**
+ * Used to extrapolate out inquiry functionality as it is used in more than one spot.
+ * 
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ */
+public class InquiryHelper {
+
+	public static List<?> findBinding(FindBinding body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+
+		List<?> keysFound = null;
+
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
+		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
+		keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
+		keysFound = FindBindingByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
+		
+		return keysFound;
+	}
+	
+	public static List<?> findBusiness(FindBusiness body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+
+		List<?> keysFound = null;
+
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
+		// The embedded find_relatedBusinesses search is performed first.  This is done the same as the actual API call, except the resulting business keys are 
+		// extracted and placed in the keysFound array to restrict future searches to only those keys.
+		if (body.getFindRelatedBusinesses() != null) {
+			FindRelatedBusinesses frb = body.getFindRelatedBusinesses();
+			
+			org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+			if (body.getFindRelatedBusinesses().getBusinessKey() != null ) {
+				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
+				getRelatedBusinesses(em, Direction.TO_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			}
+			else if (body.getFindRelatedBusinesses().getFromKey() != null)
+				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getFromKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			else if (body.getFindRelatedBusinesses().getToKey() != null)
+				getRelatedBusinesses(em, Direction.TO_KEY, frb.getToKey(), frb.getKeyedReference(), relatedBusinessInfos);
+			
+			List<String> relatedBusinessKeys = new ArrayList<String>(0);
+			for (org.uddi.api_v3.RelatedBusinessInfo rbi : relatedBusinessInfos.getRelatedBusinessInfo())
+				relatedBusinessKeys.add(rbi.getBusinessKey());
+			
+			keysFound = relatedBusinessKeys;
+		}
+		
+		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
+		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
+		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
+		keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
+		
+		return keysFound;
+	}
+
+	public static List<?> findService(FindService body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+
+		List<?> keysFound = null;
+
+		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
+		if (body.getTModelBag() == null)
+			body.setTModelBag(new TModelBag());
+		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
+		
+		
+		FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
+		keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
+		
+		return keysFound;
+	}
+
+	public static List<?> findTModel(FindTModel body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
+		List<?> keysFound = null;
+
+		keysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
+		keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
+		
+		return keysFound;
+	}
+	
+	
+	/*
+	 * Retrieves related businesses based on the focal business and the direction (fromKey or toKey).  The focal business is retrieved and then the
+	 * appropriate publisher assertion collection is examined for matches.  The assertion must be "completed" and if a keyedReference is passed, it must
+	 * match exactly.  Successful assertion matches are mapped to a RelationBusinessInfo structure and added to the passed in RelationalBusinessInfos 
+	 * structure.
+	 */
+	public static void getRelatedBusinesses(EntityManager em, 
+									  Direction direction, 
+									  String focalKey, 
+									  org.uddi.api_v3.KeyedReference keyedRef,
+									  org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos)
+			 throws DispositionReportFaultMessage {
+		if (relatedBusinessInfos == null)
+			relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+		
+		org.apache.juddi.model.BusinessEntity focalBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, focalKey);
+		if (focalBusiness == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", focalKey));
+
+		List<org.apache.juddi.model.PublisherAssertion> pubAssertList = null;
+		if (direction == Direction.FROM_KEY)
+			pubAssertList = focalBusiness.getPublisherAssertionsForFromKey();
+		else
+			pubAssertList = focalBusiness.getPublisherAssertionsForToKey();
+		
+		if (pubAssertList != null) {
+			for (org.apache.juddi.model.PublisherAssertion modelPublisherAssertion : pubAssertList) {
+				if ("true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && "true".equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {
+					if (keyedRef != null) {
+						if(!keyedRef.getTModelKey().equals(modelPublisherAssertion.getTmodelKey()) || 
+						   !keyedRef.getKeyName().equals(modelPublisherAssertion.getKeyName()) || 
+						   !keyedRef.getKeyValue().equals(modelPublisherAssertion.getKeyValue())) {
+							continue;
+						}
+					}
+					
+					org.apache.juddi.model.BusinessEntity modelRelatedBusiness  = null;
+					if (direction == Direction.FROM_KEY)
+						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getToKey());
+					else
+						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getFromKey());
+					
+					org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo = new org.uddi.api_v3.RelatedBusinessInfo();
+
+					MappingModelToApi.mapRelatedBusinessInfo(modelPublisherAssertion, modelRelatedBusiness, direction, apiRelatedBusinessInfo);
+					
+					relatedBusinessInfos.getRelatedBusinessInfo().add(apiRelatedBusinessInfo);
+				}
+			}
+		}
+		
+	}
+		
+	/*
+	 * Performs the necessary queries for the find_tModel search and adds resulting tModel keys to the tModelBag provided.
+	 */
+	private static void doFindTModelEmbeddedSearch(EntityManager em, 
+											org.uddi.api_v3.FindQualifiers fq, 
+											FindTModel findTmodel, 
+											TModelBag tmodelBag)
+			throws DispositionReportFaultMessage {
+
+		
+		if (findTmodel != null && tmodelBag != null) {
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(fq);
+
+			
+			List<?> tmodelKeysFound = null;
+			tmodelKeysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, findTmodel.getIdentifierBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
+			tmodelKeysFound = FindTModelByNameQuery.select(em, findQualifiers, findTmodel.getName(), tmodelKeysFound);
+			
+			if (tmodelKeysFound != null && tmodelKeysFound.size() > 0) {
+				for (Object item : tmodelKeysFound)
+					tmodelBag.getTModelKey().add((String)item);
+			}
+		}
+	}
+	
+	
+}

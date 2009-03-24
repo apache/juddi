@@ -17,36 +17,21 @@
 
 package org.apache.juddi.api.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.jws.WebService;
 import javax.persistence.EntityTransaction;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchBusinessServicesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
-import org.apache.juddi.query.FindBindingByCategoryGroupQuery;
-import org.apache.juddi.query.FindBindingByCategoryQuery;
-import org.apache.juddi.query.FindBindingByTModelKeyQuery;
-import org.apache.juddi.query.FindBusinessByCategoryGroupQuery;
-import org.apache.juddi.query.FindBusinessByCategoryQuery;
-import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
-import org.apache.juddi.query.FindBusinessByIdentifierQuery;
-import org.apache.juddi.query.FindBusinessByNameQuery;
-import org.apache.juddi.query.FindBusinessByTModelKeyQuery;
-import org.apache.juddi.query.FindServiceByCategoryGroupQuery;
-import org.apache.juddi.query.FindServiceByCategoryQuery;
-import org.apache.juddi.query.FindServiceByNameQuery;
-import org.apache.juddi.query.FindServiceByTModelKeyQuery;
-import org.apache.juddi.query.FindTModelByCategoryGroupQuery;
-import org.apache.juddi.query.FindTModelByCategoryQuery;
-import org.apache.juddi.query.FindTModelByIdentifierQuery;
-import org.apache.juddi.query.FindTModelByNameQuery;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateInquiry;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ErrorMessage;
 import org.uddi.api_v3.BindingDetail;
@@ -69,12 +54,12 @@ import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.api_v3.ListDescription;
-import org.uddi.api_v3.TModelBag;
 import org.uddi.api_v3.Direction;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
 import org.apache.juddi.api.datatype.PublisherDetail;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -83,34 +68,26 @@ import org.apache.juddi.api.datatype.PublisherDetail;
 @WebService(serviceName="UDDIInquiryService", 
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType",
 			targetNamespace = "urn:uddi-org:api_v3_portType")
-public class UDDIInquiryImpl implements UDDIInquiryPortType {
+public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
+
+	private static Logger log = Logger.getLogger(UDDIInquiryImpl.class);
 
 	public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
 
 		new ValidateInquiry(null).validateFindBinding(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-
-		List<?> keysFound = null;
-
-		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
-		if (body.getTModelBag() == null)
-			body.setTModelBag(new TModelBag());
-		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
 		
-		keysFound = FindBindingByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getServiceKey(), keysFound);
-		keysFound = FindBindingByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
-		keysFound = FindBindingByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getServiceKey(), keysFound);
+		List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
 
 		BindingDetail result = new BindingDetail();
 		ListDescription listDesc = new ListDescription();
@@ -139,52 +116,17 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindBusiness(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
+
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
 		
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
-		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
-		if (body.getTModelBag() == null)
-			body.setTModelBag(new TModelBag());
-		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
-		
-		List<?> keysFound = null;
-		
-		// The embedded find_relatedBusinesses search is performed first.  This is done the same as the actual API call, except the resulting business keys are 
-		// extracted and placed in the keysFound array to restrict future searches to only those keys.
-		if (body.getFindRelatedBusinesses() != null) {
-			FindRelatedBusinesses frb = body.getFindRelatedBusinesses();
-			
-			org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
-			if (body.getFindRelatedBusinesses().getBusinessKey() != null ) {
-				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
-				getRelatedBusinesses(em, Direction.TO_KEY, frb.getBusinessKey(), frb.getKeyedReference(), relatedBusinessInfos);
-			}
-			else if (body.getFindRelatedBusinesses().getFromKey() != null)
-				getRelatedBusinesses(em, Direction.FROM_KEY, frb.getFromKey(), frb.getKeyedReference(), relatedBusinessInfos);
-			else if (body.getFindRelatedBusinesses().getToKey() != null)
-				getRelatedBusinesses(em, Direction.TO_KEY, frb.getToKey(), frb.getKeyedReference(), relatedBusinessInfos);
-			
-			List<String> relatedBusinessKeys = new ArrayList<String>(0);
-			for (org.uddi.api_v3.RelatedBusinessInfo rbi : relatedBusinessInfos.getRelatedBusinessInfo())
-				relatedBusinessKeys.add(rbi.getBusinessKey());
-			
-			keysFound = relatedBusinessKeys;
-		}
-		
-		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
-		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
-		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
-		keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
+		List<?> keysFound = InquiryHelper.findBusiness(body, findQualifiers, em);
 
 		BusinessList result = new BusinessList();
 		ListDescription listDesc = new ListDescription();
@@ -215,14 +157,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		// TODO: findQualifiers aren't really used for this call, except maybe for sorting.  Sorting must be done in Java due to the retrieval method used.  Right now
 		// no sorting is performed.
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
@@ -236,13 +177,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		// found.  Rather than use a query, it seems simpler to take advantage of the model's publisher assertion collections.
 		org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
 		if (body.getBusinessKey() != null ) {
-			getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
-			getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
+			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
+			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
 		}
 		else if (body.getFromKey() != null)
-			getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos);
+			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos);
 		else if (body.getToKey() != null)
-			getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos);
+			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos);
 
 		if (relatedBusinessInfos.getRelatedBusinessInfo().size() > 0) {
 			// TODO: Do proper pagination!
@@ -260,85 +201,23 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		
 	}
 	
-	/*
-	 * Retrieves related businesses based on the focal business and the direction (fromKey or toKey).  The focal business is retrieved and then the
-	 * appropriate publisher assertion collection is examined for matches.  The assertion must be "completed" and if a keyedReference is passed, it must
-	 * match exactly.  Successful assertion matches are mapped to a RelationBusinessInfo structure and added to the passed in RelationalBusinessInfos 
-	 * structure.
-	 */
-	private void getRelatedBusinesses(EntityManager em, 
-									  Direction direction, 
-									  String focalKey, 
-									  org.uddi.api_v3.KeyedReference keyedRef,
-									  org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos)
-			 throws DispositionReportFaultMessage {
-		if (relatedBusinessInfos == null)
-			relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
-		
-		org.apache.juddi.model.BusinessEntity focalBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, focalKey);
-		if (focalBusiness == null)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", focalKey));
-
-		List<org.apache.juddi.model.PublisherAssertion> pubAssertList = null;
-		if (direction == Direction.FROM_KEY)
-			pubAssertList = focalBusiness.getPublisherAssertionsForFromKey();
-		else
-			pubAssertList = focalBusiness.getPublisherAssertionsForToKey();
-		
-		if (pubAssertList != null) {
-			for (org.apache.juddi.model.PublisherAssertion modelPublisherAssertion : pubAssertList) {
-				if ("true".equalsIgnoreCase(modelPublisherAssertion.getFromCheck()) && "true".equalsIgnoreCase(modelPublisherAssertion.getToCheck())) {
-					if (keyedRef != null) {
-						if(!keyedRef.getTModelKey().equals(modelPublisherAssertion.getTmodelKey()) || 
-						   !keyedRef.getKeyName().equals(modelPublisherAssertion.getKeyName()) || 
-						   !keyedRef.getKeyValue().equals(modelPublisherAssertion.getKeyValue())) {
-							continue;
-						}
-					}
-					
-					org.apache.juddi.model.BusinessEntity modelRelatedBusiness  = null;
-					if (direction == Direction.FROM_KEY)
-						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getToKey());
-					else
-						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getFromKey());
-					
-					org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo = new org.uddi.api_v3.RelatedBusinessInfo();
-
-					MappingModelToApi.mapRelatedBusinessInfo(modelPublisherAssertion, modelRelatedBusiness, direction, apiRelatedBusinessInfo);
-					
-					relatedBusinessInfos.getRelatedBusinessInfo().add(apiRelatedBusinessInfo);
-				}
-			}
-		}
-		
-	}
 
 	public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
 
 		new ValidateInquiry(null).validateFindService(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
-		// First perform the embedded FindTModel search which will augment the tModel bag with any resulting tModel keys.
-		if (body.getTModelBag() == null)
-			body.setTModelBag(new TModelBag());
-		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
-		
-		List<?> keysFound = null;
-		FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
-		keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
-		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
-		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
+		List<?> keysFound = InquiryHelper.findService(body, findQualifiers, em);
 
 		ServiceList result = new ServiceList();
 		ListDescription listDesc = new ListDescription();
@@ -369,22 +248,17 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateFindTModel(body, false);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
+
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
 		
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 
-		List<?> keysFound = null;
-		keysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
-		keysFound = FindTModelByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-		keysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
+		List<?> keysFound = InquiryHelper.findTModel(body, findQualifiers, em);
 
 		TModelList result = new TModelList();
 		ListDescription listDesc = new ListDescription();
@@ -415,13 +289,12 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetBindingDetail(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
+
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
 		
 		BindingDetail result = new BindingDetail();
 
@@ -450,14 +323,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		
 		new ValidateInquiry(null).validateGetBusinessDetail(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		BusinessDetail result = new BusinessDetail();
 		
 		List<String> businessKeyList = body.getBusinessKey();
@@ -484,15 +356,14 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			throws DispositionReportFaultMessage {
 
 		new ValidateInquiry(null).validateGetOperationalInfo(body);
-		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		OperationalInfos result = new OperationalInfos();
 		
 		List<String> entityKeyList = body.getEntityKey();
@@ -520,14 +391,13 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 		new ValidateInquiry(null).validateGetServiceDetail(body);
 		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		ServiceDetail result = new ServiceDetail();
 
 		List<String> serviceKeyList = body.getServiceKey();
@@ -554,15 +424,14 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			throws DispositionReportFaultMessage {
 
 		new ValidateInquiry(null).validateGetTModelDetail(body);
-		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		TModelDetail result = new TModelDetail();
 		
 		List<String> tmodelKeyList = body.getTModelKey();
@@ -586,6 +455,16 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 		return result;
 	}
 
+	private boolean isAuthenticated() {
+		boolean result = false;
+		try {
+			result = AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTHENTICATE_INQUIRY);
+		} catch (ConfigurationException e) {
+			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_AUTHENTICATE_INQUIRY, e);
+		}
+		return result;
+	}
+	
 	/*-------------------------------------------------------------------
 	 Publisher functions are specific to jUDDI.
 	 --------------------------------------------------------------------*/
@@ -597,15 +476,14 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 			throws DispositionReportFaultMessage {
 
 		new ValidateInquiry(null).validateGetPublisherDetail(body);
-		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 
+		if (isAuthenticated())
+			this.getEntityPublisher(em, body.getAuthInfo());
+		
 		PublisherDetail result = new PublisherDetail();
 		
 		List<String> publisherIdList = body.getPublisherId();
@@ -630,32 +508,5 @@ public class UDDIInquiryImpl implements UDDIInquiryPortType {
 
 	}
 	
-	/*
-	 * Performs the necessary queries for the find_tModel search and adds resulting tModel keys to the tModelBag provided.
-	 */
-	private void doFindTModelEmbeddedSearch(EntityManager em, 
-											org.uddi.api_v3.FindQualifiers fq, 
-											FindTModel findTmodel, 
-											TModelBag tmodelBag)
-			throws DispositionReportFaultMessage {
-
-		
-		if (findTmodel != null && tmodelBag != null) {
-			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(fq);
-
-			
-			List<?> tmodelKeysFound = null;
-			tmodelKeysFound = FindTModelByIdentifierQuery.select(em, findQualifiers, findTmodel.getIdentifierBag(), tmodelKeysFound);
-			tmodelKeysFound = FindTModelByCategoryQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
-			tmodelKeysFound = FindTModelByCategoryGroupQuery.select(em, findQualifiers, findTmodel.getCategoryBag(), tmodelKeysFound);
-			tmodelKeysFound = FindTModelByNameQuery.select(em, findQualifiers, findTmodel.getName(), tmodelKeysFound);
-			
-			if (tmodelKeysFound != null && tmodelKeysFound.size() > 0) {
-				for (Object item : tmodelKeysFound)
-					tmodelBag.getTModelKey().add((String)item);
-			}
-		}
-	}
 
 }
