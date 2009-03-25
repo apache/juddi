@@ -534,9 +534,22 @@ public class MappingApiToModel {
 
 	public static void mapSubscription(org.uddi.sub_v3.Subscription apiSubscription,
 			org.apache.juddi.model.Subscription modelSubscription) throws DispositionReportFaultMessage {
-		modelSubscription.setBindingKey(apiSubscription.getBindingKey());
-		modelSubscription.setSubscriptionKey(apiSubscription.getSubscriptionKey());
-		modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+		if ((apiSubscription.getSubscriptionKey() != null) && (!"".equals(apiSubscription.getSubscriptionKey()))) {
+			// if the apiSubscription has a key, this is a renewal or update - we don't want to change all of the fields, 
+			// just the ones that have been provided to update the record
+			if (apiSubscription.getBindingKey() != null) {
+				modelSubscription.setBindingKey(apiSubscription.getBindingKey());
+			}
+			
+			if (apiSubscription.getNotificationInterval() != null) {
+				modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+			}
+			
+		} else {
+			// No key provided, assume that this is a new subscription and map all fields
+			modelSubscription.setBindingKey(apiSubscription.getBindingKey());
+			modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+		}
 	}
 	
 }

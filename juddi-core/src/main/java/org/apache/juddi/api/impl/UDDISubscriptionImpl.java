@@ -31,6 +31,7 @@ import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
+import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.query.PersistenceManager;
 
 
@@ -98,7 +99,21 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
         EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-                
+        
+        if (subscription != null) {
+	        List<org.uddi.sub_v3.Subscription> apiSubscriptionList = subscription.value;
+	        for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {
+	        	org.apache.juddi.model.Subscription modelSubscription = new org.apache.juddi.model.Subscription();
+	        	if ((apiSubscription.getSubscriptionKey() != null) 
+	        			&& (!"".equals(apiSubscription.getSubscriptionKey()))) {
+	        		modelSubscription = em.find(org.apache.juddi.model.Subscription.class, 
+	        				apiSubscription.getSubscriptionKey());
+	        	}
+	        	MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
+		        em.persist(modelSubscription);	        
+	        }
+        }
+	        
         tx.commit();
         em.close();
 
@@ -108,10 +123,24 @@ public class UDDISubscriptionImpl implements UDDISubscriptionPortType {
 			SaveSubscription subscription)
 			throws DispositionReportFaultMessage {
 
+        List<org.uddi.sub_v3.Subscription> apiSubscriptionList = subscription.getSubscription();
+		
         EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-                
+        if (apiSubscriptionList != null) {
+	        for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {
+	        	org.apache.juddi.model.Subscription modelSubscription = null;
+	        	if ((apiSubscription.getSubscriptionKey() != null) 
+	        			&& (!"".equals(apiSubscription.getSubscriptionKey()))) {
+	        		modelSubscription = em.find(org.apache.juddi.model.Subscription.class, 
+	        				apiSubscription.getSubscriptionKey());
+	        	}
+	        	MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);    
+		        em.persist(modelSubscription);
+	        }
+        }
+        
         tx.commit();
         em.close();
 	}
