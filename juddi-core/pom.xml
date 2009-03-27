@@ -55,49 +55,66 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <skip>false</skip>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
-          <systemProperties>
-             <property>
-               <name>derby.stream.error.file</name>
-               <value>target/derby.log</value>
-             </property>
-           </systemProperties>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-antrun-plugin</artifactId>
+		<version>1.3</version>
         <executions>
+		  <execution>
+			<id>foo</id>
+			<phase>test-compile</phase>
+			<configuration>
+			<tasks>
+				<delete dir="src/main/java/META-INF"/>
+				<delete dir="src/main/resources/META-INF"/>
+				<mkdir dir="src/main/java/META-INF"/>
+				<copy file ="src/main/resources/persistence/${persistence}-persistence.xml"
+					tofile="src/main/java/META-INF/persistence.xml"
+					overwrite="true"/>
+				<mkdir dir="src/main/resources/META-INF"/>
+				<copy file ="src/main/resources/persistence/${persistence}-persistence.xml"
+					tofile="src/main/resources/META-INF/persistence.xml"
+					overwrite="true"/>
+			</tasks>
+			</configuration>
+			<goals>
+				<goal>run</goal>
+			</goals>
+		  </execution>
+		  <execution>
+			<id>bar</id>
+			<phase>prepare-package</phase>
+			<configuration>
+			  <tasks>
+				<delete dir="src/main/java/META-INF"/>
+				<delete dir="src/main/resources/META-INF"/>
+			  </tasks>
+			</configuration>
+			<goals>
+				<goal>run</goal>
+			</goals>
+		  </execution>
           <execution>
           <phase>generate-resources</phase>
           <configuration>
             <tasks>
-		<echo>PERSISTENCE = ${persistence}</echo>
-		<copy file="src/main/resources/version/Release.java.template"
-			tofile="src/main/java/org/apache/juddi/config/Release.java"
-			overwrite="true">
-			<filterset>
-			<filter token="juddi.version" value="${project.version}"/>	
-			</filterset>	
-		</copy>
-              <copy file="src/main/resources/persistence/${persistence}-persistence.xml" 
-                tofile="src/main/java/META-INF/persistence.xml" 
-                overwrite="true"/>
-              <delete dir="juddi-derby-test-db"/>
-            </tasks>
+				<echo>PERSISTENCE = ${persistence}</echo>
+				<copy file="src/main/resources/version/Release.java.template"
+					tofile="src/main/java/org/apache/juddi/config/Release.java"
+					overwrite="true">
+				<filterset>
+					<filter token="juddi.version" value="${project.version}"/>	
+				</filterset>	
+				</copy>
+				<delete dir="juddi-derby-test-db"/>
+				<mkdir dir="src/main/java/META-INF"/>
+		    </tasks>
           </configuration>
           <goals>
             <goal>run</goal>
           </goals>
-	  </execution>
-       </executions>
-     </plugin>
+		  </execution>
+        </executions>
+       </plugin>
   </plugins>
   </build>
   <dependencies>
@@ -198,7 +215,6 @@
         <artifactId>cglib-nodep</artifactId>
         <version>2.1_3</version>
       </dependency>
-      
   </dependencies>
   <profiles>
     <profile> 
@@ -238,55 +254,161 @@
         <version>2.1_3</version>
       </dependency>
     </dependencies>
+	<build>
+      <pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+			<version>2.4</version>
+            <configuration>
+			  <skip>false</skip>
+			  <includes>
+				<include>**/*Test.java</include>
+			  </includes>
+              <systemProperties>
+				 <property>
+					<name>hibernate.archive.autodetection</name>
+					<value>class</value>
+				 </property>
+				 <property>
+				     <name>hibernate.hbm2ddl.auto</name>
+					 <value>update</value>
+				 </property>
+				 <property>
+				     <name>hibernate.show_sql</name>
+					 <value>false</value>
+				 </property>
+				 <property>
+				     <name>hibernate.dialect</name>
+					 <value>org.hibernate.dialect.DerbyDialect</value>
+				 </property>
+				 <property>
+				     <name>hibernate.connection.driver_class</name>
+					 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+				 </property>
+				 <property>
+				     <name>hibernate.connection.username</name>
+					 <value></value>
+				 </property>
+				 <property>
+				     <name>hibernate.connection.password</name>
+					 <value></value>
+				 </property>
+				 <property>
+					 <name>hibernate.connection.url</name>
+					 <value>jdbc:derby:target/juddi-derby-test-db;create=true</value>
+				 </property>
+                 <property>
+				     <name>hibernate.dbcp.maxActive</name>
+					 <value>100</value>
+				 </property>
+				 <property>
+					 <name>hibernate.dbcp.maxIdle</name>
+					 <value>30</value>
+				 </property>
+				 <property>
+					 <name>hibernate.dbcp.maxWait</name>
+					 <value>10000</value>
+				 </property>
+			   </systemProperties>
+             </configuration>
+           </plugin>
+         </plugins>
+       </pluginManagement>
+    </build>
   </profile>
   <profile>
-		<id>openjpa</id>
-		<activation>
-			<property>
-				<name>persistence</name>
-				<value>openjpa</value>
-			</property>
-		</activation>
-		 <dependencies>
-      <dependency> 
+	<id>openjpa</id>
+	<activation>
+	  <property>
+		<name>persistence</name>
+		<value>openjpa</value>
+	  </property>
+	</activation>
+	<dependencies>
+	  <dependency> 
         <groupId>org.apache.openjpa</groupId>
         <artifactId>openjpa</artifactId>
         <version>1.2.0</version>
       </dependency>
     </dependencies>
-		<build>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>openjpa-maven-plugin</artifactId>
-					<version>1.0-alpha</version>
-					<executions>
-						<execution>
-							<id>JPA Enhance</id>
-							<phase>process-classes</phase>
-							<goals>
-								<goal>enhance</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-					    <classes>
-					      ${project.build.outputDirectory}/org/apache/juddi/model/
-					    </classes>
-						<toolProperties>
-							<property>
-								<name>addDefaultConstructor</name>
-								<value>true</value>
-							</property>
-							<property>
-								<name>enforcePropertyRestrictions</name>
-								<value>true</value>
-							</property>
-						</toolProperties>
-					</configuration>
-				</plugin>
-			</plugins>
-		</build>
-		</profile>
-	</profiles>
+	<build>
+      <pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+			<version>2.4</version>
+            <configuration>
+			  <skip>false</skip>
+			  <includes>
+				<include>**/*Test.java</include>
+			  </includes>
+              <systemProperties>
+				 <property>
+					<name>openjpa.jdbc.SynchronizeMappings</name>
+					<value>buildSchema(SchemaAction='dropDB,add')</value>
+				 </property>
+				 <property>
+				     <name>openjpa.Log</name>
+					 <value>alue="DefaultLevel=WARN, Tool=INFO</value>
+				 </property>
+				 <property>
+				     <name>openjpa.ConnectionDriverName</name>
+					 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+				 </property>
+				 <property>
+				     <name>openjpa.ConnectionURL</name>
+					 <value>jdbc:derby:target/juddi-derby-test-db;create=true</value>
+				 </property>
+				 <property>
+				     <name>openjpa.ConnectionUserName</name>
+					 <value></value>
+				 </property>
+				 <property>
+				     <name>openjpa.ConnectionPassword</name>
+					 <value></value>
+				 </property>
+				 <property>
+				     <name>openjpa.jdbc.UpdateManager</name>
+					 <value>operation-order</value>
+				 </property>
+			   </systemProperties>
+            </configuration>
+        </plugin>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>openjpa-maven-plugin</artifactId>
+			<version>1.0-alpha</version>
+			<executions>
+				<execution>
+					<id>JPA Enhance</id>
+					<phase>process-classes</phase>
+					<goals>
+						<goal>enhance</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+				<classes>
+				${project.build.outputDirectory}/org/apache/juddi/model/
+				</classes>
+				<toolProperties>
+					<property>
+						<name>addDefaultConstructor</name>
+						<value>true</value>
+					</property>
+					<property>
+						<name>enforcePropertyRestrictions</name>
+						<value>true</value>
+					</property>
+				</toolProperties>
+			</configuration>
+		</plugin>
+	  </plugins>
+	  </pluginManagement>
+	</build>
+  </profile>
+ </profiles>
 </project>

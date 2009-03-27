@@ -69,23 +69,6 @@
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
     
     <properties>
-      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/>
-      <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
-      <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
-      
-      <!-- derby connection properties -->
-      <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-      <property name="openjpa.ConnectionURL" value="jdbc:derby:target/juddi-derby-test-db;create=true"/>
-      <property name="openjpa.ConnectionUserName" value=""/>
-      <property name="openjpa.ConnectionPassword" value=""/>
-      
-      <!--  mysql connection properties
-      <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/juddi"/>
-      <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-      <property name="openjpa.ConnectionUserName" value="juddiv3"/>
-      <property name="openjpa.ConnectionPassword" value=""/>
-      -->
-      
     </properties>
   </persistence-unit>
 </persistence>
