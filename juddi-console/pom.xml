@@ -17,11 +17,7 @@
  */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.apache.juddi</groupId>
-    <artifactId>juddi-parent</artifactId>
-    <version>3.0.0.SNAPSHOT</version>
-  </parent>
+ 
   <modelVersion>4.0.0</modelVersion> 
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-console</artifactId>
@@ -33,4 +29,15 @@
     <module>uddi-portlets</module>
     <module>juddi-portal</module>
   </modules>
+   <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
