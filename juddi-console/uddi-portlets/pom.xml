@@ -28,6 +28,10 @@
 			<id>gwt-maven</id>
 			<url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
 		</repository>
+		<repository>
+			<id>apache</id>
+			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		</repository>
 	</repositories>
     
 	<!--  convenience to define GWT version in one place -->
@@ -116,7 +120,11 @@
 			<version>1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.1.4</version>
+		</dependency>
 		<!--  test -->
 		<dependency>
 			<groupId>junit</groupId>
