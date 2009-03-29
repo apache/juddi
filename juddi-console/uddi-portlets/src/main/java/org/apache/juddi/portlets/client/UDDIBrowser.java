@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.portlets.client;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.juddi.portlets.client.SecurityService;
@@ -27,6 +28,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -42,18 +44,23 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class UDDIBrowser implements EntryPoint, ClickListener {
 
-	Label tokenLabel = new Label("");
-	Label tmodelLabel = new Label("");
 	private FlowPanel loginPanel = new FlowPanel();
-	private VerticalPanel browsePanel = new VerticalPanel();
+	Label tokenLabel = new Label("");
 	private Button getTokenButton = new Button("Login");
-	private Button getTModelButton = new Button("getTModel");
 	private TextBox usernameBox = new TextBox();
 	private PasswordTextBox passwordBox = new PasswordTextBox();
 	private String token = null;
 	private TextBox tmodelKeyBox = new TextBox();
 	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	
+	private VerticalPanel tmodelPanel = new VerticalPanel();
+	Label tmodelLabel = new Label("");
+	private Button getTModelButton = new Button("getTModel");
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class);
+	
+	private FlowPanel browsePanel = new FlowPanel();
+	private FlexTable businessTable = new FlexTable();
+	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
 	/**
 	 * This is the entry point method.
 	 */
@@ -73,21 +80,26 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 		getTokenButton.addClickListener(this);
 		getTokenButton.setStyleName(("portlet-form-button"));
 		loginPanel.add(getTokenButton);
-		
+		RootPanel.get("token").add(tokenLabel);  //TODO at some point we want to hide this
 		RootPanel.get("browser").add(loginPanel);
+		
 		
 		getTModelButton.addClickListener(this);
 		Label tmodel = new Label ("TModel Key:");
 		tmodel.setStyleName("portlet-form-field-label");
-		browsePanel.add(tmodel);
+		tmodelPanel.add(tmodel);
 		tmodelKeyBox.setStyleName("portlet-form-input-field");
-		browsePanel.add(tmodelKeyBox);
+		tmodelPanel.add(tmodelKeyBox);
 		getTModelButton.setStyleName(("portlet-form-button"));
-		browsePanel.add(getTModelButton);
+		tmodelPanel.add(getTModelButton);
 		tmodelLabel.setStyleName("portlet-form-field-label");
-		browsePanel.add(tmodelLabel);
+		tmodelPanel.add(tmodelLabel);
 		
-		RootPanel.get("token").add(tokenLabel);
+		Label businesses = new Label ("Businesses");
+		businesses.setStyleName("portlet-form-field-label");
+		browsePanel.add(businesses);
+		browsePanel.add(businessTable);
+		
 		getToken();
 	}
 
@@ -116,9 +128,11 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 			public void onSuccess(SecurityResponse response) {
 				if (response.isSuccess) {
 					RootPanel.get("browser").clear();
-					RootPanel.get("browser").add(browsePanel);
 					token = response.getResponse();
 					tokenLabel.setText("token: " + token);
+					//RootPanel.get("browser").add(tmodelPanel);
+					RootPanel.get("browser").add(browsePanel);
+					getBusinesses(token, "all");
 				} else {
 					tokenLabel.setText("error: " + response.getMessage());
 				}
@@ -137,9 +151,13 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 			public void onSuccess(SecurityResponse response) {
 				if (response.getResponse()!=null) {
 					RootPanel.get("browser").clear();
-					RootPanel.get("browser").add(browsePanel);
 					token = response.getResponse();
 					tokenLabel.setText("token: " + token);
+					//RootPanel.get("browser").add(tmodelPanel);
+					RootPanel.get("browser").add(browsePanel);
+					getBusinesses(token, "all");
+					
+					
 				}
 			}
 		});
@@ -159,6 +177,31 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 					tmodelLabel.setText("tmodelMap: " + tModelMap);
 				} else {
 					tmodelLabel.setText("error: " + response.getMessage());
+				}
+			}
+		});
+	}
+	
+	private void getBusinesses(String token, String infoSelection) {
+
+		publicationService.getBusinesses(token, infoSelection, new AsyncCallback<PublicationResponse>() 
+		{
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not connect to the UDDI registry.");
+			}
+
+			public void onSuccess(PublicationResponse response) {
+				if (response.isSuccess) {
+					List<String> businesses= response.getBusinesses();
+					System.out.println("Businesses=" + businesses);
+					businessTable.setTitle("Businesses");
+					int i=0;
+					for (String business : businesses) {
+						businessTable.setText(i++, 0, business);
+					}
+					//tmodelLabel.setText("tmodelMap: " + tModelMap);
+				} else {
+					//tmodelLabel.setText("error: " + response.getMessage());
 				}
 			}
 		});
