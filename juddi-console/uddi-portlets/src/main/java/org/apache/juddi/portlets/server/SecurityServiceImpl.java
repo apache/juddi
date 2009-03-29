@@ -16,6 +16,11 @@
  */
 package org.apache.juddi.portlets.server;
 
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.juddi.portlets.client.SecurityService;
 import org.apache.juddi.portlets.client.SecurityResponse;
 import org.apache.log4j.Logger;
@@ -28,42 +33,69 @@ import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 /**
  * 
- *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- *
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * 
  */
-public class SecurityServiceImpl extends RemoteServiceServlet implements SecurityService {
+public class SecurityServiceImpl extends RemoteServiceServlet implements
+		SecurityService {
 
 	private Logger logger = Logger.getLogger(this.getClass());
 	private static final long serialVersionUID = 1L;
 	
+
+	public SecurityResponse get() {
+		SecurityResponse response = new SecurityResponse();
+		HttpServletRequest request = getThreadLocalRequest();
+		HttpSession session = request.getSession();
+		String token = (String) session.getAttribute("AuthToken");
+		response.setSuccess(true);
+		response.setResponse(token);
+		return response;
+	}
 	public SecurityResponse get(String username, String password) {
+		HttpServletRequest request = getThreadLocalRequest();
+		HttpSession session = request.getSession();
+		Principal user = request.getUserPrincipal();
+		logger.debug("UserPrincipal " + user);
 		logger.debug("User " + username + " sending token request..");
 		SecurityResponse response = new SecurityResponse();
-		try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
-	         Class<?> transportClass = Loader.loadClass(clazz);
-        	 Transport transport = (Transport) transportClass.newInstance(); 
-        	 UDDISecurityPortType securityService = transport.getSecurityService();
-        	 GetAuthToken getAuthToken = new GetAuthToken();
-        	 getAuthToken.setUserID(username);
-        	 getAuthToken.setCred(password);
-        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
-        	 logger.debug("User " + username + " obtained token=" + authToken.getAuthInfo());
-        	 response.setSuccess(true);
-        	 response.setResponse(authToken.getAuthInfo());
-	     } catch (Exception e) {
-	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
-	    	 response.setSuccess(false);
-	    	 response.setMessage(e.getMessage());
-	    	 response.setErrorCode("101");
-	     }  catch (Throwable t) {
-	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
-	    	 response.setSuccess(false);
-	    	 response.setMessage(t.getMessage());
-	    	 response.setErrorCode("101");
-	     } 
-		 return response;
+		String token = (String) session.getAttribute("AuthToken");
+		if (token == null) {
+			try {
+				String clazz = ClientConfig.getConfiguration().getString(
+						Property.UDDI_PROXY_TRANSPORT,
+						Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+				Class<?> transportClass = Loader.loadClass(clazz);
+				Transport transport = (Transport) transportClass.newInstance();
+				UDDISecurityPortType securityService = transport.getSecurityService();
+				GetAuthToken getAuthToken = new GetAuthToken();
+				getAuthToken.setUserID(username);
+				getAuthToken.setCred(password);
+				AuthToken authToken = securityService
+						.getAuthToken(getAuthToken);
+				logger.debug("User " + username + " obtained token="
+						+ authToken.getAuthInfo());
+				response.setSuccess(true);
+				response.setResponse(authToken.getAuthInfo());
+				session.setAttribute("AuthToken", authToken.getAuthInfo());
+			} catch (Exception e) {
+				logger.error("Could not obtain token. " + e.getMessage(), e);
+				response.setSuccess(false);
+				response.setMessage(e.getMessage());
+				response.setErrorCode("101");
+			} catch (Throwable t) {
+				logger.error("Could not obtain token. " + t.getMessage(), t);
+				response.setSuccess(false);
+				response.setMessage(t.getMessage());
+				response.setErrorCode("101");
+			}
+		} else {
+			response.setSuccess(true);
+			response.setResponse(token);
+		}
+		return response;
 	}
 }

@@ -58,6 +58,7 @@ public class Application implements EntryPoint, ClickListener {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() { 
+		
 		loginPanel.getElement().setId("browser-body");
 		Label publisher = new Label ("Publisher:");
 		publisher.setStyleName("portlet-form-field-label");
@@ -87,6 +88,7 @@ public class Application implements EntryPoint, ClickListener {
 		browsePanel.add(tmodelLabel);
 		
 		RootPanel.get("token").add(tokenLabel);
+		getToken();
 	}
 
 	public void onClick(Widget sender) {
@@ -117,9 +119,27 @@ public class Application implements EntryPoint, ClickListener {
 					RootPanel.get("browser").add(browsePanel);
 					token = response.getResponse();
 					tokenLabel.setText("token: " + token);
-					
 				} else {
 					tokenLabel.setText("error: " + response.getMessage());
+				}
+			}
+		});
+	}
+	
+	private void getToken() {
+
+		securityService.get(new AsyncCallback<SecurityResponse>() 
+		{
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not connect to the UDDI registry.");
+			}
+
+			public void onSuccess(SecurityResponse response) {
+				if (response.getResponse()!=null) {
+					RootPanel.get("browser").clear();
+					RootPanel.get("browser").add(browsePanel);
+					token = response.getResponse();
+					tokenLabel.setText("token: " + token);
 				}
 			}
 		});

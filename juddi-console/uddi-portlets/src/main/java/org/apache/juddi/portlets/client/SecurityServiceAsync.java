@@ -24,6 +24,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
  *
  */
 public interface SecurityServiceAsync extends RemoteService {
+	public void get(AsyncCallback<SecurityResponse> callback);
 	public void get(String username, String password, AsyncCallback<SecurityResponse> callback);
 }
 

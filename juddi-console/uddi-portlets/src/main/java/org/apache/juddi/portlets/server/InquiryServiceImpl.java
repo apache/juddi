@@ -44,6 +44,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	
 	public InquiryResponse getTModelDetail(String authToken, String tModelKey) 
 	{
+		//HttpServletRequest request = this.getThreadLocalRequest();
+		//HttpSession session = request.getSession();
 		GetTModelDetail getTModelDetail = new GetTModelDetail();
 		getTModelDetail.setAuthInfo(authToken);
 		getTModelDetail.getTModelKey().add(tModelKey);

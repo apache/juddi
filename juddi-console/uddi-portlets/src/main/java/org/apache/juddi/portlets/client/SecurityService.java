@@ -25,5 +25,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("security")
 public interface SecurityService extends RemoteService {
+	public SecurityResponse get();
 	public SecurityResponse get(String username, String password);
 }

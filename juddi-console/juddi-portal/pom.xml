@@ -110,6 +110,12 @@
     
      
   </dependencies>
+  <repositories>
+		<repository>
+			<id>apache</id>
+			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		</repository>
+	</repositories>
   <build>
     <plugins>
       <plugin>
