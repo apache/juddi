@@ -81,7 +81,7 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 		getTokenButton.setStyleName(("portlet-form-button"));
 		loginPanel.add(getTokenButton);
 		RootPanel.get("token").add(tokenLabel);  //TODO at some point we want to hide this
-		RootPanel.get("browser").add(loginPanel);
+		
 		
 		
 		getTModelButton.addClickListener(this);
@@ -129,11 +129,16 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 				if (response.isSuccess) {
 					RootPanel.get("browser").clear();
 					token = response.getResponse();
-					tokenLabel.setText("token: " + token);
-					//RootPanel.get("browser").add(tmodelPanel);
-					RootPanel.get("browser").add(browsePanel);
-					getBusinesses(token, "all");
+					if (token == null ) {
+						RootPanel.get("browser").add(loginPanel);
+					} else {
+						tokenLabel.setText("token: " + token);
+						//RootPanel.get("browser").add(tmodelPanel);
+						RootPanel.get("browser").add(browsePanel);
+						getBusinesses(token, "all");
+					}
 				} else {
+					RootPanel.get("browser").add(loginPanel);
 					tokenLabel.setText("error: " + response.getMessage());
 				}
 			}
@@ -149,15 +154,20 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 			}
 
 			public void onSuccess(SecurityResponse response) {
-				if (response.getResponse()!=null) {
+				if (response.isSuccess) {
 					RootPanel.get("browser").clear();
 					token = response.getResponse();
-					tokenLabel.setText("token: " + token);
-					//RootPanel.get("browser").add(tmodelPanel);
-					RootPanel.get("browser").add(browsePanel);
-					getBusinesses(token, "all");
-					
-					
+					if (token == null ) {
+						RootPanel.get("browser").add(loginPanel);
+					} else {
+						tokenLabel.setText("token: " + token);
+						//RootPanel.get("browser").add(tmodelPanel);
+						RootPanel.get("browser").add(browsePanel);
+						getBusinesses(token, "all");
+					}
+				} else {
+					RootPanel.get("browser").add(loginPanel);
+					tokenLabel.setText("error: " + response.getMessage());
 				}
 			}
 		});
