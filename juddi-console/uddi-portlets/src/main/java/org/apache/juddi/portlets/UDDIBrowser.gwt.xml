@@ -4,7 +4,7 @@
       <inherits name="com.google.gwt.user.User"/>   	
     
       <!-- Specify the app entry point class.                         -->
-      <entry-point class="org.apache.juddi.portlets.client.Application"/>
+      <entry-point class="org.apache.juddi.portlets.client.UDDIBrowser"/>
     
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src="uddiportlets.css"/>

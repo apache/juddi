@@ -40,7 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class Application implements EntryPoint, ClickListener {
+public class UDDIBrowser implements EntryPoint, ClickListener {
 
 	Label tokenLabel = new Label("");
 	Label tmodelLabel = new Label("");
