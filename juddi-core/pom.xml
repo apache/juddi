@@ -54,6 +54,18 @@
   </pluginRepositories>
   <build>
     <plugins>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+			<excludes>
+				<exclude>**/persistence</exclude>
+				<exclude>**/persistence.xml</exclude>
+				<exclude>**/hibernate-persistence.xml</exclude>
+				<exclude>**/openjpa-persistence.xml</exclude>
+			</excludes>
+		</configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-antrun-plugin</artifactId>
@@ -81,8 +93,8 @@
 			</goals>
 		  </execution>
 		  <execution>
-			<id>bar</id>
-			<phase>prepare-package</phase>
+			<id>remove-meta-inf</id>
+			<phase>package</phase>
 			<configuration>
 			  <tasks>
 				<delete dir="src/main/java/META-INF"/>
