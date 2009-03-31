@@ -338,8 +338,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		
 		// Sort and retrieve the final results
 		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);
-		if (queryResults != null && queryResults.size() > 0)
-			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
+		result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 		
 		for (Object item : queryResults) {
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
@@ -352,8 +351,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		// Sort and retrieve the final results
 		queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);
-		if (queryResults != null && queryResults.size() > 0)
-			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
+		result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
 		
 		for (Object item : queryResults) {
 			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
