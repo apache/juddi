@@ -14,17 +14,17 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.client;
+package org.apache.juddi.portlets.client.service;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
  * 
- * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  *
  */
-@RemoteServiceRelativePath("publication")
-public interface PublicationService extends RemoteService {
-	
-	public PublicationResponse getBusinesses(String authToken, String infoSelection);
+public interface SecurityServiceAsync extends RemoteService {
+	public void get(AsyncCallback<SecurityResponse> callback);
+	public void get(String username, String password, AsyncCallback<SecurityResponse> callback);
 }
+

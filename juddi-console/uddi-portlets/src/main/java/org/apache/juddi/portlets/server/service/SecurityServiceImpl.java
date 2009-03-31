@@ -14,15 +14,15 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.server;
+package org.apache.juddi.portlets.server.service;
 
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.juddi.portlets.client.SecurityService;
-import org.apache.juddi.portlets.client.SecurityResponse;
+import org.apache.juddi.portlets.client.service.SecurityResponse;
+import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AuthToken;

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.client;
+package org.apache.juddi.portlets.client.service;
 /**
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>

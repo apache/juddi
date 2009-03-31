@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.client;
+package org.apache.juddi.portlets.client.service;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

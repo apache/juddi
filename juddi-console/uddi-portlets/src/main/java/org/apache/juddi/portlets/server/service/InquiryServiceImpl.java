@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.server;
+package org.apache.juddi.portlets.server.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.juddi.portlets.client.InquiryResponse;
-import org.apache.juddi.portlets.client.InquiryService;
+import org.apache.juddi.portlets.client.service.InquiryResponse;
+import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.GetTModelDetail;
@@ -58,8 +58,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
         	 Transport transport = (Transport) transportClass.newInstance(); 
         	 UDDIInquiryPortType inquiryService = transport.getInquiryService();
         	 TModelDetail tmodelDetail = inquiryService.getTModelDetail(getTModelDetail);
+        	 //demo code fix up what to return for real.
         	 for (TModel tmodel : tmodelDetail.getTModel()) {
-        		 //TODO figure out how to deal with i18n
         		 tmodelDetailMap.put("name",tmodel.getName().getValue());
 			 }
         	 response.setSuccess(true);

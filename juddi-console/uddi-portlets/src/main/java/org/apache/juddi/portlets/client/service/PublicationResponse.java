@@ -14,9 +14,11 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.client;
+package org.apache.juddi.portlets.client.service;
 
 import java.util.List;
+
+import org.apache.juddi.portlets.client.model.Business;
 /**
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
@@ -25,12 +27,12 @@ import java.util.List;
 public class PublicationResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
-	List<String> businesses;
+	List<Business> businesses;
 	
-	public List<String> getBusinesses() {
+	public List<Business> getBusinesses() {
 		return businesses;
 	}
-	public void setBusinesses(List<String> businesses) {
+	public void setBusinesses(List<Business> businesses) {
 		this.businesses = businesses;
 	}
 

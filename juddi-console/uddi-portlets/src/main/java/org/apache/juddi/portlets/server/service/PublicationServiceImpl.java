@@ -14,22 +14,27 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.server;
+package org.apache.juddi.portlets.server.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.juddi.portlets.client.PublicationResponse;
-import org.apache.juddi.portlets.client.PublicationService;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.juddi.portlets.client.model.Business;
+import org.apache.juddi.portlets.client.model.Service;
+import org.apache.juddi.portlets.client.service.PublicationResponse;
+import org.apache.juddi.portlets.client.service.PublicationService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
-import org.uddi.api_v3.Name;
 import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
+import org.uddi.api_v3.client.i18n.EntityForLang;
 import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
@@ -46,13 +51,16 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 	
 	public PublicationResponse getBusinesses(String authToken, String infoSelection) 
 	{
+		HttpServletRequest request = this.getThreadLocalRequest();
+		String lang = request.getLocale().getLanguage();
+		
 		GetRegisteredInfo getRegistrationInfo = new GetRegisteredInfo();
 		getRegistrationInfo.setAuthInfo(authToken);
 		getRegistrationInfo.setInfoSelection(InfoSelection.ALL);
 		
 		PublicationResponse response = new PublicationResponse();
 		logger.debug("GetRegistrationInfo " + getRegistrationInfo + " sending get Busineses request..");
-		List<String> businesses = new ArrayList<String>();
+		List<Business> businesses = new ArrayList<Business>();
 		try {
 	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
@@ -60,13 +68,15 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
         	 UDDIPublicationPortType publicationService = transport.getPublishService();
         	 RegisteredInfo info = publicationService.getRegisteredInfo(getRegistrationInfo);
         	 for (BusinessInfo businessInfo : info.getBusinessInfos().getBusinessInfo()) {
-				List<Name> names = businessInfo.getName();
-				for (Name name : names) {
-					if ("en".equals(name.getLang())) {
-						String businessName = name.getValue();
-						businesses.add(businessName);
-					}
+				Business business = new Business(EntityForLang.get(businessInfo.getName(),lang).getValue());
+				business.setKey(businessInfo.getBusinessKey());
+				business.setDescription(EntityForLang.get(businessInfo.getDescription(),lang).getValue());
+				List<Service> services = new ArrayList<Service>();
+				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
+					Service service = new Service(EntityForLang.get(serviceInfo.getName(), lang).getValue());
+					services.add(service);
 				}
+				business.setServices(services);
 			 }
         	 response.setSuccess(true);
         	 response.setBusinesses(businesses);

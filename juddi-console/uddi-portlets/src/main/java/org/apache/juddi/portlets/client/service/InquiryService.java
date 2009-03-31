@@ -14,24 +14,17 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.portlets.client;
+package org.apache.juddi.portlets.client.service;
 
-import java.util.Map;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
  * 
- *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  *
  */
-public class InquiryResponse extends Response {
+@RemoteServiceRelativePath("inquiry")
+public interface InquiryService extends RemoteService {
 	
-	private static final long serialVersionUID = 1L;
-	Map<String,String> response;
-	
-	public Map<String,String> getResponse() {
-		return response;
-	}
-	public void setResponse(Map<String,String> response) {
-		this.response = response;
-	}
-
+	public InquiryResponse getTModelDetail(String authToken, String tModelKey);
 }
