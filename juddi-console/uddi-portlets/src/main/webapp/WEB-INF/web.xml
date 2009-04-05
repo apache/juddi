@@ -18,10 +18,25 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>UDDISearchPortlet</servlet-name>
+		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+		<init-param>
+			<param-name>portlet-name</param-name>
+			<param-value>UDDISearchPortlet</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>UDDIBrowserPortlet</servlet-name>
 		<url-pattern>/PlutoInvoker/UDDIBrowserPortlet
+		</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>UDDISearchPortlet</servlet-name>
+		<url-pattern>/PlutoInvoker/UDDISearchPortlet
 		</url-pattern>
 	</servlet-mapping>
 </web-app>

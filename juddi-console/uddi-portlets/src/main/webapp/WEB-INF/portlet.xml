@@ -17,4 +17,17 @@
 			<title>UDDIBrowser Portlet</title>
 	    </portlet-info>
 	</portlet>
+	<portlet>
+    	<description>UDDI Search as a portlet app</description>
+		<portlet-name>UDDISearchPortlet</portlet-name>
+	    <display-name>UDDISearch Portlet</display-name>
+		<portlet-class>org.apache.juddi.portlets.server.UDDISearchPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+		</supports>
+	    <portlet-info>
+			<title>UDDISearch Portlet</title>
+	    </portlet-info>
+	</portlet>
 </portlet-app>
