@@ -12,7 +12,12 @@
 		<copy file="${basedir}/pluto.xml" todir="${conf.dir}/Catalina/localhost"/>
 		<unzip dest="${webapps.dir}/pluto" src="${dependency.pluto-portal.war}"/>
 		<unzip dest="${webapps.dir}/uddi-portlets" src="${dependency.uddi-portlets.war}"/>
+		<!--
 		<copy file="${basedir}/pluto-portal-driver-config.xml" todir="${webapps.dir}/pluto/WEB-INF"/>
+		-->
+		<copy todir="${webapps.dir}/pluto">
+			<fileset dir="${basedir}/pluto"/>
+		</copy>
 		<chmod perm="ugo+x">
 			<fileset dir="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/bin">
 				<include name="*.sh"/>
