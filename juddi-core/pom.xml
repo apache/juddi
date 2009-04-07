@@ -92,9 +92,10 @@
 				<goal>run</goal>
 			</goals>
 		  </execution>
+		  
 		  <execution>
 			<id>remove-meta-inf</id>
-			<phase>package</phase>
+			<phase>deploy</phase>
 			<configuration>
 			  <tasks>
 				<delete dir="src/main/java/META-INF"/>
@@ -392,7 +393,7 @@
 		<plugin>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>openjpa-maven-plugin</artifactId>
-			<version>1.0-alpha</version>
+			<version>1.0</version>
 			<executions>
 				<execution>
 					<id>JPA Enhance</id>
