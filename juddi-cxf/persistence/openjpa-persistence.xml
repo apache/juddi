@@ -52,9 +52,9 @@
     <class>org.apache.juddi.model.UddiEntity</class>
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
     <properties>
-      <property name="openjpa.ddl-generation" value="drop-and-create-tables"/>
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/>
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
+      <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
     </properties>
   </persistence-unit>
 </persistence>
