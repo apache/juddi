@@ -28,7 +28,8 @@ public class ApplicationConfigurationTest
 	{
 		try {
 			long refreshDelay = AppConfig.getConfiguration().getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY);
-			Assert.assertEquals(2000, refreshDelay);
+			System.out.println("refreshDelay=" + refreshDelay);
+			Assert.assertEquals(2000l, refreshDelay);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -41,7 +42,8 @@ public class ApplicationConfigurationTest
 		long defaultValue = 3000l;
 		try {
 			long nonexisting = AppConfig.getConfiguration().getLong("nonexisting.property",defaultValue);
-			Assert.assertEquals(3000, nonexisting);
+			System.out.println("nonexisting=" + nonexisting);
+			Assert.assertEquals(3000l, nonexisting);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();
