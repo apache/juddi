@@ -92,7 +92,7 @@
 		<executions>
 		 <execution>
 			<id>foo</id>
-			<phase>process-resources</phase>
+			<phase>generate-sources</phase>
 			<configuration>
 			<tasks>
 				<copy file ="${basedir}/persistence/${persistence}-persistence.xml"
