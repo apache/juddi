@@ -72,8 +72,8 @@
 		<version>1.3</version>
         <executions>
 		  <execution>
-			<id>foo</id>
-			<phase>test-compile</phase>
+			<id>initialize-meta-inf</id>
+			<phase>initialize</phase>
 			<configuration>
 			<tasks>
 				<delete dir="src/main/java/META-INF"/>
