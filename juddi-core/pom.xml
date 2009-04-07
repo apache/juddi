@@ -25,6 +25,10 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-core</artifactId>
   <version>3.0.0.SNAPSHOT</version>
+  <properties>
+	<persistence>hibernate</persistence>
+  </properties>
+  
   <packaging>jar</packaging>
   <name>jUDDI Core</name>
   <repositories>
@@ -233,6 +237,7 @@
     <profile> 
     <id>hibernate</id>
     <activation>
+      <activeByDefault>true</activeByDefault>
       <property>
       <name>persistence</name>
       <value>hibernate</value>
