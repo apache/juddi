@@ -18,7 +18,7 @@
 String errMsg = "";
 if (request.getParameter("install") != null) {
     try {
-        Install.install(request.getRealPath("WEB-INF\\install"), request.getParameter("rootPartition"), true);
+        Install.install(request.getRealPath("WEB-INF" + java.io.File.separator + "install"), request.getParameter("rootPartition"), true);
     }
     catch (JAXBException je) {
         errMsg = "JAXBException occurred attempting to install jUDDI:  " + je.getMessage();
