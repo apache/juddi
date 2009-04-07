@@ -5,7 +5,7 @@
              version="1.0">
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <jta-data-source>java:/comp/env/jdbc/JuddiDS</jta-data-source>
+    <non-jta-data-source>java:/comp/env/jdbc/JuddiDS</non-jta-data-source>
     <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
     <class>org.apache.juddi.model.AddressLine</class>
@@ -55,6 +55,13 @@
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/>
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
       <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
+       <property name="openjpa.jdbc.DBDictionary" value="derby"/> 
+      <!-- derby connection properties 
+      <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="openjpa.ConnectionURL" value="jdbc:derby:target/juddi-derby-test-db;create=true"/>
+      <property name="openjpa.ConnectionUserName" value=""/>
+      <property name="openjpa.ConnectionPassword" value=""/>
+      -->
     </properties>
   </persistence-unit>
 </persistence>
