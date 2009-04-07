@@ -6,66 +6,50 @@
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
     <jta-data-source>java:/comp/env/jdbc/JuddiDS</jta-data-source>
+    <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
-    <class>org.apache.juddi.model.AddressId</class>
     <class>org.apache.juddi.model.AddressLine</class>
-    <class>org.apache.juddi.model.AddressLineId</class>
     <class>org.apache.juddi.model.AuthToken</class>
-    <class>org.apache.juddi.model.BindingCategory</class>
-    <class>org.apache.juddi.model.BindingCategoryId</class>
+    <class>org.apache.juddi.model.BindingCategoryBag</class>
     <class>org.apache.juddi.model.BindingDescr</class>
-    <class>org.apache.juddi.model.BindingDescrId</class>
     <class>org.apache.juddi.model.BindingTemplate</class>
-    <class>org.apache.juddi.model.BindingEntity</class>
-    <class>org.apache.juddi.model.BindingIdentifier</class>
-    <class>org.apache.juddi.model.BindingIdentifierId</class>
+    <class>org.apache.juddi.model.BusinessCategoryBag</class>
+    <class>org.apache.juddi.model.BusinessDescr</class>
+    <class>org.apache.juddi.model.BusinessEntity</class>
+    <class>org.apache.juddi.model.BusinessIdentifier</class>
     <class>org.apache.juddi.model.BusinessName</class>
-    <class>org.apache.juddi.model.BusinessNameId</class>
     <class>org.apache.juddi.model.BusinessService</class>
     <class>org.apache.juddi.model.CategoryBag</class>
-    <class>org.apache.juddi.model.CategoryBagId</class>
-    <class>org.apache.juddi.model.CategoryBagGroup</class>
     <class>org.apache.juddi.model.Contact</class>
-    <class>org.apache.juddi.model.ContactId</class>
     <class>org.apache.juddi.model.ContactDescr</class>
     <class>org.apache.juddi.model.DiscoveryUrl</class>
-    <class>org.apache.juddi.model.DiscoveryUrlId</class>
     <class>org.apache.juddi.model.Email</class>
-    <class>org.apache.juddi.model.EmailId</class>
     <class>org.apache.juddi.model.InstanceDetailsDescr</class>
-    <class>org.apache.juddi.model.InstanceDetailsDescrId</class>
-    <class>org.apache.juddi.model.KeyGeneratorKey</class>
-    <class>org.apache.juddi.model.KeyGeneratorKeyId</class>
+    <class>org.apache.juddi.model.InstanceDetailsDocDescr</class>
+    <class>org.apache.juddi.model.KeyedReference</class>
+    <class>org.apache.juddi.model.KeyedReferenceGroup</class>
+    <class>org.apache.juddi.model.OverviewDoc</class>
+    <class>org.apache.juddi.model.OverviewDocDescr</class>
+    <class>org.apache.juddi.model.PersonName</class>
     <class>org.apache.juddi.model.Phone</class>
-    <class>org.apache.juddi.model.PhoneId</class>
+    <class>org.apache.juddi.model.Publisher</class>
     <class>org.apache.juddi.model.PublisherAssertion</class>
     <class>org.apache.juddi.model.PublisherAssertionId</class>
-    <class>org.apache.juddi.model.Publisher</class>
-    <class>org.apache.juddi.model.ServiceCategory</class>
-    <class>org.apache.juddi.model.ServiceCategoryId</class>
+    <class>org.apache.juddi.model.ServiceCategoryBag</class>
     <class>org.apache.juddi.model.ServiceDescr</class>
-    <class>org.apache.juddi.model.ServiceDescrId</class>
     <class>org.apache.juddi.model.ServiceName</class>
-    <class>org.apache.juddi.model.ServiceNameId</class>
     <class>org.apache.juddi.model.SubscribedObject</class>
     <class>org.apache.juddi.model.SubscribedObjectId</class>
     <class>org.apache.juddi.model.Subscription</class>
-    <class>org.apache.juddi.model.TmodelCategory</class>
-    <class>org.apache.juddi.model.TmodelCategoryId</class>
     <class>org.apache.juddi.model.Tmodel</class>
+    <class>org.apache.juddi.model.TmodelCategoryBag</class>
     <class>org.apache.juddi.model.TmodelDescr</class>
-    <class>org.apache.juddi.model.TmodelDescrId</class>
-    <class>org.apache.juddi.model.TmodelDocDescr</class>
-    <class>org.apache.juddi.model.TmodelDocDescrId</class>
     <class>org.apache.juddi.model.TmodelIdentifier</class>
-    <class>org.apache.juddi.model.TmodelIdentifierId</class>
     <class>org.apache.juddi.model.TmodelInstanceInfo</class>
-    <class>org.apache.juddi.model.TmodelInstanceInfoId</class>
     <class>org.apache.juddi.model.TmodelInstanceInfoDescr</class>
-    <class>org.apache.juddi.model.TmodelInstanceInfoDescrId</class>
-    <class>org.apache.juddi.model.TmodelOverview</class>
+    <class>org.apache.juddi.model.TransferToken</class>
+    <class>org.apache.juddi.model.TransferTokenKey</class>
     <class>org.apache.juddi.model.UddiEntity</class>
-    <class>org.apache.juddi.model.UddiEntityPublisher</class>
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
     <properties>
       <property name="openjpa.ddl-generation" value="drop-and-create-tables"/>
