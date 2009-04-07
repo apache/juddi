@@ -364,7 +364,7 @@
 				 </property>
 				 <property>
 				     <name>openjpa.Log</name>
-					 <value>alue="DefaultLevel=WARN, Tool=INFO</value>
+					 <value>DefaultLevel=WARN, Tool=INFO</value>
 				 </property>
 				 <property>
 				     <name>openjpa.ConnectionDriverName</name>
