@@ -5,7 +5,7 @@
              version="1.0">
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <jta-data-source>java:/JuddiDS</jta-data-source>
+    <jta-data-source>java:/comp/env/jdbc/JuddiDS</jta-data-source>
     <class>org.apache.juddi.model.Address</class>
     <class>org.apache.juddi.model.AddressId</class>
     <class>org.apache.juddi.model.AddressLine</class>
@@ -70,10 +70,6 @@
     <properties>
       <property name="openjpa.ddl-generation" value="drop-and-create-tables"/>
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/>
-      <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/juddi"/>
-      <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-      <property name="openjpa.ConnectionUserName" value="root"/>
-      <property name="openjpa.ConnectionPassword" value=""/>
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
     </properties>
   </persistence-unit>
