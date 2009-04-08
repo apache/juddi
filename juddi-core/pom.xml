@@ -284,52 +284,6 @@
 			  <includes>
 				<include>**/*Test.java</include>
 			  </includes>
-              <systemProperties>
-				 <property>
-					<name>hibernate.archive.autodetection</name>
-					<value>class</value>
-				 </property>
-				 <property>
-				     <name>hibernate.hbm2ddl.auto</name>
-					 <value>update</value>
-				 </property>
-				 <property>
-				     <name>hibernate.show_sql</name>
-					 <value>false</value>
-				 </property>
-				 <property>
-				     <name>hibernate.dialect</name>
-					 <value>org.hibernate.dialect.DerbyDialect</value>
-				 </property>
-				 <property>
-				     <name>hibernate.connection.driver_class</name>
-					 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
-				 </property>
-				 <property>
-				     <name>hibernate.connection.username</name>
-					 <value></value>
-				 </property>
-				 <property>
-				     <name>hibernate.connection.password</name>
-					 <value></value>
-				 </property>
-				 <property>
-					 <name>hibernate.connection.url</name>
-					 <value>jdbc:derby:target/juddi-derby-test-db;create=true</value>
-				 </property>
-                 <property>
-				     <name>hibernate.dbcp.maxActive</name>
-					 <value>100</value>
-				 </property>
-				 <property>
-					 <name>hibernate.dbcp.maxIdle</name>
-					 <value>30</value>
-				 </property>
-				 <property>
-					 <name>hibernate.dbcp.maxWait</name>
-					 <value>10000</value>
-				 </property>
-			   </systemProperties>
              </configuration>
            </plugin>
          </plugins>
@@ -363,36 +317,6 @@
 			  <includes>
 				<include>**/*Test.java</include>
 			  </includes>
-              <systemProperties>
-				 <property>
-					<name>openjpa.jdbc.SynchronizeMappings</name>
-					<value>buildSchema(SchemaAction='dropDB,add')</value>
-				 </property>
-				 <property>
-				     <name>openjpa.Log</name>
-					 <value>DefaultLevel=WARN, Tool=INFO</value>
-				 </property>
-				 <property>
-				     <name>openjpa.ConnectionDriverName</name>
-					 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
-				 </property>
-				 <property>
-				     <name>openjpa.ConnectionURL</name>
-					 <value>jdbc:derby:target/juddi-derby-test-db;create=true</value>
-				 </property>
-				 <property>
-				     <name>openjpa.ConnectionUserName</name>
-					 <value></value>
-				 </property>
-				 <property>
-				     <name>openjpa.ConnectionPassword</name>
-					 <value></value>
-				 </property>
-				 <property>
-				     <name>openjpa.jdbc.UpdateManager</name>
-					 <value>operation-order</value>
-				 </property>
-			   </systemProperties>
             </configuration>
         </plugin>
 		<plugin>

@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- * Copyright 2001-2009 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */ -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" 
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
@@ -27,6 +11,31 @@
     -->
     
     <properties>
+      <property name="hibernate.archive.autodetection" value="class"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="false"/>
+
+      <!-- derby connection properties -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+      <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="hibernate.connection.url" value="jdbc:derby:target/juddi-derby-test-db;create=true"/>
+      <property name="hibernate.connection.username" value=""/>
+      <property name="hibernate.connection.password" value=""/>
+   
+
+ 	  <!--  mysql connection properties 
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+      <property name="hibernate.connection.username" value="juddiv3" />
+      <property name="hibernate.connection.password" value="" />
+      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/juddiv3" />
+      -->
+      
+      <!-- connection pool properties -->
+      <property name="hibernate.dbcp.maxActive" value="100"/>
+      <property name="hibernate.dbcp.maxIdle" value="30"/>
+      <property name="hibernate.dbcp.maxWait" value="10000"/>
+      
     </properties>
   </persistence-unit>
 </persistence>
