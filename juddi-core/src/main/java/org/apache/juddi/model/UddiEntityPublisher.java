@@ -51,7 +51,7 @@ public class UddiEntityPublisher {
 	}
 	
 	@Id
-	@Column(name = "authorized_name", nullable = false, length = 20)
+	@Column(name = "authorized_name", nullable = false, length = 255)
 	public String getAuthorizedName() {
 		return this.authorizedName;
 	}

@@ -304,7 +304,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		}
 	}
-
 	
 	public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity) throws DispositionReportFaultMessage {
 		
@@ -345,7 +344,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 		if (!entityExists) {
 			// Check to make sure key isn't used by another entity.
-			if (em.find(UddiEntity.class, entityKey) != null)
+			if (!isUniqueKey(em, entityKey))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		
@@ -498,7 +497,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 			if (!entityExists) {
 				// Check to make sure key isn't used by another entity.
-				if (em.find(UddiEntity.class, entityKey) != null)
+				if (!isUniqueKey(em, entityKey))
 					throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 			}
 			
@@ -629,7 +628,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 		if (!entityExists) {
 			// Check to make sure key isn't used by another entity.
-			if (em.find(UddiEntity.class, entityKey) != null)
+			if (!isUniqueKey(em, entityKey))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		
@@ -698,7 +697,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 		if (!entityExists) {
 			// Check to make sure key isn't used by another entity.
-			if (em.find(UddiEntity.class, entityKey) != null)
+			if (!isUniqueKey(em, entityKey))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
 		

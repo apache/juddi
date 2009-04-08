@@ -80,7 +80,7 @@ public class BusinessDescr implements java.io.Serializable {
 		this.langCode = langCode;
 	}
 
-	@Column(name = "descr", nullable = false)
+	@Column(name = "descr", nullable = false, length = 1024)
 	public String getDescr() {
 		return this.descr;
 	}

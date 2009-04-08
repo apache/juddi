@@ -14,23 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */ -->
-<subscription xmlns="urn:uddi-org:sub_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace"
-	subscriptionKey="uddi:juddi.apache.org:joepublisher:subscription">
-	<subscriptionFilter>
-		<find_service xmlns="urn:uddi-org:api_v3">
-			<findQualifiers>
-				<findQualifier> uddi:uddi.org:findqualifier:sql99:like
-				</findQualifier>
-			</findQualifiers>
-			<categoryBag>
-				<keyedReference tModeKey="uddi:uddi.org:ubr:taxonomy:naics"
-					keyName="Motor Vehicle Parts" keyValue="42112_" />
-			</categoryBag>
-		</find_service>
-	</subscriptionFilter>
-	<bindingKey> bindingKeyOfTheClientsNotifySubscriptionListenerService 
-	</bindingKey>
-	<notificationInterval>P5D</notificationInterval>
-	<maxEntities>1000</maxEntities>
+ */
+-->
+<subscription xmlns="urn:uddi-org:sub_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" subscriptionKey="uddi:juddi.apache.org:joepublisher:subscription">
+  <subscriptionFilter>
+    <find_service xmlns="urn:uddi-org:api_v3">
+      <findQualifiers>
+        <findQualifier>uddi:uddi.org:findqualifier:sql99:like</findQualifier>
+      </findQualifiers>
+      <categoryBag>
+        <keyedReference tModelKey="uddi:uddi.org:ubr:taxonomy:naics" keyName="Motor Vehicle Parts" keyValue="42112_" />
+      </categoryBag>
+    </find_service>
+  </subscriptionFilter>
+  <bindingKey>bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <notificationInterval>P5D</notificationInterval>
+  <maxEntities>1000</maxEntities>
 </subscription>

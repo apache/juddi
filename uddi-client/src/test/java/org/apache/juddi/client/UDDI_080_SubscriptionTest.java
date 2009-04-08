@@ -31,9 +31,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_080_SubscriberSaveTest 
+public class UDDI_080_SubscriptionTest 
 {
-	private static Logger logger = Logger.getLogger(UDDI_080_SubscriberSaveTest.class);
+	private static Logger logger = Logger.getLogger(UDDI_080_SubscriptionTest.class);
 	private static TckSubscriber tckSubscriber = null;
 	
 	@BeforeClass
@@ -57,13 +57,13 @@ public class UDDI_080_SubscriberSaveTest
 	     } 
 	}
 	
-	@Test @Ignore //TODO as part of JUDDI-153
-	public void saveSubscriber() {
-		tckSubscriber.saveSubscriber();
+	@Test 
+	public void saveSubscription() {
+		tckSubscriber.saveSubscription();
 	}
 
-	@Test @Ignore
-	public void deleteSubscriber() {
-		tckSubscriber.deleteSubscriber();
+	@Test
+	public void deleteSubscription() {
+		tckSubscriber.deleteSubscription();
 	}
 }

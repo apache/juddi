@@ -14,6 +14,11 @@
  */
 package org.uddi.api_v3.tck;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.ws.Holder;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.sub_v3.SaveSubscription;
@@ -37,24 +42,25 @@ public class TckSubscriber
 		this.security = security;
 	}
 
-	public void saveSubscriber() {
+	public void saveSubscription() {
 		try {
 			String authInfo = TckSecurity.getAuthToken(security, "root", "");
-			
-			SaveSubscription ss = new SaveSubscription();
-			ss.setAuthInfo(authInfo);
 
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SUBSCRIPTION_XML, "org.uddi.sub_v3");
-			ss.getSubscription().add(subIn);
-			subscription.saveSubscription(authInfo, null);
+			List<Subscription> subscriptionList = new ArrayList<Subscription>();
+			subscriptionList.add(subIn);
+			Holder<List<Subscription>> subscriptionHolder = new Holder<List<Subscription>>();
+			subscriptionHolder.value = subscriptionList;
+			
+			subscription.saveSubscription(authInfo, subscriptionHolder);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail("No exception should be thrown");		
 		}
 	}
 
-	@Test
-	public void deleteSubscriber() {
+	public void deleteSubscription() {
 		try {
 			String authInfo = TckSecurity.getAuthToken(security, "root", "");
 			System.out.println("AUTHINFO=" + authInfo);

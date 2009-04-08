@@ -31,20 +31,20 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_080_SubscriberSaveTest 
+public class API_080_SubscriptionTest 
 {
 	private TckSubscriber tckSubscriber = new TckSubscriber(new UDDISubscriptionImpl(), new UDDISecurityImpl());
 	private static Logger logger = Logger.getLogger(API_060_PublisherAssertionTest.class);
 	
-	private static API_080_SubscriberSaveTest api010  = new API_080_SubscriberSaveTest();
+	private static API_080_SubscriptionTest api010  = new API_080_SubscriptionTest();
 
 	@Test
 	public void saveSubscriber() {
-		tckSubscriber.saveSubscriber();
+		tckSubscriber.saveSubscription();
 	}
 
 	@Test
 	public void deleteSubscriber() {
-		tckSubscriber.deleteSubscriber();
+		tckSubscriber.deleteSubscription();
 	}
 }

@@ -18,8 +18,12 @@
 package org.apache.juddi.validation;
 
 
+import javax.persistence.EntityManager;
+
+import org.apache.juddi.model.Subscription;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.UnsupportedException;
+import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -46,4 +50,15 @@ public abstract class ValidateUDDIApi {
 		throw new UnsupportedException(new ErrorMessage("errors.Unsupported"));
 	}
 	
+	public static boolean isUniqueKey(EntityManager em, String entityKey) {
+		Object obj = em.find(UddiEntity.class, entityKey);
+		if (obj != null)
+			return false;
+		
+		obj = em.find(Subscription.class, entityKey);
+		if (obj != null)
+			return false;
+		
+		return true;
+	}
 }
