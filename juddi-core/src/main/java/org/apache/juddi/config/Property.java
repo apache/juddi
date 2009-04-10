@@ -23,6 +23,7 @@ public interface Property
 	public final static String JUDDI_NODE_ID                     ="juddi.nodeId";
 	public final static String JUDDI_TRANSFER_EXPIRATION_DAYS    ="juddi.transfer.expiration.days";
 	public final static String JUDDI_AUTHENTICATE_INQUIRY        ="juddi.authenticate.Inquiry";
+	public final static String JUDDI_SUBSCRIPTION_EXPIRATION_DAYS="juddi.subscription.expiration.days";
 	
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";
