@@ -68,7 +68,7 @@ public class Subscription implements java.io.Serializable {
 	}
 
 	@Lob
-	@Column(name = "subscription_filter", nullable = false)
+	@Column(name = "subscription_filter", nullable = false, length = 2048)
 	public String getSubscriptionFilter() {
 		return subscriptionFilter;
 	}
