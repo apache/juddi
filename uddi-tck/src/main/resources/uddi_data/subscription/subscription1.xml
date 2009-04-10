@@ -16,18 +16,24 @@
  *
  */
 -->
-<subscription xmlns="urn:uddi-org:sub_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" subscriptionKey="uddi:juddi.apache.org:joepublisher:subscription">
+<subscription xmlns="urn:uddi-org:sub_v3">
+  <subscriptionKey>uddi:uddi.joepublisher.com:subscriptionone</subscriptionKey>
   <subscriptionFilter>
-    <find_service xmlns="urn:uddi-org:api_v3">
+    <find_service xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
       <findQualifiers>
-        <findQualifier>uddi:uddi.org:findqualifier:sql99:like</findQualifier>
+        <findQualifier>exactMatch</findQualifier>
       </findQualifiers>
+      <name xml:lang="en">Service One</name>
       <categoryBag>
-        <keyedReference tModelKey="uddi:uddi.org:ubr:taxonomy:naics" keyName="Motor Vehicle Parts" keyValue="42112_" />
+        <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
+        <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
+        <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+          <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+        </keyedReferenceGroup>
       </categoryBag>
     </find_service>
   </subscriptionFilter>
-  <bindingKey>bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <bindingKey xmlns="urn:uddi-org:api_v3">bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
   <notificationInterval>P5D</notificationInterval>
   <maxEntities>1000</maxEntities>
 </subscription>
