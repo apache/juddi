@@ -17,10 +17,18 @@
 
 package org.apache.juddi.mapping;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.util.JAXBMarshaller;
+import org.apache.log4j.Logger;
+import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 
@@ -29,7 +37,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class MappingApiToModel {
+	private static Logger logger = Logger.getLogger(MappingApiToModel.class);
 
+	
 	public static void mapPublisher(org.apache.juddi.api.datatype.Publisher apiPublisher, 
 									org.apache.juddi.model.Publisher modelPublisher) 
 				   throws DispositionReportFaultMessage {
@@ -533,23 +543,29 @@ public class MappingApiToModel {
 	}
 
 	public static void mapSubscription(org.uddi.sub_v3.Subscription apiSubscription,
-			org.apache.juddi.model.Subscription modelSubscription) throws DispositionReportFaultMessage {
-		if ((apiSubscription.getSubscriptionKey() != null) && (!"".equals(apiSubscription.getSubscriptionKey()))) {
-			// if the apiSubscription has a key, this is a renewal or update - we don't want to change all of the fields, 
-			// just the ones that have been provided to update the record
-			if (apiSubscription.getBindingKey() != null) {
-				modelSubscription.setBindingKey(apiSubscription.getBindingKey());
-			}
-			
-			if (apiSubscription.getNotificationInterval() != null) {
-				modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
-			}
-			
-		} else {
-			// No key provided, assume that this is a new subscription and map all fields
-			modelSubscription.setBindingKey(apiSubscription.getBindingKey());
-			modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+									   org.apache.juddi.model.Subscription modelSubscription) 
+				   throws DispositionReportFaultMessage {
+
+		modelSubscription.setSubscriptionKey(apiSubscription.getSubscriptionKey());
+		modelSubscription.setBindingKey(apiSubscription.getBindingKey());
+		modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+		modelSubscription.setMaxEntities(apiSubscription.getMaxEntities());
+		if (apiSubscription.getExpiresAfter() != null) {
+			GregorianCalendar gc = apiSubscription.getExpiresAfter().toGregorianCalendar();
+			modelSubscription.setExpiresAfter(new Date(gc.getTimeInMillis()));
 		}
+		modelSubscription.setBrief(apiSubscription.isBrief());
+		
+		try {
+			String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(apiSubscription.getSubscriptionFilter()), "org.uddi.sub_v3");
+			logger.debug("marshalled subscription filter:  " + rawFilter);
+			modelSubscription.setSubscriptionFilter(rawFilter);
+
+		} catch (JAXBException e) {
+			logger.error("JAXBException while marshalling subscription filter", e);
+			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+		}
+		
 	}
 	
 }

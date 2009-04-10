@@ -17,18 +17,20 @@
 
  package org.apache.juddi.validation;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.KeyUnavailableException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.uddi.sub_v3.SaveSubscription;
+import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -106,54 +108,84 @@ public class ValidateSubscription extends ValidateUDDIApi {
 		if (!entityExists && subscriptionFilter == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.NoFilterOnNewSubscription"));
 			
-		int filterCount = 0;
-		ValidateInquiry validateInquiry = new ValidateInquiry(publisher);
-		if (subscriptionFilter.getFindBinding() != null) {
-			filterCount++;
-			validateInquiry.validateFindBinding(subscriptionFilter.getFindBinding());
-		}
-		if (subscriptionFilter.getFindBusiness() != null) {
-			filterCount++;
-			validateInquiry.validateFindBusiness(subscriptionFilter.getFindBusiness());
-		}
-		if (subscriptionFilter.getFindService() != null) {
-			filterCount++;
-			validateInquiry.validateFindService(subscriptionFilter.getFindService());
-		}
-		if (subscriptionFilter.getFindTModel() != null) {
-			filterCount++;
-			validateInquiry.validateFindTModel(subscriptionFilter.getFindTModel(), false);
-		}
-		if (subscriptionFilter.getFindRelatedBusinesses() != null) {
-			filterCount++;
-			validateInquiry.validateFindRelatedBusinesses(subscriptionFilter.getFindRelatedBusinesses(), false);
-		}
-		if (subscriptionFilter.getGetBindingDetail() != null) {
-			filterCount++;
-			validateInquiry.validateGetBindingDetail(subscriptionFilter.getGetBindingDetail());
-		}
-		if (subscriptionFilter.getGetBusinessDetail() != null) {
-			filterCount++;
-			validateInquiry.validateGetBusinessDetail(subscriptionFilter.getGetBusinessDetail());
-		}
-		if (subscriptionFilter.getGetServiceDetail() != null) {
-			filterCount++;
-			validateInquiry.validateGetServiceDetail(subscriptionFilter.getGetServiceDetail());
-		}
-		if (subscriptionFilter.getGetTModelDetail() != null) {
-			filterCount++;
-			validateInquiry.validateGetTModelDetail(subscriptionFilter.getGetTModelDetail());
-		}
-		if (subscriptionFilter.getGetAssertionStatusReport() != null) {
-			filterCount++;
+		if (subscriptionFilter != null) {
+			int filterCount = 0;
+			ValidateInquiry validateInquiry = new ValidateInquiry(publisher);
+			if (subscriptionFilter.getFindBinding() != null) {
+				filterCount++;
+				validateInquiry.validateFindBinding(subscriptionFilter.getFindBinding());
+			}
+			if (subscriptionFilter.getFindBusiness() != null) {
+				filterCount++;
+				validateInquiry.validateFindBusiness(subscriptionFilter.getFindBusiness());
+			}
+			if (subscriptionFilter.getFindService() != null) {
+				filterCount++;
+				validateInquiry.validateFindService(subscriptionFilter.getFindService());
+			}
+			if (subscriptionFilter.getFindTModel() != null) {
+				filterCount++;
+				validateInquiry.validateFindTModel(subscriptionFilter.getFindTModel(), false);
+			}
+			if (subscriptionFilter.getFindRelatedBusinesses() != null) {
+				filterCount++;
+				validateInquiry.validateFindRelatedBusinesses(subscriptionFilter.getFindRelatedBusinesses(), false);
+			}
+			if (subscriptionFilter.getGetBindingDetail() != null) {
+				filterCount++;
+				validateInquiry.validateGetBindingDetail(subscriptionFilter.getGetBindingDetail());
+			}
+			if (subscriptionFilter.getGetBusinessDetail() != null) {
+				filterCount++;
+				validateInquiry.validateGetBusinessDetail(subscriptionFilter.getGetBusinessDetail());
+			}
+			if (subscriptionFilter.getGetServiceDetail() != null) {
+				filterCount++;
+				validateInquiry.validateGetServiceDetail(subscriptionFilter.getGetServiceDetail());
+			}
+			if (subscriptionFilter.getGetTModelDetail() != null) {
+				filterCount++;
+				validateInquiry.validateGetTModelDetail(subscriptionFilter.getGetTModelDetail());
+			}
+			if (subscriptionFilter.getGetAssertionStatusReport() != null) {
+				filterCount++;
+			}
+
+			if (filterCount == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.BlankFilter"));
+			
+			if (filterCount > 1)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.TooManyFilters", String.valueOf(filterCount)));
+
 		}
 		
-		if (!entityExists && filterCount == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.NoFilterOnNewSubscription"));
-		
-		if (filterCount > 1)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.TooManyFilters", String.valueOf(filterCount)));
 		
 	}
 	
+	public void validateDeleteSubscription(EntityManager em, DeleteSubscription body) throws DispositionReportFaultMessage {
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+
+		// No null or empty list
+		List<String> entityKeyList = body.getSubscriptionKey();
+		if (entityKeyList == null || entityKeyList.size() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
+		
+		HashSet<String> dupCheck = new HashSet<String>();
+		for (String entityKey : entityKeyList) {
+			boolean inserted = dupCheck.add(entityKey);
+			if (!inserted)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+			
+			Object obj = em.find(org.apache.juddi.model.Subscription.class, entityKey);
+			if (obj == null)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscriptionNotFound", entityKey));
+			
+			// No ownership specified for subscriptions
+			//if (!publisher.isOwner((UddiEntity)obj))
+			//	throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			
+		}
+	}
 }
