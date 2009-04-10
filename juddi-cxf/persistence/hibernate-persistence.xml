@@ -38,9 +38,8 @@
     <class>org.apache.juddi.model.ServiceCategoryBag</class>
     <class>org.apache.juddi.model.ServiceDescr</class>
     <class>org.apache.juddi.model.ServiceName</class>
-    <class>org.apache.juddi.model.SubscribedObject</class>
-    <class>org.apache.juddi.model.SubscribedObjectId</class>
     <class>org.apache.juddi.model.Subscription</class>
+    <class>org.apache.juddi.model.SubscriptionMatch</class>
     <class>org.apache.juddi.model.Tmodel</class>
     <class>org.apache.juddi.model.TmodelCategoryBag</class>
     <class>org.apache.juddi.model.TmodelDescr</class>
