@@ -18,33 +18,62 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.tck.TckBindingTemplate;
 import org.uddi.api_v3.tck.TckBusiness;
+import org.uddi.api_v3.tck.TckBusinessService;
 import org.uddi.api_v3.tck.TckPublisher;
-import org.uddi.api_v3.tck.TckPublisherAssertion;
 import org.uddi.api_v3.tck.TckSecurity;
-import org.uddi.api_v3.tck.TckSubscriber;
+import org.uddi.api_v3.tck.TckSubscription;
 import org.uddi.api_v3.tck.TckTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class API_080_SubscriptionTest 
 {
-	private TckSubscriber tckSubscriber = new TckSubscriber(new UDDISubscriptionImpl(), new UDDISecurityImpl());
-	private static Logger logger = Logger.getLogger(API_060_PublisherAssertionTest.class);
+	private static Logger logger = Logger.getLogger(API_080_SubscriptionTest.class);
+
+	private static API_010_PublisherTest api010 = new API_010_PublisherTest();
+	private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
+
+	private static String authInfoJoe = null;
 	
-	private static API_080_SubscriptionTest api010  = new API_080_SubscriptionTest();
-
-	@Test
-	public void saveSubscriber() {
-		tckSubscriber.saveSubscription();
+	@BeforeClass
+	public static void setup() {
+		logger.debug("Getting auth token..");
+		try {
+			api010.saveJoePublisher();
+			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+		} catch (DispositionReportFaultMessage e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
+		}
 	}
 
+	
 	@Test
-	public void deleteSubscriber() {
-		tckSubscriber.deleteSubscription();
+	public void joePublisher() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
+		} 
+		finally {
+			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+		
 	}
+
 }

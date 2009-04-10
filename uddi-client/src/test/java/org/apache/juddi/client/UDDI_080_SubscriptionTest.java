@@ -18,36 +18,61 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.api_v3.tck.TckSubscriber;
+import org.uddi.api_v3.tck.TckBindingTemplate;
+import org.uddi.api_v3.tck.TckBusiness;
+import org.uddi.api_v3.tck.TckBusinessService;
+import org.uddi.api_v3.tck.TckPublisher;
+import org.uddi.api_v3.tck.TckSecurity;
+import org.uddi.api_v3.tck.TckSubscription;
+import org.uddi.api_v3.tck.TckTModel;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * @author <a href="mailto:tcunningh@apache.org">Tom Cunningham</a>
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class UDDI_080_SubscriptionTest 
 {
 	private static Logger logger = Logger.getLogger(UDDI_080_SubscriptionTest.class);
-	private static TckSubscriber tckSubscriber = null;
-	
+
+	private static TckTModel tckTModel                    = null;
+	private static TckBusiness tckBusiness                = null;
+	private static TckBusinessService tckBusinessService  = null;
+	private static TckBindingTemplate tckBindingTemplate  = null;
+	private static TckSubscription tckSubscription = null;
+
+	private static String authInfoJoe = null;
+
 	@BeforeClass
 	public static void setup() {
 		logger.debug("Getting subscriber proxy..");
 		try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT, Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 
 	        	 UDDISecurityPortType security = transport.getSecurityService();
-	        	 UDDISubscriptionPortType subscriber = transport.getSubscriptionService();
-	        	 tckSubscriber = new TckSubscriber(subscriber, security);
+	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
+	        	 Assert.assertNotNull(authInfoJoe);
+	        	 
+	        	 UDDIPublicationPortType publication = transport.getPublishService();
+	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
+	        	 UDDISubscriptionPortType subscription = transport.getSubscriptionService();
+
+	        	 tckTModel  = new TckTModel(publication, inquiry);
+	        	 tckBusiness = new TckBusiness(publication, inquiry);
+	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
+	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+
+	        	 tckSubscription = new TckSubscription(subscription, security);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -57,13 +82,22 @@ public class UDDI_080_SubscriptionTest
 	     } 
 	}
 	
-	@Test 
-	public void saveSubscription() {
-		tckSubscriber.saveSubscription();
+	@Test
+	public void joePublisher() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
+		} 
+		finally {
+			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
 	}
 
-	@Test
-	public void deleteSubscription() {
-		tckSubscriber.deleteSubscription();
-	}
 }
