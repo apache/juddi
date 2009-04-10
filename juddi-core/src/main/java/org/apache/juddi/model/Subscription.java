@@ -15,12 +15,17 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,6 +45,8 @@ public class Subscription implements java.io.Serializable {
 	private String notificationInterval;
 	private Integer maxEntities;
 	private Date expiresAfter;
+	private Boolean brief;
+	private List<SubscriptionMatch> subscriptionMatches = new ArrayList<SubscriptionMatch>(0);
 
 	public Subscription() {
 	}
@@ -69,7 +76,7 @@ public class Subscription implements java.io.Serializable {
 		this.subscriptionFilter = subscriptionFilter;
 	}
 	
-	@Column(name = "binding_key", nullable = false, length = 255)
+	@Column(name = "binding_key", length = 255)
 	public String getBindingKey() {
 		return this.bindingKey;
 	}
@@ -102,4 +109,19 @@ public class Subscription implements java.io.Serializable {
 		this.expiresAfter = expiresAfter;
 	}
 
+	@Column(name = "brief")
+	public Boolean isBrief() {
+		return brief;
+	}
+	public void setBrief(Boolean brief) {
+		this.brief = brief;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subscription")
+	public List<SubscriptionMatch> getSubscriptionMatches() {
+		return subscriptionMatches;
+	}
+	public void setSubscriptionMatches(List<SubscriptionMatch> subscriptionMatches) {
+		this.subscriptionMatches = subscriptionMatches;
+	}
 }

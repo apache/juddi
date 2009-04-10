@@ -41,6 +41,11 @@ public class SubscriptionMatch implements java.io.Serializable {
 
 	public SubscriptionMatch() {
 	}
+	
+	public SubscriptionMatch(Subscription subscription, String entityKey) {
+		this.subscription = subscription;
+		this.entityKey = entityKey;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
