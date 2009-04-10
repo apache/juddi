@@ -137,7 +137,8 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 		opaqueToken.value = transferKey.getBytes();
 		
 		GregorianCalendar gc = new GregorianCalendar();
-		gc.setTimeInMillis(gc.getTimeInMillis() + transferExpirationDays * 24 * 60 * 60 * 1000);
+		gc.add(GregorianCalendar.DAY_OF_MONTH, transferExpirationDays);
+		
 		transferToken.setExpirationDate(gc.getTime());
 
 		try { 
