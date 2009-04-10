@@ -554,8 +554,13 @@ public class MappingApiToModel {
 			GregorianCalendar gc = apiSubscription.getExpiresAfter().toGregorianCalendar();
 			modelSubscription.setExpiresAfter(new Date(gc.getTimeInMillis()));
 		}
-		modelSubscription.setBrief(apiSubscription.isBrief());
 		
+		if (modelSubscription.isBrief() != null) {
+			modelSubscription.setBrief(apiSubscription.isBrief());
+		} else {
+			modelSubscription.setBrief(new Boolean(false));
+		}
+			
 		try {
 			String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(apiSubscription.getSubscriptionFilter()), "org.uddi.sub_v3");
 			logger.debug("marshalled subscription filter:  " + rawFilter);
