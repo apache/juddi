@@ -77,6 +77,7 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 					services.add(service);
 				}
 				business.setServices(services);
+				businesses.add(business);
 			 }
         	 response.setSuccess(true);
         	 response.setBusinesses(businesses);

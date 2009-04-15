@@ -1,0 +1,72 @@
+package org.apache.juddi.portlets.client;
+
+import java.util.List;
+
+import org.apache.juddi.portlets.client.model.Business;
+import org.apache.juddi.portlets.client.model.Service;
+import org.apache.juddi.portlets.client.service.PublicationResponse;
+import org.apache.juddi.portlets.client.service.PublicationService;
+import org.apache.juddi.portlets.client.service.PublicationServiceAsync;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+
+public class BusinessBrowsePanel extends FlowPanel {
+
+	private Tree publisherTree = new Tree();
+	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
+	public static final Images images = (Images) GWT.create(Images.class);
+	
+	public BusinessBrowsePanel() {
+		Label businesses = new Label ("Businesses");
+		businesses.setStyleName("portlet-form-field-label");
+		this.add(businesses);
+		this.add(publisherTree);
+	}
+	
+	protected void getBusinesses(String token, String infoSelection) {
+
+		publicationService.getBusinesses(token, infoSelection, new AsyncCallback<PublicationResponse>() 
+		{
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not connect to the UDDI registry.");
+			}
+
+			public void onSuccess(PublicationResponse response) {
+				if (response.isSuccess()) {
+					List<Business> businesses= response.getBusinesses();
+					System.out.println("Businesses=" + businesses);
+					
+					for (Business business : businesses) {
+					
+						TreeItem businessTree = new TreeItem(images.business().getHTML() + " " + business.getName());
+                     
+						TreeItem keyItem = new TreeItem(images.key().getHTML() + " " + business.getKey());
+						businessTree.addItem(keyItem);
+						
+						TreeItem descriptionItem = new TreeItem(images.description().getHTML() + " " + business.getDescription());
+						businessTree.addItem(descriptionItem);
+						TreeItem serviceTree = new TreeItem();
+						for (Service service : business.getServices()) {
+							TreeItem serviceItem = new TreeItem(images.service().getHTML() + " " + service.getName());
+							serviceTree.addItem(serviceItem);
+						}
+						businessTree.addItem(serviceTree);
+						
+						publisherTree.addItem(businessTree);
+					}
+					
+				} else {
+					//tmodelLabel.setText("error: " + response.getMessage());
+				}
+			}
+		});
+	}
+	
+	
+}

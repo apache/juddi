@@ -55,7 +55,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		response.setResponse(token);
 		return response;
 	}
+	
 	public SecurityResponse get(String username, String password) {
+		if (username==null) {
+			return get();
+		}
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
 		Principal user = request.getUserPrincipal();
