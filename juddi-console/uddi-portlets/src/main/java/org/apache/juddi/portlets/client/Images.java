@@ -9,4 +9,6 @@ public interface Images extends ImageBundle {
 	AbstractImagePrototype business();
 	AbstractImagePrototype description();
 	AbstractImagePrototype service();
+	AbstractImagePrototype services();
+	
 }

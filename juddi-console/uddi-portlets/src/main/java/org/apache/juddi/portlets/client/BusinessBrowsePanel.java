@@ -51,7 +51,7 @@ public class BusinessBrowsePanel extends FlowPanel {
 						
 						TreeItem descriptionItem = new TreeItem(images.description().getHTML() + " " + business.getDescription());
 						businessTree.addItem(descriptionItem);
-						TreeItem serviceTree = new TreeItem();
+						TreeItem serviceTree = new TreeItem(images.services().getHTML() + " Services owned by this business");
 						for (Service service : business.getServices()) {
 							TreeItem serviceItem = new TreeItem(images.service().getHTML() + " " + service.getName());
 							serviceTree.addItem(serviceItem);
