@@ -26,6 +26,7 @@ import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.KeyUnavailableException;
+import org.apache.juddi.error.UserMismatchException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.keygen.KeyGeneratorFactory;
@@ -76,11 +77,9 @@ public class ValidateSubscription extends ValidateUDDIApi {
 			if (obj != null) {
 				entityExists = true;
 
-				// Subscriptions don't specify ownership.  Therefore, anyone can change a subscription (if they have the key).  
-				// This could be implemented by adding the authorizedName field to the model class.
 				// Make sure publisher owns this entity.
-				//if (!publisher.isOwner((UddiEntity)obj))
-				//	throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+				if (!publisher.getAuthorizedName().equals(((org.apache.juddi.model.Subscription)obj).getAuthorizedName()))
+					throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			}
 			else {
 				// Inside this block, we have a key proposed by the publisher on a new entity
@@ -182,9 +181,9 @@ public class ValidateSubscription extends ValidateUDDIApi {
 			if (obj == null)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscriptionNotFound", entityKey));
 			
-			// No ownership specified for subscriptions
-			//if (!publisher.isOwner((UddiEntity)obj))
-			//	throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			// Make sure publisher owns this entity.
+			if (!publisher.getAuthorizedName().equals(((org.apache.juddi.model.Subscription)obj).getAuthorizedName()))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
 		}
 	}

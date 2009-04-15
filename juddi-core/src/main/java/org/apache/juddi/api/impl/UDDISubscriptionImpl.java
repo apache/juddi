@@ -139,6 +139,8 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			doSubscriptionExpirationDate(apiSubscription);
 			
 			MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
+			
+			modelSubscription.setAuthorizedName(publisher.getAuthorizedName());
 
 			// Add the matching keys to the match collection
 			List<?> keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);
