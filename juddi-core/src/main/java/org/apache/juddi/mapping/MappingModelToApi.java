@@ -17,23 +17,28 @@
 
 package org.apache.juddi.mapping;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.util.JAXBMarshaller;
+import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.OperationalInfo;
+import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -41,6 +46,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class MappingModelToApi {
+	private static Logger logger = Logger.getLogger(MappingModelToApi.class);
+
 	
 	public static void mapPublisher(org.apache.juddi.model.Publisher modelPublisher, 
 									org.apache.juddi.api.datatype.Publisher apiPublisher) 
@@ -724,29 +731,57 @@ public class MappingModelToApi {
 		apiOperationalInfo.setAuthorizedName(modelUddiEntity.getAuthorizedName());
 	}
 
+
+	public static void mapSubscription(org.apache.juddi.model.Subscription modelSubscription, 
+									   org.uddi.sub_v3.Subscription apiSubscription) 
+				   throws DispositionReportFaultMessage {
+		
+		apiSubscription.setSubscriptionKey(modelSubscription.getSubscriptionKey());
+		apiSubscription.setBrief(modelSubscription.isBrief());
+		apiSubscription.setExpiresAfter(convertDateToXMLGregorianCalendar(modelSubscription.getExpiresAfter()));
+		apiSubscription.setBindingKey(modelSubscription.getBindingKey());
+		apiSubscription.setMaxEntities(modelSubscription.getMaxEntities());
+		apiSubscription.setNotificationInterval(converStringToDuration(modelSubscription.getNotificationInterval()));
+
+		try {
+			SubscriptionFilter existingFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), "org.uddi.sub_v3");
+			apiSubscription.setSubscriptionFilter(existingFilter);
+		} 
+		catch (JAXBException e) {
+			logger.error("JAXB Exception while marshalling subscription filter", e);
+			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+		} 
+	}
+	
 	public static XMLGregorianCalendar convertDateToXMLGregorianCalendar(Date date) throws DispositionReportFaultMessage {
 		XMLGregorianCalendar result = null;
 		try { 
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(date);
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.setTimeInMillis(date.getTime());
 			
 			DatatypeFactory df = DatatypeFactory.newInstance();
-			result = df.newXMLGregorianCalendar(calendar.get(Calendar.YEAR), 
-												calendar.get(Calendar.MONTH), 
-												calendar.get(Calendar.DAY_OF_MONTH), 
-												calendar.get(Calendar.HOUR), 
-												calendar.get(Calendar.MINUTE), 
-												calendar.get(Calendar.SECOND), 
-												calendar.get(Calendar.MILLISECOND), 
-												0);
+			result = df.newXMLGregorianCalendar(gc);
 		}
 		catch(DatatypeConfigurationException ce) { 
 			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
 		}
 		
 		return result;
-		
 	}
-
 	
+	public static Duration converStringToDuration(String duration) throws DispositionReportFaultMessage {
+		Duration result = null;
+		try { 
+			
+			DatatypeFactory df = DatatypeFactory.newInstance();
+			result = df.newDuration(duration);
+		}
+		catch(DatatypeConfigurationException ce) { 
+			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+		}
+
+		return result;
+	}
+	
+
 }

@@ -17,6 +17,7 @@
 
 package org.apache.juddi.api.impl;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -41,8 +42,10 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.juddi.validation.ValidateSubscription;
@@ -55,7 +58,7 @@ import org.apache.log4j.Logger;
 public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISubscriptionPortType {
 
 	private static Logger logger = Logger.getLogger(UDDISubscriptionImpl.class);
-	
+
 	public static final int DEFAULT_SUBSCRIPTIONEXPIRATION_DAYS = 30;
 
 
@@ -96,21 +99,33 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public List<Subscription> getSubscriptions(String authInfo)
 			throws DispositionReportFaultMessage {
 		EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-        
-        @SuppressWarnings("unused")
-		List<?> keysFound = null;
 
-        // TODO JUDDI-153 : find the subscriptions
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+		
+		List<Subscription> result = new ArrayList<Subscription>(0);
+		
+		List<org.apache.juddi.model.Subscription> modelSubscriptionList = (List<org.apache.juddi.model.Subscription>)FindSubscriptionByPublisherQuery.select(em, publisher.getAuthorizedName());
+		if (modelSubscriptionList != null && modelSubscriptionList.size() > 0) {
+			for (org.apache.juddi.model.Subscription modelSubscription : modelSubscriptionList) {
+				
+				Subscription apiSubscription = new Subscription();
+				
+				MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
+				
+				result.add(apiSubscription);
+			}
+		}
         
         tx.commit();
         em.close();
 		
-		return null;
+		return result;
 	}
 
 
