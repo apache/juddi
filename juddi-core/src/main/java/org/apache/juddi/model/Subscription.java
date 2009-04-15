@@ -40,6 +40,7 @@ public class Subscription implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String subscriptionKey;
+	private String authorizedName;
 	private String subscriptionFilter;
 	private String bindingKey;
 	private String notificationInterval;
@@ -65,6 +66,14 @@ public class Subscription implements java.io.Serializable {
 	}
 	public void setSubscriptionKey(String subscriptionKey) {
 		this.subscriptionKey = subscriptionKey;
+	}
+
+	@Column(name = "authorized_name", nullable = false, length = 255)
+	public String getAuthorizedName() {
+		return authorizedName;
+	}
+	public void setAuthorizedName(String authorizedName) {
+		this.authorizedName = authorizedName;
 	}
 
 	@Lob
