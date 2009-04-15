@@ -16,13 +16,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
-public class BusinessBrowsePanel extends FlowPanel {
+public class BusinessTreePanel extends FlowPanel {
 
 	private Tree publisherTree = new Tree();
 	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
 	public static final Images images = (Images) GWT.create(Images.class);
 	
-	public BusinessBrowsePanel() {
+	public BusinessTreePanel() {
 		Label businesses = new Label ("Businesses");
 		businesses.setStyleName("portlet-form-field-label");
 		this.add(businesses);
@@ -45,15 +45,19 @@ public class BusinessBrowsePanel extends FlowPanel {
 					for (Business business : businesses) {
 					
 						TreeItem businessTree = new TreeItem(images.business().getHTML() + " " + business.getName());
+						businessTree.setStyleName("portlet-form-field-label");
                      
 						TreeItem keyItem = new TreeItem(images.key().getHTML() + " " + business.getKey());
+						keyItem.setStyleName("portlet-form-field-label");
 						businessTree.addItem(keyItem);
 						
 						TreeItem descriptionItem = new TreeItem(images.description().getHTML() + " " + business.getDescription());
+						descriptionItem.setStyleName("portlet-form-field-label");
 						businessTree.addItem(descriptionItem);
 						TreeItem serviceTree = new TreeItem(images.services().getHTML() + " Services owned by this business");
 						for (Service service : business.getServices()) {
 							TreeItem serviceItem = new TreeItem(images.service().getHTML() + " " + service.getName());
+							serviceItem.setStyleName("portlet-form-field-label");
 							serviceTree.addItem(serviceItem);
 						}
 						businessTree.addItem(serviceTree);

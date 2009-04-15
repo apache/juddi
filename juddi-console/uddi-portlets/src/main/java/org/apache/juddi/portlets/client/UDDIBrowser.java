@@ -50,7 +50,7 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class);
 	private TextBox tmodelKeyBox = new TextBox();
 	
-	private BusinessBrowsePanel browsePanel = new  BusinessBrowsePanel();
+	private BusinessTreePanel browsePanel = new  BusinessTreePanel();
 	private LoginPanel loginPanel = null;
 	/**
 	 * This is the entry point method.
@@ -111,11 +111,11 @@ public class UDDIBrowser implements EntryPoint, ClickListener {
 		});
 	}
 
-	public BusinessBrowsePanel getBrowsePanel() {
+	public BusinessTreePanel getBrowsePanel() {
 		return browsePanel;
 	}
 
-	public void setBrowsePanel(BusinessBrowsePanel browsePanel) {
+	public void setBrowsePanel(BusinessTreePanel browsePanel) {
 		this.browsePanel = browsePanel;
 	}
 
