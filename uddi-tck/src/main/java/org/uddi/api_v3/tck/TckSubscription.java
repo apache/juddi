@@ -64,9 +64,20 @@ public class TckSubscription
 			
 			subscription.saveSubscription(authInfo, subscriptionHolder);
 			
-			Subscription subOut = subscriptionHolder.value.get(0);
+			Subscription subDirectOut = subscriptionHolder.value.get(0);
+			assertEquals(subIn.getSubscriptionKey(), subDirectOut.getSubscriptionKey());
+			
+			List<Subscription> outSubscriptionList = subscription.getSubscriptions(authInfo);
+			Assert.assertNotNull(outSubscriptionList);
+			Subscription subOut = outSubscriptionList.get(0);
 			
 			assertEquals(subIn.getSubscriptionKey(), subOut.getSubscriptionKey());
+			assertEquals(subDirectOut.getExpiresAfter().getMonth(), subOut.getExpiresAfter().getMonth());
+			assertEquals(subDirectOut.getExpiresAfter().getDay(), subOut.getExpiresAfter().getDay());
+			assertEquals(subDirectOut.getExpiresAfter().getYear(), subOut.getExpiresAfter().getYear());
+			
+			assertEquals(subIn.getSubscriptionFilter().getFindService().getName().get(0).getValue(), 
+						 subOut.getSubscriptionFilter().getFindService().getName().get(0).getValue());
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

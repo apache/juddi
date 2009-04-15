@@ -65,9 +65,9 @@ public class API_080_SubscriptionTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
+			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 		} 
 		finally {
-			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
