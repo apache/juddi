@@ -27,4 +27,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface InquiryService extends RemoteService {
 	
 	public InquiryResponse getTModelDetail(String authToken, String tModelKey);
+	public InquiryResponse getServiceDetail(String authToken, String serviceKey);
 }

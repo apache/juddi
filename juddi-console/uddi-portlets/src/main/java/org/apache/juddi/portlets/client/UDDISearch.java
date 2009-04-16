@@ -104,8 +104,8 @@ public class UDDISearch implements EntryPoint, ClickListener {
 
 			public void onSuccess(InquiryResponse response) {
 				if (response.isSuccess()) {
-					Map<String,String> tModelMap= response.getResponse();
-					tmodelLabel.setText("tmodelMap: " + tModelMap);
+					//Map<String,String> tModelMap= response.getResponse();
+					//tmodelLabel.setText("tmodelMap: " + tModelMap);
 				} else {
 					tmodelLabel.setText("error: " + response.getMessage());
 				}

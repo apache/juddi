@@ -16,13 +16,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class LoginPanel extends FlowPanel implements ClickListener{
+public class LoginPanel extends FlowPanel implements ClickListener {
 	
 	private Label tokenLabel = new Label("");
 	private Button tokenButton = new Button("Login");
 	private TextBox usernameBox = new TextBox();
 	private PasswordTextBox passwordBox = new PasswordTextBox();
-	private String token = null;
+
 	UDDIBrowser browser = null;
 	
 	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
@@ -88,14 +88,6 @@ public class LoginPanel extends FlowPanel implements ClickListener{
 		this.passwordBox = passwordBox;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public void onClick(Widget sender) {
 		if (sender == getTokenButton()) {
 			getToken(getUsernameBox().getText(), getPasswordBox().getText());
@@ -116,18 +108,19 @@ public class LoginPanel extends FlowPanel implements ClickListener{
 			public void onSuccess(SecurityResponse response) {
 				if (response.isSuccess()) {
 					
-					token = response.getResponse();
+					String token = response.getResponse();
+					browser.setToken(token);
 					if (token == null ) {
 						browser.getLoginPanel().setVisible(true);
 					} else {
 						browser.getLoginPanel().setVisible(false);
 						getTokenLabel().setText("token: " + token);
 						browser.getBrowsePanel().setVisible(true);
-						browser.getBrowsePanel().getBusinesses(token, "all");
+						browser.getBrowsePanel().getBusinesses("all");
 					}
 				} else {
-					RootPanel.get("browser").add(browser.getLoginPanel());
-					//tokenLabel.setText("error: " + response.getMessage()); //TODO add this to consolePanel
+					//browser.getBrowsePanel().add(browser.getLoginPanel());
+					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running?");
 				}
 			}
 		});

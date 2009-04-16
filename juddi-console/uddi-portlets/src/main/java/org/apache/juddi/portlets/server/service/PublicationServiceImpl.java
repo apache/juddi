@@ -73,7 +73,7 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 				business.setDescription(EntityForLang.get(businessInfo.getDescription(),lang).getValue());
 				List<Service> services = new ArrayList<Service>();
 				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
-					Service service = new Service(EntityForLang.get(serviceInfo.getName(), lang).getValue());
+					Service service = new Service(EntityForLang.get(serviceInfo.getName(), lang).getValue(), serviceInfo.getServiceKey());
 					services.add(service);
 				}
 				business.setServices(services);

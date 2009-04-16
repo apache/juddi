@@ -16,7 +16,7 @@
  */
 package org.apache.juddi.portlets.client.service;
 
-import java.util.Map;
+import org.apache.juddi.portlets.client.model.Service;
 /**
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
@@ -25,13 +25,13 @@ import java.util.Map;
 public class InquiryResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
-	Map<String,String> response;
+	private Service service;
 	
-	public Map<String,String> getResponse() {
-		return response;
+	public Service getService() {
+		return service;
 	}
-	public void setResponse(Map<String,String> response) {
-		this.response = response;
+	public void setService(Service service) {
+		this.service = service;
 	}
 
 }

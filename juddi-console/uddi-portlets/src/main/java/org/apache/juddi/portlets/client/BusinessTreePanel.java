@@ -11,27 +11,28 @@ import org.apache.juddi.portlets.client.service.PublicationServiceAsync;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.TreeListener;
 
-public class BusinessTreePanel extends FlowPanel {
+public class BusinessTreePanel extends Composite implements TreeListener {
 
-	private Tree publisherTree = new Tree();
-	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
 	public static final Images images = (Images) GWT.create(Images.class);
+	private Tree publisherTree;
+	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
+	UDDIBrowser browser = null;
 	
-	public BusinessTreePanel() {
-		Label businesses = new Label ("Businesses");
-		businesses.setStyleName("portlet-form-field-label");
-		this.add(businesses);
-		this.add(publisherTree);
+	public BusinessTreePanel(UDDIBrowser browser) {
+		this.browser = browser;
+		publisherTree = new Tree(images);
+		publisherTree.addTreeListener(this);
+		initWidget(publisherTree);
 	}
 	
-	protected void getBusinesses(String token, String infoSelection) {
+	protected void getBusinesses(String infoSelection) {
 
-		publicationService.getBusinesses(token, infoSelection, new AsyncCallback<PublicationResponse>() 
+		publicationService.getBusinesses(browser.getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
@@ -46,7 +47,8 @@ public class BusinessTreePanel extends FlowPanel {
 					
 						TreeItem businessTree = new TreeItem(images.business().getHTML() + " " + business.getName());
 						businessTree.setStyleName("portlet-form-field-label");
-                     
+						businessTree.setState(true);
+						
 						TreeItem keyItem = new TreeItem(images.key().getHTML() + " " + business.getKey());
 						keyItem.setStyleName("portlet-form-field-label");
 						businessTree.addItem(keyItem);
@@ -58,10 +60,15 @@ public class BusinessTreePanel extends FlowPanel {
 						for (Service service : business.getServices()) {
 							TreeItem serviceItem = new TreeItem(images.service().getHTML() + " " + service.getName());
 							serviceItem.setStyleName("portlet-form-field-label");
+							serviceItem.setUserObject(service);
 							serviceTree.addItem(serviceItem);
+							//serviceTree.setTitle("Service:" + );
+							TreeItem serviceKey = new TreeItem(images.key().getHTML() + " " + service.getKey());
+							serviceKey.setStyleName("portlet-form-field-label");
+							serviceTree.addItem(serviceKey);
 						}
 						businessTree.addItem(serviceTree);
-						
+
 						publisherTree.addItem(businessTree);
 					}
 					
@@ -71,6 +78,20 @@ public class BusinessTreePanel extends FlowPanel {
 			}
 		});
 	}
-	
+
+	public void onTreeItemSelected(TreeItem treeItem) {
+		System.out.println("Selected " + treeItem.getText());
+		if (treeItem.getUserObject()!=null && Service.class.equals(treeItem.getUserObject().getClass())) {
+			Service service = (Service) treeItem.getUserObject();
+			browser.getDetailPanel().setVisible(true);
+			browser.getDetailPanel().displayService(service.getKey());
+			
+		}
+	}
+
+	public void onTreeItemStateChanged(TreeItem arg0) {
+		// TODO Auto-generated method stub
+		System.out.println("StateChanged " + arg0.getText());
+	}
 	
 }
