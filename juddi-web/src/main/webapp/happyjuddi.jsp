@@ -13,6 +13,7 @@
                  javax.naming.Context,
                  javax.naming.InitialContext,
                  javax.sql.DataSource,
+		 org.apache.taglibs.standard.tag.common.core.Util,
                  org.apache.juddi.registry.RegistryServlet,
                  org.apache.juddi.registry.RegistryEngine"
 %>
@@ -245,7 +246,7 @@
   
   try
   {
-    dsname = request.getParameter("dsname");
+    dsname = Util.escapeXml(request.getParameter("dsname"));
     if ((dsname == null) || (dsname.trim().length() == 0))
       dsname = "java:comp/env/jdbc/juddiDB";
     
