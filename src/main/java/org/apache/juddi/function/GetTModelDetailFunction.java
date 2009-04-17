@@ -70,7 +70,7 @@ public class GetTModelDetailFunction extends AbstractFunction
         if ((tModelKey == null) || (tModelKey.length() == 0) ||
             (!dataStore.isValidTModelKey(tModelKey)))
           throw new InvalidKeyPassedException("get_tModelDetail: "+
-              "tModelKey="+tModelKey);
+              "tModelKey");
       }
 
       Vector tModelVector = new Vector();

@@ -70,7 +70,7 @@ public class GetBusinessDetailFunction extends AbstractFunction
         if ((businessKey == null) || (businessKey.length() == 0) ||
             (!dataStore.isValidBusinessKey(businessKey)))
           throw new InvalidKeyPassedException("get_businessDetail: "+
-            "businessKey="+businessKey);
+            "businessKey");
       }
 
       Vector businessVector = new Vector();

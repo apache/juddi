@@ -72,7 +72,7 @@ public class GetBindingDetailFunction extends AbstractFunction
         if ((bindingKey == null) || (bindingKey.length() == 0) ||
             (!dataStore.isValidBindingKey(bindingKey)))
           throw new InvalidKeyPassedException("get_bindingDetail: "+
-              "bindingKey="+bindingKey);
+              "bindingKey");
       }
 
       Vector bindingVector = new Vector();
