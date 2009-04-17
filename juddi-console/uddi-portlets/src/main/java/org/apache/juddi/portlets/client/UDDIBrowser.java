@@ -17,6 +17,7 @@
 package org.apache.juddi.portlets.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -28,7 +29,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class UDDIBrowser implements EntryPoint {
 
 	DockPanel dockPanel = new DockPanel();
-	
+	public static final Images images = (Images) GWT.create(Images.class);
 	private BusinessTreePanel browsePanel = null;
 	private DetailPanel detailPanel = null;
 	private LoginPanel loginPanel = null;
@@ -44,7 +45,6 @@ public class UDDIBrowser implements EntryPoint {
 		dockPanel.add(loginPanel, DockPanel.NORTH);
 		
 		browsePanel = new BusinessTreePanel(this);
-		browsePanel.setWidth("200px");
 		browsePanel.setVisible(false);
 		dockPanel.add(browsePanel,DockPanel.WEST);
 		

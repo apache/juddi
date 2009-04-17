@@ -18,14 +18,13 @@ import com.google.gwt.user.client.ui.TreeListener;
 
 public class BusinessTreePanel extends Composite implements TreeListener {
 
-	public static final Images images = (Images) GWT.create(Images.class);
 	private Tree publisherTree;
 	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
 	UDDIBrowser browser = null;
 	
 	public BusinessTreePanel(UDDIBrowser browser) {
 		this.browser = browser;
-		publisherTree = new Tree(images);
+		publisherTree = new Tree(UDDIBrowser.images);
 		publisherTree.addTreeListener(this);
 		initWidget(publisherTree);
 	}
@@ -45,27 +44,24 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 					
 					for (Business business : businesses) {
 					
-						TreeItem businessTree = new TreeItem(images.business().getHTML() + " " + business.getName());
+						TreeItem businessTree = new TreeItem(UDDIBrowser.images.business().getHTML() + " " + business.getName());
 						businessTree.setStyleName("portlet-form-field-label");
 						businessTree.setState(true);
 						
-						TreeItem keyItem = new TreeItem(images.key().getHTML() + " " + business.getKey());
+						TreeItem keyItem = new TreeItem(UDDIBrowser.images.key().getHTML() + " " + business.getKey());
 						keyItem.setStyleName("portlet-form-field-label");
 						businessTree.addItem(keyItem);
 						
-						TreeItem descriptionItem = new TreeItem(images.description().getHTML() + " " + business.getDescription());
+						TreeItem descriptionItem = new TreeItem(UDDIBrowser.images.description().getHTML() + " " + business.getDescription());
 						descriptionItem.setStyleName("portlet-form-field-label");
 						businessTree.addItem(descriptionItem);
-						TreeItem serviceTree = new TreeItem(images.services().getHTML() + " Services owned by this business");
+						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + " Services owned by this business");
 						for (Service service : business.getServices()) {
-							TreeItem serviceItem = new TreeItem(images.service().getHTML() + " " + service.getName());
+							TreeItem serviceItem = new TreeItem(UDDIBrowser.images.service().getHTML() + " " + service.getName());
 							serviceItem.setStyleName("portlet-form-field-label");
 							serviceItem.setUserObject(service);
 							serviceTree.addItem(serviceItem);
-							//serviceTree.setTitle("Service:" + );
-							TreeItem serviceKey = new TreeItem(images.key().getHTML() + " " + service.getKey());
-							serviceKey.setStyleName("portlet-form-field-label");
-							serviceTree.addItem(serviceKey);
+							serviceTree.setTitle("Service:" +  service.getKey());
 						}
 						businessTree.addItem(serviceTree);
 
