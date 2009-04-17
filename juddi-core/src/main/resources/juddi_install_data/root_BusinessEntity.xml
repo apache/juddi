@@ -31,7 +31,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="" serviceKey="">
           <description>UDDI Inquiry API V3</description>
-          <accessPoint useType="endpoint">http://localhost:8080/juddi/inquiry</accessPoint>
+          <accessPoint useType="endpoint">http://localhost:8080/juddi/services/inquiry?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
               <instanceDetails>
@@ -57,7 +57,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="" serviceKey="">
           <description>UDDI Publication API V3</description>
-          <accessPoint useType="endpoint">http://localhost:8080/juddi/publish</accessPoint>
+          <accessPoint useType="endpoint">http://localhost:8080/juddi/services/publish?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_publication">
               <instanceDetails>
@@ -81,7 +81,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="" serviceKey="">
           <description>UDDI Security API V3</description>
-          <accessPoint useType="endpoint">http://localhost:8080/juddi/security</accessPoint>
+          <accessPoint useType="endpoint">http://localhost:8080/juddi/services/security?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
           </tModelInstanceDetails>
