@@ -71,7 +71,7 @@ public class GetServiceDetailFunction extends AbstractFunction
         if ((serviceKey == null) || (serviceKey.length() == 0) ||
             (!dataStore.isValidServiceKey(serviceKey)))
           throw new InvalidKeyPassedException("get_serviceDetail: "
-              "serviceKey");
+              + "serviceKey");
       }
 
       Vector serviceVector = new Vector();
