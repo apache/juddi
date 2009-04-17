@@ -61,6 +61,11 @@
       <artifactId>derby</artifactId>
       <version>10.1.2.1</version>
     </dependency>
+    <dependency>
+      <groupId>taglibs</groupId>
+      <artifactId>standard</artifactId>
+      <version>1.1.2</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -83,7 +88,7 @@
 		<echo>${dependency.tomcat.zip}"</echo>
 		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-web.war.path}"/>
 		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
-
+		<property name="dependency.taglibs.jar" value="${maven.dependency.taglibs.standard.jar.path}"/>
 		<ant antfile="${basedir}/build.xml">
                   <target name="package-tomcat"/>
                 </ant>

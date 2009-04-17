@@ -20,6 +20,7 @@
 		<copy file="${dependency.axis-saaj.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.axis-jaxrpc.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${common.lib.dir}"/>
+		<copy file="${dependency.taglibs.jar}" todir="${common.lib.dir}"/>
 		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
 			<replacetoken>juddi-sql/mysql</replacetoken>
 			<replacevalue>juddi-sql/derby</replacevalue>
