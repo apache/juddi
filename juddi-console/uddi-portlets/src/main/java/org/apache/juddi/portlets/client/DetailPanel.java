@@ -1,5 +1,6 @@
 package org.apache.juddi.portlets.client;
 
+import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
@@ -17,24 +18,81 @@ public class DetailPanel extends FlowPanel {
 
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class); 
 	private UDDIBrowser browser = null;
-	private FlexTable table = null;
+	private DetailPanel detailPanel = null;
+	FlexTable table = null;
 
 	public DetailPanel(UDDIBrowser browser) {
 		this.browser = browser;
-		table = new FlexTable();
-		table.setTitle("Service");
-		this.add(table);
+		detailPanel = this;
+	}
+	
+	public void displayServices( String businessKey) {
+		inquiryService.getBusinessDetail(browser.getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not connect to the UDDI registry.");
+			}
+
+			public void onSuccess(InquiryResponse response) {
+				if (response.isSuccess()) {
+					Business business = response.getBusiness();
+					if (table!=null) detailPanel.remove(table);
+					table = new FlexTable();
+					detailPanel.add(table);
+					int row = 0;
+					for (Service service : business.getServices()) {
+						table.getFlexCellFormatter().setColSpan(row, 0, 2);
+						table.setText(row++, 0, "service");
+						table.setHTML(row, 0, UDDIBrowser.images.service().getHTML());
+						table.setText(row++, 1, service.getName());
+						table.setHTML(row, 0, UDDIBrowser.images.key().getHTML());
+						table.setText(row++, 1, service.getKey());
+						table.setHTML(row, 0, UDDIBrowser.images.description().getHTML());
+						table.setHTML(row++, 1, service.getDescription());
+					}
+				} else {
+					Window.alert("error: " + response.getMessage() 
+							+ ". Make sure the UDDI service is up and running.");
+				}
+			}
+		});
+	}
+	
+	public void displayBusiness( String businessKey) {
+		inquiryService.getBusinessDetail(browser.getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Could not connect to the UDDI registry.");
+			}
+
+			public void onSuccess(InquiryResponse response) {
+				if (response.isSuccess()) {
+					Business business = response.getBusiness();
+					if (table!=null) detailPanel.remove(table);
+					table = new FlexTable();
+					detailPanel.add(table);
+					//table.setBorderWidth(1);
+					int row = 0;
+					table.getFlexCellFormatter().setColSpan(row, 0, 2);
+					table.setText(row++, 0, "business");
+					table.setHTML(row, 0, UDDIBrowser.images.business().getHTML());
+					table.setText(row++, 1, business.getName());
+					table.setHTML(row, 0, UDDIBrowser.images.key().getHTML());
+					table.setText(row++, 1, business.getKey());
+					table.setHTML(row, 0, UDDIBrowser.images.description().getHTML());
+					table.setText(row++, 1, business.getDescription());
+					
+					//Business Contact
+					
+				} else {
+					Window.alert("error: " + response.getMessage() 
+							+ ". Make sure the UDDI service is up and running.");
+				}
+			}
+		});
 	}
 
-	public void displayService(String key) {
-		System.out.println("Going to fetch the Service and Display it");
-		getService(browser.getToken(), key);
+	public void displayService(String serviceKey) {
 
-	}
-
-	private void getService(String token, String serviceKey) {
-
-		inquiryService.getServiceDetail(token, serviceKey, new AsyncCallback<InquiryResponse>() {
+		inquiryService.getServiceDetail(browser.getToken(), serviceKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}
@@ -42,19 +100,29 @@ public class DetailPanel extends FlowPanel {
 			public void onSuccess(InquiryResponse response) {
 				if (response.isSuccess()) {
 					Service service = response.getService();
+					if (table!=null) detailPanel.remove(table);
+					table = new FlexTable();
+					detailPanel.add(table);
+					//table.setBorderWidth(1);
+					int row = 0;
+					table.getFlexCellFormatter().setColSpan(row, 0, 2);
+					table.setHTML(row++, 0, UDDIBrowser.images.service().getHTML() + " service - " + service.getName());
+					table.setHTML(row, 0, UDDIBrowser.images.key().getHTML());
+					table.setText(row++, 1, service.getKey());
+					table.setHTML(row, 0, UDDIBrowser.images.description().getHTML());
+					table.setText(row++, 1, service.getDescription());
 					
-					table.setText(0, 0, service.getName());
-					table.getFlexCellFormatter().setColSpan(0, 0, 2);
-					table.setHTML(1, 0, UDDIBrowser.images.key().getHTML() + " " + service.getKey());
-					table.getFlexCellFormatter().setColSpan(1, 0, 2);
-					table.setHTML(2, 0, UDDIBrowser.images.description().getHTML() + " " + service.getDescription());
-					table.getFlexCellFormatter().setColSpan(2, 0, 2);
-					int row = 4;
 					for (ServiceBinding serviceBinding : service.getServiceBindings()) {
-						table.setText(row, 0, "EPR");
-						table.setHTML(row, 1, new HTML("<a href='" + serviceBinding.getAccessPoint() + "'>" + serviceBinding.getAccessPoint() + "</a>").getHTML());
-						table.setText(++row, 0, "Description");
+						table.getFlexCellFormatter().setColSpan(row, 0, 2);
+						table.setText(row++, 0, "binding");
+						table.setHTML(row, 0, UDDIBrowser.images.key().getHTML());
+						table.setText(row++, 1, serviceBinding.getKey());
+						table.setHTML(row, 0, UDDIBrowser.images.description().getHTML());
 						table.setText(row++, 1,  serviceBinding.getDescription());
+						table.setText(row, 0, serviceBinding.getUrlType());
+						table.setHTML(row++, 1, new HTML("<a href='" 
+								+ serviceBinding.getAccessPoint() + "'>" 
+								+ serviceBinding.getAccessPoint() + "</a>").getHTML());
 					}
 				} else {
 					Window.alert("error: " + response.getMessage() 

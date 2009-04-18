@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 /**
  * 
@@ -26,12 +27,19 @@ public class InquiryResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
 	private Service service;
+	private Business business;
 	
 	public Service getService() {
 		return service;
 	}
 	public void setService(Service service) {
 		this.service = service;
+	}
+	public Business getBusiness() {
+		return business;
+	}
+	public void setBusiness(Business business) {
+		this.business = business;
 	}
 
 }

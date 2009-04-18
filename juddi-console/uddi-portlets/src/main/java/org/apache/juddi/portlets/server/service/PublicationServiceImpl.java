@@ -68,12 +68,15 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
         	 UDDIPublicationPortType publicationService = transport.getPublishService();
         	 RegisteredInfo info = publicationService.getRegisteredInfo(getRegistrationInfo);
         	 for (BusinessInfo businessInfo : info.getBusinessInfos().getBusinessInfo()) {
-				Business business = new Business(EntityForLang.get(businessInfo.getName(),lang).getValue());
-				business.setKey(businessInfo.getBusinessKey());
-				business.setDescription(EntityForLang.get(businessInfo.getDescription(),lang).getValue());
+				Business business = new Business(
+						businessInfo.getBusinessKey(),
+						EntityForLang.get(businessInfo.getName(),lang).getValue(),
+						EntityForLang.get(businessInfo.getDescription(),lang).getValue());
 				List<Service> services = new ArrayList<Service>();
 				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
-					Service service = new Service(EntityForLang.get(serviceInfo.getName(), lang).getValue(), serviceInfo.getServiceKey());
+					Service service = new Service(
+							serviceInfo.getServiceKey(),
+							EntityForLang.get(serviceInfo.getName(), lang).getValue());
 					services.add(service);
 				}
 				business.setServices(services);

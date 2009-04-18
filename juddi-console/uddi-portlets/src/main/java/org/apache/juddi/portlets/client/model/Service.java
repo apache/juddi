@@ -8,23 +8,23 @@ public class Service implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private String name;
 	private String key;
+	private String name;
 	private String description;
 	private Collection<ServiceBinding> serviceBindings = new ArrayList<ServiceBinding>();
 
 	public Service() {}
 		
-	public Service(String name, String key) {
+	public Service(String key, String name) {
 		super();
-		this.name = name;
 		this.key = key;
+		this.name = name;
 	}
 	
-	public Service(String name, String key, String description) {
+	public Service(String key, String name, String description) {
 		super();
-		this.name = name;
 		this.key = key;
+		this.name = name;
 		this.description = description;
 	}
 

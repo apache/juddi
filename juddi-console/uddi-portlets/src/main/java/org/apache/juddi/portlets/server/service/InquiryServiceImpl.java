@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
@@ -29,7 +30,10 @@ import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessDetail;
+import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.ServiceDetail;
@@ -102,6 +106,52 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		 return response;
 	}
 	
+	public InquiryResponse getBusinessDetail(String authToken, String businessKey) 
+	{
+		HttpServletRequest request = this.getThreadLocalRequest();
+		String lang = request.getLocale().getLanguage();
+		
+		GetBusinessDetail getBusinessDetail = new GetBusinessDetail();
+		getBusinessDetail.setAuthInfo(authToken);
+		getBusinessDetail.getBusinessKey().add(businessKey);
+		InquiryResponse response = new InquiryResponse();
+		logger.debug("BusinessDetail " + getBusinessDetail + " sending businessDetail request..");
+		try {
+        	 UDDIInquiryPortType inquiryService = getTransport().getInquiryService();
+        	 BusinessDetail businessDetail = inquiryService.getBusinessDetail(getBusinessDetail);
+        	 for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {
+        		 Business business = new Business(
+        				 businessEntity.getBusinessKey(),
+        				 EntityForLang.get(businessEntity.getName(),lang).getValue(),
+        				 EntityForLang.get(businessEntity.getDescription(),lang).getValue());
+        		 for (BusinessService businessService : businessEntity.getBusinessServices().getBusinessService()) {
+        			 Service service = new Service(
+        					 businessService.getServiceKey(),
+        					 EntityForLang.get(businessService.getName(),lang).getValue(),
+        					 EntityForLang.get(businessService.getDescription(),lang).getValue());
+        			 business.getServices().add(service);
+        		 }
+        		 //for (Contact contact : businessEntity.getContacts().getContact()) {
+        			 //contact.get
+        		 //}
+        		 response.setBusiness(business);
+			 }
+        	 
+        	 response.setSuccess(true);
+	     } catch (Exception e) {
+	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(e.getMessage());
+	    	 response.setErrorCode("102");
+	     }  catch (Throwable t) {
+	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(t.getMessage());
+	    	 response.setErrorCode("102");
+	     } 
+		 return response;
+	}
+	
 	public InquiryResponse getServiceDetail(String authToken, String serviceKey) 
 	{
 		HttpServletRequest request = this.getThreadLocalRequest();
@@ -115,16 +165,17 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		try {
         	 UDDIInquiryPortType inquiryService = getTransport().getInquiryService();
         	 ServiceDetail serviceDetail = inquiryService.getServiceDetail(getServiceDetail);
-        	 //demo code fix up what to return for real.
         	 for (BusinessService businessService : serviceDetail.getBusinessService()) {
         		 Service service = new Service(
-        				 EntityForLang.get(businessService.getName(),lang).getValue(),
         				 businessService.getServiceKey(),
+        				 EntityForLang.get(businessService.getName(),lang).getValue(),
         				 EntityForLang.get(businessService.getDescription(),lang).getValue());
         		 for (BindingTemplate bindingTemplate : businessService.getBindingTemplates().getBindingTemplate()) {
         			 ServiceBinding serviceBinding = new ServiceBinding(
+        					 bindingTemplate.getBindingKey(),
         					 bindingTemplate.getAccessPoint().getValue(),
-        					 EntityForLang.get(bindingTemplate.getDescription(),lang).getValue());
+        					 EntityForLang.get(bindingTemplate.getDescription(),lang).getValue(),
+        					 bindingTemplate.getAccessPoint().getUseType());
         			 service.getServiceBindings().add(serviceBinding);
         		 }
         		 response.setService(service);

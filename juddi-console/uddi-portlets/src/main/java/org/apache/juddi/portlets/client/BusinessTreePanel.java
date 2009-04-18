@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 
 public class BusinessTreePanel extends Composite implements TreeListener {
 
+	private static String SERVICES_LABEL="Services owned by this business";
 	private Tree publisherTree;
 	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
 	UDDIBrowser browser = null;
@@ -47,15 +48,9 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 						TreeItem businessTree = new TreeItem(UDDIBrowser.images.business().getHTML() + " " + business.getName());
 						businessTree.setStyleName("portlet-form-field-label");
 						businessTree.setState(true);
-						
-						TreeItem keyItem = new TreeItem(UDDIBrowser.images.key().getHTML() + " " + business.getKey());
-						keyItem.setStyleName("portlet-form-field-label");
-						businessTree.addItem(keyItem);
-						
-						TreeItem descriptionItem = new TreeItem(UDDIBrowser.images.description().getHTML() + " " + business.getDescription());
-						descriptionItem.setStyleName("portlet-form-field-label");
-						businessTree.addItem(descriptionItem);
-						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + " Services owned by this business");
+						businessTree.setUserObject(business);
+						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + SERVICES_LABEL);
+						serviceTree.setUserObject(business);
 						for (Service service : business.getServices()) {
 							TreeItem serviceItem = new TreeItem(UDDIBrowser.images.service().getHTML() + " " + service.getName());
 							serviceItem.setStyleName("portlet-form-field-label");
@@ -81,7 +76,14 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 			Service service = (Service) treeItem.getUserObject();
 			browser.getDetailPanel().setVisible(true);
 			browser.getDetailPanel().displayService(service.getKey());
-			
+		} else if (treeItem.getUserObject()!=null && Business.class.equals(treeItem.getUserObject().getClass())) {
+			Business business = (Business) treeItem.getUserObject();
+			browser.getDetailPanel().setVisible(true);
+			if (SERVICES_LABEL.equals(treeItem.getText())) {
+				browser.getDetailPanel().displayServices(business.getKey());
+			} else {
+				browser.getDetailPanel().displayBusiness(business.getKey());
+			}
 		}
 	}
 

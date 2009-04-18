@@ -5,20 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Business implements Serializable{
-
-	public Business() {}
-		
-	public Business(String name) {
-		super();
-		this.name = name;
-	}
-
+	
 	private static final long serialVersionUID = 1L;
 
-	private String name;
 	private String key;
+	private String name;
 	private String description;
 	private List<Service> services = new ArrayList<Service>();
+	public Business() {}
+		
+	public Business(String key, String name, String description) {
+		super();
+		this.key = key;
+		this.name = name;
+		this.description = description;
+	}
+
+	
 
 	public List<Service> getServices() {
 		return services;

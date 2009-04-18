@@ -28,4 +28,5 @@ public interface InquiryService extends RemoteService {
 	
 	public InquiryResponse getTModelDetail(String authToken, String tModelKey);
 	public InquiryResponse getServiceDetail(String authToken, String serviceKey);
+	public InquiryResponse getBusinessDetail(String authToken, String businessKey); 
 }

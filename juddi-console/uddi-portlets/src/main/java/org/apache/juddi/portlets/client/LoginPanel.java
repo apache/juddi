@@ -120,7 +120,7 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 					}
 				} else {
 					//browser.getBrowsePanel().add(browser.getLoginPanel());
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running?");
+					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
 				}
 			}
 		});
