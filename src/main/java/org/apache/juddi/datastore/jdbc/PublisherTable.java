@@ -55,10 +55,10 @@ public class PublisherTable
     sql.append("PUBLISHER_NAME,");
     sql.append("EMAIL_ADDRESS,");
     sql.append("IS_ADMIN, ");
-    sql.append("IS_ENABLED), ");
-    sql.append("MAX_BUSINESSES), ");
-    sql.append("MAX_SERVICES_PER_BUSINESS), ");
-    sql.append("MAX_BINDINGS_PER_SERVICE), ");
+    sql.append("IS_ENABLED, ");
+    sql.append("MAX_BUSINESSES, ");
+    sql.append("MAX_SERVICES_PER_BUSINESS, ");
+    sql.append("MAX_BINDINGS_PER_SERVICE, ");
     sql.append("MAX_TMODELS) ");
     sql.append("VALUES (?,?,?,?,?,?,?,?,?)");
     insertSQL = sql.toString();
