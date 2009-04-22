@@ -37,12 +37,15 @@ import org.apache.log4j.Logger;
  */
 public class JAXBMarshaller {
 	private static Logger logger = Logger.getLogger(JAXBMarshaller.class);
+	
+	public static final String PACKAGE_UDDIAPI = "org.uddi.api_v3";
+	public static final String PACKAGE_SUBSCRIPTION = "org.uddi.sub_v3";
 
 	private static final Map<String, JAXBContext> JAXBContexts = new HashMap<String, JAXBContext>();
 	static {
 		try {
-			JAXBContexts.put("org.uddi.api_v3", JAXBContext.newInstance("org.uddi.api_v3"));
-			JAXBContexts.put("org.uddi.sub_v3", JAXBContext.newInstance("org.uddi.sub_v3"));
+			JAXBContexts.put(PACKAGE_UDDIAPI, JAXBContext.newInstance(PACKAGE_UDDIAPI));
+			JAXBContexts.put(PACKAGE_SUBSCRIPTION, JAXBContext.newInstance(PACKAGE_SUBSCRIPTION));
 		} catch (JAXBException e) {
 			logger.error("Initial entityManagerFactory creation failed:" + e, e);
 			throw new ExceptionInInitializerError(e);

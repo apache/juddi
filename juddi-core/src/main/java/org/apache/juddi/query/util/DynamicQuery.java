@@ -38,6 +38,8 @@ public class DynamicQuery {
 	public static String PREDICATE_NOTEQUALS = "<>";
 	public static String PREDICATE_LIKE = "like";
 	public static String PREDICATE_IN = "in";
+	public static String PREDICATE_GREATERTHAN = ">";
+	public static String PREDICATE_LESSTHAN = "<";
 	public static String SORT_ASC = "asc";
 	public static String SORT_DESC = "desc";
 	public static String WILDCARD = "%";
