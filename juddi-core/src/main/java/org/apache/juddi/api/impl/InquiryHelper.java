@@ -17,6 +17,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -24,6 +25,10 @@ import javax.persistence.EntityManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.query.FetchBindingTemplatesQuery;
+import org.apache.juddi.query.FetchBusinessEntitiesQuery;
+import org.apache.juddi.query.FetchBusinessServicesQuery;
+import org.apache.juddi.query.FetchTModelsQuery;
 import org.apache.juddi.query.FindBindingByCategoryGroupQuery;
 import org.apache.juddi.query.FindBindingByCategoryQuery;
 import org.apache.juddi.query.FindBindingByTModelKeyQuery;
@@ -42,17 +47,22 @@ import org.apache.juddi.query.FindTModelByCategoryQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
 import org.apache.juddi.query.util.FindQualifiers;
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.Direction;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.ListDescription;
+import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelBag;
+import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
- * Used to extrapolate out inquiry functionality as it is used in more than one spot.
+ * Used to factor out inquiry functionality as it is used in more than one spot.
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
@@ -73,6 +83,36 @@ public class InquiryHelper {
 		
 		return keysFound;
 	}
+	
+	public static BindingDetail getBindingDetailFromKeys(FindBinding body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
+		return getBindingDetailFromKeys(body, findQualifiers, em, keysFound, null, null);
+	}
+	
+	public static BindingDetail getBindingDetailFromKeys(FindBinding body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+		BindingDetail result = new BindingDetail();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+		
+		// Sort and retrieve the final results with paging taken into account
+		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
+			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
+			
+			if (modifiedAfter != null && modifiedAfter.after(modelBindingTemplate.getModifiedIncludingChildren()))
+				continue;
+			
+			if (modifiedBefore != null && modifiedBefore.before(modelBindingTemplate.getModifiedIncludingChildren()))
+				continue;
+			
+			MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
+			
+			result.getBindingTemplate().add(apiBindingTemplate);
+		}
+		
+		return result;
+	}	
 	
 	public static List<?> findBusiness(FindBusiness body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
@@ -115,6 +155,38 @@ public class InquiryHelper {
 		return keysFound;
 	}
 
+	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
+		return getBusinessListFromKeys(body, findQualifiers, em, keysFound, null, null);
+	}
+	
+	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+		BusinessList result = new BusinessList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+		if (queryResults != null && queryResults.size() > 0)
+			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
+			org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+			
+			if (modifiedAfter != null && modifiedAfter.after(modelBusinessEntity.getModifiedIncludingChildren()))
+				continue;
+			
+			if (modifiedBefore != null && modifiedBefore.before(modelBusinessEntity.getModifiedIncludingChildren()))
+				continue;
+			
+			MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
+			
+			result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+		}
+		
+		return result;
+	}
+	
 	public static List<?> findService(FindService body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
 		List<?> keysFound = null;
@@ -132,6 +204,39 @@ public class InquiryHelper {
 		
 		return keysFound;
 	}
+	
+	public static ServiceList getServiceListFromKeys(FindService body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
+		return getServiceListFromKeys(body, findQualifiers, em, keysFound, null, null);
+	}
+
+	public static ServiceList getServiceListFromKeys(FindService body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+		ServiceList result = new ServiceList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+		
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+		if (queryResults != null && queryResults.size() > 0)
+			result.setServiceInfos(new org.uddi.api_v3.ServiceInfos());
+
+		for (Object item : queryResults) {
+			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
+			
+			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren()))
+				continue;
+			
+			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren()))
+				continue;
+				
+			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
+			
+			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
+			
+			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
+		}
+		
+		return result;
+	}
 
 	public static List<?> findTModel(FindTModel body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 		List<?> keysFound = null;
@@ -142,6 +247,38 @@ public class InquiryHelper {
 		keysFound = FindTModelByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 		
 		return keysFound;
+	}
+
+	public static TModelList getTModelListFromKeys(FindTModel body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
+		return getTModelListFromKeys(body, findQualifiers, em, keysFound, null, null);
+	}
+	
+	public static TModelList getTModelListFromKeys(FindTModel body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+		TModelList result = new TModelList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+
+		// Sort and retrieve the final results taking paging into account
+		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
+		if (queryResults != null && queryResults.size() > 0)
+			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
+		
+		for (Object item : queryResults) {
+			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
+			org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
+			
+			if (modifiedAfter != null && modifiedAfter.after(modelTModel.getModifiedIncludingChildren()))
+				continue;
+			
+			if (modifiedBefore != null && modifiedBefore.before(modelTModel.getModifiedIncludingChildren()))
+				continue;
+			
+			MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
+			
+			result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+		}
+		
+		return result;
 	}
 	
 	

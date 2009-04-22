@@ -18,6 +18,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -29,8 +30,17 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.Holder;
 
+import org.uddi.api_v3.BindingDetail;
+import org.uddi.api_v3.BusinessList;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelList;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.KeyBag;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -84,20 +94,179 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 
 	public SubscriptionResultsList getSubscriptionResults(
 			GetSubscriptionResults body) throws DispositionReportFaultMessage {
-		
-		// TODO JUDDI-178: Perform necessary authentication logic
-		@SuppressWarnings("unused")
-		String authInfo = body.getAuthInfo();
-		
+
 		EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
+		
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+		new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);
+		
+		org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, body.getSubscriptionKey());
+		SubscriptionFilter subscriptionFilter = null;
+		try {
+			subscriptionFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);
+		} 
+		catch (JAXBException e) {
+			logger.error("JAXB Exception while unmarshalling subscription filter", e);
+			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+		}
 
+		SubscriptionResultsList result = new SubscriptionResultsList();
+		
+		if (subscriptionFilter.getFindBinding() != null) {
+			//Get the current matching keys
+			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+
+			// See if there's any missing keys by comparing against the previous matches.  If so, they missing keys are added to the KeyBag and
+			// then added to the result
+			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+			if (missingKeys != null && missingKeys.size() > 0) {
+				KeyBag missingKeyBag = new KeyBag();
+				for (String key : missingKeys)
+					missingKeyBag.getBindingKey().add(key);
+				
+				result.getKeyBag().add(missingKeyBag);
+			}
+			
+			// Re-setting the subscription matches to the new matching key collection
+			modelSubscription.getSubscriptionMatches().clear();
+			for (Object key : currentMatchingKeys) {
+				SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				modelSubscription.getSubscriptionMatches().add(subMatch);
+			}
+			
+			// Now, finding the necessary entities, within the coverage period limits
+			FindBinding fb = subscriptionFilter.getFindBinding();
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+			
+			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
+			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
+			
+			BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+			
+			result.setBindingDetail(bindingDetail);
+			
+		}
+		if (subscriptionFilter.getFindBusiness() != null) {
+			//Get the current matching keys
+			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+
+			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+			if (missingKeys != null && missingKeys.size() > 0) {
+				KeyBag missingKeyBag = new KeyBag();
+				for (String key : missingKeys)
+					missingKeyBag.getBusinessKey().add(key);
+
+				result.getKeyBag().add(missingKeyBag);
+			}
+			
+			// Re-setting the subscription matches to the new matching key collection
+			modelSubscription.getSubscriptionMatches().clear();
+			for (Object key : currentMatchingKeys) {
+				SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				modelSubscription.getSubscriptionMatches().add(subMatch);
+			}
+			
+			// Now, finding the necessary entities, within the coverage period limits
+			FindBusiness fb = subscriptionFilter.getFindBusiness();
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+			
+			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
+			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
+			
+			BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+			
+			result.setBusinessList(businessList);
+			
+		}
+		if (subscriptionFilter.getFindService() != null) {
+			//Get the current matching keys
+			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+
+			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+			if (missingKeys != null && missingKeys.size() > 0) {
+				KeyBag missingKeyBag = new KeyBag();
+				for (String key : missingKeys)
+					missingKeyBag.getServiceKey().add(key);
+
+				result.getKeyBag().add(missingKeyBag);
+			}
+			
+			// Re-setting the subscription matches to the new matching key collection
+			modelSubscription.getSubscriptionMatches().clear();
+			for (Object key : currentMatchingKeys) {
+				SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				modelSubscription.getSubscriptionMatches().add(subMatch);
+			}
+			
+			// Now, finding the necessary entities, within the coverage period limits
+			FindService fs = subscriptionFilter.getFindService();
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());
+			
+			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
+			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
+			
+			ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+			
+			result.setServiceList(serviceList);
+		}
+		if (subscriptionFilter.getFindTModel() != null) {
+			//Get the current matching keys
+			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+
+			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+			if (missingKeys != null && missingKeys.size() > 0) {
+				KeyBag missingKeyBag = new KeyBag();
+				for (String key : missingKeys)
+					missingKeyBag.getTModelKey().add(key);
+
+				result.getKeyBag().add(missingKeyBag);
+			}
+			
+			// Re-setting the subscription matches to the new matching key collection
+			modelSubscription.getSubscriptionMatches().clear();
+			for (Object key : currentMatchingKeys) {
+				SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				modelSubscription.getSubscriptionMatches().add(subMatch);
+			}
+			
+			// Now, finding the necessary entities, within the coverage period limits
+			FindTModel ft = subscriptionFilter.getFindTModel();
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());
+			
+			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
+			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
+			
+			TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+			
+			result.setTModelList(tmodelList);
+			
+		}
+		if (subscriptionFilter.getFindRelatedBusinesses() != null) {
+		}
+		if (subscriptionFilter.getGetBindingDetail() != null) {
+		}
+		if (subscriptionFilter.getGetBusinessDetail() != null) {
+		}
+		if (subscriptionFilter.getGetServiceDetail() != null) {
+		}
+		if (subscriptionFilter.getGetTModelDetail() != null) {
+		}
+		if (subscriptionFilter.getGetAssertionStatusReport() != null) {
+		}
+		
+		
+		
         tx.commit();
         em.close();
-        return null;
-	}
 
+        return result;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Subscription> getSubscriptions(String authInfo)
@@ -285,6 +454,17 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		}
 		return keys;
 		
+	}
+	
+	private List<String> getMissingKeys(List<?> currentMatchingKeys, List<SubscriptionMatch> subscriptionMatches) {
+
+		List<String> result = new ArrayList<String>(subscriptionMatches.size());
+		for (SubscriptionMatch subMatch : subscriptionMatches)
+			result.add(subMatch.getEntityKey());
+		
+		result.removeAll(currentMatchingKeys);
+		
+		return result;
 	}
 	
 }

@@ -17,6 +17,8 @@
 
  package org.apache.juddi.validation;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,13 +27,16 @@ import javax.persistence.EntityManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
+import org.apache.juddi.error.InvalidTimeException;
 import org.apache.juddi.error.KeyUnavailableException;
 import org.apache.juddi.error.UserMismatchException;
 import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -158,7 +163,6 @@ public class ValidateSubscription extends ValidateUDDIApi {
 
 		}
 		
-		
 	}
 	
 	public void validateDeleteSubscription(EntityManager em, DeleteSubscription body) throws DispositionReportFaultMessage {
@@ -186,5 +190,38 @@ public class ValidateSubscription extends ValidateUDDIApi {
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
 		}
+	}
+
+	public void validateGetSubscriptionResults(EntityManager em, GetSubscriptionResults body) throws DispositionReportFaultMessage {
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		String subscriptionKey = body.getSubscriptionKey();
+		if (subscriptionKey == null || subscriptionKey.length() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey", subscriptionKey));
+		
+		Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
+		if (obj == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscriptionNotFound", subscriptionKey));
+		
+		Date expiresAfter = ((org.apache.juddi.model.Subscription)obj).getExpiresAfter();
+		Date now = new Date();
+		if (expiresAfter.getTime() < now.getTime())
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.getsubscriptionresult.SubscriptionExpired", subscriptionKey));
+		
+		CoveragePeriod coveragePeriod = body.getCoveragePeriod();
+		if (coveragePeriod == null)
+			throw new InvalidTimeException(new ErrorMessage("errors.getsubscriptionresult.NullCoveragePeriod"));
+		
+		if (coveragePeriod.getStartPoint() == null || coveragePeriod.getEndPoint() == null)
+			throw new InvalidTimeException(new ErrorMessage("errors.getsubscriptionresult.InvalidDateInCoveragePeriod"));
+		
+		GregorianCalendar startPoint = coveragePeriod.getStartPoint().toGregorianCalendar();
+		GregorianCalendar endPoint = coveragePeriod.getEndPoint().toGregorianCalendar();
+		if (startPoint.getTimeInMillis() > endPoint.getTimeInMillis())
+			throw new InvalidTimeException(new ErrorMessage("errors.getsubscriptionresult.StartPointAfterEndPoint", startPoint.toString()));
+		
+		
 	}
 }

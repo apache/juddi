@@ -744,7 +744,7 @@ public class MappingModelToApi {
 		apiSubscription.setNotificationInterval(converStringToDuration(modelSubscription.getNotificationInterval()));
 
 		try {
-			SubscriptionFilter existingFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), "org.uddi.sub_v3");
+			SubscriptionFilter existingFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);
 			apiSubscription.setSubscriptionFilter(existingFilter);
 		} 
 		catch (JAXBException e) {

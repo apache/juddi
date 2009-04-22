@@ -24,10 +24,6 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.query.FetchBindingTemplatesQuery;
-import org.apache.juddi.query.FetchBusinessEntitiesQuery;
-import org.apache.juddi.query.FetchBusinessServicesQuery;
-import org.apache.juddi.query.FetchTModelsQuery;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateInquiry;
 import org.apache.juddi.config.AppConfig;
@@ -89,21 +85,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
 
-		BindingDetail result = new BindingDetail();
-		ListDescription listDesc = new ListDescription();
-		result.setListDescription(listDesc);
-		
-		// Sort and retrieve the final results with paging taken into account
-		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-
-		for (Object item : queryResults) {
-			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
-			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
-			
-			MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
-			
-			result.getBindingTemplate().add(apiBindingTemplate);
-		}
+		BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
 		
 		tx.commit();
 		em.close();
@@ -128,23 +110,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		List<?> keysFound = InquiryHelper.findBusiness(body, findQualifiers, em);
 
-		BusinessList result = new BusinessList();
-		ListDescription listDesc = new ListDescription();
-		result.setListDescription(listDesc);
-
-		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-		if (queryResults != null && queryResults.size() > 0)
-			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
-
-		for (Object item : queryResults) {
-			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
-			org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
-			
-			MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
-			
-			result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
-		}
+		BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
 		
 		tx.commit();
 		em.close();
@@ -198,9 +164,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		em.close();
 		
 		return result;
-		
 	}
-	
 
 	public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
@@ -219,23 +183,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		List<?> keysFound = InquiryHelper.findService(body, findQualifiers, em);
 
-		ServiceList result = new ServiceList();
-		ListDescription listDesc = new ListDescription();
-		result.setListDescription(listDesc);
-		
-		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessServicesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-		if (queryResults != null && queryResults.size() > 0)
-			result.setServiceInfos(new org.uddi.api_v3.ServiceInfos());
-
-		for (Object item : queryResults) {
-			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
-			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
-			
-			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
-			
-			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
-		}
+		ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
 		
 		tx.commit();
 		em.close();
@@ -260,23 +208,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		List<?> keysFound = InquiryHelper.findTModel(body, findQualifiers, em);
 
-		TModelList result = new TModelList();
-		ListDescription listDesc = new ListDescription();
-		result.setListDescription(listDesc);
-
-		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchTModelsQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-		if (queryResults != null && queryResults.size() > 0)
-			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
-		
-		for (Object item : queryResults) {
-			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
-			org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
-			
-			MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
-			
-			result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
-		}
+		TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
 		
 		tx.commit();
 		em.close();
