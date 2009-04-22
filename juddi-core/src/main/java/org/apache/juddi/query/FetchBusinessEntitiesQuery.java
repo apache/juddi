@@ -50,7 +50,7 @@ public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 		selectSQL = sql.toString();
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRows, Integer listHead, ListDescription listDesc) throws DispositionReportFaultMessage {
+	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRows, Integer listHead, ListDescription listDesc, DynamicQuery.Parameter... restrictions) throws DispositionReportFaultMessage {
 		
 		// If keysIn is null or empty, then nothing to fetch.
 		if ((keysIn == null) || (keysIn.size() == 0))
@@ -59,6 +59,9 @@ public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendSortTables(dynamicQry);
 		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		if (restrictions != null && restrictions.length > 0)
+			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
+
 		appendSortCriteria(dynamicQry, fq);
 
 		log.debug(dynamicQry);
