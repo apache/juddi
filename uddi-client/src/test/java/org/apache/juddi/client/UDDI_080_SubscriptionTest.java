@@ -49,6 +49,7 @@ public class UDDI_080_SubscriptionTest
 	private static TckSubscription tckSubscription = null;
 
 	private static String authInfoJoe = null;
+	private static String authInfoSam = null;
 
 	@BeforeClass
 	public static void setup() {
@@ -62,6 +63,8 @@ public class UDDI_080_SubscriptionTest
 	        	 UDDISecurityPortType security = transport.getSecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
+	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
+	        	 Assert.assertNotNull(authInfoSam);
 	        	 
 	        	 UDDIPublicationPortType publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
@@ -90,6 +93,7 @@ public class UDDI_080_SubscriptionTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
+			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
 		} 
 		finally {
 			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
@@ -100,4 +104,23 @@ public class UDDI_080_SubscriptionTest
 		}
 	}
 
+	@Test
+	public void samSyndicator() {
+		try {
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusinessService.saveSamSyndicatorService(authInfoSam);
+			tckSubscription.saveSamSyndicatorSubscription(authInfoSam);
+			tckSubscription.getSamSyndicatorSubscriptionResults(authInfoSam);
+		} 
+		finally {
+			tckSubscription.deleteSamSyndicatorSubscription(authInfoSam);
+			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+		
+	}
+
+	
 }

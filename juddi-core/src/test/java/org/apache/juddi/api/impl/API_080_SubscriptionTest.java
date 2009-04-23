@@ -40,9 +40,10 @@ public class API_080_SubscriptionTest
 	private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
+	private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
 
 	private static String authInfoJoe = null;
+	private static String authInfoSam = null;
 	
 	@BeforeClass
 	public static void setup() {
@@ -50,6 +51,10 @@ public class API_080_SubscriptionTest
 		try {
 			api010.saveJoePublisher();
 			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+
+			api010.saveSamSyndicator();
+			authInfoSam = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
+
 		} catch (DispositionReportFaultMessage e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
@@ -66,9 +71,9 @@ public class API_080_SubscriptionTest
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
 			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
-			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 		} 
 		finally {
+			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
@@ -77,4 +82,23 @@ public class API_080_SubscriptionTest
 		
 	}
 
+	@Test
+	public void samSyndicator() {
+		try {
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusinessService.saveSamSyndicatorService(authInfoSam);
+			tckSubscription.saveSamSyndicatorSubscription(authInfoSam);
+			tckSubscription.getSamSyndicatorSubscriptionResults(authInfoSam);
+		} 
+		finally {
+			tckSubscription.deleteSamSyndicatorSubscription(authInfoSam);
+			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+		
+	}
+
+	
 }
