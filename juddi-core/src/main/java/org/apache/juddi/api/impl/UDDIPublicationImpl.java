@@ -268,26 +268,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 
-		List<org.uddi.api_v3.AssertionStatusItem> result = new ArrayList<org.uddi.api_v3.AssertionStatusItem>(0);
-
-		List<?> businessKeysFound = null;
-		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
-		
-		List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, completionStatus);
-		for(org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
-			org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem = new org.uddi.api_v3.AssertionStatusItem();
-
-			MappingModelToApi.mapAssertionStatusItem(modelPubAssertion, apiAssertionStatusItem, businessKeysFound);
-			
-			result.add(apiAssertionStatusItem);
-		}
+		List<org.uddi.api_v3.AssertionStatusItem> result = PublicationHelper.getAssertionStatusItemList(publisher, completionStatus, em);
 
 		tx.commit();
 		em.close();
 
-		return null;
+		return result;
 	}
-
 
 	public List<PublisherAssertion> getPublisherAssertions(String authInfo)
 			throws DispositionReportFaultMessage {
