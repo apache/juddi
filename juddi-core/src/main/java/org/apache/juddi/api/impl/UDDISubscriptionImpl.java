@@ -30,17 +30,22 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.Holder;
 
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.AssertionStatusReport;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetAssertionStatusReport;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelDetail;
@@ -258,6 +263,9 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			
 		}
 		if (subscriptionFilter.getFindRelatedBusinesses() != null) {
+			FindRelatedBusinesses findRelatedBusiness = subscriptionFilter.getFindRelatedBusinesses();
+			RelatedBusinessesList  relatedBusinessList = InquiryHelper.getRelatedBusinessesList(findRelatedBusiness, em, startPointDate, endPointDate);
+			result.setRelatedBusinessesList(relatedBusinessList);
 		}
 		if (subscriptionFilter.getGetBindingDetail() != null) {
 			GetBindingDetail getDetail = subscriptionFilter.getGetBindingDetail();
@@ -378,6 +386,17 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				result.getKeyBag().add(missingKeyBag);
 		}
 		if (subscriptionFilter.getGetAssertionStatusReport() != null) {
+			// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
+			
+			GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();
+			
+			List<AssertionStatusItem> assertionList = PublicationHelper.getAssertionStatusItemList(publisher, getAssertionStatusReport.getCompletionStatus(), em);
+
+			AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();
+			for(AssertionStatusItem asi : assertionList)
+				assertionStatusReport.getAssertionStatusItem().add(asi);
+			
+			result.setAssertionStatusReport(assertionStatusReport);
 		}
 		
         tx.commit();

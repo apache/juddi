@@ -49,8 +49,6 @@ import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
-import org.uddi.api_v3.ListDescription;
-import org.uddi.api_v3.Direction;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
@@ -135,30 +133,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
 		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
 		
-		RelatedBusinessesList result = new RelatedBusinessesList();
-		ListDescription listDesc = new ListDescription();
-		result.setListDescription(listDesc);
-		
-		// Either one of the businessKey, fromKey or toKey will be passed.  This is considered the "focal" business to which related businesses must be
-		// found.  Rather than use a query, it seems simpler to take advantage of the model's publisher assertion collections.
-		org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
-		if (body.getBusinessKey() != null ) {
-			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
-			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos);
-		}
-		else if (body.getFromKey() != null)
-			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos);
-		else if (body.getToKey() != null)
-			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos);
-
-		if (relatedBusinessInfos.getRelatedBusinessInfo().size() > 0) {
-			// TODO: Do proper pagination!
-			listDesc.setActualCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
-			listDesc.setIncludeCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
-			listDesc.setListHead(1);
-			
-			result.setRelatedBusinessInfos(relatedBusinessInfos);
-		}
+		RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
 		
 		tx.commit();
 		em.close();

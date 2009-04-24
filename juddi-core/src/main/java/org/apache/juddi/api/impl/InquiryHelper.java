@@ -56,6 +56,7 @@ import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.ListDescription;
+import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModelBag;
 import org.uddi.api_v3.TModelList;
@@ -289,11 +290,22 @@ public class InquiryHelper {
 	 * structure.
 	 */
 	public static void getRelatedBusinesses(EntityManager em, 
-									  Direction direction, 
-									  String focalKey, 
-									  org.uddi.api_v3.KeyedReference keyedRef,
-									  org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos)
-			 throws DispositionReportFaultMessage {
+											Direction direction, 
+											String focalKey, 
+											org.uddi.api_v3.KeyedReference keyedRef,
+											org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos)
+			throws DispositionReportFaultMessage {
+		getRelatedBusinesses(em, direction, focalKey, keyedRef, relatedBusinessInfos, null, null);
+	}
+	
+	public static void getRelatedBusinesses(EntityManager em, 
+											Direction direction, 
+											String focalKey, 
+											org.uddi.api_v3.KeyedReference keyedRef,
+											org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos,
+											Date modifiedAfter,
+											Date modifiedBefore)
+			throws DispositionReportFaultMessage {
 		if (relatedBusinessInfos == null)
 			relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
 		
@@ -324,6 +336,12 @@ public class InquiryHelper {
 					else
 						modelRelatedBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, modelPublisherAssertion.getId().getFromKey());
 					
+					if (modifiedAfter != null && modifiedAfter.after(modelRelatedBusiness.getModifiedIncludingChildren()))
+						continue;
+					
+					if (modifiedBefore != null && modifiedBefore.before(modelRelatedBusiness.getModifiedIncludingChildren()))
+						continue;
+					
 					org.uddi.api_v3.RelatedBusinessInfo apiRelatedBusinessInfo = new org.uddi.api_v3.RelatedBusinessInfo();
 
 					MappingModelToApi.mapRelatedBusinessInfo(modelPublisherAssertion, modelRelatedBusiness, direction, apiRelatedBusinessInfo);
@@ -333,6 +351,39 @@ public class InquiryHelper {
 			}
 		}
 		
+	}
+
+	public static RelatedBusinessesList getRelatedBusinessesList(FindRelatedBusinesses body, EntityManager em) throws DispositionReportFaultMessage {
+		return getRelatedBusinessesList(body, em, null, null);
+	}
+	
+	public static RelatedBusinessesList getRelatedBusinessesList(FindRelatedBusinesses body, EntityManager em, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+		RelatedBusinessesList result = new RelatedBusinessesList();
+		ListDescription listDesc = new ListDescription();
+		result.setListDescription(listDesc);
+		
+		// Either one of the businessKey, fromKey or toKey will be passed.  This is considered the "focal" business to which related businesses must be
+		// found.  Rather than use a query, it seems simpler to take advantage of the model's publisher assertion collections.
+		org.uddi.api_v3.RelatedBusinessInfos relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
+		if (body.getBusinessKey() != null ) {
+			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
+			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
+		}
+		else if (body.getFromKey() != null)
+			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
+		else if (body.getToKey() != null)
+			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
+
+		if (relatedBusinessInfos.getRelatedBusinessInfo().size() > 0) {
+			// TODO: Do proper pagination!
+			listDesc.setActualCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
+			listDesc.setIncludeCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
+			listDesc.setListHead(1);
+			
+			result.setRelatedBusinessInfos(relatedBusinessInfos);
+		}
+		
+		return result;
 	}
 		
 	/*
