@@ -113,6 +113,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * on every call to this method.  To resolve this, the user can renew the subscription at which time the "match" snapshot will be refreshed.
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body) throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -161,14 +162,22 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			//}
 			
 			// Now, finding the necessary entities, within the coverage period limits
-			FindBinding fb = subscriptionFilter.getFindBinding();
-			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
-			
-			BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
-			
-			result.setBindingDetail(bindingDetail);
-			
+			if (modelSubscription.isBrief()) {
+				KeyBag resultsKeyBag = new KeyBag();
+				for (String key : (List<String>)currentMatchingKeys)
+					resultsKeyBag.getBindingKey().add(key);
+				
+				result.getKeyBag().add(resultsKeyBag);
+			}
+			else {
+				FindBinding fb = subscriptionFilter.getFindBinding();
+				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+				findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+				
+				BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+				
+				result.setBindingDetail(bindingDetail);
+			}
 		}
 		if (subscriptionFilter.getFindBusiness() != null) {
 			//Get the current matching keys
@@ -192,14 +201,22 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			//}
 			
 			// Now, finding the necessary entities, within the coverage period limits
-			FindBusiness fb = subscriptionFilter.getFindBusiness();
-			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
-			
-			BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
-			
-			result.setBusinessList(businessList);
-			
+			if (modelSubscription.isBrief()) {
+				KeyBag resultsKeyBag = new KeyBag();
+				for (String key : (List<String>)currentMatchingKeys)
+					resultsKeyBag.getBusinessKey().add(key);
+				
+				result.getKeyBag().add(resultsKeyBag);
+			}
+			else {
+				FindBusiness fb = subscriptionFilter.getFindBusiness();
+				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+				findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+				
+				BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+				
+				result.setBusinessList(businessList);
+			}
 		}
 		if (subscriptionFilter.getFindService() != null) {
 			//Get the current matching keys
@@ -223,13 +240,22 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			//}
 			
 			// Now, finding the necessary entities, within the coverage period limits
-			FindService fs = subscriptionFilter.getFindService();
-			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());
-			
-			ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
-			
-			result.setServiceList(serviceList);
+			if (modelSubscription.isBrief()) {
+				KeyBag resultsKeyBag = new KeyBag();
+				for (String key : (List<String>)currentMatchingKeys)
+					resultsKeyBag.getServiceKey().add(key);
+				
+				result.getKeyBag().add(resultsKeyBag);
+			}
+			else {
+				FindService fs = subscriptionFilter.getFindService();
+				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+				findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());
+				
+				ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+				
+				result.setServiceList(serviceList);
+			}
 		}
 		if (subscriptionFilter.getFindTModel() != null) {
 			//Get the current matching keys
@@ -253,13 +279,23 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			//}
 			
 			// Now, finding the necessary entities, within the coverage period limits
-			FindTModel ft = subscriptionFilter.getFindTModel();
-			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());
-			
-			TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
-			
-			result.setTModelList(tmodelList);
+			// Now, finding the necessary entities, within the coverage period limits
+			if (modelSubscription.isBrief()) {
+				KeyBag resultsKeyBag = new KeyBag();
+				for (String key : (List<String>)currentMatchingKeys)
+					resultsKeyBag.getTModelKey().add(key);
+				
+				result.getKeyBag().add(resultsKeyBag);
+			}
+			else {
+				FindTModel ft = subscriptionFilter.getFindTModel();
+				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+				findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());
+				
+				TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, startPointDate, endPointDate);
+				
+				result.setTModelList(tmodelList);
+			}
 			
 		}
 		if (subscriptionFilter.getFindRelatedBusinesses() != null) {
@@ -269,8 +305,8 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		}
 		if (subscriptionFilter.getGetBindingDetail() != null) {
 			GetBindingDetail getDetail = subscriptionFilter.getGetBindingDetail();
-
 			
+			KeyBag resultsKeyBag = new KeyBag();
 			BindingDetail bindingDetail = new BindingDetail();
 			KeyBag missingKeyBag = new KeyBag();
 			missingKeyBag.setDeleted(true);
@@ -284,15 +320,23 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 					if (endPointDate.before(modelBindingTemplate.getModifiedIncludingChildren()))
 						continue;
 					
-					org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
-					MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
-					bindingDetail.getBindingTemplate().add(apiBindingTemplate);
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getBindingKey().add(key);
+					}
+					else {
+						org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
+						MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
+						bindingDetail.getBindingTemplate().add(apiBindingTemplate);
+					}
 				}
 				else
 					missingKeyBag.getBindingKey().add(key);
 			}
 			
-			result.setBindingDetail(bindingDetail);
+			if (modelSubscription.isBrief())
+				result.getKeyBag().add(resultsKeyBag);
+			else
+				result.setBindingDetail(bindingDetail);
 			
 			if (missingKeyBag.getBindingKey() != null && missingKeyBag.getBindingKey().size() > 0)
 				result.getKeyBag().add(missingKeyBag);
@@ -301,6 +345,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		if (subscriptionFilter.getGetBusinessDetail() != null) {
 			GetBusinessDetail getDetail = subscriptionFilter.getGetBusinessDetail();
 
+			KeyBag resultsKeyBag = new KeyBag();
 			BusinessDetail businessDetail = new BusinessDetail();
 			KeyBag missingKeyBag = new KeyBag();
 			missingKeyBag.setDeleted(true);
@@ -314,15 +359,23 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 					if (endPointDate.before(modelBusinessEntity.getModifiedIncludingChildren()))
 						continue;
 					
-					org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
-					MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
-					businessDetail.getBusinessEntity().add(apiBusinessEntity);
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getBusinessKey().add(key);
+					}
+					else {
+						org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
+						MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
+						businessDetail.getBusinessEntity().add(apiBusinessEntity);
+					}
 				}
 				else
 					missingKeyBag.getBusinessKey().add(key);
 			}
 			
-			result.setBusinessDetail(businessDetail);
+			if (modelSubscription.isBrief())
+				result.getKeyBag().add(resultsKeyBag);
+			else
+				result.setBusinessDetail(businessDetail);
 			
 			if (missingKeyBag.getBusinessKey() != null && missingKeyBag.getBusinessKey().size() > 0)
 				result.getKeyBag().add(missingKeyBag);
@@ -330,6 +383,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		if (subscriptionFilter.getGetServiceDetail() != null) {
 			GetServiceDetail getDetail = subscriptionFilter.getGetServiceDetail();
 
+			KeyBag resultsKeyBag = new KeyBag();
 			ServiceDetail serviceDetail = new ServiceDetail();
 			KeyBag missingKeyBag = new KeyBag();
 			missingKeyBag.setDeleted(true);
@@ -343,15 +397,23 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 					if (endPointDate.before(modelBusinessService.getModifiedIncludingChildren()))
 						continue;
 					
-					org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
-					MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
-					serviceDetail.getBusinessService().add(apiBusinessService);
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getServiceKey().add(key);
+					}
+					else {
+						org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
+						MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
+						serviceDetail.getBusinessService().add(apiBusinessService);
+					}
 				}
 				else
 					missingKeyBag.getServiceKey().add(key);
 			}
 			
-			result.setServiceDetail(serviceDetail);
+			if (modelSubscription.isBrief())
+				result.getKeyBag().add(resultsKeyBag);
+			else
+				result.setServiceDetail(serviceDetail);
 			
 			if (missingKeyBag.getServiceKey() != null && missingKeyBag.getServiceKey().size() > 0)
 				result.getKeyBag().add(missingKeyBag);
@@ -359,6 +421,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		if (subscriptionFilter.getGetTModelDetail() != null) {
 			GetTModelDetail getDetail = subscriptionFilter.getGetTModelDetail();
 
+			KeyBag resultsKeyBag = new KeyBag();
 			TModelDetail tmodelDetail = new TModelDetail();
 			KeyBag missingKeyBag = new KeyBag();
 			missingKeyBag.setDeleted(true);
@@ -372,15 +435,23 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 					if (endPointDate.before(modelTModel.getModifiedIncludingChildren()))
 						continue;
 					
-					org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
-					MappingModelToApi.mapTModel(modelTModel, apiTModel);
-					tmodelDetail.getTModel().add(apiTModel);
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getTModelKey().add(key);
+					}
+					else {
+						org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
+						MappingModelToApi.mapTModel(modelTModel, apiTModel);
+						tmodelDetail.getTModel().add(apiTModel);
+					}
 				}
 				else
 					missingKeyBag.getTModelKey().add(key);
 			}
 			
-			result.setTModelDetail(tmodelDetail);
+			if (modelSubscription.isBrief())
+				result.getKeyBag().add(resultsKeyBag);
+			else
+				result.setTModelDetail(tmodelDetail);
 			
 			if (missingKeyBag.getTModelKey() != null && missingKeyBag.getTModelKey().size() > 0)
 				result.getKeyBag().add(missingKeyBag);
