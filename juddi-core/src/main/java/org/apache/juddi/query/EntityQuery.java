@@ -85,7 +85,7 @@ public abstract class EntityQuery {
 			listDesc.setListHead(listHead);
 		}
 		
-		int startIndex = (listHead - 1) * maxRows;
+		int startIndex = listHead - 1;
 		if (startIndex >= resultSize) {
 			if (listDesc != null)
 				listDesc.setIncludeCount(0);
