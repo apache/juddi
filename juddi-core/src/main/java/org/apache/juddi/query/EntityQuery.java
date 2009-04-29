@@ -38,7 +38,7 @@ public abstract class EntityQuery {
 
 	public static final String KEY_NAME = "entityKey";
 
-	public static final int DEFAULT_MAXROWS = 100;
+	public static final int DEFAULT_MAXROWS = 1000;
 	public static final int DEFAULT_MAXINCLAUSE = 1000;
 	
 	// TODO:  make this alias creator a little more unique
