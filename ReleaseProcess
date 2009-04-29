@@ -1,0 +1,34 @@
+Notes on the rc6 release process
+
+Environment: 
+Maven version: 2.0.8
+Java version: 1.5.0_16
+OS name: "mac os x" version: "10.5.6" arch: "i386" Family: "unix"
+
+1. Run mvn clean install -Prelease, these artifact will be uploaded to the maven repos
+
+juddi/target        : juddi-2.0rc6-jar, juddi-2.0rc6-javadoc.jar, juddi-2.0rc6-sources.jar, juddi-2.0rc6.pom + *.asc
+juddi-client/target : juddi-client-2.0.rc6.jar, juddi-client-2.0rc6.pom + *.asc
+juddi-web           : juddi.war (including axis2 WS stack)
+juddi-web-lean      : juddi.war
+juddi-ws            : juddi-ws-2.0rc6.jar
+
+2. Run mvn assembly:attached from the juddi-distribution directory.
+
+juddi-distribution/target: juddi-distribution-2.0rc6-bin.zip
+
+3. Run mvn clean install from the juddi-tomcat directory.
+
+juddi-tomcat/target: juddi-tomcat-2.0rc6.zip 
+
+4. Copy the release artifacts to people.apache.org.
+
+5. Start a vote referencing the build artifacts, leave the vote open for 72 hrs.
+
+On successfull vote:
+
+6. Create a Tag in SVN for the 2.0rc6 release
+
+7. Run mvn clean deploy -Prelease
+
+8. Update the website

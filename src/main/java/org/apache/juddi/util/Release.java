@@ -20,7 +20,7 @@ package org.apache.juddi.util;
  */
 public class Release 
 {
-  private static final String REGISTRY_VERSION = "2.0rc5";
+  private static final String REGISTRY_VERSION = "2.0rc7";
   private static final String UDDI_VERSION = "2.0";
   
   // Made private to avoid instantiation

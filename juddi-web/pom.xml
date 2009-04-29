@@ -4,19 +4,19 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>SNAPSHOT</version>
+    <version>2.0rc7</version>
   </parent>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-web</artifactId>
   <packaging>war</packaging>
-  <version>SNAPSHOT</version>
+  <version>2.0rc7</version>
   <name>juddi-web Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <artifactId>juddi</artifactId>
       <groupId>org.apache.juddi</groupId>
-      <version>SNAPSHOT</version> 
+      <version>2.0rc7</version> 
         <exclusions>
           <exclusion>
             <groupId>javax.servlet</groupId>
@@ -28,7 +28,7 @@
     <dependency>
       <artifactId>juddi-ws</artifactId>
       <groupId>org.apache.juddi</groupId>
-      <version>SNAPSHOT</version> 
+      <version>2.0rc7</version> 
         <exclusions>
           <exclusion>
             <groupId>javax.servlet</groupId>
