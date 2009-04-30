@@ -69,6 +69,8 @@ public class OperationalInfo {
 
     /**
      * Gets the value of the created property.
+     * Indicates the instant in time at which the entity with which the 
+     * operationalInfo is associated first appeared in the registry.
      * 
      * @return
      *     possible object is
@@ -81,7 +83,8 @@ public class OperationalInfo {
 
     /**
      * Sets the value of the created property.
-     * 
+     * Indicates the instant in time at which the entity with which the 
+     * operationalInfo is associated first appeared in the registry.
      * @param value
      *     allowed object is
      *     {@link XMLGregorianCalendar }
@@ -189,6 +192,7 @@ public class OperationalInfo {
 
     /**
      * Gets the value of the entityKey property.
+     * The entityKey references the UDDI entity with which the operationalInfo is associated.
      * 
      * @return
      *     possible object is
@@ -201,7 +205,7 @@ public class OperationalInfo {
 
     /**
      * Sets the value of the entityKey property.
-     * 
+     * The entityKey references the UDDI entity with which the operationalInfo is associated.
      * @param value
      *     allowed object is
      *     {@link String }
