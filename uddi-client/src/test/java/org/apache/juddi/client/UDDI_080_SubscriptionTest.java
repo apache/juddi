@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
@@ -85,7 +86,7 @@ public class UDDI_080_SubscriptionTest
 	     } 
 	}
 	
-	@Test
+	@Test @Ignore //TODO fix this JUDDI-228
 	public void joePublisher() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -104,7 +105,7 @@ public class UDDI_080_SubscriptionTest
 		}
 	}
 
-	@Test
+	@Test @Ignore //TODO fix this JUDDI-227
 	public void samSyndicator() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
@@ -122,7 +123,7 @@ public class UDDI_080_SubscriptionTest
 		
 	}
 
-	@Test
+	@Test @Ignore //TODO fix this JUDDI-229
 	public void samSyndicatorWithChunkingOnFind() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
@@ -140,7 +141,7 @@ public class UDDI_080_SubscriptionTest
 		
 	}
 	
-	@Test
+	@Test  @Ignore //TODO fix this JUDDI-229
 	public void samSyndicatorWithChunkingOnGet() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
