@@ -724,7 +724,7 @@ VALUES ('uuid:AC104DCC-D623-452F-88A7-F8ACD94D9B2B',3,'uuid:C1ACF26D-9672-4404-9
 
 -- ** uddi-org:taxonomy_V2
 INSERT INTO ${prefix}TMODEL (TMODEL_KEY,AUTHORIZED_NAME,PUBLISHER_ID,OPERATOR,NAME,OVERVIEW_URL,LAST_UPDATE)
-VALUES ('uuid:1E3E9CBC-F8CE-41ab-8F99-88326BAD324A','Administrator','admin','jUDDI.org','uddi-org:taxonomy_v2','http://www.uddi.org/taxonomies/UDDI_Registry_tModels.htm#TaxV2',CURTIMESTAMP());
+VALUES ('uuid:1E3E9CBC-F8CE-41ab-8F99-88326BAD324A','Administrator','admin','jUDDI.org','uddi-org:taxonomy_v2','http://www.uddi.org/taxonomies/UDDI_Registry_tModels.htm#TaxV2',CURDATE());
 INSERT INTO ${prefix}TMODEL_DESCR (TMODEL_KEY,TMODEL_DESCR_ID,LANG_CODE,DESCR)
 VALUES ('uuid:1E3E9CBC-F8CE-41ab-8F99-88326BAD324A',0,'en','UDDI Taxonomy API Version 2 - Core Specification');
 INSERT INTO ${prefix}TMODEL_DOC_DESCR (TMODEL_KEY,TMODEL_DOC_DESCR_ID,LANG_CODE,DESCR)
