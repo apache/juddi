@@ -13,7 +13,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
-public class JAXRPCTransport implements Transport {
+public class JAXWSTransport implements Transport {
 
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
