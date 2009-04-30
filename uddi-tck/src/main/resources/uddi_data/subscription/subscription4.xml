@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+-->
+<subscription xmlns="urn:uddi-org:sub_v3">
+  <subscriptionKey>uddi:www.samco.com:subscriptionthree</subscriptionKey>
+  <subscriptionFilter>
+    <get_tModelDetail xmlns="urn:uddi-org:api_v3">
+      <tModelKey>uddi:uddi.org:findqualifier:andallkeys</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:approximatematch</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:bindingsubset</tModelKey>
+      <tModelKey>uddi:garbage.key.1</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:caseinsensitivematch</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:caseinsensitivesort</tModelKey>
+      <tModelKey>uddi:garbage.key.2</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:casesensitivematch</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:casesensitivesort</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:combinecategorybags</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:diacriticsinsensitivematch</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:diacriticssensitivematch</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:exactmatch</tModelKey>
+      <tModelKey>uddi:garbage.key.3</tModelKey>
+      <tModelKey>uddi:garbage.key.4</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:orallkeys</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:orlikekeys</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:servicesubset</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:signaturepresent</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:sortbydateasc</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:sortbydatedesc</tModelKey>
+      <tModelKey>uddi:garbage.key.5</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:sortbynameasc</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:sortbynamedesc</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:suppressProjectedServices</tModelKey>
+      <tModelKey>uddi:uddi.org:sortorder:binarysort</tModelKey>
+      <tModelKey>uddi:uddi.org:sortorder:uts-10</tModelKey>
+      <tModelKey>uddi:garbage.key.6</tModelKey>
+      <tModelKey>uddi:garbage.key.7</tModelKey>
+     </get_tModelDetail>
+  </subscriptionFilter>
+  <bindingKey xmlns="urn:uddi-org:api_v3">bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <notificationInterval>P5D</notificationInterval>
+  <maxEntities>5</maxEntities>
+</subscription>

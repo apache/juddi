@@ -26,6 +26,8 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.KeyBag;
@@ -49,6 +51,16 @@ public class TckSubscription
     final static String SAM_SUBSCRIPTION_KEY = "uddi:www.samco.com:subscriptionone";
 	final static String SAM_SUBSCRIPTIONRESULTS_XML = "uddi_data/subscription/subscriptionresults2.xml";
 	final static String SAM_DUMMYBUSINESSKEY = "uddi:www.this.key.doesnot.exist";
+
+	final static String SAM_SUBSCRIPTION2_XML = "uddi_data/subscription/subscription3.xml";
+    final static String SAM_SUBSCRIPTION2_KEY = "uddi:www.samco.com:subscriptiontwo";
+	final static String SAM_SUBSCRIPTIONRESULTS2_XML = "uddi_data/subscription/subscriptionresults3.xml";
+	final static int FINDQUALIFIER_TMODEL_TOTAL = 22;
+
+	final static String SAM_SUBSCRIPTION3_XML = "uddi_data/subscription/subscription4.xml";
+    final static String SAM_SUBSCRIPTION3_KEY = "uddi:www.samco.com:subscriptionthree";
+	final static String SAM_SUBSCRIPTIONRESULTS3_XML = "uddi_data/subscription/subscriptionresults4.xml";
+	
 	
 	private Logger logger = Logger.getLogger(this.getClass());
     UDDISubscriptionPortType subscription = null;
@@ -102,10 +114,26 @@ public class TckSubscription
 		saveSubscription(authInfoSam, SAM_SUBSCRIPTION_XML, SAM_SUBSCRIPTION_KEY);
 	}
 
+	public void saveSamSyndicatorSubscriptionWithChunkingOnFind(String authInfoSam) {
+		saveSubscription(authInfoSam, SAM_SUBSCRIPTION2_XML, SAM_SUBSCRIPTION2_KEY);
+	}
+
+	public void saveSamSyndicatorSubscriptionWithChunkingOnGet(String authInfoSam) {
+		saveSubscription(authInfoSam, SAM_SUBSCRIPTION3_XML, SAM_SUBSCRIPTION3_KEY);
+	}
+	
 	public void deleteSamSyndicatorSubscription(String authInfoSam) {
 		deleteSubscription(authInfoSam, SAM_SUBSCRIPTION_KEY);
 	}
 
+	public void deleteSamSyndicatorSubscriptionWithChunkingOnFind(String authInfoSam) {
+		deleteSubscription(authInfoSam, SAM_SUBSCRIPTION2_KEY);
+	}
+
+	public void deleteSamSyndicatorSubscriptionWithChunkingOnGet(String authInfoSam) {
+		deleteSubscription(authInfoSam, SAM_SUBSCRIPTION3_KEY);
+	}
+	
 	public void getSamSyndicatorSubscriptionResults(String authInfoSam) {		
 		try {
 			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(SAM_SUBSCRIPTIONRESULTS_XML, "org.uddi.sub_v3");
@@ -146,6 +174,105 @@ public class TckSubscription
 		}
 		
 	}
+	
+	public void getSamSyndicatorSubscriptionResultsWithChunkingOnFind(String authInfoSam) {		
+		try {
+			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(SAM_SUBSCRIPTIONRESULTS2_XML, "org.uddi.sub_v3");
+			getSubResultsIn.setAuthInfo(authInfoSam);
+			
+			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION2_XML, "org.uddi.sub_v3");
+			
+			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
+			if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
+				expectedIterations++;
+			
+			String chunkToken = "";
+			int iterations = 0;
+			while (chunkToken != null) {
+				iterations++;
+				
+				getSubResultsIn.setChunkToken(chunkToken);
+				SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
+				if (result == null)
+					Assert.fail("Null result from getSubscriptionResults operation");
+				
+				TModelList tmodelList = result.getTModelList();
+				if (tmodelList == null)
+					Assert.fail("No result from getSubscriptionResults operation on chunk attempt " + iterations);
+
+				int resultSize = tmodelList.getTModelInfos().getTModelInfo().size();
+				
+				if (iterations < expectedIterations)
+					assertEquals(resultSize, subIn.getMaxEntities().intValue());
+				else {
+					if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() > 0)
+						assertEquals(resultSize, FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities());
+					else
+						assertEquals(resultSize, subIn.getMaxEntities().intValue());
+				}
+				
+				chunkToken = result.getChunkToken();
+				
+			}
+		
+			assertEquals(iterations, expectedIterations);
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown");		
+		}
+		
+	}
+	
+	public void getSamSyndicatorSubscriptionResultsWithChunkingOnGet(String authInfoSam) {
+		try {
+			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(SAM_SUBSCRIPTIONRESULTS3_XML, "org.uddi.sub_v3");
+			getSubResultsIn.setAuthInfo(authInfoSam);
+			
+			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION3_XML, "org.uddi.sub_v3");
+			
+			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
+			if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
+				expectedIterations++;
+			
+			String chunkToken = "";
+			int iterations = 0;
+			while (chunkToken != null) {
+				iterations++;
+				
+				getSubResultsIn.setChunkToken(chunkToken);
+				SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
+				if (result == null)
+					Assert.fail("Null result from getSubscriptionResults operation");
+				
+				TModelDetail tmodelDetail = result.getTModelDetail();
+				if (tmodelDetail == null)
+					Assert.fail("No result from getSubscriptionResults operation on chunk attempt " + iterations);
+
+				int resultSize = tmodelDetail.getTModel().size();
+				
+				if (iterations < expectedIterations)
+					assertEquals(resultSize, subIn.getMaxEntities().intValue());
+				else {
+					if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() > 0)
+						assertEquals(resultSize, FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities());
+					else
+						assertEquals(resultSize, subIn.getMaxEntities().intValue());
+				}
+				
+				chunkToken = result.getChunkToken();
+				
+			}
+		
+			assertEquals(iterations, expectedIterations);
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown");		
+		}
+		
+	}
+	
 	
 	private void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey) {
 		try {

@@ -100,5 +100,40 @@ public class API_080_SubscriptionTest
 		
 	}
 
+	@Test
+	public void samSyndicatorWithChunkingOnFind() {
+		try {
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusinessService.saveSamSyndicatorService(authInfoSam);
+			tckSubscription.saveSamSyndicatorSubscriptionWithChunkingOnFind(authInfoSam);
+			tckSubscription.getSamSyndicatorSubscriptionResultsWithChunkingOnFind(authInfoSam);
+		} 
+		finally {
+			tckSubscription.deleteSamSyndicatorSubscriptionWithChunkingOnFind(authInfoSam);
+			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+		
+	}
+	
+	@Test
+	public void samSyndicatorWithChunkingOnGet() {
+		try {
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusinessService.saveSamSyndicatorService(authInfoSam);
+			tckSubscription.saveSamSyndicatorSubscriptionWithChunkingOnGet(authInfoSam);
+			tckSubscription.getSamSyndicatorSubscriptionResultsWithChunkingOnGet(authInfoSam);
+		} 
+		finally {
+			tckSubscription.deleteSamSyndicatorSubscriptionWithChunkingOnGet(authInfoSam);
+			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+		
+	}
 	
 }
