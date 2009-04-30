@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.xml.ws.Holder;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.InvalidKeyPassedException;
@@ -86,10 +87,13 @@ public class InquiryHelper {
 	}
 	
 	public static BindingDetail getBindingDetailFromKeys(FindBinding body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
-		return getBindingDetailFromKeys(body, findQualifiers, em, keysFound, null, null);
+		return getBindingDetailFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 	
-	public static BindingDetail getBindingDetailFromKeys(FindBinding body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+	public static BindingDetail getBindingDetailFromKeys(FindBinding body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
+														 Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
+				   throws DispositionReportFaultMessage {
+
 		BindingDetail result = new BindingDetail();
 		ListDescription listDesc = new ListDescription();
 		result.setListDescription(listDesc);
@@ -97,19 +101,52 @@ public class InquiryHelper {
 		// Sort and retrieve the final results with paging taken into account
 		List<?> queryResults = FetchBindingTemplatesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
 
-		for (Object item : queryResults) {
+		// Set the currentIndex to 0 or the value of the subscriptionStartIndex
+		int currentIndex = 0;
+		if (subscriptionStartIndex != null && subscriptionStartIndex.value != null)
+			currentIndex = subscriptionStartIndex.value;
+
+		int returnedRowCount = 0;
+		
+		while (currentIndex < queryResults.size()) {
+			Object item = queryResults.get(currentIndex);
+
 			org.apache.juddi.model.BindingTemplate modelBindingTemplate = (org.apache.juddi.model.BindingTemplate)item;
 			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
 			
-			if (modifiedAfter != null && modifiedAfter.after(modelBindingTemplate.getModifiedIncludingChildren()))
+			if (modifiedAfter != null && modifiedAfter.after(modelBindingTemplate.getModifiedIncludingChildren())) {
+				currentIndex++;
 				continue;
+			}
 			
-			if (modifiedBefore != null && modifiedBefore.before(modelBindingTemplate.getModifiedIncludingChildren()))
+			if (modifiedBefore != null && modifiedBefore.before(modelBindingTemplate.getModifiedIncludingChildren())) {
+				currentIndex++;
 				continue;
+			}
 			
 			MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
 			
 			result.getBindingTemplate().add(apiBindingTemplate);
+
+			returnedRowCount++;
+			// If the returned rows equals the max allowed, we can end the loop (applies to subscription calls only)
+			if (subscriptionMaxRows != null) {
+				if (returnedRowCount == subscriptionMaxRows)
+					break;
+			}
+
+			currentIndex++;
+		}
+
+		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
+		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
+		if (currentIndex < (queryResults.size() - 1)) {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = currentIndex + 1;
+		}
+		else {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = null;
 		}
 		
 		return result;
@@ -157,10 +194,13 @@ public class InquiryHelper {
 	}
 
 	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
-		return getBusinessListFromKeys(body, findQualifiers, em, keysFound, null, null);
+		return getBusinessListFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 	
-	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
+													   Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
+				   throws DispositionReportFaultMessage {
+
 		BusinessList result = new BusinessList();
 		ListDescription listDesc = new ListDescription();
 		result.setListDescription(listDesc);
@@ -170,19 +210,52 @@ public class InquiryHelper {
 		if (queryResults != null && queryResults.size() > 0)
 			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 
-		for (Object item : queryResults) {
+		// Set the currentIndex to 0 or the value of the subscriptionStartIndex
+		int currentIndex = 0;
+		if (subscriptionStartIndex != null && subscriptionStartIndex.value != null)
+			currentIndex = subscriptionStartIndex.value;
+
+		int returnedRowCount = 0;
+		
+		while (currentIndex < queryResults.size()) {
+			Object item = queryResults.get(currentIndex);
+
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
 			org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
 			
-			if (modifiedAfter != null && modifiedAfter.after(modelBusinessEntity.getModifiedIncludingChildren()))
+			if (modifiedAfter != null && modifiedAfter.after(modelBusinessEntity.getModifiedIncludingChildren())){
+				currentIndex++;
 				continue;
+			}
 			
-			if (modifiedBefore != null && modifiedBefore.before(modelBusinessEntity.getModifiedIncludingChildren()))
+			if (modifiedBefore != null && modifiedBefore.before(modelBusinessEntity.getModifiedIncludingChildren())) {
+				currentIndex++;
 				continue;
+			}
 			
 			MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
 			
 			result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+
+			returnedRowCount++;
+			// If the returned rows equals the max allowed, we can end the loop (applies to subscription calls only)
+			if (subscriptionMaxRows != null) {
+				if (returnedRowCount == subscriptionMaxRows)
+					break;
+			}
+
+			currentIndex++;
+		}
+
+		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
+		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
+		if (currentIndex < (queryResults.size() - 1)) {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = currentIndex + 1;
+		}
+		else {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = null;
 		}
 		
 		return result;
@@ -207,10 +280,12 @@ public class InquiryHelper {
 	}
 	
 	public static ServiceList getServiceListFromKeys(FindService body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
-		return getServiceListFromKeys(body, findQualifiers, em, keysFound, null, null);
+		return getServiceListFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 
-	public static ServiceList getServiceListFromKeys(FindService body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+	public static ServiceList getServiceListFromKeys(FindService body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
+													 Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
+				   throws DispositionReportFaultMessage {
 		ServiceList result = new ServiceList();
 		ListDescription listDesc = new ListDescription();
 		result.setListDescription(listDesc);
@@ -220,20 +295,52 @@ public class InquiryHelper {
 		if (queryResults != null && queryResults.size() > 0)
 			result.setServiceInfos(new org.uddi.api_v3.ServiceInfos());
 
-		for (Object item : queryResults) {
+		// Set the currentIndex to 0 or the value of the subscriptionStartIndex
+		int currentIndex = 0;
+		if (subscriptionStartIndex != null && subscriptionStartIndex.value != null)
+			currentIndex = subscriptionStartIndex.value;
+
+		int returnedRowCount = 0;
+		
+		while (currentIndex < queryResults.size()) {
+			Object item = queryResults.get(currentIndex);
+
 			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
-			
-			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren()))
-				continue;
-			
-			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren()))
-				continue;
-				
 			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
+			
+			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
+				currentIndex++;
+				continue;
+			}
+			
+			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren())) {
+				currentIndex++;
+				continue;
+			}
 			
 			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
 			
 			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
+
+			returnedRowCount++;
+			// If the returned rows equals the max allowed, we can end the loop (applies to subscription calls only)
+			if (subscriptionMaxRows != null) {
+				if (returnedRowCount == subscriptionMaxRows)
+					break;
+			}
+
+			currentIndex++;
+		}
+
+		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
+		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
+		if (currentIndex < (queryResults.size() - 1)) {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = currentIndex + 1;
+		}
+		else {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = null;
 		}
 		
 		return result;
@@ -251,10 +358,12 @@ public class InquiryHelper {
 	}
 
 	public static TModelList getTModelListFromKeys(FindTModel body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound) throws DispositionReportFaultMessage {
-		return getTModelListFromKeys(body, findQualifiers, em, keysFound, null, null);
+		return getTModelListFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 	
-	public static TModelList getTModelListFromKeys(FindTModel body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
+	public static TModelList getTModelListFromKeys(FindTModel body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
+												   Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
+				   throws DispositionReportFaultMessage {
 		TModelList result = new TModelList();
 		ListDescription listDesc = new ListDescription();
 		result.setListDescription(listDesc);
@@ -264,19 +373,52 @@ public class InquiryHelper {
 		if (queryResults != null && queryResults.size() > 0)
 			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
 		
-		for (Object item : queryResults) {
+		// Set the currentIndex to 0 or the value of the subscriptionStartIndex
+		int currentIndex = 0;
+		if (subscriptionStartIndex != null && subscriptionStartIndex.value != null)
+			currentIndex = subscriptionStartIndex.value;
+
+		int returnedRowCount = 0;
+		
+		while (currentIndex < queryResults.size()) {
+			Object item = queryResults.get(currentIndex);
+			
 			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
 			org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
 			
-			if (modifiedAfter != null && modifiedAfter.after(modelTModel.getModifiedIncludingChildren()))
+			if (modifiedAfter != null && modifiedAfter.after(modelTModel.getModifiedIncludingChildren())) {
+				currentIndex++;
 				continue;
+			}
 			
-			if (modifiedBefore != null && modifiedBefore.before(modelTModel.getModifiedIncludingChildren()))
+			if (modifiedBefore != null && modifiedBefore.before(modelTModel.getModifiedIncludingChildren())) {
+				currentIndex++;
 				continue;
+			}
 			
 			MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
 			
 			result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+			
+			returnedRowCount++;
+			// If the returned rows equals the max allowed, we can end the loop (applies to subscription calls only)
+			if (subscriptionMaxRows != null) {
+				if (returnedRowCount == subscriptionMaxRows)
+					break;
+			}
+			
+			currentIndex++;
+		}
+		
+		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
+		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
+		if (currentIndex < (queryResults.size() - 1)) {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = currentIndex + 1;
+		}
+		else {
+			if (subscriptionStartIndex != null)
+				subscriptionStartIndex.value = null;
 		}
 		
 		return result;
