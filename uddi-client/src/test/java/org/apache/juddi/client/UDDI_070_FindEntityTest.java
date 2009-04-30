@@ -91,6 +91,12 @@ public class UDDI_070_FindEntityTest
 			tckFindEntity.findService();
 			tckFindEntity.findBinding();
 			tckFindEntity.findTModel();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			Assert.fail();
 		} finally {
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
