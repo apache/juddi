@@ -24,8 +24,8 @@ public interface Property
 	public final static String JUDDI_TRANSFER_EXPIRATION_DAYS    ="juddi.transfer.expiration.days";
 	public final static String JUDDI_AUTHENTICATE_INQUIRY        ="juddi.authenticate.Inquiry";
 	public final static String JUDDI_SUBSCRIPTION_EXPIRATION_DAYS="juddi.subscription.expiration.days";
+	public final static String JUDDI_NOTIFICATION_INTERVAL       ="juddi.notification.interval";
 	public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES="juddi.subscription.chunkexpiration.minutes";
-	
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";
 	public final static String DEFAULT_USERSFILE                 ="juddi-users.properties";

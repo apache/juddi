@@ -46,7 +46,6 @@ import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
-import org.uddi.api_v3.ListDescription;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceList;

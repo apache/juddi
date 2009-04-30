@@ -47,6 +47,15 @@
 		</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
+   <servlet>
+    <servlet-name>RegistryServlet</servlet-name>
+    <display-name>Registry Servlet</display-name>
+    <servlet-class>
+      org.apache.juddi.RegistryServlet
+		</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>CXFServlet</servlet-name>
