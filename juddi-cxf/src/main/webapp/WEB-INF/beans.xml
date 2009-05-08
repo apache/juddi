@@ -52,7 +52,7 @@
     </jaxws:properties>
   </jaxws:endpoint>
   
-  <jaxws:endpoint id="supscription-listener" implementor="org.apache.juddi.api.impl.UDDISubscriptionListenerImpl" address="/supscription-listener" 
+  <jaxws:endpoint id="subscription-listener" implementor="org.apache.juddi.api.impl.UDDISubscriptionListenerImpl" address="/subscription-listener" 
    serviceName="a:SubscriptionListenerService" endpointName="a:SubscriptionListenerServicePort" xmlns:a="urn:uddi-org:subr_v3_portType">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
