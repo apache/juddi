@@ -32,12 +32,18 @@
 	        <replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
                         <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
                         <replacevalue>juddi.jdbcDriver=org.apache.derby.jdbc.EmbeddedDriver</replacevalue>
-                </replace>	
+                </replace>
+		<copy file="${basedir}/../NOTICE"
+			todir="${basedir}/target/tomcat"/>	
+		<copy file="${basedir}/..//LICENSE" 
+			todir="${basedir}/target/tomcat"/>
+		<move file="target/tomcat"
+			tofile="target/juddi-tomcat-bundle"/>
 	</target>
 	
 	<target name="package-tomcat" depends="copy-resources">
 		<zip destfile="target/juddi-tomcat.zip" 
-			basedir="target/tomcat"/>
+			basedir="target/juddi-tomcat-bundle"/>
 			
 	</target>
 </project>
