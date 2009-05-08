@@ -13,5 +13,5 @@ public interface Property
 	public final static String UDDI_PROXY_PROVIDER_URL          ="uddi.proxy.provider.url";
 	public final static String UDDI_PROXY_FACTORY_URL_PKS       ="uddi.proxy.factory.url.pkg";
 
-	public final static String DEFAULT_UDDI_PROXY_TRANSPORT     ="org.uddi.api_v3.client.transport.JAXRPCTransport";
+	public final static String DEFAULT_UDDI_PROXY_TRANSPORT     ="org.uddi.api_v3.client.transport.JAXWSTransport";
 }
