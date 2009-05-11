@@ -86,7 +86,7 @@ public class UDDI_080_SubscriptionTest
 	     } 
 	}
 	
-	@Test @Ignore //TODO fix this JUDDI-228
+	@Test
 	public void joePublisher() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -105,7 +105,7 @@ public class UDDI_080_SubscriptionTest
 		}
 	}
 
-	@Test @Ignore //TODO fix this JUDDI-227
+	@Test
 	public void samSyndicator() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
@@ -123,7 +123,7 @@ public class UDDI_080_SubscriptionTest
 		
 	}
 
-	@Test @Ignore //TODO fix this JUDDI-229
+	@Test
 	public void samSyndicatorWithChunkingOnFind() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
@@ -141,7 +141,7 @@ public class UDDI_080_SubscriptionTest
 		
 	}
 	
-	@Test  @Ignore //TODO fix this JUDDI-229
+	@Test
 	public void samSyndicatorWithChunkingOnGet() {
 		try {
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);

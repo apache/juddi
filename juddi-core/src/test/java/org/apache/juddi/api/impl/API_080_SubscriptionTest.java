@@ -71,8 +71,14 @@ public class API_080_SubscriptionTest
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
 			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
-		} 
-		finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			Assert.fail();
+		}
+ 		finally {
 			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);

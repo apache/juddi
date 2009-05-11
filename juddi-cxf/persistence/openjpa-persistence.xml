@@ -39,6 +39,7 @@
     <class>org.apache.juddi.model.ServiceDescr</class>
     <class>org.apache.juddi.model.ServiceName</class>
     <class>org.apache.juddi.model.Subscription</class>
+    <class>org.apache.juddi.model.SubscriptionChunkToken</class>
     <class>org.apache.juddi.model.SubscriptionMatch</class>
     <class>org.apache.juddi.model.Tmodel</class>
     <class>org.apache.juddi.model.TmodelCategoryBag</class>
