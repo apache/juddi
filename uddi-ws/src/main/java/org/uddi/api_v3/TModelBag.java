@@ -51,7 +51,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class TModelBag {
 
-    @XmlElement(required = true)
+	@XmlElement()
     protected List<String> tModelKey;
 
     /**
