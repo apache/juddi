@@ -140,6 +140,11 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 		
 		SubscriptionResultsList result = new SubscriptionResultsList();
 		result.setCoveragePeriod(body.getCoveragePeriod());
+
+		// The subscription structure is required output for the results
+		org.uddi.sub_v3.Subscription apiSubscription = new org.uddi.sub_v3.Subscription();
+		MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
+		result.setSubscription(apiSubscription);
 		
 		Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
 		Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
