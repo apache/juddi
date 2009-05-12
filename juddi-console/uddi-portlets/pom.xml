@@ -149,6 +149,7 @@
 				<version>2.0-beta26</version>
 				<configuration>
 					<compileTargets>
+						<value>org.apache.juddi.portlets.UDDISubscriptionNotification</value>
 						<value>org.apache.juddi.portlets.UDDIBrowser</value>
 					</compileTargets>
 					<runTarget>org.apache.juddi.portlets.UDDIBrowser/UDDIBrowser.html</runTarget>
