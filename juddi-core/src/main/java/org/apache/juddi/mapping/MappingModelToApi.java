@@ -18,21 +18,16 @@
 package org.apache.juddi.mapping;
 
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
@@ -724,9 +719,9 @@ public class MappingModelToApi {
 										  OperationalInfo apiOperationalInfo)
 				   throws DispositionReportFaultMessage {
 		
-		apiOperationalInfo.setCreated(convertDateToXMLGregorianCalendar(modelUddiEntity.getCreated()));
-		apiOperationalInfo.setModified(convertDateToXMLGregorianCalendar(modelUddiEntity.getModified()));
-		apiOperationalInfo.setModifiedIncludingChildren(convertDateToXMLGregorianCalendar(modelUddiEntity.getModifiedIncludingChildren()));
+		apiOperationalInfo.setCreated(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getCreated()));
+		apiOperationalInfo.setModified(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getModified()));
+		apiOperationalInfo.setModifiedIncludingChildren(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getModifiedIncludingChildren()));
 		apiOperationalInfo.setNodeID(modelUddiEntity.getNodeId());
 		apiOperationalInfo.setAuthorizedName(modelUddiEntity.getAuthorizedName());
 	}
@@ -738,10 +733,10 @@ public class MappingModelToApi {
 		
 		apiSubscription.setSubscriptionKey(modelSubscription.getSubscriptionKey());
 		apiSubscription.setBrief(modelSubscription.isBrief());
-		apiSubscription.setExpiresAfter(convertDateToXMLGregorianCalendar(modelSubscription.getExpiresAfter()));
+		apiSubscription.setExpiresAfter(TypeConvertor.convertDateToXMLGregorianCalendar(modelSubscription.getExpiresAfter()));
 		apiSubscription.setBindingKey(modelSubscription.getBindingKey());
 		apiSubscription.setMaxEntities(modelSubscription.getMaxEntities());
-		apiSubscription.setNotificationInterval(converStringToDuration(modelSubscription.getNotificationInterval()));
+		apiSubscription.setNotificationInterval(TypeConvertor.convertStringToDuration(modelSubscription.getNotificationInterval()));
 
 		try {
 			SubscriptionFilter existingFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);
@@ -753,35 +748,7 @@ public class MappingModelToApi {
 		} 
 	}
 	
-	public static XMLGregorianCalendar convertDateToXMLGregorianCalendar(Date date) throws DispositionReportFaultMessage {
-		XMLGregorianCalendar result = null;
-		try { 
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(date.getTime());
-			
-			DatatypeFactory df = DatatypeFactory.newInstance();
-			result = df.newXMLGregorianCalendar(gc);
-		}
-		catch(DatatypeConfigurationException ce) { 
-			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
-		}
-		
-		return result;
-	}
 	
-	public static Duration converStringToDuration(String duration) throws DispositionReportFaultMessage {
-		Duration result = null;
-		try { 
-			
-			DatatypeFactory df = DatatypeFactory.newInstance();
-			result = df.newDuration(duration);
-		}
-		catch(DatatypeConfigurationException ce) { 
-			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
-		}
-
-		return result;
-	}
 	
 
 }

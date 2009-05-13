@@ -47,6 +47,8 @@ public class Subscription implements java.io.Serializable {
 	private Integer maxEntities;
 	private Date expiresAfter;
 	private Boolean brief;
+	private Date lastNotified;
+	private Date createDate;
 	private List<SubscriptionMatch> subscriptionMatches = new ArrayList<SubscriptionMatch>(0);
 
 	public Subscription() {
@@ -132,5 +134,25 @@ public class Subscription implements java.io.Serializable {
 	}
 	public void setSubscriptionMatches(List<SubscriptionMatch> subscriptionMatches) {
 		this.subscriptionMatches = subscriptionMatches;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_notified", length = 29)
+	public Date getLastNotified() {
+		return lastNotified;
+	}
+
+	public void setLastNotified(Date lastNotified) {
+		this.lastNotified = lastNotified;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date", length = 29, nullable = false)
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 }

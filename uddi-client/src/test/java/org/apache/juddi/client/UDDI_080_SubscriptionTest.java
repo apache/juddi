@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;

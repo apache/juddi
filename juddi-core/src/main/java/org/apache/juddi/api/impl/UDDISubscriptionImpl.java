@@ -107,8 +107,10 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
         tx.commit();
         em.close();
 	}
-
-
+   
+    public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body) throws DispositionReportFaultMessage {
+    	return getSubscriptionResults(body, null);
+    }
 	/* (non-Javadoc)
 	 * @see org.uddi.v3_service.UDDISubscriptionPortType#getSubscriptionResults(org.uddi.sub_v3.GetSubscriptionResults)
 	 * 
@@ -117,16 +119,20 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 * time of the subscription save.  The result of this policy is that if an entity is deleted, that deleted result will appear in the keyBag
 	 * on every call to this method.  To resolve this, the user can renew the subscription at which time the "match" snapshot will be refreshed.
 	 * 
+	 * The WS needs to be authenticated (null publisher), however the notificationSubscriber is calling this method also. The
+	 * notificationSubscriber will pass in the publisher and this method will work in unauthenticated mode.
 	 */
 	@SuppressWarnings("unchecked")
-	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body) throws DispositionReportFaultMessage {
+	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
-		
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);
+        
+		if (publisher==null) {
+			publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);
+		}
 		
 		org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, body.getSubscriptionKey());
 		SubscriptionFilter subscriptionFilter = null;
@@ -788,6 +794,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
 			
 			modelSubscription.setAuthorizedName(publisher.getAuthorizedName());
+			modelSubscription.setCreateDate(new Date());
 
 			// Add the matching keys to the match collection
 			List<?> keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);

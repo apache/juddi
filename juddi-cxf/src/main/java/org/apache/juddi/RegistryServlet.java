@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.subscription.SubscriptionNotifier;
 import org.apache.log4j.Logger;
 
 /**
@@ -33,7 +34,7 @@ public class RegistryServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	private Logger log = Logger.getLogger(this.getClass());
-	private Thread subscriptionNotifierThread = null;
+	private SubscriptionNotifier subscriptionNotifier = null;
 
 	/**
 	 * Initialize all core components.
@@ -45,8 +46,8 @@ public class RegistryServlet extends HttpServlet
 		super.init(config);
 		try {
 			AppConfig.getInstance();
-			subscriptionNotifierThread = new Thread(new SubscriptionNotifier());
-			subscriptionNotifierThread.start();
+			//subscriptionNotifier = new SubscriptionNotifier();
+			
 		} catch (ConfigurationException ce) {
 			throw new ServletException(ce.getMessage(),ce);
 		}
@@ -61,6 +62,6 @@ public class RegistryServlet extends HttpServlet
 	{
 		super.destroy();
 		log.info("jUDDI Stopping: Cleaning up existing resources.");
-		subscriptionNotifierThread = null;
+		subscriptionNotifier.cancel();
 	}
 }
