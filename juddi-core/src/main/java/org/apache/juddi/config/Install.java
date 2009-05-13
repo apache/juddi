@@ -412,14 +412,14 @@ public class Install {
 	
 	
 	
-	private static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher, String nodeId) 
+	public static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher, String nodeId) 
 		throws JAXBException, DispositionReportFaultMessage, IOException {
 		SaveTModel apiSaveTModel = (SaveTModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
 		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
 		
 	}
 	
-	private static UddiEntityPublisher installPublisher(EntityManager em, String resource) 
+	public static UddiEntityPublisher installPublisher(EntityManager em, String resource) 
 		throws JAXBException, DispositionReportFaultMessage, IOException {
 		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildEntityFromDoc(resource, "org.apache.juddi.api.datatype");
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();

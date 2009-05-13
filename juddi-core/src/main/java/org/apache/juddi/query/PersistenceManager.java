@@ -21,18 +21,25 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
+import org.apache.log4j.Logger;
+
 public class PersistenceManager {
+	private static Logger log = Logger.getLogger(PersistenceManager.class);
+	
 	public static final String PERSISTENCE_UNIT_NAME = "juddiDatabase";
 
-	private static final EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 	
+	// Now, the factory will be initialized in the config. This will force the config to initialize, thereby initializing emf.
 	static {
 		try {
-			emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-		}
-		catch (Throwable t) {
-			System.err.println("Initial entityManagerFactory creation failed:" + t);
-			throw new ExceptionInInitializerError(t);
+			AppConfig.getInstance();
+		} 
+		catch (ConfigurationException e) {
+			log.error("Error initializing config in PersistenceManager", e);
+			throw new ExceptionInInitializerError(e);
 		}
 	}
 
@@ -45,4 +52,15 @@ public class PersistenceManager {
 			emf.close();
 	}
 	
+	public static void initializeEntityManagerFactory(String persistenceUnitName) {
+		try {
+			if (emf == null)
+				emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+		}
+		catch (Throwable t) {
+			log.error("entityManagerFactory creation failed", t);
+			throw new ExceptionInInitializerError(t);
+		}
+		
+	}
 }

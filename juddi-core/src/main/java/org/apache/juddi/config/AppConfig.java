@@ -76,7 +76,9 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
-		// Properties from the persistence layer 
+		
+		// Properties from the persistence layer (must first initialize the entityManagerFactory). 
+		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME));
 		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration());
 		
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
