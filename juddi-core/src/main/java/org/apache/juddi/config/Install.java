@@ -75,7 +75,7 @@ public class Install {
 	
 	public static void install(String srcDir, String userPartition, boolean reloadConfig) throws JAXBException, DispositionReportFaultMessage, IOException {
 		if (srcDir != null) {
-			if (srcDir.endsWith(java.io.File.separator)) {
+			if (srcDir.endsWith("/") || srcDir.endsWith("\\")) {
 				// Do nothing
 			}
 			else 
