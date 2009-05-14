@@ -26,7 +26,7 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-portal-bundle</artifactId>
   <version>3.0.0.SNAPSHOT</version>
-  <name>jUDDI Console</name>
+  <name>jUDDI Portal</name>
   <url>http://maven.apache.org</url>
   <packaging>pom</packaging>
   <dependencies>
