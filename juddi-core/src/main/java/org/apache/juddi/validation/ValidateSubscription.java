@@ -220,8 +220,6 @@ public class ValidateSubscription extends ValidateUDDIApi {
 		GregorianCalendar startPoint = coveragePeriod.getStartPoint().toGregorianCalendar();
 		GregorianCalendar endPoint = coveragePeriod.getEndPoint().toGregorianCalendar();
 		if (startPoint.getTimeInMillis() > endPoint.getTimeInMillis())
-			throw new InvalidTimeException(new ErrorMessage("errors.getsubscriptionresult.StartPointAfterEndPoint", startPoint.toString()));
-		
-		
+			throw new InvalidTimeException(new ErrorMessage("errors.getsubscriptionresult.StartPointAfterEndPoint", startPoint.toString()));		
 	}
 }

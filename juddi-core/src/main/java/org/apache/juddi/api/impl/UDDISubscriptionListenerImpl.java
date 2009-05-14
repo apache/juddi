@@ -18,8 +18,13 @@
 package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
+import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -28,13 +33,24 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:subr_v3_portType")
-public class UDDISubscriptionListenerImpl implements
+public class UDDISubscriptionListenerImpl extends AuthenticatedService implements
 		UDDISubscriptionListenerPortType {
-
+	
+	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
+	
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {
-		ValidateSubscriptionListener.unsupportedAPICall();
+		logger.error(body.toString());
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+		new ValidateSubscriptionListener(publisher).validateNotification(body);
+		tx.commit();
+		em.close();
 		return null;
 	}
 }

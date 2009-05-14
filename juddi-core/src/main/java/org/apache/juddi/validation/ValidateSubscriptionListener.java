@@ -17,15 +17,25 @@
 
  package org.apache.juddi.validation;
 
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.uddi.subr_v3.NotifySubscriptionListener;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apach.org">Tom Cunningham</a>
  */
 public class ValidateSubscriptionListener extends ValidateUDDIApi {
 
 	public ValidateSubscriptionListener(UddiEntityPublisher publisher) {
 		super(publisher);
+	}	
+	
+	public void validateNotification(NotifySubscriptionListener body) throws
+		FatalErrorException {
+		if (body != null) {
+			throw new FatalErrorException(new ErrorMessage("Subscription Listener Body was null"));
+		}
 	}
-
 }

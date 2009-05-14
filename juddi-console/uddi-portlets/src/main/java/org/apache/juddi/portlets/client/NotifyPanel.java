@@ -6,9 +6,13 @@ import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
+import org.apache.juddi.portlets.client.service.NotifyService;
+import org.apache.juddi.portlets.client.service.NotifyServiceAsync;
 import org.apache.juddi.portlets.client.service.PublicationResponse;
 import org.apache.juddi.portlets.client.service.PublicationService;
 import org.apache.juddi.portlets.client.service.PublicationServiceAsync;
+import org.apache.juddi.portlets.client.service.SecurityService;
+import org.apache.juddi.portlets.client.service.SecurityServiceAsync;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -30,6 +34,8 @@ public class NotifyPanel extends VerticalPanel {
 	private NotifyPanel notifyPanel = null;
 	FlexTable table = null;
 
+	private NotifyServiceAsync notifyService = (NotifyServiceAsync) GWT.create(NotifyService.class);
+	
 	public NotifyPanel(UDDISubscriptionNotification notification) {
 		super();
 		this.notification = notification;
@@ -44,4 +50,13 @@ public class NotifyPanel extends VerticalPanel {
 	    ta.setVisibleLines(50);
 	    add(ta);
 	}
+	
+	public NotifyServiceAsync getSecurityService() {
+		return notifyService;
+	}
+
+	public void setNotifyService(NotifyServiceAsync notifyService) {
+		this.notifyService = notifyService;
+	}
+
 }
