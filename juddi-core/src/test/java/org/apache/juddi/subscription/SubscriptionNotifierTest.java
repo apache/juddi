@@ -73,7 +73,7 @@ public class SubscriptionNotifierTest
 		}
 	}
 	@Test
-	public void testGetSubscriptionResults() throws ConfigurationException, MalformedURLException
+	public void testGetSubscriptionResults() throws ConfigurationException, MalformedURLException, DispositionReportFaultMessage
 	{
 		SubscriptionNotifier notifier = new SubscriptionNotifier();
 		notifier.cancel();
