@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -76,7 +77,7 @@ public class SubscriptionNotifier extends TimerTask {
             	log.info("Notification background task took " + (endTime - startTime) + " milliseconds.");
             }
 		} else {
-			log.warn("Skipping current notification cycle because the registry is busy.");
+			log.warn("Skipping current notification cycle because the registry is too busy.");
 		}
 	}
 	/**
@@ -155,13 +156,20 @@ public class SubscriptionNotifier extends TimerTask {
 	 */
 	@SuppressWarnings("unchecked")
 	protected Collection<Subscription> getAllSubscriptions() {
+		Collection<Subscription> subscriptions = null;
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		Query query = em.createQuery("SELECT s FROM Subscription s");
-	    Collection<Subscription> subscriptions = (Collection<Subscription>) query.getResultList();
-	    tx.commit();
-		em.close();
+		try {
+			tx.begin();
+			Query query = em.createQuery("SELECT s FROM Subscription s");
+		    subscriptions = (Collection<Subscription>) query.getResultList();
+		    tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	    return subscriptions;
 	}
 	/**
@@ -174,9 +182,20 @@ public class SubscriptionNotifier extends TimerTask {
 	{
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
 		try {
+			tx.begin();
 			org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
+			log.debug("Taking out a write lock on this subscription, and bail if we can't get it since that would mean" 
+			 + " another jUDDI instance is in the process of sending out the notification.");
+			em.lock(modelSubscription, LockModeType.WRITE);
+			Date startPoint = resultList.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTime();
+			Date endPoint   = resultList.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTime();
+			if (modelSubscription.getLastNotified()!=null 
+					&& startPoint.before(modelSubscription.getLastNotified()) 
+					&& endPoint.after(modelSubscription.getLastNotified())) {
+				 log.info("We already send out a notification within this coverage period, no need to send another one.");
+				 return;
+			}
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
 			body.setSubscriptionResultsList(resultList);
