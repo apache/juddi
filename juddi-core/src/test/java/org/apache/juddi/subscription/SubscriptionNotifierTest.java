@@ -17,6 +17,8 @@ package org.apache.juddi.subscription;
 import java.net.MalformedURLException;
 import java.util.Collection;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
@@ -24,6 +26,7 @@ import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
 import org.apache.juddi.model.Subscription;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.subscription.SubscriptionNotifier;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -37,6 +40,7 @@ import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckSubscription;
 import org.uddi.api_v3.tck.TckTModel;
+import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -73,21 +77,26 @@ public class SubscriptionNotifierTest
 		}
 	}
 	@Test
-	public void testGetSubscriptionResults() throws ConfigurationException, MalformedURLException, DispositionReportFaultMessage
+	public void testGetSubscriptionResults() 
+		throws ConfigurationException, MalformedURLException, DispositionReportFaultMessage, DatatypeConfigurationException
 	{
 		SubscriptionNotifier notifier = new SubscriptionNotifier();
 		notifier.cancel();
 		Collection<Subscription> subscriptions = notifier.getAllSubscriptions();
 		Assert.assertEquals(1, subscriptions.size());
 		Subscription subscription = subscriptions.iterator().next();
-		SubscriptionResultsList resultList = notifier.getSubscriptionResultList(subscription);
+		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription);
+		getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
+		UddiEntityPublisher publisher = new UddiEntityPublisher();
+		publisher.setAuthorizedName(subscription.getAuthorizedName());
+		SubscriptionResultsList resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
 		//We're expecting a changed service (since it was added in the 
 		Assert.assertNotNull(resultList.getServiceList());
 		//We should detect these changes.
 		boolean hasChanges = notifier.resultListContainsChanges(resultList);
 		Assert.assertTrue(hasChanges);
 		System.out.print(resultList);
-		notifier.notify(resultList);
+		notifier.notify(getSubscriptionResults,resultList);
 	}
 	
 	

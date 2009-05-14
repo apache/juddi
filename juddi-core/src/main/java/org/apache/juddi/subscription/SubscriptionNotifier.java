@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
@@ -57,12 +58,12 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class SubscriptionNotifier extends TimerTask {
 
 	private Logger log = Logger.getLogger(this.getClass());
-	Timer timer = new Timer();
-	long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
-	UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
+	private Timer timer = new Timer();
+	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
+	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private static long ACCEPTABLE_LAG_TIME = 20l; //20 milliseconds
 	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:subr_v3_portType";
-	private static String SUBSCRIPTION_LISTENER = "SubscriptionListener";
+	private static String SUBSCRIPTION_LISTENER = "SubscriptionListenerService";
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
@@ -78,11 +79,21 @@ public class SubscriptionNotifier extends TimerTask {
 			Collection<Subscription> subscriptions = getAllSubscriptions();
 			for (Subscription subscription : subscriptions) {
 				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
-					SubscriptionResultsList resultList = getSubscriptionResultList(subscription);
-					if (resultListContainsChanges(resultList)) {
-						log.info("We have a change and need to notify..");
-						notify(resultList);
+					try {
+						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription);
+						getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
+						UddiEntityPublisher publisher = new UddiEntityPublisher();
+						publisher.setAuthorizedName(subscription.getAuthorizedName());
+						SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+						if (resultListContainsChanges(resultList)) {
+							log.info("We have a change and need to notify..");
+							notify(getSubscriptionResults,resultList);
+						}
+					} catch (Exception e) {
+						log.error("Could not obtain subscriptionResult for subscriptionKey " 
+								+ subscription.getSubscriptionKey() + ". " + e.getMessage(),e);
 					}
+						
 				}
 			}
             long endTime   = System.currentTimeMillis();
@@ -116,46 +127,33 @@ public class SubscriptionNotifier extends TimerTask {
 			return false;
 		}
 	}
-	/**
-	 * Obtains the SubscriptionResultsList for a subscription.
-	 * 
-	 * @param subscription
-	 * @return
-	 */
-	protected SubscriptionResultsList getSubscriptionResultList(Subscription subscription) {
-		SubscriptionResultsList resultList = null;
-		try {
-			Date startPoint = subscription.getLastNotified();
-			if (startPoint==null) startPoint = subscription.getCreateDate();
-			Date endPoint   = new Date(scheduledExecutionTime());
+	protected GetSubscriptionResults buildGetSubscriptionResults(Subscription subscription) 
+		throws DispositionReportFaultMessage, DatatypeConfigurationException {
+		
+		GetSubscriptionResults getSubscriptionResults = null;
+		Date startPoint = subscription.getLastNotified();
+		if (startPoint==null) startPoint = subscription.getCreateDate();
+		Date endPoint   = new Date(scheduledExecutionTime());
 
-			Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());
-			Date nextDesiredNotificationDate = startPoint;
-			duration.addTo(nextDesiredNotificationDate);
+		Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());
+		Date nextDesiredNotificationDate = startPoint;
+		duration.addTo(nextDesiredNotificationDate);
 
-			if (subscription.getLastNotified()==null || nextDesiredNotificationDate.after(startPoint) && nextDesiredNotificationDate.before(endPoint)) {
-				GetSubscriptionResults subscriptionResults = new GetSubscriptionResults();
-				
-				CoveragePeriod period = new CoveragePeriod();
-				GregorianCalendar calendar = new GregorianCalendar();
-				calendar.setTimeInMillis(startPoint.getTime());
-				period.setStartPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
-				calendar.setTimeInMillis(endPoint.getTime());
-				period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
-				subscriptionResults.setCoveragePeriod(period);
-				
-				subscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
-				UddiEntityPublisher publisher = new UddiEntityPublisher();
-				publisher.setAuthorizedName(subscription.getAuthorizedName());
-				resultList = subscriptionImpl.getSubscriptionResults(subscriptionResults, publisher);
-			}
-
-		} catch (Exception e) {
-			log.error("Could not obtain subscriptionResult for subscriptionKey " 
-					+ subscription.getSubscriptionKey() + ". " + e.getMessage(),e);
+		if (subscription.getLastNotified()==null || nextDesiredNotificationDate.after(startPoint) && nextDesiredNotificationDate.before(endPoint)) {
+			getSubscriptionResults = new GetSubscriptionResults();
+			
+			CoveragePeriod period = new CoveragePeriod();
+			GregorianCalendar calendar = new GregorianCalendar();
+			calendar.setTimeInMillis(startPoint.getTime());
+			period.setStartPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+			calendar.setTimeInMillis(endPoint.getTime());
+			period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+			getSubscriptionResults.setCoveragePeriod(period);
 		}
-		return resultList;
+		return getSubscriptionResults;
+		
 	}
+	
 	protected boolean resultListContainsChanges(SubscriptionResultsList resultList)
 	{
 		if (resultList==null) return false;
@@ -195,7 +193,7 @@ public class SubscriptionNotifier extends TimerTask {
 	 * @throws MalformedURLException 
 	 * @throws DispositionReportFaultMessage 
 	 */
-	protected void notify(SubscriptionResultsList resultList) 
+	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
 	{
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -222,10 +220,22 @@ public class SubscriptionNotifier extends TimerTask {
 					QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER);
 					try {
 						Service service = Service.create(new URL(bindingTemplate.getAccessPointUrl()), qName);
-						UDDISubscriptionListenerPortType subscriptionListener = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
-						subscriptionListener.notifySubscriptionListener(body);
-					
-						//now log to the db that we notified.
+						UDDISubscriptionListenerPortType subscriptionListenerPort = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+						log.info("Sending out notification to " + bindingTemplate.getAccessPointUrl());
+						subscriptionListenerPort.notifySubscriptionListener(body);
+						//there maybe more chunks we have to send
+						String chunkToken=body.getSubscriptionResultsList().getChunkToken();
+						while(chunkToken!=null) {
+							UddiEntityPublisher publisher = new UddiEntityPublisher();
+							publisher.setAuthorizedName(modelSubscription.getAuthorizedName());
+							log.debug("Sending out next chunk: " + chunkToken + " to " + bindingTemplate.getAccessPointUrl());
+							getSubscriptionResults.setChunkToken(chunkToken);
+							resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+							body.setSubscriptionResultsList(resultList);
+							subscriptionListenerPort.notifySubscriptionListener(body);
+							chunkToken=body.getSubscriptionResultsList().getChunkToken();
+						}
+						//now log to the db that we completed sending the notification.
 						Date notificationDate = new Date();
 						modelSubscription.setLastNotified(notificationDate);
 						em.persist(modelSubscription);
@@ -235,6 +245,8 @@ public class SubscriptionNotifier extends TimerTask {
 				} else {
 					log.error("Unsupported binding type.");
 				}
+			} else {
+				log.error("There is no valid binding template defined for this subscription: " + modelSubscription.getBindingKey());
 			}
 			tx.commit();
 		} finally {
@@ -243,6 +255,10 @@ public class SubscriptionNotifier extends TimerTask {
 			}
 			em.close();
 		}
+	}
+
+	protected UDDISubscriptionImpl getSubscriptionImpl() {
+		return subscriptionImpl;
 	}
 
 }
