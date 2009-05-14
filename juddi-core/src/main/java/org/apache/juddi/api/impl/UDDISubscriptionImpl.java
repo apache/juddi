@@ -93,19 +93,25 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			throws DispositionReportFaultMessage {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		new ValidateSubscription(publisher).validateDeleteSubscription(em, body);
-		
-        List<String> subscriptionKeyList = body.getSubscriptionKey();
-        for (String subscriptionKey : subscriptionKeyList) {
-                Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
-                em.remove(obj);
-        }
-
-        tx.commit();
-        em.close();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			new ValidateSubscription(publisher).validateDeleteSubscription(em, body);
+			
+	        List<String> subscriptionKeyList = body.getSubscriptionKey();
+	        for (String subscriptionKey : subscriptionKeyList) {
+	                Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
+	                em.remove(obj);
+	        }
+	
+	        tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
    
     public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body) throws DispositionReportFaultMessage {
@@ -127,607 +133,612 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 
 		EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        
-		if (publisher==null) {
-			publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);
-		}
-		
-		org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, body.getSubscriptionKey());
-		SubscriptionFilter subscriptionFilter = null;
-		try {
-			subscriptionFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);
-		} 
-		catch (JAXBException e) {
-			logger.error("JAXB Exception while unmarshalling subscription filter", e);
-			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
-		}
-		
-		SubscriptionResultsList result = new SubscriptionResultsList();
-		result.setCoveragePeriod(body.getCoveragePeriod());
-
-		// The subscription structure is required output for the results
-		org.uddi.sub_v3.Subscription apiSubscription = new org.uddi.sub_v3.Subscription();
-		MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
-		result.setSubscription(apiSubscription);
-		
-		Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
-		Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
-
-		Integer chunkData = null;
-		if (body.getChunkToken() != null && body.getChunkToken().length() > 0) {
-			SubscriptionChunkToken chunkToken = em.find(SubscriptionChunkToken.class, body.getChunkToken());
+        try {
+	        tx.begin();
+	        
+			if (publisher==null) {
+				publisher = this.getEntityPublisher(em, body.getAuthInfo());
+				new ValidateSubscription(publisher).validateGetSubscriptionResults(em, body);
+			}
 			
-			if (chunkToken == null)
-				throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.InvalidChunkToken", body.getChunkToken()));
-			if (!chunkToken.getSubscriptionKey().equals(chunkToken.getSubscriptionKey()))
-				throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
-			if (chunkToken.getStartPoint() != null && chunkToken.getStartPoint().getTime() != startPointDate.getTime())
-				throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
-			if (chunkToken.getEndPoint() != null && chunkToken.getEndPoint().getTime() != endPointDate.getTime())
-				throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
-			if (chunkToken.getExpiresAfter().before(new Date()))
-				throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.ExpiredChunkToken", body.getChunkToken()));
+			org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, body.getSubscriptionKey());
+			SubscriptionFilter subscriptionFilter = null;
+			try {
+				subscriptionFilter = (SubscriptionFilter)JAXBMarshaller.unmarshallFromString(modelSubscription.getSubscriptionFilter(), JAXBMarshaller.PACKAGE_SUBSCRIPTION);
+			} 
+			catch (JAXBException e) {
+				logger.error("JAXB Exception while unmarshalling subscription filter", e);
+				throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
+			}
 			
-			chunkData = chunkToken.getData();
-			// We've got the data from the chunk token, now it is no longer needed (once it's called, it's used up)
-			em.remove(chunkToken);
-		}
-
-		
-		if (subscriptionFilter.getFindBinding() != null) {
-			//Get the current matching keys
-			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-
-			// See if there's any missing keys by comparing against the previous matches.  If so, they missing keys are added to the KeyBag and
-			// then added to the result
-			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
-			if (missingKeys != null && missingKeys.size() > 0) {
+			SubscriptionResultsList result = new SubscriptionResultsList();
+			result.setCoveragePeriod(body.getCoveragePeriod());
+	
+			// The subscription structure is required output for the results
+			org.uddi.sub_v3.Subscription apiSubscription = new org.uddi.sub_v3.Subscription();
+			MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
+			result.setSubscription(apiSubscription);
+			
+			Date startPointDate = new Date(body.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTimeInMillis());
+			Date endPointDate = new Date(body.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTimeInMillis());
+	
+			Integer chunkData = null;
+			if (body.getChunkToken() != null && body.getChunkToken().length() > 0) {
+				SubscriptionChunkToken chunkToken = em.find(SubscriptionChunkToken.class, body.getChunkToken());
+				
+				if (chunkToken == null)
+					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.InvalidChunkToken", body.getChunkToken()));
+				if (!chunkToken.getSubscriptionKey().equals(chunkToken.getSubscriptionKey()))
+					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
+				if (chunkToken.getStartPoint() != null && chunkToken.getStartPoint().getTime() != startPointDate.getTime())
+					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
+				if (chunkToken.getEndPoint() != null && chunkToken.getEndPoint().getTime() != endPointDate.getTime())
+					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.NonMatchingChunkToken", body.getChunkToken()));
+				if (chunkToken.getExpiresAfter().before(new Date()))
+					throw new InvalidValueException(new ErrorMessage("errors.getsubscriptionresult.ExpiredChunkToken", body.getChunkToken()));
+				
+				chunkData = chunkToken.getData();
+				// We've got the data from the chunk token, now it is no longer needed (once it's called, it's used up)
+				em.remove(chunkToken);
+			}
+	
+			
+			if (subscriptionFilter.getFindBinding() != null) {
+				//Get the current matching keys
+				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+	
+				// See if there's any missing keys by comparing against the previous matches.  If so, they missing keys are added to the KeyBag and
+				// then added to the result
+				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+				if (missingKeys != null && missingKeys.size() > 0) {
+					KeyBag missingKeyBag = new KeyBag();
+					missingKeyBag.setDeleted(true);
+					for (String key : missingKeys)
+						missingKeyBag.getBindingKey().add(key);
+					
+					result.getKeyBag().add(missingKeyBag);
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+				if (modelSubscription.isBrief()) {
+					KeyBag resultsKeyBag = new KeyBag();
+					for (String key : (List<String>)currentMatchingKeys)
+						resultsKeyBag.getBindingKey().add(key);
+					
+					result.getKeyBag().add(resultsKeyBag);
+				}
+				else {
+					FindBinding fb = subscriptionFilter.getFindBinding();
+					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+					findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+					
+					// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the "chunking" feature.
+					fb.setListHead(null);
+					fb.setMaxRows(null);
+					// Setting the start index to the chunkData
+					Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
+					
+					BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys,
+																						 startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+							
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+					chunkData = subscriptionStartIndex.value;
+					
+					result.setBindingDetail(bindingDetail);
+				}
+			}
+			if (subscriptionFilter.getFindBusiness() != null) {
+				//Get the current matching keys
+				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+	
+				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+				if (missingKeys != null && missingKeys.size() > 0) {
+					KeyBag missingKeyBag = new KeyBag();
+					missingKeyBag.setDeleted(true);
+					for (String key : missingKeys)
+						missingKeyBag.getBusinessKey().add(key);
+	
+					result.getKeyBag().add(missingKeyBag);
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+				if (modelSubscription.isBrief()) {
+					KeyBag resultsKeyBag = new KeyBag();
+					for (String key : (List<String>)currentMatchingKeys)
+						resultsKeyBag.getBusinessKey().add(key);
+					
+					result.getKeyBag().add(resultsKeyBag);
+				}
+				else {
+					FindBusiness fb = subscriptionFilter.getFindBusiness();
+					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+					findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
+					
+					// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the "chunking" feature.
+					fb.setListHead(null);
+					fb.setMaxRows(null);
+					// Setting the start index to the chunkData
+					Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
+					
+					BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys,
+																					  startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+					
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+					chunkData = subscriptionStartIndex.value;
+					
+					result.setBusinessList(businessList);
+				}
+			}
+			if (subscriptionFilter.getFindService() != null) {
+				//Get the current matching keys
+				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+	
+				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+				if (missingKeys != null && missingKeys.size() > 0) {
+					KeyBag missingKeyBag = new KeyBag();
+					missingKeyBag.setDeleted(true);
+					for (String key : missingKeys)
+						missingKeyBag.getServiceKey().add(key);
+	
+					result.getKeyBag().add(missingKeyBag);
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+				if (modelSubscription.isBrief()) {
+					KeyBag resultsKeyBag = new KeyBag();
+					for (String key : (List<String>)currentMatchingKeys)
+						resultsKeyBag.getServiceKey().add(key);
+					
+					result.getKeyBag().add(resultsKeyBag);
+				}
+				else {
+					FindService fs = subscriptionFilter.getFindService();
+					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+					findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());
+					
+					// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the "chunking" feature.
+					fs.setListHead(null);
+					fs.setMaxRows(null);
+					// Setting the start index to the chunkData
+					Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
+	
+					ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys,
+																				   startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+	
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+					chunkData = subscriptionStartIndex.value;
+					
+					result.setServiceList(serviceList);
+				}
+			}
+			if (subscriptionFilter.getFindTModel() != null) {
+				//Get the current matching keys
+				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
+	
+				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
+				if (missingKeys != null && missingKeys.size() > 0) {
+					KeyBag missingKeyBag = new KeyBag();
+					missingKeyBag.setDeleted(true);
+					for (String key : missingKeys)
+						missingKeyBag.getTModelKey().add(key);
+	
+					result.getKeyBag().add(missingKeyBag);
+				}
+				
+				// Re-setting the subscription matches to the new matching key collection
+				//modelSubscription.getSubscriptionMatches().clear();
+				//for (Object key : currentMatchingKeys) {
+				//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+				//	modelSubscription.getSubscriptionMatches().add(subMatch);
+				//}
+				
+				// Now, finding the necessary entities, within the coverage period limits
+				if (modelSubscription.isBrief()) {
+					KeyBag resultsKeyBag = new KeyBag();
+					for (String key : (List<String>)currentMatchingKeys)
+						resultsKeyBag.getTModelKey().add(key);
+					
+					result.getKeyBag().add(resultsKeyBag);
+				}
+				else {
+					FindTModel ft = subscriptionFilter.getFindTModel();
+					org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+					findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());
+	
+					// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
+					// these values don't make sense with the "chunking" feature.
+					ft.setListHead(null);
+					ft.setMaxRows(null);
+					// Setting the start index to the chunkData
+					Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
+					
+					// If more results are to be had, chunkData will come out with a value and a new token will be generated below.  Otherwise, it will
+					// be null and no token will be generated.
+					TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, 
+																				startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+	
+					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
+					// if no more results)
+					chunkData = subscriptionStartIndex.value;
+					
+					result.setTModelList(tmodelList);
+				}
+				
+			}
+			if (subscriptionFilter.getFindRelatedBusinesses() != null) {
+				FindRelatedBusinesses findRelatedBusiness = subscriptionFilter.getFindRelatedBusinesses();
+				RelatedBusinessesList  relatedBusinessList = InquiryHelper.getRelatedBusinessesList(findRelatedBusiness, em, startPointDate, endPointDate);
+				result.setRelatedBusinessesList(relatedBusinessList);
+			}
+			if (subscriptionFilter.getGetBindingDetail() != null) {
+				GetBindingDetail getDetail = subscriptionFilter.getGetBindingDetail();
+				
+				// Running through the key list here to determine the deleted keys and store the existing entities.
 				KeyBag missingKeyBag = new KeyBag();
 				missingKeyBag.setDeleted(true);
-				for (String key : missingKeys)
-					missingKeyBag.getBindingKey().add(key);
+				List<org.apache.juddi.model.BindingTemplate> existingList = new ArrayList<org.apache.juddi.model.BindingTemplate>(0);
+				for (String key : getDetail.getBindingKey()) {
+					org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, key);
+					if (modelBindingTemplate != null)
+						existingList.add(modelBindingTemplate);
+					else
+						missingKeyBag.getBindingKey().add(key);
+				}
+				// Store deleted keys in the results
+				if (missingKeyBag.getBindingKey() != null && missingKeyBag.getBindingKey().size() > 0)
+					result.getKeyBag().add(missingKeyBag);
 				
-				result.getKeyBag().add(missingKeyBag);
-			}
-			
-			// Re-setting the subscription matches to the new matching key collection
-			//modelSubscription.getSubscriptionMatches().clear();
-			//for (Object key : currentMatchingKeys) {
-			//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
-			//	modelSubscription.getSubscriptionMatches().add(subMatch);
-			//}
-			
-			// Now, finding the necessary entities, within the coverage period limits
-			if (modelSubscription.isBrief()) {
 				KeyBag resultsKeyBag = new KeyBag();
-				for (String key : (List<String>)currentMatchingKeys)
-					resultsKeyBag.getBindingKey().add(key);
-				
-				result.getKeyBag().add(resultsKeyBag);
-			}
-			else {
-				FindBinding fb = subscriptionFilter.getFindBinding();
-				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-				findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
-				
-				// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
-				// these values don't make sense with the "chunking" feature.
-				fb.setListHead(null);
-				fb.setMaxRows(null);
-				// Setting the start index to the chunkData
-				Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
-				
-				BindingDetail bindingDetail = InquiryHelper.getBindingDetailFromKeys(fb, findQualifiers, em, currentMatchingKeys,
-																					 startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
+				BindingDetail bindingDetail = new BindingDetail();
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+				int currentIndex = 0;
+				if (chunkData != null)
+					currentIndex = chunkData;
+	
+				int returnedRowCount = 0;
+				while(currentIndex < existingList.size()) {
+	
+					org.apache.juddi.model.BindingTemplate modelBindingTemplate = existingList.get(currentIndex);
 						
-				// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
-				// if no more results)
-				chunkData = subscriptionStartIndex.value;
+					if (startPointDate.after(modelBindingTemplate.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (endPointDate.before(modelBindingTemplate.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getBindingKey().add(modelBindingTemplate.getEntityKey());
+					}
+					else {
+						org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
+						MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
+						bindingDetail.getBindingTemplate().add(apiBindingTemplate);
+						
+						returnedRowCount++;
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+					if (modelSubscription.getMaxEntities() != null) {
+						if (returnedRowCount == modelSubscription.getMaxEntities())
+							break;
+					}
+	
+					currentIndex++;
+				}
 				
-				result.setBindingDetail(bindingDetail);
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+				if (currentIndex < (existingList.size() - 1))
+					chunkData = currentIndex + 1;
+				else
+					chunkData = null;
+				
+				if (modelSubscription.isBrief())
+					result.getKeyBag().add(resultsKeyBag);
+				else
+					result.setBindingDetail(bindingDetail);
+				
+				
 			}
-		}
-		if (subscriptionFilter.getFindBusiness() != null) {
-			//Get the current matching keys
-			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-
-			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
-			if (missingKeys != null && missingKeys.size() > 0) {
+			if (subscriptionFilter.getGetBusinessDetail() != null) {
+				GetBusinessDetail getDetail = subscriptionFilter.getGetBusinessDetail();
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
 				KeyBag missingKeyBag = new KeyBag();
 				missingKeyBag.setDeleted(true);
-				for (String key : missingKeys)
-					missingKeyBag.getBusinessKey().add(key);
-
-				result.getKeyBag().add(missingKeyBag);
-			}
-			
-			// Re-setting the subscription matches to the new matching key collection
-			//modelSubscription.getSubscriptionMatches().clear();
-			//for (Object key : currentMatchingKeys) {
-			//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
-			//	modelSubscription.getSubscriptionMatches().add(subMatch);
-			//}
-			
-			// Now, finding the necessary entities, within the coverage period limits
-			if (modelSubscription.isBrief()) {
+				List<org.apache.juddi.model.BusinessEntity> existingList = new ArrayList<org.apache.juddi.model.BusinessEntity>(0);
+				for (String key : getDetail.getBusinessKey()) {
+					org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, key);
+					if (modelBusinessEntity != null)
+						existingList.add(modelBusinessEntity);
+					else
+						missingKeyBag.getBusinessKey().add(key);
+				}
+				// Store deleted keys in the results
+				if (missingKeyBag.getBusinessKey() != null && missingKeyBag.getBusinessKey().size() > 0)
+					result.getKeyBag().add(missingKeyBag);
+				
 				KeyBag resultsKeyBag = new KeyBag();
-				for (String key : (List<String>)currentMatchingKeys)
-					resultsKeyBag.getBusinessKey().add(key);
+				BusinessDetail businessDetail = new BusinessDetail();
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+				int currentIndex = 0;
+				if (chunkData != null)
+					currentIndex = chunkData;
 				
-				result.getKeyBag().add(resultsKeyBag);
+				int returnedRowCount = 0;
+				while(currentIndex < existingList.size()) {
+	
+					org.apache.juddi.model.BusinessEntity modelBusinessEntity = existingList.get(currentIndex);
+	
+					if (startPointDate.after(modelBusinessEntity.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (endPointDate.before(modelBusinessEntity.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getBusinessKey().add(modelBusinessEntity.getEntityKey());
+					}
+					else {
+						org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
+						MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
+						businessDetail.getBusinessEntity().add(apiBusinessEntity);
+						
+						returnedRowCount++;
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+					if (modelSubscription.getMaxEntities() != null) {
+						if (returnedRowCount == modelSubscription.getMaxEntities())
+							break;
+					}
+	
+					currentIndex++;
+				}
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+				if (currentIndex < (existingList.size() - 1))
+					chunkData = currentIndex + 1;
+				else
+					chunkData = null;
+				
+				if (modelSubscription.isBrief())
+					result.getKeyBag().add(resultsKeyBag);
+				else
+					result.setBusinessDetail(businessDetail);
+				
 			}
-			else {
-				FindBusiness fb = subscriptionFilter.getFindBusiness();
-				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-				findQualifiers.mapApiFindQualifiers(fb.getFindQualifiers());
-				
-				// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
-				// these values don't make sense with the "chunking" feature.
-				fb.setListHead(null);
-				fb.setMaxRows(null);
-				// Setting the start index to the chunkData
-				Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
-				
-				BusinessList businessList = InquiryHelper.getBusinessListFromKeys(fb, findQualifiers, em, currentMatchingKeys,
-																				  startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
-				
-				// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
-				// if no more results)
-				chunkData = subscriptionStartIndex.value;
-				
-				result.setBusinessList(businessList);
-			}
-		}
-		if (subscriptionFilter.getFindService() != null) {
-			//Get the current matching keys
-			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-
-			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
-			if (missingKeys != null && missingKeys.size() > 0) {
+			if (subscriptionFilter.getGetServiceDetail() != null) {
+				GetServiceDetail getDetail = subscriptionFilter.getGetServiceDetail();
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
 				KeyBag missingKeyBag = new KeyBag();
 				missingKeyBag.setDeleted(true);
-				for (String key : missingKeys)
-					missingKeyBag.getServiceKey().add(key);
-
-				result.getKeyBag().add(missingKeyBag);
-			}
-			
-			// Re-setting the subscription matches to the new matching key collection
-			//modelSubscription.getSubscriptionMatches().clear();
-			//for (Object key : currentMatchingKeys) {
-			//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
-			//	modelSubscription.getSubscriptionMatches().add(subMatch);
-			//}
-			
-			// Now, finding the necessary entities, within the coverage period limits
-			if (modelSubscription.isBrief()) {
+				List<org.apache.juddi.model.BusinessService> existingList = new ArrayList<org.apache.juddi.model.BusinessService>(0);
+				for (String key : getDetail.getServiceKey()) {
+					org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, key);
+					if (modelBusinessService != null)
+						existingList.add(modelBusinessService);
+					else
+						missingKeyBag.getBusinessKey().add(key);
+				}
+				// Store deleted keys in the results
+				if (missingKeyBag.getServiceKey() != null && missingKeyBag.getServiceKey().size() > 0)
+					result.getKeyBag().add(missingKeyBag);
+	
 				KeyBag resultsKeyBag = new KeyBag();
-				for (String key : (List<String>)currentMatchingKeys)
-					resultsKeyBag.getServiceKey().add(key);
+				ServiceDetail serviceDetail = new ServiceDetail();
 				
-				result.getKeyBag().add(resultsKeyBag);
+				// Set the currentIndex to 0 or the value of the chunkData
+				int currentIndex = 0;
+				if (chunkData != null)
+					currentIndex = chunkData;
+				
+				int returnedRowCount = 0;
+				while(currentIndex < existingList.size()) {
+					
+					org.apache.juddi.model.BusinessService modelBusinessService = existingList.get(currentIndex);
+						
+					if (startPointDate.after(modelBusinessService.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (endPointDate.before(modelBusinessService.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getServiceKey().add(modelBusinessService.getEntityKey());
+					}
+					else {
+						org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
+						MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
+						serviceDetail.getBusinessService().add(apiBusinessService);
+						
+						returnedRowCount++;
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+					if (modelSubscription.getMaxEntities() != null) {
+						if (returnedRowCount == modelSubscription.getMaxEntities())
+							break;
+					}
+	
+					currentIndex++;
+				}
+				
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+				if (currentIndex < (existingList.size() - 1))
+					chunkData = currentIndex + 1;
+				else
+					chunkData = null;
+				
+				if (modelSubscription.isBrief())
+					result.getKeyBag().add(resultsKeyBag);
+				else
+					result.setServiceDetail(serviceDetail);
+				
 			}
-			else {
-				FindService fs = subscriptionFilter.getFindService();
-				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-				findQualifiers.mapApiFindQualifiers(fs.getFindQualifiers());
-				
-				// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
-				// these values don't make sense with the "chunking" feature.
-				fs.setListHead(null);
-				fs.setMaxRows(null);
-				// Setting the start index to the chunkData
-				Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
-
-				ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys,
-																			   startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
-
-				// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
-				// if no more results)
-				chunkData = subscriptionStartIndex.value;
-				
-				result.setServiceList(serviceList);
-			}
-		}
-		if (subscriptionFilter.getFindTModel() != null) {
-			//Get the current matching keys
-			List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-
-			List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
-			if (missingKeys != null && missingKeys.size() > 0) {
+			if (subscriptionFilter.getGetTModelDetail() != null) {
+				GetTModelDetail getDetail = subscriptionFilter.getGetTModelDetail();
+	
+				// Running through the key list here to determine the deleted keys and store the existing entities.
 				KeyBag missingKeyBag = new KeyBag();
 				missingKeyBag.setDeleted(true);
-				for (String key : missingKeys)
-					missingKeyBag.getTModelKey().add(key);
-
-				result.getKeyBag().add(missingKeyBag);
-			}
-			
-			// Re-setting the subscription matches to the new matching key collection
-			//modelSubscription.getSubscriptionMatches().clear();
-			//for (Object key : currentMatchingKeys) {
-			//	SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
-			//	modelSubscription.getSubscriptionMatches().add(subMatch);
-			//}
-			
-			// Now, finding the necessary entities, within the coverage period limits
-			if (modelSubscription.isBrief()) {
+				List<org.apache.juddi.model.Tmodel> existingList = new ArrayList<org.apache.juddi.model.Tmodel>(0);
+				for (String key : getDetail.getTModelKey()) {
+					org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, key);
+					if (modelTModel != null)
+						existingList.add(modelTModel);
+					else
+						missingKeyBag.getTModelKey().add(key);
+				}
+				// Store deleted keys in the results
+				if (missingKeyBag.getTModelKey() != null && missingKeyBag.getTModelKey().size() > 0)
+					result.getKeyBag().add(missingKeyBag);
+				
 				KeyBag resultsKeyBag = new KeyBag();
-				for (String key : (List<String>)currentMatchingKeys)
-					resultsKeyBag.getTModelKey().add(key);
+				TModelDetail tmodelDetail = new TModelDetail();
+	
+				// Set the currentIndex to 0 or the value of the chunkData
+				int currentIndex = 0;
+				if (chunkData != null)
+					currentIndex = chunkData;
 				
-				result.getKeyBag().add(resultsKeyBag);
-			}
-			else {
-				FindTModel ft = subscriptionFilter.getFindTModel();
-				org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-				findQualifiers.mapApiFindQualifiers(ft.getFindQualifiers());
-
-				// To do subscription "chunking", the listHead and maxRows are nulled which will set them to system default.  User settings for
-				// these values don't make sense with the "chunking" feature.
-				ft.setListHead(null);
-				ft.setMaxRows(null);
-				// Setting the start index to the chunkData
-				Holder<Integer> subscriptionStartIndex = new Holder<Integer>(chunkData);
+				int returnedRowCount = 0;
+				while(currentIndex < existingList.size()) {
+	
+					org.apache.juddi.model.Tmodel modelTModel = existingList.get(currentIndex);
+						
+					if (startPointDate.after(modelTModel.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (endPointDate.before(modelTModel.getModifiedIncludingChildren())) {
+						currentIndex++;
+						continue;
+					}
+					
+					if (modelSubscription.isBrief()) {
+						resultsKeyBag.getTModelKey().add(modelTModel.getEntityKey());
+					}
+					else {
+						org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
+						MappingModelToApi.mapTModel(modelTModel, apiTModel);
+						tmodelDetail.getTModel().add(apiTModel);
+						
+						returnedRowCount++;
+					}
+	
+					// If the returned rows equals the max allowed, we can end the loop.
+					if (modelSubscription.getMaxEntities() != null) {
+						if (returnedRowCount == modelSubscription.getMaxEntities())
+							break;
+					}
+	
+					currentIndex++;
+				}
 				
-				// If more results are to be had, chunkData will come out with a value and a new token will be generated below.  Otherwise, it will
-				// be null and no token will be generated.
-				TModelList tmodelList = InquiryHelper.getTModelListFromKeys(ft, findQualifiers, em, currentMatchingKeys, 
-																			startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
-
-				// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null
-				// if no more results)
-				chunkData = subscriptionStartIndex.value;
-				
-				result.setTModelList(tmodelList);
-			}
-			
-		}
-		if (subscriptionFilter.getFindRelatedBusinesses() != null) {
-			FindRelatedBusinesses findRelatedBusiness = subscriptionFilter.getFindRelatedBusinesses();
-			RelatedBusinessesList  relatedBusinessList = InquiryHelper.getRelatedBusinessesList(findRelatedBusiness, em, startPointDate, endPointDate);
-			result.setRelatedBusinessesList(relatedBusinessList);
-		}
-		if (subscriptionFilter.getGetBindingDetail() != null) {
-			GetBindingDetail getDetail = subscriptionFilter.getGetBindingDetail();
-			
-			// Running through the key list here to determine the deleted keys and store the existing entities.
-			KeyBag missingKeyBag = new KeyBag();
-			missingKeyBag.setDeleted(true);
-			List<org.apache.juddi.model.BindingTemplate> existingList = new ArrayList<org.apache.juddi.model.BindingTemplate>(0);
-			for (String key : getDetail.getBindingKey()) {
-				org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, key);
-				if (modelBindingTemplate != null)
-					existingList.add(modelBindingTemplate);
+				// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
+				// A non-null value of chunk data will cause a chunk token to be generated. 
+				if (currentIndex < (existingList.size() - 1))
+					chunkData = currentIndex + 1;
 				else
-					missingKeyBag.getBindingKey().add(key);
-			}
-			// Store deleted keys in the results
-			if (missingKeyBag.getBindingKey() != null && missingKeyBag.getBindingKey().size() > 0)
-				result.getKeyBag().add(missingKeyBag);
-			
-			KeyBag resultsKeyBag = new KeyBag();
-			BindingDetail bindingDetail = new BindingDetail();
-
-			// Set the currentIndex to 0 or the value of the chunkData
-			int currentIndex = 0;
-			if (chunkData != null)
-				currentIndex = chunkData;
-
-			int returnedRowCount = 0;
-			while(currentIndex < existingList.size()) {
-
-				org.apache.juddi.model.BindingTemplate modelBindingTemplate = existingList.get(currentIndex);
-					
-				if (startPointDate.after(modelBindingTemplate.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
+					chunkData = null;
 				
-				if (endPointDate.before(modelBindingTemplate.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
-				
-				if (modelSubscription.isBrief()) {
-					resultsKeyBag.getBindingKey().add(modelBindingTemplate.getEntityKey());
-				}
-				else {
-					org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
-					MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
-					bindingDetail.getBindingTemplate().add(apiBindingTemplate);
-					
-					returnedRowCount++;
-				}
-
-				// If the returned rows equals the max allowed, we can end the loop.
-				if (modelSubscription.getMaxEntities() != null) {
-					if (returnedRowCount == modelSubscription.getMaxEntities())
-						break;
-				}
-
-				currentIndex++;
-			}
-			
-			// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
-			// A non-null value of chunk data will cause a chunk token to be generated. 
-			if (currentIndex < (existingList.size() - 1))
-				chunkData = currentIndex + 1;
-			else
-				chunkData = null;
-			
-			if (modelSubscription.isBrief())
-				result.getKeyBag().add(resultsKeyBag);
-			else
-				result.setBindingDetail(bindingDetail);
-			
-			
-		}
-		if (subscriptionFilter.getGetBusinessDetail() != null) {
-			GetBusinessDetail getDetail = subscriptionFilter.getGetBusinessDetail();
-
-			// Running through the key list here to determine the deleted keys and store the existing entities.
-			KeyBag missingKeyBag = new KeyBag();
-			missingKeyBag.setDeleted(true);
-			List<org.apache.juddi.model.BusinessEntity> existingList = new ArrayList<org.apache.juddi.model.BusinessEntity>(0);
-			for (String key : getDetail.getBusinessKey()) {
-				org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, key);
-				if (modelBusinessEntity != null)
-					existingList.add(modelBusinessEntity);
+				if (modelSubscription.isBrief())
+					result.getKeyBag().add(resultsKeyBag);
 				else
-					missingKeyBag.getBusinessKey().add(key);
+					result.setTModelDetail(tmodelDetail);
+				
 			}
-			// Store deleted keys in the results
-			if (missingKeyBag.getBusinessKey() != null && missingKeyBag.getBusinessKey().size() > 0)
-				result.getKeyBag().add(missingKeyBag);
-			
-			KeyBag resultsKeyBag = new KeyBag();
-			BusinessDetail businessDetail = new BusinessDetail();
-
-			// Set the currentIndex to 0 or the value of the chunkData
-			int currentIndex = 0;
-			if (chunkData != null)
-				currentIndex = chunkData;
-			
-			int returnedRowCount = 0;
-			while(currentIndex < existingList.size()) {
-
-				org.apache.juddi.model.BusinessEntity modelBusinessEntity = existingList.get(currentIndex);
-
-				if (startPointDate.after(modelBusinessEntity.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
+			if (subscriptionFilter.getGetAssertionStatusReport() != null) {
+				// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
 				
-				if (endPointDate.before(modelBusinessEntity.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
+				GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();
 				
-				if (modelSubscription.isBrief()) {
-					resultsKeyBag.getBusinessKey().add(modelBusinessEntity.getEntityKey());
-				}
-				else {
-					org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
-					MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
-					businessDetail.getBusinessEntity().add(apiBusinessEntity);
-					
-					returnedRowCount++;
-				}
-
-				// If the returned rows equals the max allowed, we can end the loop.
-				if (modelSubscription.getMaxEntities() != null) {
-					if (returnedRowCount == modelSubscription.getMaxEntities())
-						break;
-				}
-
-				currentIndex++;
+				List<AssertionStatusItem> assertionList = PublicationHelper.getAssertionStatusItemList(publisher, getAssertionStatusReport.getCompletionStatus(), em);
+	
+				AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();
+				for(AssertionStatusItem asi : assertionList)
+					assertionStatusReport.getAssertionStatusItem().add(asi);
+				
+				result.setAssertionStatusReport(assertionStatusReport);
 			}
 			
-			// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
-			// A non-null value of chunk data will cause a chunk token to be generated. 
-			if (currentIndex < (existingList.size() - 1))
-				chunkData = currentIndex + 1;
-			else
-				chunkData = null;
+			// If chunkData contains non-null data, a new token must be created and the token returned in the results
+			if (chunkData != null) {
+				String chunkToken = CHUNK_TOKEN_PREFIX + UUID.randomUUID();
+				SubscriptionChunkToken newChunkToken = new SubscriptionChunkToken(chunkToken);
+				newChunkToken.setSubscriptionKey(body.getSubscriptionKey());
+				newChunkToken.setStartPoint(startPointDate);
+				newChunkToken.setEndPoint(endPointDate);
+				newChunkToken.setData(chunkData);
+	
+				int chunkExpirationMinutes = DEFAULT_CHUNKEXPIRATION_MINUTES;
+				try { 
+					chunkExpirationMinutes = AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES); 
+				}
+				catch(ConfigurationException ce) { 
+					throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval"));
+				}
+				newChunkToken.setExpiresAfter(new Date(System.currentTimeMillis() + chunkExpirationMinutes * 60 * 1000));
+				
+				em.persist(newChunkToken);
+				
+				result.setChunkToken(chunkToken);
+			}
 			
-			if (modelSubscription.isBrief())
-				result.getKeyBag().add(resultsKeyBag);
-			else
-				result.setBusinessDetail(businessDetail);
-			
+	        tx.commit();
+	        return result;
+        } finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-		if (subscriptionFilter.getGetServiceDetail() != null) {
-			GetServiceDetail getDetail = subscriptionFilter.getGetServiceDetail();
-
-			// Running through the key list here to determine the deleted keys and store the existing entities.
-			KeyBag missingKeyBag = new KeyBag();
-			missingKeyBag.setDeleted(true);
-			List<org.apache.juddi.model.BusinessService> existingList = new ArrayList<org.apache.juddi.model.BusinessService>(0);
-			for (String key : getDetail.getServiceKey()) {
-				org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, key);
-				if (modelBusinessService != null)
-					existingList.add(modelBusinessService);
-				else
-					missingKeyBag.getBusinessKey().add(key);
-			}
-			// Store deleted keys in the results
-			if (missingKeyBag.getServiceKey() != null && missingKeyBag.getServiceKey().size() > 0)
-				result.getKeyBag().add(missingKeyBag);
-
-			KeyBag resultsKeyBag = new KeyBag();
-			ServiceDetail serviceDetail = new ServiceDetail();
-			
-			// Set the currentIndex to 0 or the value of the chunkData
-			int currentIndex = 0;
-			if (chunkData != null)
-				currentIndex = chunkData;
-			
-			int returnedRowCount = 0;
-			while(currentIndex < existingList.size()) {
-				
-				org.apache.juddi.model.BusinessService modelBusinessService = existingList.get(currentIndex);
-					
-				if (startPointDate.after(modelBusinessService.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
-				
-				if (endPointDate.before(modelBusinessService.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
-				
-				if (modelSubscription.isBrief()) {
-					resultsKeyBag.getServiceKey().add(modelBusinessService.getEntityKey());
-				}
-				else {
-					org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
-					MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
-					serviceDetail.getBusinessService().add(apiBusinessService);
-					
-					returnedRowCount++;
-				}
-
-				// If the returned rows equals the max allowed, we can end the loop.
-				if (modelSubscription.getMaxEntities() != null) {
-					if (returnedRowCount == modelSubscription.getMaxEntities())
-						break;
-				}
-
-				currentIndex++;
-			}
-			
-			// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
-			// A non-null value of chunk data will cause a chunk token to be generated. 
-			if (currentIndex < (existingList.size() - 1))
-				chunkData = currentIndex + 1;
-			else
-				chunkData = null;
-			
-			if (modelSubscription.isBrief())
-				result.getKeyBag().add(resultsKeyBag);
-			else
-				result.setServiceDetail(serviceDetail);
-			
-		}
-		if (subscriptionFilter.getGetTModelDetail() != null) {
-			GetTModelDetail getDetail = subscriptionFilter.getGetTModelDetail();
-
-			// Running through the key list here to determine the deleted keys and store the existing entities.
-			KeyBag missingKeyBag = new KeyBag();
-			missingKeyBag.setDeleted(true);
-			List<org.apache.juddi.model.Tmodel> existingList = new ArrayList<org.apache.juddi.model.Tmodel>(0);
-			for (String key : getDetail.getTModelKey()) {
-				org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, key);
-				if (modelTModel != null)
-					existingList.add(modelTModel);
-				else
-					missingKeyBag.getTModelKey().add(key);
-			}
-			// Store deleted keys in the results
-			if (missingKeyBag.getTModelKey() != null && missingKeyBag.getTModelKey().size() > 0)
-				result.getKeyBag().add(missingKeyBag);
-			
-			KeyBag resultsKeyBag = new KeyBag();
-			TModelDetail tmodelDetail = new TModelDetail();
-
-			// Set the currentIndex to 0 or the value of the chunkData
-			int currentIndex = 0;
-			if (chunkData != null)
-				currentIndex = chunkData;
-			
-			int returnedRowCount = 0;
-			while(currentIndex < existingList.size()) {
-
-				org.apache.juddi.model.Tmodel modelTModel = existingList.get(currentIndex);
-					
-				if (startPointDate.after(modelTModel.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
-				
-				if (endPointDate.before(modelTModel.getModifiedIncludingChildren())) {
-					currentIndex++;
-					continue;
-				}
-				
-				if (modelSubscription.isBrief()) {
-					resultsKeyBag.getTModelKey().add(modelTModel.getEntityKey());
-				}
-				else {
-					org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
-					MappingModelToApi.mapTModel(modelTModel, apiTModel);
-					tmodelDetail.getTModel().add(apiTModel);
-					
-					returnedRowCount++;
-				}
-
-				// If the returned rows equals the max allowed, we can end the loop.
-				if (modelSubscription.getMaxEntities() != null) {
-					if (returnedRowCount == modelSubscription.getMaxEntities())
-						break;
-				}
-
-				currentIndex++;
-			}
-			
-			// If the loop was broken prematurely (max row count hit) we set the chunk data to the next index to start with.
-			// A non-null value of chunk data will cause a chunk token to be generated. 
-			if (currentIndex < (existingList.size() - 1))
-				chunkData = currentIndex + 1;
-			else
-				chunkData = null;
-			
-			if (modelSubscription.isBrief())
-				result.getKeyBag().add(resultsKeyBag);
-			else
-				result.setTModelDetail(tmodelDetail);
-			
-		}
-		if (subscriptionFilter.getGetAssertionStatusReport() != null) {
-			// The coverage period doesn't apply here (basically because publisher assertions don't keep operational info).
-			
-			GetAssertionStatusReport getAssertionStatusReport = subscriptionFilter.getGetAssertionStatusReport();
-			
-			List<AssertionStatusItem> assertionList = PublicationHelper.getAssertionStatusItemList(publisher, getAssertionStatusReport.getCompletionStatus(), em);
-
-			AssertionStatusReport assertionStatusReport  = new AssertionStatusReport();
-			for(AssertionStatusItem asi : assertionList)
-				assertionStatusReport.getAssertionStatusItem().add(asi);
-			
-			result.setAssertionStatusReport(assertionStatusReport);
-		}
-		
-		// If chunkData contains non-null data, a new token must be created and the token returned in the results
-		if (chunkData != null) {
-			String chunkToken = CHUNK_TOKEN_PREFIX + UUID.randomUUID();
-			SubscriptionChunkToken newChunkToken = new SubscriptionChunkToken(chunkToken);
-			newChunkToken.setSubscriptionKey(body.getSubscriptionKey());
-			newChunkToken.setStartPoint(startPointDate);
-			newChunkToken.setEndPoint(endPointDate);
-			newChunkToken.setData(chunkData);
-
-			int chunkExpirationMinutes = DEFAULT_CHUNKEXPIRATION_MINUTES;
-			try { 
-				chunkExpirationMinutes = AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES); 
-			}
-			catch(ConfigurationException ce) { 
-				throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval"));
-			}
-			newChunkToken.setExpiresAfter(new Date(System.currentTimeMillis() + chunkExpirationMinutes * 60 * 1000));
-			
-			em.persist(newChunkToken);
-			
-			result.setChunkToken(chunkToken);
-		}
-		
-        tx.commit();
-        em.close();
-
-        return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -735,28 +746,33 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			throws DispositionReportFaultMessage {
 		EntityManager em = PersistenceManager.getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-		
-		List<Subscription> result = new ArrayList<Subscription>(0);
-		
-		List<org.apache.juddi.model.Subscription> modelSubscriptionList = (List<org.apache.juddi.model.Subscription>)FindSubscriptionByPublisherQuery.select(em, publisher.getAuthorizedName());
-		if (modelSubscriptionList != null && modelSubscriptionList.size() > 0) {
-			for (org.apache.juddi.model.Subscription modelSubscription : modelSubscriptionList) {
-				
-				Subscription apiSubscription = new Subscription();
-				
-				MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
-				
-				result.add(apiSubscription);
+        try {
+	        tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+			
+			List<Subscription> result = new ArrayList<Subscription>(0);
+			
+			List<org.apache.juddi.model.Subscription> modelSubscriptionList = (List<org.apache.juddi.model.Subscription>)FindSubscriptionByPublisherQuery.select(em, publisher.getAuthorizedName());
+			if (modelSubscriptionList != null && modelSubscriptionList.size() > 0) {
+				for (org.apache.juddi.model.Subscription modelSubscription : modelSubscriptionList) {
+					
+					Subscription apiSubscription = new Subscription();
+					
+					MappingModelToApi.mapSubscription(modelSubscription, apiSubscription);
+					
+					result.add(apiSubscription);
+				}
 			}
+	        
+	        tx.commit();
+			return result;
+        } finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-        
-        tx.commit();
-        em.close();
-		
-		return result;
 	}
 
 
@@ -773,43 +789,49 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-		new ValidateSubscription(publisher).validateSubscriptions(em, subscription.value);
-		
-		List<org.uddi.sub_v3.Subscription> apiSubscriptionList = subscription.value;
-		for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+			new ValidateSubscription(publisher).validateSubscriptions(em, subscription.value);
 			
-			org.apache.juddi.model.Subscription modelSubscription = new org.apache.juddi.model.Subscription();
-			
-			Object existingEntity = em.find(org.apache.juddi.model.Subscription.class, apiSubscription.getSubscriptionKey());
-			if (existingEntity != null) {
-				doRenewal((org.apache.juddi.model.Subscription)existingEntity, apiSubscription);
-				em.remove(existingEntity);
-			}
-
-			doSubscriptionExpirationDate(apiSubscription);
-			
-			MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
-			
-			modelSubscription.setAuthorizedName(publisher.getAuthorizedName());
-			modelSubscription.setCreateDate(new Date());
-
-			// Add the matching keys to the match collection
-			List<?> keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);
-			if (keys != null && keys.size() > 0) {
-				for (Object key : keys) {
-					SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
-					modelSubscription.getSubscriptionMatches().add(subMatch);
+			List<org.uddi.sub_v3.Subscription> apiSubscriptionList = subscription.value;
+			for (org.uddi.sub_v3.Subscription apiSubscription : apiSubscriptionList) {
+				
+				org.apache.juddi.model.Subscription modelSubscription = new org.apache.juddi.model.Subscription();
+				
+				Object existingEntity = em.find(org.apache.juddi.model.Subscription.class, apiSubscription.getSubscriptionKey());
+				if (existingEntity != null) {
+					doRenewal((org.apache.juddi.model.Subscription)existingEntity, apiSubscription);
+					em.remove(existingEntity);
 				}
+	
+				doSubscriptionExpirationDate(apiSubscription);
+				
+				MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
+				
+				modelSubscription.setAuthorizedName(publisher.getAuthorizedName());
+				modelSubscription.setCreateDate(new Date());
+	
+				// Add the matching keys to the match collection
+				List<?> keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);
+				if (keys != null && keys.size() > 0) {
+					for (Object key : keys) {
+						SubscriptionMatch subMatch = new SubscriptionMatch(modelSubscription, (String)key);
+						modelSubscription.getSubscriptionMatches().add(subMatch);
+					}
+				}
+				
+				em.persist(modelSubscription);
 			}
-			
-			em.persist(modelSubscription);
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	/**

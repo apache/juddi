@@ -131,11 +131,11 @@ public class Install {
 			log .error(ie.getMessage(),ie);
 			tx.rollback();
 			throw ie;
-		} 
-		finally {
-			if (em.isOpen()) {
-				em.close();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
 			}
+			em.close();
 		}
 
 		// Now that all necessary persistent entities are loaded, the configuration must be reloaded to be sure all properties are set.
@@ -159,14 +159,19 @@ public class Install {
 	public static boolean alreadyInstalled() {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		boolean result = alreadyInstalled(em);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+			
+			boolean result = alreadyInstalled(em);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public static boolean alreadyInstalled(EntityManager em) {

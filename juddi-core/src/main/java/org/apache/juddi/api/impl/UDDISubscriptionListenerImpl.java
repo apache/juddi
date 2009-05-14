@@ -45,12 +45,18 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		new ValidateSubscriptionListener(publisher).validateNotification(body);
-		tx.commit();
-		em.close();
-		return null;
+		try {
+			tx.begin();
+			
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			new ValidateSubscriptionListener(publisher).validateNotification(body);
+			tx.commit();
+			return null;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 }

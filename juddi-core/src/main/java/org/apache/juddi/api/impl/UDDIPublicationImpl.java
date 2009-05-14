@@ -84,62 +84,68 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateAddPublisherAssertions(em, body);
-
-		List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = body.getPublisherAssertion();
-		for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
+		try {
+			tx.begin();
 			
-			org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
-			
-			org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(modelPubAssertion.getClass(), modelPubAssertion.getId());
-			boolean persistNewAssertion = true;
-			if (existingPubAssertion != null) {
-				if (modelPubAssertion.getTmodelKey().equalsIgnoreCase(existingPubAssertion.getTmodelKey()) &&
-					modelPubAssertion.getKeyName().equalsIgnoreCase(existingPubAssertion.getKeyName()) &&
-					modelPubAssertion.getKeyValue().equalsIgnoreCase(existingPubAssertion.getKeyValue())) {
-					// This pub assertion is already been "asserted".  Simply need to set the "check" value on the existing (and persistent) assertion
-					if (publisher.isOwner(existingPubAssertion.getBusinessEntityByFromKey()))
-						existingPubAssertion.setFromCheck("true");
-					if (publisher.isOwner(existingPubAssertion.getBusinessEntityByToKey()))
-						existingPubAssertion.setToCheck("true");
-					
-					persistNewAssertion = false;
-				}
-				else {
-					// Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
-					// TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
-					// many relationships as desired (the differentiator would be the keyedRef values).
-					em.remove(existingPubAssertion);
-				}
-			}
-
-			if (persistNewAssertion) {
-				org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
-				org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
-				modelPubAssertion.setBusinessEntityByFromKey(beFrom);
-				modelPubAssertion.setBusinessEntityByToKey(beTo);
-
-				modelPubAssertion.setFromCheck("false");
-				modelPubAssertion.setToCheck("false");
-
-				em.persist(modelPubAssertion);
+			new ValidatePublish(publisher).validateAddPublisherAssertions(em, body);
+	
+			List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = body.getPublisherAssertion();
+			for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
 				
-				if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey()))
-					modelPubAssertion.setFromCheck("true");
-				if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey()))
-					modelPubAssertion.setToCheck("true");
+				org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+				
+				MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+				
+				org.apache.juddi.model.PublisherAssertion existingPubAssertion = em.find(modelPubAssertion.getClass(), modelPubAssertion.getId());
+				boolean persistNewAssertion = true;
+				if (existingPubAssertion != null) {
+					if (modelPubAssertion.getTmodelKey().equalsIgnoreCase(existingPubAssertion.getTmodelKey()) &&
+						modelPubAssertion.getKeyName().equalsIgnoreCase(existingPubAssertion.getKeyName()) &&
+						modelPubAssertion.getKeyValue().equalsIgnoreCase(existingPubAssertion.getKeyValue())) {
+						// This pub assertion is already been "asserted".  Simply need to set the "check" value on the existing (and persistent) assertion
+						if (publisher.isOwner(existingPubAssertion.getBusinessEntityByFromKey()))
+							existingPubAssertion.setFromCheck("true");
+						if (publisher.isOwner(existingPubAssertion.getBusinessEntityByToKey()))
+							existingPubAssertion.setToCheck("true");
+						
+						persistNewAssertion = false;
+					}
+					else {
+						// Otherwise, it is a new relationship between these entities.  Remove the old one so the new one can be added.
+						// TODO: the model only seems to allow one assertion per two business (primary key is fromKey and toKey). Spec seems to imply as 
+						// many relationships as desired (the differentiator would be the keyedRef values).
+						em.remove(existingPubAssertion);
+					}
+				}
+	
+				if (persistNewAssertion) {
+					org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
+					org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
+					modelPubAssertion.setBusinessEntityByFromKey(beFrom);
+					modelPubAssertion.setBusinessEntityByToKey(beTo);
+	
+					modelPubAssertion.setFromCheck("false");
+					modelPubAssertion.setToCheck("false");
+	
+					em.persist(modelPubAssertion);
+					
+					if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey()))
+						modelPubAssertion.setFromCheck("true");
+					if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey()))
+						modelPubAssertion.setToCheck("true");
+				}
+				
 			}
-			
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	public void deleteBinding(DeleteBinding body)
@@ -147,23 +153,29 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateDeleteBinding(em, body);
-		
-		List<String> entityKeyList = body.getBindingKey();
-		for (String entityKey : entityKeyList) {
-			Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
-
-			((org.apache.juddi.model.BindingTemplate)obj).getBusinessService().setModifiedIncludingChildren(new Date());
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			em.remove(obj);
+			new ValidatePublish(publisher).validateDeleteBinding(em, body);
+			
+			List<String> entityKeyList = body.getBindingKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
+	
+				((org.apache.juddi.model.BindingTemplate)obj).getBusinessService().setModifiedIncludingChildren(new Date());
+				
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	public void deleteBusiness(DeleteBusiness body)
@@ -171,20 +183,26 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-
-		new ValidatePublish(publisher).validateDeleteBusiness(em, body);
-		
-		List<String> entityKeyList = body.getBusinessKey();
-		for (String entityKey : entityKeyList) {
-			Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
-			em.remove(obj);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+	
+			new ValidatePublish(publisher).validateDeleteBusiness(em, body);
+			
+			List<String> entityKeyList = body.getBusinessKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.BusinessEntity.class, entityKey);
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	public void deletePublisherAssertions(DeletePublisherAssertions body)
@@ -192,21 +210,27 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-
-		new ValidatePublish(publisher).validateDeletePublisherAssertions(em, body);
-		
-		List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
-		for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
-			org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
-			Object obj = em.find(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
-			em.remove(obj);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+	
+			new ValidatePublish(publisher).validateDeletePublisherAssertions(em, body);
+			
+			List<org.uddi.api_v3.PublisherAssertion> entityList = body.getPublisherAssertion();
+			for (org.uddi.api_v3.PublisherAssertion entity : entityList) {
+				org.apache.juddi.model.PublisherAssertionId pubAssertionId = new org.apache.juddi.model.PublisherAssertionId(entity.getFromKey(), entity.getToKey());
+				Object obj = em.find(org.apache.juddi.model.PublisherAssertion.class, pubAssertionId);
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	public void deleteService(DeleteService body)
@@ -214,23 +238,29 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateDeleteService(em, body);
-		
-		List<String> entityKeyList = body.getServiceKey();
-		for (String entityKey : entityKeyList) {
-			Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			((org.apache.juddi.model.BusinessService)obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
+			new ValidatePublish(publisher).validateDeleteService(em, body);
 			
-			em.remove(obj);
+			List<String> entityKeyList = body.getServiceKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
+				
+				((org.apache.juddi.model.BusinessService)obj).getBusinessEntity().setModifiedIncludingChildren(new Date());
+				
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 
@@ -239,22 +269,28 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-
-		new ValidatePublish(publisher).validateDeleteTModel(em, body);
-
-		// tModels are only lazily deleted!
-		List<String> entityKeyList = body.getTModelKey();
-		for (String entityKey : entityKeyList) {
-			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
-			((org.apache.juddi.model.Tmodel)obj).setDeleted(true);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+	
+			new ValidatePublish(publisher).validateDeleteTModel(em, body);
+	
+			// tModels are only lazily deleted!
+			List<String> entityKeyList = body.getTModelKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+				((org.apache.juddi.model.Tmodel)obj).setDeleted(true);
+				
+			}
 			
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-		
-		tx.commit();
-		em.close();
 	}
 
 
@@ -264,16 +300,21 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-
-		List<org.uddi.api_v3.AssertionStatusItem> result = PublicationHelper.getAssertionStatusItemList(publisher, completionStatus, em);
-
-		tx.commit();
-		em.close();
-
-		return result;
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+	
+			List<org.uddi.api_v3.AssertionStatusItem> result = PublicationHelper.getAssertionStatusItemList(publisher, completionStatus, em);
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public List<PublisherAssertion> getPublisherAssertions(String authInfo)
@@ -281,28 +322,33 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-		
-		List<org.uddi.api_v3.PublisherAssertion> result = new ArrayList<org.uddi.api_v3.PublisherAssertion>(0);
-
-		List<?> businessKeysFound = null;
-		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
-		
-		List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);
-		for(org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
-			org.uddi.api_v3.PublisherAssertion apiPubAssertion = new org.uddi.api_v3.PublisherAssertion();
-
-			MappingModelToApi.mapPublisherAssertion(modelPubAssertion, apiPubAssertion);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 			
-			result.add(apiPubAssertion);
+			List<org.uddi.api_v3.PublisherAssertion> result = new ArrayList<org.uddi.api_v3.PublisherAssertion>(0);
+	
+			List<?> businessKeysFound = null;
+			businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
+			
+			List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);
+			for(org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
+				org.uddi.api_v3.PublisherAssertion apiPubAssertion = new org.uddi.api_v3.PublisherAssertion();
+	
+				MappingModelToApi.mapPublisherAssertion(modelPubAssertion, apiPubAssertion);
+				
+				result.add(apiPubAssertion);
+			}
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-		
-		tx.commit();
-		em.close();
-
-		return result;
 	}
 
 
@@ -311,48 +357,53 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		List<?> businessKeysFound = null;
-		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
-
-		List<?> tmodelKeysFound = null;
-		tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);
-
-		RegisteredInfo result = new RegisteredInfo();
-		
-		// Sort and retrieve the final results
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);
-		result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
-		
-		for (Object item : queryResults) {
-			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
-			org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
+			List<?> businessKeysFound = null;
+			businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
+	
+			List<?> tmodelKeysFound = null;
+			tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);
+	
+			RegisteredInfo result = new RegisteredInfo();
 			
-			result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+			// Sort and retrieve the final results
+			List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);
+			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
+			
+			for (Object item : queryResults) {
+				org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
+				org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+				
+				MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
+				
+				result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+			}
+	
+			// Sort and retrieve the final results
+			queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);
+			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
+			
+			for (Object item : queryResults) {
+				org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
+				org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
+				
+				MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
+				
+				result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+			}
+			
+			tx.commit();	
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		// Sort and retrieve the final results
-		queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);
-		result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
-		
-		for (Object item : queryResults) {
-			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
-			org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
-			
-			MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
-			
-			result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
-		}
-		
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 
@@ -361,34 +412,39 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateSaveBinding(em, body);
-
-		BindingDetail result = new BindingDetail();
-		
-		List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
-		for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
+		try {
+			tx.begin();
 			
-			org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
-			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
-			modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
-
-			setOperationalInfo(em, modelBindingTemplate, publisher, false);
-
-			em.persist(modelBindingTemplate);
+			new ValidatePublish(publisher).validateSaveBinding(em, body);
+	
+			BindingDetail result = new BindingDetail();
 			
-			result.getBindingTemplate().add(apiBindingTemplate);
+			List<org.uddi.api_v3.BindingTemplate> apiBindingTemplateList = body.getBindingTemplate();
+			for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
+				
+				org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
+				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
+				modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
+				
+				MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
+	
+				setOperationalInfo(em, modelBindingTemplate, publisher, false);
+	
+				em.persist(modelBindingTemplate);
+				
+				result.getBindingTemplate().add(apiBindingTemplate);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 
@@ -397,32 +453,37 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateSaveBusiness(em, body);
-
-		BusinessDetail result = new BusinessDetail();
-		
-		List<org.uddi.api_v3.BusinessEntity> apiBusinessEntityList = body.getBusinessEntity();
-		for (org.uddi.api_v3.BusinessEntity apiBusinessEntity : apiBusinessEntityList) {
+		try {
+			tx.begin();
 			
-			org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
+			new ValidatePublish(publisher).validateSaveBusiness(em, body);
+	
+			BusinessDetail result = new BusinessDetail();
 			
-			setOperationalInfo(em, modelBusinessEntity, publisher);
-
-			em.persist(modelBusinessEntity);
-
-			result.getBusinessEntity().add(apiBusinessEntity);
+			List<org.uddi.api_v3.BusinessEntity> apiBusinessEntityList = body.getBusinessEntity();
+			for (org.uddi.api_v3.BusinessEntity apiBusinessEntity : apiBusinessEntityList) {
+				
+				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
+				
+				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
+				
+				setOperationalInfo(em, modelBusinessEntity, publisher);
+	
+				em.persist(modelBusinessEntity);
+	
+				result.getBusinessEntity().add(apiBusinessEntity);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 
@@ -431,34 +492,39 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateSaveService(em, body);
-		
-		ServiceDetail result = new ServiceDetail();
-
-		List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = body.getBusinessService();
-		for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
-			org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
-			modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
+			new ValidatePublish(publisher).validateSaveService(em, body);
 			
-			MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
-
-			setOperationalInfo(em, modelBusinessService, publisher, false);
-
-			em.persist(modelBusinessService);
-			
-			result.getBusinessService().add(apiBusinessService);
+			ServiceDetail result = new ServiceDetail();
+	
+			List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = body.getBusinessService();
+			for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
+				
+				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
+				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
+				modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
+				
+				MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
+	
+				setOperationalInfo(em, modelBusinessService, publisher, false);
+	
+				em.persist(modelBusinessService);
+				
+				result.getBusinessService().add(apiBusinessService);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-
-		return result;
 	}
 
 
@@ -467,33 +533,38 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-
-		new ValidatePublish(publisher).validateSaveTModel(em, body);
-
-		TModelDetail result = new TModelDetail();
-
-		List<org.uddi.api_v3.TModel> apiTModelList = body.getTModel();
-		for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
-			
-			org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
-			
-			MappingApiToModel.mapTModel(apiTModel, modelTModel);
-
-			setOperationalInfo(em, modelTModel, publisher);
-
-			em.persist(modelTModel);
-			
-			result.getTModel().add(apiTModel);
-			
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+	
+			new ValidatePublish(publisher).validateSaveTModel(em, body);
+	
+			TModelDetail result = new TModelDetail();
+	
+			List<org.uddi.api_v3.TModel> apiTModelList = body.getTModel();
+			for (org.uddi.api_v3.TModel apiTModel : apiTModelList) {
+				
+				org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
+				
+				MappingApiToModel.mapTModel(apiTModel, modelTModel);
+	
+				setOperationalInfo(em, modelTModel, publisher);
+	
+				em.persist(modelTModel);
+				
+				result.getTModel().add(apiTModel);
+				
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 
@@ -503,45 +574,51 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
-		
-		new ValidatePublish(publisher).validateSetPublisherAssertions(em, publisherAssertion);
-		
-		List<?> businessKeysFound = null;
-		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
-
-		// First, wipe out all previous assertions associated with this publisher
-		DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
-		
-		// Slate is clean for all assertions involving this publisher, now we simply need to add the new ones (and they will all be "new").
-		List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = publisherAssertion.value;
-		for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 			
-			org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+			new ValidatePublish(publisher).validateSetPublisherAssertions(em, publisherAssertion);
 			
-			MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+			List<?> businessKeysFound = null;
+			businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
+	
+			// First, wipe out all previous assertions associated with this publisher
+			DeletePublisherAssertionByBusinessQuery.delete(em, businessKeysFound);
 			
-			org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
-			org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
-			modelPubAssertion.setBusinessEntityByFromKey(beFrom);
-			modelPubAssertion.setBusinessEntityByToKey(beTo);
-			
-			modelPubAssertion.setFromCheck("false");
-			modelPubAssertion.setToCheck("false");
-			
-			em.persist(modelPubAssertion);
-
-			if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey()))
-				modelPubAssertion.setFromCheck("true");
-			if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey()))
-				modelPubAssertion.setToCheck("true");
-			
+			// Slate is clean for all assertions involving this publisher, now we simply need to add the new ones (and they will all be "new").
+			List<org.uddi.api_v3.PublisherAssertion> apiPubAssertionList = publisherAssertion.value;
+			for (org.uddi.api_v3.PublisherAssertion apiPubAssertion : apiPubAssertionList) {
+				
+				org.apache.juddi.model.PublisherAssertion modelPubAssertion = new org.apache.juddi.model.PublisherAssertion();
+				
+				MappingApiToModel.mapPublisherAssertion(apiPubAssertion, modelPubAssertion);
+				
+				org.apache.juddi.model.BusinessEntity beFrom = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getFromKey());
+				org.apache.juddi.model.BusinessEntity beTo = em.find(org.apache.juddi.model.BusinessEntity.class, modelPubAssertion.getId().getToKey());
+				modelPubAssertion.setBusinessEntityByFromKey(beFrom);
+				modelPubAssertion.setBusinessEntityByToKey(beTo);
+				
+				modelPubAssertion.setFromCheck("false");
+				modelPubAssertion.setToCheck("false");
+				
+				em.persist(modelPubAssertion);
+	
+				if (publisher.isOwner(modelPubAssertion.getBusinessEntityByFromKey()))
+					modelPubAssertion.setFromCheck("true");
+				if (publisher.isOwner(modelPubAssertion.getBusinessEntityByToKey()))
+					modelPubAssertion.setToCheck("true");
+				
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	private void setOperationalInfo(EntityManager em, org.apache.juddi.model.BusinessEntity uddiEntity, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
@@ -684,34 +761,39 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateSavePublisher(em, body);
-		
-		PublisherDetail result = new PublisherDetail();
-
-		List<org.apache.juddi.api.datatype.Publisher> apiPublisherList = body.getPublisher();
-		for (org.apache.juddi.api.datatype.Publisher apiPublisher : apiPublisherList) {
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
+			new ValidatePublish(publisher).validateSavePublisher(em, body);
 			
-			MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
-			
-			Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
-			if (existingUddiEntity != null)
-				em.remove(existingUddiEntity);
-			
-			em.persist(modelPublisher);
-			
-			result.getPublisher().add(apiPublisher);
+			PublisherDetail result = new PublisherDetail();
+	
+			List<org.apache.juddi.api.datatype.Publisher> apiPublisherList = body.getPublisher();
+			for (org.apache.juddi.api.datatype.Publisher apiPublisher : apiPublisherList) {
+				
+				org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
+				
+				MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
+				
+				Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
+				if (existingUddiEntity != null)
+					em.remove(existingUddiEntity);
+				
+				em.persist(modelPublisher);
+				
+				result.getPublisher().add(apiPublisher);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	/*
@@ -722,20 +804,26 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-		
-		new ValidatePublish(publisher).validateDeletePublisher(em, body);
-
-		List<String> entityKeyList = body.getPublisherId();
-		for (String entityKey : entityKeyList) {
-			Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-			em.remove(obj);
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidatePublish(publisher).validateDeletePublisher(em, body);
+	
+			List<String> entityKeyList = body.getPublisherId();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 	

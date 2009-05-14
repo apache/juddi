@@ -18,6 +18,7 @@
 package org.apache.juddi.auth;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.error.AuthenticationException;
@@ -41,31 +42,37 @@ public class JUDDIAuthenticator implements Authenticator {
 	 */
 	public String authenticate(String authorizedName, String credential) throws AuthenticationException {
 		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
 		try {
+			tx.begin();
 			Publisher publisher = em.find(Publisher.class, authorizedName);
 			if (publisher == null)
 				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
 			
 			return authorizedName;
-		}
-		finally {
-			if (em.isOpen())
-				em.close();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
 	}
 	
 	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
 		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
 		try {
+			tx.begin();
 			Publisher publisher = em.find(Publisher.class, authorizedName);
 			if (publisher == null)
 				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
 			
 			return publisher;
-		}
-		finally {
-			if (em.isOpen())
-				em.close();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
 	}
 }

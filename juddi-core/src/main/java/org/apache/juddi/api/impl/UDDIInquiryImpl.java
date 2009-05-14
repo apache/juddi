@@ -73,22 +73,26 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-		
-		List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
-
-		BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
+			
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+			
+			List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
+	
+			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public BusinessList findBusiness(FindBusiness body)
@@ -98,22 +102,27 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-
-		List<?> keysFound = InquiryHelper.findBusiness(body, findQualifiers, em);
-
-		BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
+			
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+	
+			List<?> keysFound = InquiryHelper.findBusiness(body, findQualifiers, em);
+	
+			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body) 
@@ -123,22 +132,27 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		// TODO: findQualifiers aren't really used for this call, except maybe for sorting.  Sorting must be done in Java due to the retrieval method used.  Right now
-		// no sorting is performed.
-		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-		
-		RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
+			
+			// TODO: findQualifiers aren't really used for this call, except maybe for sorting.  Sorting must be done in Java due to the retrieval method used.  Right now
+			// no sorting is performed.
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+			
+			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public ServiceList findService(FindService body)
@@ -148,22 +162,27 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-
-		List<?> keysFound = InquiryHelper.findService(body, findQualifiers, em);
-
-		ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+			
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
+			
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+	
+			List<?> keysFound = InquiryHelper.findService(body, findQualifiers, em);
+	
+			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public TModelList findTModel(FindTModel body)
@@ -173,22 +192,27 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-		findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
-
-		List<?> keysFound = InquiryHelper.findTModel(body, findQualifiers, em);
-
-		TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
+			
+			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
+			findQualifiers.mapApiFindQualifiers(body.getFindQualifiers());
+	
+			List<?> keysFound = InquiryHelper.findTModel(body, findQualifiers, em);
+	
+			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public BindingDetail getBindingDetail(GetBindingDetail body)
@@ -198,31 +222,36 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		BindingDetail result = new BindingDetail();
-
-		List<String> bindingKeyList = body.getBindingKey();
-		for (String bindingKey : bindingKeyList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
-			if (modelBindingTemplate == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", bindingKey));
-			
-			org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
-			
-			MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
-			
-			result.getBindingTemplate().add(apiBindingTemplate);
+			BindingDetail result = new BindingDetail();
+	
+			List<String> bindingKeyList = body.getBindingKey();
+			for (String bindingKey : bindingKeyList) {
+				
+				org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
+				if (modelBindingTemplate == null)
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", bindingKey));
+				
+				org.uddi.api_v3.BindingTemplate apiBindingTemplate = new org.uddi.api_v3.BindingTemplate();
+				
+				MappingModelToApi.mapBindingTemplate(modelBindingTemplate, apiBindingTemplate);
+				
+				result.getBindingTemplate().add(apiBindingTemplate);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	public BusinessDetail getBusinessDetail(GetBusinessDetail body)
@@ -232,31 +261,36 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		BusinessDetail result = new BusinessDetail();
-		
-		List<String> businessKeyList = body.getBusinessKey();
-		for (String businessKey : businessKeyList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
-			if (modelBusinessEntity == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", businessKey));
+			BusinessDetail result = new BusinessDetail();
 			
-			org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
-			
-			MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
-			
-			result.getBusinessEntity().add(apiBusinessEntity);
+			List<String> businessKeyList = body.getBusinessKey();
+			for (String businessKey : businessKeyList) {
+				
+				org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
+				if (modelBusinessEntity == null)
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", businessKey));
+				
+				org.uddi.api_v3.BusinessEntity apiBusinessEntity = new org.uddi.api_v3.BusinessEntity();
+				
+				MappingModelToApi.mapBusinessEntity(modelBusinessEntity, apiBusinessEntity);
+				
+				result.getBusinessEntity().add(apiBusinessEntity);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	public OperationalInfos getOperationalInfo(GetOperationalInfo body)
@@ -266,31 +300,36 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		OperationalInfos result = new OperationalInfos();
-		
-		List<String> entityKeyList = body.getEntityKey();
-		for (String entityKey : entityKeyList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.UddiEntity modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);
-			if (modelUddiEntity == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.EntityNotFound", entityKey));
+			OperationalInfos result = new OperationalInfos();
 			
-			org.uddi.api_v3.OperationalInfo apiOperationalInfo = new org.uddi.api_v3.OperationalInfo();
-			
-			MappingModelToApi.mapOperationalInfo(modelUddiEntity, apiOperationalInfo);
-			
-			result.getOperationalInfo().add(apiOperationalInfo);
+			List<String> entityKeyList = body.getEntityKey();
+			for (String entityKey : entityKeyList) {
+				
+				org.apache.juddi.model.UddiEntity modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);
+				if (modelUddiEntity == null)
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.EntityNotFound", entityKey));
+				
+				org.uddi.api_v3.OperationalInfo apiOperationalInfo = new org.uddi.api_v3.OperationalInfo();
+				
+				MappingModelToApi.mapOperationalInfo(modelUddiEntity, apiOperationalInfo);
+				
+				result.getOperationalInfo().add(apiOperationalInfo);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	public ServiceDetail getServiceDetail(GetServiceDetail body)
@@ -300,31 +339,37 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		ServiceDetail result = new ServiceDetail();
-
-		List<String> serviceKeyList = body.getServiceKey();
-		for (String serviceKey : serviceKeyList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
-			if (modelBusinessService == null)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
+			ServiceDetail result = new ServiceDetail();
+	
+			List<String> serviceKeyList = body.getServiceKey();
+			for (String serviceKey : serviceKeyList) {
+				
+				org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+				if (modelBusinessService == null)
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
+				
+				org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
+				
+				MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
+				
+				result.getBusinessService().add(apiBusinessService);
+			}
+	
+			tx.commit();
+			return result;
 			
-			org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
-			
-			MappingModelToApi.mapBusinessService(modelBusinessService, apiBusinessService);
-			
-			result.getBusinessService().add(apiBusinessService);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	public TModelDetail getTModelDetail(GetTModelDetail body)
@@ -334,32 +379,37 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		TModelDetail result = new TModelDetail();
-		
-		List<String> tmodelKeyList = body.getTModelKey();
-		for (String tmodelKey : tmodelKeyList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
-			if (modelTModel == null) {
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", tmodelKey));
+			TModelDetail result = new TModelDetail();
+			
+			List<String> tmodelKeyList = body.getTModelKey();
+			for (String tmodelKey : tmodelKeyList) {
+				
+				org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
+				if (modelTModel == null) {
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", tmodelKey));
+				}
+				
+				org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
+				
+				MappingModelToApi.mapTModel(modelTModel, apiTModel);
+				
+				result.getTModel().add(apiTModel);
 			}
-			
-			org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
-			
-			MappingModelToApi.mapTModel(modelTModel, apiTModel);
-			
-			result.getTModel().add(apiTModel);
+	
+			tx.commit();	
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 
 	private boolean isAuthenticated() {
@@ -386,32 +436,37 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (isAuthenticated())
-			this.getEntityPublisher(em, body.getAuthInfo());
-		
-		PublisherDetail result = new PublisherDetail();
-		
-		List<String> publisherIdList = body.getPublisherId();
-		for (String publisherId : publisherIdList) {
+		try {
+			tx.begin();
+	
+			if (isAuthenticated())
+				this.getEntityPublisher(em, body.getAuthInfo());
 			
-			org.apache.juddi.model.Publisher modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
-			if (modelPublisher == null) {
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
+			PublisherDetail result = new PublisherDetail();
+			
+			List<String> publisherIdList = body.getPublisherId();
+			for (String publisherId : publisherIdList) {
+				
+				org.apache.juddi.model.Publisher modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
+				if (modelPublisher == null) {
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
+				}
+				
+				org.apache.juddi.api.datatype.Publisher apiPublisher = new org.apache.juddi.api.datatype.Publisher();
+				
+				MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
+				
+				result.getPublisher().add(apiPublisher);
 			}
-			
-			org.apache.juddi.api.datatype.Publisher apiPublisher = new org.apache.juddi.api.datatype.Publisher();
-			
-			MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
-			
-			result.getPublisher().add(apiPublisher);
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
-		
-		return result;
 
 	}
 	

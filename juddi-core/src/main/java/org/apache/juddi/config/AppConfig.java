@@ -101,60 +101,65 @@ public class AppConfig
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		if (!Install.alreadyInstalled(em)) {
-			log.info("The 'root' publisher was not found, loading...");
-			try {
-				Install.install();
-			} catch (JAXBException e) {
-				throw new ConfigurationException(e);
-			} catch (DispositionReportFaultMessage e) {
-				throw new ConfigurationException(e);
-			} catch (IOException e) {
-				throw new ConfigurationException(e);
+		try {
+			tx.begin();
+	
+			if (!Install.alreadyInstalled(em)) {
+				log.info("The 'root' publisher was not found, loading...");
+				try {
+					Install.install();
+				} catch (JAXBException e) {
+					throw new ConfigurationException(e);
+				} catch (DispositionReportFaultMessage e) {
+					throw new ConfigurationException(e);
+				} catch (IOException e) {
+					throw new ConfigurationException(e);
+				}
+	
 			}
-
+			tx.commit();
+			tx.begin();
+	
+			UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(Constants.ROOT_PUBLISHER);
+			rootPublisher.populateKeyGeneratorKeys(em);
+			List<String> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
+			if (rootKeyGenList == null || rootKeyGenList.size() == 0)
+				throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");
+			
+			String rootKeyGen = rootKeyGenList.iterator().next();
+			//rootKeyGen = rootKeyGen.substring((KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR).length());
+			rootKeyGen = rootKeyGen.substring(0, rootKeyGen.length() - (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).length());
+			log.debug("root partition:  " + rootKeyGen);
+	
+			result.setProperty(Property.JUDDI_ROOT_PARTITION, rootKeyGen);
+			
+			// The node Id is defined as the business key of the business entity categorized as a node.  This entity is saved as part of the install.
+			// Only one business entity should be categorized as a node.
+			String nodeId = "";
+			CategoryBag categoryBag = new CategoryBag();
+			KeyedReference keyedRef = new KeyedReference();
+			keyedRef.setTModelKey(Constants.NODE_CATEGORY_TMODEL);
+			keyedRef.setKeyValue(Constants.NODE_KEYVALUE);
+			categoryBag.getContent().add(new ObjectFactory().createKeyedReference(keyedRef));
+			List<?> keyList = FindBusinessByCategoryQuery.select(em, new FindQualifiers(), categoryBag, null);
+			if (keyList != null && keyList.size() > 1)
+				throw new ConfigurationException("Only one business entity can be categorized as the node.");
+			
+			if (keyList != null && keyList.size() > 0) {
+				nodeId = (String)keyList.get(0);
+			}
+			else
+				throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
+			result.setProperty(Property.JUDDI_NODE_ID, nodeId);
+			
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-		tx.commit();
-		tx.begin();
-
-		UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(Constants.ROOT_PUBLISHER);
-		rootPublisher.populateKeyGeneratorKeys(em);
-		List<String> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
-		if (rootKeyGenList == null || rootKeyGenList.size() == 0)
-			throw new ConfigurationException("The 'root' publisher key generator was not found.  Please make sure that the application is properly installed.");
-		
-		String rootKeyGen = rootKeyGenList.iterator().next();
-		//rootKeyGen = rootKeyGen.substring((KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR).length());
-		rootKeyGen = rootKeyGen.substring(0, rootKeyGen.length() - (KeyGenerator.PARTITION_SEPARATOR + KeyGenerator.KEYGENERATOR_SUFFIX).length());
-		log.debug("root partition:  " + rootKeyGen);
-
-		result.setProperty(Property.JUDDI_ROOT_PARTITION, rootKeyGen);
-		
-		// The node Id is defined as the business key of the business entity categorized as a node.  This entity is saved as part of the install.
-		// Only one business entity should be categorized as a node.
-		String nodeId = "";
-		CategoryBag categoryBag = new CategoryBag();
-		KeyedReference keyedRef = new KeyedReference();
-		keyedRef.setTModelKey(Constants.NODE_CATEGORY_TMODEL);
-		keyedRef.setKeyValue(Constants.NODE_KEYVALUE);
-		categoryBag.getContent().add(new ObjectFactory().createKeyedReference(keyedRef));
-		List<?> keyList = FindBusinessByCategoryQuery.select(em, new FindQualifiers(), categoryBag, null);
-		if (keyList != null && keyList.size() > 1)
-			throw new ConfigurationException("Only one business entity can be categorized as the node.");
-		
-		if (keyList != null && keyList.size() > 0) {
-			nodeId = (String)keyList.get(0);
-		}
-		else
-			throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
-		result.setProperty(Property.JUDDI_NODE_ID, nodeId);
-		
-		tx.commit();
-		em.close();
-		
-		return result;
 	}
 	
 	

@@ -41,85 +41,116 @@ public class JPAUtil {
 	public static void persistEntity(Object uddiEntity, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Object existingUddiEntity = em.find(uddiEntity.getClass(), entityKey);
-		if (existingUddiEntity != null)
-			em.remove(existingUddiEntity);
-		
-		em.persist(uddiEntity);
-
-		tx.commit();
-		em.close();
+		try {
+			tx.begin();
+	
+			Object existingUddiEntity = em.find(uddiEntity.getClass(), entityKey);
+			if (existingUddiEntity != null)
+				em.remove(existingUddiEntity);
+			
+			em.persist(uddiEntity);
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 	
 	public static Object getEntity(Class<?> entityClass, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Object obj = em.find(entityClass, entityKey);
-		
-		tx.commit();
-		em.close();
-		
-		return obj;
+		try {
+			tx.begin();
+	
+			Object obj = em.find(entityClass, entityKey);
+			
+			tx.commit();
+			return obj;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	public static void deleteEntity(Class<?> entityClass, Object entityKey) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Object obj = em.find(entityClass, entityKey);
-		em.remove(obj);
-		
-		tx.commit();
-		em.close();
+		try {
+			tx.begin();
+	
+			Object obj = em.find(entityClass, entityKey);
+			em.remove(obj);
+			
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 	
 	public static List<?> runQuery(String qry, int maxRows, int listHead) {
 		EntityManager em = PersistenceManager.getEntityManager();
-		
-		Query q = em.createQuery(qry);
-		q.setMaxResults(maxRows);
-		q.setFirstResult(listHead);
-		List<?> ret =  q.getResultList();
-		
-		em.close();
-		
-		return ret;
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			Query q = em.createQuery(qry);
+			q.setMaxResults(maxRows);
+			q.setFirstResult(listHead);
+			List<?> ret =  q.getResultList();
+			tx.commit();
+			return ret;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 		
 	}
 	
 	public static void runUpdateQuery(String qry) {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		Query q = em.createQuery(qry);
-		q.executeUpdate();
-
-		tx.commit();
-		em.close();
-		
-		
+		try {
+			tx.begin();
+			
+			Query q = em.createQuery(qry);
+			q.executeUpdate();
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 	
 	public static void removeAuthTokens() {
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
-		Query qry = em.createQuery("delete from AuthToken");
-		qry.executeUpdate();
-		
-		tx.commit();
-		em.close();
+		try {
+			tx.begin();
+	
+			Query qry = em.createQuery("delete from AuthToken");
+			qry.executeUpdate();
+			
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 
 	}
 
-
-	
 }

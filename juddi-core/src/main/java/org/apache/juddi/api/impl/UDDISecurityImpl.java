@@ -52,19 +52,25 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		this.getEntityPublisher(em, body.getAuthInfo());
-		
-		org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, body.getAuthInfo());
-		if (modelAuthToken != null) {
-			modelAuthToken.setLastUsed(new Date());
-			modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
-			modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+		try {
+			tx.begin();
+			
+			this.getEntityPublisher(em, body.getAuthInfo());
+			
+			org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, body.getAuthInfo());
+			if (modelAuthToken != null) {
+				modelAuthToken.setLastUsed(new Date());
+				modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
+				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-
-		tx.commit();
-		em.close();
 	}
 
 
@@ -80,30 +86,35 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-
+		try {
+			tx.begin();
+	
+					
+			// Generate auth token and store it!
+			String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
+			org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();
+			if (authInfo != null) {
+				modelAuthToken.setAuthToken(authInfo);
+				modelAuthToken.setCreated(new Date());
+				modelAuthToken.setLastUsed(new Date());
+				modelAuthToken.setAuthorizedName(publisherId);
+				modelAuthToken.setNumberOfUses(0);
+				modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
 				
-		// Generate auth token and store it!
-		String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
-		org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();
-		if (authInfo != null) {
-			modelAuthToken.setAuthToken(authInfo);
-			modelAuthToken.setCreated(new Date());
-			modelAuthToken.setLastUsed(new Date());
-			modelAuthToken.setAuthorizedName(publisherId);
-			modelAuthToken.setNumberOfUses(0);
-			modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
+				em.persist(modelAuthToken);
+			}
 			
-			em.persist(modelAuthToken);
+			org.uddi.api_v3.AuthToken apiAuthToken = new org.uddi.api_v3.AuthToken();
+			
+			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
+			
+			tx.commit();
+			return apiAuthToken;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
-		
-		org.uddi.api_v3.AuthToken apiAuthToken = new org.uddi.api_v3.AuthToken();
-		
-		MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
-		
-		tx.commit();
-		em.close();
-		
-		return apiAuthToken;
 	}
 }
