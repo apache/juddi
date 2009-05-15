@@ -10,6 +10,7 @@ import org.uddi.api_v3.client.config.Property;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
@@ -19,6 +20,7 @@ public class JAXWSTransport implements Transport {
 	UDDISecurityPortType securityService = null;
 	UDDIPublicationPortType publishService = null;
 	UDDISubscriptionPortType subscriptionService = null;
+	UDDISubscriptionListenerPortType subscriptionListenerService = null;
 
 	public UDDIInquiryPortType getInquiryService() throws TransportException {
 
@@ -78,6 +80,20 @@ public class JAXWSTransport implements Transport {
 			}
 		}
 		return subscriptionService;
+	}
+	
+	public UDDISubscriptionListenerPortType getSubscriptionListenerService() throws TransportException {
+		if (subscriptionListenerService == null) {
+			try {
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SUBSCRIPTION_LISTENER_URL);
+				QName qName = new QName(Transport.SUBR_V3_NAMESPACE, Transport.SUBSCRIPTION_LISTENER_SERVICE);
+				Service service = Service.create(new URL(endpointURL), qName);
+				subscriptionListenerService = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(), e);
+			}
+		}
+		return subscriptionListenerService;
 	}
 
 }
