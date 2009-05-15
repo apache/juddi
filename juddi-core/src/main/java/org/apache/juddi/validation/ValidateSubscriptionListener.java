@@ -28,13 +28,13 @@ import org.uddi.subr_v3.NotifySubscriptionListener;
  */
 public class ValidateSubscriptionListener extends ValidateUDDIApi {
 
-	public ValidateSubscriptionListener(UddiEntityPublisher publisher) {
-		super(publisher);
+	public ValidateSubscriptionListener() {
+		super(null);
 	}	
-	
+		
 	public void validateNotification(NotifySubscriptionListener body) throws
 		FatalErrorException {
-		if (body != null) {
+		if (body == null) {
 			throw new FatalErrorException(new ErrorMessage("Subscription Listener Body was null"));
 		}
 	}

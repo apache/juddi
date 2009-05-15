@@ -26,6 +26,7 @@ import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.Result;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
@@ -33,7 +34,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:subr_v3_portType")
-public class UDDISubscriptionListenerImpl extends AuthenticatedService implements
+public class UDDISubscriptionListenerImpl implements
 		UDDISubscriptionListenerPortType {
 	
 	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
@@ -43,20 +44,11 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 			throws DispositionReportFaultMessage {
 		logger.error(body.toString());
 		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			new ValidateSubscriptionListener(publisher).validateNotification(body);
-			tx.commit();
-			return null;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
+		
+		new ValidateSubscriptionListener().validateNotification(body);
+		DispositionReport dr = new DispositionReport();
+		Result res = new Result();
+		dr.getResult().add(res);
+		return dr;
 	}
 }
