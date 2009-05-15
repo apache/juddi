@@ -21,6 +21,7 @@ package org.uddi.subr_v3;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.sub_v3.SubscriptionResultsList;
 
@@ -50,6 +51,7 @@ import org.uddi.sub_v3.SubscriptionResultsList;
     "authInfo",
     "subscriptionResultsList"
 })
+@XmlRootElement(name="notify_subscriptionListener")
 public class NotifySubscriptionListener {
 
     @XmlElement(namespace = "urn:uddi-org:api_v3")

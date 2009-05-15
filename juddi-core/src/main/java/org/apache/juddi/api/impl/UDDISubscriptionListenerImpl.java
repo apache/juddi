@@ -17,10 +17,18 @@
 
 package org.apache.juddi.api.impl;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
+
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.error.ErrorMessage;
+import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
@@ -38,17 +46,33 @@ public class UDDISubscriptionListenerImpl implements
 		UDDISubscriptionListenerPortType {
 	
 	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
-	
+		
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {
-		logger.error(body.toString());
+		try {
+			JAXBContext context = JAXBContext.newInstance(body.getClass());
+			Marshaller marshaller = context.createMarshaller();
+			StringWriter sw = new StringWriter();
+			marshaller.marshal(body, sw);
+
+			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+			System.out.println("Notification received by UDDISubscriptionListenerService : " 
+					+ sw.toString());
+
+		} catch (JAXBException jaxbe) {
+			logger.error("", jaxbe);
+			throw new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client"));
+		}
+		
 		
 		
 		new ValidateSubscriptionListener().validateNotification(body);
+			
 		DispositionReport dr = new DispositionReport();
 		Result res = new Result();
 		dr.getResult().add(res);
 		return dr;
 	}
+
 }
