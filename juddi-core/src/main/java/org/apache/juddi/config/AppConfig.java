@@ -34,7 +34,6 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
-import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CategoryBag;

@@ -21,11 +21,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.PersistenceManager;
 
 /**
  * This is the default implementation of jUDDI's Authenticator interface, which

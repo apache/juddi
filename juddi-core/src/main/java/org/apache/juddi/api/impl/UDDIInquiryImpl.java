@@ -24,9 +24,9 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidateInquiry;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.error.ErrorMessage;

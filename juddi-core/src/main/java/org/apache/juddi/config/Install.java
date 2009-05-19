@@ -17,8 +17,6 @@
 
 package org.apache.juddi.config;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -34,7 +32,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -44,7 +41,6 @@ import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidateUDDIKey;
 import org.apache.log4j.Logger;
@@ -67,22 +63,10 @@ public class Install {
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
+	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
 	public static Logger log = Logger.getLogger(Install.class);
 
-	public static void install() throws JAXBException, DispositionReportFaultMessage, IOException {
-		install(JUDDI_INSTALL_DATA_DIR, null, false);
-	}
-	
-	public static void install(String srcDir, String userPartition, boolean reloadConfig) throws JAXBException, DispositionReportFaultMessage, IOException {
-		if (srcDir != null) {
-			if (srcDir.endsWith("/") || srcDir.endsWith("\\")) {
-				// Do nothing
-			}
-			else 
-				srcDir = srcDir + java.io.File.separator;
-		}
-		else
-			srcDir = "";
+	protected static void install() throws JAXBException, DispositionReportFaultMessage, IOException {
 				
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -93,27 +77,27 @@ public class Install {
 			tx.begin();
 	
 			if (alreadyInstalled(em))
-				throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
+				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
-			TModel rootTModelKeyGen = (TModel)buildEntityFromDoc(JUDDI_INSTALL_DATA_DIR + FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3");
-			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildEntityFromDoc(srcDir + FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3");
+			TModel rootTModelKeyGen = (TModel)buildInstallEntity(FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3");
+			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3");
 			
-			String rootPartition = getRootPartition(rootTModelKeyGen, userPartition);
+			String rootPartition = getRootPartition(rootTModelKeyGen);
 			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			
-			rootPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_ROOT_PUBLISHER);
-			uddiPublisher = installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_PUBLISHER);
-			// TODO:  These do not belong here
+			rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER);
+			uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER);
+			// TODO:  These do not belong here?
 			// Inserting 2 test publishers
-			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_JOE_PUBLISHER);
-			installPublisher(em, JUDDI_INSTALL_DATA_DIR + FILE_SSYNDICATOR);
+			installPublisher(em, FILE_JOE_PUBLISHER);
+			installPublisher(em, FILE_SSYNDICATOR);
 
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
 			rootBusinessEntity.setBusinessKey(nodeId);
 			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher, rootPartition);
 
-			installUDDITModels(em, JUDDI_INSTALL_DATA_DIR + FILE_UDDI_TMODELS, uddiPublisher, nodeId);
+			installSaveTModel(em, FILE_UDDI_TMODELS, uddiPublisher, nodeId);
 			
 			tx.commit();
 		}
@@ -137,15 +121,9 @@ public class Install {
 			}
 			em.close();
 		}
-
-		// Now that all necessary persistent entities are loaded, the configuration must be reloaded to be sure all properties are set.
-		if (reloadConfig) {
-			try { AppConfig.reloadConfig(); } catch (ConfigurationException ce) { log.error(ce.getMessage(), ce); }
-		}
-		
 	}
 
-	public static void uninstall() {
+	protected static void uninstall() {
 		// Close the open emf, open a new one with Persistence.create...(String, Map) and overwrite the property that handles the table 
 		// generation. The persistence.xml file will have to be read in to determine which property
 		// to overwrite.  The property will be specific to the provider.  
@@ -156,7 +134,7 @@ public class Install {
 		
 	}
 	
-	public static boolean alreadyInstalled() {
+	protected static boolean alreadyInstalled() {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -174,7 +152,7 @@ public class Install {
 		}
 	}
 
-	public static boolean alreadyInstalled(EntityManager em) {
+	protected static boolean alreadyInstalled(EntityManager em) {
 		
 		org.apache.juddi.model.Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, Constants.ROOT_PUBLISHER);
 		if (publisher != null)
@@ -187,36 +165,36 @@ public class Install {
 		return false;
 	}
 	
-	public static String getRootPartition(TModel rootTModelKeyGen, String userPartition) throws JAXBException, IOException, DispositionReportFaultMessage {
+	protected static String getRootPartition(TModel rootTModelKeyGen) throws JAXBException, IOException, DispositionReportFaultMessage {
 		String result = rootTModelKeyGen.getTModelKey().substring(0, rootTModelKeyGen.getTModelKey().lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
-		if (userPartition != null && userPartition.length() > 0) {
-			// A root partition was provided by the user.  Must validate it.  The first component should be a domain key and the any following
-			// tokens should be a valid KSS.
-			userPartition = userPartition.trim();
-			if (userPartition.endsWith(KeyGenerator.PARTITION_SEPARATOR) || userPartition.startsWith(KeyGenerator.PARTITION_SEPARATOR))
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
-			
-			StringTokenizer tokenizer = new StringTokenizer(userPartition.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
-			for(int count = 0; tokenizer.hasMoreTokens(); count++) {
-				String nextToken = tokenizer.nextToken();
+		if (result == null || result.length() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", result));
+		
+		// Must validate the root partition.  The first component should be a domain key and the any following
+		// tokens should be a valid KSS.
+		result = result.trim();
+		if (result.endsWith(KeyGenerator.PARTITION_SEPARATOR) || result.startsWith(KeyGenerator.PARTITION_SEPARATOR))
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", result));
+		
+		StringTokenizer tokenizer = new StringTokenizer(result.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
+		for(int count = 0; tokenizer.hasMoreTokens(); count++) {
+			String nextToken = tokenizer.nextToken();
 
-				if (count == 0) {
-					if(!ValidateUDDIKey.isValidDomainKey(nextToken))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
-				}
-				else {
-					if (!ValidateUDDIKey.isValidKSS(nextToken))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", userPartition));
-				}
+			if (count == 0) {
+				if(!ValidateUDDIKey.isValidDomainKey(nextToken))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", result));
 			}
-			// If the user-supplied root partition checks out, we can use that.
-			result = KeyGenerator.UDDI_SCHEME + KeyGenerator.PARTITION_SEPARATOR + userPartition;
+			else {
+				if (!ValidateUDDIKey.isValidKSS(nextToken))
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", result));
+			}
 		}
+
 		return result;
 	}
 	
-	public static String getNodeId(String userNodeId, String rootPartition) throws DispositionReportFaultMessage {
+	protected static String getNodeId(String userNodeId, String rootPartition) throws DispositionReportFaultMessage {
 
 		String result = userNodeId;
 		if (result == null || result.length() == 0) {
@@ -231,21 +209,6 @@ public class Install {
 		return result;
 	}
 	
-	public static org.uddi.api_v3.BusinessEntity getNodeBusinessEntity(String businessKey) throws DispositionReportFaultMessage {
-		UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
-		
-		org.uddi.api_v3.GetBusinessDetail gbd = new org.uddi.api_v3.GetBusinessDetail();
-		gbd.getBusinessKey().add(businessKey);
-		
-		org.uddi.api_v3.BusinessDetail bd = inquiry.getBusinessDetail(gbd);
-		if (bd != null) {
-			List<org.uddi.api_v3.BusinessEntity> beList = bd.getBusinessEntity();
-			if (beList != null && beList.size() > 0)
-				return beList.get(0);
-		}
-
-		return new org.uddi.api_v3.BusinessEntity();
-	}
 	
 	
 	private static String installRootBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, UddiEntityPublisher rootPublisher, String rootPartition) 
@@ -417,21 +380,6 @@ public class Install {
 	
 	
 	
-	public static void installUDDITModels(EntityManager em, String resource, UddiEntityPublisher publisher, String nodeId) 
-		throws JAXBException, DispositionReportFaultMessage, IOException {
-		SaveTModel apiSaveTModel = (SaveTModel)buildEntityFromDoc(resource, "org.uddi.api_v3");
-		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
-		
-	}
-	
-	public static UddiEntityPublisher installPublisher(EntityManager em, String resource) 
-		throws JAXBException, DispositionReportFaultMessage, IOException {
-		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildEntityFromDoc(resource, "org.apache.juddi.api.datatype");
-		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
-		MappingApiToModel.mapPublisher(apiPub, modelPub);
-		em.persist(modelPub);
-		return modelPub;
-	}
 	
 	private static void installTModels(EntityManager em, List<org.uddi.api_v3.TModel> apiTModelList, UddiEntityPublisher publisher, String nodeId) throws DispositionReportFaultMessage {
 		if (apiTModelList != null) {
@@ -486,21 +434,87 @@ public class Install {
 		
 	}
 	
-	private static Object buildEntityFromDoc(String resource, String thePackage) throws JAXBException, IOException {
+	private static Object buildInstallEntity(String fileName, String packageName) throws JAXBException, IOException {
 		InputStream resourceStream = null;
 		
-		URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
+		// First try the custom install directory
+		URL url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName);
 		if (url != null)
 			resourceStream = url.openStream();
 		
+		// If the custom install directory doesn't exist, then use the standard install directory where the resource is guaranteed to exist.
 		if (resourceStream == null) {
-			resourceStream = new FileInputStream(new File(resource));
+			url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_INSTALL_DATA_DIR + fileName);
+			resourceStream = url.openStream();
 		}
 		
-		JAXBContext jc = JAXBContext.newInstance(thePackage);
+		JAXBContext jc = JAXBContext.newInstance(packageName);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		Object obj = ((JAXBElement<?>)unmarshaller.unmarshal(resourceStream)).getValue();
 		return obj;
 	}
 
+	/**
+	 * Public convenience method that allows one to retrieve the node business entity (perhaps to display during an install process, or even to
+	 * initiate the install process).
+	 * 
+	 * @param businessKey
+	 * @return
+	 * @throws DispositionReportFaultMessage
+	 */
+	public static org.uddi.api_v3.BusinessEntity getNodeBusinessEntity(String businessKey) throws DispositionReportFaultMessage {
+		UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+		
+		org.uddi.api_v3.GetBusinessDetail gbd = new org.uddi.api_v3.GetBusinessDetail();
+		gbd.getBusinessKey().add(businessKey);
+		
+		org.uddi.api_v3.BusinessDetail bd = inquiry.getBusinessDetail(gbd);
+		if (bd != null) {
+			List<org.uddi.api_v3.BusinessEntity> beList = bd.getBusinessEntity();
+			if (beList != null && beList.size() > 0)
+				return beList.get(0);
+		}
+
+		return new org.uddi.api_v3.BusinessEntity();
+	}
+	
+	/**
+	 * Public convenience method that allows one to install additional TModels via a SaveTModel structure.
+	 * 
+	 * @param em - the entity manager to a juddi model
+	 * @param fileName - name of SaveTModel xml file
+	 * @param publisher - the publisher structure that owns the tModels
+	 * @param nodeId - the node id of the custodial node
+	 * @throws JAXBException
+	 * @throws DispositionReportFaultMessage
+	 * @throws IOException
+	 */
+	public static void installSaveTModel(EntityManager em, String fileName, UddiEntityPublisher publisher, String nodeId) 
+		throws JAXBException, DispositionReportFaultMessage, IOException {
+
+		SaveTModel apiSaveTModel = (SaveTModel)buildInstallEntity(fileName, "org.uddi.api_v3");
+		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
+	}
+
+	/**
+	 * Public convenience method that allows one to install additional Publishers via a Publisher structure.
+	 * 
+	 * @param em - the entity manager to the juddi model
+	 * @param fileName - name of Publisher xml file
+	 * @return
+	 * @throws JAXBException
+	 * @throws DispositionReportFaultMessage
+	 * @throws IOException
+	 */
+	public static UddiEntityPublisher installPublisher(EntityManager em, String fileName) 
+		throws JAXBException, DispositionReportFaultMessage, IOException {
+
+		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api.datatype");
+		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
+		MappingApiToModel.mapPublisher(apiPub, modelPub);
+		em.persist(modelPub);
+		return modelPub;
+	}
+	
+	
 }

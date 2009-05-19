@@ -33,6 +33,7 @@ import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -42,7 +43,6 @@ import org.apache.juddi.model.BusinessService;
 import org.apache.juddi.model.TransferTokenKey;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.PersistenceManager;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.validation.ValidateCustodyTransfer;
 import org.uddi.custody_v3.DiscardTransferToken;

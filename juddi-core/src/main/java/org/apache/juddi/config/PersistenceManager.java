@@ -15,14 +15,13 @@
  *
  */
 
-package org.apache.juddi.query;
+package org.apache.juddi.config;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.config.AppConfig;
 import org.apache.log4j.Logger;
 
 public class PersistenceManager {
@@ -35,7 +34,8 @@ public class PersistenceManager {
 	// Now, the factory will be initialized in the config. This will force the config to initialize, thereby initializing emf.
 	static {
 		try {
-			AppConfig.getInstance();
+			if (emf == null)
+				AppConfig.getInstance();
 		} 
 		catch (ConfigurationException e) {
 			log.error("Error initializing config in PersistenceManager", e);
@@ -52,7 +52,7 @@ public class PersistenceManager {
 			emf.close();
 	}
 	
-	public static void initializeEntityManagerFactory(String persistenceUnitName) {
+	protected static void initializeEntityManagerFactory(String persistenceUnitName) {
 		try {
 			if (emf == null)
 				emf = Persistence.createEntityManagerFactory(persistenceUnitName);
