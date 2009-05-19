@@ -13,26 +13,6 @@
 %>
 
 <!-- index.jsp -->
-<%
-
-String errMsg = "";
-if (request.getParameter("install") != null) {
-    try {
-        Install.install(request.getRealPath("WEB-INF" + java.io.File.separator + "install"), request.getParameter("rootPartition"), true);
-    }
-    catch (JAXBException je) {
-        errMsg = "JAXBException occurred attempting to install jUDDI:  " + je.getMessage();
-        if (je.getLinkedException() != null)
-            errMsg = errMsg + "; linkedException=" + je.getLinkedException().getMessage();
-    }
-    catch (IOException ioe) {
-        errMsg = "An IOException occurred attempting to install jUDDI:  " + ioe.getMessage();
-    }
-    catch (DispositionReportFaultMessage drfm) {
-        errMsg = "An error occurred attempting to install jUDDI:  " + drfm.getMessage();
-    }
-}
-%>
 <html>
 <head>
 <title>Apache jUDDI Registry</title>
@@ -54,13 +34,14 @@ if (request.getParameter("install") != null) {
   <h4>jUDDI Installation</h4>
     <div class="content">
 <%
-if (Install.alreadyInstalled())  {
+    // This will tirgger the install process...
     String rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION);
 	String nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
     String nodeName = "";
     String nodeDescription = "";
     
     BusinessEntity be = Install.getNodeBusinessEntity(nodeId);
+    
     if (be != null) {
         Name n = (Name) be.getName().get(0);
         if (n != null)
@@ -95,34 +76,6 @@ if (Install.alreadyInstalled())  {
             <td><%= nodeDescription %></td>
         </tr>
     </table>
-<%
-} else { 
-%>
-    <div>
-      jUDDI does not appear to have been installed.  In order for jUDDI to function properly, certain entities must be installed into the registry.
-      You can chose to edit the entities located in the <i>WEB-INF/install</i> directory and install manually by clicking the install button below.  
-      Or, you can leave everything as is, and the entities will automatically be installed with the default values.  Please read the setup documentation 
-      for more information.
-    </div>
-<% 
-if (errMsg != null && errMsg.length() > 0) {
-%> 
-    <br/>
-    <div class="error"><%= errMsg %></div>
-<%	
-}
-%>
-    <br/>
-    <div>
-      <form action="index.jsp" method="post">
-        Please enter the root partition for this node.  The root partition will serve as the prefix to all identifiers created in the node.<br/><br/>
-        uddi:<input type="text" value="" name="rootPartition" size="40" /> (Ex. juddi.apache.org, www.mycompany.com:registry)<br/><br/>
-        <input type="submit" value="Install" name = "install" />
-      </form>
-    </div>
-<% 
-} 
-%>
   </div>
 </div>
 
