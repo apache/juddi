@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-import org.apache.juddi.query.PersistenceManager;
+import org.apache.juddi.config.PersistenceManager;
 
 
 /**
