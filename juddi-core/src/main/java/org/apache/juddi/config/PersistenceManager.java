@@ -30,10 +30,10 @@ public class PersistenceManager {
 	public static final String PERSISTENCE_UNIT_NAME = "juddiDatabase";
 
 	private static EntityManagerFactory emf;
-	
-	// Now, the factory will be initialized in the config. This will force the config to initialize, thereby initializing emf.
-	static {
+
+	public static EntityManager getEntityManager() {
 		try {
+			// Now, the factory will be initialized in the config. This will force the config to initialize, thereby initializing emf.
 			if (emf == null)
 				AppConfig.getInstance();
 		} 
@@ -41,9 +41,7 @@ public class PersistenceManager {
 			log.error("Error initializing config in PersistenceManager", e);
 			throw new ExceptionInInitializerError(e);
 		}
-	}
-
-	public static EntityManager getEntityManager() {
+		
 		return emf.createEntityManager();
 	}
 	
