@@ -51,13 +51,7 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-tomcat</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
-			<type>zip</type>
-			<scope>test</scope>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
@@ -74,11 +68,6 @@
 			<version>3.2.1</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
-		</dependency>
-		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
@@ -93,6 +82,13 @@
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck</artifactId>
 			<version>3.0.0.SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>juddi-tomcat</artifactId>
+			<version>3.0.0.SNAPSHOT</version>
+			<type>zip</type>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
