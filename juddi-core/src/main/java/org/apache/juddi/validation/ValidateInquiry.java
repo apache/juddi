@@ -35,6 +35,7 @@ import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.TModelBag;
 
@@ -181,6 +182,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			body.getIdentifierBag() == null && body.getDiscoveryURLs() == null && body.getFindRelatedBusinesses() == null)
 			throw new FatalErrorException(new ErrorMessage("errors.findbusiness.NoInput"));
 
+		validateNames(body.getName());
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
@@ -199,6 +201,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName().size() == 0)
 			throw new FatalErrorException(new ErrorMessage("errors.findservice.NoInput"));
 
+		validateNames(body.getName());
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
@@ -278,6 +281,15 @@ public class ValidateInquiry extends ValidateUDDIApi {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.findrelatedbusiness.BlankKeyedRef"));
 		}
 			
+	}
+
+	public void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {
+		if (names != null) {
+			for (Name n : names) {
+				if (n.getValue() == null || n.getValue().length() == 0)
+					throw new ValueNotAllowedException(new ErrorMessage("errors.names.NoValue"));
+			}
+		}
 	}
 	
 	public void validateTModelBag(TModelBag tmodelBag) throws DispositionReportFaultMessage {

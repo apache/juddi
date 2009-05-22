@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBElement;
 import javax.xml.ws.Holder;
 
+import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeleteBinding;
@@ -758,6 +759,11 @@ public class ValidatePublish extends ValidateUDDIApi {
 		// At least one name is required
 		if (names == null || names.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.names.NoInput"));
+		
+		for (Name n : names) {
+			if (n.getValue() == null || n.getValue().length() == 0)
+				throw new ValueNotAllowedException(new ErrorMessage("errors.names.NoValue"));
+		}
 		
 	}
 	
