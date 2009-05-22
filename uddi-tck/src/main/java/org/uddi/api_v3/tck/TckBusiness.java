@@ -53,32 +53,32 @@ public class TckBusiness
 		saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
 	}
 
-	public void saveSamSyndicatorBusinesses(String authInfoSam, String keyPostFix, int numberOfCopies) {
-		saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY+keyPostFix, numberOfCopies);
+	public void saveSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
+		saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
 	}
 	
 	public void deleteSamSyndicatorBusiness(String authInfoSam) {
 		deleteBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
 	}
 	
-	public void deleteSamSyndicatorBusinesses(String authInfoSam, String keyPostFix, int numberOfCopies) {
-		deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY+keyPostFix, numberOfCopies);
+	public void deleteSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
+		deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
 	}
 	
 	public void saveJoePublisherBusiness(String authInfoJoe) {
 		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
-	public void saveJoePublisherBusinesses(String authInfoJoe, String keyPostFix, int numberOfCopies) {
-    	saveBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY+keyPostFix, numberOfCopies);
+	public void saveJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
+    	saveBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
     }
     
 	public void deleteJoePublisherBusiness(String authInfoJoe) {
     	deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
-	public void deleteJoePublisherBusinesses(String authInfoJoe, String keyPostFix, int numberOfCopies) {
-    	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY+keyPostFix, numberOfCopies);
+	public void deleteJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
+    	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
     }
 	 
 	private void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {

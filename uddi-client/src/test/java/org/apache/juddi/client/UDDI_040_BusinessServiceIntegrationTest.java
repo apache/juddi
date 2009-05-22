@@ -40,12 +40,12 @@ public class UDDI_040_BusinessServiceIntegrationTest
 	 
     private static Logger logger                     = Logger.getLogger(UDDI_040_BusinessServiceIntegrationTest.class);
 	
-	private static TckTModel tckTModel               = null;
-	private static TckBusiness tckBusiness           = null;
-	private static TckBusinessService tckBusinessService  = null;
+	protected static TckTModel tckTModel               = null;
+	protected static TckBusiness tckBusiness           = null;
+	protected static TckBusinessService tckBusinessService  = null;
 	
-	private static String authInfoJoe                = null;
-	private static String authInfoSam                = null;
+	protected static String authInfoJoe                = null;
+	protected static String authInfoSam                = null;
 	
 	@BeforeClass
 	public static void setup() {
