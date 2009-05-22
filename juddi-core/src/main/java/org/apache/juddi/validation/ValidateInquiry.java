@@ -177,7 +177,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
 
-		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName() == null &&
+		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName().size() == 0 &&
 			body.getIdentifierBag() == null && body.getDiscoveryURLs() == null && body.getFindRelatedBusinesses() == null)
 			throw new FatalErrorException(new ErrorMessage("errors.findbusiness.NoInput"));
 
@@ -196,7 +196,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
 
-		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName() == null)
+		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null && body.getName().size() == 0)
 			throw new FatalErrorException(new ErrorMessage("errors.findservice.NoInput"));
 
 		validateFindQualifiers(body.getFindQualifiers());
