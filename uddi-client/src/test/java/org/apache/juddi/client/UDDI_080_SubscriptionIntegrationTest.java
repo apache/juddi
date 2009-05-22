@@ -38,9 +38,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_080_SubscriptionTest 
+public class UDDI_080_SubscriptionIntegrationTest 
 {
-	private static Logger logger = Logger.getLogger(UDDI_080_SubscriptionTest.class);
+	private static Logger logger = Logger.getLogger(UDDI_080_SubscriptionIntegrationTest.class);
 
 	private static TckTModel tckTModel                    = null;
 	private static TckBusiness tckBusiness                = null;

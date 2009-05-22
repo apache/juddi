@@ -23,7 +23,6 @@ import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.api_v3.tck.TckBusiness;
-import org.uddi.api_v3.tck.TckBusinessService;
 import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckTModel;
@@ -35,17 +34,14 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_040_BusinessServiceTest 
-{
-	 
-    private static Logger logger                     = Logger.getLogger(UDDI_040_BusinessServiceTest.class);
+public class UDDI_030_BusinessEntityIntegrationTest {
 	
-	private static TckTModel tckTModel               = null;
-	private static TckBusiness tckBusiness           = null;
-	private static TckBusinessService tckBusinessService  = null;
+	private static Logger logger                = Logger.getLogger(UDDI_030_BusinessEntityIntegrationTest.class);
 	
-	private static String authInfoJoe                = null;
-	private static String authInfoSam                = null;
+	protected static TckTModel tckTModel          = null;
+	protected static TckBusiness tckBusiness      = null;
+	protected static String authInfoJoe           = null;
+	protected static String authInfoSam           = null;
 	
 	@BeforeClass
 	public static void setup() {
@@ -64,46 +60,38 @@ public class UDDI_040_BusinessServiceTest
 	        	 
 	        	 UDDIPublicationPortType publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
-	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
-	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
-			 Assert.fail("Could not obtain authInfo token.");
+				Assert.fail("Could not obtain authInfo token.");
 	     } 
 	}
 	
 	@Test
-	public void joepublisher() {
+	public void testJoePublisherBusinessEntity() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-		} finally {
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+		} finally {
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}
 	
 	@Test
-	public void samsyndicator() {
+	public void testSamSyndicatorBusiness() {
 		try {
-			
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
 			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusinessService.saveSamSyndicatorService(authInfoSam);
-			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
-		} finally {
 			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+		} finally {
 			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
 		}
 	}
 	
 	
-
 }

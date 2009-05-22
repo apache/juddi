@@ -188,7 +188,7 @@
 				<configuration>
 					<skip>true</skip>
 					<includes>
-						<include>**/*Test.java</include>
+						<include>**/*IntegrationTest.java</include>
 					</includes>
 					<systemProperties>
 						<property>
@@ -218,4 +218,48 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>load</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<skip>true</skip>
+							<includes>
+								<include>**/*LoadTest.java</include>
+							</includes>
+							<systemProperties>
+								<property>
+									<name>derby.stream.error.file</name>
+									<value>target/derby.log</value>
+								</property>
+							</systemProperties>
+						</configuration>
+						<executions>
+							<execution>
+								<id>surefire-it</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<configuration>
+									<skip>false</skip>
+									<systemProperties>
+										<property>
+											<name>cactus.contextURL</name>
+											<value>http://localhost:8880/juddi</value>
+										</property>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

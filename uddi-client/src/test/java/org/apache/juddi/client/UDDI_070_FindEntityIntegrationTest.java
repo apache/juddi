@@ -14,10 +14,6 @@
  */
 package org.apache.juddi.client;
 
-/**
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
- * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- */
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
@@ -26,24 +22,33 @@ import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
+import org.uddi.api_v3.tck.TckBindingTemplate;
 import org.uddi.api_v3.tck.TckBusiness;
+import org.uddi.api_v3.tck.TckBusinessService;
+import org.uddi.api_v3.tck.TckFindEntity;
 import org.uddi.api_v3.tck.TckPublisher;
-import org.uddi.api_v3.tck.TckPublisherAssertion;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckTModel;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
-public class UDDI_060_PublisherAssertionTest {
+/**
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ */
+public class UDDI_070_FindEntityIntegrationTest 
+{
+  
+    private static Logger logger                      = Logger.getLogger(UDDI_070_FindEntityIntegrationTest.class);
 	
-	private static Logger logger = Logger.getLogger(UDDI_060_PublisherAssertionTest.class);
-    
-	private static TckTModel tckTModel                = null;
-	private static TckBusiness tckBusiness            = null;
-	private static TckPublisherAssertion tckAssertion = null;
+	private static TckTModel tckTModel                    = null;
+	private static TckBusiness tckBusiness                = null;
+	private static TckBusinessService tckBusinessService  = null;
+	private static TckBindingTemplate tckBindingTemplate  = null;
+	private static TckFindEntity tckFindEntity            = null;
+	
 	private static String authInfoJoe                 = null;
-	private static String authInfoSam                 = null;
 	
 	@BeforeClass
 	public static void setup() {
@@ -56,16 +61,16 @@ public class UDDI_060_PublisherAssertionTest {
 	        	 
 	        	 UDDISecurityPortType security = transport.getSecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
-	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
-	        	 Assert.assertNotNull(authInfoSam);
 	        	 
 	        	 UDDIPublicationPortType publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
 	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
-	        	 tckAssertion = new TckPublisherAssertion(publication);
+	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
+	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+	        	 tckFindEntity = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -76,19 +81,31 @@ public class UDDI_060_PublisherAssertionTest {
 	}
 	
 	@Test
-	public void testJoepublisherToSamSyndicator() {
+	public void findEntities() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
-			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			tckFindEntity.findBusiness();
+			tckFindEntity.findService();
+			tckFindEntity.findBinding();
+			tckFindEntity.findTModel();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			Assert.fail();
 		} finally {
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
 		}
+		
 	}
+
+	
+
 }

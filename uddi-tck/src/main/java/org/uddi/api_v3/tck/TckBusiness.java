@@ -48,28 +48,66 @@ public class TckBusiness
 		this.publication = publication;
 		this.inquiry = inquiry;
 	}
-
+	
 	public void saveSamSyndicatorBusiness(String authInfoSam) {
 		saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+	}
+
+	public void saveSamSyndicatorBusinesses(String authInfoSam, String keyPostFix, int numberOfCopies) {
+		saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY+keyPostFix, numberOfCopies);
 	}
 	
 	public void deleteSamSyndicatorBusiness(String authInfoSam) {
 		deleteBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
 	}
 	
+	public void deleteSamSyndicatorBusinesses(String authInfoSam, String keyPostFix, int numberOfCopies) {
+		deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY+keyPostFix, numberOfCopies);
+	}
+	
 	public void saveJoePublisherBusiness(String authInfoJoe) {
-    	saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+    }
+	
+	public void saveJoePublisherBusinesses(String authInfoJoe, String keyPostFix, int numberOfCopies) {
+    	saveBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY+keyPostFix, numberOfCopies);
     }
     
 	public void deleteJoePublisherBusiness(String authInfoJoe) {
     	deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
+	
+	public void deleteJoePublisherBusinesses(String authInfoJoe, String keyPostFix, int numberOfCopies) {
+    	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY+keyPostFix, numberOfCopies);
+    }
 	 
+	private void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+		try {
+			
+			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
+			String businessName = beIn.getName().get(0).getValue();
+			for (int i=0; i<numberOfCopies; i++) {
+				SaveBusiness sb = new SaveBusiness();
+				sb.setAuthInfo(authInfo);
+				beIn.getName().get(0).setValue(businessName + "-" + i);
+				beIn.setBusinessKey(businessKey + "-" + i);
+				sb.getBusinessEntity().add(beIn);
+				publication.saveBusiness(sb);
+				logger.debug("Saved business with key " + businessName + "-" + i);
+			}
+			
+		} catch(Throwable e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+	}
+		
 	private void saveBusiness(String authInfo, String businessXML, String businessKey) {
 		try {
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
 
+			
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
 			publication.saveBusiness(sb);
@@ -96,6 +134,24 @@ public class TckBusiness
 
 	}
 	
+	private void deleteBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+		try {
+			for (int i=0; i<numberOfCopies; i++) {
+				// Delete the entity and make sure it is removed
+				String key = businessKey + "-" + i;
+				DeleteBusiness db = new DeleteBusiness();
+				db.setAuthInfo(authInfo);
+				db.getBusinessKey().add(key);
+				publication.deleteBusiness(db);
+				logger.debug("Deleted business with key " + key);
+			}
+			
+		} catch(Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+	}
+	
 	
 	private void deleteBusiness(String authInfo, String businessXML, String businessKey) {
 		try {
@@ -109,6 +165,7 @@ public class TckBusiness
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");
 		}
-
 	}
+	
+
 }

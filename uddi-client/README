@@ -1,2 +1,8 @@
-The JAXRPCTransport uses Axis however there is nothing Axis specific here, and
-any JAXRPC implementation can be used.
+1. The integration tests run with every build as part of the integration-test goal, i.e. execute
+
+mvn clean install
+
+2. To execute the load tests instead run with the 'load' profile, i.e. execute
+
+mvn integration-test -Pload, or
+mvn clean install -Pload

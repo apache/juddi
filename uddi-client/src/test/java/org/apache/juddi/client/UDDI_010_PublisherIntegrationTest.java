@@ -27,7 +27,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_010_PublisherTest {
+public class UDDI_010_PublisherIntegrationTest {
 	
      @Test
      public void testAuthToken() {

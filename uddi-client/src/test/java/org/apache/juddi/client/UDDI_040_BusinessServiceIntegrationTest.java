@@ -22,10 +22,8 @@ import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.api_v3.tck.TckBindingTemplate;
 import org.uddi.api_v3.tck.TckBusiness;
 import org.uddi.api_v3.tck.TckBusinessService;
-import org.uddi.api_v3.tck.TckFindEntity;
 import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckTModel;
@@ -37,18 +35,17 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_070_FindEntityTest 
+public class UDDI_040_BusinessServiceIntegrationTest 
 {
-  
-    private static Logger logger                      = Logger.getLogger(UDDI_070_FindEntityTest.class);
+	 
+    private static Logger logger                     = Logger.getLogger(UDDI_040_BusinessServiceIntegrationTest.class);
 	
-	private static TckTModel tckTModel                    = null;
-	private static TckBusiness tckBusiness                = null;
+	private static TckTModel tckTModel               = null;
+	private static TckBusiness tckBusiness           = null;
 	private static TckBusinessService tckBusinessService  = null;
-	private static TckBindingTemplate tckBindingTemplate  = null;
-	private static TckFindEntity tckFindEntity            = null;
 	
-	private static String authInfoJoe                 = null;
+	private static String authInfoJoe                = null;
+	private static String authInfoSam                = null;
 	
 	@BeforeClass
 	public static void setup() {
@@ -61,7 +58,9 @@ public class UDDI_070_FindEntityTest
 	        	 
 	        	 UDDISecurityPortType security = transport.getSecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+	 			 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
+	        	 Assert.assertNotNull(authInfoSam);
 	        	 
 	        	 UDDIPublicationPortType publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
@@ -69,8 +68,6 @@ public class UDDI_070_FindEntityTest
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
 	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
-	        	 tckFindEntity = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -81,31 +78,32 @@ public class UDDI_070_FindEntityTest
 	}
 	
 	@Test
-	public void findEntities() {
+	public void joepublisher() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckFindEntity.findBusiness();
-			tckFindEntity.findService();
-			tckFindEntity.findBinding();
-			tckFindEntity.findTModel();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			Assert.fail();
-		} finally {
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+		} finally {
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
-		
 	}
-
+	
+	@Test
+	public void samsyndicator() {
+		try {
+			
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusinessService.saveSamSyndicatorService(authInfoSam);
+			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
+		} finally {
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+	}
+	
 	
 
 }

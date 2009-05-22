@@ -22,9 +22,6 @@ import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.api_v3.tck.TckBindingTemplate;
-import org.uddi.api_v3.tck.TckBusiness;
-import org.uddi.api_v3.tck.TckBusinessService;
 import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckTModel;
@@ -36,18 +33,13 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDI_050_BindingTemplateTest 
-{
-   
-    private static Logger logger                          = Logger.getLogger(UDDI_050_BindingTemplateTest.class);
+public class UDDI_020_TmodelIntegrationTest {
 	
-	private static TckTModel tckTModel                    = null;
-	private static TckBusiness tckBusiness                = null;
-	private static TckBusinessService tckBusinessService  = null;
-	private static TckBindingTemplate tckBindingTemplate  = null;
-	
+	private static TckTModel tckTModel                = null;
+	private static Logger logger                      = Logger.getLogger(UDDI_020_TmodelIntegrationTest.class);
 	
 	private static String authInfoJoe                 = null;
+	private static String authInfoSam                 = null;
 	
 	@BeforeClass
 	public static void setup() {
@@ -60,36 +52,32 @@ public class UDDI_050_BindingTemplateTest
 	        	 
 	        	 UDDISecurityPortType security = transport.getSecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+	 			 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
+	        	 Assert.assertNotNull(authInfoSam);
 	        	 
 	        	 UDDIPublicationPortType publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
-	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
-	        	 tckBusiness = new TckBusiness(publication, inquiry);
-	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
-			 Assert.fail("Could not obtain authInfo token.");
+				Assert.fail("Could not obtain authInfo token.");
 	     } 
 	}
 	
 	@Test
-	public void joepublisher() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-		} finally {
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
+	public void testJoePublisherTmodel() {
+		tckTModel.saveJoePublisherTmodel(authInfoJoe);
+		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 	}
+	
+	@Test
+	public void testSamSyndicatorTmodelTest() {
+		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+	}	
+	
 }
