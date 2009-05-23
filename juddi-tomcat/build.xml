@@ -2,6 +2,7 @@
 	<property file="package.properties"/>
 	<property name="common.lib.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/common/lib"/>
 	<property name="webapps.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps"/>
+	<property name="conf.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/conf"/>
 
 	<target name="unzip-tomcat">
 		<mkdir dir="${basedir}/target/tomcat"/>
@@ -19,7 +20,8 @@
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
-		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddi/META-INF"/>	
+		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddi/META-INF"/>
+		<copy file="${basedir}/server.xml" todir="${conf.dir}"/>	
  		<copy file="${dependency.mysql.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${common.lib.dir}"/>
 		<copy file="${dependency.derby.jar}" todir="${common.lib.dir}"/>
