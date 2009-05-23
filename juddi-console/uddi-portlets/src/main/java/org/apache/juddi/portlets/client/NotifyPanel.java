@@ -32,6 +32,7 @@ public class NotifyPanel extends VerticalPanel {
 
 	private UDDISubscriptionNotification notification = null;
 	private NotifyPanel notifyPanel = null;
+	private TextArea textArea = null;
 	FlexTable table = null;
 
 	private NotifyServiceAsync notifyService = (NotifyServiceAsync) GWT.create(NotifyService.class);
@@ -45,10 +46,18 @@ public class NotifyPanel extends VerticalPanel {
 		notifyLabel.setStyleName("portlet-form-field-label");
 		add(notifyLabel);
 		
-	    TextArea ta = new TextArea();
-	    ta.setCharacterWidth(50);
-	    ta.setVisibleLines(50);
-	    add(ta);
+	    textArea = new TextArea();
+	    textArea.setCharacterWidth(50);
+	    textArea.setVisibleLines(50);
+	    add(textArea);
+	}
+	
+	public TextArea getTextArea() {
+		return textArea;
+	}
+	
+	public void setTextArea(TextArea textArea) {
+		this.textArea = textArea;
 	}
 	
 	public NotifyServiceAsync getSecurityService() {

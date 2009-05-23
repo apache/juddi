@@ -52,6 +52,7 @@
   </distributionManagement>
   <modules>
     <module>uddi-portlets</module>
+    <module>subscription-listener</module>
     <module>juddi-portal</module>
   </modules>
    <build>

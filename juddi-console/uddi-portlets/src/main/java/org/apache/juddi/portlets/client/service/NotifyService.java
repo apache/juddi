@@ -23,7 +23,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  *
  */
-@RemoteServiceRelativePath("subscription-listener")
+@RemoteServiceRelativePath("notify")
 public interface NotifyService extends RemoteService {
 	public NotifyResponse getSubscriptionNotifications(String authToken);
 }

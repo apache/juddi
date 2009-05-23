@@ -26,12 +26,12 @@ import java.util.List;
 public class NotifyResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
-	List<String> subscriptionNotifications;
+	String subscriptionNotifications;
 	
-	public List<String> getSubscriptionNotifications() {
+	public String getSubscriptionNotifications() {
 		return subscriptionNotifications;
 	}
-	public void setBusinesses(List<String> subscriptionNotifications) {
+	public void setSubscriptionNotifications(String subscriptionNotifications) {
 		this.subscriptionNotifications = subscriptionNotifications;
 	}
 

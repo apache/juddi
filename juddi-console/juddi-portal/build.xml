@@ -12,6 +12,7 @@
 		<copy file="${basedir}/pluto.xml" todir="${conf.dir}/Catalina/localhost"/>
 		<unzip dest="${webapps.dir}/pluto" src="${dependency.pluto-portal.war}"/>
 		<unzip dest="${webapps.dir}/uddi-portlets" src="${dependency.uddi-portlets.war}"/>
+		<unzip dest="${webapps.dir}/subscription-listener" src="${dependency.subscription-listener.war}"/>
 		<!--
 		<copy file="${basedir}/pluto-portal-driver-config.xml" todir="${webapps.dir}/pluto/WEB-INF"/>
 		-->

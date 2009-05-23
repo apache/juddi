@@ -16,8 +16,14 @@
  */
 package org.apache.juddi.portlets.server.service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +35,7 @@ import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.juddi.portlets.client.service.NotifyResponse;
 import org.apache.juddi.portlets.client.service.NotifyService;
+import org.apache.juddi.util.NotificationList;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.BindingTemplate;
@@ -76,34 +83,20 @@ public class NotifyServiceImpl extends RemoteServiceServlet implements NotifySer
 
 	public NotifyResponse getSubscriptionNotifications(String authToken) 
 	{
-		HttpServletRequest request = this.getThreadLocalRequest();
-		String lang = request.getLocale().getLanguage();
-
-		NotifySubscriptionListener nsl = new NotifySubscriptionListener();
-		nsl.setAuthInfo(authToken);
 		NotifyResponse response = new NotifyResponse();
-		//logger.debug("BusinessDetail " + getBusinessDetail + " sending businessDetail request..");
 		try {
-        	 //UDDISubscriptionListenerPortType notifyService = getTransport().getSubscriptionService().getSubscriptionResults();
-        	 /*
-        	 BusinessDetail businessDetail = notifyService.
-
-        	 for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {
-        		 Business business = new Business(
-        				 businessEntity.getBusinessKey(),
-        				 EntityForLang.get(businessEntity.getName(),lang).getValue(),
-        				 EntityForLang.get(businessEntity.getDescription(),lang).getValue());
-        		 for (BusinessService businessService : businessEntity.getBusinessServices().getBusinessService()) {
-        			 Service service = new Service(
-        					 businessService.getServiceKey(),
-        					 EntityForLang.get(businessService.getName(),lang).getValue(),
-        					 EntityForLang.get(businessService.getDescription(),lang).getValue());
-        			 business.getServices().add(service);
-        		 }
-        		 response.setBusiness(business);
-        	 */
-        	 
-        	 response.setSuccess(true);
+			URL url = new URL("http", "localhost", 8080, "/subscription-listener/notify/");	
+			URLConnection con = url.openConnection();
+			con.setDoOutput(true);
+			con.setDoInput(true);
+			InputStream is = con.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			StringBuffer sb = new StringBuffer();
+			while (br.ready()) {
+				sb.append(br.readLine());
+			}
+			response.setSubscriptionNotifications(sb.toString());
+			response.setSuccess(true);
 	     } catch (Exception e) {
 	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
 	    	 response.setSuccess(false);

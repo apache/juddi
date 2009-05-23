@@ -16,9 +16,18 @@
  */
 package org.apache.juddi.portlets.client;
 
+import java.util.Vector;
+
+import org.apache.juddi.portlets.client.service.NotifyResponse;
+import org.apache.juddi.portlets.client.service.NotifyService;
+import org.apache.juddi.portlets.client.service.NotifyServiceAsync;
+
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -32,16 +41,10 @@ public class UDDISubscriptionNotification implements EntryPoint {
 	private NotifyPanel notifyPanel = null;
 	private String token = null;
 	
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
-		notifyPanel = new NotifyPanel(this);
-		notifyPanel.setVisible(true);
-		setNotifyPanel(notifyPanel);
-		RootPanel.get("notification").add(notifyPanel);
-	}
-
+	private static int counter = 0;
+	
+	private NotifyServiceAsync notifyService = (NotifyServiceAsync) GWT.create(NotifyService.class);
+	
 	protected NotifyPanel getNotifyPanel() {
 		return notifyPanel;
 	}
@@ -57,6 +60,42 @@ public class UDDISubscriptionNotification implements EntryPoint {
 	public void setToken(String token) {
 		this.token = token;
 	}	
+
+	public void onModuleLoad() {
+		notifyPanel = new NotifyPanel(this);
+		notifyPanel.setVisible(true);
+		notifyPanel.getTextArea().setText("");
+		setNotifyPanel(notifyPanel);
+		RootPanel.get("notification").add(notifyPanel);
+
+		Timer timer = new Timer() {
+			public void run() {
+				getSubscriptionNotifications();
+			}
+		};
+	    timer.scheduleRepeating(20000);
+	    getSubscriptionNotifications();
+	}	
+	
+	public void getSubscriptionNotifications() {
+       	final String ta = notifyPanel.getTextArea().getText();
+        
+       	notifyService.getSubscriptionNotifications("", new AsyncCallback<NotifyResponse>() {
+            public void onFailure(Throwable caught) {
+                Window.alert("Could not connect to SubscriptionListener WS : " + caught.getMessage() );
+            }
+            public void onSuccess(NotifyResponse result) {
+           		if (result.getSubscriptionNotifications() != null) {
+           			if (("".equals(ta)) || (ta == null)) {
+               			notifyPanel.getTextArea().setText(result.getSubscriptionNotifications());				
+           			} else {
+           				notifyPanel.getTextArea().setText(ta + " \n" + result.getSubscriptionNotifications());				
+           			}
+           		}
+           	}
+		});
+		
+	}
 }
 	
  
