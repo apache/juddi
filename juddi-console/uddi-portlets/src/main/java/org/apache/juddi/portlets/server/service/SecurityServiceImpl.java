@@ -44,26 +44,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 
 	private Logger logger = Logger.getLogger(this.getClass());
 	private static final long serialVersionUID = 1L;
-	
 
-	public SecurityResponse get() {
-		SecurityResponse response = new SecurityResponse();
-		HttpServletRequest request = getThreadLocalRequest();
-		HttpSession session = request.getSession();
-		String token = (String) session.getAttribute("AuthToken");
-		response.setSuccess(true);
-		response.setResponse(token);
-		return response;
-	}
-	
 	public SecurityResponse get(String username, String password) {
-		if (username==null) {
-			return get();
-		}
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
 		Principal user = request.getUserPrincipal();
 		logger.debug("UserPrincipal " + user);
+		if (username==null && user!=null) {
+			username = user.getName();
+			password = "";
+		}
 		logger.debug("User " + username + " sending token request..");
 		SecurityResponse response = new SecurityResponse();
 		String token = (String) session.getAttribute("AuthToken");

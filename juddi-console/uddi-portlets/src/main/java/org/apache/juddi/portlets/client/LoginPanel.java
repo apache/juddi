@@ -44,7 +44,7 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 		tokenButton.addClickListener(this);
 		tokenButton.setStyleName(("portlet-form-button"));
 		add(tokenButton);
-		RootPanel.get("token").add(tokenLabel);  //TODO at some point we want to hide this
+		//RootPanel.get("token").add(tokenLabel);
 		
 	}
 	
@@ -126,6 +126,5 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 		});
 		
 	}
-
 	
 }
