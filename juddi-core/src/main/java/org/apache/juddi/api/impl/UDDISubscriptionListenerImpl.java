@@ -32,6 +32,7 @@ import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
+import org.apache.juddi.util.NotificationList;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
@@ -57,15 +58,17 @@ public class UDDISubscriptionListenerImpl implements
 			marshaller.marshal(body, sw);
 
 			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+			
+			NotificationList nl = NotificationList.getInstance();
+			nl.getNotifications().add(sw.toString());
+			
 			System.out.println("Notification received by UDDISubscriptionListenerService : " 
 					+ sw.toString());
 
 		} catch (JAXBException jaxbe) {
 			logger.error("", jaxbe);
 			throw new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client"));
-		}
-		
-		
+		}	
 		
 		new ValidateSubscriptionListener().validateNotification(body);
 			
@@ -74,5 +77,4 @@ public class UDDISubscriptionListenerImpl implements
 		dr.getResult().add(res);
 		return dr;
 	}
-
 }
