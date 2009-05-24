@@ -57,6 +57,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 /**
  * 
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
@@ -68,24 +69,17 @@ public class NotifyServiceImpl extends RemoteServiceServlet implements NotifySer
 	private Transport transport = null;
 	
 	public NotifyServiceImpl() {
-		super();	
+		super();
 	}
 	
-	private Transport getTransport() 
-		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		if (transport==null) {
-			String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
-	        Class<?> transportClass = Loader.loadClass(clazz);
-	   	 	transport = (Transport) transportClass.newInstance(); 
-		}
-		return transport;
-	}
-
 	public NotifyResponse getSubscriptionNotifications(String authToken) 
 	{
 		NotifyResponse response = new NotifyResponse();
 		try {
-			URL url = new URL("http", "localhost", 8080, "/subscription-listener/notify/");	
+			URL url = new URL(getThreadLocalRequest().getScheme(),
+							getThreadLocalRequest().getRemoteHost(), 
+							getThreadLocalRequest().getLocalPort(), 
+							"/subscription-listener/notify/");	
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
 			con.setDoInput(true);

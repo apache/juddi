@@ -28,6 +28,11 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+/**
+ * 
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ *
+ */
 public class NotifyPanel extends VerticalPanel {
 
 	private UDDISubscriptionNotification notification = null;

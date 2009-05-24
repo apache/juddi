@@ -9,6 +9,11 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+/**
+ * 
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ *
+ */
 public class UDDISubscriptionNotificationPortlet extends GenericPortlet 
 {
 	protected void doView(RenderRequest renderRequest, RenderResponse renderResponse) 

@@ -18,6 +18,7 @@ package org.apache.juddi.portlets.client.service;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
+
 /**
  * 
  *  @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
