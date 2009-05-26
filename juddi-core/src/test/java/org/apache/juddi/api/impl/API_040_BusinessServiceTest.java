@@ -74,14 +74,22 @@ public class API_040_BusinessServiceTest
 	@Test
 	public void samsyndicator() {
 		try {
+			// For sam's service projection, joe's information must be loaded
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			
 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusinessWithProjection(authInfoSam);
 			tckBusinessService.saveSamSyndicatorService(authInfoSam);
 			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
 		} finally {
 			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
 			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+			
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}
 	

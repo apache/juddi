@@ -36,6 +36,7 @@ public class TckBusiness
 	final static String JOE_BUSINESS_XML        = "uddi_data/joepublisher/businessEntity.xml";
     final static String JOE_BUSINESS_KEY        = "uddi:uddi.joepublisher.com:businessone";
     final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
+    final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
     final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
     
 	private Logger logger = Logger.getLogger(this.getClass());
@@ -55,6 +56,10 @@ public class TckBusiness
 
 	public void saveSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
 		saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
+	}
+	
+	public void saveSamSyndicatorBusinessWithProjection(String authInfoSam) {
+		saveBusiness(authInfoSam, SAM_BUSINESS_WITHPROJECTION_XML, SAM_BUSINESS_KEY);
 	}
 	
 	public void deleteSamSyndicatorBusiness(String authInfoSam) {
