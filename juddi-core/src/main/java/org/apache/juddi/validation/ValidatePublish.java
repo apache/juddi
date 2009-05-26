@@ -429,6 +429,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 				if (!businessService.getBusinessKey().equalsIgnoreCase(bs.getBusinessEntity().getEntityKey()))
 					throw new InvalidProjectionException(new ErrorMessage("errors.invalidprojection.ParentMismatch", businessService.getBusinessKey() + ", " + bs.getBusinessEntity().getEntityKey()));
 			}
+			obj = null;
 		}
 		else {
 			boolean entityExists = false;

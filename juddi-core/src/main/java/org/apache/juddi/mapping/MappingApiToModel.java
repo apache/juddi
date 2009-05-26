@@ -71,7 +71,10 @@ public class MappingApiToModel {
 			mapCategoryBag(apiBusinessEntity.getCategoryBag(), modelBusinessEntity.getCategoryBag());
 		}
 		
-		mapBusinessServices(apiBusinessEntity.getBusinessServices(), modelBusinessEntity.getBusinessServices(), modelBusinessEntity);
+		mapBusinessServices(apiBusinessEntity.getBusinessServices(), 
+							modelBusinessEntity.getBusinessServices(), 
+							modelBusinessEntity.getServiceProjections(), 
+							modelBusinessEntity);
 	}
 	
 
@@ -231,6 +234,7 @@ public class MappingApiToModel {
 	
 	public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices,
 										   List<org.apache.juddi.model.BusinessService> modelBusinessServiceList,
+										   List<org.apache.juddi.model.ServiceProjection> modelServiceProjectionList,
 										   org.apache.juddi.model.BusinessEntity modelBusinessEntity) 
 				   throws DispositionReportFaultMessage {
 		modelBusinessServiceList.clear();
@@ -240,9 +244,18 @@ public class MappingApiToModel {
 			for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
 				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 
-				mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
-				
-				modelBusinessServiceList.add(modelBusinessService);
+				// If the parent businessEntity key and the service businessEntity key (if provided) do not match, it's a projection.
+				if (apiBusinessService.getBusinessKey() != null && apiBusinessService.getBusinessKey().length() > 0 && 
+				    !modelBusinessEntity.getEntityKey().equalsIgnoreCase(apiBusinessService.getBusinessKey())) {
+
+					modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
+					org.apache.juddi.model.ServiceProjection modelServiceProjection = new org.apache.juddi.model.ServiceProjection(modelBusinessEntity, modelBusinessService);
+					modelServiceProjectionList.add(modelServiceProjection);
+				}
+				else {
+					mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
+					modelBusinessServiceList.add(modelBusinessService);
+				}
 			}
 		}
 	}
@@ -266,6 +279,8 @@ public class MappingApiToModel {
 
 	}
 
+	
+	
 	public static void mapServiceNames(List<org.uddi.api_v3.Name> apiNameList, 
 									   List<org.apache.juddi.model.ServiceName> modelNameList,
 									   org.apache.juddi.model.BusinessService modelBusinessService) 

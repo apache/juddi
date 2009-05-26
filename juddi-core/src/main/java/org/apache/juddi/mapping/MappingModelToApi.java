@@ -73,7 +73,7 @@ public class MappingModelToApi {
 		mapBusinessIdentifiers(modelBusinessEntity.getBusinessIdentifiers(), apiBusinessEntity.getIdentifierBag(), apiBusinessEntity);
 		apiBusinessEntity.setCategoryBag(mapCategoryBag(modelBusinessEntity.getCategoryBag(), apiBusinessEntity.getCategoryBag()));
 		
-		mapBusinessServices(modelBusinessEntity.getBusinessServices(), apiBusinessEntity.getBusinessServices(), apiBusinessEntity);
+		mapBusinessServices(modelBusinessEntity.getBusinessServices(), modelBusinessEntity.getServiceProjections(), apiBusinessEntity.getBusinessServices(), apiBusinessEntity);
 	
 	}
 
@@ -261,11 +261,10 @@ public class MappingModelToApi {
 	}
 
 	public static void mapBusinessServices(List<org.apache.juddi.model.BusinessService> modelBusinessServiceList, 
+										   List<org.apache.juddi.model.ServiceProjection> modelServiceProjectionList,
 										   org.uddi.api_v3.BusinessServices apiBusinessServices,
 										   org.uddi.api_v3.BusinessEntity apiBusinessEntity) 
 				   throws DispositionReportFaultMessage {
-		if (modelBusinessServiceList == null || modelBusinessServiceList.size() == 0)
-			return;
 		
 		if (apiBusinessServices == null)
 			apiBusinessServices = new org.uddi.api_v3.BusinessServices();
@@ -273,12 +272,25 @@ public class MappingModelToApi {
 		List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = apiBusinessServices.getBusinessService();
 		apiBusinessServiceList.clear();
 		
-		for (org.apache.juddi.model.BusinessService modelBusinessService : modelBusinessServiceList) {
-			org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
-			mapBusinessService(modelBusinessService, apiBusinessService);
-			apiBusinessServiceList.add(apiBusinessService);
+		if (modelBusinessServiceList != null && modelBusinessServiceList.size() > 0) {
+			for (org.apache.juddi.model.BusinessService modelBusinessService : modelBusinessServiceList) {
+				org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
+				mapBusinessService(modelBusinessService, apiBusinessService);
+				apiBusinessServiceList.add(apiBusinessService);
+			}
 		}
-		apiBusinessEntity.setBusinessServices(apiBusinessServices);
+		
+		
+		if (modelServiceProjectionList != null && modelServiceProjectionList.size() > 0) {
+			for (org.apache.juddi.model.ServiceProjection modelServiceProjection : modelServiceProjectionList) {
+				org.uddi.api_v3.BusinessService apiBusinessService = new org.uddi.api_v3.BusinessService();
+				mapBusinessService(modelServiceProjection.getBusinessService(), apiBusinessService);
+				apiBusinessServiceList.add(apiBusinessService);
+			}
+		}
+		
+		if (apiBusinessServiceList.size() > 0)
+			apiBusinessEntity.setBusinessServices(apiBusinessServices);
 	}
 
 	public static void mapBusinessService(org.apache.juddi.model.BusinessService modelBusinessService, 
