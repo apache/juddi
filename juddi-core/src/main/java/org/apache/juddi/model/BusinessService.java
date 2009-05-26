@@ -23,7 +23,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -44,7 +43,7 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	private List<ServiceDescr> serviceDescrs = new ArrayList<ServiceDescr>(0);
 	private List<BindingTemplate> bindingTemplates = new ArrayList<BindingTemplate>(0);
 	private ServiceCategoryBag categoryBag;
-    private List<BusinessEntity> businessProjections = new ArrayList<BusinessEntity>(0);
+    private List<ServiceProjection> projectingBusinesses = new ArrayList<ServiceProjection>(0);
 
 	public BusinessService() {
 	}
@@ -110,13 +109,12 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public void setCategoryBag(ServiceCategoryBag categoryBag) {
 		this.categoryBag = categoryBag;
 	}
-	
-	@ManyToMany(mappedBy="serviceProjections", targetEntity=BusinessEntity.class)
-	public List<BusinessEntity> getBusinessProjections() {
-      return businessProjections;
-    }
-	
-	public void setBusinessProjections(List<BusinessEntity> businessProjections) {
-		this.businessProjections = businessProjections;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
+	public List<ServiceProjection> getProjectingBusinesses() {
+		return projectingBusinesses;
+	}
+	public void setProjectingBusinesses(List<ServiceProjection> projectingBusinesses) {
+		this.projectingBusinesses = projectingBusinesses;
 	}
 }

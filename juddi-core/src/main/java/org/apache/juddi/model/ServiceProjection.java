@@ -1,0 +1,129 @@
+/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+package org.apache.juddi.model;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ */
+@Entity
+@Table(name = "juddiv3_service_projection")
+public class ServiceProjection implements java.io.Serializable {
+
+		@Embeddable
+		public static class Id implements java.io.Serializable {
+			
+			private static final long serialVersionUID = 1L;
+
+			@Column(name = "business_key", nullable = false, length = 255)
+			private String businessKey;
+			@Column(name = "service_key", nullable = false, length = 255)
+			String serviceKey;
+			
+			public Id() {
+			}
+			public Id(String businessKey, String serviceKey) {
+				this.businessKey = businessKey;
+				this.serviceKey = serviceKey;
+			}
+
+			public int hashCode() {
+				final int prime = 31;
+				int result = 1;
+				result = prime * result
+						+ ((businessKey == null) ? 0 : businessKey.hashCode());
+				result = prime * result
+						+ ((serviceKey == null) ? 0 : serviceKey.hashCode());
+				return result;
+			}
+			public boolean equals(Object obj) {
+				if (this == obj)
+					return true;
+				if (obj == null)
+					return false;
+				if (getClass() != obj.getClass())
+					return false;
+				Id other = (Id) obj;
+				if (businessKey == null) {
+					if (other.businessKey != null)
+						return false;
+				} else if (!businessKey.equals(other.businessKey))
+					return false;
+				if (serviceKey == null) {
+					if (other.serviceKey != null)
+						return false;
+				} else if (!serviceKey.equals(other.serviceKey))
+					return false;
+				return true;
+			}
+			
+		}
+
+		private static final long serialVersionUID = 1L;
+		
+		@EmbeddedId
+		private Id id = new Id();
+		@ManyToOne
+		@JoinColumn(name = "business_key", insertable = false, updatable = false)
+		private BusinessEntity businessEntity;
+		@ManyToOne
+		@JoinColumn(name = "service_key", insertable = false, updatable = false)
+		private BusinessService businessService;
+		
+		public ServiceProjection() {
+		}
+		
+		public ServiceProjection(BusinessEntity businessEntity, BusinessService businessService) {
+			this.businessEntity = businessEntity;
+			this.businessService = businessService;
+			
+			this.id.businessKey = businessEntity.entityKey;
+			this.id.serviceKey = businessService.entityKey;
+			
+			businessEntity.getServiceProjections().add(this);
+			businessService.getProjectingBusinesses().add(this);
+		}
+
+		public Id getId() {
+			return id;
+		}
+		public void setId(Id id) {
+			this.id = id;
+		}
+
+		public BusinessEntity getBusinessEntity() {
+			return businessEntity;
+		}
+		public void setBusinessEntity(BusinessEntity businessEntity) {
+			this.businessEntity = businessEntity;
+		}
+
+		public BusinessService getBusinessService() {
+			return businessService;
+		}
+		public void setBusinessService(BusinessService businessService) {
+			this.businessService = businessService;
+		}
+		
+}
