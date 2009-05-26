@@ -7,19 +7,19 @@ OS name: "mac os x" version: "10.5.6" arch: "i386" Family: "unix"
 
 1. Run mvn clean install -Prelease, these artifact will be uploaded to the maven repos
 
-juddi/target        : juddi-2.0rc6-jar, juddi-2.0rc6-javadoc.jar, juddi-2.0rc6-sources.jar, juddi-2.0rc6.pom + *.asc
-juddi-client/target : juddi-client-2.0.rc6.jar, juddi-client-2.0rc6.pom + *.asc
+juddi/target        : juddi-2.0rc7-jar, juddi-2.0rc7-javadoc.jar, juddi-2.0rc7-sources.jar, juddi-2.0rc7.pom + *.asc
+juddi-client/target : juddi-client-2.0.rc7.jar, juddi-client-2.0rc7.pom + *.asc
 juddi-web           : juddi.war (including axis2 WS stack)
 juddi-web-lean      : juddi.war
-juddi-ws            : juddi-ws-2.0rc6.jar
+juddi-ws            : juddi-ws-2.0rc7.jar
 
 2. Run mvn assembly:attached from the juddi-distribution directory.
 
-juddi-distribution/target: juddi-distribution-2.0rc6-bin.zip
+juddi-distribution/target: juddi-distribution-2.0rc7-bin.zip
 
 3. Run mvn clean install from the juddi-tomcat directory.
 
-juddi-tomcat/target: juddi-tomcat-2.0rc6.zip 
+juddi-tomcat/target: juddi-tomcat-2.0rc7.zip 
 
 4.  Sign the release artifacts using
 
@@ -31,7 +31,7 @@ gpg --armor --detach-sig <build artifact>
 
 On successfull vote:
 
-7. Create a Tag in SVN for the 2.0rc6 release
+7. Create a Tag in SVN for the 2.0rc7 release
 
 8. Run mvn clean deploy -Prelease
 
