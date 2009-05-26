@@ -15,6 +15,17 @@
  * limitations under the License.
  *
  */ -->
+<!-- 
+  In this file, you only need to edit the tModelKey just below.  This will determine your root partition; the base that all system-generated
+  keys will use.  The keywords "uddi" and "keygenerator" must enclose the partition, but you are free to edit the interior.  The general format
+  is a domain name followed by a colon-delimited list of keywords (known as key-specific strings).
+  
+  Examples:
+  
+  uddi:www.mycompany.com:registry:keygenerator
+  uddi:uddi.acme.com:keygenerator
+  uddi:engineering.umich.edu:soa:ubr:keygenerator
+ -->
 <tModel tModelKey="uddi:juddi.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
   <name>uddi-org:keyGenerator</name>
   <description>Root domain key generator</description>

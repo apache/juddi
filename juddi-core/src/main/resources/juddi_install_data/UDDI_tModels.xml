@@ -713,4 +713,88 @@
       <keyedReference keyName="uddi-org:types:specification" keyValue="specification" tModelKey="uddi:uddi.org:categorization:types" />
     </categoryBag>
   </tModel>
+  <tModel tModelKey="uddi:uddi.org:v3_ownership_transfer">
+    <name>uddi-org:ownership_transfer_v3</name>
+    <description>UDDI Custody and Ownership Transfer API V3.0</description>
+    <overviewDoc>
+      <overviewURL useType="wsdlInterface">
+         http://uddi.org/wsdl/uddi_custody_v3_binding.wsdl
+      </overviewURL>
+    </overviewDoc>
+    <overviewDoc>
+      <overviewURL useType="text">
+         http://uddi.org/pubs/uddi_v3.htm#OwnershipTransfer
+      </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:wsdl"
+        keyValue="wsdlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:soap"
+        keyValue="soapSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:xml"
+        keyValue="xmlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:specification"
+        keyValue="specification"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+     </categoryBag>
+  </tModel>
+  <tModel tModelKey="uddi:uddi.org:v3_subscription">
+    <name>uddi-org:subscription_v3</name>
+    <description>UDDI Subscription API V3.0</description>
+    <overviewDoc>
+      <overviewURL useType="wsdlInterface">
+         http://uddi.org/wsdl/uddi_sub_v3_binding.wsdl
+      </overviewURL>
+    </overviewDoc>
+    <overviewDoc>
+      <overviewURL useType="text">
+         http://uddi.org/pubs/uddi_v3.htm#Sub
+      </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:wsdl"
+        keyValue="wsdlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:soap"
+        keyValue="soapSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:xml"
+        keyValue="xmlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:specification"
+        keyValue="specification"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+     </categoryBag>
+  </tModel>
+  <tModel tModelKey="uddi:uddi.org:v3_subscriptionlistener">
+    <name>uddi-org:subscriptionListener_v3</name>
+    <description>UDDI Subscription Listener API V3.0</description>
+    <overviewDoc>
+      <overviewURL useType="wsdlInterface">
+          http://uddi.org/wsdl/uddi_subr_v3_binding.wsdl
+      </overviewURL>
+    </overviewDoc>
+    <overviewDoc>
+      <overviewURL useType="text">
+         http://uddi.org/pubs/uddi_v3.htm#Subscribe
+      </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:wsdl"
+        keyValue="wsdlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:soap"
+        keyValue="soapSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:xml"
+        keyValue="xmlSpec"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+      <keyedReference keyName="uddi-org:types:specification"
+        keyValue="specification"
+        tModelKey="uddi:uddi.org:categorization:types"/>
+     </categoryBag>
+  </tModel>
 </save_tModel>
