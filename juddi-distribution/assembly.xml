@@ -13,7 +13,7 @@
    <fileSets>
     <fileSet>
       <includes>
-	<include>NOTICE</include>
+	    <include>NOTICE</include>
         <include>LICENSE-2.0</include>
         <include>README</include>
         <include>RELEASE-NOTES*.*</include>
