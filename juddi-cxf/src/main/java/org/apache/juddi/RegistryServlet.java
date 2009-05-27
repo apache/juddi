@@ -46,7 +46,7 @@ public class RegistryServlet extends HttpServlet
 		super.init(config);
 		try {
 			AppConfig.getInstance();
-			//subscriptionNotifier = new SubscriptionNotifier();
+			subscriptionNotifier = new SubscriptionNotifier();
 			
 		} catch (ConfigurationException ce) {
 			throw new ServletException(ce.getMessage(),ce);
