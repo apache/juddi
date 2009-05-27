@@ -21,9 +21,9 @@
     <findQualifier>approximateMatch</findQualifier>
     <findQualifier>andAllKeys</findQualifier>
   </findQualifiers>
-  <name>Joe Publisher</name>
+  <name>Joe Publisher%</name>
   <categoryBag>
-    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
-      keyValue="keyGenerator" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator%"
+      keyValue="keyGenerator%" />
   </categoryBag>
 </find_tModel>

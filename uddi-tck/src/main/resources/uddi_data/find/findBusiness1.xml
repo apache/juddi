@@ -21,17 +21,17 @@
     <findQualifier>caseInsensitiveMatch</findQualifier>
     <findQualifier>approximateMatch</findQualifier>
   </findQualifiers>
-  <name xml:lang="en">john</name>
-  <name xml:lang="en">A-1</name>
+  <name xml:lang="en">john%</name>
+  <name xml:lang="en">A-1%</name>
   <identifierBag>
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identityX" />
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity%" />
+    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identityX%" />
   </identifierBag>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples%" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues%" />
     <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank%" />
     </keyedReferenceGroup>
   </categoryBag>
   <discoveryURLs>
@@ -44,6 +44,6 @@
       <findQualifier>approximateMatch</findQualifier>
       <findQualifier>andAllKeys</findQualifier>
     </findQualifiers>
-    <name>uddi-org:serverAuthenticatedSSL3</name>
+    <name>uddi-org:serverAuthenticatedSSL3%</name>
   </find_tModel>
 </find_business>

@@ -166,8 +166,9 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 			String keyName = keyedRef.getKeyName();
 			
 			if (fq.isApproximateMatch()) {
-				keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
-				keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
+				// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+				//keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
+				//keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
 			}
 
 			// Either opening up (and AND'ing) a new "group" of like keys or simply appending an "or".  If this is not "orLikeKeys", then just need to increment

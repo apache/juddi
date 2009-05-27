@@ -81,8 +81,9 @@ public class FindTModelByNameQuery extends TModelQuery {
 			nameTerm = "upper(" + ENTITY_ALIAS + ".name)";
 			nameValue = name.getValue().toUpperCase();
 		}
-		if (fq.isApproximateMatch())
-			nameValue = nameValue.endsWith(DynamicQuery.WILDCARD)?nameValue:nameValue + DynamicQuery.WILDCARD;
+		// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+		//if (fq.isApproximateMatch())
+		//	nameValue = nameValue.endsWith(DynamicQuery.WILDCARD)?nameValue:nameValue + DynamicQuery.WILDCARD;
 		
 		if (name.getLang() == null || name.getLang().length() == 0 ) {
 			qry.appendGroupedAnd(new DynamicQuery.Parameter(nameTerm, nameValue, namePredicate));

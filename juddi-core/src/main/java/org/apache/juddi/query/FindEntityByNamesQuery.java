@@ -125,13 +125,15 @@ public class FindEntityByNamesQuery extends EntityQuery {
 				nameTerm = "upper(" + entityAliasChild + ".name)";
 				nameValue = n.getValue().toUpperCase();
 			}
-			if (fq.isApproximateMatch())
-				nameValue = nameValue.endsWith(DynamicQuery.WILDCARD)?nameValue:nameValue + DynamicQuery.WILDCARD;
+			// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+			//if (fq.isApproximateMatch())
+			//	nameValue = nameValue.endsWith(DynamicQuery.WILDCARD)?nameValue:nameValue + DynamicQuery.WILDCARD;
 			
 			if (n.getLang() == null || n.getLang().length() == 0 ) {
 				qry.appendGroupedAnd(new DynamicQuery.Parameter(nameTerm, nameValue, namePredicate));
 			}
 			else {
+				// Per spec, the language argument is always wildcarded and case insensitive
 				String langValue = n.getLang().endsWith(DynamicQuery.WILDCARD)?n.getLang().toUpperCase():n.getLang().toUpperCase() + DynamicQuery.WILDCARD;
 				qry.appendGroupedAnd(new DynamicQuery.Parameter(nameTerm, nameValue, namePredicate), 
 									 new DynamicQuery.Parameter("upper(" + entityAliasChild + ".langCode)", langValue, DynamicQuery.PREDICATE_LIKE));

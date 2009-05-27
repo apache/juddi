@@ -221,8 +221,9 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 				String keyName = keyedRef.getKeyName();
 
 				if (fq.isApproximateMatch()) {
-					keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
-					keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
+					// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
+					//keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
+					//keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
 				}
 
 				tblCount++;
