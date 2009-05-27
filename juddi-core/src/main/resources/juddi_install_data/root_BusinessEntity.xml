@@ -78,6 +78,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
@@ -102,6 +105,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
@@ -115,6 +121,9 @@
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
@@ -140,6 +149,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
@@ -166,6 +178,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
@@ -179,6 +194,9 @@
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
           </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
