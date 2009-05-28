@@ -64,7 +64,8 @@ public class UDDISubscriptionListenerImpl implements
 			
 			System.out.println("Notification received by UDDISubscriptionListenerService : " 
 					+ sw.toString());
-
+			logger.info("Notification received by UDDISubscriptionListenerService : " 
+					+ sw.toString());
 		} catch (JAXBException jaxbe) {
 			logger.error("", jaxbe);
 			throw new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client"));
