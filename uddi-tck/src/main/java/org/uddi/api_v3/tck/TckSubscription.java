@@ -40,6 +40,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class TckSubscription 
 {	
@@ -72,6 +73,11 @@ public class TckSubscription
 		this.security = security;
 	}
 
+	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,
+			String subscriptionKey) {
+		saveSubscription(authInfoJoe, subscriptionXML, subscriptionKey);
+	}
+		
 	public void saveJoePublisherSubscription(String authInfoJoe) {
 		saveSubscription(authInfoJoe, JOE_SUBSCRIPTION_XML, JOE_SUBSCRIPTION_KEY);
 	}

@@ -33,6 +33,10 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  */
 public class TckBusinessService 
 {
+	
+	public final static String NOTIFIER_SERVICE_XML  = "uddi_data/subscriptionnotifier/businessService.xml";
+	public final static String NOTIFIER_SERVICE_KEY  = "uddi:uddi.joepublisher.com:notifierone";
+
 	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
     final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
     final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
@@ -52,7 +56,7 @@ public class TckBusinessService
 	public void saveJoePublisherService(String authInfoJoe) {
 		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
 	}
-	
+
 	public void saveJoePublisherServices(String authInfoJoe, int numberOfCopies) {
 		saveServices(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies);
 	}
@@ -60,6 +64,15 @@ public class TckBusinessService
 	public void deleteJoePublisherService(String authInfoJoe) {
 		deleteService(authInfoJoe, JOE_SERVICE_KEY);
 	}
+
+	public void saveNotifierService(String authInfoJoe) {
+		saveService(authInfoJoe, NOTIFIER_SERVICE_XML, NOTIFIER_SERVICE_KEY);
+	}
+	
+	public void deleteNotifierService(String authInfoJoe) {
+		deleteService(authInfoJoe, NOTIFIER_SERVICE_KEY);
+	}
+
 	
 	public void deleteJoePublisherServices(String authInfoJoe, int numberOfCopies) {
 		deleteServices(authInfoJoe, JOE_SERVICE_KEY, numberOfCopies);
