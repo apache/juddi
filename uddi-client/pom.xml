@@ -131,7 +131,6 @@
 							<tasks>
 								<unzip dest="target" src="target/juddi-tomcat-3.0.0.SNAPSHOT.zip" />
 								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf" overwrite="true"/>
-								<copy file="${basedir}/juddi.properties" todir="target/juddi-tomcat-${project.version}/webapps/juddi/WEB-INF/classes"/>
 							</tasks>
 						</configuration>
 						<goals>
