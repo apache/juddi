@@ -75,17 +75,17 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
-		
-		// Properties from the persistence layer (must first initialize the entityManagerFactory). 
-		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME));
-		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration());
-		
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
 		fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);
 		propConfig.setReloadingStrategy(fileChangedReloadingStrategy);
 		compositeConfig.addConfiguration(propConfig);
+		
+		// Properties from the persistence layer (must first initialize the entityManagerFactory). 
+		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME));
+		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration(compositeConfig));
+		
 		compositeConfig.addConfiguration(persistentConfig);
 		//Making the new configuration globally accessible.
 		config = compositeConfig;
@@ -95,7 +95,7 @@ public class AppConfig
 	 * This method will build any "persisted" properties. Persisted properties are those that are stored in the database.  These values
 	 * should be stored when the application is installed.  If they don't exist, then an error should occur.
 	 */
-	private Properties getPersistentConfiguration() throws ConfigurationException {
+	private Properties getPersistentConfiguration(Configuration config) throws ConfigurationException {
 		Properties result = new Properties();
 		
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -106,7 +106,7 @@ public class AppConfig
 			if (!Install.alreadyInstalled(em)) {
 				log.info("The 'root' publisher was not found, loading...");
 				try {
-					Install.install();
+					Install.install(config);
 				} catch (JAXBException e) {
 					throw new ConfigurationException(e);
 				} catch (DispositionReportFaultMessage e) {

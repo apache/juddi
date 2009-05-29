@@ -19,11 +19,14 @@ package org.apache.juddi.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -31,7 +34,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -66,7 +72,7 @@ public class Install {
 	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
 	public static Logger log = Logger.getLogger(Install.class);
 
-	protected static void install() throws JAXBException, DispositionReportFaultMessage, IOException {
+	protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 				
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -79,25 +85,25 @@ public class Install {
 			if (alreadyInstalled(em))
 				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
-			TModel rootTModelKeyGen = (TModel)buildInstallEntity(FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3");
-			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3");
+			TModel rootTModelKeyGen = (TModel)buildInstallEntity(FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3", config);
+			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3",config);
 			
 			String rootPartition = getRootPartition(rootTModelKeyGen);
 			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			
-			rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER);
-			uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER);
+			rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER, config);
+			uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER, config);
 			// TODO:  These do not belong here?
 			// Inserting 2 test publishers
-			installPublisher(em, FILE_JOE_PUBLISHER);
-			installPublisher(em, FILE_SSYNDICATOR);
+			installPublisher(em, FILE_JOE_PUBLISHER, config);
+			installPublisher(em, FILE_SSYNDICATOR, config);
 
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
 			rootBusinessEntity.setBusinessKey(nodeId);
 			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher, rootPartition);
 
-			installSaveTModel(em, FILE_UDDI_TMODELS, uddiPublisher, nodeId);
+			installSaveTModel(em, FILE_UDDI_TMODELS, uddiPublisher, nodeId, config);
 			
 			tx.commit();
 		}
@@ -434,7 +440,7 @@ public class Install {
 		
 	}
 	
-	private static Object buildInstallEntity(String fileName, String packageName) throws JAXBException, IOException {
+	private static Object buildInstallEntity(String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException {
 		InputStream resourceStream = null;
 		
 		// First try the custom install directory
@@ -447,11 +453,40 @@ public class Install {
 			url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_INSTALL_DATA_DIR + fileName);
 			resourceStream = url.openStream();
 		}
+		StringBuilder xml = new StringBuilder();
+	    byte[] b = new byte[4096];
+	    for (int n; (n = resourceStream.read(b)) != -1;) {
+	    	xml.append(new String(b, 0, n));
+	    }
+	    StringReader reader = new StringReader(replaceTokens(xml.toString(), config));
 		
 		JAXBContext jc = JAXBContext.newInstance(packageName);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		Object obj = ((JAXBElement<?>)unmarshaller.unmarshal(resourceStream)).getValue();
+		Object obj = ((JAXBElement<?>)unmarshaller.unmarshal(new StreamSource(reader))).getValue();
 		return obj;
+	}
+	
+	private static String replaceTokens(String installData, Configuration config) throws ConfigurationException {
+		
+		installData = installData.replaceAll("\\n"," ").replaceAll("\\r", "");
+		/* pattern that is multi-line (?m), and looks for a pattern of
+		 * ${token}, in a 'reluctant' manner, by using the ? to 
+		 * make sure we find ALL the tokens.
+		 */
+		Pattern pattern = Pattern.compile("(?m)\\$\\{.*?\\}");
+        Matcher matcher = pattern.matcher(installData);
+        while (matcher.find()) {
+            String token = matcher.group();
+            token = token.substring(2,token.length()-1);
+            String replacement = config.getString(token);
+            if (replacement!=null) {
+            	log.debug("Found token " + token + " and replacement value " + replacement);
+            	installData.replaceAll(token, replacement);
+            } else {
+            	log.error("Found token " + token + " but could not obtain its value. Data: " + installData);
+            }
+        }
+        return installData;
 	}
 
 	/**
@@ -488,11 +523,12 @@ public class Install {
 	 * @throws JAXBException
 	 * @throws DispositionReportFaultMessage
 	 * @throws IOException
+	 * @throws ConfigurationException 
 	 */
-	public static void installSaveTModel(EntityManager em, String fileName, UddiEntityPublisher publisher, String nodeId) 
-		throws JAXBException, DispositionReportFaultMessage, IOException {
+	public static void installSaveTModel(EntityManager em, String fileName, UddiEntityPublisher publisher, String nodeId, Configuration config) 
+		throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
-		SaveTModel apiSaveTModel = (SaveTModel)buildInstallEntity(fileName, "org.uddi.api_v3");
+		SaveTModel apiSaveTModel = (SaveTModel)buildInstallEntity(fileName, "org.uddi.api_v3", config);
 		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
 	}
 
@@ -505,11 +541,12 @@ public class Install {
 	 * @throws JAXBException
 	 * @throws DispositionReportFaultMessage
 	 * @throws IOException
+	 * @throws ConfigurationException 
 	 */
-	public static UddiEntityPublisher installPublisher(EntityManager em, String fileName) 
-		throws JAXBException, DispositionReportFaultMessage, IOException {
+	public static UddiEntityPublisher installPublisher(EntityManager em, String fileName, Configuration config) 
+		throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
-		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api.datatype");
+		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api.datatype", config);
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
 		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		em.persist(modelPub);
