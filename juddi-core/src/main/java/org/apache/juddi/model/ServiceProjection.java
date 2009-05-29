@@ -16,8 +16,6 @@
  */
 package org.apache.juddi.model;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -31,59 +29,11 @@ import javax.persistence.Table;
 @Table(name = "juddiv3_service_projection")
 public class ServiceProjection implements java.io.Serializable {
 
-		@Embeddable
-		public static class Id implements java.io.Serializable {
-			
-			private static final long serialVersionUID = 1L;
-
-			@Column(name = "business_key", nullable = false, length = 255)
-			private String businessKey;
-			@Column(name = "service_key", nullable = false, length = 255)
-			String serviceKey;
-			
-			public Id() {
-			}
-			public Id(String businessKey, String serviceKey) {
-				this.businessKey = businessKey;
-				this.serviceKey = serviceKey;
-			}
-
-			public int hashCode() {
-				final int prime = 31;
-				int result = 1;
-				result = prime * result
-						+ ((businessKey == null) ? 0 : businessKey.hashCode());
-				result = prime * result
-						+ ((serviceKey == null) ? 0 : serviceKey.hashCode());
-				return result;
-			}
-			public boolean equals(Object obj) {
-				if (this == obj)
-					return true;
-				if (obj == null)
-					return false;
-				if (getClass() != obj.getClass())
-					return false;
-				Id other = (Id) obj;
-				if (businessKey == null) {
-					if (other.businessKey != null)
-						return false;
-				} else if (!businessKey.equals(other.businessKey))
-					return false;
-				if (serviceKey == null) {
-					if (other.serviceKey != null)
-						return false;
-				} else if (!serviceKey.equals(other.serviceKey))
-					return false;
-				return true;
-			}
-			
-		}
-
+		
 		private static final long serialVersionUID = 1L;
 		
 		@EmbeddedId
-		private Id id = new Id();
+		private ServiceProjectionId id = new ServiceProjectionId();
 		@ManyToOne
 		@JoinColumn(name = "business_key", insertable = false, updatable = false)
 		private BusinessEntity businessEntity;
@@ -105,10 +55,10 @@ public class ServiceProjection implements java.io.Serializable {
 			businessService.getProjectingBusinesses().add(this);
 		}
 
-		public Id getId() {
+		public ServiceProjectionId getId() {
 			return id;
 		}
-		public void setId(Id id) {
+		public void setId(ServiceProjectionId id) {
 			this.id = id;
 		}
 

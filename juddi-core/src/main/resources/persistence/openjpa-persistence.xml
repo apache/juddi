@@ -38,6 +38,8 @@
     <class>org.apache.juddi.model.ServiceCategoryBag</class>
     <class>org.apache.juddi.model.ServiceDescr</class>
     <class>org.apache.juddi.model.ServiceName</class>
+    <class>org.apache.juddi.model.ServiceProjection</class>
+    <class>org.apache.juddi.model.ServiceProjectionId</class>
     <class>org.apache.juddi.model.Subscription</class>
     <class>org.apache.juddi.model.SubscriptionChunkToken</class>
     <class>org.apache.juddi.model.SubscriptionMatch</class>
