@@ -98,88 +98,16 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			//tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckSubscriptionListener.saveService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-
-			//			tckBusinessService.saveSamSyndicatorService(authInfoJoe);
-			//tckBusinessService.saveNotifierService(authInfoJoe);
-			//tckSubscriptionListener.saveNotifierBinding(authInfoJoe, 
-			//		tckSubscriptionListener.NOTIFIER_BINDING_XML,
-			//		tckSubscriptionListener.NOTIFIER_BINDING_KEY);
-			tckSubscription.saveJoePublisherSubscription(authInfoJoe,
-					tckSubscriptionListener.SUBSCRIPTION_XML,
-					tckSubscriptionListener.SUBSCRIPTION_KEY);
+			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);			
 		} 
 		finally {
-			//tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
-			//tckSubscriptionListener.deleteBinding(authInfoJoe, tckSubscriptionListener.NOTIFIER_BINDING_KEY);
-//			tckBusinessService.deleteSamSyndicatorService(authInfoJoe);
-			//tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			//tckBusinessService.deleteNotifierService(authInfoJoe);
-			//tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			//tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
-	}
-
-	@Test
-	public void samSyndicator() {
-		try {
- 			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusinessService.saveSamSyndicatorService(authInfoSam);
-			tckSubscription.saveSamSyndicatorSubscription(authInfoSam);
-			tckSubscription.getSamSyndicatorSubscriptionResults(authInfoSam);
-		} 
-		finally {
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-			tckSubscription.deleteSamSyndicatorSubscription(authInfoSam);
-			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-	//		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-		}
-		
-	}
-
-	@Test
-	public void samSyndicatorWithChunkingOnFind() {
-		try {
-			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusinessService.saveSamSyndicatorService(authInfoSam);
-			tckSubscription.saveSamSyndicatorSubscriptionWithChunkingOnFind(authInfoSam);
-			tckSubscription.getSamSyndicatorSubscriptionResultsWithChunkingOnFind(authInfoSam);
-		} 
-		finally {
-			tckSubscription.deleteSamSyndicatorSubscriptionWithChunkingOnFind(authInfoSam);
-			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-		}
-		
-	}
-	
-	@Test
-	public void samSyndicatorWithChunkingOnGet() {
-		try {
-			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusinessService.saveSamSyndicatorService(authInfoSam);
-			tckSubscription.saveSamSyndicatorSubscriptionWithChunkingOnGet(authInfoSam);
-			tckSubscription.getSamSyndicatorSubscriptionResultsWithChunkingOnGet(authInfoSam);
-		} 
-		finally {
-			tckSubscription.deleteSamSyndicatorSubscriptionWithChunkingOnGet(authInfoSam);
-			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-		}
-		
-	}
-	
-	public void saveSubscriptionNotifierBinding() {
-		
-	}
-	
+	}	
 }
