@@ -74,7 +74,7 @@ public class SubscriptionNotifier extends TimerTask {
 	{
 		if (firedOnTime(scheduledExecutionTime())) {
 			long startTime = System.currentTimeMillis();
-			log.info("Start Notification background task; checking if subscription notifications need to be send out..");
+			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllSubscriptions();
 			for (Subscription subscription : subscriptions) {
@@ -102,7 +102,7 @@ public class SubscriptionNotifier extends TimerTask {
             	log.warn("Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL of " + interval);
             	log.warn("Notification background task took " + (endTime - startTime) + " milliseconds.");
             } else {
-            	log.info("Notification background task took " + (endTime - startTime) + " milliseconds.");
+            	log.debug("Notification background task took " + (endTime - startTime) + " milliseconds.");
             }
 		} else {
 			log.warn("Skipping current notification cycle because the registry is too busy.");
