@@ -62,8 +62,6 @@ public class UDDISubscriptionListenerImpl implements
 			NotificationList nl = NotificationList.getInstance();
 			nl.getNotifications().add(sw.toString());
 			
-			System.out.println("Notification received by UDDISubscriptionListenerService : " 
-					+ sw.toString());
 			logger.info("Notification received by UDDISubscriptionListenerService : " 
 					+ sw.toString());
 		} catch (JAXBException jaxbe) {
