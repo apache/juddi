@@ -13,4 +13,8 @@ public enum AccessPointType {
 		this.type = type;
 	}
 	
+ 	public String toString() {
+		return type;	
+	}
+	
 }

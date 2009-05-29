@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.subscription;
 
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -28,6 +29,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -213,6 +216,9 @@ public class SubscriptionNotifier extends TimerTask {
 			}
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
+			if (resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
+				resultList.getServiceList().setServiceInfos(null);
+			}
 			body.setSubscriptionResultsList(resultList);
 			//body.setAuthInfo();  //where would I get the authInfo from?
 			if (bindingTemplate!=null) {
