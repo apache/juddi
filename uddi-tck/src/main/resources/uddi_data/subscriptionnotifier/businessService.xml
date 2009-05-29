@@ -22,9 +22,9 @@
   <description xml:lang="en">This is the description of notifier one.</description>
   <description xml:lang="es">Ésta es la descripción del notifier uno.</description>
   <bindingTemplates>
-<bindingTemplate xmlns="urn:uddi-org:api_v3" serviceKey="uddi:uddi.joepublisher.com:notifierone" bindingKey="uddi:uddi.joepublisher.com:bindingnotifier">
+<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindingnotifier">
   <description xml:lang="en">This is the endpoint for the subscription listener</description>
-  <accessPoint useType="endPoint">https://localhost:8080/juddi/services/subscription-listener</accessPoint>
+  <accessPoint useType="endPoint">http://localhost:8880/juddi/services/subscription-listener?wsdl</accessPoint>
   <tModelInstanceDetails>
     <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
   </tModelInstanceDetails>

@@ -19,6 +19,8 @@ import static junit.framework.Assert.assertEquals;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.xml.ws.Holder;
+
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 
@@ -34,7 +36,9 @@ import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
+import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -54,8 +58,8 @@ import org.uddi.api_v3.FindTModel;
  */
 public class TckSubscriptionListener
 {
-	public final static String SUBSCRIBED_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
-    public final static String SUBSCRIBED_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
+	public final static String SUBSCRIBED_SERVICE_XML              = "uddi_data/subscriptionnotifier/businessService.xml";
+    public final static String SUBSCRIBED_SERVICE_KEY              = "uddi:uddi.joepublisher.com:notifierone";
 
 	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
     final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
@@ -86,8 +90,8 @@ public class TckSubscriptionListener
 		super();
 		this.listener = listener;
 		this.subscription = subscription;
-		this.publication = publication;
 		this.inquiry = inquiry;
+		this.publication = publication;
 	}
 	
 	public void saveNotifierBinding(String authInfo, String bindingXML, String bindingKey) {
@@ -140,9 +144,11 @@ public class TckSubscriptionListener
 	
 	public void changeSubscribedObject(String authInfo) {
 		try	{
-			ss.getBusinessService().get(0).getName().get(0).setValue("foo");
+			System.out.println("Name: " +
+					ss.getBusinessService().get(0).getDescription().get(0).getValue());
+			ss.getBusinessService().get(0).getDescription().get(0).setValue("foo");
 			publication.saveService(ss);
-			Thread.sleep(100000);
+			Thread.sleep(10000);
 		} catch(Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
@@ -150,25 +156,58 @@ public class TckSubscriptionListener
 		}
 
 	}
-	
-	public void notifyService(String authInfo) {
-		try {
-			
-			NotifySubscriptionListener nsl = new NotifySubscriptionListener();
-			nsl.setAuthInfo(authInfo);
-			SubscriptionResultsList srl = new SubscriptionResultsList();
-			
-//			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(JOE_SUBSCRIPTIONRESULTS_XML, "org.uddi.sub_v3");
-	//		getSubResultsIn.setAuthInfo(authInfo);
-			
-//			SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
 
-			nsl.setSubscriptionResultsList(srl);
+	public void saveNotifierSubscription(String authInfo) {
+		saveSubscription(authInfo, SUBSCRIPTION_XML, SUBSCRIPTION_KEY);
+	}
+	
+	public void deleteNotifierSubscription(String authInfo) {
+		deleteSubscription(authInfo, SUBSCRIPTION_KEY);
+	}
+	
+	private void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey) {
+		try {
+			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(subscriptionXML, "org.uddi.sub_v3");
+			List<Subscription> subscriptionList = new ArrayList<Subscription>();
+			subscriptionList.add(subIn);
+			Holder<List<Subscription>> subscriptionHolder = new Holder<List<Subscription>>();
+			subscriptionHolder.value = subscriptionList;
+			
+			subscription.saveSubscription(authInfo, subscriptionHolder);
+			
+			Subscription subDirectOut = subscriptionHolder.value.get(0);
+			assertEquals(subIn.getSubscriptionKey(), subDirectOut.getSubscriptionKey());
+			
+			List<Subscription> outSubscriptionList = subscription.getSubscriptions(authInfo);
+			Assert.assertNotNull(outSubscriptionList);
+			Subscription subOut = outSubscriptionList.get(0);
+			
+			assertEquals(subIn.getSubscriptionKey(), subOut.getSubscriptionKey());
+			assertEquals(subDirectOut.getExpiresAfter().getMonth(), subOut.getExpiresAfter().getMonth());
+			assertEquals(subDirectOut.getExpiresAfter().getDay(), subOut.getExpiresAfter().getDay());
+			assertEquals(subDirectOut.getExpiresAfter().getYear(), subOut.getExpiresAfter().getYear());
+			
+			//assertEquals(subIn.getSubscriptionFilter().getFindService().getName().get(0).getValue(), 
+			//			 subOut.getSubscriptionFilter().getFindService().getName().get(0).getValue());
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown");		
+		}	
+	}
+	
+	private void deleteSubscription(String authInfo, String subscriptionKey) {
+		try {
+			// Delete the entity and make sure it is removed
+			DeleteSubscription ds = new DeleteSubscription();
+			ds.setAuthInfo(authInfo);
+			
+			ds.getSubscriptionKey().add(subscriptionKey);
+			subscription.deleteSubscription(ds);
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
 		}
-		
-	}
+	}	
 }
