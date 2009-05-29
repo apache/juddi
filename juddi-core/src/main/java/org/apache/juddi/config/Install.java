@@ -481,11 +481,12 @@ public class Install {
             String replacement = config.getString(token);
             if (replacement!=null) {
             	log.debug("Found token " + token + " and replacement value " + replacement);
-            	installData.replaceAll(token, replacement);
+            	installData = installData.replaceAll("\\$\\{" + token + "\\}", replacement);
             } else {
             	log.error("Found token " + token + " but could not obtain its value. Data: " + installData);
             }
         }
+        log.debug("Data after token replacement: " + installData);
         return installData;
 	}
 
