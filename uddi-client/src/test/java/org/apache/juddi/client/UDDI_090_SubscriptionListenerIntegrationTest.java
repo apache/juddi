@@ -14,6 +14,9 @@ package org.apache.juddi.client;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
@@ -102,12 +105,33 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckSubscriptionListener.saveService(authInfoJoe);
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);			
-		} 
-		finally {
+
+			String test = readLogAsString("./target/uddiclient.log");
+			System.out.println(test);
+		} catch (Exception e) {
+			Assert.fail();
+			e.printStackTrace();
+		} finally {
 			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}	
+	
+    private static String readLogAsString(String filePath)
+    throws java.io.IOException{
+        StringBuffer data = new StringBuffer(1000);
+        BufferedReader reader = new BufferedReader(
+                new FileReader(filePath));
+        char[] buf = new char[1024];
+        int numRead=0;
+        while((numRead=reader.read(buf)) != -1){
+            data.append(buf, 0, numRead);
+        }
+        reader.close();
+        String notify = data.toString().replace("Notification received by UDDISubscriptionListenerService : ", "");
+        	
+        return notify;
+    }
 }
