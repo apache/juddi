@@ -16,41 +16,21 @@ package org.uddi.api_v3.tck;
  */
 import static junit.framework.Assert.assertEquals;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.ws.Holder;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-
-import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.DeleteBinding;
-import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.SaveBinding;
-
-
-import org.uddi.api_v3.BusinessService;
-import org.uddi.api_v3.DeleteService;
-import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.SaveService;
-import org.uddi.api_v3.ServiceDetail;
 import org.uddi.sub_v3.DeleteSubscription;
-import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.Subscription;
-import org.uddi.sub_v3.SubscriptionResultsList;
-import org.uddi.subr_v3.NotifySubscriptionListener;
-import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
-
-import org.uddi.api_v3.TModel;
-import org.uddi.api_v3.TModelList;
-import org.uddi.api_v3.Name;
-import org.uddi.api_v3.SaveTModel;
-import org.uddi.api_v3.FindTModel;
 
 
 /**
@@ -78,19 +58,14 @@ public class TckSubscriptionListener
     
 	private Logger logger = Logger.getLogger(this.getClass());
 	private UDDIPublicationPortType publication = null;
-    private UDDIInquiryPortType inquiry = null;
-    private UDDISubscriptionListenerPortType listener = null;
     private UDDISubscriptionPortType subscription = null;
     private SaveService ss = null;
     
-	public TckSubscriptionListener(UDDISubscriptionListenerPortType listener,
+	public TckSubscriptionListener(
 			UDDISubscriptionPortType subscription,
-			UDDIInquiryPortType inquiry,
 			UDDIPublicationPortType publication) {
 		super();
-		this.listener = listener;
 		this.subscription = subscription;
-		this.inquiry = inquiry;
 		this.publication = publication;
 	}
 	

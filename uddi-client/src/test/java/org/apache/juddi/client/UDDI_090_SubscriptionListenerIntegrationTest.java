@@ -25,24 +25,16 @@ import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.api_v3.tck.EntityCreator;
-import org.uddi.api_v3.tck.TckBindingTemplate;
 import org.uddi.api_v3.tck.TckBusiness;
 import org.uddi.api_v3.tck.TckBusinessService;
 import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
-import org.uddi.api_v3.tck.TckSubscription;
 import org.uddi.api_v3.tck.TckSubscriptionListener;
 import org.uddi.api_v3.tck.TckTModel;
-import org.uddi.sub_v3.Subscription;
-import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
-
-import org.uddi.api_v3.BusinessService;
 
 /**
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
@@ -54,8 +46,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	private static TckTModel tckTModel                    = null;
 	private static TckBusiness tckBusiness                = null;
 	private static TckBusinessService tckBusinessService  = null;
-	private static TckBindingTemplate tckBindingTemplate  = null;
-	private static TckSubscription tckSubscription = null;
 	private static TckSubscriptionListener tckSubscriptionListener = null;
 
 	private static UDDIPublicationPortType publication = null;
@@ -82,14 +72,11 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	        	 publication = transport.getPublishService();
 	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
 	        	 UDDISubscriptionPortType subscription = transport.getSubscriptionService();
-	        	 UDDISubscriptionListenerPortType listener = transport.getSubscriptionListenerService();
 	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
 	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
-	        	 tckSubscription = new TckSubscription(subscription, security);
-	        	 tckSubscriptionListener = new TckSubscriptionListener(listener, subscription, inquiry, publication);	
+	        	 tckSubscriptionListener = new TckSubscriptionListener(subscription, publication);	
 	         } else {
 	        	 Assert.fail();
 	         }

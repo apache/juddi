@@ -18,21 +18,16 @@
 package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 
 import javax.jws.WebService;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.validation.ValidateSubscriptionListener;
 import org.apache.juddi.util.NotificationList;
+import org.apache.juddi.validation.ValidateSubscriptionListener;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
@@ -48,6 +43,7 @@ public class UDDISubscriptionListenerImpl implements
 	
 	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
 		
+	@SuppressWarnings("unchecked")
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {

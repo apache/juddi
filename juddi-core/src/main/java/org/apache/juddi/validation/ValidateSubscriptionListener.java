@@ -19,7 +19,6 @@
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.model.UddiEntityPublisher;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 
 /**
