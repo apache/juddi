@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.Transport;
+import org.uddi.api_v3.tck.EntityCreator;
 import org.uddi.api_v3.tck.TckBindingTemplate;
 import org.uddi.api_v3.tck.TckBusiness;
 import org.uddi.api_v3.tck.TckBusinessService;
@@ -33,6 +34,8 @@ import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckSubscription;
 import org.uddi.api_v3.tck.TckSubscriptionListener;
 import org.uddi.api_v3.tck.TckTModel;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -107,10 +110,15 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);			
 
 			String test = readLogAsString("./target/uddiclient.log");
-			System.out.println(test);
+
+			if (! test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
+				Assert.fail("Notification does not contain the correct service");
+			}
+			
 		} catch (Exception e) {
-			Assert.fail();
 			e.printStackTrace();
+
+			Assert.fail();
 		} finally {
 			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
@@ -130,8 +138,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
             data.append(buf, 0, numRead);
         }
         reader.close();
-        String notify = data.toString().replace("Notification received by UDDISubscriptionListenerService : ", "");
-        	
+        String notify = data.toString().replace("Notification received by UDDISubscriptionListenerService : <?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");
+        
         return notify;
     }
 }
