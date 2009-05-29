@@ -18,8 +18,10 @@ package org.uddi.api_v3.tck;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
@@ -50,6 +52,15 @@ public class EntityCreator {
 		return obj;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static Object buildFromString(String source, String thePackage) throws JAXBException, IOException {
+		Object obj = null;
+		JAXBContext jc = JAXBContext.newInstance(thePackage);
+		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		obj = ((JAXBElement)unmarshaller.unmarshal(new StringReader(source)));
+		return obj;
+	}
+		
 	public static void outputEntity(Object obj, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Marshaller marshaller = jc.createMarshaller();

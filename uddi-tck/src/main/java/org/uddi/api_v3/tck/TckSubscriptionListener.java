@@ -144,8 +144,6 @@ public class TckSubscriptionListener
 	
 	public void changeSubscribedObject(String authInfo) {
 		try	{
-			System.out.println("Name: " +
-					ss.getBusinessService().get(0).getDescription().get(0).getValue());
 			ss.getBusinessService().get(0).getDescription().get(0).setValue("foo");
 			publication.saveService(ss);
 			Thread.sleep(10000);
