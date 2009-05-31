@@ -16,11 +16,6 @@
  */
 package org.uddi.api_v3.client.transport;
 
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -31,7 +26,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
-public class JAXWSTransport implements Transport {
+public class InVMTransport implements Transport {
 
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
@@ -41,13 +36,11 @@ public class JAXWSTransport implements Transport {
 	UDDICustodyTransferPortType custodyTransferService = null;
 
 	public UDDIInquiryPortType getInquiryService() throws TransportException {
-
 		if (inquiryService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_INQUIRY_URL);
-				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.INQUIRY_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				inquiryService = (UDDIInquiryPortType) service.getPort(UDDIInquiryPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				inquiryService = (UDDIInquiryPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -56,13 +49,11 @@ public class JAXWSTransport implements Transport {
 	}
 	
 	public UDDISecurityPortType getSecurityService() throws TransportException {
-
 		if (securityService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SECURITY_URL);
-				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.SECURITY_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				securityService = (UDDISecurityPortType) service.getPort(UDDISecurityPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				securityService = (UDDISecurityPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -71,13 +62,11 @@ public class JAXWSTransport implements Transport {
 	}
 	
 	public UDDIPublicationPortType getPublishService() throws TransportException {
-
 		if (publishService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_PUBLISH_URL);
-				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.PUBLISH_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				publishService = (UDDIPublicationPortType) service.getPort(UDDIPublicationPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				publishService = (UDDIPublicationPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -86,13 +75,11 @@ public class JAXWSTransport implements Transport {
 	}
 	
 	public UDDISubscriptionPortType getSubscriptionService() throws TransportException {
-
 		if (subscriptionService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SUBSCRIPTION_URL);
-				QName qName = new QName(Transport.SUB_V3_NAMESPACE, Transport.SUBSCRIPTION_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				subscriptionService = (UDDISubscriptionPortType) service.getPort(UDDISubscriptionPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				subscriptionService = (UDDISubscriptionPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -101,12 +88,11 @@ public class JAXWSTransport implements Transport {
 	}
 	
 	public UDDISubscriptionListenerPortType getSubscriptionListenerService() throws TransportException {
-		if (subscriptionListenerService == null) {
+		if (subscriptionListenerService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SUBSCRIPTION_LISTENER_URL);
-				QName qName = new QName(Transport.SUBR_V3_NAMESPACE, Transport.SUBSCRIPTION_LISTENER_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				subscriptionListenerService = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				subscriptionListenerService = (UDDISubscriptionListenerPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -115,12 +101,11 @@ public class JAXWSTransport implements Transport {
 	}
 	
 	public UDDICustodyTransferPortType getCustodyTransferService() throws TransportException {
-		if (custodyTransferService == null) {
+		if (custodyTransferService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_CUSTODY_TRANSFER_URL);
-				QName qName = new QName(Transport.CUSTODY_V3_NAMESPACE, Transport.CUSTODY_TRANSFER_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
-				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+				Class<?> c = Class.forName(endpointURL);
+				custodyTransferService = (UDDICustodyTransferPortType) c.newInstance();
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
