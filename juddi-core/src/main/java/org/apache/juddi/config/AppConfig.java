@@ -31,6 +31,7 @@ import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.juddi.Registry;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
@@ -182,7 +183,9 @@ public class AppConfig
 	 */
 	public static void reloadConfig() throws ConfigurationException
 	{
+		Registry.stop();
 		getInstance().loadConfiguration();
+		Registry.start();
 	}
 	/**
 	 * The object from which property values can be obtained.
