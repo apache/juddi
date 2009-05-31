@@ -21,19 +21,19 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.0.SNAPSHOT</version>
+    <version>3.0.0.beta</version>
   </parent>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-axis</artifactId>
   <packaging>war</packaging>
-  <version>3.0.0.SNAPSHOT</version>
+  <version>3.0.0.beta</version>
   <name>jUDDI Axis2 Deployment</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <artifactId>juddi-core</artifactId>
       <groupId>org.apache.juddi</groupId>
-      <version>3.0.0.SNAPSHOT</version> 
+      <version>3.0.0.beta</version> 
         <exclusions>
           <exclusion>
             <groupId>javax.servlet</groupId>
