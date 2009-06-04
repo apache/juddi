@@ -1,4 +1,113 @@
 
+        <h1>Release Notes - jUDDI - Version 3.0.0.beta</h1>
+    
+<h2>        Sub-task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-205'>JUDDI-205</a>] -         add subscription notification
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-206'>JUDDI-206</a>] -         Implement save_subscription method of API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-207'>JUDDI-207</a>] -         Subscription model itself (durations / point in time / coverage / etc)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-208'>JUDDI-208</a>] -         Implement get_subscriptions method of API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-209'>JUDDI-209</a>] -         Implement delete_subscription method of API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-210'>JUDDI-210</a>] -         Implement get_subscriptionResults method of API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-211'>JUDDI-211</a>] -         Allow subscription results to be chunked
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-212'>JUDDI-212</a>] -         Allow the option to request &quot;brief&quot; versus full results with subscription result requests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-213'>JUDDI-213</a>] -         Handle &quot;virtually deleted&quot; entities of subscription results
+</li>
+</ul>
+    
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-100'>JUDDI-100</a>] -         jUDDI does not work with Java 6
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-166'>JUDDI-166</a>] -         Need review persistence.xml setup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-175'>JUDDI-175</a>] -         resources are not on the eclipse classpath by default
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-193'>JUDDI-193</a>] -         Fix path bug with manual installation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-194'>JUDDI-194</a>] -         We only want the exploded webapps/juddi directory
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-195'>JUDDI-195</a>] -         OpenJPA does not work in alpha
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-214'>JUDDI-214</a>] -         Implement getOperationalInfo method
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-216'>JUDDI-216</a>] -         18/19 tests fail under openjpa configuration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-223'>JUDDI-223</a>] -         juddi-cxf missing root_BusinessEntity.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-227'>JUDDI-227</a>] -         SOAP error missing required element 'coveragePeriod'
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-228'>JUDDI-228</a>] -         SOAP error missing required element 'tModelKey'
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-229'>JUDDI-229</a>] -         Persistence issue with subscription with CLOB on Derby
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-231'>JUDDI-231</a>] -         Fix potential db connection leaks
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-232'>JUDDI-232</a>] -         root_BusinessEntity.xml should not be in WAR
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-235'>JUDDI-235</a>] -         Adjust &quot;approximate match&quot; searching to comply with spec
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-236'>JUDDI-236</a>] -         update the editable XML install files for new APIs and add some commented help text
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-234'>JUDDI-234</a>] -         More dynamic registration of our own jUDDI endpoints
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-244'>JUDDI-244</a>] -         Add inVM transport for client-server communication to allow embedded jUDDI
+</li>
+</ul>
+                
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-131'>JUDDI-131</a>] -         Figure out what to do with the samples and the test directories.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-136'>JUDDI-136</a>] -         How to deal with a table prefix (JUDDI_) when using JPA
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-147'>JUDDI-147</a>] -         Create test data in the form of input XML files
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-149'>JUDDI-149</a>] -         BusinessEntities require serviceProjections collection
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-150'>JUDDI-150</a>] -         Implement service projections in the publish API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-153'>JUDDI-153</a>] -         Build Subscription API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-177'>JUDDI-177</a>] -         Adding debug level logging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-178'>JUDDI-178</a>] -         Perform necessary authentication logic
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-181'>JUDDI-181</a>] -         Add scalability tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-182'>JUDDI-182</a>] -         Investigate using the maven release plugin.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-196'>JUDDI-196</a>] -         Implement subscriptionListener API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-238'>JUDDI-238</a>] -         Create Integration test for Subscription
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-239'>JUDDI-239</a>] -         Go over the docs - add info on Subcription
+</li>
+</ul>
+            
+
+
         <h1>Release Notes - jUDDI - Version 3.0.0.alpha</h1>
         
 <h2>        Bug
