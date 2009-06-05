@@ -86,6 +86,31 @@
 			<email>tcunningham AT apache.org</email>
 			<organization>ASF</organization>
 		</developer>
+		<developer>
+			<id>sviens</id>
+			<name>Steve Viens</name>
+			<email>steve AT viens.net</email>
+			<url>http://www.viens.net</url>
+			<organization>ASF</organization>
+		</developer>
+		<developer>
+			<id>acutright</id>
+			<name>Andy Cutright</name>
+			<email>acutright AT apache.org</email>
+			<organization>ASF</organization>
+		</developer>
+		<developer>
+			<id>anil</id>
+			<name>Anil Saldhana</name>
+			<email>anil AT apache.org</email>
+			<organization>ASF</organization>
+		</developer>
+		<developer>
+			<id>dims</id>
+			<name>Davanum Srinivas</name>
+			<email>dims AT yahoo.com</email>
+			<organization>ASF</organization>
+		</developer>
 	</developers>
 	<licenses>
 		<license>
@@ -114,6 +139,9 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+				    <aggregate>true</aggregate>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -133,7 +161,9 @@
 		<module>uddi-tck</module>
 		<module>juddi-core</module>
 		<module>juddi-cxf</module>
+<!--
 		<module>juddi-axis</module>
+-->
 		<module>juddi-tomcat</module>
 		<module>uddi-client</module>
 	</modules>

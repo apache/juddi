@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <properties>
+    <title>jUDDI Releases</title>
+  </properties>
+  <body>
+    <section name="Releases">    
+        
+      <table>   
+           
+        <tr> 
+          <td><strong>Name</strong></td>
+          <td><strong>Date</strong></td>
+          <td><strong>Description</strong></td>
+        </tr>
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.beta</a></td>
+          <td>June 5, 2009</td>
+          <td>Stable Release for Version 3.0, with limited console support only.</td>
+        </tr> 
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC7/">2.0rc7</a></td>
+          <td>May 31, 2009</td>
+          <td>Stable Release Candidate #7 for Version 2.0.</td>
+        </tr> 
+		<tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.alpha</a></td>
+          <td>Februari 13, 2009</td>
+          <td>Unstable Preview Release for Version 3.0.</td>
+        </tr> 
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC6/">2.0rc6</a></td>
+          <td>Februari 10, 2009</td>
+          <td>Stable Release Candidate #6 for Version 2.0.</td>
+        </tr>        
+		<tr>
+          <td><a href="http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/juddi/juddi/2.0rc5/">2.0rc5</a></td>
+          <td>December 13, 2007</td>
+          <td>Stable Release Candidate #5 for Version 2.0.</td>
+        </tr>
+
+        <tr>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/0_9RC4/">0.9rc4</a></td>
+          <td>June 14, 2005</td>
+          <td>Stable Release Candidate #4 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc3/">0.9rc3</a></td>
+          <td>July 2, 2004</td>
+          <td>Stable Release Candidate #3 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc2/">0.9rc2</a></td>
+          <td>June 29, 2004</td>
+          <td>Stable Release Candidate #2 for Version 0.9.</td>
+        </tr>
+        <tr>
+          <td><a href="http://archive.apache.org/dist/ws/juddi/0_9rc1/">0.9rc1</a></td>
+          <td>Stable June 16, 2004</td>
+          <td>Release Candidate #1 for Version 0.9.</td>
+        </tr>
+
+      </table>
+		
+    </section>
+  </body>
+</document>
