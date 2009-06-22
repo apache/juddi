@@ -7,6 +7,11 @@
 		<mkdir dir="${dist.dir}/docs"/>
 		<copy file="${dependency.juddi.war}"
 			tofile="${dist.dir}/juddi.war"/>
+		<copy todir="${dist.dir}">
+			<fileset dir="${basedir}/../juddi-core/target/">
+				<include name="*-sources.jar"/>
+			</fileset>	
+		</copy>
 		<copy todir="${dist.dir}/docs">
 			<fileset dir="${basedir}/../docs">
 				<exclude name="**/*.odt"/>

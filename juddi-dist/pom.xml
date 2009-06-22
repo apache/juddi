@@ -59,7 +59,6 @@
                <property name="test_classpath" refid="maven.test.classpath"/>
                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
                <property name="project.version" value="${project.version}"/>
-
 	       <property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-war.war.path}"/>
 	       <ant antfile="${basedir}/build.xml">
                   <target name="package-dist"/>
