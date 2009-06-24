@@ -27,7 +27,7 @@ import org.uddi.api_v3.Name;
  */
 public class EntityForLang {
 	
-	public static Name get(List<Name> entityList, String lang) {
+	public static Name getName(List<Name> entityList, String lang) {
 		
 		if (lang==null) return entityList.get(0);
 		for (Name entity : entityList) {
@@ -38,7 +38,7 @@ public class EntityForLang {
 		return entityList.get(0);
 	}
 	
-	public static Address get(List<Address> entityList, String lang) {
+	public static Address getAddress(List<Address> entityList, String lang) {
 		
 		if (lang==null) return entityList.get(0);
 		for (Address entity : entityList) {
@@ -49,7 +49,7 @@ public class EntityForLang {
 		return entityList.get(0);
 	}
 	
-	public static Description get(List<Description> entityList, String lang) {
+	public static Description getDescription(List<Description> entityList, String lang) {
 		
 		if (lang==null) return entityList.get(0);
 		for (Description entity : entityList) {
