@@ -18,6 +18,8 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -70,85 +72,85 @@ import org.uddi.api_v3.TModelDetail;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDIPublicationPortType {
+public interface UDDIPublicationPortType extends Remote{
 
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "add_publisherAssertions", action = "add_publisherAssertions")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void addPublisherAssertions(
         @WebParam(name = "add_publisherAssertions", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         AddPublisherAssertions body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_binding", action = "delete_binding")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteBinding(
         @WebParam(name = "delete_binding", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteBinding body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_business", action = "delete_business")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteBusiness(
         @WebParam(name = "delete_business", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteBusiness body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_publisherAssertions", action = "delete_publisherAssertions")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deletePublisherAssertions(
         @WebParam(name = "delete_publisherAssertions", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeletePublisherAssertions body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_service", action = "delete_service")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteService(
         @WebParam(name = "delete_service", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteService body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_tModel", action = "delete_tModel")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteTModel(
         @WebParam(name = "delete_tModel", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteTModel body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -157,7 +159,7 @@ public interface UDDIPublicationPortType {
      * @param authInfo
      * @return
      *     returns java.util.List<org.uddi.api_v3.AssertionStatusItem>
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_assertionStatusReport", action = "get_assertionStatusReport")
     @WebResult(name = "assertionStatusItem", targetNamespace = "urn:uddi-org:api_v3")
@@ -168,7 +170,7 @@ public interface UDDIPublicationPortType {
         String authInfo,
         @WebParam(name = "completionStatus", targetNamespace = "urn:uddi-org:api_v3")
         CompletionStatus completionStatus)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -176,7 +178,7 @@ public interface UDDIPublicationPortType {
      * @param authInfo
      * @return
      *     returns java.util.List<org.uddi.api_v3.PublisherAssertion>
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_publisherAssertions", action = "get_publisherAssertions")
     @WebResult(name = "publisherAssertion", targetNamespace = "urn:uddi-org:api_v3")
@@ -185,7 +187,7 @@ public interface UDDIPublicationPortType {
     public List<PublisherAssertion> getPublisherAssertions(
         @WebParam(name = "authInfo", targetNamespace = "urn:uddi-org:api_v3")
         String authInfo)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -193,7 +195,7 @@ public interface UDDIPublicationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.RegisteredInfo
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_registeredInfo", action = "get_registeredInfo")
     @WebResult(name = "registeredInfo", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -201,7 +203,7 @@ public interface UDDIPublicationPortType {
     public RegisteredInfo getRegisteredInfo(
         @WebParam(name = "get_registeredInfo", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetRegisteredInfo body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -209,7 +211,7 @@ public interface UDDIPublicationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BindingDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_binding", action = "save_binding")
     @WebResult(name = "bindingDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -217,7 +219,7 @@ public interface UDDIPublicationPortType {
     public BindingDetail saveBinding(
         @WebParam(name = "save_binding", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         SaveBinding body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -225,7 +227,7 @@ public interface UDDIPublicationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BusinessDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_business", action = "save_business")
     @WebResult(name = "businessDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -233,7 +235,7 @@ public interface UDDIPublicationPortType {
     public BusinessDetail saveBusiness(
         @WebParam(name = "save_business", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         SaveBusiness body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -241,7 +243,7 @@ public interface UDDIPublicationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.ServiceDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_service", action = "save_service")
     @WebResult(name = "serviceDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -249,7 +251,7 @@ public interface UDDIPublicationPortType {
     public ServiceDetail saveService(
         @WebParam(name = "save_service", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         SaveService body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -257,7 +259,7 @@ public interface UDDIPublicationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.TModelDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_tModel", action = "save_tModel")
     @WebResult(name = "tModelDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -265,14 +267,14 @@ public interface UDDIPublicationPortType {
     public TModelDetail saveTModel(
         @WebParam(name = "save_tModel", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         SaveTModel body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param publisherAssertion
      * @param authInfo
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "set_publisherAssertions", action = "set_publisherAssertions")
     @RequestWrapper(localName = "set_publisherAssertions", targetNamespace = "urn:uddi-org:api_v3", className = "org.uddi.api_v3.SetPublisherAssertions")
@@ -282,7 +284,7 @@ public interface UDDIPublicationPortType {
         String authInfo,
         @WebParam(name = "publisherAssertion", targetNamespace = "urn:uddi-org:api_v3", mode = WebParam.Mode.INOUT)
         Holder<List<PublisherAssertion>> publisherAssertion)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

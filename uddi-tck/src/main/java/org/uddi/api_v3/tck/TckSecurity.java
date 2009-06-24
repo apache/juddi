@@ -14,6 +14,8 @@
  */
 package org.uddi.api_v3.tck;
 
+import java.rmi.RemoteException;
+
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 /**
@@ -22,7 +24,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class TckSecurity {
 
-	public static String getAuthToken(UDDISecurityPortType securityService, String pubId, String cred) throws DispositionReportFaultMessage {
+	public static String getAuthToken(UDDISecurityPortType securityService, String pubId, String cred) throws DispositionReportFaultMessage, RemoteException {
 	
 		org.uddi.api_v3.GetAuthToken ga = new org.uddi.api_v3.GetAuthToken();
 		ga.setUserID(pubId);

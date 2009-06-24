@@ -14,7 +14,12 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.rmi.RemoteException;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.Registry;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,7 +29,6 @@ import org.uddi.api_v3.tck.TckBusinessService;
 import org.uddi.api_v3.tck.TckPublisher;
 import org.uddi.api_v3.tck.TckSecurity;
 import org.uddi.api_v3.tck.TckTModel;
-import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -45,15 +49,21 @@ public class API_050_BindingTemplateTest
 	private static String authInfoJoe                 = null;
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws ConfigurationException {
+		Registry.start();
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
 			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
-		} catch (DispositionReportFaultMessage e) {
+		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
 		}
+	}
+
+	@AfterClass
+	public static void stopRegistry() throws ConfigurationException {
+		Registry.stop();
 	}
 	
 	@Test

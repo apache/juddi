@@ -18,6 +18,7 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.Contact;
 import org.w3._2000._09.xmldsig_.SignatureType;
@@ -78,8 +80,10 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "signature"
 })
 @XmlRootElement(name = "replicationConfiguration")
-public class ReplicationConfiguration {
+public class ReplicationConfiguration implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected long serialNumber;
     @XmlElement(required = true)
     protected String timeOfConfigurationUpdate;

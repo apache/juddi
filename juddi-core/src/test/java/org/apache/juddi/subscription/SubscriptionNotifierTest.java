@@ -15,6 +15,7 @@
 package org.apache.juddi.subscription;
 
 import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 import java.util.Collection;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -71,7 +72,7 @@ public class SubscriptionNotifierTest
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
 			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
-		} catch (DispositionReportFaultMessage e) {
+		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
 		}

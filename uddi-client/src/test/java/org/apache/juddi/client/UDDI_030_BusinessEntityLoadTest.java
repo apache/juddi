@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.client;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class UDDI_030_BusinessEntityLoadTest extends UDDI_030_BusinessEntityInte
 	int numberOfBusinesses=1100;
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws ConfigurationException {
 		UDDI_030_BusinessEntityIntegrationTest.setup();
 	}
 	

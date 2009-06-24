@@ -18,9 +18,12 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -47,8 +50,10 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlType(name = "addressLine", propOrder = {
     "value"
 })
-public class AddressLine {
+public class AddressLine implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlValue
     protected String value;
     @XmlAttribute

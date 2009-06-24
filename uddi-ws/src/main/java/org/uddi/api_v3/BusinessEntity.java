@@ -18,12 +18,14 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.w3._2000._09.xmldsig_.SignatureType;
 
@@ -66,8 +68,10 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "categoryBag",
     "signature"
 })
-public class BusinessEntity {
+public class BusinessEntity implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected DiscoveryURLs discoveryURLs;
     @XmlElement(required = true)
     protected List<Name> name;

@@ -18,9 +18,12 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -44,9 +47,11 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "get_authToken")
-public class GetAuthToken {
+public class GetAuthToken implements Serializable{
 
-    @XmlAttribute(required = true)
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
+	@XmlAttribute(required = true)
     protected String userID;
     @XmlAttribute(required = true)
     protected String cred;

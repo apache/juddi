@@ -18,6 +18,8 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.RemoteException;
+
 import javax.xml.ws.WebFault;
 import org.uddi.api_v3.DispositionReport;
 
@@ -30,7 +32,7 @@ import org.uddi.api_v3.DispositionReport;
  */
 @WebFault(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3")
 public class DispositionReportFaultMessage
-    extends Exception
+    extends RemoteException
 {
 	private static final long serialVersionUID = 1L;
 	/**

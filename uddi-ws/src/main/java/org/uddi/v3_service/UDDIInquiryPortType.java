@@ -18,6 +18,9 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -67,7 +70,7 @@ import org.uddi.api_v3.TModelList;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDIInquiryPortType {
+public interface UDDIInquiryPortType extends Remote{
 
 
     /**
@@ -75,14 +78,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BindingDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "find_binding", action = "find_binding")
     @WebResult(name = "bindingDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public BindingDetail findBinding(
         @WebParam(name = "find_binding", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         FindBinding body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -90,14 +93,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BusinessList
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "find_business", action = "find_business")
     @WebResult(name = "businessList", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public BusinessList findBusiness(
         @WebParam(name = "find_business", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         FindBusiness body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -105,14 +108,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.RelatedBusinessesList
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "find_relatedBusinesses", action = "find_relatedBusinesses")
     @WebResult(name = "relatedBusinessesList", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public RelatedBusinessesList findRelatedBusinesses(
         @WebParam(name = "find_relatedBusinesses", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         FindRelatedBusinesses body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -120,14 +123,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.ServiceList
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "find_service", action = "find_service")
     @WebResult(name = "serviceList", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public ServiceList findService(
         @WebParam(name = "find_service", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         FindService body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -135,14 +138,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.TModelList
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "find_tModel", action = "find_tModel")
     @WebResult(name = "tModelList", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public TModelList findTModel(
         @WebParam(name = "find_tModel", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         FindTModel body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -150,14 +153,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BindingDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_bindingDetail", action = "get_bindingDetail")
     @WebResult(name = "bindingDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public BindingDetail getBindingDetail(
         @WebParam(name = "get_bindingDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetBindingDetail body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -165,14 +168,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.BusinessDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_businessDetail", action = "get_businessDetail")
     @WebResult(name = "businessDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public BusinessDetail getBusinessDetail(
         @WebParam(name = "get_businessDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetBusinessDetail body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -180,14 +183,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.OperationalInfos
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_operationalInfo", action = "get_operationalInfo")
     @WebResult(name = "operationalInfos", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public OperationalInfos getOperationalInfo(
         @WebParam(name = "get_operationalInfo", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetOperationalInfo body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -195,14 +198,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.ServiceDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_serviceDetail", action = "get_serviceDetail")
     @WebResult(name = "serviceDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public ServiceDetail getServiceDetail(
         @WebParam(name = "get_serviceDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetServiceDetail body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -210,14 +213,14 @@ public interface UDDIInquiryPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.TModelDetail
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_tModelDetail", action = "get_tModelDetail")
     @WebResult(name = "tModelDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     public TModelDetail getTModelDetail(
         @WebParam(name = "get_tModelDetail", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetTModelDetail body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

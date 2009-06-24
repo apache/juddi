@@ -18,9 +18,12 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -57,8 +60,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "nodeID",
     "authorizedName"
 })
-public class OperationalInfo {
+public class OperationalInfo implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected XMLGregorianCalendar created;
     protected XMLGregorianCalendar modified;
     protected XMLGregorianCalendar modifiedIncludingChildren;

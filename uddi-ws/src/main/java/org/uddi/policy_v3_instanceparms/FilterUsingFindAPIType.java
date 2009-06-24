@@ -18,6 +18,8 @@
 
 package org.uddi.policy_v3_instanceparms;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -40,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "filterUsingFindAPI_type")
 @XmlEnum
-public enum FilterUsingFindAPIType {
+public enum FilterUsingFindAPIType implements Serializable{
 
     @XmlEnumValue("supported")
     SUPPORTED("supported"),

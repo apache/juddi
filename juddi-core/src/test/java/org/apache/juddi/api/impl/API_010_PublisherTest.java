@@ -16,8 +16,11 @@ package org.apache.juddi.api.impl;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.Registry;
 import org.apache.juddi.api.datatype.DeletePublisher;
 import org.apache.juddi.api.datatype.GetPublisherDetail;
 import org.apache.juddi.api.datatype.Publisher;
@@ -26,7 +29,9 @@ import org.apache.juddi.api.datatype.SavePublisher;
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.tck.EntityCreator;
 import org.uddi.api_v3.tck.TckPublisher;
@@ -48,6 +53,16 @@ public class API_010_PublisherTest {
 	private UDDIInquiryImpl inquiry       = new UDDIInquiryImpl();
 	private UDDISecurityPortType security = new UDDISecurityImpl();
 	private static String authInfo = null;
+	
+	@BeforeClass
+	public static void startRegistry() throws ConfigurationException {
+		Registry.start();
+	}
+	
+	@AfterClass
+	public static void stopRegistry() throws ConfigurationException {
+		Registry.stop();
+	}
 	
 	@Test
 	public void testJoePublisher() {
@@ -192,11 +207,11 @@ public class API_010_PublisherTest {
 		}
 	}
 	
-	protected String authInfoJoe() throws DispositionReportFaultMessage {
+	protected String authInfoJoe() throws RemoteException, DispositionReportFaultMessage {
 		return TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
 	}
 	
-	protected String authInfoSam() throws DispositionReportFaultMessage {
+	protected String authInfoSam() throws RemoteException,  DispositionReportFaultMessage {
 		return TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
 	}
 	

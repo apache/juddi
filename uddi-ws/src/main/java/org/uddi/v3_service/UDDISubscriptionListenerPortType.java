@@ -18,6 +18,9 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -49,7 +52,7 @@ import org.uddi.subr_v3.NotifySubscriptionListener;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDISubscriptionListenerPortType {
+public interface UDDISubscriptionListenerPortType extends Remote{
 
 
     /**
@@ -65,7 +68,7 @@ public interface UDDISubscriptionListenerPortType {
     public DispositionReport notifySubscriptionListener(
         @WebParam(name = "notify_subscriptionListener", targetNamespace = "urn:uddi-org:subr_v3", partName = "body")
         NotifySubscriptionListener body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

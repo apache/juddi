@@ -18,10 +18,12 @@
 
 package org.uddi.sub_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -48,8 +50,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "subscriptions", propOrder = {
     "subscription"
 })
-public class Subscriptions {
+public class Subscriptions implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected List<Subscription> subscription;
 
     /**

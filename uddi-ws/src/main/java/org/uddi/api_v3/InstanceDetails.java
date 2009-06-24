@@ -18,6 +18,7 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -58,8 +60,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "instanceDetails", propOrder = {
     "content"
 })
-public class InstanceDetails {
+public class InstanceDetails implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElementRefs({
         @XmlElementRef(name = "instanceParms", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
         @XmlElementRef(name = "description", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),

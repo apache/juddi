@@ -18,9 +18,12 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -61,8 +64,10 @@ import javax.xml.bind.annotation.XmlType;
     "toKey",
     "keyedReference"
 })
-public class FindRelatedBusinesses {
+public class FindRelatedBusinesses implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected String authInfo;
     protected FindQualifiers findQualifiers;
     protected String businessKey;

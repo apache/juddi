@@ -18,10 +18,13 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.uddi.api_v3.PublisherAssertion;
@@ -61,8 +64,10 @@ import org.uddi.api_v3.PublisherAssertion;
     "toSignatures"
 })
 @XmlRootElement(name = "changeRecordPublisherAssertion")
-public class ChangeRecordPublisherAssertion {
+public class ChangeRecordPublisherAssertion implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected PublisherAssertion publisherAssertion;
     protected boolean fromBusinessCheck;

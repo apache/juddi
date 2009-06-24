@@ -18,10 +18,12 @@
 
 package org.uddi.vscache_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -50,8 +52,10 @@ import javax.xml.bind.annotation.XmlType;
     "chunkToken",
     "validValue"
 })
-public class ValidValuesList {
+public class ValidValuesList implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected String chunkToken;
     protected List<ValidValue> validValue;
 

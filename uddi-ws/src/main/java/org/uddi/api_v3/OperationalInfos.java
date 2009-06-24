@@ -18,11 +18,13 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -50,8 +52,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "operationalInfos", propOrder = {
     "operationalInfo"
 })
-public class OperationalInfos {
+public class OperationalInfos implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected List<OperationalInfo> operationalInfo;
     @XmlAttribute
     protected Boolean truncated;

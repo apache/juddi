@@ -18,10 +18,13 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -55,8 +58,10 @@ import javax.xml.bind.annotation.XmlType;
     "keyedReference",
     "keysOwned"
 })
-public class AssertionStatusItem {
+public class AssertionStatusItem implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(required = true)
     protected String fromKey;
     @XmlElement(required = true)

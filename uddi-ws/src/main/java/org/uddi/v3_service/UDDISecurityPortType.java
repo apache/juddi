@@ -18,6 +18,9 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -51,7 +54,7 @@ import org.uddi.api_v3.GetAuthToken;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDISecurityPortType {
+public interface UDDISecurityPortType extends Remote{
 
 
     /**
@@ -63,7 +66,7 @@ public interface UDDISecurityPortType {
     public void discardAuthToken(
         @WebParam(name = "discard_authToken", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DiscardAuthToken body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -78,7 +81,7 @@ public interface UDDISecurityPortType {
     public AuthToken getAuthToken(
         @WebParam(name = "get_authToken", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         GetAuthToken body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

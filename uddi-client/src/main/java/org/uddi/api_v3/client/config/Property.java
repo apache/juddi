@@ -27,9 +27,9 @@ public interface Property
 	public final static String UDDI_PROXY_TRANSPORT             ="uddi.proxy.transport";
 	public final static String UDDI_CUSTODY_TRANSFER_URL       ="uddi.custodytransfer.url";
 	
-	public final static String UDDI_PROXY_FACTORY_INITIAL       ="uddi.proxy.factory.initial";
-	public final static String UDDI_PROXY_PROVIDER_URL          ="uddi.proxy.provider.url";
-	public final static String UDDI_PROXY_FACTORY_URL_PKS       ="uddi.proxy.factory.url.pkg";
+	public final static String UDDI_PROXY_FACTORY_INITIAL       ="java.naming.factory.initial";
+	public final static String UDDI_PROXY_PROVIDER_URL          ="java.naming.provider.url";
+	public final static String UDDI_PROXY_FACTORY_URL_PKS       ="java.naming.factory.url.pkgs";
 
 	public final static String DEFAULT_UDDI_PROXY_TRANSPORT     ="org.uddi.api_v3.client.transport.JAXWSTransport";
 }

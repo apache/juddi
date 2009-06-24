@@ -14,7 +14,12 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.rmi.RemoteException;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.Registry;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,7 +42,8 @@ public class API_020_TmodelTest {
 	private static String authInfoSam                 = null;
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws ConfigurationException, RemoteException {
+		Registry.start();
 		logger.debug("Getting auth tokens..");
 		try {
 			api010.saveJoePublisher();
@@ -49,6 +55,11 @@ public class API_020_TmodelTest {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
 		}
+	}
+	
+	@AfterClass
+	public static void stopRegistry() throws ConfigurationException {
+		Registry.stop();
 	}
 	
 	@Test

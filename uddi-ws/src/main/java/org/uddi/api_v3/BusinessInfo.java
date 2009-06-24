@@ -18,12 +18,14 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -55,8 +57,10 @@ import javax.xml.bind.annotation.XmlType;
     "description",
     "serviceInfos"
 })
-public class BusinessInfo {
+public class BusinessInfo implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(required = true)
     protected List<Name> name;
     protected List<Description> description;

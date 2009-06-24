@@ -18,10 +18,13 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
@@ -64,8 +67,10 @@ import org.uddi.api_v3.TModel;
     "operationalInfo"
 })
 @XmlRootElement(name = "changeRecordNewData")
-public class ChangeRecordNewData {
+public class ChangeRecordNewData implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected BusinessEntity businessEntity;
     @XmlElement(namespace = "urn:uddi-org:api_v3")

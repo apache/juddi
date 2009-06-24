@@ -18,11 +18,13 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -58,8 +60,10 @@ import javax.xml.bind.annotation.XmlType;
     "responseLimitVector"
 })
 @XmlRootElement(name = "get_changeRecords")
-public class GetChangeRecords {
-
+public class GetChangeRecords implements Serializable{
+	
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(required = true)
     protected String requestingNode;
     protected HighWaterMarkVectorType changesAlreadySeen;

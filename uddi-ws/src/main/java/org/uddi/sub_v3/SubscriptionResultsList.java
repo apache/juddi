@@ -18,12 +18,14 @@
 
 package org.uddi.sub_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.AssertionStatusReport;
 import org.uddi.api_v3.BindingDetail;
@@ -86,8 +88,10 @@ import org.uddi.api_v3.TModelList;
     "assertionStatusReport",
     "keyBag"
 })
-public class SubscriptionResultsList {
+public class SubscriptionResultsList implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected String chunkToken;
     @XmlElement(required = true)
     protected CoveragePeriod coveragePeriod;

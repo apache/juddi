@@ -18,9 +18,12 @@
 
 package org.uddi.sub_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -50,8 +53,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "startPoint",
     "endPoint"
 })
-public class CoveragePeriod {
+public class CoveragePeriod implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar startPoint;
     @XmlSchemaType(name = "dateTime")

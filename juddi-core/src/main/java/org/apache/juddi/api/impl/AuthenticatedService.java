@@ -31,7 +31,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public abstract class AuthenticatedService extends BaseService {
+public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
 	

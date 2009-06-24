@@ -18,6 +18,8 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -42,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "operatorStatus_type")
 @XmlEnum
-public enum OperatorStatusType {
+public enum OperatorStatusType implements Serializable{
 
     @XmlEnumValue("new")
     NEW("new"),

@@ -18,6 +18,8 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -50,7 +52,7 @@ import org.uddi.vscache_v3.ValidValue;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDIValueSetCachingPortType {
+public interface UDDIValueSetCachingPortType extends Remote {
 
 
     /**
@@ -73,7 +75,7 @@ public interface UDDIValueSetCachingPortType {
         Holder<String> chunkToken,
         @WebParam(name = "validValue", targetNamespace = "urn:uddi-org:vscache_v3", mode = WebParam.Mode.OUT)
         Holder<List<ValidValue>> validValue)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

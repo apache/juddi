@@ -18,11 +18,13 @@
 
 package org.uddi.policy_v3_instanceparms;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.w3c.dom.Element;
 
@@ -50,8 +52,10 @@ import org.w3c.dom.Element;
 @XmlType(name = "UDDIinstanceParmsContainer_type", propOrder = {
     "any"
 })
-public class UDDIinstanceParmsContainerType {
+public class UDDIinstanceParmsContainerType implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlAnyElement(lax = true)
     protected List<Object> any;
 

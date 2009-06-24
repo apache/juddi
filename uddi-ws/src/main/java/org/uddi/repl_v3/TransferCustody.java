@@ -18,9 +18,12 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferOperationalInfo;
@@ -54,8 +57,10 @@ import org.uddi.custody_v3.TransferToken;
     "keyBag",
     "transferOperationalInfo"
 })
-public class TransferCustody {
+public class TransferCustody implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(namespace = "urn:uddi-org:custody_v3", required = true)
     protected TransferToken transferToken;
     @XmlElement(namespace = "urn:uddi-org:custody_v3", required = true)

@@ -18,10 +18,13 @@
 
 package org.uddi.sub_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -61,8 +64,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "maxEntities",
     "expiresAfter"
 })
-public class Subscription {
+public class Subscription implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected String subscriptionKey;
     protected SubscriptionFilter subscriptionFilter;
     @XmlElement(namespace = "urn:uddi-org:api_v3")

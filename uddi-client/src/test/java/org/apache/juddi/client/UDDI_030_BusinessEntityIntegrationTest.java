@@ -14,13 +14,17 @@
  */
 package org.apache.juddi.client;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.Registry;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
+import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.api_v3.tck.TckBusiness;
 import org.uddi.api_v3.tck.TckPublisher;
@@ -44,10 +48,14 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	protected static String authInfoSam           = null;
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws ConfigurationException {
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.start();
+		}
 		logger.debug("Getting auth tokens..");
 		try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
@@ -69,6 +77,14 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	    	 logger.error(e.getMessage(), e);
 				Assert.fail("Could not obtain authInfo token.");
 	     } 
+	}
+	
+	@AfterClass
+	public static void stopRegistry() throws ConfigurationException {
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.stop();
+		}
 	}
 	
 	@Test

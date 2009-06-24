@@ -18,9 +18,12 @@
 
 package org.uddi.vscache_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -47,8 +50,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "validValue", propOrder = {
     "keyValue"
 })
-public class ValidValue {
+public class ValidValue implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(required = true)
     protected String keyValue;
 

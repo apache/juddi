@@ -18,6 +18,8 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -55,20 +57,20 @@ import org.uddi.sub_v3.SubscriptionResultsList;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDISubscriptionPortType {
+public interface UDDISubscriptionPortType extends Remote{
 
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_subscription", action = "delete_subscription")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteSubscription(
         @WebParam(name = "delete_subscription", targetNamespace = "urn:uddi-org:sub_v3", partName = "body")
         DeleteSubscription body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -76,7 +78,7 @@ public interface UDDISubscriptionPortType {
      * @param body
      * @return
      *     returns org.uddi.sub_v3.SubscriptionResultsList
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_subscriptionResults", action = "get_subscriptionResults")
     @WebResult(name = "subscriptionResultsList", targetNamespace = "urn:uddi-org:sub_v3", partName = "body")
@@ -84,7 +86,7 @@ public interface UDDISubscriptionPortType {
     public SubscriptionResultsList getSubscriptionResults(
         @WebParam(name = "get_subscriptionResults", targetNamespace = "urn:uddi-org:sub_v3", partName = "body")
         GetSubscriptionResults body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -92,7 +94,7 @@ public interface UDDISubscriptionPortType {
      * @param authInfo
      * @return
      *     returns java.util.List<org.uddi.sub_v3.Subscription>
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_subscriptions", action = "get_subscriptions")
     @WebResult(name = "subscription", targetNamespace = "urn:uddi-org:sub_v3")
@@ -101,14 +103,14 @@ public interface UDDISubscriptionPortType {
     public List<Subscription> getSubscriptions(
         @WebParam(name = "authInfo", targetNamespace = "urn:uddi-org:api_v3")
         String authInfo)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param subscription
      * @param authInfo
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_subscription", action = "save_subscription")
     @RequestWrapper(localName = "save_subscription", targetNamespace = "urn:uddi-org:sub_v3", className = "org.uddi.sub_v3.SaveSubscription")
@@ -118,7 +120,7 @@ public interface UDDISubscriptionPortType {
         String authInfo,
         @WebParam(name = "subscription", targetNamespace = "urn:uddi-org:sub_v3", mode = WebParam.Mode.INOUT)
         Holder<List<Subscription>> subscription)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

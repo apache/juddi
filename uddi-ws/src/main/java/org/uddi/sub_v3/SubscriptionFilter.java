@@ -18,9 +18,12 @@
 
 package org.uddi.sub_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
@@ -75,8 +78,10 @@ import org.uddi.api_v3.GetTModelDetail;
     "getTModelDetail",
     "getAssertionStatusReport"
 })
-public class SubscriptionFilter {
+public class SubscriptionFilter implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(name = "find_binding", namespace = "urn:uddi-org:api_v3")
     protected FindBinding findBinding;
     @XmlElement(name = "find_business", namespace = "urn:uddi-org:api_v3")

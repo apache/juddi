@@ -19,6 +19,8 @@
 package org.uddi.v3_service;
 
 import java.math.BigInteger;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -57,7 +59,7 @@ import org.uddi.repl_v3.TransferCustody;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDIReplicationPortType {
+public interface UDDIReplicationPortType extends Remote{
 
 
     /**
@@ -68,7 +70,7 @@ public interface UDDIReplicationPortType {
      * @param responseLimitCount
      * @return
      *     returns java.util.List<org.uddi.repl_v3.ChangeRecord>
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_changeRecords", action = "get_changeRecords")
     @WebResult(name = "changeRecord", targetNamespace = "urn:uddi-org:repl_v3")
@@ -83,20 +85,20 @@ public interface UDDIReplicationPortType {
         BigInteger responseLimitCount,
         @WebParam(name = "responseLimitVector", targetNamespace = "urn:uddi-org:repl_v3")
         HighWaterMarkVectorType responseLimitVector)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "notify_changeRecordsAvailable", action = "notify_changeRecordsAvailable")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void notifyChangeRecordsAvailable(
         @WebParam(name = "notify_changeRecordsAvailable", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
         NotifyChangeRecordsAvailable body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -104,7 +106,7 @@ public interface UDDIReplicationPortType {
      * @param body
      * @return
      *     returns java.lang.String
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "do_ping", action = "do_ping")
     @WebResult(name = "operatorNodeID", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
@@ -112,34 +114,34 @@ public interface UDDIReplicationPortType {
     public String doPing(
         @WebParam(name = "do_ping", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
         DoPing body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @return
      *     returns java.util.List<org.uddi.repl_v3.ChangeRecordIDType>
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_highWaterMarks", action = "get_highWaterMarks")
     @WebResult(name = "highWaterMark", targetNamespace = "urn:uddi-org:repl_v3")
     @RequestWrapper(localName = "get_highWaterMarks", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.GetHighWaterMarks")
     @ResponseWrapper(localName = "highWaterMarks", targetNamespace = "urn:uddi-org:repl_v3", className = "org.uddi.repl_v3.HighWaterMarkVectorType")
     public List<ChangeRecordIDType> getHighWaterMarks()
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "transfer_custody", action = "transfer_custody")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void transferCustody(
         @WebParam(name = "transfer_custody", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
         TransferCustody body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

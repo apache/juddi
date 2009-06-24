@@ -18,9 +18,12 @@
 
 package org.uddi.custody_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -53,8 +56,10 @@ import javax.xml.bind.annotation.XmlType;
     "transferToken",
     "keyBag"
 })
-public class DiscardTransferToken {
+public class DiscardTransferToken implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
     protected TransferToken transferToken;

@@ -18,9 +18,12 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -49,8 +52,10 @@ import javax.xml.bind.annotation.XmlType;
     "nodeID",
     "originatingUSN"
 })
-public class ChangeRecordIDType {
+public class ChangeRecordIDType implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(required = true)
     protected String nodeID;
     protected Long originatingUSN;

@@ -18,10 +18,13 @@
 
 package org.uddi.repl_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -52,8 +55,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "modified"
 })
 @XmlRootElement(name = "changeRecordHide")
-public class ChangeRecordHide {
+public class ChangeRecordHide implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected String tModelKey;
     @XmlElement(required = true)

@@ -18,6 +18,8 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -40,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "direction")
 @XmlEnum
-public enum Direction {
+public enum Direction implements Serializable{
 
     @XmlEnumValue("fromKey")
     FROM_KEY("fromKey"),

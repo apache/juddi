@@ -18,6 +18,9 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -53,20 +56,20 @@ import org.uddi.custody_v3.TransferEntities;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDICustodyTransferPortType {
+public interface UDDICustodyTransferPortType extends Remote{
 
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "discard_transferToken", action = "discard_transferToken")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void discardTransferToken(
         @WebParam(name = "discard_transferToken", targetNamespace = "urn:uddi-org:custody_v3", partName = "body")
         DiscardTransferToken body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
@@ -76,7 +79,7 @@ public interface UDDICustodyTransferPortType {
      * @param keyBag
      * @param expirationTime
      * @param authInfo
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "get_transferToken", action = "get_transferToken")
     @RequestWrapper(localName = "get_transferToken", targetNamespace = "urn:uddi-org:custody_v3", className = "org.uddi.custody_v3.GetTransferToken")
@@ -92,20 +95,20 @@ public interface UDDICustodyTransferPortType {
         Holder<XMLGregorianCalendar> expirationTime,
         @WebParam(name = "opaqueToken", targetNamespace = "urn:uddi-org:custody_v3", mode = WebParam.Mode.OUT)
         Holder<byte[]> opaqueToken)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
     /**
      * 
      * @param body
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "transfer_entities", action = "transfer_entities")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void transferEntities(
         @WebParam(name = "transfer_entities", targetNamespace = "urn:uddi-org:custody_v3", partName = "body")
         TransferEntities body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

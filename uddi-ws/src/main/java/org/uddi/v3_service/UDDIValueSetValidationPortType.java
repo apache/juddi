@@ -18,6 +18,9 @@
 
 package org.uddi.v3_service;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -49,7 +52,7 @@ import org.uddi.vs_v3.ValidateValues;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public interface UDDIValueSetValidationPortType {
+public interface UDDIValueSetValidationPortType extends Remote{
 
 
     /**
@@ -57,7 +60,7 @@ public interface UDDIValueSetValidationPortType {
      * @param body
      * @return
      *     returns org.uddi.api_v3.DispositionReport
-     * @throws DispositionReportFaultMessage
+     * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "validate_values", action = "validate_values")
     @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
@@ -65,7 +68,7 @@ public interface UDDIValueSetValidationPortType {
     public DispositionReport validateValues(
         @WebParam(name = "validate_values", targetNamespace = "urn:uddi-org:vs_v3", partName = "body")
         ValidateValues body)
-        throws DispositionReportFaultMessage
+        throws DispositionReportFaultMessage, RemoteException
     ;
 
 }

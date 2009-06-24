@@ -18,9 +18,12 @@
 
 package org.uddi.api_v3;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -50,8 +53,10 @@ import javax.xml.bind.annotation.XmlType;
     "businessInfos",
     "tModelInfos"
 })
-public class RegisteredInfo {
+public class RegisteredInfo implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected BusinessInfos businessInfos;
     protected TModelInfos tModelInfos;
     @XmlAttribute

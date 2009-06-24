@@ -14,13 +14,18 @@
  */
 package org.apache.juddi.client;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.Registry;
 import org.apache.log4j.helpers.Loader;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
+import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -28,6 +33,22 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class UDDI_010_PublisherIntegrationTest {
+	
+	@BeforeClass
+	public static void startRegistry() throws ConfigurationException {
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.start();
+		}
+	}
+	
+	@AfterClass
+	public static void stopRegistry() throws ConfigurationException {
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.stop();
+		}
+	}
 	
      @Test
      public void testAuthToken() {
