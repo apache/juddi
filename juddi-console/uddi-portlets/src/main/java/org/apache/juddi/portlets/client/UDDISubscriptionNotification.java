@@ -16,17 +16,14 @@
  */
 package org.apache.juddi.portlets.client;
 
-import java.util.Vector;
-
 import org.apache.juddi.portlets.client.service.NotifyResponse;
 import org.apache.juddi.portlets.client.service.NotifyService;
 import org.apache.juddi.portlets.client.service.NotifyServiceAsync;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -40,8 +37,6 @@ public class UDDISubscriptionNotification implements EntryPoint {
 	//public static final Images images = (Images) GWT.create(Images.class);
 	private NotifyPanel notifyPanel = null;
 	private String token = null;
-	
-	private static int counter = 0;
 	
 	private NotifyServiceAsync notifyService = (NotifyServiceAsync) GWT.create(NotifyService.class);
 	

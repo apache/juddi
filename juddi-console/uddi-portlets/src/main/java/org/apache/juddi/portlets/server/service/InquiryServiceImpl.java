@@ -122,13 +122,13 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
         	 for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {
         		 Business business = new Business(
         				 businessEntity.getBusinessKey(),
-        				 EntityForLang.get(businessEntity.getName(),lang).getValue(),
-        				 EntityForLang.get(businessEntity.getDescription(),lang).getValue());
+        				 EntityForLang.getName(businessEntity.getName(),lang).getValue(),
+        				 EntityForLang.getDescription(businessEntity.getDescription(),lang).getValue());
         		 for (BusinessService businessService : businessEntity.getBusinessServices().getBusinessService()) {
         			 Service service = new Service(
         					 businessService.getServiceKey(),
-        					 EntityForLang.get(businessService.getName(),lang).getValue(),
-        					 EntityForLang.get(businessService.getDescription(),lang).getValue());
+        					 EntityForLang.getName(businessService.getName(),lang).getValue(),
+        					 EntityForLang.getDescription(businessService.getDescription(),lang).getValue());
         			 business.getServices().add(service);
         		 }
         		 //for (Contact contact : businessEntity.getContacts().getContact()) {
@@ -154,9 +154,10 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	
 	public InquiryResponse getServiceDetail(String authToken, String serviceKey) 
 	{
+		
 		HttpServletRequest request = this.getThreadLocalRequest();
 		String lang = request.getLocale().getLanguage();
-		
+	
 		GetServiceDetail getServiceDetail = new GetServiceDetail();
 		getServiceDetail.setAuthInfo(authToken);
 		getServiceDetail.getServiceKey().add(serviceKey);
@@ -168,13 +169,13 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
         	 for (BusinessService businessService : serviceDetail.getBusinessService()) {
         		 Service service = new Service(
         				 businessService.getServiceKey(),
-        				 EntityForLang.get(businessService.getName(),lang).getValue(),
-        				 EntityForLang.get(businessService.getDescription(),lang).getValue());
+        				 EntityForLang.getName(businessService.getName(),lang).getValue(),
+        				 EntityForLang.getDescription(businessService.getDescription(),lang).getValue());
         		 for (BindingTemplate bindingTemplate : businessService.getBindingTemplates().getBindingTemplate()) {
         			 ServiceBinding serviceBinding = new ServiceBinding(
         					 bindingTemplate.getBindingKey(),
         					 bindingTemplate.getAccessPoint().getValue(),
-        					 EntityForLang.get(bindingTemplate.getDescription(),lang).getValue(),
+        					 EntityForLang.getDescription(bindingTemplate.getDescription(),lang).getValue(),
         					 bindingTemplate.getAccessPoint().getUseType());
         			 service.getServiceBindings().add(serviceBinding);
         		 }

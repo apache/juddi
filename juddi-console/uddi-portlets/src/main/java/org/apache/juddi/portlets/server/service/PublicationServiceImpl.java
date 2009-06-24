@@ -70,13 +70,13 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
         	 for (BusinessInfo businessInfo : info.getBusinessInfos().getBusinessInfo()) {
 				Business business = new Business(
 						businessInfo.getBusinessKey(),
-						EntityForLang.get(businessInfo.getName(),lang).getValue(),
-						EntityForLang.get(businessInfo.getDescription(),lang).getValue());
+						EntityForLang.getName(businessInfo.getName(),lang).getValue(),
+						EntityForLang.getDescription(businessInfo.getDescription(),lang).getValue());
 				List<Service> services = new ArrayList<Service>();
 				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
 					Service service = new Service(
 							serviceInfo.getServiceKey(),
-							EntityForLang.get(serviceInfo.getName(), lang).getValue());
+							EntityForLang.getName(serviceInfo.getName(), lang).getValue());
 					services.add(service);
 				}
 				business.setServices(services);

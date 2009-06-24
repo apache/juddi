@@ -14,7 +14,6 @@ public class UDDIBrowserPortlet extends GenericPortlet
 	protected void doView(RenderRequest renderRequest, RenderResponse renderResponse) 
 		throws PortletException, PortletSecurityException, IOException
 	{
-		
 	  renderResponse.setContentType("text/html");
 	  PrintWriter writer = renderResponse.getWriter();
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
