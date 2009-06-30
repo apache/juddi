@@ -246,9 +246,12 @@
   
   try
   {
-    dsname = Util.escapeXml(request.getParameter("dsname"));
-    if ((dsname == null) || (dsname.trim().length() == 0))
+    dsname = request.getParameter("dsname");
+    if ((dsname == null) || (dsname.trim().length() == 0)) {
       dsname = "java:comp/env/jdbc/juddiDB";
+    } else {
+      dsname = Util.escapeXml(dsname); 
+    }
     
     ctx = new InitialContext();
     if (ctx == null )
