@@ -13,6 +13,7 @@
                  javax.naming.Context,
                  javax.naming.InitialContext,
                  javax.sql.DataSource,
+		 org.apache.taglibs.standard.tag.common.core.Util,
                  org.apache.juddi.registry.RegistryServlet,
                  org.apache.juddi.registry.RegistryEngine"
 %>
@@ -169,11 +170,14 @@
 <h4>jUDDI Dependencies: Class Files &amp; Libraries</h4>
 <pre>
 <%
-     //creates the schema if not there
+    //creates the schema if not there
     RegistryEngine registry = RegistryServlet.getRegistry();
     registry.init();
+    
     String[] classArray = {
       "org.apache.juddi.IRegistry",
+      "org.apache.axis.transport.http.AxisServlet",
+      "org.apache.commons.discovery.Resource",
       "org.apache.commons.logging.Log",
       "org.apache.log4j.Layout",
       "javax.xml.soap.SOAPMessage",
@@ -243,8 +247,11 @@
   try
   {
     dsname = request.getParameter("dsname");
-    if ((dsname == null) || (dsname.trim().length() == 0))
+    if ((dsname == null) || (dsname.trim().length() == 0)) {
       dsname = "java:comp/env/jdbc/juddiDB";
+    } else {
+      dsname = Util.escapeXml(dsname); 
+    }
     
     ctx = new InitialContext();
     if (ctx == null )
