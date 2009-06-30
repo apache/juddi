@@ -47,7 +47,7 @@ public class JAXBMarshaller {
 			JAXBContexts.put(PACKAGE_UDDIAPI, JAXBContext.newInstance(PACKAGE_UDDIAPI));
 			JAXBContexts.put(PACKAGE_SUBSCRIPTION, JAXBContext.newInstance(PACKAGE_SUBSCRIPTION));
 		} catch (JAXBException e) {
-			logger.error("Initial entityManagerFactory creation failed:" + e, e);
+			logger.error("Initialization of JAXBMarshaller failed:" + e, e);
 			throw new ExceptionInInitializerError(e);
 		}
 	}

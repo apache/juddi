@@ -40,8 +40,8 @@ public class FindTModelByPublisherQuery {
 		findQuery = new FindEntityByPublisherQuery(TModelQuery.ENTITY_NAME, TModelQuery.ENTITY_ALIAS, TModelQuery.KEY_NAME);
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, UddiEntityPublisher publisher, List<?> keysIn) {
-		return findQuery.select(em, fq, publisher, keysIn, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", new Boolean(false), DynamicQuery.PREDICATE_EQUALS));
+	public static List<?> select(EntityManager em, FindQualifiers fq, UddiEntityPublisher publisher, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+		return findQuery.select(em, fq, publisher, keysIn, restrictions);
 	}
 	
 }

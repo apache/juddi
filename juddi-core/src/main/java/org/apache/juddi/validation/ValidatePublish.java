@@ -944,6 +944,17 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.overviewdoc.NoDescOrUrl"));
 	}
 
+	public void validateRegisteredInfo(org.uddi.api_v3.GetRegisteredInfo body) throws DispositionReportFaultMessage {
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// infoSelection is required
+		if (body.getInfoSelection() == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.getregisteredinfo.NoInfoSelection"));
+			
+	}
+	
 	/*-------------------------------------------------------------------
 	 Publisher functions are specific to jUDDI.
 	 --------------------------------------------------------------------*/

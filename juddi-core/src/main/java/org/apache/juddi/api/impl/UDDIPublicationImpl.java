@@ -38,6 +38,7 @@ import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.GetRegisteredInfo;
+import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
 import org.uddi.api_v3.SaveBinding;
@@ -59,6 +60,7 @@ import org.apache.juddi.query.FindBusinessByPublisherQuery;
 import org.apache.juddi.query.FindTModelByPublisherQuery;
 import org.apache.juddi.query.FindPublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.DeletePublisherAssertionByBusinessQuery;
+import org.apache.juddi.query.TModelQuery;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.juddi.api.datatype.SavePublisher;
@@ -68,6 +70,7 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 
 /**
@@ -362,12 +365,21 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
+			new ValidatePublish(publisher).validateRegisteredInfo(body);
+
 			List<?> businessKeysFound = null;
 			businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
 	
+			
 			List<?> tmodelKeysFound = null;
-			tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);
-	
+
+			if (body.getInfoSelection().equals(InfoSelection.HIDDEN))
+				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", new Boolean(true), DynamicQuery.PREDICATE_EQUALS));
+			else if (body.getInfoSelection().equals(InfoSelection.VISIBLE))
+				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", new Boolean(false), DynamicQuery.PREDICATE_EQUALS));
+			else
+				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);
+				
 			RegisteredInfo result = new RegisteredInfo();
 			
 			// Sort and retrieve the final results
