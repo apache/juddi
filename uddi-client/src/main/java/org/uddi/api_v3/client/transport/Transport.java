@@ -29,12 +29,12 @@ public interface Transport {
 	public final static String SUBR_V3_NAMESPACE	         = "urn:uddi-org:subr_v3_portType";
 	public final static String CUSTODY_V3_NAMESPACE          = "urn:uddi-org:custody_v3_portType";
 	
-	public final static String INQUIRY_SERVICE               = "InquiryService";
-	public final static String SECURITY_SERVICE              = "SecurityService";
-	public final static String PUBLISH_SERVICE               = "PublishService";
-	public final static String SUBSCRIPTION_SERVICE          = "SubscriptionService";
-	public final static String SUBSCRIPTION_LISTENER_SERVICE = "SubscriptionListenerService";
-	public final static String CUSTODY_TRANSFER_SERVICE      = "CustodyTransferService";
+	public final static String INQUIRY_SERVICE               = "UDDIInquiryService";
+	public final static String SECURITY_SERVICE              = "UDDISecurityService";
+	public final static String PUBLISH_SERVICE               = "UDDIPublicationService";
+	public final static String SUBSCRIPTION_SERVICE          = "UDDISubscriptionService";
+	public final static String SUBSCRIPTION_LISTENER_SERVICE = "UDDISubscriptionListenerService";
+	public final static String CUSTODY_TRANSFER_SERVICE      = "UDDICustodyTransferService";
 	
 	UDDIInquiryPortType getInquiryService()           throws TransportException;
 	UDDISecurityPortType getSecurityService()         throws TransportException;
