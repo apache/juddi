@@ -132,7 +132,7 @@ public class JNDIRegistration
 		}
 		custodyTransferService = null;
 		try {
-			context.destroySubcontext(JUDDI);
+			context.unbind(JUDDI);
 		} catch (NamingException e) {
 			log.error(e.getMessage(),e);
 		}
