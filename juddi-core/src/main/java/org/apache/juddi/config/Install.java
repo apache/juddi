@@ -458,6 +458,7 @@ public class Install {
 	    for (int n; (n = resourceStream.read(b)) != -1;) {
 	    	xml.append(new String(b, 0, n));
 	    }
+	    log.debug("inserting: " + xml.toString());
 	    StringReader reader = new StringReader(replaceTokens(xml.toString(), config));
 		
 		JAXBContext jc = JAXBContext.newInstance(packageName);

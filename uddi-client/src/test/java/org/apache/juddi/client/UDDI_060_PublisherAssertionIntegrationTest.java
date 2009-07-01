@@ -62,14 +62,14 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 
-	        	 UDDISecurityPortType security = transport.getSecurityService();
+	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
 	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
 	        	 Assert.assertNotNull(authInfoSam);
 	        	 
-	        	 UDDIPublicationPortType publication = transport.getPublishService();
-	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
+	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);

@@ -59,7 +59,7 @@ public class RMITransport implements Transport {
 	UDDISubscriptionListenerPortType subscriptionListenerService = null;
 	UDDICustodyTransferPortType custodyTransferService = null;
 
-	public UDDIInquiryPortType getInquiryService() throws TransportException {
+	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_INQUIRY_URL);
@@ -75,7 +75,7 @@ public class RMITransport implements Transport {
 		return inquiryService;
 	}
 	
-	public UDDISecurityPortType getSecurityService() throws TransportException {
+	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
 		if (securityService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SECURITY_URL);
@@ -91,7 +91,7 @@ public class RMITransport implements Transport {
 		return securityService;
 	}
 	
-	public UDDIPublicationPortType getPublishService() throws TransportException {
+	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
 		if (publishService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_PUBLISH_URL);
@@ -107,7 +107,7 @@ public class RMITransport implements Transport {
 		return publishService;
 	}
 	
-	public UDDISubscriptionPortType getSubscriptionService() throws TransportException {
+	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
 		if (subscriptionService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SUBSCRIPTION_URL);
@@ -123,7 +123,7 @@ public class RMITransport implements Transport {
 		return subscriptionService;
 	}
 	
-	public UDDISubscriptionListenerPortType getSubscriptionListenerService() throws TransportException {
+	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
 		if (subscriptionListenerService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_SUBSCRIPTION_LISTENER_URL);
@@ -139,7 +139,7 @@ public class RMITransport implements Transport {
 		return subscriptionListenerService;
 	}
 	
-	public UDDICustodyTransferPortType getCustodyTransferService() throws TransportException {
+	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
 		if (custodyTransferService==null) {
 			try {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_CUSTODY_TRANSFER_URL);

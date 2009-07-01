@@ -43,7 +43,7 @@
     <url-pattern>/services/security/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>UDDIPublicationWS</servlet-name>
+    <servlet-name>UDDIPublishWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
     <init-param>
       <param-name>jboss.ws.endpoint</param-name>
@@ -51,7 +51,7 @@
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>UDDIPublicationWS</servlet-name>
+    <servlet-name>UDDIPublishWS</servlet-name>
     <url-pattern>/services/publish/*</url-pattern>
   </servlet-mapping>
   <servlet>

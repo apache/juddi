@@ -68,15 +68,15 @@ public class UDDI_080_SubscriptionIntegrationTest
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 
-	        	 UDDISecurityPortType security = transport.getSecurityService();
+	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
 	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
 	        	 Assert.assertNotNull(authInfoSam);
 	        	 
-	        	 UDDIPublicationPortType publication = transport.getPublishService();
-	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
-	        	 UDDISubscriptionPortType subscription = transport.getSubscriptionService();
+	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+	        	 UDDISubscriptionPortType subscription = transport.getUDDISubscriptionService();
 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);

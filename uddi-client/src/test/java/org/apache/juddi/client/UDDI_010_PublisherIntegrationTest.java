@@ -58,7 +58,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 
-	        	 UDDISecurityPortType securityService = transport.getSecurityService();
+	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
 	        	 GetAuthToken getAuthToken = new GetAuthToken();
 	        	 getAuthToken.setUserID("root");
 	        	 getAuthToken.setCred("");

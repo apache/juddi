@@ -67,12 +67,12 @@ public class UDDI_070_FindEntityIntegrationTest
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 
-	        	 UDDISecurityPortType security = transport.getSecurityService();
+	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
 	        	 
-	        	 UDDIPublicationPortType publication = transport.getPublishService();
-	        	 UDDIInquiryPortType inquiry = transport.getInquiryService();
+	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 	        	 
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);

@@ -31,15 +31,15 @@ public interface Transport {
 	
 	public final static String INQUIRY_SERVICE               = "UDDIInquiryService";
 	public final static String SECURITY_SERVICE              = "UDDISecurityService";
-	public final static String PUBLISH_SERVICE               = "UDDIPublicationService";
+	public final static String PUBLISH_SERVICE               = "UDDIPublishService";
 	public final static String SUBSCRIPTION_SERVICE          = "UDDISubscriptionService";
 	public final static String SUBSCRIPTION_LISTENER_SERVICE = "UDDISubscriptionListenerService";
 	public final static String CUSTODY_TRANSFER_SERVICE      = "UDDICustodyTransferService";
 	
-	UDDIInquiryPortType getInquiryService()           throws TransportException;
-	UDDISecurityPortType getSecurityService()         throws TransportException;
-	UDDIPublicationPortType getPublishService()       throws TransportException;
-	UDDISubscriptionPortType getSubscriptionService() throws TransportException;
-	UDDICustodyTransferPortType getCustodyTransferService() throws TransportException;
-	UDDISubscriptionListenerPortType getSubscriptionListenerService() throws TransportException;
+	UDDIInquiryPortType getUDDIInquiryService()           throws TransportException;
+	UDDISecurityPortType getUDDISecurityService()         throws TransportException;
+	UDDIPublicationPortType getUDDIPublishService()       throws TransportException;
+	UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException;
+	UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException;
+	UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException;
 }
