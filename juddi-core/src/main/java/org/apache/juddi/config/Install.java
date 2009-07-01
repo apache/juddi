@@ -93,10 +93,6 @@ public class Install {
 			
 			rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER, config);
 			uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER, config);
-			// TODO:  These do not belong here?
-			// Inserting 2 test publishers
-			installPublisher(em, FILE_JOE_PUBLISHER, config);
-			installPublisher(em, FILE_SSYNDICATOR, config);
 
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 

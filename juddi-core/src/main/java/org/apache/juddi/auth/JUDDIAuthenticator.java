@@ -26,29 +26,47 @@ import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.log4j.Logger;
 
 /**
  * This is the default implementation of jUDDI's Authenticator interface, which
- * authenticates a request only if the user id has an associated publisher.
+ * if the user id has an associated publisher, and adds the publisher is this is not the
+ * case. Please do NOT use this class in production.
  *
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class JUDDIAuthenticator implements Authenticator {
+	
+	private Logger log = Logger.getLogger(this.getClass());
 	/**
 	 * 
 	 * @return the userId that came in on the request providing the user has a publishing account in jUDDI.
 	 */
 	public String authenticate(String authorizedName, String credential) throws AuthenticationException {
+		if (authorizedName==null || "".equals(authorizedName)) {
+			throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
+		}
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
 			Publisher publisher = em.find(Publisher.class, authorizedName);
-			if (publisher == null)
-				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
-			
+			if (publisher == null) {
+				log.info("Publisher was not found, adding the publisher in on the fly.");
+				publisher = new Publisher();
+				publisher.setAuthorizedName(authorizedName);
+				publisher.setIsAdmin("false");
+				publisher.setIsEnabled("true");
+				publisher.setMaxBindingsPerService(199);
+				publisher.setMaxBusinesses(100);
+				publisher.setMaxServicesPerBusiness(100);
+				publisher.setMaxTmodels(100);
+				publisher.setPublisherName("Unknown");
+				em.persist(publisher);
+				tx.commit();
+			}
 			return authorizedName;
 		} finally {
 			if (tx.isActive()) {
