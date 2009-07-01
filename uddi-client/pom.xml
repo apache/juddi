@@ -96,12 +96,14 @@
 			<type>zip</type>
 			<scope>test</scope>
 		</dependency>
+		<!-- for RMI 
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>jbossall-client</artifactId>
 			<version>4.2.2.GA</version>
 			<scope>test</scope>
 		</dependency>
+		-->
 	</dependencies>
 	<build>
 		<plugins>
