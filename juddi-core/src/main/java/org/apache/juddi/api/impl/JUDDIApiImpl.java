@@ -40,6 +40,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
+import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
@@ -204,5 +205,33 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 		}
 	}
 
+	public void adminDeleteTModel(DeleteTModel body)
+			throws DispositionReportFaultMessage {
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+		
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidatePublish(publisher).validateAdminDeleteTModel(em, body);
+			
+			List<String> entityKeyList = body.getTModelKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+				em.remove(obj);
+			}
+		
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+}
+
+	
 	
 }

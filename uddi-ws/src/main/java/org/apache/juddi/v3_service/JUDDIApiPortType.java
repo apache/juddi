@@ -32,6 +32,7 @@ import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 
@@ -63,7 +64,7 @@ public interface JUDDIApiPortType extends Remote{
     @WebMethod(operationName = "delete_publisher", action = "delete_publisher")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deletePublisher(
-        @WebParam(name = "delete_binding", targetNamespace = "urn:apache-org:juddi_api_v3", partName = "body")
+        @WebParam(name = "delete_publisher", targetNamespace = "urn:apache-org:juddi_api_v3", partName = "body")
         DeletePublisher body)
         throws DispositionReportFaultMessage, RemoteException
     ;
@@ -99,6 +100,19 @@ public interface JUDDIApiPortType extends Remote{
         throws DispositionReportFaultMessage, RemoteException
     ;
 
+
+    /**
+     * 
+     * @param body
+     * @throws DispositionReportFaultMessage, RemoteException
+     */
+    @WebMethod(operationName = "adminDelete_tmodel", action = "adminDelete_tmodel")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public void adminDeleteTModel(
+        @WebParam(name = "adminDelete_tmodel", targetNamespace = "urn:apache-org:juddi_api_v3", partName = "body")
+        DeleteTModel body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
     
 }
 

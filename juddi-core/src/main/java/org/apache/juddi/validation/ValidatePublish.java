@@ -956,7 +956,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 	}
 	
 	/*-------------------------------------------------------------------
-	 Publisher functions are specific to jUDDI.
+	 Publishing API functions are specific to jUDDI.
 	 --------------------------------------------------------------------*/
 	
 	public void validateDeletePublisher(EntityManager em, DeletePublisher body) throws DispositionReportFaultMessage {
@@ -1019,6 +1019,36 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (publisherName == null || publisherName.length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.publisher.NoPublisherName"));
 
+	}
+	
+	public void validateAdminDeleteTModel(EntityManager em, DeleteTModel body) throws DispositionReportFaultMessage {
+
+		// No null input
+		if (body == null)
+			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+		
+		// No null or empty list
+		List<String> entityKeyList = body.getTModelKey();
+		if (entityKeyList == null || entityKeyList.size() == 0)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
+		
+		if (!((Publisher)publisher).isAdmin())
+			throw new UserMismatchException(new ErrorMessage("errors.AdminReqd"));
+
+		HashSet<String> dupCheck = new HashSet<String>();
+		for (String entityKey : entityKeyList) {
+			boolean inserted = dupCheck.add(entityKey);
+			if (!inserted)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+			
+			Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+			if (obj == null)
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", entityKey));
+			
+			if (!publisher.isOwner((UddiEntity)obj))
+				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+			
+		}
 	}
 	
 }
