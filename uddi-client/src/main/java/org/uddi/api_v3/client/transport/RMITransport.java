@@ -23,7 +23,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.v3_service.JUDDIPublisherPortType;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
@@ -59,7 +59,7 @@ public class RMITransport implements Transport {
 	UDDISubscriptionPortType subscriptionService = null;
 	UDDISubscriptionListenerPortType subscriptionListenerService = null;
 	UDDICustodyTransferPortType custodyTransferService = null;
-	JUDDIPublisherPortType publisherService = null;
+	JUDDIApiPortType publisherService = null;
 
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
@@ -157,15 +157,15 @@ public class RMITransport implements Transport {
 		return custodyTransferService;
 	}
 	
-	public JUDDIPublisherPortType getJUDDIPublisherService() throws TransportException {
+	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
 		if (publisherService==null) {
 			try {
-				String endpointURL = ClientConfig.getConfiguration().getString(Property.JUDDI_PUBLISHER_TRANSFER_URL);
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_JUDDI_API_URL);
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
 		    	Object requestHandler = context.lookup(service);
-		    	publisherService = (JUDDIPublisherPortType)  requestHandler;
+		    	publisherService = (JUDDIApiPortType)  requestHandler;
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}

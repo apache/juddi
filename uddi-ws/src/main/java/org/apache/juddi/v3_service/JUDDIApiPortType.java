@@ -39,8 +39,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * This portType defines all of the jUDDI publisher operations.
  * 
  */
-@WebService(name = "JUDDI_Publisher_PortType", targetNamespace = "urn:apache-org:juddi_api_v3_portType")
-public interface JUDDIPublisherPortType extends Remote{
+@WebService(name = "JUDDI_Api_PortType", targetNamespace = "urn:apache-org:juddi_api_v3_portType")
+public interface JUDDIApiPortType extends Remote{
 
     /**
      * 

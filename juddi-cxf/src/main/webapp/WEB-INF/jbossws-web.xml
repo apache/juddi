@@ -103,16 +103,16 @@
     <url-pattern>/services/custody-transfer/*</url-pattern>
   </servlet-mapping>
     <servlet>
-    <servlet-name>JUDDIPublisherWS</servlet-name>
+    <servlet-name>JUDDIApiWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
     <init-param>
       <param-name>jboss.ws.endpoint</param-name>
-      <param-value>org.apache.juddi.api.impl.JUDDIPublisherImpl</param-value>
+      <param-value>org.apache.juddi.api.impl.JUDDIApiImpl</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>JUDDIPublisherWS</servlet-name>
-    <url-pattern>/services/publisher/*</url-pattern>
+    <servlet-name>JUDDIApiWS</servlet-name>
+    <url-pattern>/services/juddi-api/*</url-pattern>
   </servlet-mapping>
 </web-app>
   

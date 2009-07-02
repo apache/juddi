@@ -37,18 +37,19 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.v3_service.JUDDIPublisherPortType;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-@WebService(serviceName="JUDDIPublisherService", 
-			endpointInterface="org.apache.juddi.v3_service.JUDDIPublisherPortType",
+@WebService(serviceName="JUDDIApiService", 
+			endpointInterface="org.apache.juddi.v3_service.JUDDIApiPortType",
 			targetNamespace = "urn:apache-org:juddi_api_v3_portType")
-public class JUDDIPublisherImpl extends AuthenticatedService implements JUDDIPublisherPortType {
+public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
 	/**
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.

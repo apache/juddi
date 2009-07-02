@@ -87,8 +87,8 @@
     </jaxws:properties>
   </jaxws:endpoint>
   
-   <jaxws:endpoint id="publisher" implementor="org.apache.juddi.api.impl.JUDDIPublisherImpl" address="/publisher"
-   serviceName="a:JUDDIPublisherService" endpointName="a:JUDDIPublisherServicePort" xmlns:a="urn:apache-org:juddi_api_v3_portType">
+   <jaxws:endpoint id="juddi-api" implementor="org.apache.juddi.api.impl.JUDDIApiImpl" address="/juddi-api"
+   serviceName="a:JUDDIApiService" endpointName="a:JUDDIApiServicePort" xmlns:a="urn:apache-org:juddi_api_v3_portType">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>

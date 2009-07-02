@@ -33,7 +33,7 @@ public class JNDIRegistration
 	public static String UDDI_SUBSCRIPTION_SERVICE = JUDDI + "/UDDISubscriptionService";
 	public static String UDDI_SUBSCRIPTION_LISTENER_SERVICE = JUDDI + "/UDDISubscriptionListenerService";
 	public static String UDDI_CUSTODY_TRANSFER_SERVICE = JUDDI + "/UDDICustodyTransferService";
-	public static String JUDDI_PUBLISHER_SERVICE  = JUDDI + "/JUDDIPublisherService";
+	public static String JUDDI_PUBLISHER_SERVICE  = JUDDI + "/JUDDIApiService";
 	
 	private UDDISecurityService securityService = null;
 	private UDDIPublicationService publicationService = null;
@@ -41,7 +41,7 @@ public class JNDIRegistration
 	private UDDISubscriptionService subscriptionService = null;
 	private UDDISubscriptionListenerService subscriptionListenerService = null;
 	private UDDICustodyTransferService custodyTransferService = null;
-	private JUDDIPublisherService publisherService = null;
+	private JUDDIApiService publisherService = null;
 	
 	private Logger log = Logger.getLogger(this.getClass());
 	InitialContext context = null;
@@ -90,7 +90,7 @@ public class JNDIRegistration
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_CUSTODY_TRANSFER_SERVICE + ", " + custodyTransferService.getClass());
 			juddiContext.rebind(UDDI_CUSTODY_TRANSFER_SERVICE, custodyTransferService);
 			
-			publisherService = new JUDDIPublisherService();
+			publisherService = new JUDDIApiService();
 			if (log.isDebugEnabled()) log.debug("Setting " + JUDDI_PUBLISHER_SERVICE + ", " + publisherService.getClass());
 			juddiContext.rebind(JUDDI_PUBLISHER_SERVICE, publisherService);
 			

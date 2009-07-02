@@ -49,7 +49,7 @@ public class API_010_PublisherTest {
     
     private static Logger logger = Logger.getLogger(API_010_PublisherTest.class);
     
-    private JUDDIPublisherImpl publisher  = new JUDDIPublisherImpl();
+    private JUDDIApiImpl publisher  = new JUDDIApiImpl();
 	private UDDISecurityPortType security = new UDDISecurityImpl();
 	private static String authInfo = null;
 	

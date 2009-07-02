@@ -16,7 +16,7 @@
  */
 package org.uddi.api_v3.client.transport;
 
-import org.apache.juddi.v3_service.JUDDIPublisherPortType;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -37,7 +37,7 @@ public interface Transport {
 	public final static String SUBSCRIPTION_SERVICE          = "UDDISubscriptionService";
 	public final static String SUBSCRIPTION_LISTENER_SERVICE = "UDDISubscriptionListenerService";
 	public final static String CUSTODY_TRANSFER_SERVICE      = "UDDICustodyTransferService";
-	public final static String PUBLISHER_SERVICE             = "JUDDIPublisherService";
+	public final static String PUBLISHER_SERVICE             = "JUDDIApiService";
 	
 	UDDIInquiryPortType getUDDIInquiryService()           throws TransportException;
 	UDDISecurityPortType getUDDISecurityService()         throws TransportException;
@@ -45,5 +45,5 @@ public interface Transport {
 	UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException;
 	UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException;
 	UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException;
-	JUDDIPublisherPortType getJUDDIPublisherService() throws TransportException;
+	JUDDIApiPortType getJUDDIApiService() throws TransportException;
 }

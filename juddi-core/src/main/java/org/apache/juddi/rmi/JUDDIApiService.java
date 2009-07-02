@@ -19,13 +19,13 @@ package org.apache.juddi.rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.apache.juddi.api.impl.JUDDIPublisherImpl;
+import org.apache.juddi.api.impl.JUDDIApiImpl;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
-import org.apache.juddi.v3_service.JUDDIPublisherPortType;
+import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * UDDIPublicationPortType wrapper so it can be exposed as a service over RMI.
@@ -33,12 +33,12 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  *
  */
-public class JUDDIPublisherService extends UnicastRemoteObject implements JUDDIPublisherPortType {
+public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPortType {
 
 	private static final long serialVersionUID = 1L;
-	private JUDDIPublisherPortType publisher = new JUDDIPublisherImpl();
+	private JUDDIApiPortType publisher = new JUDDIApiImpl();
 	
-	protected JUDDIPublisherService() throws RemoteException {
+	protected JUDDIApiService() throws RemoteException {
 		super();
 	}
 
