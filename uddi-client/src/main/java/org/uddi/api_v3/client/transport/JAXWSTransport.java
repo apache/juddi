@@ -21,6 +21,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import org.apache.juddi.v3_service.JUDDIPublisherPortType;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -39,6 +40,7 @@ public class JAXWSTransport implements Transport {
 	UDDISubscriptionPortType subscriptionService = null;
 	UDDISubscriptionListenerPortType subscriptionListenerService = null;
 	UDDICustodyTransferPortType custodyTransferService = null;
+	JUDDIPublisherPortType publisherService = null;
 
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 
@@ -120,12 +122,26 @@ public class JAXWSTransport implements Transport {
 				String endpointURL = ClientConfig.getConfiguration().getString(Property.UDDI_CUSTODY_TRANSFER_URL);
 				QName qName = new QName(Transport.CUSTODY_V3_NAMESPACE, Transport.CUSTODY_TRANSFER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
-				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDICustodyTransferPortType.class);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
 		}
 		return custodyTransferService;
+	}
+	
+	public JUDDIPublisherPortType getJUDDIPublisherService() throws TransportException {
+		if (publisherService == null) {
+			try {
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.JUDDI_PUBLISHER_TRANSFER_URL);
+				QName qName = new QName(Transport.JUDDI_API_V3_NAMESPACE, Transport.PUBLISHER_SERVICE);
+				Service service = Service.create(new URL(endpointURL), qName);
+				publisherService = (JUDDIPublisherPortType) service.getPort(JUDDIPublisherPortType.class);
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(), e);
+			}
+		}
+		return publisherService;
 	}
 
 }

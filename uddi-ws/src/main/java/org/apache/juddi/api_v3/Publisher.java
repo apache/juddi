@@ -16,14 +16,16 @@
  */
 
 
-package org.apache.juddi.api.datatype;
+package org.apache.juddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.w3._2000._09.xmldsig_.SignatureType;
@@ -47,27 +49,22 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "maxTModels",
     "signature"
 })
-public class Publisher {
+public class Publisher implements Serializable{
 
-    @XmlElement(name = "publisherName", namespace = "urn:apache-org:juddi_v3")
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
+    @XmlElement(required=true)
 	protected String publisherName;
-    @XmlElement(name = "emailAddress", namespace = "urn:apache-org:juddi_v3")
     protected String emailAddress;
-    @XmlElement(name = "isAdmin", namespace = "urn:apache-org:juddi_v3")
     protected String isAdmin;
-    @XmlElement(name = "isEnabled", namespace = "urn:apache-org:juddi_v3")
     protected String isEnabled;
-    @XmlElement(name = "maxBindingsPerService", namespace = "urn:apache-org:juddi_v3")
     protected Integer maxBindingsPerService;
-    @XmlElement(name = "maxBusinesses", namespace = "urn:apache-org:juddi_v3")
     protected Integer maxBusinesses;
-    @XmlElement(name = "maxServicePerBusiness", namespace = "urn:apache-org:juddi_v3")
     protected Integer maxServicePerBusiness;
-    @XmlElement(name = "maxTModels", namespace = "urn:apache-org:juddi_v3")
     protected Integer maxTModels;
-    @XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
+    @XmlElement(name="Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
     protected List<SignatureType> signature;
-    @XmlAttribute
+    @XmlAttribute(required=true)
     protected String authorizedName;
 
     

@@ -16,6 +16,7 @@
  */
 package org.uddi.api_v3.client.transport;
 
+import org.apache.juddi.v3_service.JUDDIPublisherPortType;
 import org.uddi.api_v3.client.config.ClientConfig;
 import org.uddi.api_v3.client.config.Property;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -34,6 +35,7 @@ public class InVMTransport implements Transport {
 	UDDISubscriptionPortType subscriptionService = null;
 	UDDISubscriptionListenerPortType subscriptionListenerService = null;
 	UDDICustodyTransferPortType custodyTransferService = null;
+	JUDDIPublisherPortType publisherService = null;
 
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
@@ -112,5 +114,19 @@ public class InVMTransport implements Transport {
 		}
 		return custodyTransferService;
 	}
+	
+	public JUDDIPublisherPortType getJUDDIPublisherService() throws TransportException {
+		if (publisherService==null) {
+			try {
+				String endpointURL = ClientConfig.getConfiguration().getString(Property.JUDDI_PUBLISHER_TRANSFER_URL);
+				Class<?> c = Class.forName(endpointURL);
+				publisherService = (JUDDIPublisherPortType) c.newInstance();
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(), e);
+			}
+		}
+		return publisherService;
+	}
+
 
 }

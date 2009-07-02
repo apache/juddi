@@ -16,13 +16,15 @@
  */
 
 
-package org.apache.juddi.api.datatype;
+package org.apache.juddi.api_v3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -35,8 +37,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "publisherDetail", propOrder = {
     "publisher"
 })
-public class PublisherDetail {
+public class PublisherDetail implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected List<Publisher> publisher;
     @XmlAttribute
     protected Boolean truncated;

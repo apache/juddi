@@ -15,32 +15,36 @@
  *
  */
 
+package org.apache.juddi.api_v3;
 
-package org.apache.juddi.api.datatype;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for delete_publisher type.  Specific to juddi.
+ * <p>Java class for save_publisher type.  Specific to juddi.
  * 
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "delete_publisher", propOrder = {
+@XmlType(name = "save_publisher", propOrder = {
     "authInfo",
-    "publisherId"
+    "publisher"
 })
-public class DeletePublisher {
+public class SavePublisher implements Serializable{
 
+	@XmlTransient
+	private static final long serialVersionUID = 1L;
     protected String authInfo;
     @XmlElement(required = true)
-    protected List<String> publisherId;
+    protected List<Publisher> publisher;
 
     /**
      * Gets the value of the authInfo property.
@@ -67,32 +71,32 @@ public class DeletePublisher {
     }
 
     /**
-     * Gets the value of the publisherId property.
+     * Gets the value of the publisher property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the businessKey property.
+     * This is why there is not a <CODE>set</CODE> method for the businessEntity property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getPublisherId().add(newItem);
+     *    getPublisher().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * {@link Publisher }
      * 
      * 
      */
-    public List<String> getPublisherId() {
-        if (publisherId == null) {
-        	publisherId = new ArrayList<String>();
+    public List<Publisher> getPublisher() {
+        if (publisher == null) {
+        	publisher = new ArrayList<Publisher>();
         }
-        return this.publisherId;
+        return this.publisher;
     }
 
 }

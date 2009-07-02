@@ -51,8 +51,6 @@ import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.apache.juddi.api.datatype.GetPublisherDetail;
-import org.apache.juddi.api.datatype.PublisherDetail;
 import org.apache.log4j.Logger;
 
 
@@ -421,54 +419,5 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 		return result;
 	}
-	
-	/*-------------------------------------------------------------------
-	 Publisher functions are specific to jUDDI.
-	 --------------------------------------------------------------------*/
-	
-	/*
-	 * Retrieves publisher(s) from the persistence layer.  This method is specific to jUDDI.
-	 */
-	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
-			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetPublisherDetail(body);
-
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			if (isAuthenticated())
-				this.getEntityPublisher(em, body.getAuthInfo());
-			
-			PublisherDetail result = new PublisherDetail();
-			
-			List<String> publisherIdList = body.getPublisherId();
-			for (String publisherId : publisherIdList) {
-				
-				org.apache.juddi.model.Publisher modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
-				if (modelPublisher == null) {
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
-				}
-				
-				org.apache.juddi.api.datatype.Publisher apiPublisher = new org.apache.juddi.api.datatype.Publisher();
-				
-				MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
-				
-				result.getPublisher().add(apiPublisher);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-
-	}
-	
 
 }

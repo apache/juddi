@@ -33,6 +33,7 @@ public class JNDIRegistration
 	public static String UDDI_SUBSCRIPTION_SERVICE = JUDDI + "/UDDISubscriptionService";
 	public static String UDDI_SUBSCRIPTION_LISTENER_SERVICE = JUDDI + "/UDDISubscriptionListenerService";
 	public static String UDDI_CUSTODY_TRANSFER_SERVICE = JUDDI + "/UDDICustodyTransferService";
+	public static String JUDDI_PUBLISHER_SERVICE  = JUDDI + "/JUDDIPublisherService";
 	
 	private UDDISecurityService securityService = null;
 	private UDDIPublicationService publicationService = null;
@@ -40,6 +41,7 @@ public class JNDIRegistration
 	private UDDISubscriptionService subscriptionService = null;
 	private UDDISubscriptionListenerService subscriptionListenerService = null;
 	private UDDICustodyTransferService custodyTransferService = null;
+	private JUDDIPublisherService publisherService = null;
 	
 	private Logger log = Logger.getLogger(this.getClass());
 	InitialContext context = null;
@@ -77,16 +79,20 @@ public class JNDIRegistration
 			juddiContext.rebind(UDDI_INQUIRY_SERVICE, inquiryService);
 			
 			subscriptionService = new UDDISubscriptionService();
-			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_SERVICE + ", " + inquiryService.getClass());
+			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_SERVICE + ", " + subscriptionService.getClass());
 			juddiContext.rebind(UDDI_SUBSCRIPTION_SERVICE, subscriptionService);
 			
 			subscriptionListenerService = new UDDISubscriptionListenerService();
-			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_LISTENER_SERVICE + ", " + inquiryService.getClass());
+			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_LISTENER_SERVICE + ", " + subscriptionListenerService.getClass());
 			juddiContext.rebind(UDDI_SUBSCRIPTION_LISTENER_SERVICE, subscriptionListenerService);
 			
 			custodyTransferService = new UDDICustodyTransferService();
-			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_CUSTODY_TRANSFER_SERVICE + ", " + inquiryService.getClass());
+			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_CUSTODY_TRANSFER_SERVICE + ", " + custodyTransferService.getClass());
 			juddiContext.rebind(UDDI_CUSTODY_TRANSFER_SERVICE, custodyTransferService);
+			
+			publisherService = new JUDDIPublisherService();
+			if (log.isDebugEnabled()) log.debug("Setting " + JUDDI_PUBLISHER_SERVICE + ", " + publisherService.getClass());
+			juddiContext.rebind(JUDDI_PUBLISHER_SERVICE, publisherService);
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
@@ -131,6 +137,12 @@ public class JNDIRegistration
 			log.error(e.getMessage(),e);
 		}
 		custodyTransferService = null;
+		try {
+			context.unbind(JUDDI_PUBLISHER_SERVICE);
+		} catch (NamingException e) {
+			log.error(e.getMessage(),e);
+		}
+		publisherService = null;
 		try {
 			context.unbind(JUDDI);
 		} catch (NamingException e) {

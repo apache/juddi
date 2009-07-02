@@ -26,6 +26,7 @@ public interface Property
 	public final static String UDDI_SUBSCRIPTION_LISTENER_URL	="uddi.subscription.listener.url";
 	public final static String UDDI_PROXY_TRANSPORT             ="uddi.proxy.transport";
 	public final static String UDDI_CUSTODY_TRANSFER_URL        ="uddi.custodytransfer.url";
+	public final static String JUDDI_PUBLISHER_TRANSFER_URL     ="juddi.publisher.url";
 	
 	public final static String UDDI_PROXY_FACTORY_INITIAL       ="java.naming.factory.initial";
 	public final static String UDDI_PROXY_PROVIDER_URL          ="java.naming.provider.url";

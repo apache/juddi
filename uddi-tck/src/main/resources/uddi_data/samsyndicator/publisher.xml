@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<publisher xmlns="urn:apache-org:juddi_v3" authorizedName="ssyndicator">
+<publisher xmlns="urn:apache-org:juddi_api_v3" authorizedName="ssyndicator">
   <publisherName>Sam Syndicator</publisherName>
   <emailAddress>ssyndicator@samco.com</emailAddress>
   <isAdmin>false</isAdmin>

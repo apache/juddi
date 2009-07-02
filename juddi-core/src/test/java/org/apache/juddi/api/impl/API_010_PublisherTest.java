@@ -21,11 +21,11 @@ import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
-import org.apache.juddi.api.datatype.DeletePublisher;
-import org.apache.juddi.api.datatype.GetPublisherDetail;
-import org.apache.juddi.api.datatype.Publisher;
-import org.apache.juddi.api.datatype.PublisherDetail;
-import org.apache.juddi.api.datatype.SavePublisher;
+import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.Publisher;
+import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.log4j.Logger;
@@ -49,8 +49,7 @@ public class API_010_PublisherTest {
     
     private static Logger logger = Logger.getLogger(API_010_PublisherTest.class);
     
-	private UDDIPublicationImpl publish   = new UDDIPublicationImpl();
-	private UDDIInquiryImpl inquiry       = new UDDIInquiryImpl();
+    private JUDDIPublisherImpl publisher  = new JUDDIPublisherImpl();
 	private UDDISecurityPortType security = new UDDISecurityImpl();
 	private static String authInfo = null;
 	
@@ -129,14 +128,15 @@ public class API_010_PublisherTest {
 			logger.debug("Saving new publisher: " + publisherXML);
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
-			Publisher pubIn = (Publisher)EntityCreator.buildFromDoc(publisherXML, "org.apache.juddi.api.datatype");
+			Publisher pubIn = (Publisher)EntityCreator.buildFromDoc(publisherXML, "org.apache.juddi.api_v3");
 			sp.getPublisher().add(pubIn);
-			publish.savePublisher(sp);
+			publisher.savePublisher(sp);
 	
 			// Now get the entity and check the values
 			GetPublisherDetail gp = new GetPublisherDetail();
 			gp.getPublisherId().add(publisherId);
-			PublisherDetail pd = inquiry.getPublisherDetail(gp);
+			gp.setAuthInfo(authInfo);
+			PublisherDetail pd = publisher.getPublisherDetail(gp);
 			List<Publisher> pubOutList = pd.getPublisher();
 			Publisher pubOut = pubOutList.get(0);
 
@@ -155,7 +155,7 @@ public class API_010_PublisherTest {
 			//We're expecting a invalid Key exception at this point.
 			PublisherDetail pdBeforeDelete =null;
 			try {
-				pdBeforeDelete = inquiry.getPublisherDetail(gp);
+				pdBeforeDelete = publisher.getPublisherDetail(gp);
 				Assert.assertNotNull(pdBeforeDelete);
 			} catch (InvalidKeyPassedException e) {
 				Assert.fail("We expected to find publisher " + publisherXML);
@@ -175,16 +175,17 @@ public class API_010_PublisherTest {
 			DeletePublisher dp = new DeletePublisher();
 			dp.setAuthInfo(authInfo);
 			dp.getPublisherId().add(publisherId);
-			publish.deletePublisher(dp);
+			publisher.deletePublisher(dp);
 			
 			logger.info("Querying for publisher: " + publisherId + " after deletion.");
 			//Querying for this publisher to make sure it's really gone
 			//We're expecting a invalid Key exception at this point.
 			GetPublisherDetail gp = new GetPublisherDetail();
 			gp.getPublisherId().add(publisherId);
+			gp.setAuthInfo(authInfo);
 			PublisherDetail pdAfterDelete =null;
 			try {
-				pdAfterDelete = inquiry.getPublisherDetail(gp);
+				pdAfterDelete = publisher.getPublisherDetail(gp);
 				Assert.fail("We did not expect to find this publisher anymore.");
 			} catch (InvalidKeyPassedException e) {
 				Assert.assertNull(pdAfterDelete);
@@ -200,7 +201,7 @@ public class API_010_PublisherTest {
 		GetPublisherDetail gp = new GetPublisherDetail();
 		gp.getPublisherId().add(publisherId);
 		try {
-			inquiry.getPublisherDetail(gp);
+			publisher.getPublisherDetail(gp);
 			return true;
 		} catch (Exception e) {
 			return false;

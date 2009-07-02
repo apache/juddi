@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.jws.WebService;
-//import javax.naming.ConfigurationException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
@@ -62,9 +61,6 @@ import org.apache.juddi.query.FindPublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.DeletePublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.TModelQuery;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.api.datatype.PublisherDetail;
-import org.apache.juddi.api.datatype.SavePublisher;
-import org.apache.juddi.api.datatype.DeletePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -759,84 +755,5 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			em.remove(existingUddiEntity);
 		
 	}
-
-	
-	/*-------------------------------------------------------------------
-	 Publisher functions are specific to jUDDI.
-	 --------------------------------------------------------------------*/
-	
-	/*
-	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
-	 */
-	public PublisherDetail savePublisher(SavePublisher body)
-			throws DispositionReportFaultMessage {
-
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidatePublish(publisher).validateSavePublisher(em, body);
-			
-			PublisherDetail result = new PublisherDetail();
-	
-			List<org.apache.juddi.api.datatype.Publisher> apiPublisherList = body.getPublisher();
-			for (org.apache.juddi.api.datatype.Publisher apiPublisher : apiPublisherList) {
-				
-				org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
-				
-				MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
-				
-				Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
-				if (existingUddiEntity != null)
-					em.remove(existingUddiEntity);
-				
-				em.persist(modelPublisher);
-				
-				result.getPublisher().add(apiPublisher);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-
-	/*
-	 * Deletes publisher(s) from the persistence layer.  This method is specific to jUDDI.
-	 */
-	public void deletePublisher(DeletePublisher body)
-			throws DispositionReportFaultMessage {
-
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidatePublish(publisher).validateDeletePublisher(em, body);
-	
-			List<String> entityKeyList = body.getPublisherId();
-			for (String entityKey : entityKeyList) {
-				Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-				em.remove(obj);
-			}
-	
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-
 	
 }

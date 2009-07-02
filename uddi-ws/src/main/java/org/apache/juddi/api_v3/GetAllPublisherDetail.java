@@ -15,32 +15,31 @@
  *
  */
 
-package org.apache.juddi.api.datatype;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.apache.juddi.api_v3;
+
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for save_publisher type.  Specific to juddi.
+ * <p>Java class for get_allPublisherDetail type. Specific to juddi.
  * 
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
- * 
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "save_publisher", propOrder = {
-    "authInfo",
-    "publisher"
+@XmlType(name = "get_allPublisherDetail", propOrder = {
+    "authInfo"
 })
-public class SavePublisher {
+public class GetAllPublisherDetail implements Serializable{
 
-    protected String authInfo;
-    @XmlElement(required = true)
-    protected List<Publisher> publisher;
+    @XmlTransient
+	private static final long serialVersionUID = 1L;
+	protected String authInfo;
 
     /**
      * Gets the value of the authInfo property.
@@ -64,35 +63,6 @@ public class SavePublisher {
      */
     public void setAuthInfo(String value) {
         this.authInfo = value;
-    }
-
-    /**
-     * Gets the value of the publisher property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the businessEntity property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getPublisher().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Publisher }
-     * 
-     * 
-     */
-    public List<Publisher> getPublisher() {
-        if (publisher == null) {
-        	publisher = new ArrayList<Publisher>();
-        }
-        return this.publisher;
     }
 
 }

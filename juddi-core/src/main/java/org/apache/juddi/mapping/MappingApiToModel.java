@@ -40,7 +40,7 @@ public class MappingApiToModel {
 	private static Logger logger = Logger.getLogger(MappingApiToModel.class);
 
 	
-	public static void mapPublisher(org.apache.juddi.api.datatype.Publisher apiPublisher, 
+	public static void mapPublisher(org.apache.juddi.api_v3.Publisher apiPublisher, 
 									org.apache.juddi.model.Publisher modelPublisher) 
 				   throws DispositionReportFaultMessage {
 

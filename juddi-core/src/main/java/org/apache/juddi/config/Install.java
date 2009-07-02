@@ -64,8 +64,6 @@ public class Install {
 	public static final String FILE_ROOT_TMODELKEYGEN = "root_tModelKeyGen.xml";
 	public static final String FILE_UDDI_PUBLISHER = "UDDI_Publisher.xml";
 	public static final String FILE_UDDI_TMODELS = "UDDI_tModels.xml";
-	public static final String FILE_JOE_PUBLISHER = "joepublisher_Publisher.xml";
-	public static final String FILE_SSYNDICATOR = "ssyndicator_Publisher.xml";
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
@@ -544,7 +542,7 @@ public class Install {
 	public static UddiEntityPublisher installPublisher(EntityManager em, String fileName, Configuration config) 
 		throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
-		org.apache.juddi.api.datatype.Publisher apiPub = (org.apache.juddi.api.datatype.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api.datatype", config);
+		org.apache.juddi.api_v3.Publisher apiPub = (org.apache.juddi.api_v3.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api_v3", config);
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
 		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		em.persist(modelPub);

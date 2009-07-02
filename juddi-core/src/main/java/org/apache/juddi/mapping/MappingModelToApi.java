@@ -45,7 +45,7 @@ public class MappingModelToApi {
 
 	
 	public static void mapPublisher(org.apache.juddi.model.Publisher modelPublisher, 
-									org.apache.juddi.api.datatype.Publisher apiPublisher) 
+									org.apache.juddi.api_v3.Publisher apiPublisher) 
 				   throws DispositionReportFaultMessage {
 
 		apiPublisher.setAuthorizedName(modelPublisher.getAuthorizedName());

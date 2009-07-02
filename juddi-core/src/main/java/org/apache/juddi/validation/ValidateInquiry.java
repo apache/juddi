@@ -23,7 +23,6 @@ import java.util.Hashtable;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.juddi.api.datatype.GetPublisherDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.GetServiceDetail;
@@ -58,25 +57,6 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		super(publisher);
 	}
 
-	public void validateGetPublisherDetail(GetPublisherDetail body) throws DispositionReportFaultMessage {
-
-		// No null input
-		if (body == null)
-			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
-		
-		// No null or empty list
-		List<String> publisherIdList = body.getPublisherId();
-		if (publisherIdList == null || publisherIdList.size() == 0)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
-
-		HashSet<String> dupCheck = new HashSet<String>();
-		for (String publisherId : publisherIdList) {
-			boolean inserted = dupCheck.add(publisherId);
-			if (!inserted)
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", publisherId));
-		}
-	}
-	
 	public void validateGetBusinessDetail(GetBusinessDetail body) throws DispositionReportFaultMessage {
 
 		// No null input

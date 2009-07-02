@@ -36,8 +36,8 @@ import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.apache.juddi.api.datatype.SavePublisher;
-import org.apache.juddi.api.datatype.DeletePublisher;
+import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.Constants;
 
 import org.apache.juddi.keygen.KeyGeneratorFactory;
@@ -993,19 +993,19 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
 		
 		// No null or empty list
-		List<org.apache.juddi.api.datatype.Publisher> entityList = body.getPublisher();
+		List<org.apache.juddi.api_v3.Publisher> entityList = body.getPublisher();
 		if (entityList == null || entityList.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.savepublisher.NoInput"));
 		
 		if (!((Publisher)publisher).isAdmin())
 			throw new UserMismatchException(new ErrorMessage("errors.savepublisher.AdminReqd"));
 		
-		for (org.apache.juddi.api.datatype.Publisher entity : entityList) {
+		for (org.apache.juddi.api_v3.Publisher entity : entityList) {
 			validatePublisher(em, entity);
 		}
 	}
 
-	public void validatePublisher(EntityManager em, org.apache.juddi.api.datatype.Publisher publisher) throws DispositionReportFaultMessage {
+	public void validatePublisher(EntityManager em, org.apache.juddi.api_v3.Publisher publisher) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (publisher == null)
