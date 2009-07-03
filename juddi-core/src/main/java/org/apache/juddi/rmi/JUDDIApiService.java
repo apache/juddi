@@ -26,6 +26,7 @@ import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * UDDIPublicationPortType wrapper so it can be exposed as a service over RMI.
@@ -36,7 +37,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPortType {
 
 	private static final long serialVersionUID = 1L;
-	private JUDDIApiPortType publisher = new JUDDIApiImpl();
+	private JUDDIApiPortType juddiAPI = new JUDDIApiImpl();
 	
 	protected JUDDIApiService() throws RemoteException {
 		super();
@@ -44,23 +45,30 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 
 	public void deletePublisher(DeletePublisher body)
 			throws DispositionReportFaultMessage, RemoteException {
-		publisher.deletePublisher(body);
+		juddiAPI.deletePublisher(body);
 	}
 
 	public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
 			throws DispositionReportFaultMessage, RemoteException {
-		return publisher.getAllPublisherDetail(body);
+		return juddiAPI.getAllPublisherDetail(body);
 	}
 
 	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
 			throws DispositionReportFaultMessage, RemoteException {
-		return publisher.getPublisherDetail(body);
+		return juddiAPI.getPublisherDetail(body);
 	}
 
 	public PublisherDetail savePublisher(SavePublisher body)
 			throws DispositionReportFaultMessage, RemoteException {
-		return publisher.savePublisher(body);
+		return juddiAPI.savePublisher(body);
 	}
+
+	public void adminDeleteTModel(DeleteTModel body)
+			throws DispositionReportFaultMessage, RemoteException {
+		juddiAPI.adminDeleteTModel(body);
+	}
+	
+	
 
 
 }

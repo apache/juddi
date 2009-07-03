@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "get_publisherDetail", propOrder = {
+@XmlType(name = "get_publisher_detail", propOrder = {
     "authInfo",
     "publisherId"
 })

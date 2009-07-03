@@ -47,7 +47,8 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "maxBusinesses",
     "maxServicePerBusiness",
     "maxTModels",
-    "signature"
+    "signature",
+    "authorizedName"
 })
 public class Publisher implements Serializable{
 

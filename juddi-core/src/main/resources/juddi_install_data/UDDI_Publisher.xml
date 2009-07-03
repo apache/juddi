@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<publisher xmlns="urn:apache-org:juddi_api_v3" authorizedName="uddi">
+<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="uddi">
   <publisherName>UDDI publisher</publisherName>
   <isAdmin>false</isAdmin>
 </publisher>

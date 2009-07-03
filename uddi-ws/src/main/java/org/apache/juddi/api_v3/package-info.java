@@ -15,6 +15,6 @@
  *
  */
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "urn:apache-org:juddi_api_v3", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "urn:juddi-apache-org:api_v3", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.apache.juddi.api_v3;
 

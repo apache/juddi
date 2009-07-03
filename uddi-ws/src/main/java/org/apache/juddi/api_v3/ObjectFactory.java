@@ -36,22 +36,23 @@ import javax.xml.namespace.QName;
  * groups.  Factory methods for each of these are 
  * provided in this class.
  * 
- * This object was copied from the UDDI generated package and hand-edited to fit the juddi specific Publisher structures.
+ * This object was copied from the UDDI generated package 
+ * and hand-edited to fit the juddi specific Publisher structures.
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @XmlRegistry
 public class ObjectFactory {
 	
-    private final static QName _SavePublisher_QNAME = new QName("urn:apache-org:juddi_api_v3", "save_publisher");
-    private final static QName _DeletePublisher_QNAME = new QName("urn:apache-org:juddi_api_v3", "delete_publisher");
-    private final static QName _Publisher_QNAME = new QName("urn:apache-org:juddi_api_v3", "publisher");
-    private final static QName _PublisherDetail_QNAME = new QName("urn:apache-org:juddi_api_v3", "publisherDetail");
-    private final static QName _GetPublisherDetail_QNAME = new QName("urn:apache-org:juddi_api_v3", "get_publisherDetail");
-    private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:apache-org:juddi_api_v3", "get_allPublisherDetail");
+    private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
+    private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
+    private final static QName _Publisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisher");
+    private final static QName _PublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetail");
+    private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
+    private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.uddi.api_v3
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.apache.juddi.api_v3
      * 
      */
     public ObjectFactory() {
@@ -110,7 +111,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "save_publisher")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_publisher")
     public JAXBElement<SavePublisher> createSavePublisher(SavePublisher value) {
         return new JAXBElement<SavePublisher>(_SavePublisher_QNAME, SavePublisher.class, null, value);
     }
@@ -119,7 +120,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link DeletePublisher }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "delete_publisher")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "delete_publisher")
     public JAXBElement<DeletePublisher> createDeletePublisher(DeletePublisher value) {
         return new JAXBElement<DeletePublisher>(_DeletePublisher_QNAME, DeletePublisher.class, null, value);
     }
@@ -128,7 +129,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link Publisher }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "publisher")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "publisher")
     public JAXBElement<Publisher> createPublisher(Publisher value) {
         return new JAXBElement<Publisher>(_Publisher_QNAME, Publisher.class, null, value);
     }
@@ -137,7 +138,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "publisherDetail")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "publisherDetail")
     public JAXBElement<PublisherDetail> createPublisherDetail(PublisherDetail value) {
         return new JAXBElement<PublisherDetail>(_PublisherDetail_QNAME, PublisherDetail.class, null, value);
     }
@@ -146,16 +147,16 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link GetPublisherDetail }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "get_publisherDetail")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "get_publisherDetail")
     public JAXBElement<GetPublisherDetail> createGetPublisherDetail(GetPublisherDetail value) {
         return new JAXBElement<GetPublisherDetail>(_GetPublisherDetail_QNAME, GetPublisherDetail.class, null, value);
     }
     
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetPublisherDetail }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetAllPublisherDetail }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:apache-org:juddi_api_v3", name = "get_allPublisherDetail")
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "get_allPublisherDetail")
     public JAXBElement<GetAllPublisherDetail> createGetAllPublisherDetail(GetAllPublisherDetail value) {
         return new JAXBElement<GetAllPublisherDetail>(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);
     }

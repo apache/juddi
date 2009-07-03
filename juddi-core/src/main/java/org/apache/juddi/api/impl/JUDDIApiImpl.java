@@ -49,7 +49,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 @WebService(serviceName="JUDDIApiService", 
 			endpointInterface="org.apache.juddi.v3_service.JUDDIApiPortType",
-			targetNamespace = "urn:apache-org:juddi_api_v3_portType")
+			targetNamespace = "urn:juddi-apache-org:api_v3_portType")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
 	/**
