@@ -72,6 +72,11 @@ public class JUDDI_010_PublisherIntegrationTest {
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 security = transport.getUDDISecurityService();
+	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
+	        	 GetAuthToken getAuthToken = new GetAuthToken();
+	        	 getAuthToken.setUserID("root");
+	        	 getAuthToken.setCred("");
+	        	 authInfo = securityService.getAuthToken(getAuthToken).getAuthInfo();
 	        	 publisher = transport.getJUDDIApiService();
 	         } else {
 	        	 Assert.fail();
@@ -250,6 +255,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	private boolean isExistPublisher(String publisherId) {
 		GetPublisherDetail gp = new GetPublisherDetail();
+		gp.setAuthInfo(authInfo);
 		gp.getPublisherId().add(publisherId);
 		try {
 			publisher.getPublisherDetail(gp);
