@@ -135,7 +135,7 @@ public class Publisher implements Serializable{
 	/**
 	 * @param maxBindingsPerService the maxBindingsPerService to set
 	 */
-	public void setMaxBindingsPerService(int maxBindingsPerService) {
+	public void setMaxBindingsPerService(Integer maxBindingsPerService) {
 		this.maxBindingsPerService = maxBindingsPerService;
 	}
 
@@ -149,7 +149,7 @@ public class Publisher implements Serializable{
 	/**
 	 * @param maxBusinesses the maxBusinesses to set
 	 */
-	public void setMaxBusinesses(int maxBusinesses) {
+	public void setMaxBusinesses(Integer maxBusinesses) {
 		this.maxBusinesses = maxBusinesses;
 	}
 
@@ -163,7 +163,7 @@ public class Publisher implements Serializable{
 	/**
 	 * @param maxServicePerBusiness the maxServicePerBusiness to set
 	 */
-	public void setMaxServicePerBusiness(int maxServicePerBusiness) {
+	public void setMaxServicePerBusiness(Integer maxServicePerBusiness) {
 		this.maxServicePerBusiness = maxServicePerBusiness;
 	}
 
@@ -177,7 +177,7 @@ public class Publisher implements Serializable{
 	/**
 	 * @param maxTModels the maxTModels to set
 	 */
-	public void setMaxTModels(int maxTModels) {
+	public void setMaxTModels(Integer maxTModels) {
 		this.maxTModels = maxTModels;
 	}
 
