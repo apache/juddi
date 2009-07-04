@@ -16,21 +16,25 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import java.util.List;
+
+import org.apache.juddi.portlets.client.model.Publisher;
 /**
  * 
- *  @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  *
  */
-public class NotifyResponse extends Response {
+public class JUDDIApiResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
-	String subscriptionNotifications;
 	
-	public String getSubscriptionNotifications() {
-		return subscriptionNotifications;
+	List<Publisher> publishers;
+	
+	public List<Publisher> getPublishers() {
+		return publishers;
 	}
-	public void setSubscriptionNotifications(String subscriptionNotifications) {
-		this.subscriptionNotifications = subscriptionNotifications;
+	public void setPublishers(List<Publisher> publishers) {
+		this.publishers = publishers;
 	}
 
 }

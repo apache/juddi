@@ -31,17 +31,31 @@
 	    </portlet-info>
 	</portlet>
 
-        <portlet>
-        <description>UDDI Subscription Notification as a portlet app</description>
-               <portlet-name>UDDISubscriptionNotificationPortlet</portlet-name>
-               <display-name>UDDISubscriptionNotification Portlet</display-name>
-               <portlet-class>org.apache.juddi.portlets.server.UDDISubscriptionNotificationPortlet</portlet-class>
-               <supports>
-                    <mime-type>text/html</mime-type>
-                    <portlet-mode>VIEW</portlet-mode>
-                </supports>
-                <portlet-info>
-                     <title>UDDISubscriptionNotification Portlet</title>
-                </portlet-info>
-          </portlet>
+    <portlet>
+    <description>UDDI Subscription Notification as a portlet app</description>
+           <portlet-name>UDDISubscriptionNotificationPortlet</portlet-name>
+           <display-name>UDDISubscriptionNotification Portlet</display-name>
+           <portlet-class>org.apache.juddi.portlets.server.UDDISubscriptionNotificationPortlet</portlet-class>
+           <supports>
+                <mime-type>text/html</mime-type>
+                <portlet-mode>VIEW</portlet-mode>
+            </supports>
+            <portlet-info>
+                 <title>UDDISubscriptionNotification Portlet</title>
+            </portlet-info>
+      </portlet>
+      
+      <portlet>
+   		 <description>JUDDI Publisher as a portlet app</description>
+           <portlet-name>JUDDIPublisherPortlet</portlet-name>
+           <display-name>JUDDIPublisher Portlet</display-name>
+           <portlet-class>org.apache.juddi.portlets.server.JUDDIPublisherPortlet</portlet-class>
+           <supports>
+                <mime-type>text/html</mime-type>
+                <portlet-mode>VIEW</portlet-mode>
+            </supports>
+            <portlet-info>
+                 <title>jUDDIPublisher Portlet</title>
+            </portlet-info>
+      </portlet>
 </portlet-app>

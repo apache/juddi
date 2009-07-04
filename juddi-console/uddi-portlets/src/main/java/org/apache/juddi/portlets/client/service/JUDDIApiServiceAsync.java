@@ -16,21 +16,14 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.RemoteService;
 /**
  * 
- *  @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  *
  */
-public class NotifyResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
-	String subscriptionNotifications;
-	
-	public String getSubscriptionNotifications() {
-		return subscriptionNotifications;
-	}
-	public void setSubscriptionNotifications(String subscriptionNotifications) {
-		this.subscriptionNotifications = subscriptionNotifications;
-	}
-
+public interface JUDDIApiServiceAsync extends RemoteService {
+	public void getPublishers(String authToken, String publisherId, AsyncCallback<JUDDIApiResponse> callback);
 }
+

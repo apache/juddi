@@ -19,6 +19,7 @@ package org.apache.juddi.portlets.server.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -84,7 +85,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		logger.debug("TModelDetail " + getTModelDetail + " sending tmodelDetail request..");
 		Map<String,String> tmodelDetailMap = new HashMap<String,String>();
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getInquiryService();
+        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
         	 TModelDetail tmodelDetail = inquiryService.getTModelDetail(getTModelDetail);
         	 //demo code fix up what to return for real.
         	 for (TModel tmodel : tmodelDetail.getTModel()) {
@@ -117,7 +118,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		InquiryResponse response = new InquiryResponse();
 		logger.debug("BusinessDetail " + getBusinessDetail + " sending businessDetail request..");
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getInquiryService();
+        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
         	 BusinessDetail businessDetail = inquiryService.getBusinessDetail(getBusinessDetail);
         	 for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {
         		 Business business = new Business(
@@ -164,7 +165,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		InquiryResponse response = new InquiryResponse();
 		logger.debug("ServiceDetail " + getServiceDetail + " sending serviceDetail request..");
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getInquiryService();
+        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
         	 ServiceDetail serviceDetail = inquiryService.getServiceDetail(getServiceDetail);
         	 for (BusinessService businessService : serviceDetail.getBusinessService()) {
         		 Service service = new Service(

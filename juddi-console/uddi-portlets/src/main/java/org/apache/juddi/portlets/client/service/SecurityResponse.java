@@ -24,12 +24,19 @@ public class SecurityResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
 	String response;
+	String username;
 	
 	public String getResponse() {
 		return response;
 	}
 	public void setResponse(String response) {
 		this.response = response;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 }

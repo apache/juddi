@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 
-public class BusinessTreePanel extends Composite implements TreeListener {
+public class BusinessTreePanel extends Composite implements TreeListener, ApplicationPanel {
 
 	private static String SERVICES_LABEL="Services owned by this business";
 	private Tree publisherTree;
@@ -28,6 +28,10 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		publisherTree = new Tree(UDDIBrowser.images);
 		publisherTree.addTreeListener(this);
 		initWidget(publisherTree);
+	}
+	
+	public void loadData() {
+		getBusinesses("all");
 	}
 	
 	protected void getBusinesses(String infoSelection) {
@@ -64,7 +68,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 					}
 					
 				} else {
-					//tmodelLabel.setText("error: " + response.getMessage());
+					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
 				}
 			}
 		});

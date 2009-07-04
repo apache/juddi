@@ -8,8 +8,8 @@
 		<mkdir dir="${basedir}/target/tomcat"/>
 
 		<unzip dest="${basedir}/target/tomcat" src="${dependency.juddi-tomcat.zip}"/>
-		<copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}"/>
-		<copy file="${basedir}/pluto.xml" todir="${conf.dir}/Catalina/localhost"/>
+		<copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}" overwrite="yes"/>
+		<copy file="${basedir}/pluto.xml" todir="${conf.dir}/Catalina/localhost" overwrite="yes"/>
 		<unzip dest="${webapps.dir}/pluto" src="${dependency.pluto-portal.war}"/>
 		<unzip dest="${webapps.dir}/uddi-portlets" src="${dependency.uddi-portlets.war}"/>
 		<unzip dest="${webapps.dir}/subscription-listener" src="${dependency.subscription-listener.war}"/>

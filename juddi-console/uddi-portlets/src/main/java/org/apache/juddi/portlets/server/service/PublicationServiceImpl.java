@@ -65,7 +65,7 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
         	 Transport transport = (Transport) transportClass.newInstance(); 
-        	 UDDIPublicationPortType publicationService = transport.getPublishService();
+        	 UDDIPublicationPortType publicationService = transport.getUDDIPublishService();
         	 RegisteredInfo info = publicationService.getRegisteredInfo(getRegistrationInfo);
         	 for (BusinessInfo businessInfo : info.getBusinessInfos().getBusinessInfo()) {
 				Business business = new Business(

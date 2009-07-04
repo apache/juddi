@@ -48,48 +48,58 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 	public SecurityResponse get(String username, String password) {
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
+		logger.debug("User " + username + " sending token request..");
+		SecurityResponse response = new SecurityResponse();
+		String token = (String) session.getAttribute("AuthToken");
+		if (username==null) {
+			username = (String) session.getAttribute("UserName");
+		}
 		Principal user = request.getUserPrincipal();
 		logger.debug("UserPrincipal " + user);
 		if (username==null && user!=null) {
 			username = user.getName();
 			password = "";
-		}
-		logger.debug("User " + username + " sending token request..");
-		SecurityResponse response = new SecurityResponse();
-		String token = (String) session.getAttribute("AuthToken");
-		if (token == null) {
-			try {
-				String clazz = ClientConfig.getConfiguration().getString(
-						Property.UDDI_PROXY_TRANSPORT,
-						Property.DEFAULT_UDDI_PROXY_TRANSPORT);
-				Class<?> transportClass = Loader.loadClass(clazz);
-				Transport transport = (Transport) transportClass.newInstance();
-				UDDISecurityPortType securityService = transport.getSecurityService();
-				GetAuthToken getAuthToken = new GetAuthToken();
-				getAuthToken.setUserID(username);
-				getAuthToken.setCred(password);
-				AuthToken authToken = securityService
-						.getAuthToken(getAuthToken);
-				logger.debug("User " + username + " obtained token="
-						+ authToken.getAuthInfo());
+		} 
+		if (token==null) {
+			if (username==null) {
 				response.setSuccess(true);
-				response.setResponse(authToken.getAuthInfo());
-				session.setAttribute("AuthToken", authToken.getAuthInfo());
-			} catch (Exception e) {
-				logger.error("Could not obtain token. " + e.getMessage(), e);
-				response.setSuccess(false);
-				response.setMessage(e.getMessage());
-				response.setErrorCode("101");
-			} catch (Throwable t) {
-				logger.error("Could not obtain token. " + t.getMessage(), t);
-				response.setSuccess(false);
-				response.setMessage(t.getMessage());
-				response.setErrorCode("101");
-			}
+				return response;
+			} else {
+				try {
+					String clazz = ClientConfig.getConfiguration().getString(
+							Property.UDDI_PROXY_TRANSPORT,
+							Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+					Class<?> transportClass = Loader.loadClass(clazz);
+					Transport transport = (Transport) transportClass.newInstance();
+					UDDISecurityPortType securityService = transport.getUDDISecurityService();
+					GetAuthToken getAuthToken = new GetAuthToken();
+					getAuthToken.setUserID(username);
+					getAuthToken.setCred(password);
+					AuthToken authToken = securityService
+							.getAuthToken(getAuthToken);
+					logger.debug("User " + username + " obtained token="
+							+ authToken.getAuthInfo());
+					response.setSuccess(true);
+					response.setResponse(authToken.getAuthInfo());
+					session.setAttribute("AuthToken", authToken.getAuthInfo());
+					session.setAttribute("UserName", username);
+				} catch (Exception e) {
+					logger.error("Could not obtain token. " + e.getMessage(), e);
+					response.setSuccess(false);
+					response.setMessage(e.getMessage());
+					response.setErrorCode("101");
+				} catch (Throwable t) {
+					logger.error("Could not obtain token. " + t.getMessage(), t);
+					response.setSuccess(false);
+					response.setMessage(t.getMessage());
+					response.setErrorCode("101");
+				}
+			} 
 		} else {
 			response.setSuccess(true);
 			response.setResponse(token);
 		}
+		response.setUsername(username);
 		return response;
 	}
 }

@@ -17,78 +17,66 @@
 package org.apache.juddi.portlets.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIBrowser implements EntryPoint, Application {
+public class JUDDIPublisher implements Application, EntryPoint, ClickListener {
 
-	DockPanel dockPanel = new DockPanel();
-	public static final Images images = (Images) GWT.create(Images.class);
-	private BusinessTreePanel applicationPanel = null;
-	private DetailPanel detailPanel = null;
-	private LoginPanel loginPanel = null;
+	private FlowPanel flowPanel = new FlowPanel();
 	private String token = null;
-	private String username;
+	private LoginPanel loginPanel = null;
+	private PublisherListPanel applicationPanel = null;
 	
+	private String username;
+
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad() {
+	public void onModuleLoad() { 
 		
 		loginPanel = new LoginPanel(this);
 		loginPanel.setVisible(false);
-		dockPanel.add(loginPanel, DockPanel.NORTH);
+		flowPanel.add(loginPanel);
 		
-		applicationPanel = new BusinessTreePanel(this);
+		applicationPanel = new PublisherListPanel(this);
 		applicationPanel.setVisible(false);
-		dockPanel.add(applicationPanel,DockPanel.WEST);
+		flowPanel.add(applicationPanel);
 		
-		detailPanel = new DetailPanel(this);
-		detailPanel.setVisible(false);
-		dockPanel.add(detailPanel,DockPanel.CENTER);
-		
-		//dockPanel.add(detailPanel);
-		
-		RootPanel.get("browser").add(dockPanel);
+		RootPanel.get("publisher").add(flowPanel);
 		loginPanel.getToken(null,null);
 	}
 
-	public BusinessTreePanel getApplicationPanel() {
-		return applicationPanel;
+	public void onClick(Widget sender) {
+//	    if (sender == getTModelButton) {
+//			if (token!=null) {
+//				getTModels(token,tmodelKeyBox.getText());
+//			}
+//		} else {
+//			System.err.println("undefined");
+//		}
 	}
 
-	protected void setApplicationPanel(BusinessTreePanel applicationPanel) {
-		this.applicationPanel = applicationPanel;
+	public ApplicationPanel getApplicationPanel() {
+		return applicationPanel;
 	}
 
 	public LoginPanel getLoginPanel() {
 		return loginPanel;
 	}
 
-	protected void setLoginPanel(LoginPanel loginPanel) {
-		this.loginPanel = loginPanel;
-	}
-
-	public DetailPanel getDetailPanel() {
-		return detailPanel;
-	}
-
-	public void setDetailPanel(DetailPanel detailPanel) {
-		this.detailPanel = detailPanel;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
 	public void setToken(String token) {
 		this.token = token;
+	}
+	
+	public String getToken() {
+		return token;
 	}
 	
 	public String getUsername() {
@@ -101,7 +89,4 @@ public class UDDIBrowser implements EntryPoint, Application {
 	
 	
 	
-	
 }
-	
- 
