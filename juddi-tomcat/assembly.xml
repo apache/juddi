@@ -5,7 +5,7 @@
   </formats>
   <fileSets>
     <fileSet>
-	  <directory>${project.build.directory}/tomcat/apache-tomcat-5.5.23</directory>
+	  <directory>${project.build.directory}/tomcat/apache-tomcat-6.0.20</directory>
 	  <outputDirectory></outputDirectory>
     </fileSet>
   </fileSets>
