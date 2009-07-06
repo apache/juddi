@@ -19,7 +19,6 @@ package org.apache.juddi.portlets.server.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.ConfigurationException;

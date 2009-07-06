@@ -10,8 +10,5 @@
       <stylesheet src="uddiportlets.css"/>
 
 	  <servlet class="org.apache.juddi.portlets.server.service.NotifyServiceImpl" path="/notify"/>	
-	  <servlet class="org.apache.juddi.portlets.server.service.SecurityServiceImpl"    path="/security"/>
-	  <servlet class="org.apache.juddi.portlets.server.service.InquiryServiceImpl"     path="/inquiry"/>
-	  <servlet class="org.apache.juddi.portlets.server.service.PublicationServiceImpl" path="/publication"/>
 	 
 </module>

@@ -45,6 +45,7 @@ limitations under the License.
   <render-config default="About Apache Pluto">
     <page name="jUDDI" uri="/WEB-INF/themes/pluto-default-theme.jsp">
       <portlet context="/uddi-portlets" name="UDDIBrowserPortlet"/>
+      <portlet context="/uddi-portlets" name="JUDDIPublisherPortlet"/>
       <portlet context="/uddi-portlets" name="UDDISearchPortlet"/>
       <portlet context="/uddi-portlets" name="UDDISubscriptionNotificationPortlet"/>
     </page>

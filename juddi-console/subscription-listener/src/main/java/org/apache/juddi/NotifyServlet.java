@@ -20,8 +20,6 @@ import java.util.Vector;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.config.AppConfig;
 import org.apache.log4j.Logger;
 import org.apache.juddi.util.NotificationList;
 
