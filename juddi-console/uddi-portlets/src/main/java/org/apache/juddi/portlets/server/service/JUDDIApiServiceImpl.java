@@ -19,9 +19,12 @@ package org.apache.juddi.portlets.server.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.portlets.client.model.Publisher;
 import org.apache.juddi.portlets.client.service.JUDDIApiResponse;
 import org.apache.juddi.portlets.client.service.JUDDIApiService;
@@ -56,26 +59,19 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
         	 Transport transport = (Transport) transportClass.newInstance(); 
-        	 JUDDIApiPortType publisherService = transport.getJUDDIApiService();
+        	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
         	 PublisherDetail publisherDetail = null;
-        	 publisherDetail = publisherService.getPublisherDetail(getPublisherDetail);
+        	 publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
         	 //if the publisher is an admin, then return ALL publishers
         	 if ("true".equalsIgnoreCase(publisherDetail.getPublisher().get(0).getIsAdmin())) {
         		 GetAllPublisherDetail getAllPublisherDetail = new GetAllPublisherDetail();
 				 getAllPublisherDetail.setAuthInfo(authToken);
 				 logger.debug("GetAllPublisherDetail " + getAllPublisherDetail + " sending get AllPublisherDetail request..");
-				 publisherDetail = publisherService.getAllPublisherDetail(getAllPublisherDetail);
+				 publisherDetail = apiService.getAllPublisherDetail(getAllPublisherDetail);
         	 }
         	 for (org.apache.juddi.api_v3.Publisher apiPublisher : publisherDetail.getPublisher()) {
 				Publisher publisher = new Publisher();
-				publisher.setAuthorizedName(apiPublisher.getAuthorizedName());
-				publisher.setEmailAddress(apiPublisher.getEmailAddress());
-				publisher.setIsAdmin(apiPublisher.getIsAdmin());
-				publisher.setIsEnabled(apiPublisher.getIsEnabled());
-				publisher.setMaxBindingsPerService(apiPublisher.getMaxBindingsPerService());
-				publisher.setMaxBusinesses(apiPublisher.getMaxBusinesses());
-				publisher.setMaxServicePerBusiness(apiPublisher.getMaxServicePerBusiness());
-				publisher.setPublisherName(apiPublisher.getPublisherName());
+				BeanUtils.copyProperties(publisher, apiPublisher);
 				publishers.add(publisher);
 			 }
         	 response.setSuccess(true);
@@ -93,4 +89,66 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	     } 
 		 return response;
 	}
+	
+	public JUDDIApiResponse savePublisher(String token, Publisher publisher) {
+		JUDDIApiResponse response = new JUDDIApiResponse();
+		try {
+	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	       	 Transport transport = (Transport) transportClass.newInstance(); 
+	       	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
+	       	 SavePublisher savePublisher = new SavePublisher();
+	       	 savePublisher.setAuthInfo(token);
+	       	 org.apache.juddi.api_v3.Publisher apiPublisher = new org.apache.juddi.api_v3.Publisher();
+	       	 BeanUtils.copyProperties(apiPublisher, publisher);
+	       	 savePublisher.getPublisher().add(apiPublisher);
+	       	 PublisherDetail publisherDetail = apiService.savePublisher(savePublisher);
+	       	 List<Publisher> publishers = new ArrayList<Publisher>();
+	         for (org.apache.juddi.api_v3.Publisher apiPublisherOut : publisherDetail.getPublisher()) {
+				Publisher publisherOut = new Publisher();
+				BeanUtils.copyProperties(publisherOut, apiPublisherOut);
+				publishers.add(publisher);
+			 }
+        	 response.setSuccess(true);
+        	 response.setPublishers(publishers);
+		} catch (Exception e) {
+	    	 logger.error("Could not obtain publishers. " + e.getMessage(), e);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(e.getMessage());
+	    	 response.setErrorCode("102");
+	     }  catch (Throwable t) {
+	    	 logger.error("Could not obtain publishers. " + t.getMessage(), t);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(t.getMessage());
+	    	 response.setErrorCode("102");
+	     } 
+		return response;
+	}
+	
+	public JUDDIApiResponse deletePublisher(String token, String publisherId) {
+		JUDDIApiResponse response = new JUDDIApiResponse();
+		try {
+	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	       	 Transport transport = (Transport) transportClass.newInstance(); 
+	       	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
+	       	 DeletePublisher deletePublisher = new DeletePublisher();
+	         deletePublisher.setAuthInfo(token);
+	       	 deletePublisher.getPublisherId().add(publisherId);
+	       	 apiService.deletePublisher(deletePublisher);
+        	 response.setSuccess(true);
+		} catch (Exception e) {
+	    	 logger.error("Could not obtain publishers. " + e.getMessage(), e);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(e.getMessage());
+	    	 response.setErrorCode("102");
+	     }  catch (Throwable t) {
+	    	 logger.error("Could not obtain publishers. " + t.getMessage(), t);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(t.getMessage());
+	    	 response.setErrorCode("102");
+	     } 
+		return response;
+	}
+	
 }

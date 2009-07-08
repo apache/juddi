@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 
-public class BusinessTreePanel extends Composite implements TreeListener, ApplicationPanel {
+public class BusinessTreePanel extends Composite implements TreeListener {
 
 	private static String SERVICES_LABEL="Services owned by this business";
 	private Tree publisherTree;

@@ -23,12 +23,14 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 	private PasswordTextBox passwordBox = new PasswordTextBox();
 	
 	private String publisherId;
-	Application parentApp = null;
+	private Login application;
+	private String token;
 	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 	
-	public LoginPanel(Application application) {
+	public LoginPanel(Login application) {
 		super();
-		this.parentApp = application;
+		this.application = application;
+		getToken(null, null);
 		getElement().setId("parentApp-body");
 		
 		Label publisher = new Label ("Publisher:");
@@ -69,22 +71,18 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 
 			public void onSuccess(SecurityResponse response) {
 				if (response.isSuccess()) {
-					
-					String token = response.getResponse();
-					parentApp.setToken(token);
-					if (token == null ) {
-						parentApp.getLoginPanel().setVisible(true);
-					} else {
-						parentApp.getLoginPanel().setVisible(false);
-						parentApp.getApplicationPanel().setVisible(true);
-						parentApp.setUsername(response.getUsername());
-						parentApp.getApplicationPanel().loadData();
-					}
+					token = response.getResponse();
+					publisherId = response.getUsername();
+					application.login();
 				} else {
 					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
 				}
 			}
-		});
+		}); 
+	}
+	
+	public String getToken() {
+		return token;
 	}
 	
 	public String getPublisherId() {

@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import org.apache.juddi.portlets.client.model.Publisher;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
@@ -27,4 +29,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface JUDDIApiService extends RemoteService {
 	
 	public JUDDIApiResponse getPublishers(String authToken, String publisherId);
+	public JUDDIApiResponse savePublisher(String authToken, Publisher publisher);
+	public JUDDIApiResponse deletePublisher(String authToken, String publisherId);
 }

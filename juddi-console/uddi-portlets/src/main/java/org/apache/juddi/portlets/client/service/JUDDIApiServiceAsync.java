@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import org.apache.juddi.portlets.client.model.Publisher;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 /**
@@ -25,5 +27,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
  */
 public interface JUDDIApiServiceAsync extends RemoteService {
 	public void getPublishers(String authToken, String publisherId, AsyncCallback<JUDDIApiResponse> callback);
+	public void savePublisher(String authToken, Publisher publisher, AsyncCallback<JUDDIApiResponse> callback);
+	public void deletePublisher(String authToken, String publisherId, AsyncCallback<JUDDIApiResponse> callback);
 }
 

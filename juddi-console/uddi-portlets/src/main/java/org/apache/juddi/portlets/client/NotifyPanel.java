@@ -16,8 +16,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class NotifyPanel extends VerticalPanel {
 
-	private UDDISubscriptionNotification notification = null;
-	private NotifyPanel notifyPanel = null;
+	//private UDDISubscriptionNotification notification = null;
+	//private NotifyPanel notifyPanel = null;
 	private TextArea textArea = null;
 	FlexTable table = null;
 
@@ -25,8 +25,8 @@ public class NotifyPanel extends VerticalPanel {
 	
 	public NotifyPanel(UDDISubscriptionNotification notification) {
 		super();
-		this.notification = notification;
-		notifyPanel = this;
+		//this.notification = notification;
+		//notifyPanel = this;
 		getElement().setId("notifications-body");
 		Label notifyLabel = new Label ("Subscription notifications:");
 		notifyLabel.setStyleName("portlet-form-field-label");

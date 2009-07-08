@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.RootPanel;
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIBrowser implements EntryPoint, Application {
+public class UDDIBrowser implements EntryPoint, Login {
 
 	DockPanel dockPanel = new DockPanel();
 	public static final Images images = (Images) GWT.create(Images.class);
@@ -53,10 +53,17 @@ public class UDDIBrowser implements EntryPoint, Application {
 		detailPanel.setVisible(false);
 		dockPanel.add(detailPanel,DockPanel.CENTER);
 		
-		//dockPanel.add(detailPanel);
-		
 		RootPanel.get("browser").add(dockPanel);
-		loginPanel.getToken(null,null);
+	}
+	
+	public void login() {
+		String token = loginPanel.getToken();
+		if (token == null ) {
+			loginPanel.setVisible(true);
+		} else {
+			loginPanel.setVisible(false);
+			applicationPanel.setVisible(true);
+		}
 	}
 
 	public BusinessTreePanel getApplicationPanel() {

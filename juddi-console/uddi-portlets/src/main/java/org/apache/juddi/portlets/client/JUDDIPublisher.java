@@ -16,76 +16,74 @@
  */
 package org.apache.juddi.portlets.client;
 
+import org.apache.juddi.portlets.client.model.Publisher;
+
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class JUDDIPublisher implements Application, EntryPoint, ClickListener {
+public class JUDDIPublisher implements EntryPoint, Login {
 
+	private static JUDDIPublisher singleton;
 	private FlowPanel flowPanel = new FlowPanel();
-	private String token = null;
-	private LoginPanel loginPanel = null;
-	private PublisherListPanel applicationPanel = null;
-	
-	private String username;
+	private LoginPanel loginPanel = new LoginPanel(this);
+	private PublisherListPanel publisherListPanel = new PublisherListPanel();
+	private PublisherPanel publisherPanel = null;
 
+	public static JUDDIPublisher getInstance() {
+		return singleton;
+	}
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() { 
+		singleton = this;
 		
-		loginPanel = new LoginPanel(this);
 		loginPanel.setVisible(false);
 		flowPanel.add(loginPanel);
 		
-		applicationPanel = new PublisherListPanel(this);
-		applicationPanel.setVisible(false);
-		flowPanel.add(applicationPanel);
+		publisherListPanel.setVisible(false);
+		flowPanel.add(publisherListPanel);
 		
 		RootPanel.get("publisher").add(flowPanel);
-		loginPanel.getToken(null,null);
-	}
-
-	public void onClick(Widget sender) {
-//	    if (sender == getTModelButton) {
-//			if (token!=null) {
-//				getTModels(token,tmodelKeyBox.getText());
-//			}
-//		} else {
-//			System.err.println("undefined");
-//		}
-	}
-
-	public ApplicationPanel getApplicationPanel() {
-		return applicationPanel;
-	}
-
-	public LoginPanel getLoginPanel() {
-		return loginPanel;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 	
+	public void login() {
+		String token = loginPanel.getToken();
+		if (token == null ) {
+			loginPanel.setVisible(true);
+			publisherListPanel.setVisible(false);
+		} else {
+			loginPanel.setVisible(false);
+			publisherListPanel.setVisible(true);
+			String publisherId = loginPanel.getPublisherId();
+			publisherListPanel.listPublishers(token, publisherId);
+		}
+	}
+	
+	public void displayPublisher(Publisher publisher) {
+		if (publisherPanel!=null ) flowPanel.remove(publisherPanel);
+		publisherPanel = new PublisherPanel(publisher);
+		flowPanel.add(publisherPanel);
+	}
+	
+	public void hidePublisher() {
+		publisherPanel.setVisible(false);
+		String token = loginPanel.getToken();
+		String publisherId = loginPanel.getPublisherId();
+		publisherListPanel.listPublishers(token, publisherId);
+	}
+
 	public String getToken() {
-		return token;
-	}
-	
-	public String getUsername() {
-		return username;
+		return loginPanel.getToken();
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+
 	
 	
 	

@@ -20,7 +20,6 @@ import java.util.Vector;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.apache.log4j.Logger;
 import org.apache.juddi.util.NotificationList;
 
 
@@ -33,8 +32,8 @@ import org.apache.juddi.util.NotificationList;
 public class NotifyServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-	private Logger log = Logger.getLogger(this.getClass());
-
+	
+	@SuppressWarnings("unchecked")
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws
 		ServletException, IOException {

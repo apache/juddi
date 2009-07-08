@@ -25,7 +25,6 @@ import java.net.URLConnection;
 import org.apache.juddi.portlets.client.service.NotifyResponse;
 import org.apache.juddi.portlets.client.service.NotifyService;
 import org.apache.log4j.Logger;
-import org.uddi.api_v3.client.transport.Transport;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -37,7 +36,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class NotifyServiceImpl extends RemoteServiceServlet implements NotifyService {
 	private Logger logger = Logger.getLogger(this.getClass());
 	private static final long serialVersionUID = 1L;
-	private Transport transport = null;
 	
 	public NotifyServiceImpl() {
 		super();
