@@ -28,6 +28,7 @@ public class PublisherPanel extends FlowPanel implements ClickListener {
 	private TextBox maxBindingsPerServiceBox = new TextBox();
 	private TextBox maxBusinessesBox = new TextBox();
 	private TextBox maxServicesPerBusinessBox = new TextBox();
+	private TextBox maxTModelBox = new TextBox();
 	Button saveButton = new Button();
 	Button newButton = new Button();
 	Button deleteButton = new Button();
@@ -93,6 +94,13 @@ public class PublisherPanel extends FlowPanel implements ClickListener {
 		maxBindingsPerServiceBox.setStyleName("portlet-form-input-field");
 		add(maxBindingsPerServiceBox);
 		
+		Label maxTModels = new Label ("MaxTModels:");
+		maxTModels.setStyleName("portlet-form-field-label");
+		add(maxTModels);
+		maxTModelBox.setText(String.valueOf(publisher.getMaxTModels()));
+		maxTModelBox.setStyleName("portlet-form-input-field");
+		add(maxTModelBox);
+		
 		saveButton.setText("Save");
 		saveButton.setStyleName(("portlet-form-button"));
 		saveButton.addClickListener(this);
@@ -128,7 +136,13 @@ public class PublisherPanel extends FlowPanel implements ClickListener {
 	}
 	
 	private void newPublisher(String token){
-		
+		publisher = new Publisher();
+		publisher.setIsEnabled("true");
+		publisher.setMaxBusinesses(100);
+		publisher.setMaxServicePerBusiness(1000);
+		publisher.setMaxBindingsPerService(100);
+		publisher.setMaxTModels(100);
+		JUDDIPublisher.getInstance().displayPublisher(publisher);
 	}
 
 	public void onClick(Widget sender) {
@@ -144,6 +158,16 @@ public class PublisherPanel extends FlowPanel implements ClickListener {
 	}
 	
 	private void savePublisher(String token) {
+		publisher.setAuthorizedName(idBox.getText());
+		publisher.setPublisherName(nameBox.getText());
+		publisher.setEmailAddress(emailAddressBox.getText());
+		publisher.setIsAdmin(isAdminBox.isChecked()?"true":"false");
+		publisher.setIsEnabled(isEnabledBox.isChecked()?"true":"false");
+		publisher.setMaxBindingsPerService(("".equals(maxServicesPerBusinessBox))?null:Integer.valueOf(maxBindingsPerServiceBox.getText()));
+		publisher.setMaxBusinesses(("".equals(maxBusinessesBox.getText()))?null:Integer.valueOf(maxBusinessesBox.getText()));
+		publisher.setMaxServicePerBusiness(("".equals(maxBindingsPerServiceBox.getText()))?null:Integer.valueOf(maxBindingsPerServiceBox.getText()));
+		publisher.setMaxTModels(("".equals(maxTModelBox.getText()))?null:Integer.valueOf(maxTModelBox.getText()));
+		
 		juddiApiService.savePublisher(token, publisher, new AsyncCallback<JUDDIApiResponse>() 
 		{
 			public void onFailure(Throwable caught) {
@@ -153,6 +177,7 @@ public class PublisherPanel extends FlowPanel implements ClickListener {
 			public void onSuccess(JUDDIApiResponse response) {
 				if (response.isSuccess()) {
 					Publisher publisher = response.getPublishers().get(0);
+					JUDDIPublisher.getInstance().setSelectedPublisher(publisher.getAuthorizedName());
 					JUDDIPublisher.getInstance().displayPublisher(publisher);
 				} else {
 					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");

@@ -62,6 +62,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 			loginPanel.setVisible(false);
 			publisherListPanel.setVisible(true);
 			String publisherId = loginPanel.getPublisherId();
+			publisherListPanel.setSelectedPublisher(publisherId);
 			publisherListPanel.listPublishers(token, publisherId);
 		}
 	}
@@ -70,6 +71,13 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		if (publisherPanel!=null ) flowPanel.remove(publisherPanel);
 		publisherPanel = new PublisherPanel(publisher);
 		flowPanel.add(publisherPanel);
+		String token = loginPanel.getToken();
+		String publisherId = loginPanel.getPublisherId();
+		publisherListPanel.listPublishers(token, publisherId);
+	}
+	
+	public void setSelectedPublisher(String selectedPublisherId) {
+		publisherListPanel.setSelectedPublisher(selectedPublisherId);
 	}
 	
 	public void hidePublisher() {
