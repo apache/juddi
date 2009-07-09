@@ -29,31 +29,35 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class UDDIBrowser implements EntryPoint, Login {
 
 	DockPanel dockPanel = new DockPanel();
+	private static UDDIBrowser singleton;
 	public static final Images images = (Images) GWT.create(Images.class);
 	private BusinessTreePanel applicationPanel = null;
 	private DetailPanel detailPanel = null;
 	private LoginPanel loginPanel = null;
-	private String token = null;
-	private String username;
 	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		
+		singleton = this;
 		loginPanel = new LoginPanel(this);
 		loginPanel.setVisible(false);
 		dockPanel.add(loginPanel, DockPanel.NORTH);
 		
-		applicationPanel = new BusinessTreePanel(this);
+		applicationPanel = new BusinessTreePanel();
 		applicationPanel.setVisible(false);
 		dockPanel.add(applicationPanel,DockPanel.WEST);
 		
-		detailPanel = new DetailPanel(this);
+		detailPanel = new DetailPanel();
 		detailPanel.setVisible(false);
 		dockPanel.add(detailPanel,DockPanel.CENTER);
 		
 		RootPanel.get("browser").add(dockPanel);
+	}
+	
+	public static UDDIBrowser getInstance() {
+		return singleton;
 	}
 	
 	public void login() {
@@ -63,51 +67,18 @@ public class UDDIBrowser implements EntryPoint, Login {
 		} else {
 			loginPanel.setVisible(false);
 			applicationPanel.setVisible(true);
+			applicationPanel.loadData();
 		}
 	}
-
-	public BusinessTreePanel getApplicationPanel() {
-		return applicationPanel;
+	
+	public String getToken() {
+		return loginPanel.getToken();
 	}
-
-	protected void setApplicationPanel(BusinessTreePanel applicationPanel) {
-		this.applicationPanel = applicationPanel;
-	}
-
-	public LoginPanel getLoginPanel() {
-		return loginPanel;
-	}
-
-	protected void setLoginPanel(LoginPanel loginPanel) {
-		this.loginPanel = loginPanel;
-	}
-
-	public DetailPanel getDetailPanel() {
+	
+	protected DetailPanel getDetailPanel() {
 		return detailPanel;
 	}
 
-	public void setDetailPanel(DetailPanel detailPanel) {
-		this.detailPanel = detailPanel;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	
-	
 	
 }
 	

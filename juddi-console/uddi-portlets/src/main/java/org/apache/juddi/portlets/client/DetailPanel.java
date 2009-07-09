@@ -17,17 +17,15 @@ import com.google.gwt.user.client.ui.HTML;
 public class DetailPanel extends FlowPanel {
 
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class); 
-	private UDDIBrowser browser = null;
 	private DetailPanel detailPanel = null;
 	FlexTable table = null;
 
-	public DetailPanel(UDDIBrowser browser) {
-		this.browser = browser;
+	public DetailPanel() {
 		detailPanel = this;
 	}
 	
 	public void displayServices( String businessKey) {
-		inquiryService.getBusinessDetail(browser.getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
+		inquiryService.getBusinessDetail(UDDIBrowser.getInstance().getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}
@@ -58,7 +56,7 @@ public class DetailPanel extends FlowPanel {
 	}
 	
 	public void displayBusiness( String businessKey) {
-		inquiryService.getBusinessDetail(browser.getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
+		inquiryService.getBusinessDetail(UDDIBrowser.getInstance().getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}
@@ -92,7 +90,7 @@ public class DetailPanel extends FlowPanel {
 
 	public void displayService(String serviceKey) {
 
-		inquiryService.getServiceDetail(browser.getToken(), serviceKey, new AsyncCallback<InquiryResponse>() {
+		inquiryService.getServiceDetail(UDDIBrowser.getInstance().getToken(), serviceKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}

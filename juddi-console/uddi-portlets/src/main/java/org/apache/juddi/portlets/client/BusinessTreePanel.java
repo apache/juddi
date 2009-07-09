@@ -21,10 +21,8 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 	private static String SERVICES_LABEL="Services owned by this business";
 	private Tree publisherTree;
 	private PublicationServiceAsync publicationService = (PublicationServiceAsync) GWT.create(PublicationService.class);
-	UDDIBrowser browser = null;
 	
-	public BusinessTreePanel(UDDIBrowser browser) {
-		this.browser = browser;
+	public BusinessTreePanel() {
 		publisherTree = new Tree(UDDIBrowser.images);
 		publisherTree.addTreeListener(this);
 		initWidget(publisherTree);
@@ -36,7 +34,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 	
 	protected void getBusinesses(String infoSelection) {
 
-		publicationService.getBusinesses(browser.getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
+		publicationService.getBusinesses(UDDIBrowser.getInstance().getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
@@ -78,15 +76,15 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		System.out.println("Selected " + treeItem.getText());
 		if (treeItem.getUserObject()!=null && Service.class.equals(treeItem.getUserObject().getClass())) {
 			Service service = (Service) treeItem.getUserObject();
-			browser.getDetailPanel().setVisible(true);
-			browser.getDetailPanel().displayService(service.getKey());
+			UDDIBrowser.getInstance().getDetailPanel().setVisible(true);
+			UDDIBrowser.getInstance().getDetailPanel().displayService(service.getKey());
 		} else if (treeItem.getUserObject()!=null && Business.class.equals(treeItem.getUserObject().getClass())) {
 			Business business = (Business) treeItem.getUserObject();
-			browser.getDetailPanel().setVisible(true);
+			UDDIBrowser.getInstance().getDetailPanel().setVisible(true);
 			if (SERVICES_LABEL.equals(treeItem.getText())) {
-				browser.getDetailPanel().displayServices(business.getKey());
+				UDDIBrowser.getInstance().getDetailPanel().displayServices(business.getKey());
 			} else {
-				browser.getDetailPanel().displayBusiness(business.getKey());
+				UDDIBrowser.getInstance().getDetailPanel().displayBusiness(business.getKey());
 			}
 		}
 	}
