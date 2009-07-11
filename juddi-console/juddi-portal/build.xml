@@ -11,6 +11,7 @@
 		<copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}" overwrite="yes"/>
 		<copy file="${basedir}/pluto.xml" todir="${conf.dir}/Catalina/localhost" overwrite="yes"/>
 		<unzip dest="${webapps.dir}/pluto" src="${dependency.pluto-portal.war}"/>
+		<delete file="${webapps.dir}/pluto/WEB-INF/lib/commons-logging-api-1.1.jar"/>
 		<unzip dest="${webapps.dir}/uddi-portlets" src="${dependency.uddi-portlets.war}"/>
 		<unzip dest="${webapps.dir}/subscription-listener" src="${dependency.subscription-listener.war}"/>
 		<!--
