@@ -218,7 +218,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
                     <!-- <webXml>target/web.xml</webXml>-->
-					<warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
+					<warSourceExcludes>**/servlet-api-*.jar,.gwt-tmp/**</warSourceExcludes>
 				</configuration>
 			</plugin>
 			<!--  tell the compiler we can use 1.5 -->
