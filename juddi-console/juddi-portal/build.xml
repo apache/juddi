@@ -1,6 +1,6 @@
 <project name="juddi-portal.tomcat" default="package-tomcat" basedir=".">
 	<property file="package.properties"/>
-	<property name="shared.lib.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/shared/lib"/>
+	<property name="lib.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/lib"/>
 	<property name="conf.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/conf"/>
 	<property name="webapps.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/webapps"/>
 
@@ -28,12 +28,13 @@
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
-		<copy file="${dependency.castor.jar}" todir="${shared.lib.dir}"/>
-		<copy file="${dependency.pluto-container.jar}" todir="${shared.lib.dir}"/>
-		<copy file="${dependency.pluto-descriptor-api.jar}" todir="${shared.lib.dir}"/>
-		<copy file="${dependency.pluto-descriptor-impl.jar}" todir="${shared.lib.dir}"/>
-		<copy file="${dependency.pluto-taglib.jar}" todir="${shared.lib.dir}"/>
-		<copy file="${dependency.portlet-api.jar}" todir="${shared.lib.dir}"/>
+		<copy file="${dependency.castor.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.commons-logging.jar}" todir="${lib.dir}"/>	
+		<copy file="${dependency.pluto-container.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.pluto-descriptor-api.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.pluto-descriptor-impl.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.pluto-taglib.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.portlet-api.jar}" todir="${lib.dir}"/>
 	</target>
 	
 	<target name="package-tomcat" depends="copy-resources"/>

@@ -113,8 +113,11 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
-     
+    <dependency>
+    	<groupId>commons-logging</groupId>
+    	<artifactId>commons-logging</artifactId>
+    	<version>1.1</version>
+    </dependency> 
   </dependencies>
   <repositories>
 		<repository>
@@ -150,6 +153,7 @@
 		       <property name="dependency.pluto-descriptor-impl.jar"  value="${maven.dependency.org.apache.pluto.pluto-descriptor-impl.jar.path}"/>
 		       <property name="dependency.pluto-taglib.jar"  value="${maven.dependency.org.apache.pluto.pluto-taglib.jar.path}"/>
 		       <property name="dependency.pluto-portal.war"  value="${maven.dependency.org.apache.pluto.pluto-portal.war.path}"/>
+		       <property name="dependency.commons-logging.jar" value="${maven.dependency.commons-logging.commons-logging.jar.path}"/> 
 		       <property name="dependency.portlet-api.jar"  value="${maven.dependency.javax.portlet.portlet-api.jar.path}"/>
 		       <property name="dependency.uddi-portlets.war"  value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}"/>
 		       <property name="dependency.subscription-listener.war" value="${maven.dependency.org.apache.juddi.subscription-listener.war.path}"/>
