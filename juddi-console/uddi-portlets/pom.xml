@@ -96,6 +96,12 @@
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.5</version>
+			<exclusions>
+			    <exclusion>
+     				<groupId>javax.servlet</groupId>
+     				<artifactId>servlet-api</artifactId>
+   			    </exclusion>
+			 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
@@ -218,7 +224,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
                     <!-- <webXml>target/web.xml</webXml>-->
-					<warSourceExcludes>**/servlet-api-*.jar,.gwt-tmp/**</warSourceExcludes>
+					<warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
 				</configuration>
 			</plugin>
 			<!--  tell the compiler we can use 1.5 -->
