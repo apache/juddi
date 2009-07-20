@@ -59,6 +59,7 @@ public class SubscriptionNotifier extends TimerTask {
 
 	private Logger log = Logger.getLogger(this.getClass());
 	private Timer timer = new Timer();
+	private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private static long ACCEPTABLE_LAG_TIME = 20l; //20 milliseconds
@@ -67,7 +68,7 @@ public class SubscriptionNotifier extends TimerTask {
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
-		timer.scheduleAtFixedRate(this, new Date(), interval);
+		timer.scheduleAtFixedRate(this, startBuffer, interval);
 	}
 
 	public void run() 

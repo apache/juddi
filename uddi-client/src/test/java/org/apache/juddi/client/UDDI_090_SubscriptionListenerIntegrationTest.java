@@ -19,6 +19,7 @@ import java.io.FileReader;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
+import org.apache.juddi.config.AppConfig;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
@@ -54,19 +55,20 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 	private static UDDIPublicationPortType publication = null;
 
-	
 	private static String authInfoJoe = null;
 	private static String authInfoSam = null;
 
+	private static long START_BUFFER = 30000l;
+
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getConfiguration().getString(org.uddi.api_v3.client.config.Property.UDDI_PROXY_TRANSPORT,org.uddi.api_v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
 		logger.debug("Getting subscriber proxy..");
 		try {
-	    	 clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT, Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 clazz = ClientConfig.getConfiguration().getString(org.uddi.api_v3.client.config.Property.UDDI_PROXY_TRANSPORT, org.uddi.api_v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
@@ -96,7 +98,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getConfiguration().getString(org.uddi.api_v3.client.config.Property.UDDI_PROXY_TRANSPORT,org.uddi.api_v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -110,6 +112,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckSubscriptionListener.saveService(authInfoJoe);
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
+
+			Thread.sleep(START_BUFFER);
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);			
 
 			String test = readLogAsString("./target/uddiclient.log");
