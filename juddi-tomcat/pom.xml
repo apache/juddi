@@ -34,8 +34,8 @@
     </dependency>
     <dependency>
       <artifactId>apache-tomcat</artifactId>
-      <groupId>tomcat</groupId>
-      <version>5.5.23</version> 
+      <groupId>org.apache.juddi.bootstrap</groupId>
+      <version>5.5.27</version> 
       <type>zip</type>
     </dependency>
     <dependency>
@@ -50,12 +50,14 @@
      <version>SNAPSHOT</version>
      <type>jar</type>
     </dependency>
+    <!-- 
     <dependency>
     <artifactId>juddi-soapconsole</artifactId>
      <groupId>org.apache.juddi</groupId>
      <version>SNAPSHOT</version>
      <type>war</type>
     </dependency>
+     -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -78,13 +80,15 @@
             <phase>compile</phase>
             <configuration>
               <tasks>
+        <!--  
 		<property name="dependency.soap-console.war" value="${maven.dependency.org.apache.juddi.juddi-soapconsole.war.path}"/>
+		-->
 		<property name="dependency.axis.jar" value="${maven.dependency.axis.axis.jar.path}"/>
 		<property name="dependency.axis-saaj.jar" value="${maven.dependency.org.apache.axis.axis-saaj.jar.path}"/>
 		<property name="dependency.axis-jaxrpc.jar" value="${maven.dependency.org.apache.axis.axis-jaxrpc.jar.path}"/>
 		<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
 		<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
-		<property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
+		<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}"/>
 		<echo>${dependency.tomcat.zip}"</echo>
 		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-web.war.path}"/>
 		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
