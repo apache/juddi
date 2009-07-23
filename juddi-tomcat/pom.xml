@@ -72,10 +72,11 @@
 <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.3</version>
         <executions>
           <execution>
             <id>compile</id>
-            <phase>compile</phase>
+            <phase>package</phase>
             <configuration>
               <tasks>
 		<property name="dependency.soap-console.war" value="${maven.dependency.org.apache.juddi.juddi-soapconsole.war.path}"/>
@@ -85,7 +86,6 @@
 		<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
 		<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
 		<property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
-		<echo>${dependency.tomcat.zip}"</echo>
 		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-web.war.path}"/>
 		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
 		<property name="dependency.taglibs.jar" value="${maven.dependency.taglibs.standard.jar.path}"/>
