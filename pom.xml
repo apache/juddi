@@ -4,8 +4,8 @@
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>SNAPSHOT</version>
 	<name>jUDDI-parent</name>
+	<version>2.0</version>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
 		Integration (UDDI) specification for Web Services.</description>
