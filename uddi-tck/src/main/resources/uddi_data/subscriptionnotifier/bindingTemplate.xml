@@ -1,0 +1,11 @@
+<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindingnotifier">
+  <description xml:lang="en">This is the endpoint for the subscription listener</description>
+    <accessPoint useType="endPoint">http://localhost:8880/juddi/services/subscription-listener</accessPoint>
+      <tModelInstanceDetails>
+          <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+            </tModelInstanceDetails>
+              <categoryBag>
+                  <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
+                    </categoryBag>
+                    </bindingTemplate>
+

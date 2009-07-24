@@ -1,26 +1,32 @@
 <project name="juddi-tomcat" default="package-tomcat" basedir=".">
 	<property file="package.properties"/>
-	<property name="common.lib.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/common/lib"/>
+	<property name="lib.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/lib"/>
 	<property name="webapps.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps"/>
+	<property name="conf.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/conf"/>
 
 	<target name="unzip-tomcat">
 		<mkdir dir="${basedir}/target/tomcat"/>
 
 		<unzip dest="${basedir}/target/tomcat" src="${dependency.tomcat.zip}"/>
-		<copy file="${dependency.juddi.war}" tofile="${webapps.dir}/juddi.war"/>
+		<!--
+		<copy file="${basedir}/juddi.xml" todir="${webapps.dir}"/>
+		-->
 		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddi.war}"/>
-		<copy file="${dependency.soap-console.war}" tofile="${webapps.dir}/juddi-console.war"/>
+		<chmod perm="ugo+x">
+			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
-	
-		<copy file="juddi.xml" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/conf/Catalina/localhost"/>
-		<copy file="${dependency.derby.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis-saaj.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.axis-jaxrpc.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.commons-discovery.jar}" todir="${common.lib.dir}"/>
-		<copy file="${dependency.taglibs.jar}" todir="${common.lib.dir}"/>
+		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddi/META-INF"/>
+		<copy file="${basedir}/server.xml" todir="${conf.dir}"/>
+ 		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.derby.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.commons-discovery.jar}" todir="${lib.dir}"/>
+		<!--
 		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
 			<replacetoken>juddi-sql/mysql</replacetoken>
 			<replacevalue>juddi-sql/derby</replacevalue>
@@ -32,18 +38,10 @@
 	        <replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
                         <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
                         <replacevalue>juddi.jdbcDriver=org.apache.derby.jdbc.EmbeddedDriver</replacevalue>
-                </replace>
-		<copy file="${basedir}/../NOTICE"
-			todir="${basedir}/target/tomcat"/>	
-		<copy file="${basedir}/..//LICENSE" 
-			todir="${basedir}/target/tomcat"/>
-		<move file="target/tomcat"
-			tofile="target/juddi-tomcat-bundle"/>
+                </replace>	
+		-->
 	</target>
 	
-	<target name="package-tomcat" depends="copy-resources">
-		<zip destfile="target/juddi-tomcat.zip" 
-			basedir="target/juddi-tomcat-bundle"/>
-			
-	</target>
+	<target name="package-tomcat" depends="copy-resources"/>
+
 </project>

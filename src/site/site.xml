@@ -50,10 +50,13 @@
             </item>
             <item name="Participation" href="participate.html" description="Participation"/>
             <item name="Documentation">
-                <item name="User guide" href="usersguide.html"/>
+                <item name="jUDDI v3 docs" href="http://svn.apache.org/viewvc/webservices/juddi/branches/v3_trunk/docs/"/>
+                <item name="jUDDI v2 User guide" href="usersguide.html"/>
                 <item name="Wiki" href="http://wiki.apache.org/ws/jUDDI"/>
                 <item name="Reference Library" href="library.html" />
-                <item name="Javadocs" href="apidocs/index.html"/>
+                <item name="Javadocs v2" href="apidocs/index.html"/>
+                <item name="Javadocs v3" href="apidocs3/index.html"/>
+                <item name="XRef v3" href="xref/index.html"/>
             </item>
             <item name="Project Information">
                 <item name="Project Information" href="project-info.html"/>

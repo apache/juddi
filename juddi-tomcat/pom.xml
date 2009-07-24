@@ -1,16 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>SNAPSHOT</version>
+    <version>3.0.0.SNAPSHOT</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion> 
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-tomcat</artifactId>
-  <version>SNAPSHOT</version>
-  <name>juddi-tomcat packaging</name>
+  <version>3.0.0.SNAPSHOT</version>
+  <name>jUDDI Tomcat Packaging</name>
   <url>http://maven.apache.org</url>
+  <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>commons-discovery</groupId>
@@ -18,43 +36,22 @@
       <version>0.2</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.axis</groupId>
-      <artifactId>axis-saaj</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.axis</groupId>
-      <artifactId>axis-jaxrpc</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
-      <groupId>axis</groupId>
-      <artifactId>axis</artifactId>
-      <version>1.4</version>
-    </dependency>
-    <dependency>
       <artifactId>apache-tomcat</artifactId>
-      <groupId>tomcat</groupId>
-      <version>5.5.23</version> 
+      <groupId>org.apache.juddi.bootstrap</groupId>
+      <version>6.0.20</version>
       <type>zip</type>
     </dependency>
     <dependency>
-     <artifactId>juddi-web</artifactId>
+     <artifactId>juddi-cxf</artifactId>
      <groupId>org.apache.juddi</groupId>
-     <version>SNAPSHOT</version> 
+     <version>3.0.0.SNAPSHOT</version> 
      <type>war</type>
     </dependency>
     <dependency>
-     <artifactId>juddi</artifactId>
+     <artifactId>juddi-core</artifactId>
      <groupId>org.apache.juddi</groupId>
-     <version>SNAPSHOT</version>
+     <version>3.0.0.SNAPSHOT</version>
      <type>jar</type>
-    </dependency>
-    <dependency>
-    <artifactId>juddi-soapconsole</artifactId>
-     <groupId>org.apache.juddi</groupId>
-     <version>SNAPSHOT</version>
-     <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -62,36 +59,49 @@
       <version>10.1.2.1</version>
     </dependency>
     <dependency>
-      <groupId>taglibs</groupId>
-      <artifactId>standard</artifactId>
-      <version>1.1.2</version>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
     </dependency>
   </dependencies>
   <build>
     <plugins>
-<plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.1</version>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.3</version>
         <executions>
           <execution>
-            <id>compile</id>
-            <phase>compile</phase>
+            <id>test</id>
+            <phase>package</phase>
             <configuration>
               <tasks>
-		<property name="dependency.soap-console.war" value="${maven.dependency.org.apache.juddi.juddi-soapconsole.war.path}"/>
-		<property name="dependency.axis.jar" value="${maven.dependency.axis.axis.jar.path}"/>
-		<property name="dependency.axis-saaj.jar" value="${maven.dependency.org.apache.axis.axis-saaj.jar.path}"/>
-		<property name="dependency.axis-jaxrpc.jar" value="${maven.dependency.org.apache.axis.axis-jaxrpc.jar.path}"/>
-		<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
-		<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
-		<property name="dependency.tomcat.zip" value="${maven.dependency.tomcat.apache-tomcat.zip.path}"/>
-		<echo>${dependency.tomcat.zip}"</echo>
-		<property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-web.war.path}"/>
-		<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
-		<property name="dependency.taglibs.jar" value="${maven.dependency.taglibs.standard.jar.path}"/>
-		<ant antfile="${basedir}/build.xml">
+               <property name="compile_classpath" refid="maven.compile.classpath"/>
+               <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+               <property name="test_classpath" refid="maven.test.classpath"/>
+               <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+               <property name="project.version" value="${project.version}"/>
+
+	       <property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}"/>
+	       <property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}"/>
+	       <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
+	       <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
+	       <property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}"/>
+	       <property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
+	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
+	       <ant antfile="${basedir}/build.xml">
                   <target name="package-tomcat"/>
-                </ant>
+               </ant>
               </tasks>
             </configuration>
             <goals>
@@ -99,6 +109,25 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-assembly-plugin</artifactId>
+	  <version>2.2-beta-3</version>
+	  <executions>
+	  <execution>
+          <id>make-assembly</id>
+          <phase>package</phase>
+          <goals>
+              <goal>attached</goal>
+          </goals>
+	  <configuration>
+	  <descriptors>
+	    <descriptor>${basedir}/assembly.xml</descriptor>
+	  </descriptors>
+	  </configuration>
+	  </execution>
+          </executions>
       </plugin>
     </plugins>
   </build>

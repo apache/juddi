@@ -1,0 +1,383 @@
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* CSS Document */
+
+/* SET BASE FONT ATTRUBUTES */
+html, body, div, p, table, td, th {
+font-family: Arial, Helvetica, sans-serif;
+line-height: 1.3em;
+font-size: 1em;
+color: #444;
+}
+
+/* REMOVE PADDING AND MARGIN VALUES */
+html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, li, dd, dt, img,
+blockquote, q, table, thead, tbody, tfoot, caption, th, tr, td, a, form,
+input, textarea, fieldset, pre
+{margin: 0; padding: 0;}
+
+/* SORT OUT HEADER FORMATTING AND SIZES */
+h1, h2, h3, h4, h5 {font-weight: bold;}
+
+h1 {font-size: 2em;}
+h2 {font-size: 1.75em;}
+h3 {font-size: 1.5em;}
+h4 {font-size: 1.2em;}
+h5 {font-size: 1.1em;}
+h6 {font-size: 1em;}
+
+/* HARMONIZE LINKS, KILL BORDER ON IMG LINKS */
+a {text-decoration: underline; font-weight: normal;}
+a:link, a:visited {font-weight: normal;}
+a:hover {font-weight: normal;}
+a:active {color: #fff;}
+a img, :link img, :visited img {border: none}
+
+/* REMOVE BROWSERS DEFAULT TABLE BORDERS */
+table {border-collapse: collapse;}
+
+
+/* REMOVE AUTOMATIC TOP/BOTTOM MARGINS ON NESTED LISTS */
+ul ul, ul ol, ul dir, ul menu, ul dl,
+ol ul, ol ol, ol dir, ol menu, ol dl,
+dir ul, dir ol, dir dir, dir menu, dir dl,
+menu ul, menu ol, menu dir, menu menu, menu dl,
+dl ul, dl ol, dl dir, dl menu, dl dl
+{margin-top: 0; margin-bottom: 0;}
+
+/* HARMONISE LIST-BULLET TYPE */
+ul, ol, dl {list-style-type: none; }
+
+/* general layout */
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    font-size: 76%;
+	background:midnightblue url(images/bkgd_bottom_gradient.png) 100% 100% repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/bkgd_bottom_gradient.png', sizingMethod='scale');
+}
+p {display:table-cell; vertical-align:top;}
+/** 'tooltip' block **/
+
+a.tooltip {
+    position:relative;
+    z-index:24; 
+    background-color:#ccc;
+    color:#000;
+    text-decoration:none;
+}
+
+a.tooltip:hover {
+     z-index:25; 
+     background-color:#ff0;
+}
+
+a.tooltip span.tooltip {
+     display: none;
+}
+
+a.tooltip:hover span.tooltip {
+    display:block;
+    position:float;
+    top:-2em; left:28em; width:5em;
+    border:1px solid #0cf;
+    background-color:#cff; color:#000;
+    text-align: center;
+}
+#wrapper {
+	background: url(images/bkgd_top_gradient.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/bkgd_top_gradient.png', sizingMethod='scale');
+}
+
+/** 'portal' block **/
+
+#portal {
+ 	margin-left: 15px;
+    margin-right: 15px;
+	height:100%;
+	background: url('images/bar.png') 0 0 no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/bar.png', sizingMethod='image');
+}
+/* EI 6 ignores the following rule */
+html>body #portal{
+ 	margin-left: auto;
+    margin-right: auto;
+    min-width: 800px;
+    max-width: 1000px;
+    _width: expression((( document . body . clientWidth) ) <   800 ? "800px" : (( document . body . clientWidth ) ) >   1000 ? "1000px" : "auto" );
+  	background: url('images/bar.png') 0px 0px repeat-x;
+}
+
+/** 'header' block **/
+
+#header {
+  /* background: url('images/pluto_logo.png') 0px 0px no-repeat; */
+  /* background: url('images/juddi_logo.png') 0px 0px no-repeat; */
+	background: url('images/juddi_logo_v2.png') 0px 0px no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/juddi_logo_v2.png', sizingMethod='image');
+ 	 width: auto;
+  	height: 122px;
+  	margin: 0px;
+  	vertical-align: top;
+}
+
+#header h1 {
+  display: none;
+  margin: 5px 10px 5px 10px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: 200%;
+}
+
+#header p {
+  display: none;
+  margin: 0px 10px 0px 10px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: smaller;
+}
+
+#logout {
+  float:right;
+  font-size:smaller;
+  margin:10px;
+  color:#fff;
+}
+#logout a {
+  color:#fff;
+ }
+
+/** 'content' block **/
+
+#content {
+  float: top;
+  margin-bottom:10px;
+}
+
+/** 'portlet' block **/
+
+#portlets-left-column {
+  margin: 0;
+  padding: 0;
+  width: 49%;
+  float: left;
+}
+
+#portlets-right-column {
+  margin: 0;
+  padding: 0;
+  width: 49%;
+  float: right;
+}
+
+.portlet {
+  margin: 10px 0px 10px 0px;
+  padding: 0px;
+  border: 1px solid #ccc;
+}
+.portlet .body {
+  background:#FFF;
+  margin:2px;
+ }
+.portlet .header {
+	background:url(images/nav_bkgd.png) 0px 0px repeat-x; 
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/nav_bkgd.png', sizingMethod='scale');
+  	white-space: nowrap;
+  	color: #FFFFFF;
+	height:28px;
+ 	border-bottom:1px solid #ccc;
+}
+
+.portlet .header h2 {
+  margin: 0px;
+  padding-top: 5px;
+  padding-left:12px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: 100%;
+  float: none;
+}
+/* EI 6 ignores the following rule */
+html>body .portlet .header h2 {
+  padding: 6px 12px;
+}
+
+.portlet .header span {
+  width: 16px;
+  height: 16px;
+  float: right;
+  margin:4px 4px 0px 0px;
+}
+
+
+/** 'portlet' block: portlet mode and window state controls **/
+
+.portlet .header span.minimized {
+  background: url(images/controls/minimize_control.gif) 0px 0px no-repeat;
+}
+
+.portlet .header span.maximized {
+  background: url(images/controls/maximize_control.gif) 0px 0px no-repeat;
+}
+
+.portlet .header span.normal {
+  background: url(images/controls/normal_control.gif) 0px 0px no-repeat;
+}
+
+.portlet .header span.view {
+  background: url(images/controls/view.png) no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/view.png', sizingMethod='image');
+}
+
+.portlet .header span.edit {
+  background: url(images/controls/edit.png) no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/edit.png', sizingMethod='image');
+}
+
+.portlet .header span.help {
+  background: url(images/controls/help.png) no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/help.png', sizingMethod='image');
+}
+
+.portlet .body {
+  padding: 10px;
+}
+
+.portlet .body h2 {
+  margin: 0px 0px 10px 0px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: 150%;
+  float: none;
+}
+/** 'footer' block **/
+
+#footer {
+	background: url('images/footer_bar.png') 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/footer_bar.png', sizingMethod='scale');
+  clear: both;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: smaller;
+  color: #ccc;
+  text-align: left;
+  margin: 0px;
+  padding: 30px 20px 4px 20px;
+}
+
+
+/** Login page styles **/
+
+fieldset {
+  margin: 0.5em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+}
+
+legend {
+	margin-left:25px;
+	padding:3px 7px;
+  color: #fff;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-weight: bold;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+}
+
+label {
+  clear: both;
+  width: 40%;
+  float: left;
+  text-align: right;
+  margin: 0px 5px 10px 0px;
+  color: #fff;
+}
+
+input, select {
+  color: #333;
+  background-color: #fff;
+  padding:2px;
+  font-size:11px;
+  margin: 0px 0px 10px 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #333;
+}
+input:focus {
+	background-color:#ffc;
+}
+
+input#j_login, input#addPageButton, input#removePageButton, input#removeButton, input#addButton {padding:3px;border:1px solid #333;color:#333;background-color:#ccc;}
+
+
+/** navigation block **/
+
+#navigation .selected a {
+  /** color: #6D97BF; **/
+  	color: #FFFFFF;
+    text-decoration: none;
+	font-size:11px;
+    line-height: 1em;
+    font-weight: bold;
+	background:url(images/active_tab.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/active_tab.png', sizingMethod='crop');
+}
+
+#navigation {
+	background:url(images/nav_bkgd.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/nav_bkgd.png', sizingMethod='crop');
+    position: static;
+    width: 100%;
+	height:29px;
+    margin: 0;
+    list-style: none;
+    line-height: 1em;
+}
+
+#navigation LI {
+    float: left;
+    margin: 0;
+    padding: 0;
+	height:29px
+}
+
+#navigation a {
+	background:url(images/tab_bkgd.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/tab_bkgd.png', sizingMethod='crop');
+    display: block;
+	float:left;
+    color: #ccc;
+    text-decoration: none;
+	font-size:11px;
+    line-height: 1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 8px 12px;
+}
+
+#navigation A:hover,
+#navigation A:active,
+#navigation A.here:link,
+#navigation A.here:visited {
+    color: #fff;
+}
+
+#navigation A.here:link,
+#navigation A.here:visited {
+    position: relative;
+    z-index: 102;
+}

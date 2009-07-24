@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><module>
+
+      <!-- Inherit the core Web Toolkit stuff.                        -->
+      <inherits name="com.google.gwt.user.User"/>   	
+    
+      <!-- Specify the app entry point class.                         -->
+      <entry-point class="org.apache.juddi.portlets.client.UDDISearch"/>
+    
+      <!-- Specify the application specific style sheet.              -->
+      <stylesheet src="uddiportlets.css"/>
+	
+	  <servlet class="org.apache.juddi.portlets.server.service.NotifyServiceImpl" path="/notify"/>	
+	  <servlet class="org.apache.juddi.portlets.server.service.SecurityServiceImpl"    path="/security"/>
+	  <servlet class="org.apache.juddi.portlets.server.service.InquiryServiceImpl"     path="/inquiry"/>
+	  <servlet class="org.apache.juddi.portlets.server.service.PublicationServiceImpl" path="/publication"/>
+	 
+</module>

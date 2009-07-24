@@ -1,0 +1,12 @@
+<assembly>
+  <id></id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+	  <directory>${basedir}/apache-tomcat-6.0.20</directory>
+	  <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

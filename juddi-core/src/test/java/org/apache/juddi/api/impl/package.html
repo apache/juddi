@@ -1,0 +1,16 @@
+<html>
+<body>
+<p>Unit tests to test the api implementation. Theses tests go all the way down into
+the persistence layer. By default they are using an embedded Java-based database
+called Derby. </p>
+
+<p>The order in which the tests are run is irrelevant however some tests are more basic
+then others. For example, you will need to have a Publisher, before you can persist
+a Business, and you need to have a Business before you can persist a Service. So it
+makes sense to test persisting a Publisher first.</p>
+
+<p>By default JUnit executes tests in alphabetical order, so to control test execution order we
+use the JUDDI_###_ prefix.
+</p>
+</body>
+</html>

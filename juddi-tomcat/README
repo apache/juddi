@@ -1,0 +1,12 @@
+Please use maven-2.0.6 (2.0.8 also seems to work) when building, 
+juddi-tomcat uses dependency properties which are broken in recent versions of maven.
+
+You will see an error like:
+
+Caused by: java.io.FileNotFoundException: 
+C:\development\projects\jUDDI_v3\juddi-tomcat\${maven.dependency.tomcat.apache-tomcat.zip.path} 
+(The system cannot find the file specified)
+
+where the ${maven.dependency.tomcat.apache-tomcat.zip.path} should have been set by maven.
+
+

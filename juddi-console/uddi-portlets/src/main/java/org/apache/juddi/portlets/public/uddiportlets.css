@@ -1,0 +1,77 @@
+/**
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+/** Add css rules here for your application. */
+button {
+  display: block;
+  font-size: 16pt
+}
+
+.widePanel {
+  width: 100%
+}
+
+img {
+  margin-top: 0px;
+}
+
+.gwt-Tree .gwt-TreeItem {
+ font-size: 80%;
+ padding: 1px 3px 0 3px;
+ cursor: hand;
+ cursor: pointer;
+ display: block !important;
+}
+
+.gwt-Tree .gwt-TreeItem-selected {
+  background: #ccc;
+}
+
+.List {
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-left: 1px solid #666;
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+  font-size: 80%;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.List td {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  padding: 2px 0 2px 10px;
+}
+
+.ListHeader {
+  font-weight: bold;
+}
+
+.ListHeader td {
+  padding: 2px 0 2px 10px;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+}
+
+.SelectedRow td {
+  border-bottom: 1px solid #666;
+  border-top: 1px solid #666;
+}
+
+.SelectedRow {
+  background: #eee;
+}

@@ -1,11 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		* Copyright 2001-2009 The Apache Software Foundation. * * Licensed
+		under the Apache License, Version 2.0 (the "License"); * you may not
+		use this file except in compliance with the License. * You may obtain
+		a copy of the License at * *
+		http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by
+		applicable law or agreed to in writing, software * distributed under
+		the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES
+		OR CONDITIONS OF ANY KIND, either express or implied. * See the
+		License for the specific language governing permissions and *
+		limitations under the License. * */
+	-->
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>SNAPSHOT</version>
-	<name>jUDDI-parent</name>
+	<version>3.0.0.SNAPSHOT</version>
+	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
 		Integration (UDDI) specification for Web Services.</description>
@@ -19,10 +33,10 @@
 		<url>http://vmbuild.apache.org</url>
 		<notifiers>
 			<notifier>
-				<sendOnError>false</sendOnError>
-				<sendOnFailure>false</sendOnFailure>
-				<sendOnSuccess>false</sendOnSuccess>
-				<sendOnWarning>false</sendOnWarning>
+				<sendOnError>true</sendOnError>
+				<sendOnFailure>true</sendOnFailure>
+				<sendOnSuccess>true</sendOnSuccess>
+				<sendOnWarning>true</sendOnWarning>
 				<configuration>
 					<address>juddi-dev@ws.apache.org</address>
 				</configuration>
@@ -55,13 +69,6 @@
 	</mailingLists>
 	<developers>
 		<developer>
-			<id>sviens</id>
-			<name>Steve Viens</name>
-			<email>steve AT viens.net</email>
-			<url>http://www.viens.net</url>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
 			<id>kstam</id>
 			<name>Kurt Stam</name>
 			<email>kstam AT apache.org</email>
@@ -77,6 +84,13 @@
 			<id>tcunningham</id>
 			<name>Tom Cunningham</name>
 			<email>tcunningham AT apache.org</email>
+			<organization>ASF</organization>
+		</developer>
+		<developer>
+			<id>sviens</id>
+			<name>Steve Viens</name>
+			<email>steve AT viens.net</email>
+			<url>http://www.viens.net</url>
 			<organization>ASF</organization>
 		</developer>
 		<developer>
@@ -106,14 +120,28 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/trunk/</developerConnection>
-		<url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/trunk/</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/branches/v3_trunk/</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/branches/v3_trunk/</developerConnection>
+		<url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/branches/v3_trunk/</url>
 	</scm>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<reporting>
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+				    <aggregate>true</aggregate>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -129,11 +157,15 @@
 		</plugins>
 	</reporting>
 	<modules>
-		<module>juddi</module>
-		<module>juddi-client</module>
-		<module>juddi-ws</module>
-		<module>juddi-web</module>
-		<module>juddi-web-lean</module>
+		<module>uddi-ws</module>
+		<module>uddi-tck</module>
+		<module>juddi-core</module>
+		<module>juddi-cxf</module>
+<!--
+		<module>juddi-axis</module>
+-->
+		<module>juddi-tomcat</module>
+		<module>uddi-client</module>
 	</modules>
 	<distributionManagement>
 		<repository>
@@ -151,6 +183,8 @@
 			<url>scpexe://people.apache.org/www/ws.apache.org/juddi/</url>
 		</site>
 	</distributionManagement>
+	<dependencies>
+	</dependencies>
 	<profiles>
 		<profile>
 			<id>release</id>

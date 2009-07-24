@@ -14,14 +14,24 @@
           <td><strong>Date</strong></td>
           <td><strong>Description</strong></td>
         </tr>
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.beta</a></td>
+          <td>June 5, 2009</td>
+          <td>Stable Release for Version 3.0, with limited console support only.</td>
+        </tr> 
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC7/">2.0rc7</a></td>
+          <td>May 31, 2009</td>
+          <td>Stable Release Candidate #7 for Version 2.0.</td>
+        </tr> 
 		<tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.alpha</a></td>
-          <td>Feb 13, 2009</td>
+          <td>Februari 13, 2009</td>
           <td>Unstable Preview Release for Version 3.0.</td>
         </tr> 
         <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC6/">2.0rc6</a></td>
-          <td>Feb 10, 2009</td>
+          <td>Februari 10, 2009</td>
           <td>Stable Release Candidate #6 for Version 2.0.</td>
         </tr>        
 		<tr>

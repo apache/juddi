@@ -1,0 +1,21 @@
+<project name="juddi-dist" default="package-dist" basedir=".">
+	<property file="package.properties"/>
+	<property name="dist.dir" value="${basedir}/target/dist"/>
+
+	<target name="package-dist">
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${dist.dir}/docs"/>
+		<copy file="${dependency.juddi.war}"
+			tofile="${dist.dir}/juddi.war"/>
+		<copy todir="${dist.dir}">
+			<fileset dir="${basedir}/../juddi-core/target/">
+				<include name="*-sources.jar"/>
+			</fileset>	
+		</copy>
+		<copy todir="${dist.dir}/docs">
+			<fileset dir="${basedir}/../docs">
+				<exclude name="**/*.odt"/>
+			</fileset>
+		</copy>
+	</target>
+</project>
