@@ -25,7 +25,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "juddiv3_service_category_bag")
+@Table(name = "j3_service_category_bag")
 public class ServiceCategoryBag extends CategoryBag {
 
 	private static final long serialVersionUID = 1L;

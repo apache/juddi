@@ -25,7 +25,7 @@ import javax.persistence.Transient;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_publisher")
+@Table(name = "j3_publisher")
 //@PrimaryKeyJoinColumn(name = "authorized_name")
 public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
 

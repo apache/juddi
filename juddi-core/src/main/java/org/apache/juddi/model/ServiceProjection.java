@@ -26,7 +26,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_service_projection")
+@Table(name = "j3_service_projection")
 public class ServiceProjection implements java.io.Serializable {
 
 		

@@ -34,7 +34,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 @Entity
-@Table(name = "juddiv3_tmodel")
+@Table(name = "j3_tmodel")
 public class Tmodel extends UddiEntity implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

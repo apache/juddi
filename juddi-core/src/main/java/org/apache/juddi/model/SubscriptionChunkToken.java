@@ -29,7 +29,7 @@ import javax.persistence.TemporalType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_subscription_chunk_token")
+@Table(name = "j3_subscription_chunk_token")
 public class SubscriptionChunkToken implements java.io.Serializable  {
 
 	private static final long serialVersionUID = 1L;
