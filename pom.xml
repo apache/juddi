@@ -72,19 +72,22 @@
 			<id>kstam</id>
 			<name>Kurt Stam</name>
 			<email>kstam AT apache.org</email>
-			<organization>ASF</organization>
+			<url>http://www.jboss.org</url>
+			<organization>JBoss/Red Hat</organization>
 		</developer>
 		<developer>
 			<id>jfaath</id>
 			<name>Jeffrey Faath</name>
 			<email>jfaath AT apache.org</email>
-			<organization>ASF</organization>
+			<url>http://www.esigma.com</url>
+			<organization>ESigma</organization>
 		</developer>
 		<developer>
 			<id>tcunningham</id>
 			<name>Tom Cunningham</name>
 			<email>tcunningham AT apache.org</email>
-			<organization>ASF</organization>
+			<url>http://www.jboss.org/jbossesb</url>
+			<organization>JBoss/Red Ha</organization>
 		</developer>
 		<developer>
 			<id>sviens</id>
@@ -94,24 +97,25 @@
 			<organization>ASF</organization>
 		</developer>
 		<developer>
-			<id>acutright</id>
-			<name>Andy Cutright</name>
-			<email>acutright AT apache.org</email>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
 			<id>anil</id>
 			<name>Anil Saldhana</name>
 			<email>anil AT apache.org</email>
-			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>dims</id>
-			<name>Davanum Srinivas</name>
-			<email>dims AT yahoo.com</email>
-			<organization>ASF</organization>
+			<url>http://www.jboss.org</url>
+			<organization>JBoss/Red Hat</organization>
 		</developer>
 	</developers>
+	<contributors>
+	    <contributor>
+			<name>Ken Wilson</name>
+			<organization>Dynamic Site Design</organization>
+			<url>http://www.dynamicsitedesign.com</url>
+		</contributor>
+	    <contributor>
+			<name>Jeremi Thebeau</name>
+			<organization>Xceptance Software Technologies</organization>
+			<url>http://www.xceptance.com</url>
+		</contributor>
+	</contributors>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>

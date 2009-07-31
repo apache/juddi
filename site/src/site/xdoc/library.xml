@@ -17,7 +17,7 @@
 
     <section name="UDDI Specifications">        
       <p>
-      <strong><a href="http://www.uddi.org/">UDDI.org</a></strong><br/>
+      <strong><a href="http://uddi.xml.org/">UDDI.org</a></strong><br/>
       <strong><a href="http://www.oasis-open.org/committees/uddi-spec/doc/contribs.htm#uddiv1">UDDI Version 1.0 Specification</a></strong><br/>
       <strong><a href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv2">UDDI Version 2.0 Specification</a></strong><br/>
       <strong><a href="http://www.oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">UDDI Version 3.0 Specification</a></strong>
@@ -32,30 +32,16 @@
       
     <section name="Articles, Tutorials and Best Practices">            
       <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-version/">Best practices for Web services versioning</a></strong><br/>Keep your Web services current with WSDL and UDDI<br/>Kyle Brown and Michael Ellis, IBM developerWorks<br/>January 2004</p>      
-      <p><strong><a href="http://www.sys-con.com/webservices/article.cfm?id=663">Registering a Web Service in UDDI using the new WSDL mapping model</a></strong><br/>Anne Thomas Manes, WebServices Journal<br/>October 2003</p>      
-      <p><strong><a href="http://www.sys-con.com/webservices/article.cfm?id=664">Bringing Order to Enterprise Service Proliferation</a></strong><br/>The foundation of a flexible infrastructure<br/>Toufic Boubez, WebServices Journal<br/>October 2003</p>      
-      <p><strong><a href="http://www.line56.com/articles/default.asp?ArticleID=4927">A Second Look at UDDI</a></strong><br/>The stepchild of Web services could be a cornerstone of service-oriented architectures beginning to take shape<br/>Jim Ericson, Line56.com<br/>August 2003</p>
-      <p><strong><a href="http://www-106.ibm.com/developerworks/edu/ws-dw-ws-dwsuddi-i.html">Discovering Web Services: UDDI (a Tutorial)</a></strong><br/>Rick Hightower, IBM developerWorks<br/>February 2003</p>      
-      <p><strong><a href="http://www.gotdotnet.com/team/karstenj/docs/rss_in_uddi.aspx">Registering and Discovering RSS Feeds in UDDI</a></strong><br/>Keep your Web services current with WSDL and UDDI<br/>Karsten Januszewski, GotDotNet.com<br/>July 2002</p>
       <p><strong><a href="http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm">Using WSDL in a UDDI Registry</a></strong><br/>John Colgrave and Karsten Januszewski, UDDI.org<br/>November 2003</p>            
-      <p><strong><a href="http://msdn.microsoft.com/library/en-us/dnuddi/html/runtimeuddi1.asp">Using UDDI at Runtime Part I</a></strong><br/>Building the Web Services Infrastructure to Support Client Applications<br/>Karsten Januszewski, Microsoft<br/>December 2001</p>      
-      <p><strong><a href="http://msdn.microsoft.com/library/en-us/dnuddi/html/runtimeuddi2.asp">Using UDDI at Runtime Part II</a></strong><br/>Dynamically Binding to Multiple Web Service Implementations<br/>Karsten Januszewski, Microsoft<br/>May 2002</p>
-      <p><strong><a href="http://www.onjava.com/pub/a/onjava/2002/02/27/uddi.html">Understanding UDDI and JAXR</a></strong><br/>The why and what of the new approach<br/>Satya Komatineni, O'Reilly ONJava.com<br/>February 2002</p>
       <p><strong><a href="http://java.sun.com/developer/technicalArticles/WebServices/jaxrws/">Registration and Discovery of Web Services Using JAXR with XML Registries such as UDDI and ebXML</a></strong><br/>The why and what of the new approach<br/>Qusay H. Mahmoud, Sun Microsystems<br/>June 2002</p>      
-      <p><strong><a href="http://java.sun.com/webservices/docs/1.0/tutorial/doc/JAXR.html">Java API for XML Registries (a Tutorial)</a></strong><br/>The why and what of the new approach<br/>Kim Haase, Sun Microsystems</p>      
       <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod1/">A New Approach to UDDI and WSDL Part 1</a></strong><br/>The why and what of the new approach<br/>John Colgrave, IBM developerWorks<br/>August 2003</p>      
-      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod2.html">A New Approach to UDDI and WSDL Part 2</a></strong><br/>Usage scenarios in publishing and finding WSDL service descriptions<br/>John Colgrave, IBM developerWorks<br/>September 2003</p>            
-      <p><strong><a href="http://www.onjava.com/pub/a/onjava/2002/02/27/uddi.html">Understanding UDDI and JAXR</a></strong><br/>Satya Komatineni, O'Reilly OnJava.com<br/>February 2002</p>
-      <p><strong><a href="http://www.sys-con.com/webservices/article.cfm?id=87">Understanding UDDI tModels and Taxonomies</a></strong><br/>The key integration point for products supporting Web services<br/>Andy Grove, Web Services Journal (Volume 1, Issue 2)<br/>January 2001</p>      
-      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl/">Understanding WSDL in a UDDI Registry Part 1</a></strong><br/>How to publish and find WSDL service descriptions<br/>Peter Brittenham, Francisco Cubera, Dave Ehnebuske, Steve Graham, IBM developerWorks<br/>September 2001 (updated September 2002)</p>      
-      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl2/">Understanding WSDL in a UDDI Registry Part 2</a></strong><br/>Usage scenarios in publishing and finding WSDL service descriptions<br/>Peter Brittenham, IBM developerWorks<br/>September 2001</p>      
-      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl3/">Understanding WSDL in a UDDI Registry Part 3</a></strong><br/>How to publish and find WSDL service descriptions<br/>Peter Brittenham, IBM developerWorks<br/>November 2001</p>
-      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-wsdl3/">UDDI - A Foundation for Web Services</a></strong><br/>Thomas A. Bellwood, IBM developerWorks<br/>November 2001</p>
-      <p><strong><a href="http://www.stencilgroup.com/ideas_scope_200104uddi.html">Why UDDI Will Succeed, Quietly: Two Factors Push Web Services Forward</a></strong><br/>Brent Sleeper, The Stencil Group<br/>April 2001</p>
+      <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-udmod2/">A New Approach to UDDI and WSDL Part 2</a></strong><br/>Usage scenarios in publishing and finding WSDL service descriptions<br/>John Colgrave, IBM developerWorks<br/>September 2003</p>            
+      <p><strong><a href="http://www.ibm.com/developerworks/webservices/library/ws-wsdl/">Understanding WSDL in a UDDI Registry Part 1</a></strong><br/>How to publish and find WSDL service descriptions<br/>Peter Brittenham, Francisco Cubera, Dave Ehnebuske, Steve Graham, IBM developerWorks<br/>September 2001 (updated September 2002)</p>      
+      <p><strong><a href="http://www.ibm.com/developerworks/webservices/library/ws-wsdl2/">Understanding WSDL in a UDDI Registry Part 2</a></strong><br/>How to publish and find WSDL service descriptions<br/>Peter Brittenham, Francisco Cubera, Dave Ehnebuske, Steve Graham, IBM developerWorks<br/>September 2001 (updated September 2002)</p>      
+      <p><strong><a href="http://www.ibm.com/developerworks/webservices/library/ws-wsdl3/">Understanding WSDL in a UDDI Registry Part 3</a></strong><br/>How to publish and find WSDL service descriptions<br/>Peter Brittenham, IBM developerWorks<br/>November 2001</p>
       <p><strong><a href="http://www.uddi.org/pubs/TN-taxonomy-provider-V1.00-Final-20010717.pdf">Providing a Taxonomy for Use in UDDI Version 2</a></strong><br/>UDDI.org<br/>July 2001</p>
       <p><strong><a href="http://www.developer.com/services/article.php/1367781">The Role of Taxonomies in UDDI: tModels Demystified</a></strong><br/>Ravi Trivedi, Developer.com</p>
       <p><strong><a href="http://www.developer.com/services/article.php/3374631">Versioning of Web Services: An UDDI Subscription-Based Approach</a></strong><br/>Aravilli Srinivasa Rao, Developer.com</p>
-      <p><strong><a href="http://www.gotdotnet.com/team/karstenj/docs/rss_in_uddi.aspx">Registering and Discovering RSS Feeds in UDDI</a></strong><br/>Karsten Januszewski, GotDotNet.com</p>
     </section>
 
     <section name="Related Specifications">        

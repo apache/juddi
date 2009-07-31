@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>Donated Software Licenses</title>
+  </properties>
+  <body>
+    <section name="Donated Software Licenses">
+	    <p>The jUDDI Project uses a few commercial products in the development 
+	    process. We are grateful for the community licenses which were provided 
+	    to the project at no costs. 
+	    </p>
+    </section>
+
+	<section name="JIRA">
+	    <p>
+	    Bug and issue tracker <a href="http://www.atlassian.com/software/jira/">
+	    Jira by Atlassion</a>.
+	    </p>
+    </section>
+
+    <section name="JProfiler">        
+      <p>
+         Java profiler <a href="http://www.ej-technologies.com/products/jprofiler/overview.html">
+         JProfiler by ej-technologies</a>.
+      </p>
+    </section>
+      
+    <section name="XLT">            
+         Xceptance LoadTest (XLT) for both regression as well as load tests by <a href="http://www.gqpartners.com/">Global Quality Partners, LLC</a> 
+         and <a href="http://www.xceptance.com/">Xceptance 
+         Software Technologies, Inc.</a> Load and performance tests were created and 
+         executed by our sponsors using Xceptance LoadTest (XLT) from Xceptance 
+         Software Technologies, Inc., of which Global Quality Partners, LLC is 
+         the exclusive North American distributor. To enable the Apache jUDDI 
+         project to continue and extend these tests, Xceptance has provided 
+         an unlimited XLT license and donated the source code of the test suite 
+         to the Apache jUDDI project. XLT is built and scripted in pure Java, 
+         providing a highly scalable and easily adaptable technology that can be 
+         used across development, quality assurance, and consulting teams.
+    </section>
+      
+  </body>
+</document>

@@ -1,0 +1,189 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/* CSS Document */
+
+/* SET BASE FONT ATTRUBUTES */
+html, body, div, p, table, td, th {
+font-family: Arial, Helvetica, sans-serif;
+line-height: 1.2em;
+font-size: 1em;
+color: #ffffcc;
+}
+/* SORT OUT HEADER FORMATTING AND SIZES */
+h1, h2, h3, h4, h5 {font-weight: normal;}
+
+h1 {font-size: 1.5em;}
+h2 {font-size: 1.5em;}
+h3 {font-size: 1.5em;}
+h4 {font-size: 1.2em;}
+h5 {font-size: 1.1em;}
+h6 {font-size: 1em;}
+
+#navcolumn h5 {
+  margin-left:-10px;
+  padding: 4px  10px;
+  font-size: 1.2em; 
+  color:#ffcc00
+}
+
+
+
+#bodyColumn a {text-decoration:underline;color:darkorange;}
+#bodyColumn a:hover {text-decoration:underline;color:orange;}
+
+#navcolumn {
+  padding: 6px 0px 0px 10px;
+	background:url(../images/nav_bkd.png) 100% 100% repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkd.png', sizingMethod='scale');
+}
+#navcolumn li.expanded {
+  background: url(../images/gear.png) 0 -1px no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/gear.png', sizingMethod='image');
+}
+#navcolumn li.collapsed {
+  background: url(../images/gear.png) 0 -1px no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/gear.png', sizingMethod='image');
+}
+h2 {
+  padding: 4px 4px 4px 6px;
+  border: 1px solid #999;
+  color: #ffcc00;
+	background:url(../images/nav_bkgd.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkgd.png', sizingMethod='crop');
+    position: static;
+  
+}
+
+table.bodyTable {
+	border-collapse:collapse;
+  border-top:1px solid #ababab;
+  border-left:1px solid #ababab;
+	height:auto;
+	/* table-layout:fixed; */
+	width:100%;
+}
+table.bodyTable th {
+  color: white;
+	background:url(../images/nav_bkgd.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkgd.png', sizingMethod='crop');
+  text-align: left;
+  font-weight: bold;
+}
+table.bodyTable th, table.bodyTable td {
+	padding:3px;
+  vertical-align: top;
+  border-right:1px solid #ababab;
+  border-bottom:1px solid #ababab;
+  
+}
+table.bodyTable tr.a {
+	background:url(../images/nav_bkd.png) 100% 100% repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkd.png', sizingMethod='crop');
+}
+
+table.bodyTable tr.b {
+	filter: alpha(opacity = 50);
+	opacity: 0.5;
+	-moz-opacity: 0.5;
+	
+	background:url(../images/nav_bkd_2.png) 100% 100% repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkd_2.png', sizingMethod='crop');
+}
+
+
+/* general layout */
+html ,body {
+    height: 100%;
+ 	padding: 0px;
+ 	margin: 0px;
+}
+#shell{
+    height: 100%;
+    font-size: 76%;
+	background:url(../images/bkgd_bottom_gradient.png) 100% 100% repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/bkgd_bottom_gradient.png', sizingMethod='scale');
+	background-position:bottom;
+	background-attachment:fixed;
+}
+#wrapper {
+	background: url(../images/bkgd_top_gradient.png) 0px 0px repeat-x;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/bkgd_top_gradient.png', sizingMethod='scale');
+}
+
+/** 'JUDDI' block **/
+
+#JUDDI {
+	background: url('../images/bar.png') 0 0 no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/bar.png', sizingMethod='image');
+}
+/* EI 6 ignores the following rule */
+html>body #JUDDI{
+ 	margin-left: auto;
+    margin-right: auto;
+	height:100%;
+
+  	background: url('../images/bar.png') 0px 0px repeat-x;
+}
+
+/** 'header' block **/
+
+#header {
+  /* background: url('images/pluto_logo.png') 0px 0px no-repeat; */
+  /* background: url('images/juddi_logo.png') 0px 0px no-repeat; */
+  /* background: url('images/juddi_logo_v2.png') 0px 0px no-repeat; */
+  /* background: url('images/juddi_logo_v3.png') 0px 0px no-repeat; */
+	background: url('../images/juddi_logo_v3.png') 0px 0px no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/juddi_logo_v3.png', sizingMethod='image');
+ 	 width: auto;
+  	height: 122px;
+  	margin: 0px;
+  	vertical-align: top;
+}
+
+#header h1 {
+  display: none;
+  margin: 5px 10px 5px 10px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: 200%;
+}
+
+#header p {
+  display: none;
+  margin: 0px 10px 0px 10px;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: smaller;
+}
+
+
+/** 'footer' block **/
+
+#footer {
+	background: url('../images/footer_bar.png') 0px 0px no-repeat;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/footer_bar.png', sizingMethod='image');
+  clear: both;
+  font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, Sans-serif;
+  font-size: smaller;
+  color: #ccc;
+  text-align: left;
+  margin: 10px 0px;
+  padding: 30px 20px 4px 20px;
+}
+html>body #footer {background: url('../images/footer_bar.png') 0px 0px repeat-x;}
