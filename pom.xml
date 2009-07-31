@@ -72,8 +72,7 @@
 			<id>kstam</id>
 			<name>Kurt Stam</name>
 			<email>kstam AT apache.org</email>
-			<url>http://www.jboss.org</url>
-			<organization>JBoss/Red Hat</organization>
+			<organization>ASF</organization>
 		</developer>
 		<developer>
 			<id>jfaath</id>
@@ -95,13 +94,6 @@
 			<email>steve AT viens.net</email>
 			<url>http://www.viens.net</url>
 			<organization>ASF</organization>
-		</developer>
-		<developer>
-			<id>anil</id>
-			<name>Anil Saldhana</name>
-			<email>anil AT apache.org</email>
-			<url>http://www.jboss.org</url>
-			<organization>JBoss/Red Hat</organization>
 		</developer>
 	</developers>
 	<contributors>

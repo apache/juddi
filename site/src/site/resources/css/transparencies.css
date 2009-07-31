@@ -21,7 +21,7 @@
 /* CSS Document */
 
 /* SET BASE FONT ATTRUBUTES */
-html, body, div, p, table, td, th {
+html, body, div, p, td, th {
 font-family: Arial, Helvetica, sans-serif;
 line-height: 1.2em;
 font-size: 1em;
@@ -76,27 +76,31 @@ table.bodyTable {
 	border-collapse:collapse;
   border-top:1px solid #ababab;
   border-left:1px solid #ababab;
-	height:auto;
-	/* table-layout:fixed; */
-	width:100%;
+  border-spacing:0px 0px;
+	height:auto; 
+	width:99%;
 }
 table.bodyTable th {
   color: white;
-	background:url(../images/nav_bkgd.png) 0px 0px repeat-x;
-	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkgd.png', sizingMethod='crop');
   text-align: left;
   font-weight: bold;
+}
+table.bodyTable th {
+	background:url(../images/nav_bkgd.png) 0px 0px repeat-x;
+   
 }
 table.bodyTable th, table.bodyTable td {
 	padding:3px;
   vertical-align: top;
   border-right:1px solid #ababab;
   border-bottom:1px solid #ababab;
+    height: 19px !important;
+  
   
 }
 table.bodyTable tr.a {
 	background:url(../images/nav_bkd.png) 100% 100% repeat;
-	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkd.png', sizingMethod='crop');
+	
 }
 
 table.bodyTable tr.b {
@@ -105,7 +109,7 @@ table.bodyTable tr.b {
 	-moz-opacity: 0.5;
 	
 	background:url(../images/nav_bkd_2.png) 100% 100% repeat;
-	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/nav_bkd_2.png', sizingMethod='crop');
+	
 }
 
 
