@@ -5,7 +5,7 @@
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
 	<name>jUDDI-parent</name>
-	<version>2.0.0</version>
+	<version>2.0.1</version>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
 		Integration (UDDI) specification for Web Services.</description>
