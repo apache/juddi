@@ -24,6 +24,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
@@ -139,6 +140,19 @@ public class JUDDI_010_PublisherIntegrationTest {
  			deleteSamSyndicator();
  		}
  	}
+ 	
+ 	@Test
+ 	public void testGetAllPublishers(){
+		GetAllPublisherDetail gp = new GetAllPublisherDetail();
+		gp.setAuthInfo(authInfo);
+		try {
+			PublisherDetail publisherDetail = publisher.getAllPublisherDetail(gp);
+			Assert.assertTrue(publisherDetail.getPublisher().size() > 1);
+		} catch (Exception e) {
+			Assert.fail();
+		}
+	}
+ 	
  	/**
  	 * Persists Joe Publisher to the database.
  	 * @return - true if the published did not exist already, 
