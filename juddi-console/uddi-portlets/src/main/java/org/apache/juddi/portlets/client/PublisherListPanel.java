@@ -55,6 +55,7 @@ public class PublisherListPanel extends Composite implements TableListener {
 			table.getCellFormatter().setWordWrap(i + 1, 1, false);
 			table.getFlexCellFormatter().setColSpan(i + 1, 1, 1);
 		}
+		selectRow(0);
 	}
 
 	/**
@@ -94,24 +95,19 @@ public class PublisherListPanel extends Composite implements TableListener {
 		// Select the row that was clicked (-1 to account for header row).
 		if (row > 0) {
 			selectedPublisher="";
-			styleRow(selectedRow, false);
 			selectedRow=row;
 			JUDDIPublisher.getInstance().displayPublisher(publishers.get(row -1));
 		}
 	}
 
-	protected void selectRow(String publisherId) {
-		for (int i=1; i<=table.getRowCount(); i++) {
-			System.out.println(table.getText(i, 0));
-			if (publisherId.equals(table.getText(i, 0))) {
-				selectRow(i);
-				break;
-			}
+	protected void selectRow(int selectedRow) {
+		for (int row=1; row < table.getRowCount(); row++) {
+			styleRow(row, false);
 		}
-	}
-
-	protected void selectRow(int row) {
-		styleRow(row, true);
+		this.selectedRow=selectedRow;
+		if (selectedRow>0) {
+			styleRow(selectedRow, true);
+		}
 	}
 
 	private void styleRow(int row, boolean selected) {
