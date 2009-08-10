@@ -72,10 +72,13 @@ public class PublisherListPanel extends Composite implements TableListener {
 			public void onSuccess(JUDDIApiResponse response) {
 				if (response.isSuccess()) {
 					publishers = response.getPublishers();
+					for (int row=1; row<table.getRowCount(); row++) {
+						table.removeRow(row);
+					}
 					for (int i=0; i < publishers.size(); i++) {
 						table.setText(i+1, 0, publishers.get(i).getAuthorizedName());
 						table.setText(i+1, 1, publishers.get(i).getPublisherName());
-						if (selectedPublisher.equals(publishers.get(i).getAuthorizedName())) {
+						if (selectedRow==i+1 || selectedPublisher.equals(publishers.get(i).getAuthorizedName())) {
 							selectRow(i+1);
 						}
 					}
@@ -91,7 +94,8 @@ public class PublisherListPanel extends Composite implements TableListener {
 		// Select the row that was clicked (-1 to account for header row).
 		if (row > 0) {
 			selectedPublisher="";
-			selectRow(row);
+			styleRow(selectedRow, false);
+			selectedRow=row;
 			JUDDIPublisher.getInstance().displayPublisher(publishers.get(row -1));
 		}
 	}
@@ -107,9 +111,7 @@ public class PublisherListPanel extends Composite implements TableListener {
 	}
 
 	protected void selectRow(int row) {
-		styleRow(selectedRow, false);
 		styleRow(row, true);
-		selectedRow = row;
 	}
 
 	private void styleRow(int row, boolean selected) {
