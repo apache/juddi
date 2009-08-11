@@ -82,9 +82,9 @@
 			<organization>ESigma</organization>
 		</developer>
 		<developer>
-			<id>tcunningham</id>
+			<id>tcunning</id>
 			<name>Tom Cunningham</name>
-			<email>tcunningham AT apache.org</email>
+			<email>tcunning AT apache.org</email>
 			<url>http://www.jboss.org/jbossesb</url>
 			<organization>JBoss/Red Hat</organization>
 		</developer>
