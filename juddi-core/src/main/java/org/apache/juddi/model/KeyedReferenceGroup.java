@@ -35,7 +35,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "juddiv3_keyed_reference_group")
+@Table(name = "j3_keyed_reference_group")
 public class KeyedReferenceGroup implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

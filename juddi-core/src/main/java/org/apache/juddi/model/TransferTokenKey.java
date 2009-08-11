@@ -30,7 +30,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 @Entity
-@Table(name = "juddiv3_transfer_token_keys")
+@Table(name = "j3_transfer_token_keys")
 public class TransferTokenKey implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

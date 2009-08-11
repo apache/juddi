@@ -34,7 +34,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_transfer_token")
+@Table(name = "j3_transfer_token")
 public class TransferToken implements java.io.Serializable{
 
 	private static final long serialVersionUID = 1L;

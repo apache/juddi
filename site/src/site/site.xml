@@ -53,7 +53,7 @@
                 <item name="jUDDI v3 docs" href="http://svn.apache.org/viewvc/webservices/juddi/branches/v3_trunk/docs/"/>
                 <item name="jUDDI v2 User guide" href="usersguide.html"/>
                 <item name="Wiki" href="http://wiki.apache.org/ws/jUDDI"/>
-                <item name="Reference Library" href="library.html" />
+                <item name="UDDI Library" href="library.html" />
                 <item name="Javadocs v2" href="apidocs/index.html"/>
                 <item name="Javadocs v3" href="apidocs3/index.html"/>
                 <item name="XRef v3" href="xref/index.html"/>
@@ -61,19 +61,19 @@
             <item name="Project Information">
                 <item name="Project Information" href="project-info.html"/>
                 <item name="Mailing Lists" href="mail-lists.html"/>
+                <item name="jUDDI Blog" href="http://apachejuddi.blogspot.com/" />
                 <item name="Issue Tracking" href="issue-tracking.html"/>
                 <item name="Dependencies" href="dependencies.html"/>
-                <item name="Dependency Convergence" href="dependency-convergence.html"/>
                 <item name="Project Team" href="team-list.html"/>
                 <item name="Project Summary" href="project-summary.html"/>
             </item>
             <item name="Related Projects">
-    			<item name="Apache Axis" href="http://ws.apache.org/axis/" description="Apache Axis"/>
     			<item name="Apache Scout" href="http://ws.apache.org/scout/" description="Apache Scout"/>
   			</item>
   			<item name="Misc">
     			<item name="Who We Are" href="who.html" description="Who We Are"/>
     			<item name="Committer Notes" href="committers.html" description="Committer Notes"/>
+    			<item name="Sponsors" href="thanks.html" description="Thank you"/>
     			<item name="Legal" href="legal.html" description="Legal Stuff"/>
     			<item name="License" href="license.html" description="Apache 2.0 License"/>
   			</item>

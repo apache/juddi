@@ -19,7 +19,7 @@ package org.apache.juddi.portlets.client;
 import org.apache.juddi.portlets.client.model.Publisher;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -30,7 +30,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class JUDDIPublisher implements EntryPoint, Login {
 
 	private static JUDDIPublisher singleton;
-	private FlowPanel flowPanel = new FlowPanel();
+	
+	private MenuBarPanel menuBar = new MenuBarPanel();
+	private DockPanel dockPanel = new DockPanel();
 	private LoginPanel loginPanel = new LoginPanel(this);
 	private PublisherListPanel publisherListPanel = new PublisherListPanel();
 	private PublisherPanel publisherPanel = null;
@@ -44,13 +46,18 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	public void onModuleLoad() { 
 		singleton = this;
 		
+		dockPanel.setSpacing(8);
+		menuBar.setVisible(false);
+		menuBar.setHeight("20px");
+		dockPanel.add(menuBar,DockPanel.NORTH);
+		
 		loginPanel.setVisible(false);
-		flowPanel.add(loginPanel);
+		dockPanel.add(loginPanel,DockPanel.WEST);
 		
 		publisherListPanel.setVisible(false);
-		flowPanel.add(publisherListPanel);
+		dockPanel.add(publisherListPanel,DockPanel.CENTER);
 		
-		RootPanel.get("publisher").add(flowPanel);
+		RootPanel.get("publisher").add(dockPanel);
 	}
 	
 	public void login() {
@@ -58,19 +65,20 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		if (token == null ) {
 			loginPanel.setVisible(true);
 			publisherListPanel.setVisible(false);
+			menuBar.setVisible(false);
 		} else {
 			loginPanel.setVisible(false);
+			menuBar.setVisible(true);
 			publisherListPanel.setVisible(true);
 			String publisherId = loginPanel.getPublisherId();
-			publisherListPanel.setSelectedPublisher(publisherId);
 			publisherListPanel.listPublishers(token, publisherId);
 		}
 	}
 	
 	public void displayPublisher(Publisher publisher) {
-		if (publisherPanel!=null ) flowPanel.remove(publisherPanel);
+		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
 		publisherPanel = new PublisherPanel(publisher);
-		flowPanel.add(publisherPanel);
+		dockPanel.add(publisherPanel,DockPanel.EAST);
 		String token = loginPanel.getToken();
 		String publisherId = loginPanel.getPublisherId();
 		publisherListPanel.listPublishers(token, publisherId);
@@ -84,11 +92,33 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		publisherPanel.setVisible(false);
 		String token = loginPanel.getToken();
 		String publisherId = loginPanel.getPublisherId();
+		publisherListPanel.selectRow(0);
+		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
+		publisherPanel=null;
 		publisherListPanel.listPublishers(token, publisherId);
 	}
 
 	public String getToken() {
 		return loginPanel.getToken();
+	}
+	
+	public void savePublisher() {
+		if (publisherPanel!=null) {
+			publisherPanel.savePublisher(getToken());
+		}
+	}
+	
+	public void newPublisher() {
+		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
+		publisherPanel = new PublisherPanel(null);
+		dockPanel.add(publisherPanel,DockPanel.EAST);
+		publisherListPanel.selectRow(0);
+	}
+	
+	public void deletePublisher() {
+		if (publisherPanel!=null) {
+			publisherPanel.deletePublisher(getToken());
+		}
 	}
 
 

@@ -30,7 +30,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_business_identifier")
+@Table(name = "j3_business_identifier")
 public class BusinessIdentifier implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

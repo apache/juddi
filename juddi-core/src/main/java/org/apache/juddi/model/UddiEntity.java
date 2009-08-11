@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_uddi_entity")
+@Table(name = "j3_uddi_entity")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UddiEntity {
 

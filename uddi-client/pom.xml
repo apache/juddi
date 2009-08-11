@@ -91,6 +91,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
+			<artifactId>juddi-core</artifactId>
+			<version>3.0.0.SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-tomcat</artifactId>
 			<version>3.0.0.SNAPSHOT</version>
 			<type>zip</type>

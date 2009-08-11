@@ -30,7 +30,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 @Entity
-@Table(name = "juddiv3_subscription_match")
+@Table(name = "j3_subscription_match")
 public class SubscriptionMatch implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
