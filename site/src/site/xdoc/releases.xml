@@ -15,6 +15,16 @@
           <td><strong>Description</strong></td>
         </tr>
         <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/2_0_1/">2.0.1</a></td>
+          <td>Aug 11, 2009</td>
+          <td>Stable SP Release Version 2.0.1.</td>
+        </tr> 
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/2_0/">2.0</a></td>
+          <td>Aug 2, 2009</td>
+          <td>Stable Release Version 2.0.</td>
+        </tr> 
+        <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.beta</a></td>
           <td>June 5, 2009</td>
           <td>Stable Release for Version 3.0, with limited console support only.</td>

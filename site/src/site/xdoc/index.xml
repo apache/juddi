@@ -45,7 +45,7 @@ under the License.
 	    jUDDIv3
 	    <ul>
 	      <li>UDDI Specification version 3.0 compliant</li>
-	      <li>Supports for JDK 1.5 and later</li>
+	      <li>JDK 1.6 Recommended, but supports for JDK 1.5 and later</li>
 	      <li>Build on JAXB and JAX-WS standards, tested on CXF</li>
 	      <li>Build on JPA standard, tested with OpenJPA and Hibernate</li>
 	      <li>Pre-configured bundle deployed to Tomcat</li>
@@ -61,6 +61,7 @@ under the License.
 	  </section>
       
 	  <section name="News">
+	    <p><strong>Aug 11, 2009  </strong> <a href="http://apachejuddi.blogspot.com/2009/07/release-juddi-v2-thank-you-steve-viens.html">Release 2.0</a> and <a href="http://www.apache.org/dist/ws/juddi/2_0_1/">2.0.1</a></p>
 	    <p><strong>June 5, 2009</strong> Release 3.0.0.beta</p>
 	    <p><strong>May 31, 2009</strong> Release 2.0rc7</p>
 	    <p><strong>Feb 13, 2009</strong> Version 3.0.0.alpha is now available</p>
