@@ -35,6 +35,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class MappingApiToModel {
 	private static Logger logger = Logger.getLogger(MappingApiToModel.class);
@@ -357,18 +358,21 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 
 		if (apiCategoryBag != null) {
-			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			for (JAXBElement<?> elem : apiCategoryList) {
-				
-				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
+			List krList = apiCategoryBag.getKeyedReference();
+			List<org.uddi.api_v3.KeyedReferenceGroup> krgList = apiCategoryBag.getKeyedReferenceGroup(); 
+			for (Object elem : krList) {
+				if (elem instanceof org.uddi.api_v3.KeyedReference) {
+					org.uddi.api_v3.KeyedReference kr = (org.uddi.api_v3.KeyedReference) elem;
 					List<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
 					//modelKeyedReferences.clear();
-					org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference)elem.getValue();
+					org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference)elem;
 					modelKeyedReferences.add(new org.apache.juddi.model.KeyedReference(modelCategoryBag, 
 						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
 				}
-				if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
-					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem.getValue();
+			}
+			for (org.uddi.api_v3.KeyedReferenceGroup elem : krgList) {
+				if (elem instanceof org.uddi.api_v3.KeyedReferenceGroup) {
+					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem;
 
 					org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup = new org.apache.juddi.model.KeyedReferenceGroup();
 					List<org.apache.juddi.model.KeyedReferenceGroup> modelKeyedReferenceGroups=modelCategoryBag.getKeyedReferenceGroups();
@@ -438,23 +442,20 @@ public class MappingApiToModel {
 		modelTmodelInstInfo.getInstanceDetailsDescrs().clear();
 
 		if (apiInstanceDetails != null) {
-			List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
-			for (JAXBElement<?> elem : apiInstanceDetailsContent) {
-				if (elem.getValue() instanceof org.uddi.api_v3.Description) {
-					org.uddi.api_v3.Description apiDesc = (org.uddi.api_v3.Description)elem.getValue();
-					org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr = 
-							new org.apache.juddi.model.InstanceDetailsDescr(
-									modelTmodelInstInfo, apiDesc.getLang(), apiDesc.getValue());
-					modelTmodelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
-				} else if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
-					org.uddi.api_v3.OverviewDoc apiOverviewDoc = (org.uddi.api_v3.OverviewDoc)elem.getValue();
-					org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTmodelInstInfo);
-					mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
-					modelTmodelInstInfo.getOverviewDocs().add(modelOverviewDoc);
-				} else if (elem.getValue() instanceof String) {
-					modelTmodelInstInfo.setInstanceParms((String)elem.getValue());
-				}
+			List<org.uddi.api_v3.Description> descriptions = apiInstanceDetails.getDescription();
+			List<org.uddi.api_v3.OverviewDoc> overviewdocs = apiInstanceDetails.getOverviewDoc();
+			for (org.uddi.api_v3.Description apiDesc : descriptions) {
+				org.apache.juddi.model.InstanceDetailsDescr modelInstanceDetailsDescr = 
+						new org.apache.juddi.model.InstanceDetailsDescr(
+							modelTmodelInstInfo, apiDesc.getLang(), apiDesc.getValue());
+				modelTmodelInstInfo.getInstanceDetailsDescrs().add(modelInstanceDetailsDescr);
 			}
+			for (org.uddi.api_v3.OverviewDoc apiOverviewDoc : overviewdocs) {
+				org.apache.juddi.model.OverviewDoc modelOverviewDoc = new org.apache.juddi.model.OverviewDoc(modelTmodelInstInfo);
+				mapOverviewDoc(apiOverviewDoc, modelOverviewDoc);
+				modelTmodelInstInfo.getOverviewDocs().add(modelOverviewDoc);
+			}
+			modelTmodelInstInfo.setInstanceParms((String)apiInstanceDetails.getInstanceParms());
 		}
 	}
 	
@@ -463,20 +464,24 @@ public class MappingApiToModel {
 				throws DispositionReportFaultMessage {
 		if (apiOverviewDoc != null) {
 			
-			List<JAXBElement<?>> apiOverviewDocContent = apiOverviewDoc.getContent();
-			for (JAXBElement<?> elem : apiOverviewDocContent) {
-				if (elem.getValue() instanceof org.uddi.api_v3.OverviewURL) {
-					org.uddi.api_v3.OverviewURL overviewURL = (org.uddi.api_v3.OverviewURL) elem.getValue();
-					modelOverviewDoc.setOverviewUrl(overviewURL.getValue());
-					modelOverviewDoc.setOverviewUrlUseType(overviewURL.getUseType());
-				} else if (elem.getValue() instanceof org.uddi.api_v3.Description) {
-					org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem.getValue();
+			List descContent = apiOverviewDoc.getDescription();
+			for (Object elem : descContent) {
+				org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem;
+				if (description != null) {
 					org.apache.juddi.model.OverviewDocDescr modelOverviewDocDescr 
 						= new org.apache.juddi.model.OverviewDocDescr(
-								modelOverviewDoc, description.getLang(), description.getValue());
+							modelOverviewDoc, description.getLang(), description.getValue());
 					modelOverviewDoc.getOverviewDocDescrs().add(modelOverviewDocDescr);
-				}
+				}				
 			}
+
+			org.uddi.api_v3.OverviewURL elem = apiOverviewDoc.getOverviewURL();
+			if (elem instanceof org.uddi.api_v3.OverviewURL) {
+				org.uddi.api_v3.OverviewURL overviewURL = (org.uddi.api_v3.OverviewURL) elem;
+				modelOverviewDoc.setOverviewUrl(overviewURL.getValue());
+				modelOverviewDoc.setOverviewUrlUseType(overviewURL.getUseType());
+			}
+
 		}
 	}
 	

@@ -140,7 +140,7 @@ public class AppConfig
 			KeyedReference keyedRef = new KeyedReference();
 			keyedRef.setTModelKey(Constants.NODE_CATEGORY_TMODEL);
 			keyedRef.setKeyValue(Constants.NODE_KEYVALUE);
-			categoryBag.getContent().add(new ObjectFactory().createKeyedReference(keyedRef));
+			categoryBag.getKeyedReference().add(keyedRef);
 			List<?> keyList = FindBusinessByCategoryQuery.select(em, new FindQualifiers(), categoryBag, null);
 			if (keyList != null && keyList.size() > 1)
 				throw new ConfigurationException("Only one business entity can be categorized as the node.");

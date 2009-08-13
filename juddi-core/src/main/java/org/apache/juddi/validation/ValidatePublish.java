@@ -23,6 +23,8 @@ import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBElement;
 import javax.xml.ws.Holder;
 
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.DeleteBusiness;
@@ -30,6 +32,8 @@ import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveBinding;
@@ -57,6 +61,7 @@ import org.apache.juddi.error.UserMismatchException;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class ValidatePublish extends ValidateUDDIApi {
 
@@ -823,12 +828,15 @@ public class ValidatePublish extends ValidateUDDIApi {
 			return;
 		
 		// If category bag does exist, it must have at least one element
-		List<JAXBElement<?>> elems = categories.getContent();
-		if (elems == null || elems.size() == 0)
+		List elems = categories.getKeyedReference();
+		List<KeyedReferenceGroup> groups = categories.getKeyedReferenceGroup();
+		if (groups.size() == 0 && elems.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
 		
-		for (JAXBElement<?> elem : elems) {
-			validateKeyedReferenceTypes(elem);
+		for (Object elem : elems) {
+			if (elem instanceof org.uddi.api_v3.KeyedReference) {
+				validateKeyedReference((KeyedReference) elem);
+			}
 		}
 	}
 
@@ -844,35 +852,28 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.identifierbag.NoInput"));
 		
 		for (org.uddi.api_v3.KeyedReference keyedRef : keyedRefList) {
-			validateKeyedReferenceTypes(new ObjectFactory().createKeyedReference(keyedRef));
+			validateKeyedReference(keyedRef);
 		}
 	}
 	
-	
-	public void validateKeyedReferenceTypes(JAXBElement<?> elem) throws DispositionReportFaultMessage {
-		if (elem == null || elem.getValue() == null)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
-		
+
+	public void validateKeyedReferenceGroup(KeyedReferenceGroup krg) throws DispositionReportFaultMessage {
 		// Keyed reference groups must contain a tModelKey
-		if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
-			org.uddi.api_v3.KeyedReferenceGroup krg = (org.uddi.api_v3.KeyedReferenceGroup)elem.getValue();
-			if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
-				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
-		}
-		// Keyed references must contain a tModelKey and keyValue
-		else if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
-			org.uddi.api_v3.KeyedReference kr = (org.uddi.api_v3.KeyedReference)elem.getValue();
-			if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
-				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+	}
+	
+	public void validateKeyedReference(KeyedReference kr) throws DispositionReportFaultMessage {
+		if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
 			
-			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
-				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
+		if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
 			
-			// Per section 6.2.2.1 of the specification, no publishers (except the root) are allowed to use the node categorization tmodelKey
-			if (Constants.NODE_CATEGORY_TMODEL.equalsIgnoreCase(kr.getTModelKey())) {
-				if (!Constants.ROOT_PUBLISHER.equals(publisher.getAuthorizedName()))
-					throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NodeCategoryTModel", Constants.NODE_CATEGORY_TMODEL));
-			}
+		// Per section 6.2.2.1 of the specification, no publishers (except the root) are allowed to use the node categorization tmodelKey
+		if (Constants.NODE_CATEGORY_TMODEL.equalsIgnoreCase(kr.getTModelKey())) {
+			if (!Constants.ROOT_PUBLISHER.equals(publisher.getAuthorizedName()))
+				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NodeCategoryTModel", Constants.NODE_CATEGORY_TMODEL));
 		}
 	}
 
@@ -911,26 +912,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 			return;
 		
 		// At least one OverviewDoc or instanceParms must be supplied
-		List<JAXBElement<?>> elems = instDetails.getContent();
-		if (elems == null || elems.size() == 0)
+		List<OverviewDoc> elems = instDetails.getOverviewDoc();
+		if (instDetails.getInstanceParms() == null && elems.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.instdetails.NoOverviewOrParms"));
 		
-		// At least one OverviewDoc or instanceParms must be supplied
-		boolean overviewOrParmsFound = false;
-		for (JAXBElement<?> elem : elems) {
-			if (elem.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
-				overviewOrParmsFound = true;
-				org.uddi.api_v3.OverviewDoc od = (org.uddi.api_v3.OverviewDoc)elem.getValue();
-				validateOverviewDoc(od);
-			}
-			else if (elem.getValue() instanceof String) {
-				overviewOrParmsFound = true;
-			}
-		}
-
-		if (!overviewOrParmsFound)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.instdetails.NoOverviewOrParms"));
-
 	}
 	
 	public void validateOverviewDoc(org.uddi.api_v3.OverviewDoc overviewDoc) throws DispositionReportFaultMessage {
@@ -939,8 +924,8 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.overviewdoc.NullInput"));
 		
 		// At least one description or overview URL must be supplied
-		List<JAXBElement<?>> elems = overviewDoc.getContent();
-		if (elems == null || elems.size() == 0)
+		List<org.uddi.api_v3.Description> elems = overviewDoc.getDescription();
+		if ((elems == null || elems.size() == 0 ) && overviewDoc.getOverviewURL() == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.overviewdoc.NoDescOrUrl"));
 	}
 

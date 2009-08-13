@@ -17,6 +17,7 @@ package org.uddi.api_v3.tck;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -150,25 +151,23 @@ public class TckValidator {
 			assertEquals(cbag1, cbag2);
 			return;
 		}
-		List<JAXBElement<?>> elemList1 = cbag1.getContent();
-		List<JAXBElement<?>> elemList2 = cbag2.getContent();
+		List<KeyedReference> elemList1 = cbag1.getKeyedReference();
+		List<KeyedReference> elemList2 = cbag2.getKeyedReference();
 		if (elemList1 == null || elemList2 == null) {
 			assertEquals(elemList1, elemList2);
 			return;
 		}
 		// In object could have KeyedReferenceGroups which are ignored.  For now, only solo KeyedReferences are checked.
 		//assertEquals(elemList1.size(), elemList2.size());
-		Iterator<JAXBElement<?>> elemList1Itr = elemList1.iterator();
-		Iterator<JAXBElement<?>> elemList2Itr = elemList2.iterator();
+		Iterator<KeyedReference> elemList1Itr = elemList1.iterator();
+		Iterator<KeyedReference> elemList2Itr = elemList2.iterator();
 		while (elemList1Itr.hasNext()) {
-			JAXBElement<?> elem1 = elemList1Itr.next();
-			if (elem1.getValue() instanceof org.uddi.api_v3.KeyedReference) {
-				JAXBElement<?> elem2 = elemList2Itr.next();
-				KeyedReference kr1 = (KeyedReference)elem1.getValue();
-				KeyedReference kr2 = (KeyedReference)elem2.getValue();;
-				assertEquals(kr1.getTModelKey(), kr2.getTModelKey());
-				assertEquals(kr1.getKeyName(), kr2.getKeyName());
-				assertEquals(kr1.getKeyValue(), kr2.getKeyValue());
+			KeyedReference elem1 = elemList1Itr.next();
+			if (elem1 instanceof org.uddi.api_v3.KeyedReference) {
+				KeyedReference elem2 = elemList2Itr.next();
+				assertEquals(elem1.getTModelKey(), elem2.getTModelKey());
+				assertEquals(elem1.getKeyName(), elem2.getKeyName());
+				assertEquals(elem1.getKeyValue(), elem2.getKeyValue());
 			}
 			// add comparing keyedReferenceGroup
 		}
@@ -221,57 +220,64 @@ public class TckValidator {
 			assertEquals(ids1, ids2);
 			return;
 		}
-		List<JAXBElement<?>> elem1s =  ids1.getContent();
-		List<JAXBElement<?>> elem2s =  ids2.getContent();
-		Iterator<JAXBElement<?>> elem1 = elem1s.iterator();
+		List<Description> elem1s =  ids1.getDescription();
+		List<Description> elem2s =  ids2.getDescription();
+		Iterator<Description> elem1 = elem1s.iterator();
+
+		boolean isMatch=false;
+
+		if (elem1s.size() == 0 && elem2s.size() == 0) {
+			isMatch = true;
+		}
 		
 		while (elem1.hasNext()) {
-			boolean isMatch=false;
-			JAXBElement<?> element1 = elem1.next();
+			Description desc1 = elem1.next();
 			
-			if (element1.getValue() instanceof org.uddi.api_v3.Description) {
+			if (desc1 instanceof org.uddi.api_v3.Description) {
 				//Descriptions
-				Description desc1 = (Description) element1.getValue();
-				Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+				Iterator<Description> elem2 = elem2s.iterator();
 				while (elem2.hasNext()) {
-					JAXBElement<?> element2 = elem2.next();
-					if (element2.getValue() instanceof org.uddi.api_v3.Description) {
-						Description desc2 = (Description) element2.getValue();
+					Description desc2 = elem2.next();
+					if (desc2 instanceof org.uddi.api_v3.Description) {
 						if (desc1.getLang().equals(desc2.getLang()) && desc1.getValue().equals(desc2.getValue())) {
 							isMatch=true;
 							break;
 						}
 					}
 				}
-			} else if (element1.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
-				//OverviewDocs
-				OverviewDoc doc1 = (OverviewDoc) element1.getValue();
-				checkOverviewDocs(doc1, elem2s);
-				isMatch=true;
-			} else if (element1.getValue() instanceof String) {
-				//InstanceParams
-				Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
-				while (elem2.hasNext()) {
-					JAXBElement<?> element2 = elem2.next();
-					if (element1.getValue() instanceof String) {
-						assertEquals((String)element1.getValue(),(String)element2.getValue());
-					}
-					isMatch=true;
-					break;
-				}
 			}
-			assertTrue(isMatch);
 		}
+		assertTrue(isMatch);
+
+		
+		List<OverviewDoc> odoc1s =  ids1.getOverviewDoc();
+		List<OverviewDoc> odoc2s =  ids2.getOverviewDoc();
+		Iterator<OverviewDoc> docelem1 = odoc1s.iterator();
+		isMatch = false;
+		if (odoc1s.size() == 0 && odoc2s.size() == 0) {
+			isMatch = true;
+		}
+		
+		while (docelem1.hasNext()) {
+			OverviewDoc odoc1 = docelem1.next();
+			if (odoc1 instanceof org.uddi.api_v3.OverviewDoc) {
+				//OverviewDocs
+				checkOverviewDocs(odoc1, odoc2s);
+				isMatch=true;
+			}
+		}
+		
+		assertEquals((String)ids1.getInstanceParms(),(String)ids2.getInstanceParms());
+		assertTrue(isMatch);
 	}
 	
-	public static void checkOverviewDocs(OverviewDoc doc1, List<JAXBElement<?>> elem2s) {
+	public static void checkOverviewDocs(OverviewDoc doc1, List<OverviewDoc> elem2s) {
 		boolean isMatch=false;
-		Iterator<JAXBElement<?>> elem2 = elem2s.iterator();
+		Iterator<OverviewDoc> elem2 = elem2s.iterator();
 		//Match against any OverviewDocs in the elem2 list
 		while (elem2.hasNext()) {
-			JAXBElement<?> element2 = elem2.next();
-			if (element2.getValue() instanceof org.uddi.api_v3.OverviewDoc) {
-				OverviewDoc doc2 = (OverviewDoc) element2.getValue();
+			OverviewDoc doc2 = elem2.next();
+			if (doc2 instanceof org.uddi.api_v3.OverviewDoc) {
 				//match doc1 against this doc2
 				isMatch = compareOverviewDocs(doc1, doc2);
 				if (isMatch) break;
@@ -296,42 +302,33 @@ public class TckValidator {
 	{	
 		boolean descMatch=false;
 		boolean urlMatch =false;
-		List<JAXBElement<?>> odElem1List = doc1.getContent();
-		Iterator<JAXBElement<?>> odElem1 = odElem1List.iterator();
-		while (odElem1.hasNext()) {
-			JAXBElement<?> odElement1 = odElem1.next();
-			if (odElement1.getValue() instanceof org.uddi.api_v3.Description) {
-				Description descr1 = (Description) odElement1.getValue();
-				List<JAXBElement<?>> odElem2List = doc2.getContent();
-				Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
-				while (odElem2.hasNext()) {
-					JAXBElement<?> odElement2 = odElem2.next();
-					if (odElement2.getValue() instanceof org.uddi.api_v3.Description) {
-						Description descr2 = (Description) odElement2.getValue();
-						if (descr1.getLang().equals(descr2.getLang()) && descr1.getValue().equals(descr2.getValue())) {
-							descMatch=true;
-							break;
-						}
-					}
-				}
-			} else if (odElement1.getValue() instanceof org.uddi.api_v3.OverviewURL) {
-				OverviewURL url1 = (OverviewURL) odElement1.getValue();
-				List<JAXBElement<?>> odElem2List = doc2.getContent();
-				Iterator<JAXBElement<?>> odElem2 = odElem2List.iterator();
-				while (odElem2.hasNext()) {
-					JAXBElement<?> odElement2 = odElem2.next();
-					if (odElement2.getValue() instanceof org.uddi.api_v3.OverviewURL) {
-						OverviewURL url2 = (OverviewURL) odElement2.getValue();
-						if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
-							urlMatch=true;
-							break;
-						}
-					}
+
+		OverviewURL url1 = (OverviewURL) doc1.getOverviewURL();
+		OverviewURL url2 = (OverviewURL) doc2.getOverviewURL();
+		if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
+			urlMatch=true;
+		}
+
+
+		List<Description> descList1 = doc1.getDescription();
+		Iterator<Description> descIter1 = descList1.iterator();
+		if (descList1.size() == 0 && doc2.getDescription().size() == 0) {
+			descMatch = true;
+		}
+		while (descIter1.hasNext()) {
+			Description descr1 = (Description) descIter1.next();
+			List<Description> descList2 = doc2.getDescription();
+			Iterator<Description> descElem2 = descList2.iterator();
+			while (descElem2.hasNext()) {
+				Description descr2 = descElem2.next();
+				if (descr1.getLang().equals(descr2.getLang()) && descr1.getValue().equals(descr2.getValue())) {
+					descMatch=true;
 				}
 			}
-			if (urlMatch && descMatch || ( odElem1List.size()==1 && (urlMatch || descMatch)) ) {
+		}
+
+		if (urlMatch && descMatch) {
 				return true;
-			}
 		}
 		return false;
 	}

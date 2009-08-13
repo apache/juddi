@@ -24,11 +24,14 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 
 /**
  * <p>Java class for instanceDetails complex type.
@@ -58,58 +61,40 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "instanceDetails", propOrder = {
-    "content"
+    "instanceParms", "description", "overviewDoc"
 })
-public class InstanceDetails implements Serializable{
+public class InstanceDetails implements Serializable {
 
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
-    @XmlElementRefs({
-        @XmlElementRef(name = "instanceParms", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        @XmlElementRef(name = "description", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        @XmlElementRef(name = "overviewDoc", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class)
-    })
-    protected List<JAXBElement<?>> content;
 
-    /**
-     * Gets the rest of the content model. 
-     * 
-     * <p>
-     * You are getting this "catch-all" property because of the following reason: 
-     * The field name "InstanceParms" is used by two different parts of a schema. See: 
-     * line 329 of file:/C:/Development/Projects/jUDDI_v3/uddi-ws/src/main/resources/uddi_v3.xsd
-     * line 327 of file:/C:/Development/Projects/jUDDI_v3/uddi-ws/src/main/resources/uddi_v3.xsd
-     * <p>
-     * To get rid of this property, apply a property customization to one 
-     * of both of the following declarations to change their names: 
-     * Gets the value of the content property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link Description }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link JAXBElement }{@code <}{@link OverviewDoc }{@code >}
-     * 
-     * 
-     */
-    public List<JAXBElement<?>> getContent() {
-        if (content == null) {
-            content = new ArrayList<JAXBElement<?>>();
+    @XmlElement
+    protected String instanceParms;
+    @XmlElement
+    protected List<Description> description;
+    @XmlElement
+    protected List<OverviewDoc> overviewDoc;
+    
+    public void setInstanceParms(String instanceParms) {
+		this.instanceParms = instanceParms;
+	}
+    
+    public String getInstanceParms() {
+    	return instanceParms;
+    }
+    
+    public List<OverviewDoc> getOverviewDoc() {
+        if (overviewDoc == null) {
+            overviewDoc = new ArrayList<OverviewDoc>();
         }
-        return this.content;
+        return this.overviewDoc;    	
+    }
+    
+    public List<Description> getDescription() {
+        if (description == null) {
+            description = new ArrayList<Description>();
+        }
+        return this.description;
     }
 
 }

@@ -30,6 +30,7 @@ import org.apache.juddi.error.ValueNotAllowedException;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class ValidateUDDIKey {
 
@@ -82,13 +83,12 @@ public class ValidateUDDIKey {
 		// A key generator key should have exactly one category and it's key value should be 'keyGenerator'
 		org.uddi.api_v3.CategoryBag categories = tModel.getCategoryBag();
 		if (categories != null) {
-			List<JAXBElement<?>> elems = categories.getContent();
+			List<org.uddi.api_v3.KeyedReference> elems = categories.getKeyedReference();
 			if (elems != null && elems.size() == 1) {
-				JAXBElement<?> elem = elems.get(0);
+				org.uddi.api_v3.KeyedReference elem = elems.get(0);
 				if (elem != null) {
-					Object obj = elem.getValue();
-					if (obj != null && obj instanceof org.uddi.api_v3.KeyedReference) {
-						String keyedValue = ((org.uddi.api_v3.KeyedReference)obj).getKeyValue();
+					if (elem != null && elem instanceof org.uddi.api_v3.KeyedReference) {
+						String keyedValue = ((org.uddi.api_v3.KeyedReference)elem).getKeyValue();
 						if (keyedValue != null) {
 							if (keyedValue.equalsIgnoreCase(KeyGenerator.KEYGENERATOR_SUFFIX))
 								return;

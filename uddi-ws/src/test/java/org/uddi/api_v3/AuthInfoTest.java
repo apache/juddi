@@ -77,6 +77,8 @@ public class AuthInfoTest {
 			boolean assertion = EXPECTED_XML_FRAGMENT1.equals(actualXml) || EXPECTED_XML_FRAGMENT2.equals(actualXml);
 			assertTrue(assertion);
 		} catch (JAXBException jaxbe) {
+			jaxbe.printStackTrace();
+			
 			fail("No exception should be thrown");
 		}
 	}

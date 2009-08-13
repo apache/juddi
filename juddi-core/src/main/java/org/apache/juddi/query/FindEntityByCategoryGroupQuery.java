@@ -125,14 +125,14 @@ public class FindEntityByCategoryGroupQuery extends EntityQuery {
 		if (categoryBag == null)
 			return keysIn;
 		
-		List<JAXBElement<?>> categories = categoryBag.getContent();
+		List<KeyedReferenceGroup> categories = categoryBag.getKeyedReferenceGroup();
 		if (categories == null || categories.size() == 0)
 			return keysIn;
 		
 		List<KeyedReferenceGroup> keyedRefGroups = new ArrayList<KeyedReferenceGroup>(0);
-		for (JAXBElement<?> elem : categories) {
-			if (elem.getValue() instanceof KeyedReferenceGroup)
-				keyedRefGroups.add((KeyedReferenceGroup)elem.getValue());
+		for (KeyedReferenceGroup elem : categories) {
+			if (elem instanceof KeyedReferenceGroup)
+				keyedRefGroups.add((KeyedReferenceGroup)elem);
 		}
 		if (keyedRefGroups.size() == 0)
 			return keysIn;		

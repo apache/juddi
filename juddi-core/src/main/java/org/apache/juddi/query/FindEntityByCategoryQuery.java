@@ -114,14 +114,14 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 		if (categoryBag == null)
 			return keysIn;
 		
-		List<JAXBElement<?>> categories = categoryBag.getContent();
+		List<KeyedReference> categories = categoryBag.getKeyedReference();
 		if (categories == null || categories.size() == 0)
 			return keysIn;
 		
 		List<KeyedReference> keyedRefs = new ArrayList<KeyedReference>(0);
-		for (JAXBElement<?> elem : categories) {
-			if (elem.getValue() instanceof KeyedReference)
-				keyedRefs.add((KeyedReference)elem.getValue());
+		for (KeyedReference elem : categories) {
+			if (elem instanceof KeyedReference)
+				keyedRefs.add((KeyedReference)elem);
 		}
 		if (keyedRefs.size() == 0)
 			return keysIn;		

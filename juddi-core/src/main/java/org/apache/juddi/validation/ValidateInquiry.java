@@ -34,6 +34,7 @@ import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.TModelBag;
@@ -50,6 +51,7 @@ import org.apache.juddi.query.util.FindQualifiers;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class ValidateInquiry extends ValidateUDDIApi {
 
@@ -300,12 +302,16 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			return;
 		
 		// If category bag does exist, it must have at least one element
-		List<JAXBElement<?>> elems = categories.getContent();
+		List<KeyedReference> elems = categories.getKeyedReference();
 		if (elems == null || elems.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
 		
-		for (JAXBElement<?> elem : elems) {
-			validateKeyedReferenceTypes(elem);
+		for (KeyedReference elem : elems) {
+			validateKeyedReference(elem);
+		}
+		List<KeyedReferenceGroup> krgs = categories.getKeyedReferenceGroup();
+		for (KeyedReferenceGroup elem : krgs) {
+			validateKeyedReferenceGroup(elem);
 		}
 	}
 
@@ -321,33 +327,32 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.identifierbag.NoInput"));
 		
 		for (org.uddi.api_v3.KeyedReference keyedRef : keyedRefList) {
-			validateKeyedReferenceTypes(new ObjectFactory().createKeyedReference(keyedRef));
+			validateKeyedReference(keyedRef);
 		}
 	}
 	
-	public void validateKeyedReferenceTypes(JAXBElement<?> elem) throws DispositionReportFaultMessage {
-		if (elem == null || elem.getValue() == null)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
-		
+	public void validateKeyedReferenceGroup (KeyedReferenceGroup krg) throws DispositionReportFaultMessage {
 		// Keyed reference groups must contain a tModelKey
-		if (elem.getValue() instanceof org.uddi.api_v3.KeyedReferenceGroup) {
-			org.uddi.api_v3.KeyedReferenceGroup krg = (org.uddi.api_v3.KeyedReferenceGroup)elem.getValue();
+		if (krg instanceof org.uddi.api_v3.KeyedReferenceGroup) {
 			if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
 		}
+	}
+	
+	public void validateKeyedReference(KeyedReference kr) throws DispositionReportFaultMessage {
+		if (kr == null)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
+		
 		// Keyed references must contain a tModelKey and keyValue
-		else if (elem.getValue() instanceof org.uddi.api_v3.KeyedReference) {
-			org.uddi.api_v3.KeyedReference kr = (org.uddi.api_v3.KeyedReference)elem.getValue();
+		if (kr instanceof org.uddi.api_v3.KeyedReference) {
 			if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
 			
 			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
-				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
-			
+				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));			
 		}
 	}
-	
-	
+		
 	private void validateFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws DispositionReportFaultMessage {
 		if (findQualifiers == null)
 			return;

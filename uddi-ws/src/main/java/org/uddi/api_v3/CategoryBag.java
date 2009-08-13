@@ -24,6 +24,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlTransient;
@@ -55,17 +56,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "categoryBag", propOrder = {
-    "content"
+    "keyedReference", "keyedReferenceGroup"
 })
-public class CategoryBag implements Serializable{
-
+public class CategoryBag implements Serializable {
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
-    @XmlElementRefs({
-        @XmlElementRef(name = "keyedReference", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        @XmlElementRef(name = "keyedReferenceGroup", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class)
-    })
-    protected List<JAXBElement<?>> content;
+
+	@XmlElement
+    protected List<KeyedReference> keyedReference;
+	@XmlElement
+	protected List<KeyedReferenceGroup> keyedReferenceGroup;
 
     /**
      * Gets the rest of the content model. 
@@ -100,12 +100,18 @@ public class CategoryBag implements Serializable{
      * 
      * 
      */
-    public List<JAXBElement<?>> getContent() {
-        if (content == null) {
-            content = new ArrayList<JAXBElement<?>>();
+    public List<KeyedReference> getKeyedReference() {
+        if (keyedReference == null) {
+            keyedReference = new ArrayList<KeyedReference>();
         }
-        return this.content;
+        return this.keyedReference;
     }
-
+    
+    public List<KeyedReferenceGroup> getKeyedReferenceGroup() {
+    	if (keyedReferenceGroup == null) {
+    		keyedReferenceGroup = new ArrayList<KeyedReferenceGroup>();
+    	}
+    	return this.keyedReferenceGroup;
+    }
 }
 

@@ -396,23 +396,20 @@ public class MappingModelToApi {
 		if (modelCategoryBag != null) {
 			if (apiCategoryBag == null)
 				apiCategoryBag = new org.uddi.api_v3.CategoryBag();
-	
-			List<JAXBElement<?>> apiCategoryList = apiCategoryBag.getContent();
-			apiCategoryList.clear();
-		
+			
 			for (org.apache.juddi.model.KeyedReference modelKeyedReference : modelCategoryBag.getKeyedReferences()) {
 				org.uddi.api_v3.KeyedReference apiKeyedReference = new org.uddi.api_v3.KeyedReference();
 				apiKeyedReference.setTModelKey(modelKeyedReference.getTmodelKeyRef());
 				apiKeyedReference.setKeyName(modelKeyedReference.getKeyName());
 				apiKeyedReference.setKeyValue(modelKeyedReference.getKeyValue());
-				apiCategoryList.add(new ObjectFactory().createKeyedReference(apiKeyedReference));
+				apiCategoryBag.getKeyedReference().add(apiKeyedReference);
 			}
 			for (org.apache.juddi.model.KeyedReferenceGroup modelKeyedReferenceGroup : modelCategoryBag.getKeyedReferenceGroups()) {
 				org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = new org.uddi.api_v3.KeyedReferenceGroup();
 	
 				mapKeyedReferenceGroup(modelKeyedReferenceGroup, apiKeyedReferenceGroup);
 				
-				apiCategoryList.add(new ObjectFactory().createKeyedReferenceGroup(apiKeyedReferenceGroup));
+				apiCategoryBag.getKeyedReferenceGroup().add(apiKeyedReferenceGroup);
 			}
 		}
 		return apiCategoryBag;
@@ -481,17 +478,15 @@ public class MappingModelToApi {
 		if (apiInstanceDetails == null)
 			apiInstanceDetails = new org.uddi.api_v3.InstanceDetails();
 
-		List<JAXBElement<?>> apiInstanceDetailsContent = apiInstanceDetails.getContent();
-		apiInstanceDetailsContent.clear();
 		//InstanceParms
-		apiInstanceDetailsContent.add(new ObjectFactory().createInstanceParms(modelTModelInstInfo.getInstanceParms()));
+		apiInstanceDetails.setInstanceParms(modelTModelInstInfo.getInstanceParms());
 		//Descriptions
 		List<org.apache.juddi.model.InstanceDetailsDescr> modelInstDetailsDescrList = modelTModelInstInfo.getInstanceDetailsDescrs();
 		for (org.apache.juddi.model.InstanceDetailsDescr modelInstDetailDescr : modelInstDetailsDescrList) {
 			org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();
 			apiDesc.setLang(modelInstDetailDescr.getLangCode());
 			apiDesc.setValue(modelInstDetailDescr.getDescr());
-			apiInstanceDetailsContent.add(new ObjectFactory().createDescription(apiDesc));
+			apiInstanceDetails.getDescription().add(apiDesc);
 		}
 		//OverviewDoc
 		mapOverviewDocs(modelTModelInstInfo.getOverviewDocs(),apiInstanceDetails,null);
@@ -505,8 +500,6 @@ public class MappingModelToApi {
 	{
 		for (OverviewDoc modelOverviewDoc : modelOverviewDocs) {
 			org.uddi.api_v3.OverviewDoc apiOverviewDoc = new org.uddi.api_v3.OverviewDoc();
-			List<JAXBElement<?>> apiOverviewDocContent = apiOverviewDoc.getContent();
-			apiOverviewDocContent.clear();
 			
 			//Descriptions
 			List<org.apache.juddi.model.OverviewDocDescr> overviewDocDescrList = modelOverviewDoc.getOverviewDocDescrs();
@@ -514,16 +507,16 @@ public class MappingModelToApi {
 				org.uddi.api_v3.Description apiDesc = new org.uddi.api_v3.Description();
 				apiDesc.setLang(overviewDocDescr.getLangCode());
 				apiDesc.setValue(overviewDocDescr.getDescr());
-				apiOverviewDocContent.add(new ObjectFactory().createDescription(apiDesc));
+				apiOverviewDoc.getDescription().add(apiDesc);
 			}
 			//OverviewURL
 			org.uddi.api_v3.OverviewURL apiOverviewURL = new org.uddi.api_v3.OverviewURL();
 			apiOverviewURL.setUseType(modelOverviewDoc.getOverviewUrlUseType());
 			apiOverviewURL.setValue(modelOverviewDoc.getOverviewUrl());
-			apiOverviewDocContent.add(new ObjectFactory().createOverviewURL(apiOverviewURL));
+			apiOverviewDoc.setOverviewURL(apiOverviewURL);
 			//Set the entity on the apiOverviewDoc
 			if (apiInstanceDetails!=null) {
-				apiInstanceDetails.getContent().add(new ObjectFactory().createOverviewDoc(apiOverviewDoc));
+				apiInstanceDetails.getOverviewDoc().add(apiOverviewDoc);
 			} else {
 				apiTModel.getOverviewDoc().add(apiOverviewDoc);
 			}
@@ -697,10 +690,10 @@ public class MappingModelToApi {
 		
 		Collections.sort((List<String>)businessKeys);
 		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) >= 0)
-			keysOwned.getContent().add(new ObjectFactory().createFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()));
+			keysOwned.getFromKey().add(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey());
 		
 		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) >= 0)
-			keysOwned.getContent().add(new ObjectFactory().createToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()));
+			keysOwned.setToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey());
 		
 	}
 

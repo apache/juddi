@@ -24,6 +24,8 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlTransient;
@@ -55,18 +57,20 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "keysOwned", propOrder = {
-    "content"
 })
-public class KeysOwned implements Serializable{
+public class KeysOwned implements Serializable {
 
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
-    @XmlElementRefs({
-        @XmlElementRef(name = "fromKey", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class),
-        @XmlElementRef(name = "toKey", namespace = "urn:uddi-org:api_v3", type = JAXBElement.class)
-    })
-    protected List<JAXBElement<String>> content;
 
+
+    @XmlElement
+    protected List<String> fromKey;
+
+    @XmlElement
+    protected String toKey;
+    
+    
     /**
      * Gets the rest of the content model. 
      * 
@@ -100,12 +104,17 @@ public class KeysOwned implements Serializable{
      * 
      * 
      */
-    public List<JAXBElement<String>> getContent() {
-        if (content == null) {
-            content = new ArrayList<JAXBElement<String>>();
-        }
-        return this.content;
+    public String getToKey() {
+    	return toKey;
     }
 
+    public void setToKey(String toKey) {
+    	this.toKey = toKey;
+    }
+    
+    public List<String> getFromKey() {
+    	return fromKey;
+    }
+    
 }
 
