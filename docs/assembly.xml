@@ -1,0 +1,34 @@
+<assembly>
+	<id>docs</id>
+	<formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>${basedir}</directory>
+			<includes>
+				<include>*.pdf</include>
+				<include>*.java</include>
+			</includes>
+			<outputDirectory></outputDirectory>
+		</fileSet>
+                <fileSet>
+                        <directory>${basedir}/examples/auth</directory>
+                        <includes>
+                                <include>*.pdf</include>
+                                <include>*.java</include>
+                        </includes>
+                        <outputDirectory>examples/auth</outputDirectory>
+                </fileSet>
+                <fileSet>
+                        <directory>${basedir}/uddi3-specification</directory>
+                        <includes>
+                                <include>*.pdf</include>
+				<include>*.txt</include>
+                                <include>*.java</include>
+                        </includes>
+                        <outputDirectory>uddi3-specification</outputDirectory>
+                </fileSet>
+	</fileSets>
+</assembly>
