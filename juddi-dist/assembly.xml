@@ -10,4 +10,15 @@
 	  <outputDirectory></outputDirectory>
     </fileSet>
   </fileSets>
+  <moduleSets>
+     <moduleSet>
+	<includes>
+	<include>org.apache.juddi:juddi-docs</include>
+	</includes>
+	<binaries>
+	<outputDirectory>docs</outputDirectory>
+	<unpack>true</unpack>
+	</binaries>
+     </moduleSet>
+  </moduleSets>
 </assembly>

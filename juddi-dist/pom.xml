@@ -36,6 +36,24 @@
       <version>3.0.0.SNAPSHOT</version>
       <type>war</type>
     </dependency>
+    <dependency>
+      <groupId>org.apache.juddi</groupId>
+      <artifactId>juddi-core</artifactId>
+      <version>3.0.0.SNAPSHOT</version>
+      <classifier>sources</classifier> 
+    </dependency>
+    <dependency>
+      <groupId>org.apache.juddi</groupId>      
+      <artifactId>juddi-core</artifactId>
+      <version>3.0.0.SNAPSHOT</version>      
+      <classifier>javadoc</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.juddi</groupId>
+      <artifactId>juddi-docs</artifactId>
+      <version>3.0.0.SNAPSHOT</version>
+      <type>tar.gz</type>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -60,6 +78,9 @@
                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
                <property name="project.version" value="${project.version}"/>
 	       <property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-war.war.path}"/>
+	       <property name="dependency.juddi.javadoc" value="${maven.dependency.org.apache.juddi.juddi-core.javadoc.jar.path}"/>
+	       <property name="dependency.juddi.sources" value="${maven.dependency.org.apache.juddi.juddi-core.sources.jar.path}"/>
+	       <property name="dependency.juddi.docs" value="${maven.dependency.org.apache.juddi.juddi-docs.tar.gz.path}"/>
 	       <ant antfile="${basedir}/build.xml">
                   <target name="package-dist"/>
                </ant>
