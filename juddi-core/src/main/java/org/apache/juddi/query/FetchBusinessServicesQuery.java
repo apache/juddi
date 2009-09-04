@@ -46,7 +46,7 @@ public class FetchBusinessServicesQuery extends BusinessServiceQuery {
 
 	static {
 		StringBuffer sql = new StringBuffer(200);
-		sql.append("select distinct " + ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
+		sql.append("select " + ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		selectSQL = sql.toString();
 	}
 	
@@ -63,6 +63,8 @@ public class FetchBusinessServicesQuery extends BusinessServiceQuery {
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 		
 		appendSortCriteria(dynamicQry, fq);
+		
+		appendGroupByEntityKey(dynamicQry);
 
 		log.debug(dynamicQry);
 		

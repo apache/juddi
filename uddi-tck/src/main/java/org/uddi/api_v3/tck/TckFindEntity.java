@@ -46,6 +46,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 public class TckFindEntity 
 {
 	final static String FIND_BUSINESS_XML             = "uddi_data/find/findBusiness1.xml";
+	final static String FIND_ALL_BUSINESSES_XML       = "uddi_data/find/findAllBusinesses.xml";
 	final static String FIND_SERVICE_XML              = "uddi_data/find/findService1.xml";
 	final static String FIND_BINDING_XML              = "uddi_data/find/findBinding1.xml";
 	final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
@@ -78,6 +79,28 @@ public class TckFindEntity
 			
 			TckValidator.checkNames(beIn.getName(), biOut.getName());
 			TckValidator.checkDescriptions(beIn.getDescription(), biOut.getDescription());
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+	}
+	
+	public void findAllBusiness() {
+		try {
+			FindBusiness body = (FindBusiness)EntityCreator.buildFromDoc(FIND_ALL_BUSINESSES_XML, "org.uddi.api_v3");
+			BusinessList result = inquiry.findBusiness(body);
+			if (result == null)
+				Assert.fail("Null result from find business operation");
+			BusinessInfos bInfos = result.getBusinessInfos();
+			if (bInfos == null)
+				Assert.fail("No result from find business operation");
+			List<BusinessInfo> biList = bInfos.getBusinessInfo();
+			if (biList == null || biList.size() == 0)
+				Assert.fail("No result from find business operation");
+			//expecting more than 2 businesses
+			Assert.assertTrue(biList.size()>1);
+			
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);

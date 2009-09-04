@@ -30,7 +30,9 @@
       <p><strong><a href="http://www.unspsc.org/Defaults.asp">United Nations Standard Products and Services Code System (UNSPSC) Version 3.1</a></strong><br/>U.S. Census Bureau</p>
     </section>
       
-    <section name="Articles, Tutorials and Best Practices">            
+    <section name="Articles, Tutorials and Best Practices">        
+    
+      <p><strong><a href="http://oreilly.com/catalog/javawebserv/chapter/ch06.html">O'Reilly Java WebServices Chapter 6: "UDDI: Universal Description, Discovery, and Integration"</a></strong><br/>Tyler Jewell and David Chappell</p>    
       <p><strong><a href="http://www-106.ibm.com/developerworks/webservices/library/ws-version/">Best practices for Web services versioning</a></strong><br/>Keep your Web services current with WSDL and UDDI<br/>Kyle Brown and Michael Ellis, IBM developerWorks<br/>January 2004</p>      
       <p><strong><a href="http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm">Using WSDL in a UDDI Registry</a></strong><br/>John Colgrave and Karsten Januszewski, UDDI.org<br/>November 2003</p>            
       <p><strong><a href="http://java.sun.com/developer/technicalArticles/WebServices/jaxrws/">Registration and Discovery of Web Services Using JAXR with XML Registries such as UDDI and ebXML</a></strong><br/>The why and what of the new approach<br/>Qusay H. Mahmoud, Sun Microsystems<br/>June 2002</p>      

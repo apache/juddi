@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
-import javax.xml.bind.JAXBElement;
 
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.query.util.DynamicQuery;

@@ -78,6 +78,7 @@ public class API_070_FindEntityTest
 			tckFindEntity.findService();
 			tckFindEntity.findBinding();
 			tckFindEntity.findTModel();
+			tckFindEntity.findAllBusiness();
 		} finally {
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);

@@ -153,6 +153,11 @@ public abstract class EntityQuery {
 		
 
 	}
+	
+	public static void appendGroupByEntityKey(DynamicQuery qry) {
+		qry.pad();
+		qry.append("GROUP BY " + KEY_NAME);
+	}
 
 	
 }

@@ -17,6 +17,7 @@
 
 package org.apache.juddi.query;
 
+
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
