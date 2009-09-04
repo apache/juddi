@@ -21,13 +21,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.log4j.Logger;
+import org.uddi.api_v3.Description;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -358,11 +358,9 @@ public class MappingApiToModel {
 				   throws DispositionReportFaultMessage {
 
 		if (apiCategoryBag != null) {
-			List krList = apiCategoryBag.getKeyedReference();
-			List<org.uddi.api_v3.KeyedReferenceGroup> krgList = apiCategoryBag.getKeyedReferenceGroup(); 
+			List<org.uddi.api_v3.KeyedReference> krList = apiCategoryBag.getKeyedReference();
 			for (Object elem : krList) {
 				if (elem instanceof org.uddi.api_v3.KeyedReference) {
-					org.uddi.api_v3.KeyedReference kr = (org.uddi.api_v3.KeyedReference) elem;
 					List<org.apache.juddi.model.KeyedReference> modelKeyedReferences=modelCategoryBag.getKeyedReferences();
 					//modelKeyedReferences.clear();
 					org.uddi.api_v3.KeyedReference apiKeyedReference = (org.uddi.api_v3.KeyedReference)elem;
@@ -370,6 +368,7 @@ public class MappingApiToModel {
 						apiKeyedReference.getTModelKey(), apiKeyedReference.getKeyName(), apiKeyedReference.getKeyValue()));
 				}
 			}
+			List<org.uddi.api_v3.KeyedReferenceGroup> krgList = apiCategoryBag.getKeyedReferenceGroup(); 
 			for (org.uddi.api_v3.KeyedReferenceGroup elem : krgList) {
 				if (elem instanceof org.uddi.api_v3.KeyedReferenceGroup) {
 					org.uddi.api_v3.KeyedReferenceGroup apiKeyedReferenceGroup = (org.uddi.api_v3.KeyedReferenceGroup) elem;
@@ -464,7 +463,7 @@ public class MappingApiToModel {
 				throws DispositionReportFaultMessage {
 		if (apiOverviewDoc != null) {
 			
-			List descContent = apiOverviewDoc.getDescription();
+			List<Description> descContent = apiOverviewDoc.getDescription();
 			for (Object elem : descContent) {
 				org.uddi.api_v3.Description description = (org.uddi.api_v3.Description) elem;
 				if (description != null) {

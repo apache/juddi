@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Hashtable;
 
-import javax.xml.bind.JAXBElement;
-
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.GetServiceDetail;
@@ -36,7 +34,6 @@ import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.Name;
-import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.TModelBag;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;

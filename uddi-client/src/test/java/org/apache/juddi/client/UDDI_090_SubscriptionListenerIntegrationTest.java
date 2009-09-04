@@ -19,7 +19,6 @@ import java.io.FileReader;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
-import org.apache.juddi.config.AppConfig;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
@@ -27,7 +26,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.client.config.ClientConfig;
-import org.uddi.api_v3.client.config.Property;
 import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.api_v3.client.transport.Transport;
 import org.uddi.api_v3.tck.TckBusiness;

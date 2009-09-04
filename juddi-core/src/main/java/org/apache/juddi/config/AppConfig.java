@@ -39,7 +39,6 @@ import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**

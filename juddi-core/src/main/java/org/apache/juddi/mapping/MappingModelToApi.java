@@ -20,7 +20,6 @@ package org.apache.juddi.mapping;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.error.ErrorMessage;
@@ -31,7 +30,6 @@ import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
-import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;

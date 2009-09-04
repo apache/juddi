@@ -17,46 +17,43 @@
 
 package org.apache.juddi.validation;
 
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
+
 import javax.persistence.EntityManager;
-import javax.xml.bind.JAXBElement;
 import javax.xml.ws.Holder;
 
-import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.KeyedReferenceGroup;
-import org.uddi.api_v3.Name;
-import org.uddi.api_v3.ObjectFactory;
-import org.uddi.api_v3.DeleteBusiness;
-import org.uddi.api_v3.DeleteBinding;
-import org.uddi.api_v3.DeletePublisherAssertions;
-import org.uddi.api_v3.DeleteService;
-import org.uddi.api_v3.DeleteTModel;
-import org.uddi.api_v3.OverviewDoc;
-import org.uddi.api_v3.OverviewURL;
-import org.uddi.api_v3.SaveBusiness;
-import org.uddi.api_v3.SaveService;
-import org.uddi.api_v3.SaveBinding;
-import org.uddi.api_v3.SaveTModel;
-import org.uddi.api_v3.AddPublisherAssertions;
-import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.Constants;
-
-import org.apache.juddi.keygen.KeyGeneratorFactory;
-import org.apache.juddi.keygen.KeyGenerator;
-import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.model.Publisher;
-import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.error.AssertionNotFoundException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.AssertionNotFoundException;
-import org.apache.juddi.error.KeyUnavailableException;
-import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.error.InvalidProjectionException;
+import org.apache.juddi.error.KeyUnavailableException;
 import org.apache.juddi.error.UserMismatchException;
+import org.apache.juddi.error.ValueNotAllowedException;
+import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.keygen.KeyGeneratorFactory;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.UddiEntity;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.uddi.api_v3.AddPublisherAssertions;
+import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.SaveBinding;
+import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 
 
 /**
@@ -828,7 +825,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			return;
 		
 		// If category bag does exist, it must have at least one element
-		List elems = categories.getKeyedReference();
+		List<KeyedReference> elems = categories.getKeyedReference();
 		List<KeyedReferenceGroup> groups = categories.getKeyedReferenceGroup();
 		if (groups.size() == 0 && elems.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
