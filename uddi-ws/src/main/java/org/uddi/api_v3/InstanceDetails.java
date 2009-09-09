@@ -65,9 +65,9 @@ public class InstanceDetails implements Serializable {
 
     @XmlElement
     protected String instanceParms;
-    @XmlElement
+    @XmlElement(required=false)
     protected List<Description> description;
-    @XmlElement
+    @XmlElement(required=false)
     protected List<OverviewDoc> overviewDoc;
     
     public void setInstanceParms(String instanceParms) {

@@ -36,10 +36,12 @@ import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
+import org.uddi.api_v3.Result;
 import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
@@ -50,6 +52,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.validation.ValidatePublish;
@@ -78,7 +81,7 @@ import org.apache.juddi.query.util.FindQualifiers;
 public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPublicationPortType {
 
 	
-	public void addPublisherAssertions(AddPublisherAssertions body)
+	public DispositionReport addPublisherAssertions(AddPublisherAssertions body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -145,9 +148,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public void deleteBinding(DeleteBinding body)
+	public DispositionReport deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -175,9 +179,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public void deleteBusiness(DeleteBusiness body)
+	public DispositionReport deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -202,9 +207,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public void deletePublisherAssertions(DeletePublisherAssertions body)
+	public DispositionReport deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -230,9 +236,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public void deleteService(DeleteService body)
+	public DispositionReport deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -260,10 +267,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
 
-	public void deleteTModel(DeleteTModel body)
+	public DispositionReport deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
 
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -290,6 +298,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
+		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
 

@@ -33,6 +33,7 @@ import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
@@ -58,34 +59,34 @@ public class UDDIPublicationService extends UnicastRemoteObject implements UDDIP
 		super();
 	}
 
-	public void addPublisherAssertions(AddPublisherAssertions body)
+	public DispositionReport addPublisherAssertions(AddPublisherAssertions body)
 			throws RemoteException {
-		publication.addPublisherAssertions(body);
+		return publication.addPublisherAssertions(body);
 	}
 
-	public void deleteBinding(DeleteBinding body)
+	public DispositionReport deleteBinding(DeleteBinding body)
 			throws RemoteException {
-		publication.deleteBinding(body);
+		return publication.deleteBinding(body);
 	}
 
-	public void deleteBusiness(DeleteBusiness body)
+	public DispositionReport deleteBusiness(DeleteBusiness body)
 			throws RemoteException {
-		publication.deleteBusiness(body);
+		return publication.deleteBusiness(body);
 	}
 
-	public void deletePublisherAssertions(DeletePublisherAssertions body)
+	public DispositionReport deletePublisherAssertions(DeletePublisherAssertions body)
 			throws RemoteException {
-		publication.deletePublisherAssertions(body);
+		return publication.deletePublisherAssertions(body);
 	}
 
-	public void deleteService(DeleteService body)
+	public DispositionReport deleteService(DeleteService body)
 			throws RemoteException {
-		publication.deleteService(body);
+		return publication.deleteService(body);
 	}
 
-	public void deleteTModel(DeleteTModel body)
+	public DispositionReport deleteTModel(DeleteTModel body)
 			throws RemoteException {
-		publication.deleteTModel(body);
+		return publication.deleteTModel(body);
 	}
 
 	public List<AssertionStatusItem> getAssertionStatusReport(String authInfo,

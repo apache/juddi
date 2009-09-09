@@ -20,6 +20,7 @@ package org.apache.juddi.mapping;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.apache.juddi.error.ErrorMessage;
@@ -30,6 +31,7 @@ import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.ObjectFactory;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -688,11 +690,13 @@ public class MappingModelToApi {
 		
 		Collections.sort((List<String>)businessKeys);
 		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) >= 0)
-			keysOwned.getFromKey().add(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey());
+			keysOwned.setFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey());
 		
 		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) >= 0)
 			keysOwned.setToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey());
-		
+		if (keysOwned.getFromKey() == null && keysOwned.getToKey() == null) {
+			throw new FatalErrorException(new ErrorMessage("errors.invalidKey.KeysOwned"));
+		}
 	}
 
 	public static void mapRelatedBusinessInfo(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
