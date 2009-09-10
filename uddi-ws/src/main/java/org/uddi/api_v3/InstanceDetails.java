@@ -63,7 +63,7 @@ public class InstanceDetails implements Serializable {
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
 
-    @XmlElement
+    @XmlElement(required=false)
     protected String instanceParms;
     @XmlElement(required=false)
     protected List<Description> description;
