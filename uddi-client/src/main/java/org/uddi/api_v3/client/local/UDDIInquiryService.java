@@ -1,8 +1,6 @@
-package org.apache.juddi.local;
+package org.uddi.api_v3.client.local;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.TreeSet;
 
 import org.apache.juddi.Registry;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
@@ -10,29 +8,8 @@ import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
-import org.uddi.api_v3.BindingDetail;
-import org.uddi.api_v3.BusinessDetail;
-import org.uddi.api_v3.BusinessList;
-import org.uddi.api_v3.FindBinding;
-import org.uddi.api_v3.FindBusiness;
-import org.uddi.api_v3.FindRelatedBusinesses;
-import org.uddi.api_v3.FindService;
-import org.uddi.api_v3.FindTModel;
-import org.uddi.api_v3.GetBindingDetail;
-import org.uddi.api_v3.GetBusinessDetail;
-import org.uddi.api_v3.GetOperationalInfo;
-import org.uddi.api_v3.GetServiceDetail;
-import org.uddi.api_v3.GetTModelDetail;
-import org.uddi.api_v3.OperationalInfos;
-import org.uddi.api_v3.RelatedBusinessesList;
-import org.uddi.api_v3.ServiceDetail;
-import org.uddi.api_v3.ServiceList;
-import org.uddi.api_v3.TModelDetail;
-import org.uddi.api_v3.TModelList;
 import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
-import org.uddi.v3_service.UDDISecurityPortType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

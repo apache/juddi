@@ -1,7 +1,6 @@
-package org.apache.juddi.local;
+package org.uddi.api_v3.client.local;
 
 import java.util.HashMap;
-import java.util.TreeSet;
 
 import org.apache.juddi.Registry;
 import org.apache.juddi.error.ErrorMessage;

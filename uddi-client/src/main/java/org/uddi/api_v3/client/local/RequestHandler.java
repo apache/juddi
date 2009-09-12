@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.local;
+package org.uddi.api_v3.client.local;
 
 import java.rmi.Remote;
 import java.util.Vector;
