@@ -15,6 +15,7 @@
  */
 package org.uddi.api_v3.client.local;
 
+import java.lang.reflect.Method;
 import java.rmi.Remote;
 import java.util.Vector;
 
@@ -53,6 +54,8 @@ public class RequestHandler implements Runnable
   private volatile Node response;
   private volatile String exception;
   private volatile Remote portType; 
+  private volatile String methodName;
+  private volatile Class operationClass;
   
     /**
    * Grab the local name of the UDDI request element
@@ -121,7 +124,8 @@ public class RequestHandler implements Runnable
       Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, "org.uddi.api_v3");
       
       
-      
+      Method method = portType.getClass().getMethod(methodName, operationClass);
+      Object result = method.invoke(uddiReqObj);
       // Lookup the appropriate response handler which will
       // be used to marshal the UDDI object into the appropriate 
       // xml format.
@@ -297,6 +301,18 @@ public Remote getPortType() {
 }
 public void setPortType(Remote portType) {
 	this.portType = portType;
+}
+public String getMethodName() {
+	return methodName;
+}
+public void setMethodName(String methodName) {
+	this.methodName = methodName;
+}
+public Class getOperationClass() {
+	return operationClass;
+}
+public void setOperationClass (Class operationClass) {
+	this.operationClass = operationClass;
 }
 public String getVersion() {
     return version;

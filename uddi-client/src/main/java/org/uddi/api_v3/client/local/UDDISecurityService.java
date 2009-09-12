@@ -12,6 +12,9 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.uddi.api_v3.GetAuthToken;
+import org.uddi.api_v3.DiscardAuthToken;
+
 /**
  * @author Tom Cunningham (tcunning@apache.org)
  * @author Kurt Stam (kurt.stam@redhat.com)
@@ -19,15 +22,15 @@ import org.w3c.dom.Node;
 public class UDDISecurityService {
 
 	// collection of valid operations
-	private HashMap<String, String> operations = null;
+	private HashMap<String, Handler> operations = null;
 
 	public UDDISecurityService() {
 		super();
-		operations = new HashMap<String, String>();
-		operations.put("get_authtoken", "getAuthToken");
-		operations.put("discard_authToken", "discardAuthToken");
+		operations = new HashMap<String, Handler>();
+		operations.put("get_authtoken", new Handler("getAuthToken", GetAuthToken.class));
+		operations.put("discard_authToken", new Handler("discardAuthToken", DiscardAuthToken.class));
 	}
-
+	
 	public void validateRequest(String operation,String version,Element uddiReq)
 		throws RegistryException
 	{
@@ -54,6 +57,10 @@ public class UDDISecurityService {
 		requestHandler.setPortType(security);
 		
 		String operation = requestHandler.getOperation(uddiReq);
+		Handler opHandler = operations.get(operation);
+	    requestHandler.setMethodName(opHandler.getMethodName());
+		requestHandler.setOperationClass(opHandler.getClass());
+
 		String version   = requestHandler.getVersion(uddiReq, operation);
 	    validateRequest(operation, version, uddiReq);
 

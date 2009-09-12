@@ -8,6 +8,16 @@ import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UnsupportedException;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBindingDetail;
+import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetOperationalInfo;
+import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.w3c.dom.Element;
@@ -20,21 +30,21 @@ public class UDDIInquiryService {
 	private static final long serialVersionUID = 1L;
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
-	private HashMap<String, String> operations = null;
+	private HashMap<String, Handler> operations = null;
 
 	public UDDIInquiryService() {
 		super();
-		operations = new HashMap<String, String>();
-		operations.put("find_business", "findBusiness");
-		operations.put("find_service", "findService");
-		operations.put("find_binding", "findBinding");
-		operations.put("find_tmodel", "findTModel");
-		operations.put("find_relatedbusinesses", "findRelatedBusinesses");
-		operations.put("get_businessdetail", "getBusinessDetail");
-		operations.put("get_servicedetail", "getServiceDetail");
-		operations.put("get_bindingdetail", "getBindingDetail");
-		operations.put("get_tmodeldetail", "getTModelDetail");
-		operations.put("get_operationalInfo", "getOperationalInfo");
+		operations = new HashMap<String, Handler>();
+		operations.put("find_business", new Handler("findBusiness", FindBusiness.class));
+		operations.put("find_service", new Handler("findService", FindService.class));
+		operations.put("find_binding", new Handler("findBinding", FindBinding.class));
+		operations.put("find_tmodel", new Handler ("findTModel", FindTModel.class));
+		operations.put("find_relatedbusinesses", new Handler("findRelatedBusinesses", FindRelatedBusinesses.class));
+		operations.put("get_businessdetail", new Handler("getBusinessDetail", GetBusinessDetail.class));
+		operations.put("get_servicedetail", new Handler("getServiceDetail", GetServiceDetail.class));
+		operations.put("get_bindingdetail", new Handler("getBindingDetail", GetBindingDetail.class));
+		operations.put("get_tmodeldetail", new Handler("getTModelDetail", GetTModelDetail.class));
+		operations.put("get_operationalInfo", new Handler("getOperationalInfo", GetOperationalInfo.class));
 	}
 
 
@@ -71,6 +81,10 @@ public class UDDIInquiryService {
 	      requestHandler.setPortType(inquiry);
 	      
 	      String operation = requestHandler.getOperation(uddiReq);
+		  Handler opHandler = operations.get(operation);
+	      requestHandler.setMethodName(opHandler.getMethodName());
+		  requestHandler.setOperationClass(opHandler.getClass());
+
 	      String version   = requestHandler.getVersion(uddiReq,operation);
 	      validateRequest(operation, version, uddiReq);
 	      Thread thread = new Thread(requestHandler, "WorkThread");
