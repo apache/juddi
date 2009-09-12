@@ -31,6 +31,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -102,6 +103,14 @@ public class JAXBMarshaller {
 		rawObject = baos.toString();
 		
 		return rawObject;
+	}
+
+	public static Element marshallToElement(Object object, String thePackage, Element element) throws JAXBException {
+		String rawObject = null;
+		JAXBContext jc = JAXBContexts.get(thePackage);
+		Marshaller marshaller = jc.createMarshaller();
+		marshaller.marshal(object, element);	
+		return element;
 	}
 	
 }

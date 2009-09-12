@@ -17,7 +17,6 @@ package org.uddi.api_v3.client.local;
 
 import java.lang.reflect.Method;
 import java.rmi.Remote;
-import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -140,24 +139,21 @@ public class RequestHandler implements Runnable
       // Create a new 'temp' XML element to use as a container 
       // in which to marshal the UDDI response data into.
      
-      /*
       DocumentBuilder docBuilder = getDocumentBuilder();
       Document document = docBuilder.newDocument();
       Element element = document.createElement("temp");
-      */
       // Lookup the appropriate response handler and marshal 
       // the juddi object into the appropriate xml format (we 
       // only support UDDI v2.0 at this time).  Attach the
       // results to the body of the SOAP response.
-        
-      //responseHandler.marshal(uddiResObj,element);
+      JAXBMarshaller.marshallToElement(result, "org.uddi.api_v3", element);
       
       // Grab a reference to the 'temp' element's
       // only child here (this has the effect of
       // discarding the temp element) and append 
       // this child to the soap response body
-      //document.appendChild(element.getFirstChild());
-      //setResponse(document);
+      document.appendChild(element.getFirstChild());
+      setResponse(document);
       throw new FatalErrorException(new ErrorMessage(""));
     }
     catch (RegistryException rex) 
