@@ -38,12 +38,12 @@ public class UDDIInquiryService {
 		operations.put("find_business", new Handler("findBusiness", FindBusiness.class));
 		operations.put("find_service", new Handler("findService", FindService.class));
 		operations.put("find_binding", new Handler("findBinding", FindBinding.class));
-		operations.put("find_tmodel", new Handler ("findTModel", FindTModel.class));
-		operations.put("find_relatedbusinesses", new Handler("findRelatedBusinesses", FindRelatedBusinesses.class));
-		operations.put("get_businessdetail", new Handler("getBusinessDetail", GetBusinessDetail.class));
-		operations.put("get_servicedetail", new Handler("getServiceDetail", GetServiceDetail.class));
-		operations.put("get_bindingdetail", new Handler("getBindingDetail", GetBindingDetail.class));
-		operations.put("get_tmodeldetail", new Handler("getTModelDetail", GetTModelDetail.class));
+		operations.put("find_tModel", new Handler ("findTModel", FindTModel.class));
+		operations.put("find_relatedBusinesses", new Handler("findRelatedBusinesses", FindRelatedBusinesses.class));
+		operations.put("get_businessDetail", new Handler("getBusinessDetail", GetBusinessDetail.class));
+		operations.put("get_serviceDetail", new Handler("getServiceDetail", GetServiceDetail.class));
+		operations.put("get_bindingDetail", new Handler("getBindingDetail", GetBindingDetail.class));
+		operations.put("get_tModelDetail", new Handler("getTModelDetail", GetTModelDetail.class));
 		operations.put("get_operationalInfo", new Handler("getOperationalInfo", GetOperationalInfo.class));
 	}
 
@@ -64,9 +64,6 @@ public class UDDIInquiryService {
 
 	    if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
-
-	    else if (!operations.containsKey(operation.toLowerCase()))
-	    	throw new UnsupportedException(new ErrorMessage("errors.local.inquiry.notsupported"));
 		}
 
 	  public Node inquire(Element uddiReq) throws Exception{
@@ -83,7 +80,7 @@ public class UDDIInquiryService {
 	      String operation = requestHandler.getOperation(uddiReq);
 		  Handler opHandler = operations.get(operation);
 	      requestHandler.setMethodName(opHandler.getMethodName());
-		  requestHandler.setOperationClass(opHandler.getClass());
+		  requestHandler.setOperationClass(opHandler.getParameter());
 
 	      String version   = requestHandler.getVersion(uddiReq,operation);
 	      validateRequest(operation, version, uddiReq);

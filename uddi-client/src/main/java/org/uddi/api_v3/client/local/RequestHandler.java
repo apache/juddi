@@ -15,12 +15,19 @@
  */
 package org.uddi.api_v3.client.local;
 
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,12 +35,13 @@ import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UDDIErrorHelper;
-import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.util.JAXBMarshaller;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.ErrInfo;
+import org.uddi.api_v3.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @author Tom Cunningham (tcunning@apache.org)
@@ -98,8 +106,14 @@ public class RequestHandler implements Runnable
       return version;
   }
   
-  public static String getText(Element element)
+  public static String getText(Element element) throws TransformerException
   {
+      TransformerFactory tf = TransformerFactory.newInstance();
+      Transformer trans = tf.newTransformer();
+      StringWriter sw = new StringWriter();
+      trans.transform(new DOMSource(element), new StreamResult(sw));
+      return new String(sw.toString());
+  /*
     StringBuffer textBuffer = new StringBuffer();
 
     NodeList nodeList = element.getChildNodes();
@@ -110,6 +124,7 @@ public class RequestHandler implements Runnable
     }
 
     return textBuffer.toString().trim();
+*/
   }
 
   
@@ -124,7 +139,7 @@ public class RequestHandler implements Runnable
       
       
       Method method = portType.getClass().getMethod(methodName, operationClass);
-      Object result = method.invoke(uddiReqObj);
+      Object result = method.invoke(portType, uddiReqObj);
       // Lookup the appropriate response handler which will
       // be used to marshal the UDDI object into the appropriate 
       // xml format.
@@ -165,24 +180,24 @@ public class RequestHandler implements Runnable
         // as a UDDI DispositionReport with specific information 
         // about the problem.
     	// SOAP Fault values
-        //String faultCode = rex.getFaultCode();
-    	//String faultString = rex.getFaultString();
-        //String faultActor = rex.getFaultActor();
+    	String faultCode = "";
+    	String faultString = "";
+    	String faultActor = "";
         
+    	String errno = null;
+    	String errText = null;
+    	String errCode = null;
+    	
         // UDDI DispositionReport values
-        //String errno = null;
-        //String errCode = null;
-        //String errText = null;
-        /*
-        DispositionReport dispRpt = rex.getDispositionReport();
+        DispositionReport dispRpt = rex.getFaultInfo();
         if (dispRpt != null)
         {
           Result result = null;
           ErrInfo errInfo = null;
         
-          Vector results = dispRpt.getResultVector();
+          List<Result> results = dispRpt.getResult();
           if ((results != null) && (!results.isEmpty()))
-            result = (Result)results.elementAt(0);
+            result = (Result)results.get(0);
         
           if (result != null)
           {
@@ -192,11 +207,10 @@ public class RequestHandler implements Runnable
             if (errInfo != null)
             {
               errCode = errInfo.getErrCode();  // UDDI ErrInfo errCode
-              errText = errInfo.getErrMsg();  // UDDI ErrInfo errMsg
+              errText = errInfo.getValue();  // UDDI ErrInfo errMsg
             }
           }
         }
-          */
         // We should have everything we need to assemble 
         // the SOAPFault so lets piece it together and 
         // send it on it's way.
