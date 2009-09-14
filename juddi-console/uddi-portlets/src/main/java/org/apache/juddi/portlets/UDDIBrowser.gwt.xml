@@ -13,5 +13,6 @@
 	  <servlet class="org.apache.juddi.portlets.server.service.SecurityServiceImpl"    path="/security"/>
 	  <servlet class="org.apache.juddi.portlets.server.service.InquiryServiceImpl"     path="/inquiry"/>
 	  <servlet class="org.apache.juddi.portlets.server.service.PublicationServiceImpl" path="/publication"/>
+	  <servlet class="org.apache.juddi.portlets.server.service.FindServiceImpl"     path="/find"/>
 	 
 </module>

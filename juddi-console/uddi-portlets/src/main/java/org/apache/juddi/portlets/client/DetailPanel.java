@@ -13,15 +13,20 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SourcesTableEvents;
+import com.google.gwt.user.client.ui.TableListener;
 
-public class DetailPanel extends FlowPanel {
+public class DetailPanel  extends FlowPanel  implements TableListener{
 
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class); 
 	private DetailPanel detailPanel = null;
-	FlexTable table = null;
+	FlexTable table = new FlexTable();;
 
 	public DetailPanel() {
 		detailPanel = this;
+		detailPanel.setStylePrimaryName("portlet-form-field-label");
+		table.addTableListener(this);
+		detailPanel.add(table);
 	}
 	
 	public void displayServices( String businessKey) {
@@ -35,6 +40,7 @@ public class DetailPanel extends FlowPanel {
 					Business business = response.getBusiness();
 					if (table!=null) detailPanel.remove(table);
 					table = new FlexTable();
+					table.addTableListener(detailPanel);
 					detailPanel.add(table);
 					int row = 0;
 					for (Service service : business.getServices()) {
@@ -67,8 +73,11 @@ public class DetailPanel extends FlowPanel {
 					if (table!=null) detailPanel.remove(table);
 					table = new FlexTable();
 					detailPanel.add(table);
+					table.addTableListener(detailPanel);
 					//table.setBorderWidth(1);
+					table.setStyleName("portlet-form-field-label");
 					int row = 0;
+					table.setTitle("business");
 					table.getFlexCellFormatter().setColSpan(row, 0, 2);
 					table.setText(row++, 0, "business");
 					table.setHTML(row, 0, UDDIBrowser.images.business().getHTML());
@@ -101,8 +110,11 @@ public class DetailPanel extends FlowPanel {
 					if (table!=null) detailPanel.remove(table);
 					table = new FlexTable();
 					detailPanel.add(table);
+					table.addTableListener(detailPanel);
 					//table.setBorderWidth(1);
+					table.setStyleName("portlet-form-field-label");
 					int row = 0;
+					table.setTitle("service");
 					table.getFlexCellFormatter().setColSpan(row, 0, 2);
 					table.setHTML(row++, 0, UDDIBrowser.images.service().getHTML() + " service - " + service.getName());
 					table.setHTML(row, 0, UDDIBrowser.images.key().getHTML());
@@ -128,6 +140,15 @@ public class DetailPanel extends FlowPanel {
 				}
 			}
 		});
+	}
+
+	public void onCellClicked(SourcesTableEvents arg0, int arg1, int arg2) {
+		// TODO Auto-generated method stub
+		//if (table.getTitle().equalsIgnoreCase("service"))
+		System.out.println("title=" + table.getTitle());
+		String text = table.getText(arg1, arg2);
+		System.out.println("text=" + text);
+		
 	}
 
 }

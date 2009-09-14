@@ -26,10 +26,10 @@ import com.google.gwt.user.client.ui.RootPanel;
  * 
  *  @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIBrowser implements EntryPoint, Login {
+public class UDDIEditor implements EntryPoint, Login {
 
 	DockPanel dockPanel = new DockPanel();
-	private static UDDIBrowser singleton;
+	private static UDDIEditor singleton;
 	public static final Images images = (Images) GWT.create(Images.class);
 	private BusinessTreePanel applicationPanel = null;
 	private DetailPanel detailPanel = null;
@@ -56,7 +56,7 @@ public class UDDIBrowser implements EntryPoint, Login {
 		RootPanel.get("browser").add(dockPanel);
 	}
 	
-	public static UDDIBrowser getInstance() {
+	public static UDDIEditor getInstance() {
 		return singleton;
 	}
 	
@@ -67,7 +67,7 @@ public class UDDIBrowser implements EntryPoint, Login {
 		} else {
 			loginPanel.setVisible(false);
 			applicationPanel.setVisible(true);
-			applicationPanel.findAllBusiness();
+			applicationPanel.loadBusinesses();
 		}
 	}
 	
