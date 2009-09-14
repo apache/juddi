@@ -66,10 +66,6 @@ public class UDDIPublicationService {
 
 	    if ((operation == null) || (operation.trim().length() == 0))
 	      throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
-
-	    else if (!operations.containsKey(operation.toLowerCase()))
-	    	throw new UnsupportedException(new ErrorMessage("errors.local.publish.notsupported"));
-
 		}
 
 	  
@@ -87,7 +83,7 @@ public class UDDIPublicationService {
 	      String operation = requestHandler.getOperation(uddiReq);
 		  Handler opHandler = operations.get(operation);
 	      requestHandler.setMethodName(opHandler.getMethodName());
-		  requestHandler.setOperationClass(opHandler.getClass());
+		  requestHandler.setOperationClass(opHandler.getParameter());
 		  
 	      String version   = requestHandler.getVersion(uddiReq, operation);
 	      validateRequest(operation, version, uddiReq);

@@ -24,6 +24,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -52,6 +53,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "serviceDetail", propOrder = {
     "businessService"
 })
+@XmlRootElement
 public class ServiceDetail implements Serializable{
 
 	@XmlTransient

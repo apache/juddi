@@ -169,8 +169,7 @@ public class RequestHandler implements Runnable
       // this child to the soap response body
       document.appendChild(element.getFirstChild());
       setResponse(document);
-      throw new FatalErrorException(new ErrorMessage(""));
-    }
+    }/*
     catch (RegistryException rex) 
     {
     	log.error(rex.getMessage());
@@ -220,7 +219,7 @@ public class RequestHandler implements Runnable
     	//+ ", errText=" + errText;
         setException(fault);
         
-    }
+    } */
     catch(Exception ex) // Catch any other exceptions
     {
         log.error(ex.getMessage());

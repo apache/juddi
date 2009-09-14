@@ -27,7 +27,7 @@ public class UDDISecurityService {
 	public UDDISecurityService() {
 		super();
 		operations = new HashMap<String, Handler>();
-		operations.put("get_authtoken", new Handler("getAuthToken", GetAuthToken.class));
+		operations.put("get_authToken", new Handler("getAuthToken", GetAuthToken.class));
 		operations.put("discard_authToken", new Handler("discardAuthToken", DiscardAuthToken.class));
 	}
 	
@@ -39,10 +39,6 @@ public class UDDISecurityService {
 
 		if ((operation == null) || (operation.trim().length() == 0))
 			throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
-
-		else if (!operations.containsKey(operation.toLowerCase()))
-	    	throw new UnsupportedException(new ErrorMessage("errors.local.security.notsupported"));
-
 	}
 
 	public Node secure(Element uddiReq) throws Exception
@@ -59,7 +55,7 @@ public class UDDISecurityService {
 		String operation = requestHandler.getOperation(uddiReq);
 		Handler opHandler = operations.get(operation);
 	    requestHandler.setMethodName(opHandler.getMethodName());
-		requestHandler.setOperationClass(opHandler.getClass());
+		requestHandler.setOperationClass(opHandler.getParameter());
 
 		String version   = requestHandler.getVersion(uddiReq, operation);
 	    validateRequest(operation, version, uddiReq);
