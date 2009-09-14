@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.auth;
+package org.apache.juddi.v3.auth;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;

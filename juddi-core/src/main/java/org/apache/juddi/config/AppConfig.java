@@ -49,7 +49,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class AppConfig 
 {
-	private final static String JUDDI_PROPERTIES = "juddi.properties";
+	private final static String JUDDI_PROPERTIES = "juddiv3.properties";
 	private Logger log = Logger.getLogger(AppConfig.class);
 	private Configuration config;
 	private static AppConfig instance=null;
@@ -64,7 +64,7 @@ public class AppConfig
 	}
 	/**
 	 * Does the actual work of reading the configuration from System
-	 * Properties and/or juddi.properties file. When the juddi.properties
+	 * Properties and/or juddiv3.properties file. When the juddiv3.properties
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */

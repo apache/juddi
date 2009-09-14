@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.auth;
+package org.apache.juddi.v3.auth;
 
 import org.apache.juddi.error.AuthenticationException;
 import org.apache.juddi.error.FatalErrorException;

@@ -47,7 +47,7 @@ public class ClientConfig
 	}
 	/**
 	 * Does the actual work of reading the configuration from System
-	 * Properties and/or juddi.properties file. When the juddi.properties
+	 * Properties and/or juddiv3.properties file. When the juddiv3.properties
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */

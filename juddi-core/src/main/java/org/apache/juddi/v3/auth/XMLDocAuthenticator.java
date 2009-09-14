@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.auth;
+package org.apache.juddi.v3.auth;
 
 import java.io.IOException;
 import java.io.InputStream;

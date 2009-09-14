@@ -30,12 +30,12 @@ import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
-import org.apache.juddi.auth.AuthenticatorFactory;
-import org.apache.juddi.auth.Authenticator;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.v3.auth.Authenticator;
+import org.apache.juddi.v3.auth.AuthenticatorFactory;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>

@@ -37,7 +37,7 @@ import java.security.Principal;
  * Usage:
  * 
  * To use this class you must add the following properties to the
- * juddi.properties file:
+ * juddiv3.properties file:
  * 
  * # The JBoss Authenticator
  * juddi.authenticator=org.apache.juddi.auth.JBossAuthenticator

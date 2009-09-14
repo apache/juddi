@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.auth;
+package org.apache.juddi.v3.auth;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

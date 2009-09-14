@@ -27,15 +27,15 @@
 		<copy file="${dependency.derby.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${lib.dir}"/>
 		<!--
-		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
+		<replace file="${webapps.dir}/juddi/WEB-INF/juddiv3.properties">
 			<replacetoken>juddi-sql/mysql</replacetoken>
 			<replacevalue>juddi-sql/derby</replacevalue>
 		</replace>
-		<replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
+		<replace file="${webapps.dir}/juddi/WEB-INF/juddiv3.properties">
 			<replacetoken>#juddi.jdbcUrl=jdbc:mysql://localhost/juddi</replacetoken>
 			<replacevalue>juddi.jdbcUrl=jdbc:derby:juddi-derby-test-db;create=true</replacevalue>
 		</replace>
-	        <replace file="${webapps.dir}/juddi/WEB-INF/juddi.properties">
+	        <replace file="${webapps.dir}/juddi/WEB-INF/juddiv3.properties">
                         <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
                         <replacevalue>juddi.jdbcDriver=org.apache.derby.jdbc.EmbeddedDriver</replacevalue>
                 </replace>	

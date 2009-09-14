@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.auth;
+package org.apache.juddi.v3.auth;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
