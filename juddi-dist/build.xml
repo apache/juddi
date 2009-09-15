@@ -11,7 +11,7 @@
 			todir="${dist.dir}"/>
 		<copy file="${dependency.juddi.javadoc}"
 			todir="${dist.dir}"/>
-		<copy file="${dependency.juddi.war}"
-			tofile="${dist.dir}/juddi.war"/>
+		<copy file="${dependency.juddiv3.war}"
+			tofile="${dist.dir}/juddiv3.war"/>
 	</target>
 </project>

@@ -74,9 +74,8 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>juddi</finalName>
+    <finalName>juddiv3</finalName>
     <plugins>	
-
          <plugin>
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-source-plugin</artifactId>

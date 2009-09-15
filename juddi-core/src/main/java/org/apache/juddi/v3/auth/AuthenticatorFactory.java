@@ -30,7 +30,7 @@ public class AuthenticatorFactory {
 	private static Logger log = Logger.getLogger(AuthenticatorFactory.class);
 
 	// Default authenticator implementation
-	private static final String DEFAULT_IMPL = "org.apache.juddi.auth.JUDDIAuthenticator";
+	private static final String DEFAULT_IMPL = "org.apache.juddi.v3.auth.JUDDIAuthenticator";
 
 	// the shared Authenticator instance
 	private static Authenticator auth = null;

@@ -97,7 +97,7 @@
 	       <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
 	       <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
 	       <property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}"/>
-	       <property name="dependency.juddi.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
+	       <property name="dependency.juddiv3.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
 	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
 	       <ant antfile="${basedir}/build.xml">
                   <target name="package-tomcat"/>
