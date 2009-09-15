@@ -43,7 +43,6 @@ public class UDDISecurityService {
 
 	public Node secure(Element uddiReq) throws Exception
 	{
-		Registry.start();
 		InVMTransport invmtransport = new InVMTransport();		
         UDDISecurityPortType security = invmtransport.getUDDISecurityService();
 		

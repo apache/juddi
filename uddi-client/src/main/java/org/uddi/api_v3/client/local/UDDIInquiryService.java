@@ -66,9 +66,7 @@ public class UDDIInquiryService {
 	    	throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
 		}
 
-	  public Node inquire(Element uddiReq) throws Exception{
-		  
-		  Registry.start();
+	  public Node inquire(Element uddiReq) throws Exception{		  
 		  InVMTransport invmtransport = new InVMTransport();		
 	      UDDIInquiryPortType inquiry = invmtransport.getUDDIInquiryService();
 

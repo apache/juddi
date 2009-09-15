@@ -72,7 +72,6 @@ public class UDDIPublicationService {
 
 	  public Node publish(Element uddiReq) throws Exception
 	  {
-		  Registry.start();
 		  InVMTransport invmtransport = new InVMTransport();		
 		  UDDIPublicationPortType publish = invmtransport.getUDDIPublishService();
 
