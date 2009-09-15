@@ -2,12 +2,10 @@ package org.uddi.api_v3.client.local;
 
 import java.util.HashMap;
 
-import org.apache.juddi.Registry;
-import org.apache.juddi.api.impl.UDDIInquiryImpl;
+
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.RegistryException;
-import org.apache.juddi.error.UnsupportedException;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -28,7 +26,7 @@ import org.w3c.dom.Node;
  */
 public class UDDIInquiryService {
 	private static final long serialVersionUID = 1L;
-	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+	//private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
 	private HashMap<String, Handler> operations = null;
 

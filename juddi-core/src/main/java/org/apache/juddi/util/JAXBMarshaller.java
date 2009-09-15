@@ -106,7 +106,7 @@ public class JAXBMarshaller {
 	}
 
 	public static Element marshallToElement(Object object, String thePackage, Element element) throws JAXBException {
-		String rawObject = null;
+		
 		JAXBContext jc = JAXBContexts.get(thePackage);
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.marshal(object, element);	

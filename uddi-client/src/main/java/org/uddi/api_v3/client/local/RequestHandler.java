@@ -18,7 +18,6 @@ package org.uddi.api_v3.client.local;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,12 +32,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.RegistryException;
 import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.util.JAXBMarshaller;
-import org.uddi.api_v3.DispositionReport;
-import org.uddi.api_v3.ErrInfo;
-import org.uddi.api_v3.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,7 +57,7 @@ public class RequestHandler implements Runnable
   private volatile String exception;
   private volatile Remote portType; 
   private volatile String methodName;
-  private volatile Class operationClass;
+  private volatile Class<?> operationClass;
   
     /**
    * Grab the local name of the UDDI request element
@@ -317,10 +312,10 @@ public String getMethodName() {
 public void setMethodName(String methodName) {
 	this.methodName = methodName;
 }
-public Class getOperationClass() {
+public Class<?> getOperationClass() {
 	return operationClass;
 }
-public void setOperationClass (Class operationClass) {
+public void setOperationClass (Class<?> operationClass) {
 	this.operationClass = operationClass;
 }
 public String getVersion() {

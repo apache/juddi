@@ -2,13 +2,13 @@ package org.uddi.api_v3.client.local;
 
 public class Handler {
 	private String methodName;
-	private Class parameter;
+	private Class<?> parameter;
 
 	public Handler() {
 		super();
 	}
 	
-	public Handler(String methodName, Class parameter) {
+	public Handler(String methodName, Class<?> parameter) {
 		super();
 		this.methodName = methodName;
 		this.parameter = parameter;
@@ -20,10 +20,10 @@ public class Handler {
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
 	}
-	public Class getParameter() {
+	public Class<?> getParameter() {
 		return parameter;
 	}
-	public void setParameter(Class parameter) {
+	public void setParameter(Class<?> parameter) {
 		this.parameter = parameter;
 	}	
 }
