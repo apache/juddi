@@ -30,10 +30,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.UDDIErrorHelper;
-import org.apache.juddi.util.JAXBMarshaller;
+import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -72,12 +69,11 @@ public class RequestHandler implements Runnable
    */
   public String getOperation(Element uddiReq) throws Exception
   {
-      if (uddiReq == null)
-          throw new FatalErrorException(new ErrorMessage("errors.local.soapnotfound"));
-
-      String operation = uddiReq.getLocalName();
+	  if (!("3.0".equals(version)))
+	  		throw new UnsupportedOperationException("version needs to be 3.0");
+	  
       if ((operation == null) || (operation.trim().length() == 0))
-        throw new FatalErrorException(new ErrorMessage("errors.local.serviceoperation"));
+	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
       setOperation(operation);
       return operation;
   }
@@ -95,8 +91,8 @@ public class RequestHandler implements Runnable
   public String getVersion(Element uddiReq, String operation) throws Exception
   {
       String version = uddiReq.getAttribute("generic");
-      if (version == null)
-        throw new FatalErrorException(new ErrorMessage("errors.local.generic"));
+      if (!("3.0".equals(version)))
+	  		throw new UnsupportedOperationException("version needs to be 3.0");
       setVersion(version);
       return version;
   }
@@ -168,36 +164,7 @@ public class RequestHandler implements Runnable
     catch(Exception ex) // Catch any other exceptions
     {
         log.error(ex.getMessage());
-    
-        // Because something occured that jUDDI wasn't expecting
-        // let's set default SOAP Fault values.  Since SOAPExceptions
-        // here are most likely XML validation errors let's blame the
-        // client by placing "Client" in the Fault Code and pass
-        // the Exception message back to the client.
-        
-        String faultCode = "Server";
-        String faultString = ex.getMessage();
-        String faultActor = null;
-        
-        // Let's set default values for the UDDI DispositionReport
-        // here.  While we didn't catch a RegistryException (or 
-        // subclass) but we're going to be friendly and include a
-        // FatalError DispositionReport within the SOAP Fault anyway.
-        
-        String errno = String.valueOf(UDDIErrorHelper.E_FATAL_ERROR);
-        String errCode = UDDIErrorHelper.lookupErrCode(UDDIErrorHelper.E_FATAL_ERROR); 
-        String errText = UDDIErrorHelper.lookupErrText(UDDIErrorHelper.E_FATAL_ERROR) +
-                  " An internal UDDI server error has " +
-                  "occurred. Please report this error " +
-                  "to the UDDI server administrator.";
-
-        // We should have everything we need to assemble 
-        // the SOAPFault so lets piece it together and 
-        // send it on it's way.
-        String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
-    	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
-    	+ ", errText=" + errText;
-        setException(fault);
+        setException(ex.getMessage());
     }
   }
   

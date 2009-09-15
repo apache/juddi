@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.util;
+package org.apache.juddi.jaxb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

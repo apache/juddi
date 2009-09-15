@@ -66,13 +66,13 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.error.InvalidValueException;
+import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.SubscriptionChunkToken;
 import org.apache.juddi.model.SubscriptionMatch;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
-import org.apache.juddi.util.JAXBMarshaller;
 import org.apache.juddi.validation.ValidateSubscription;
 import org.apache.log4j.Logger;
 

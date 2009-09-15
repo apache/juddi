@@ -2,9 +2,6 @@ package org.uddi.api_v3.client.local;
 
 import java.util.HashMap;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.RegistryException;
 import org.uddi.api_v3.client.transport.InVMTransport;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.w3c.dom.Element;
@@ -29,15 +26,23 @@ public class UDDISecurityService {
 		operations.put("discard_authToken", new Handler("discardAuthToken", DiscardAuthToken.class));
 	}
 	
-	public void validateRequest(String operation,String version,Element uddiReq)
-		throws RegistryException
+	//Verify that the appropriate endpoint was targeted for
+	// this service request.  The validateRequest method will
+	// throw an UnsupportedOperationException if anything's amiss.
+	public void validateRequest(String operation,String version, Element uddiReq)
+			throws UnsupportedOperationException
 	{
-		if (version == null)
-	    	throw new FatalErrorException(new ErrorMessage("errors.local.generic"));
+	    // If the value 
+	  	// specified is not "2.0" or "3.0" then throw an exception (this 
+	  	// value must be specified for all UDDI requests and 
+	  	// only version 2.0 and 3.0 UDDI requests are supported by 
+	  	// this endpoint).
+	  	if (! "3.0".equals(version))
+	  		throw new UnsupportedOperationException("version needs to be 3.0");
 
-		if ((operation == null) || (operation.trim().length() == 0))
-			throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
-	}
+	    if ((operation == null) || (operation.trim().length() == 0))
+	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
+	  }
 
 	public Node secure(Element uddiReq) throws Exception
 	{

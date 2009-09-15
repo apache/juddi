@@ -2,10 +2,6 @@ package org.uddi.api_v3.client.local;
 
 import java.util.HashMap;
 
-
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.RegistryException;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -48,21 +44,21 @@ public class UDDIInquiryService {
 
 	//Verify that the appropriate endpoint was targeted for
 	// this service request.  The validateRequest method will
-	// throw an UnsupportedException if anything's amiss.
+	// throw an UnsupportedOperationException if anything's amiss.
 	public void validateRequest(String operation,String version, Element uddiReq)
-			throws RegistryException
+			throws UnsupportedOperationException
 	{
 	    // If the value 
-	  	// specified is not "2.0" then throw an exception (this 
+	  	// specified is not "3.0" then throw an exception (this 
 	  	// value must be specified for all UDDI requests and 
-	  	// only version 2.0 UDDI requests are supported by 
+	  	// only version 2.0 and 3.0 UDDI requests are supported by 
 	  	// this endpoint).
-	  	if (version == null)
-	  		throw new FatalErrorException(new ErrorMessage("errors.local.generic"));
+	  	if (!("3.0".equals(version)))
+	  		throw new UnsupportedOperationException("version needs to be 3.0");
 
 	    if ((operation == null) || (operation.trim().length() == 0))
-	    	throw new FatalErrorException(new ErrorMessage("errors.local.operation.notidentified"));
-		}
+	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
+	  }
 
 	  public Node inquire(Element uddiReq) throws Exception{		  
 		  InVMTransport invmtransport = new InVMTransport();		
@@ -80,6 +76,7 @@ public class UDDIInquiryService {
 
 	      String version   = requestHandler.getVersion(uddiReq,operation);
 	      validateRequest(operation, version, uddiReq);
+	      
 	      Thread thread = new Thread(requestHandler, "WorkThread");
 	      thread.start();
 	      thread.join();
