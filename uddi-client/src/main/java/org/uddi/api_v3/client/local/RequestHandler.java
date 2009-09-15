@@ -164,57 +164,7 @@ public class RequestHandler implements Runnable
       // this child to the soap response body
       document.appendChild(element.getFirstChild());
       setResponse(document);
-    }/*
-    catch (RegistryException rex) 
-    {
-    	log.error(rex.getMessage());
-    	
-        // All RegistryException and subclasses of RegistryException
-        // should contain values for populating a SOAP Fault as well
-        // as a UDDI DispositionReport with specific information 
-        // about the problem.
-    	// SOAP Fault values
-    	String faultCode = "";
-    	String faultString = "";
-    	String faultActor = "";
-        
-    	String errno = null;
-    	String errText = null;
-    	String errCode = null;
-    	
-        // UDDI DispositionReport values
-        DispositionReport dispRpt = rex.getFaultInfo();
-        if (dispRpt != null)
-        {
-          Result result = null;
-          ErrInfo errInfo = null;
-        
-          List<Result> results = dispRpt.getResult();
-          if ((results != null) && (!results.isEmpty()))
-            result = (Result)results.get(0);
-        
-          if (result != null)
-          {
-            errno = String.valueOf(result.getErrno());  // UDDI Result errno
-            errInfo = result.getErrInfo();
-          
-            if (errInfo != null)
-            {
-              errCode = errInfo.getErrCode();  // UDDI ErrInfo errCode
-              errText = errInfo.getValue();  // UDDI ErrInfo errMsg
-            }
-          }
-        }
-        // We should have everything we need to assemble 
-        // the SOAPFault so lets piece it together and 
-        // send it on it's way.
-        String fault = null;
-        //String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
-    	//+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
-    	//+ ", errText=" + errText;
-        setException(fault);
-        
-    } */
+    }
     catch(Exception ex) // Catch any other exceptions
     {
         log.error(ex.getMessage());
