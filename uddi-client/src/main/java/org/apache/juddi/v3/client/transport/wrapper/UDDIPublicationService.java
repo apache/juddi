@@ -1,4 +1,4 @@
-package org.apache.juddi.v3.client.local;
+package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.util.HashMap;
 

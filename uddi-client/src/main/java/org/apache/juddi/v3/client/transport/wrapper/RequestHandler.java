@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.v3.client.local;
+package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.io.StringWriter;
 import java.lang.reflect.Method;
