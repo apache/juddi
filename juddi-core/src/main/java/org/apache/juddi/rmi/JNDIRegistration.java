@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class JNDIRegistration
 {
-	public static String JUDDI = "/juddi";
+	public static String JUDDI = "/juddiv3";
 	public static String UDDI_SECURITY_SERVICE    = JUDDI + "/UDDISecurityService";
 	public static String UDDI_PUBLICATION_SERVICE = JUDDI + "/UDDIPublicationService";
 	public static String UDDI_INQUIRY_SERVICE     = JUDDI + "/UDDIInquiryService";
