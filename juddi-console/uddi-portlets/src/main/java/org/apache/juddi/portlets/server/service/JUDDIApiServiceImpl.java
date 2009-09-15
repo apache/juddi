@@ -28,12 +28,12 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.portlets.client.model.Publisher;
 import org.apache.juddi.portlets.client.service.JUDDIApiResponse;
 import org.apache.juddi.portlets.client.service.JUDDIApiService;
+import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
-import org.uddi.api_v3.client.config.ClientConfig;
-import org.uddi.api_v3.client.config.Property;
-import org.uddi.api_v3.client.transport.Transport;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 /**
