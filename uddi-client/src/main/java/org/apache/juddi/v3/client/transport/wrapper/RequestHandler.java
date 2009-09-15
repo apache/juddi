@@ -69,9 +69,10 @@ public class RequestHandler implements Runnable
    */
   public String getOperation(Element uddiReq) throws Exception
   {
-	  if (!("3.0".equals(version)))
-	  		throw new UnsupportedOperationException("version needs to be 3.0");
+	  if (uddiReq == null)
+	  		throw new UnsupportedOperationException("UDDI Request is null");
 	  
+	  String operation = uddiReq.getLocalName();
       if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
       setOperation(operation);
@@ -81,7 +82,7 @@ public class RequestHandler implements Runnable
    * Grab the generic attribute value (version value).  If 
    * one isn't specified or the value specified is not "2.0" 
    * then throw an exception (this value must be specified 
-   * for all UDDI requests and currently only vesion 2.0
+   * for all UDDI requests and currently only version 2.0
    * UDDI requests are supported).
    *   
    * @param uddiReq
@@ -91,7 +92,7 @@ public class RequestHandler implements Runnable
   public String getVersion(Element uddiReq, String operation) throws Exception
   {
       String version = uddiReq.getAttribute("generic");
-      if (!("3.0".equals(version)))
+      if (version == null)
 	  		throw new UnsupportedOperationException("version needs to be 3.0");
       setVersion(version);
       return version;

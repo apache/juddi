@@ -62,7 +62,7 @@ public class UDDIPublicationService {
 		  	// value must be specified for all UDDI requests and 
 		  	// only version 3.0 UDDI requests are supported by 
 		  	// this endpoint).
-		  	if (! "3.0".equals(version))
+		  	if (version == null)
 		  		throw new UnsupportedOperationException("version needs to be 3.0");
 
 		    if ((operation == null) || (operation.trim().length() == 0))
