@@ -12,12 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.api.impl;
-
-import java.rmi.RemoteException;
+package org.apache.juddi.v3.client;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
+import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.Property;
+import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -26,49 +28,77 @@ import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckSubscription;
 import org.apache.juddi.v3.tck.TckTModel;
 import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class API_080_SubscriptionTest 
+public class UDDI_080_SubscriptionIntegrationTest 
 {
-	private static Logger logger = Logger.getLogger(API_080_SubscriptionTest.class);
+	private static Logger logger = Logger.getLogger(UDDI_080_SubscriptionIntegrationTest.class);
 
-	private static API_010_PublisherTest api010 = new API_010_PublisherTest();
-	private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
+	private static TckTModel tckTModel                    = null;
+	private static TckBusiness tckBusiness                = null;
+	private static TckBusinessService tckBusinessService  = null;
+	private static TckBindingTemplate tckBindingTemplate  = null;
+	private static TckSubscription tckSubscription = null;
 
 	private static String authInfoJoe = null;
 	private static String authInfoSam = null;
-	
+
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		Registry.start();
-		logger.debug("Getting auth token..");
-		try {
-			api010.saveJoePublisher();
-			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
-
-			api010.saveSamSyndicator();
-			authInfoSam = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
-
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("Could not obtain authInfo token.");
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.start();
 		}
-	}
+		logger.debug("Getting subscriber proxy..");
+		try {
+	    	 clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT, Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	         if (transportClass!=null) {
+	        	 Transport transport = (Transport) transportClass.newInstance();
+	        	 
+	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
+	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
+	        	 Assert.assertNotNull(authInfoJoe);
+	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
+	        	 Assert.assertNotNull(authInfoSam);
+	        	 
+	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+	        	 UDDISubscriptionPortType subscription = transport.getUDDISubscriptionService();
 
+	        	 tckTModel  = new TckTModel(publication, inquiry);
+	        	 tckBusiness = new TckBusiness(publication, inquiry);
+	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
+	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+
+	        	 tckSubscription = new TckSubscription(subscription, security);
+	         } else {
+	        	 Assert.fail();
+	         }
+	     } catch (Exception e) {
+	    	 logger.error(e.getMessage(), e);
+			 Assert.fail("Could not obtain authInfo token.");
+	     } 
+	}
+	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		Registry.stop();
+		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		if (InVMTransport.class.getName().equals(clazz)) {
+			Registry.stop();
+		}
 	}
 	
 	@Test
@@ -80,21 +110,14 @@ public class API_080_SubscriptionTest
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
 			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			Assert.fail();
-		}
- 		finally {
+		} 
+		finally {
 			tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
-		
 	}
 
 	@Test

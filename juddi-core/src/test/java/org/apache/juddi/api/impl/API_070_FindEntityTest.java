@@ -18,18 +18,18 @@ import java.rmi.RemoteException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
+import org.apache.juddi.v3.tck.TckBindingTemplate;
+import org.apache.juddi.v3.tck.TckBusiness;
+import org.apache.juddi.v3.tck.TckBusinessService;
+import org.apache.juddi.v3.tck.TckFindEntity;
+import org.apache.juddi.v3.tck.TckPublisher;
+import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckTModel;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.api_v3.tck.TckBindingTemplate;
-import org.uddi.api_v3.tck.TckBusiness;
-import org.uddi.api_v3.tck.TckBusinessService;
-import org.uddi.api_v3.tck.TckFindEntity;
-import org.uddi.api_v3.tck.TckPublisher;
-import org.uddi.api_v3.tck.TckSecurity;
-import org.uddi.api_v3.tck.TckTModel;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
