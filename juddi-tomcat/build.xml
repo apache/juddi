@@ -11,7 +11,7 @@
 		<!--
 		<copy file="${basedir}/juddi.xml" todir="${webapps.dir}"/>
 		-->
-		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddi.war}"/>
+		<unzip dest="${webapps.dir}/juddi" src="${dependency.juddiv3.war}"/>
 		<chmod perm="ugo+x">
 			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
 				<include name="*.sh"/>
