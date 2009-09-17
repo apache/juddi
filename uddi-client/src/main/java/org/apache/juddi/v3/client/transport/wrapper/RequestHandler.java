@@ -39,7 +39,7 @@ import org.w3c.dom.Node;
  * @author Tom Cunningham (tcunning@apache.org)
  * @author Kurt Stam (kurt.stam@redhat.com)
  */
-public class RequestHandler implements Runnable
+public class RequestHandler
 {
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(RequestHandler.class);
@@ -49,12 +49,12 @@ public class RequestHandler implements Runnable
   
   private volatile String version;
   private volatile String operation;
-  private volatile Element uddiReq;
   private volatile Node response;
   private volatile String exception;
   private volatile Remote portType; 
   private volatile String methodName;
   private volatile Class<?> operationClass;
+  private static TransformerFactory transFactory = null;
   
     /**
    * Grab the local name of the UDDI request element
@@ -91,8 +91,13 @@ public class RequestHandler implements Runnable
    */
   public String getVersion(Element uddiReq, String operation) throws Exception
   {
-      String version = uddiReq.getAttribute("generic");
-      if (version == null)
+       String version = uddiReq.getAttribute("generic");
+      if ((version == null) || ("".equals(version))) {
+    	  if ("urn:uddi-org:api_v3".equals(uddiReq.getNamespaceURI())) {
+    		  version = "3.0";
+    	  }
+      }
+      if (!"3.0".equals(version))
 	  		throw new UnsupportedOperationException("version needs to be 3.0");
       setVersion(version);
       return version;
@@ -100,36 +105,25 @@ public class RequestHandler implements Runnable
   
   public static String getText(Element element) throws TransformerException
   {
-      TransformerFactory tf = TransformerFactory.newInstance();
-      Transformer trans = tf.newTransformer();
+	  if (transFactory == null) {
+		  transFactory = TransformerFactory.newInstance();		  
+	  }
+      Transformer trans = transFactory.newTransformer();
       StringWriter sw = new StringWriter();
       trans.transform(new DOMSource(element), new StreamResult(sw));
       return new String(sw.toString());
-  /*
-    StringBuffer textBuffer = new StringBuffer();
-
-    NodeList nodeList = element.getChildNodes();
-    for (int i=0; i<nodeList.getLength(); i++)
-    {
-      if (nodeList.item(i).getNodeType() == Element.TEXT_NODE)
-        textBuffer.append(nodeList.item(i).getNodeValue());
-    }
-
-    return textBuffer.toString().trim();
-*/
   }
 
   
-  public void run()
+  public Node invoke(Element uddiReq)
   {
     try 
     { 
       // Lookup the appropriate XML handler.  Throw an 
       // UnsupportedException if one could not be located.
-      String reqString = getText(uddiReq);
-      Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, "org.uddi.api_v3");
-      
-      
+      //String reqString = getText(uddiReq);
+      //Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, "org.uddi.api_v3");
+      Object uddiReqObj = JAXBMarshaller.unmarshallFromElement(uddiReq, "org.uddi.api_v3");
       Method method = portType.getClass().getMethod(methodName, operationClass);
       Object result = method.invoke(portType, uddiReqObj);
       // Lookup the appropriate response handler which will
@@ -167,6 +161,7 @@ public class RequestHandler implements Runnable
         log.error(ex.getMessage());
         setException(ex.getMessage());
     }
+    return response;
   }
   
   /**
@@ -211,12 +206,6 @@ public Node getResponse() {
 }
 public void setResponse(Node response) {
     this.response = response;
-}
-public Element getUddiReq() {
-    return uddiReq;
-}
-public void setUddiReq(Element uddiReq) {
-    this.uddiReq = uddiReq;
 }
 public Remote getPortType() {
 	return portType;

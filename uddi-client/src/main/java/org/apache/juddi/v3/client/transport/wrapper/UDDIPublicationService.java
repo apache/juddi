@@ -54,17 +54,9 @@ public class UDDIPublicationService {
 	//Verify that the appropriate endpoint was targeted for
 		// this service request.  The validateRequest method will
 		// throw an UnsupportedOperationException if anything's amiss.
-		public void validateRequest(String operation,String version, Element uddiReq)
+		public void validateRequest(String operation)
 				throws UnsupportedOperationException
 		{
-		    // If the value 
-		  	// specified is not "3.0" then throw an exception (this 
-		  	// value must be specified for all UDDI requests and 
-		  	// only version 3.0 UDDI requests are supported by 
-		  	// this endpoint).
-		  	if (version == null)
-		  		throw new UnsupportedOperationException("version needs to be 3.0");
-
 		    if ((operation == null) || (operation.trim().length() == 0))
 		    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 		  }
@@ -76,7 +68,6 @@ public class UDDIPublicationService {
 
 	      //new RequestHandler on it's own thread
 	      RequestHandler requestHandler = new RequestHandler();
-	      requestHandler.setUddiReq(uddiReq);
 	      requestHandler.setPortType(publish);
 	      String operation = requestHandler.getOperation(uddiReq);
 		  Handler opHandler = operations.get(operation);
@@ -84,16 +75,8 @@ public class UDDIPublicationService {
 		  requestHandler.setOperationClass(opHandler.getParameter());
 		  
 	      String version   = requestHandler.getVersion(uddiReq, operation);
-	      validateRequest(operation, version, uddiReq);
+	      validateRequest(operation);
 
-	      Thread thread = new Thread(requestHandler, "WorkThread");
-	      thread.start();
-	      thread.join();
-
-	      if (requestHandler.getException()!=null) {
-	          throw new Exception(requestHandler.getException());
-	      }
-
-	      return requestHandler.getResponse();
+	      return requestHandler.invoke(uddiReq);
 	  }
 }
