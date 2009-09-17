@@ -125,7 +125,7 @@ public class RequestHandler
       //Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, "org.uddi.api_v3");
       Object uddiReqObj = JAXBMarshaller.unmarshallFromElement(uddiReq, "org.uddi.api_v3");
       Method method = portType.getClass().getMethod(methodName, operationClass);
-      Object result = method.invoke(portType, uddiReqObj);
+      Object result = method.invoke(portType, (Object) uddiReqObj);
       // Lookup the appropriate response handler which will
       // be used to marshal the UDDI object into the appropriate 
       // xml format.

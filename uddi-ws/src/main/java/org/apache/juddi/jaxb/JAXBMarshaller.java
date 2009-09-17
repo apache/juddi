@@ -116,7 +116,8 @@ public class JAXBMarshaller {
 	public static Object unmarshallFromElement(Element element, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContexts.get(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
-		return unmarshaller.unmarshal(element.getFirstChild());
+		Object obj = ((JAXBElement) unmarshaller.unmarshal(element)).getValue();
+		return obj;
 	}
 	
 }
