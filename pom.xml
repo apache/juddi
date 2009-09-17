@@ -157,9 +157,6 @@
 		<module>uddi-tck</module>
 		<module>juddi-core</module>
 		<module>juddi-cxf</module>
-<!--
-		<module>juddi-axis</module>
--->
 		<module>juddi-tomcat</module>
 		<module>uddi-client</module>
 	</modules>

@@ -1,7 +1,0 @@
-<project name="juddi-axis" default="package-axis" basedir=".">
-	<target name="package-axis">
-		<echo>${juddi.jar.path}</echo>
-		<unzip src="${juddi.jar.path}"
-			dest="target/juddi/WEB-INF/classes"/>
-	</target>
-</project>
