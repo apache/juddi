@@ -84,16 +84,9 @@ public class PublishService
   {
       //new RequestHandler on it's own thread
       RequestHandler requestHandler = new RequestHandler();
-      requestHandler.setUddiReq(uddiReq);
       String operation = requestHandler.getOperation(uddiReq);
       String version   = requestHandler.getVersion(uddiReq, operation);
       validateRequest(operation, version, uddiReq);
-      Thread thread = new Thread(requestHandler, "WorkThread");
-      thread.start();
-      thread.join();
-      if (requestHandler.getException()!=null) {
-          throw new Exception(requestHandler.getException());
-      }
-      return requestHandler.getResponse();
+      return requestHandler.invoke(uddiReq);
   }
 }

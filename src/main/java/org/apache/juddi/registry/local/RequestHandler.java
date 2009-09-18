@@ -41,7 +41,7 @@ import org.w3c.dom.Node;
 /**
  * @author Kurt Stam (kurt.stam@redhat.com)
  */
-public class RequestHandler implements Runnable
+public class RequestHandler
 {
   // private reference to the webapp's logger.
   private static Log log = LogFactory.getLog(RequestHandler.class);
@@ -51,7 +51,6 @@ public class RequestHandler implements Runnable
   
   private volatile String version;
   private volatile String operation;
-  private volatile Element uddiReq;
   private volatile Node response;
   private volatile String exception;
    
@@ -101,7 +100,7 @@ public class RequestHandler implements Runnable
       return version;
   }
   
-  public void run()
+  public Node invoke (Element uddiReq) throws Exception
   {
     try 
     { 
@@ -206,7 +205,7 @@ public class RequestHandler implements Runnable
     	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
     	+ ", errText=" + errText;
         setException(fault);
-        
+        throw new Exception(fault);
     }
     catch(Exception ex) // Catch any other exceptions
     {
@@ -240,8 +239,9 @@ public class RequestHandler implements Runnable
         String fault = "faultCode=" + faultCode + ", faultString=" + faultString 
     	+ ", faultActor=" + faultActor + ", errno=" + errno + ", errCode=" + errCode
     	+ ", errText=" + errText;
-        setException(fault);
+        throw new Exception(fault);
     }
+    return response;
   }
   
   /**
@@ -286,12 +286,6 @@ public Node getResponse() {
 }
 public void setResponse(Node response) {
     this.response = response;
-}
-public Element getUddiReq() {
-    return uddiReq;
-}
-public void setUddiReq(Element uddiReq) {
-    this.uddiReq = uddiReq;
 }
 public String getVersion() {
     return version;
