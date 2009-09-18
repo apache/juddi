@@ -63,8 +63,6 @@ public class FetchBindingTemplatesQuery extends BindingTemplateQuery {
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 		
 		appendSortCriteria(dynamicQry, fq);
-		
-		appendGroupByEntityKey(dynamicQry);
 
 		log.debug(dynamicQry);
 		
