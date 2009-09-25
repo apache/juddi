@@ -17,7 +17,6 @@ package org.apache.juddi.v3.client;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.helpers.Loader;
@@ -36,7 +35,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -44,7 +43,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -53,7 +52,7 @@ public class UDDI_010_PublisherIntegrationTest {
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();

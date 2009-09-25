@@ -113,6 +113,7 @@ public class JAXBMarshaller {
 		return element;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static Object unmarshallFromElement(Element element, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContexts.get(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();

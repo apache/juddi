@@ -74,6 +74,7 @@ public class UDDIPublicationService {
 	      requestHandler.setMethodName(opHandler.getMethodName());
 		  requestHandler.setOperationClass(opHandler.getParameter());
 		  
+		  @SuppressWarnings("unused")
 	      String version   = requestHandler.getVersion(uddiReq, operation);
 	      validateRequest(operation);
 

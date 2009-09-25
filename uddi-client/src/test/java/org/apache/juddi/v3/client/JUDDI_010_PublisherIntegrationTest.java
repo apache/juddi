@@ -32,7 +32,6 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.Constants;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.tck.EntityCreator;
@@ -55,7 +54,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JUDDI_010_PublisherIntegrationTest {
 	
-	private static Logger logger                      = Logger.getLogger(JUDDI_010_PublisherIntegrationTest.class);
+	private static Logger logger = Logger.getLogger(JUDDI_010_PublisherIntegrationTest.class);
 	
 	private static UDDISecurityPortType security =null;
 	private static JUDDIApiPortType publisher = null;
@@ -63,7 +62,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -90,7 +89,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -99,7 +98,7 @@ public class JUDDI_010_PublisherIntegrationTest {
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();

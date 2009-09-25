@@ -24,7 +24,7 @@ public class Registry {
 	 * Stops the registry.
 	 * @throws ConfigurationException 
 	 */
-	public static void stop() throws ConfigurationException {
+	public synchronized static void stop() throws ConfigurationException {
 		if (registry!=null) {
 			log.info("Stopping jUDDI registry...");
 			if (subscriptionNotifier!=null) {
@@ -49,7 +49,7 @@ public class Registry {
 	 * @throws ConfigurationException
 	 * @throws  
 	 */
-	public static Registry start() throws ConfigurationException {
+	public synchronized static Registry start() throws ConfigurationException {
 		if (registry==null) {
 			log.info("Starting jUDDI registry...");
 			registry = new Registry();

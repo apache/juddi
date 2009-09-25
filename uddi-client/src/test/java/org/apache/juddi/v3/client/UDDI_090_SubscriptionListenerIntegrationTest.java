@@ -60,13 +60,12 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(org.apache.juddi.v3.client.config.Property.UDDI_PROXY_TRANSPORT,org.apache.juddi.v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
 		logger.debug("Getting subscriber proxy..");
 		try {
-	    	 clazz = ClientConfig.getConfiguration().getString(org.apache.juddi.v3.client.config.Property.UDDI_PROXY_TRANSPORT, org.apache.juddi.v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
@@ -96,7 +95,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getConfiguration().getString(org.apache.juddi.v3.client.config.Property.UDDI_PROXY_TRANSPORT,org.apache.juddi.v3.client.config.Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
