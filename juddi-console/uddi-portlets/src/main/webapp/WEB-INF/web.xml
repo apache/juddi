@@ -10,6 +10,12 @@
 	</welcome-file-list>
 	
 	<servlet>
+		<servlet-name>UDDIClientServlet</servlet-name>
+		<servlet-class>org.apache.juddi.v3.client.UDDIClientServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
 		<servlet-name>UDDIBrowserPortlet</servlet-name>
 		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
 		<init-param>
@@ -24,6 +30,16 @@
 		<init-param>
 			<param-name>portlet-name</param-name>
 			<param-value>UDDISearchPortlet</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>UDDISubscriptionPortlet</servlet-name>
+		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+		<init-param>
+			<param-name>portlet-name</param-name>
+			<param-value>UDDISubscriptionPortlet</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -47,6 +63,12 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>UDDISubscriptionPortlet</servlet-name>
+		<url-pattern>/PlutoInvoker/UDDISubscriptionPortlet
+		</url-pattern>
+	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>UDDIBrowserPortlet</servlet-name>

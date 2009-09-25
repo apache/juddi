@@ -26,7 +26,6 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.PublicationResponse;
 import org.apache.juddi.portlets.client.service.PublicationService;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -62,7 +61,7 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 		logger.debug("GetRegistrationInfo " + getRegistrationInfo + " sending get Busineses request..");
 		List<Business> businesses = new ArrayList<Business>();
 		try {
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
         	 Transport transport = (Transport) transportClass.newInstance(); 
         	 UDDIPublicationPortType publicationService = transport.getUDDIPublishService();

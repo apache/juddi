@@ -26,7 +26,6 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
 import org.apache.juddi.portlets.client.service.FindService;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -71,7 +70,7 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 			logger.debug("FindBusiness " + findBusiness + " sending findBusinesses request..");
 			List<Business> businesses = new ArrayList<Business>();
 		
-	    	 String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
         	 Transport transport = (Transport) transportClass.newInstance(); 
         	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();

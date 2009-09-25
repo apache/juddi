@@ -30,9 +30,22 @@
 			<title>UDDISearch Portlet</title>
 	    </portlet-info>
 	</portlet>
+	<portlet>
+    	<description>UDDI Subscription as a portlet app</description>
+		<portlet-name>UDDISubscriptionPortlet</portlet-name>
+	    <display-name>UDDISubscriptionPortlet</display-name>
+		<portlet-class>org.apache.juddi.portlets.server.UDDISubscriptionPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+		</supports>
+	    <portlet-info>
+			<title>UDDISubscription Portlet</title>
+	    </portlet-info>
+	</portlet>
 
     <portlet>
-    <description>UDDI Subscription Notification as a portlet app</description>
+           <description>UDDI Subscription Notification as a portlet app</description>
            <portlet-name>UDDISubscriptionNotificationPortlet</portlet-name>
            <display-name>UDDISubscriptionNotification Portlet</display-name>
            <portlet-class>org.apache.juddi.portlets.server.UDDISubscriptionNotificationPortlet</portlet-class>

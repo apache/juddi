@@ -28,7 +28,6 @@ import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -65,7 +64,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	private Transport getTransport() 
 		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		if (transport==null) {
-			String clazz = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_TRANSPORT,Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+			String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 	        Class<?> transportClass = Loader.loadClass(clazz);
 	   	 	transport = (Transport) transportClass.newInstance(); 
 		}

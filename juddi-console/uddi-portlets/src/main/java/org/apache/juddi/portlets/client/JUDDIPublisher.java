@@ -31,7 +31,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 
 	private static JUDDIPublisher singleton;
 	
-	private MenuBarPanel menuBar = new MenuBarPanel();
+	private MenuBarPanel menuBar = new MenuBarPanel(MenuBarPanel.PUBLISHER);
 	private DockPanel dockPanel = new DockPanel();
 	private LoginPanel loginPanel = new LoginPanel(this);
 	private PublisherListPanel publisherListPanel = new PublisherListPanel();

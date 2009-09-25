@@ -34,9 +34,8 @@ limitations under the License.
     <portlet-mode>edit</portlet-mode>
     <portlet-mode>help</portlet-mode>
     <portlet-mode>config</portlet-mode>
-
-    <window-state>normal</window-state>
     <window-state>maximized</window-state>
+    <window-state>normal</window-state>
     <window-state>minimized</window-state>
   </supports>
 

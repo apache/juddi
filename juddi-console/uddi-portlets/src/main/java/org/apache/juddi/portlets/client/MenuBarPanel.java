@@ -9,12 +9,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MenuBarPanel extends FlowPanel implements ClickListener {
 
+	public static final String PUBLISHER = "publisher";
+	public static final String SUBSCRIPTION = "subscription";
 	public static final Images images = (Images) GWT.create(Images.class);
 	PushButton saveButton = new PushButton();
 	PushButton newButton = new PushButton();
 	PushButton deleteButton = new PushButton();
+	String context = PUBLISHER;
 
-	public MenuBarPanel() {
+	public MenuBarPanel(String context) {
+		
+		this.context = context;
 		HorizontalPanel pushPanel = new HorizontalPanel();
 	    pushPanel.setSpacing(7);
 
@@ -39,11 +44,14 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 
 	public void onClick(Widget sender) {
 		if (sender == saveButton) {
-			JUDDIPublisher.getInstance().savePublisher();
+			if (PUBLISHER.equals(context)) JUDDIPublisher.getInstance().savePublisher();
+			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().saveSubscription();
 		} else if (sender == newButton) {
-			JUDDIPublisher.getInstance().newPublisher();
+			if (PUBLISHER.equals(context)) JUDDIPublisher.getInstance().newPublisher();
+			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().newSubscription();
 		} else if (sender == deleteButton) {
-			JUDDIPublisher.getInstance().deletePublisher();
+			if (PUBLISHER.equals(context)) JUDDIPublisher.getInstance().deletePublisher();
+			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().deleteSubscription();
 		}
 		
 	}

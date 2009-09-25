@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
@@ -66,9 +65,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 				return response;
 			} else {
 				try {
-					String clazz = ClientConfig.getConfiguration().getString(
-							Property.UDDI_PROXY_TRANSPORT,
-							Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+					String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
 					Class<?> transportClass = Loader.loadClass(clazz);
 					Transport transport = (Transport) transportClass.newInstance();
 					UDDISecurityPortType securityService = transport.getUDDISecurityService();
