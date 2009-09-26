@@ -8,10 +8,7 @@
 		<mkdir dir="${basedir}/target/tomcat"/>
 
 		<unzip dest="${basedir}/target/tomcat" src="${dependency.tomcat.zip}"/>
-		<!--
-	        <unzip dest="${webapps.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
-	        -->
-		<unzip dest="${webapps.dir}/juddiv3" src="${basedir}/../juddi-cxf/target/juddi-cxf-3.0.0.SNAPSHOT.war"/>
+		<unzip dest="${webapps.dir}/juddiv3" src="${dependency.juddiv3.war}"/>
 		<chmod perm="ugo+x">
 			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
 				<include name="*.sh"/>
