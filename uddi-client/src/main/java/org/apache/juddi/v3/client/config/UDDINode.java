@@ -1,5 +1,9 @@
 package org.apache.juddi.v3.client.config;
 
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
+import org.apache.log4j.helpers.Loader;
+
 
 public class UDDINode {
 	
@@ -13,6 +17,24 @@ public class UDDINode {
 	private String subscriptionListenerUrl;
 	private String juddiApiUrl;
 	private String proxyTransport;
+	private String factoryInitial;
+	private String factoryURLPkgs;
+	private String factoryNamingProvider;
+	
+	private Transport transport;
+	
+	public Transport getTransport() throws TransportException {
+		if (transport==null) {
+			try {
+				String clazz = ClientConfig.getInstance().getNodes().get(name).getProxyTransport();
+				Class<?> transportClass = Loader.loadClass(clazz);
+				transport = (Transport) transportClass.getConstructor(String.class).newInstance(name);
+			} catch (Exception e) {
+				throw new TransportException(e.getMessage(),e);
+			}
+		}
+		return transport;
+	}
 	
 	public String getName() {
 		return name;
@@ -73,6 +95,24 @@ public class UDDINode {
 	}
 	public void setSubscriptionListenerUrl(String subscriptionListenerUrl) {
 		this.subscriptionListenerUrl = subscriptionListenerUrl;
+	}
+	public String getFactoryInitial() {
+		return factoryInitial;
+	}
+	public void setFactoryInitial(String factoryInitial) {
+		this.factoryInitial = factoryInitial;
+	}
+	public String getFactoryURLPkgs() {
+		return factoryURLPkgs;
+	}
+	public void setFactoryURLPkgs(String factoryURLPkgs) {
+		this.factoryURLPkgs = factoryURLPkgs;
+	}
+	public String getFactoryNamingProvider() {
+		return factoryNamingProvider;
+	}
+	public void setFactoryNamingProvider(String factoryNamingProvider) {
+		this.factoryNamingProvider = factoryNamingProvider;
 	}
 	
 	

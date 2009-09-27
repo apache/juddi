@@ -25,11 +25,13 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;;
 
 public interface Transport {
+	
 	public final static String API_V3_NAMESPACE              = "urn:uddi-org:api_v3_portType";
 	public final static String SUB_V3_NAMESPACE              = "urn:uddi-org:sub_v3_portType";
 	public final static String SUBR_V3_NAMESPACE	         = "urn:uddi-org:subr_v3_portType";
 	public final static String CUSTODY_V3_NAMESPACE          = "urn:uddi-org:custody_v3_portType";
 	public final static String JUDDI_API_V3_NAMESPACE        = "urn:juddi-apache-org:api_v3_portType";
+	public final static String DEFAULT_NODE_NAME             = "default";
 	
 	public final static String INQUIRY_SERVICE               = "UDDIInquiryService";
 	public final static String SECURITY_SERVICE              = "UDDISecurityService";
@@ -46,4 +48,5 @@ public interface Transport {
 	UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException;
 	UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException;
 	JUDDIApiPortType getJUDDIApiService() throws TransportException;
+	
 }

@@ -39,10 +39,11 @@ public class ClientConfig
 {
 	private final static String UDDI_CONFIG = "META-INF/uddi.xml";
 	private static Logger log = Logger.getLogger(ClientConfig.class);
-	private Configuration config;
+	private Configuration config = null;;
 	private static ClientConfig instance=null;
 	private Map<String,UDDINode> nodes = null;
-	private Set<UDDIClerk> clerks = null;
+	private Map<String,UDDIClerk> clerks = null;
+	private Set<XRegistration> xRegistrations = null;
 	
 	/**
 	 * Constructor (note Singleton pattern).
@@ -74,6 +75,7 @@ public class ClientConfig
 		config = compositeConfig;
 		nodes = readNodeConfig(config);
 		clerks = readClerkConfig(config, nodes);
+		xRegistrations = readXRegConfig(config,clerks);
 	}
 
 	/**
@@ -113,10 +115,10 @@ public class ClientConfig
 		return getInstance().config;
 	}
 
-	private static Set<UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
+	private static Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
 	throws ConfigurationException {
 		String[] names = config.getStringArray("clerks.clerk[@name]");
-		Set<UDDIClerk> clerks = new HashSet<UDDIClerk>();
+		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
 		log.debug("clerk names=" + names);
 		for (int i=0; i<names.length; i++) {
 			UDDIClerk uddiClerk = new UDDIClerk();
@@ -129,7 +131,7 @@ public class ClientConfig
 			uddiClerk.setPassword( config.getString("clerks.clerk(" + i + ")[@password]"));
 			String[] classes = config.getStringArray("clerks.clerk(" + i + ").class");
 			uddiClerk.setClassWithAnnotations(classes);
-			clerks.add(uddiClerk);
+			clerks.put(names[i],uddiClerk);
 		}
 		return clerks;
 	}
@@ -144,6 +146,7 @@ public class ClientConfig
 			String name = config.getString("nodes.node(" + i +").name");
 			uddiNode.setName(                   config.getString("nodes.node(" + i +").name"));
 			uddiNode.setDescription(            config.getString("nodes.node(" + i +").description"));
+			uddiNode.setProxyTransport(         config.getString("nodes.node(" + i +").proxyTransport"));
 			uddiNode.setInquiryUrl(             config.getString("nodes.node(" + i +").inquiryUrl"));
 			uddiNode.setPublishUrl(             config.getString("nodes.node(" + i +").publishUrl"));
 			uddiNode.setCustodyTransferUrl(     config.getString("nodes.node(" + i +").custodyTransferUrl"));
@@ -151,7 +154,9 @@ public class ClientConfig
 			uddiNode.setSubscriptionUrl(        config.getString("nodes.node(" + i +").subscriptionUrl"));
 			uddiNode.setSubscriptionListenerUrl(config.getString("nodes.node(" + i +").subscriptionListenerUrl"));
 			uddiNode.setJuddiApiUrl(            config.getString("nodes.node(" + i +").juddiApiUrl"));
-			uddiNode.setProxyTransport(         config.getString("nodes.node(" + i +").proxyTransport"));
+			uddiNode.setFactoryInitial(         config.getString("nodes.node(" + i +").javaNamingFactoryInitial"));
+			uddiNode.setFactoryURLPkgs(         config.getString("nodes.node(" + i +").javaNamingFactoryUrlPkgs"));
+			uddiNode.setFactoryNamingProvider(  config.getString("nodes.node(" + i +").javaNamingProviderUrl"));
 			nodes.put(name,uddiNode);
 		}
 		if (!nodes.containsKey("default")) {
@@ -159,11 +164,50 @@ public class ClientConfig
 		}
 		return nodes;
 	}
+	/*
+	 * only works for services right now
+	 */
+	private static Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
+	throws ConfigurationException {
+		String[] bindingKeys = config.getStringArray("xregister.service[@bindingKey]");
+		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
+		log.debug("XRegistration bindingKeys=" + bindingKeys);
+		for (int i=0; i<bindingKeys.length; i++) {
+			XRegistration xRegistration = new XRegistration();
+			xRegistration.setBindingKey(config.getString("xregister.service(" + i + ")[@bindingKey]"));
+			
+			String fromClerkRef = config.getString("xregister.service(" + i + ")[@fromClerk]");
+			if (!clerks.containsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
+			UDDIClerk fromClerk = clerks.get(fromClerkRef);
+			xRegistration.setFromClerk(fromClerk);
+			
+			String toClerkRef = config.getString("xregister.service(" + i + ")[@toClerk]");
+			if (!clerks.containsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
+			UDDIClerk toClerk = clerks.get(toClerkRef);
+			xRegistration.setToClerk(toClerk);
+			
+			xRegistrations.add(xRegistration);
+		}
+		return xRegistrations;
+	}
+	
+	public boolean isRegisterOnStartup() {
+		return config.getBoolean("xregister[@onStartUp]");
+	}
 	
 	public Map<String, UDDINode> getNodes() {
+		try {
+			getInstance();
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return nodes;
 	}
-	public Set<UDDIClerk> getClerks() {
+	public Map<String,UDDIClerk> getClerks() {
 		return clerks;
+	}
+	public Set<XRegistration> getXRegistrations() {
+		return xRegistrations;
 	}
 }

@@ -39,9 +39,21 @@ public class RMITransport implements Transport {
 
 	InitialContext context = null;
 	private Logger logger = Logger.getLogger(this.getClass());
+	private String nodeName = null;
 	
 	public RMITransport() throws NamingException, ConfigurationException {
 		super();
+		this.nodeName = Transport.DEFAULT_NODE_NAME;
+        initContext();
+	}
+	
+	public RMITransport(String nodeName) throws NamingException, ConfigurationException {
+		super();
+		this.nodeName = nodeName;
+		initContext();
+	}
+	
+	private void initContext() throws NamingException, ConfigurationException {
 		Properties env = new Properties();
 		String factoryInitial = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_FACTORY_INITIAL);
 		String factoryURLPkgs = ClientConfig.getConfiguration().getString(Property.UDDI_PROXY_FACTORY_URL_PKS);
@@ -53,18 +65,19 @@ public class RMITransport implements Transport {
     	context = new InitialContext(env);
 	}
 
-	UDDIInquiryPortType inquiryService = null;
-	UDDISecurityPortType securityService = null;
-	UDDIPublicationPortType publishService = null;
-	UDDISubscriptionPortType subscriptionService = null;
-	UDDISubscriptionListenerPortType subscriptionListenerService = null;
-	UDDICustodyTransferPortType custodyTransferService = null;
-	JUDDIApiPortType publisherService = null;
+	private UDDIInquiryPortType inquiryService = null;
+	private UDDISecurityPortType securityService = null;
+	private UDDIPublicationPortType publishService = null;
+	private UDDISubscriptionPortType subscriptionService = null;
+	private UDDISubscriptionListenerPortType subscriptionListenerService = null;
+	private UDDICustodyTransferPortType custodyTransferService = null;
+	private JUDDIApiPortType publisherService = null;
+	
 
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getInquiryUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getInquiryUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -80,7 +93,7 @@ public class RMITransport implements Transport {
 	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
 		if (securityService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSecurityUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSecurityUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -96,7 +109,7 @@ public class RMITransport implements Transport {
 	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
 		if (publishService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getPublishUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getPublishUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -112,7 +125,7 @@ public class RMITransport implements Transport {
 	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
 		if (subscriptionService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSubscriptionUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSubscriptionUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -128,7 +141,7 @@ public class RMITransport implements Transport {
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
 		if (subscriptionListenerService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSubscriptionListenerUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSubscriptionListenerUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -144,7 +157,7 @@ public class RMITransport implements Transport {
 	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
 		if (custodyTransferService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getCustodyTransferUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getCustodyTransferUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -160,7 +173,7 @@ public class RMITransport implements Transport {
 	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
 		if (publisherService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getJuddiApiUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getJuddiApiUrl();
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);

@@ -72,11 +72,10 @@ public class JUDDI_010_PublisherIntegrationTest {
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.newInstance();
 	        	 security = transport.getUDDISecurityService();
-	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
 	        	 GetAuthToken getAuthToken = new GetAuthToken();
 	        	 getAuthToken.setUserID("root");
 	        	 getAuthToken.setCred("");
-	        	 authInfo = securityService.getAuthToken(getAuthToken).getAuthInfo();
+	        	 authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
 	        	 publisher = transport.getJUDDIApiService();
 	         } else {
 	        	 Assert.fail();

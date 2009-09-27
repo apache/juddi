@@ -5,7 +5,7 @@
              version="1.0">
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <non-jta-data-source>java:/comp/env/jdbc/JuddiDS</non-jta-data-source>
+    <non-jta-data-source>java:comp/env/jdbc/JuddiDS</non-jta-data-source>
     <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
     <class>org.apache.juddi.model.AddressLine</class>

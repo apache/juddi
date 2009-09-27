@@ -28,6 +28,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 public class InVMTransport implements Transport {
 
+	private String nodeName = Transport.DEFAULT_NODE_NAME;
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
 	UDDIPublicationPortType publishService = null;
@@ -36,10 +37,19 @@ public class InVMTransport implements Transport {
 	UDDICustodyTransferPortType custodyTransferService = null;
 	JUDDIApiPortType publisherService = null;
 
+	public InVMTransport() {
+		super();
+	}
+	
+	public InVMTransport(String nodeName) {
+		super();
+		this.nodeName = nodeName;
+	}
+	
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getInquiryUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getInquiryUrl();
 				Class<?> c = Class.forName(endpointURL);
 				inquiryService = (UDDIInquiryPortType) c.newInstance();
 			} catch (Exception e) {
@@ -52,7 +62,7 @@ public class InVMTransport implements Transport {
 	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
 		if (securityService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSecurityUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSecurityUrl();
 				Class<?> c = Class.forName(endpointURL);
 				securityService = (UDDISecurityPortType) c.newInstance();
 			} catch (Exception e) {
@@ -65,7 +75,7 @@ public class InVMTransport implements Transport {
 	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
 		if (publishService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getPublishUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getPublishUrl();
 				Class<?> c = Class.forName(endpointURL);
 				publishService = (UDDIPublicationPortType) c.newInstance();
 			} catch (Exception e) {
@@ -78,7 +88,7 @@ public class InVMTransport implements Transport {
 	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
 		if (subscriptionService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSubscriptionUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSubscriptionUrl();
 				Class<?> c = Class.forName(endpointURL);
 				subscriptionService = (UDDISubscriptionPortType) c.newInstance();
 			} catch (Exception e) {
@@ -91,7 +101,7 @@ public class InVMTransport implements Transport {
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
 		if (subscriptionListenerService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getSubscriptionListenerUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getSubscriptionListenerUrl();
 				Class<?> c = Class.forName(endpointURL);
 				subscriptionListenerService = (UDDISubscriptionListenerPortType) c.newInstance();
 			} catch (Exception e) {
@@ -104,7 +114,7 @@ public class InVMTransport implements Transport {
 	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
 		if (custodyTransferService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getCustodyTransferUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getCustodyTransferUrl();
 				Class<?> c = Class.forName(endpointURL);
 				custodyTransferService = (UDDICustodyTransferPortType) c.newInstance();
 			} catch (Exception e) {
@@ -117,7 +127,7 @@ public class InVMTransport implements Transport {
 	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
 		if (publisherService==null) {
 			try {
-				String endpointURL = ClientConfig.getInstance().getNodes().get("default").getJuddiApiUrl();
+				String endpointURL = ClientConfig.getInstance().getNodes().get(nodeName).getJuddiApiUrl();
 				Class<?> c = Class.forName(endpointURL);
 				publisherService = (JUDDIApiPortType) c.newInstance();
 			} catch (Exception e) {
