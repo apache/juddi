@@ -16,7 +16,14 @@
 				<include name="**/*.xml"/>
 				<include name="**/*.properties"/>
 			</fileset>	
-		</copy>	
+		</copy>
+		<copy todir="${basedir}/target/juddiv3war/WEB-INF/classes/META-INF"
+			overwrite="true">
+			<fileset dir="${basedir}/src/main/resources/META-INF">
+				<include name="persistence.xml"/>
+			</fileset>
+		</copy>
+			
 	</target>
 	
 	<target name="package-war" depends="copy-resources"/>

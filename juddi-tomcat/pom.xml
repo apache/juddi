@@ -29,6 +29,9 @@
   <name>jUDDI Tomcat Packaging</name>
   <url>http://maven.apache.org</url>
   <packaging>pom</packaging>
+  <properties>
+    <juddi-cxf-version>3.0.0.SNAPSHOT</juddi-cxf-version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-discovery</groupId>
@@ -44,7 +47,7 @@
     <dependency>
      <artifactId>juddi-cxf</artifactId>
      <groupId>org.apache.juddi</groupId>
-     <version>3.0.0.SNAPSHOT</version> 
+     <version>${juddi-cxf-version}</version> 
      <type>war</type>
     </dependency>
     <dependency>
@@ -97,7 +100,7 @@
 	       <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
 	       <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
 	       <property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}"/>
-	       <property name="dependency.juddiv3.war" value="${maven.dependency.org.apache.juddi.juddi-cxf.war.path}"/>
+	       <property name="dependency.juddiv3.war" value="${basedir}/../juddi-cxf/target/juddi-cxf-${juddi-cxf-version}.war"/>
 	       <echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
 	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
 	       <ant antfile="${basedir}/build.xml">
