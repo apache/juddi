@@ -46,6 +46,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	public void onModuleLoad() { 
 		singleton = this;
 		
+		dockPanel.setWidth("100%");
 		dockPanel.setSpacing(8);
 		menuBar.setVisible(false);
 		menuBar.setHeight("20px");
@@ -55,6 +56,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		dockPanel.add(loginPanel,DockPanel.WEST);
 		
 		publisherListPanel.setVisible(false);
+		publisherListPanel.setWidth("100%");
 		dockPanel.add(publisherListPanel,DockPanel.CENTER);
 		
 		RootPanel.get("publisher").add(dockPanel);
@@ -78,6 +80,8 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	public void displayPublisher(Publisher publisher) {
 		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
 		publisherPanel = new PublisherPanel(publisher);
+		publisherPanel.setWidth("100%");
+		publisherPanel.setStyleName("detail-panel");
 		dockPanel.add(publisherPanel,DockPanel.EAST);
 		String token = loginPanel.getToken();
 		String publisherId = loginPanel.getPublisherId();
@@ -111,6 +115,8 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	public void newPublisher() {
 		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
 		publisherPanel = new PublisherPanel(null);
+		publisherPanel.setWidth("100%");
+		publisherPanel.setStyleName("detail-panel");
 		dockPanel.add(publisherPanel,DockPanel.EAST);
 		publisherListPanel.selectRow(0);
 	}

@@ -42,10 +42,15 @@ public class PublisherListPanel extends Composite implements TableListener {
 	}
 
 	private void initTable() {
+		
+		for (int row=0; row<table.getRowCount(); row++) {
+			table.removeRow(row);
+		}
 		// Create the header row.
 		table.setText(0, 0, "Publisher Id");
 		table.setText(0, 1, "Publisher Name");
 		table.getRowFormatter().setStyleName(0, "ListHeader");
+		
 
 		// Initialize the rest of the rows.
 		for (int i = 0; i < VISIBLE_PUBLISHER_COUNT; ++i) {

@@ -187,8 +187,6 @@ Form styles define the look-and-feel of the elements in an HTML form.
 	font-family: Arial,Helvetica,sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	background-color:#FF9;
-	border:1px solid #ababab;
 	font-size: 10pt;
 	color: 333;
 }
@@ -219,6 +217,18 @@ Form styles define the look-and-feel of the elements in an HTML form.
 	font-weight: bold;
 	font-size: 10pt;
 	color: black;
+}
+
+.portlet-form-field-label-right {
+	font-family: Arial,Helvetica,sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 10pt;
+	color: black;
+	float:right;
+	padding-left:25px;
+    white-space:nowrap;
+	
 }
 
 /* Text for a field (not input field, e.g. checkboxes, etc) */

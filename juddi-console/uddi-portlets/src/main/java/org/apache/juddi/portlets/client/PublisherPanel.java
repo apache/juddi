@@ -41,63 +41,63 @@ public class PublisherPanel extends FlowPanel {
 		add(flexTable);
 
 		Label id = new Label ("Id:");
-		id.setStyleName("portlet-form-field-label");
+		id.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(0, 0, id);
 		idBox.setText(this.publisher.getAuthorizedName());
 		idBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(0, 1, idBox);
 		
 		Label name = new Label ("Name:");
-		name.setStyleName("portlet-form-field-label");
+		name.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(1, 0, name);
 		nameBox.setText(this.publisher.getPublisherName());
 		nameBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(1, 1,nameBox);
 		
 		Label email = new Label ("Email:");
-		email.setStyleName("portlet-form-field-label");
+		email.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(2, 0,email);
 		emailAddressBox.setText(this.publisher.getEmailAddress());
 		emailAddressBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(2, 1,emailAddressBox);
 		
 		Label isAdmin = new Label ("Is Admin:");
-		isAdmin.setStyleName("portlet-form-field-label");
+		isAdmin.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(3, 0,isAdmin);
 		isAdminBox.setChecked("true".equalsIgnoreCase(this.publisher.getIsAdmin()));
 		isAdminBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(3, 1,isAdminBox);
 		
 		Label isEnabled = new Label ("Is Enabled:");
-		isEnabled.setStyleName("portlet-form-field-label");
+		isEnabled.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(4, 0,isEnabled);
 		isEnabledBox.setChecked("true".equalsIgnoreCase(this.publisher.getIsEnabled()));
 		isEnabledBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(4, 1,isEnabledBox);
 		
 		Label maxBusinesses = new Label ("MaxBusinesses:");
-		maxBusinesses.setStyleName("portlet-form-field-label");
+		maxBusinesses.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(5, 0,maxBusinesses);
 		maxBusinessesBox.setText(String.valueOf(this.publisher.getMaxBusinesses()));
 		maxBusinessesBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(5, 1,maxBusinessesBox);
 		
 		Label maxServicesPerBusiness = new Label ("MaxServicePerBusiness:");
-		maxServicesPerBusiness.setStyleName("portlet-form-field-label");
+		maxServicesPerBusiness.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(6, 0,maxServicesPerBusiness);
 		maxServicesPerBusinessBox.setText(String.valueOf(this.publisher.getMaxServicePerBusiness()));
 		maxServicesPerBusinessBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(6, 1,maxServicesPerBusinessBox);
 		
 		Label maxBindingsPerService = new Label ("MaxBindingsPerService:");
-		maxBindingsPerService.setStyleName("portlet-form-field-label");
+		maxBindingsPerService.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(7, 0,maxBindingsPerService);
 		maxBindingsPerServiceBox.setText(String.valueOf(this.publisher.getMaxBindingsPerService()));
 		maxBindingsPerServiceBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(7, 1,maxBindingsPerServiceBox);
 		
 		Label maxTModels = new Label ("MaxTModels:");
-		maxTModels.setStyleName("portlet-form-field-label");
+		maxTModels.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(8, 0,maxTModels);
 		maxTModelBox.setText(String.valueOf(this.publisher.getMaxTModels()));
 		maxTModelBox.setStyleName("portlet-form-input-field");
