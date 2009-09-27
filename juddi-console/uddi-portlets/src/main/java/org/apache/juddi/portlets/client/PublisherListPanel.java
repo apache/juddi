@@ -43,9 +43,6 @@ public class PublisherListPanel extends Composite implements TableListener {
 
 	private void initTable() {
 		
-		for (int row=0; row<table.getRowCount(); row++) {
-			table.removeRow(row);
-		}
 		// Create the header row.
 		table.setText(0, 0, "Publisher Id");
 		table.setText(0, 1, "Publisher Name");
@@ -53,14 +50,14 @@ public class PublisherListPanel extends Composite implements TableListener {
 		
 
 		// Initialize the rest of the rows.
-		for (int i = 0; i < VISIBLE_PUBLISHER_COUNT; ++i) {
-			table.setText(i + 1, 0, "");
-			table.setText(i + 1, 1, "");
-			table.getCellFormatter().setWordWrap(i + 1, 0, false);
-			table.getCellFormatter().setWordWrap(i + 1, 1, false);
-			table.getFlexCellFormatter().setColSpan(i + 1, 1, 1);
-		}
-		selectRow(0);
+//		for (int i = 0; i < VISIBLE_PUBLISHER_COUNT; ++i) {
+//			table.setText(i + 1, 0, "");
+//			table.setText(i + 1, 1, "");
+//			table.getCellFormatter().setWordWrap(i + 1, 0, false);
+//			table.getCellFormatter().setWordWrap(i + 1, 1, false);
+//			table.getFlexCellFormatter().setColSpan(i + 1, 1, 1);
+//		}
+//		selectRow(0);
 	}
 
 	/**
@@ -89,7 +86,7 @@ public class PublisherListPanel extends Composite implements TableListener {
 						}
 					}
 				} else {
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 				});

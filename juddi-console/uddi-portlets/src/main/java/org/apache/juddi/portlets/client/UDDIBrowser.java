@@ -51,6 +51,8 @@ public class UDDIBrowser implements EntryPoint, Login {
 		
 		detailPanel = new DetailPanel();
 		detailPanel.setVisible(false);
+        detailPanel.setWidth("100%");
+        detailPanel.setStyleName("detail-panel");
 		dockPanel.add(detailPanel,DockPanel.CENTER);
 		
 		RootPanel.get("browser").add(dockPanel);

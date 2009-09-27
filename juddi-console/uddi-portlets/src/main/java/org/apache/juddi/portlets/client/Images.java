@@ -11,6 +11,8 @@ public interface Images extends  ImageBundle, TreeImages {
 	AbstractImagePrototype description();
 	AbstractImagePrototype service();
 	AbstractImagePrototype services();
+	AbstractImagePrototype bindingtemplate();
+	AbstractImagePrototype endpointlive();
 	
 	AbstractImagePrototype create();
 	AbstractImagePrototype save();
