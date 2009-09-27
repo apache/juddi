@@ -24,7 +24,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 
 	public DetailPanel() {
 		detailPanel = this;
-		detailPanel.setStylePrimaryName("portlet-form-field-label");
+		//detailPanel.setStylePrimaryName("t");
 		table.addTableListener(this);
 		detailPanel.add(table);
 	}
@@ -44,7 +44,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 					detailPanel.add(table);
 					int row = 0;
 					for (Service service : business.getServices()) {
-						table.getFlexCellFormatter().setColSpan(row, 0, 2);
+						//table.getFlexCellFormatter().setColSpan(row, 0, 2);
 						table.setText(row++, 0, "service");
 						table.setHTML(row, 0, UDDIBrowser.images.service().getHTML());
 						table.setText(row++, 1, service.getName());
@@ -75,7 +75,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 					detailPanel.add(table);
 					table.addTableListener(detailPanel);
 					//table.setBorderWidth(1);
-					table.setStyleName("portlet-form-field-label");
+					//table.setStyleName("portlet-form-field-label");
 					int row = 0;
 					table.setTitle("business");
 					table.getFlexCellFormatter().setColSpan(row, 0, 2);

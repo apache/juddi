@@ -36,6 +36,13 @@ img {
  display: block !important;
 }
 
+.gwt-Tree {
+ overflow:auto;
+ margin-right:25px;
+ height:150px;
+}
+
+
 .gwt-Tree .gwt-TreeItem-selected {
   background: #ccc;
 }
