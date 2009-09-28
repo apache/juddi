@@ -34,8 +34,8 @@ public class UDDISubscription implements EntryPoint, Login {
 	private MenuBarPanel menuBar = new MenuBarPanel(MenuBarPanel.SUBSCRIPTION);
 	private DockPanel dockPanel = new DockPanel();
 	private LoginPanel loginPanel = new LoginPanel(this);
-	private SubscriptionListPanel subscriptionListPanel = new SubscriptionListPanel();
-	private SubscriptionPanel subscriptionPanel = null;
+	private SubscriptionTreePanel treePanel = new SubscriptionTreePanel();
+	private SubscriptionPanel detailPanel = null;
 
 	public static UDDISubscription getInstance() {
 		return singleton;
@@ -54,8 +54,8 @@ public class UDDISubscription implements EntryPoint, Login {
 		loginPanel.setVisible(false);
 		dockPanel.add(loginPanel,DockPanel.WEST);
 		
-		subscriptionListPanel.setVisible(false);
-		dockPanel.add(subscriptionListPanel,DockPanel.CENTER);
+		treePanel.setVisible(false);
+		dockPanel.add(treePanel,DockPanel.CENTER);
 		
 		RootPanel.get("subscription").add(dockPanel);
 	}
@@ -64,56 +64,55 @@ public class UDDISubscription implements EntryPoint, Login {
 		String token = loginPanel.getToken();
 		if (token == null ) {
 			loginPanel.setVisible(true);
-			subscriptionListPanel.setVisible(false);
+			treePanel.setVisible(false);
 			menuBar.setVisible(false);
 		} else {
 			loginPanel.setVisible(false);
 			menuBar.setVisible(true);
-			subscriptionListPanel.setVisible(true);
-			subscriptionListPanel.listSubscriptions(token);
+			treePanel.setVisible(true);
+			treePanel.loadSubscriptions();
 		}
 	}
 	
 	public void displaySubscription(Subscription subscription) {
-		if (subscriptionPanel!=null ) dockPanel.remove(subscriptionPanel);
-		subscriptionPanel = new SubscriptionPanel(subscription);
-		dockPanel.add(subscriptionPanel,DockPanel.EAST);
-		String token = loginPanel.getToken();
-		subscriptionListPanel.listSubscriptions(token);
+		if (detailPanel!=null ) dockPanel.remove(detailPanel);
+		detailPanel = new SubscriptionPanel(subscription);
+		dockPanel.add(detailPanel,DockPanel.EAST);
+		treePanel.loadSubscriptions();
 	}
 	
-	public void setSelectedSubscription(String selectedSubscriptionId) {
-		subscriptionListPanel.setSelectedSubscription(selectedSubscriptionId);
-	}
+//	public void setSelectedSubscription(String selectedSubscriptionId) {
+//		treePanel.setSelectedSubscription(selectedSubscriptionId);
+//	}
 	
-	public void hideSubscription() {
-		subscriptionPanel.setVisible(false);
-		String token = loginPanel.getToken();
-		subscriptionListPanel.selectRow(0);
-		if (subscriptionPanel!=null ) dockPanel.remove(subscriptionPanel);
-		subscriptionPanel=null;
-		subscriptionListPanel.listSubscriptions(token);
-	}
+//	public void hideSubscription() {
+//		detailPanel.setVisible(false);
+//		String token = loginPanel.getToken();
+//		treePanel.selectRow(0);
+//		if (detailPanel!=null ) dockPanel.remove(detailPanel);
+//		detailPanel=null;
+//		treePanel.listSubscriptions(token);
+//	}
 
 	public String getToken() {
 		return loginPanel.getToken();
 	}
 	
 	public void saveSubscription() {
-		if (subscriptionPanel!=null) {
-			subscriptionPanel.saveSubscription(getToken());
+		if (detailPanel!=null) {
+			detailPanel.saveSubscription(getToken());
 		}
 	}
 	
 	public void newSubscription() {
-		if (subscriptionPanel!=null ) dockPanel.remove(subscriptionPanel);
-		subscriptionPanel = new SubscriptionPanel(null);
-		dockPanel.add(subscriptionPanel,DockPanel.EAST);
-		subscriptionListPanel.selectRow(0);
+		if (detailPanel!=null ) dockPanel.remove(detailPanel);
+		detailPanel = new SubscriptionPanel(null);
+		dockPanel.add(detailPanel,DockPanel.EAST);
+		//treePanel.selectRow(0);
 	}
 	
 	public void deleteSubscription() {
-		if (subscriptionPanel!=null) {
+		if (detailPanel!=null) {
 	//		subscriptionPanel.deleteSubscription(getToken());
 		}
 	}

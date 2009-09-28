@@ -16,9 +16,10 @@
  */
 package org.apache.juddi.portlets.client.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.juddi.portlets.client.model.Subscription;
+import org.apache.juddi.portlets.client.model.Node;
 
 /**
  * 
@@ -28,13 +29,15 @@ import org.apache.juddi.portlets.client.model.Subscription;
 public class SubscriptionResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
-	List<Subscription> subscriptions;
 	
-	public List<Subscription> getSubscriptions() {
-		return subscriptions;
+	List<Node> nodes = new ArrayList<Node>();
+	
+	public List<Node> getNodes() {
+		return nodes;
 	}
-	public void setSubscriptions(List<Subscription> subscriptions) {
-		this.subscriptions = subscriptions;
+	
+	public void setNodes(List<Node> nodes) {
+		this.nodes = nodes;
 	}
 
 }

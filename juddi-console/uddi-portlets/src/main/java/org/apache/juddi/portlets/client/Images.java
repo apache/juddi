@@ -13,6 +13,10 @@ public interface Images extends  ImageBundle, TreeImages {
 	AbstractImagePrototype services();
 	AbstractImagePrototype bindingtemplate();
 	AbstractImagePrototype endpointlive();
+	AbstractImagePrototype node();
+	AbstractImagePrototype subscription();
+	AbstractImagePrototype down();
+	AbstractImagePrototype up();
 	
 	AbstractImagePrototype create();
 	AbstractImagePrototype save();
