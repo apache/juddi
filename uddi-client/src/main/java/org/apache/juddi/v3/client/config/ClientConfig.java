@@ -169,19 +169,19 @@ public class ClientConfig
 	 */
 	private static Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
 	throws ConfigurationException {
-		String[] bindingKeys = config.getStringArray("xregister.service[@bindingKey]");
+		String[] bindingKeys = config.getStringArray("clerks.xregister.service[@bindingKey]");
 		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
 		log.debug("XRegistration bindingKeys=" + bindingKeys);
 		for (int i=0; i<bindingKeys.length; i++) {
 			XRegistration xRegistration = new XRegistration();
-			xRegistration.setBindingKey(config.getString("xregister.service(" + i + ")[@bindingKey]"));
+			xRegistration.setBindingKey(config.getString("clerks.xregister.service(" + i + ")[@bindingKey]"));
 			
-			String fromClerkRef = config.getString("xregister.service(" + i + ")[@fromClerk]");
+			String fromClerkRef = config.getString("clerks.xregister.service(" + i + ")[@fromClerk]");
 			if (!clerks.containsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
 			UDDIClerk fromClerk = clerks.get(fromClerkRef);
 			xRegistration.setFromClerk(fromClerk);
 			
-			String toClerkRef = config.getString("xregister.service(" + i + ")[@toClerk]");
+			String toClerkRef = config.getString("clerks.xregister.service(" + i + ")[@toClerk]");
 			if (!clerks.containsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
 			UDDIClerk toClerk = clerks.get(toClerkRef);
 			xRegistration.setToClerk(toClerk);
@@ -189,10 +189,6 @@ public class ClientConfig
 			xRegistrations.add(xRegistration);
 		}
 		return xRegistrations;
-	}
-	
-	public boolean isRegisterOnStartup() {
-		return config.getBoolean("xregister[@onStartUp]");
 	}
 	
 	public Map<String, UDDINode> getNodes() {

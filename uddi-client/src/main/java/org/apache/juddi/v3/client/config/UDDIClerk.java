@@ -85,9 +85,6 @@ public class UDDIClerk {
 		return authToken;
 	}
 	
-	
-	
-	
 	public String getName() {
 		return name;
 	}

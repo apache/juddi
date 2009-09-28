@@ -19,7 +19,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,9 +27,9 @@ import org.apache.log4j.Logger;
  * 
  * @author Kurt Stam (kstam@apache.org)
  */
-public class UDDIClientServlet extends HttpServlet {
+public class UDDIClerkServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger logger = Logger.getLogger(UDDIClientServlet.class);
+	private static Logger logger = Logger.getLogger(UDDIClerkServlet.class);
 
 	/**
 	 * Create the shared instance of jUDDI's Registry class and call it's
@@ -40,20 +39,26 @@ public class UDDIClientServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			UDDIClient.start();
-		} catch (ConfigurationException e) {
+			UDDIClerkManager.start();
+		} catch (Exception e) {
 			logger.error("UDDI-client could not be started."
 					+ e.getMessage(), e);
+		} catch (Throwable t) {
+			logger.error("UDDI-client could not be started."
+					+ t.getMessage(), t);
 		}
 	}
 	
 	@Override
 	public void destroy() {
 		try {
-			UDDIClient.stop();
-		} catch (ConfigurationException e) {
-			logger.error("UDDI client could not be stopped."
+			UDDIClerkManager.stop();
+		} catch (Exception e) {
+			logger.error("UDDI-client could not be stopped."
 					+ e.getMessage(), e);
+		} catch (Throwable t) {
+			logger.error("UDDI-client could not be stopped."
+					+ t.getMessage(), t);
 		}
 		super.destroy();
 	}

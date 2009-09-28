@@ -20,14 +20,14 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIClientTest {
+public class UDDIClerkManagerTest {
 	
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	 UDDIClient.start();
-	        
+	    	UDDIClerkManager.start();
 	     } catch (Exception e) {
+	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
 	         Assert.fail();
 	     } 
