@@ -55,10 +55,11 @@
 	<clerks>
 	   <clerk name="default" node="default" publisher="root" password="root"/>
        <clerk name="medroot" node="med"     publisher="root" password="root"/>
+       <xregister >
+	       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+	   </xregister>
    </clerks> 
-   <xregister onStartUp="true">
-       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-   </xregister>
+   
 	
 	
 	

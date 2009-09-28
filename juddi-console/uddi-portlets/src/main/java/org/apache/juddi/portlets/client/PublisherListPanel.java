@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.TableListener;
 
 public class PublisherListPanel extends Composite implements TableListener {
 
-	private static final int VISIBLE_PUBLISHER_COUNT = 10;
 	private int selectedRow = -1;
 	private String selectedPublisher = "";
 

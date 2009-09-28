@@ -47,15 +47,15 @@ public class SubscriptionListPanel extends Composite implements TableListener {
 		table.setText(0, 1, "Subscription Key");
 		table.getRowFormatter().setStyleName(0, "ListHeader");
 
-		// Initialize the rest of the rows.
-		for (int i = 0; i < VISIBLE_PUBLISHER_COUNT; ++i) {
-			table.setText(i + 1, 0, "");
-			table.setText(i + 1, 1, "");
-			table.getCellFormatter().setWordWrap(i + 1, 0, false);
-			table.getCellFormatter().setWordWrap(i + 1, 1, false);
-			table.getFlexCellFormatter().setColSpan(i + 1, 1, 1);
-		}
-		selectRow(0);
+//		// Initialize the rest of the rows.
+//		for (int i = 0; i < VISIBLE_PUBLISHER_COUNT; ++i) {
+//			table.setText(i + 1, 0, "");
+//			table.setText(i + 1, 1, "");
+//			table.getCellFormatter().setWordWrap(i + 1, 0, false);
+//			table.getCellFormatter().setWordWrap(i + 1, 1, false);
+//			table.getFlexCellFormatter().setColSpan(i + 1, 1, 1);
+//		}
+//		selectRow(0);
 	}
 
 	/**

@@ -9,12 +9,15 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	
+	<!-- use to run the registration clerks, make sure the UDDI registry is up and running before
+	     attempting to run the clerks
 	<servlet>
-		<servlet-name>UDDIClientServlet</servlet-name>
-		<servlet-class>org.apache.juddi.v3.client.UDDIClientServlet</servlet-class>
+		<servlet-name>UDDIClerkServlet</servlet-name>
+		<servlet-class>org.apache.juddi.v3.client.UDDIClerkServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+	 -->
+	 
 	<servlet>
 		<servlet-name>UDDIBrowserPortlet</servlet-name>
 		<servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
