@@ -111,7 +111,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	       				 subscription.getNotificationInterval().toString(),
 	       				 rawFilter,
 	       				 subscription.getSubscriptionKey());
-	       		modelNode.getSubscriptions().add(modelSubscription);
+	       		 modelSubscription.setNode(modelNode);
+	       		 modelNode.getSubscriptions().add(modelSubscription);
 		     }
 	       	 modelNode.setStatus(UP);
 	     } catch (Exception e) {
@@ -123,9 +124,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	
 	public SubscriptionResponse saveSubscription(String authToken, Subscription modelSubscription) {
 		SubscriptionResponse response = new SubscriptionResponse();
+		Node modelNode = modelSubscription.getNode();
 		logger.debug("Sending saveSubscriptions request..");
 		try {
-	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+	    	 String clazz = ClientConfig.getInstance().getNodes().get(modelNode.getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	       	 Transport transport = (Transport) transportClass.newInstance(); 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
@@ -152,7 +154,6 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			 subscriptionHolder.value = subscriptionList;
 	       	 subscriptionService.saveSubscription(authToken, subscriptionHolder);
 	       	 response.setSuccess(true);
-	       	 //TODO, do we get a response? response.setSubscriptions(modelSubscriptions);
 	     } catch (Exception e) {
 	    	 logger.error("Could not obtain subscription. " + e.getMessage(), e);
 	    	 response.setSuccess(false);
@@ -167,5 +168,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		
 		return response;
 	}
+	
+	
 
 }

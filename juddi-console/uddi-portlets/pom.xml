@@ -162,6 +162,8 @@
 					<compileTargets>
 						<value>org.apache.juddi.portlets.UDDISubscriptionNotification</value>
 						<value>org.apache.juddi.portlets.UDDIBrowser</value>
+						<value>org.apache.juddi.portlets.UDDISubscription</value>
+						<value>org.apache.juddi.portlets.UDDISearch</value>
 						<value>org.apache.juddi.portlets.JUDDIPublisher</value>
 					</compileTargets>
 					<runTarget>org.apache.juddi.portlets.UDDIBrowser/UDDIBrowser.html</runTarget>

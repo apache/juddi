@@ -18,7 +18,9 @@ public interface Images extends  ImageBundle, TreeImages {
 	AbstractImagePrototype down();
 	AbstractImagePrototype up();
 	
+	//MenuBar
 	AbstractImagePrototype create();
 	AbstractImagePrototype save();
 	AbstractImagePrototype delete();
+	AbstractImagePrototype sync();
 }

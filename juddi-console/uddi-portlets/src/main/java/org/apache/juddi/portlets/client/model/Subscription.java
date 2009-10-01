@@ -38,7 +38,9 @@ public class Subscription implements Serializable{
     protected String subscriptionFilter;
     protected String subscriptionKey;
     
-    public Subscription() {
+    private Node node;
+    
+	public Subscription() {
 		super();
     }
     public Subscription(String bindingKey, Boolean brief, String expiresAfter,
@@ -107,6 +109,13 @@ public class Subscription implements Serializable{
 
 	public String getSubscriptionFilter() {
 		return subscriptionFilter;
+	}
+	
+	public Node getNode() {
+			return node;
+	}
+	public void setNode(Node node) {
+		this.node = node;
 	}
 
 	public void setSubscriptionFilter(String subscriptionFilter) {

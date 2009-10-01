@@ -82,7 +82,7 @@ img {
 
 .detail-panel {
   background: #eee;
-  border:1px solid #000000; padding:5px
+  border:1px solid #000000; 
   margin-right:10px;
-  padding-top:10px;
+  padding:10px 5px 5px 5px;
 }

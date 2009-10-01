@@ -15,6 +15,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 	PushButton saveButton = new PushButton();
 	PushButton newButton = new PushButton();
 	PushButton deleteButton = new PushButton();
+	PushButton syncButton = new PushButton();
 	String context = PUBLISHER;
 
 	public MenuBarPanel(String context) {
@@ -38,6 +39,11 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 		deleteButton.addClickListener(this);
 		pushPanel.add(deleteButton);
 		
+		if (SUBSCRIPTION.equals(context)) {
+			syncButton.setHTML(images.sync().getHTML());
+			syncButton.setStyleName(("portlet-form-button"));
+			syncButton.addClickListener(this);
+		}
 		add(pushPanel);
 		
 	}
@@ -52,6 +58,8 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 		} else if (sender == deleteButton) {
 			if (PUBLISHER.equals(context)) JUDDIPublisher.getInstance().deletePublisher();
 			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().deleteSubscription();
+		} else if (sender == syncButton) {
+			if (PUBLISHER.equals(context)) UDDISubscription.getInstance().syncListedServices();
 		}
 		
 	}

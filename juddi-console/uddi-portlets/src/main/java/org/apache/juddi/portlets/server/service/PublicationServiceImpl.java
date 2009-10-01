@@ -26,6 +26,7 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.PublicationResponse;
 import org.apache.juddi.portlets.client.service.PublicationService;
 import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -96,4 +97,56 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 	     } 
 		 return response;
 	}
+	
+	public PublicationResponse syncServices(UDDIClerk fromClerk, UDDIClerk toClerk, String serviceKey) 
+	{
+		HttpServletRequest request = this.getThreadLocalRequest();
+		String lang = request.getLocale().getLanguage();
+		
+		
+//		GetRegisteredInfo getRegistrationInfo = new GetRegisteredInfo();
+//		getRegistrationInfo.setAuthInfo(authToken);
+//		getRegistrationInfo.setInfoSelection(InfoSelection.ALL);
+//		
+		PublicationResponse response = new PublicationResponse();
+//		logger.debug("GetRegistrationInfo " + getRegistrationInfo + " sending get Busineses request..");
+//		List<Business> businesses = new ArrayList<Business>();
+//		try {
+//	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+//	         Class<?> transportClass = Loader.loadClass(clazz);
+//        	 Transport transport = (Transport) transportClass.newInstance(); 
+//        	 UDDIPublicationPortType publicationService = transport.getUDDIPublishService();
+//        	 RegisteredInfo info = publicationService.getRegisteredInfo(getRegistrationInfo);
+//        	 for (BusinessInfo businessInfo : info.getBusinessInfos().getBusinessInfo()) {
+//				Business business = new Business(
+//						businessInfo.getBusinessKey(),
+//						EntityForLang.getName(businessInfo.getName(),lang).getValue(),
+//						EntityForLang.getDescription(businessInfo.getDescription(),lang).getValue());
+//				List<Service> services = new ArrayList<Service>();
+//				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
+//					Service service = new Service(
+//							serviceInfo.getServiceKey(),
+//							EntityForLang.getName(serviceInfo.getName(), lang).getValue());
+//					services.add(service);
+//				}
+//				business.setServices(services);
+//				businesses.add(business);
+//			 }
+//        	 response.setSuccess(true);
+//        	 response.setBusinesses(businesses);
+//	     } catch (Exception e) {
+//	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
+//	    	 response.setSuccess(false);
+//	    	 response.setMessage(e.getMessage());
+//	    	 response.setErrorCode("102");
+//	     }  catch (Throwable t) {
+//	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
+//	    	 response.setSuccess(false);
+//	    	 response.setMessage(t.getMessage());
+//	    	 response.setErrorCode("102");
+//	     } 
+		 return response;
+	}
+	
+	
 }

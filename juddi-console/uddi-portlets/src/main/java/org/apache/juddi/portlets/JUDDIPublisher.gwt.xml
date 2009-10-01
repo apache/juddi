@@ -9,7 +9,7 @@
       <!-- Specify the application specific style sheet.              -->
       <stylesheet src="uddiportlets.css"/>
 
-	  <servlet class="org.apache.juddi.portlets.server.service.SecurityServiceImpl"    path="/security"/>
+	  <servlet class="org.apache.juddi.portlets.server.service.SecurityServiceImpl" path="/security"/>
 	  <servlet class="org.apache.juddi.portlets.server.service.JUDDIApiServiceImpl" path="/juddi-api"/>
 	 
 </module>

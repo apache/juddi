@@ -2,7 +2,6 @@ package org.apache.juddi.portlets.client;
 
 import java.util.List;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.portlets.client.model.Node;
 import org.apache.juddi.portlets.client.model.Subscription;
 import org.apache.juddi.portlets.client.service.SubscriptionResponse;
@@ -20,6 +19,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 public class SubscriptionTreePanel extends Composite implements TreeListener {
 
 	private Tree subscriptionTree;
+	private Node selectedNode=null;
 	private SubscriptionServiceAsync subscriptionService = (SubscriptionServiceAsync) GWT.create(SubscriptionService.class);
 	
 	public SubscriptionTreePanel() {
@@ -47,9 +47,10 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 					for (Node node : nodes) {
 						String statusImg = UDDIBrowser.images.down().getHTML();
 						if ("Up".equals(node.getStatus())) {
-							statusImg = UDDIBrowser.images.down().getHTML();
+							statusImg = UDDIBrowser.images.up().getHTML();
 						}
 						TreeItem nodeTree = new TreeItem(statusImg + node.getName());
+						nodeTree.setUserObject(node);
 						nodeTree.setStyleName("portlet-form-field-label");
 						nodeTree.setState(true);
 						nodeTree.setUserObject(node);
@@ -61,6 +62,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 							TreeItem subcriptionItem = new TreeItem(UDDIBrowser.images.subscription().getHTML() + " " 
 									+ subcription.getSubscriptionKey() + ":" + subcription.getExpiresAfter());
 							subcriptionItem.setStyleName("portlet-form-field-label");
+							subcription.setNode(node);
 							subcriptionItem.setUserObject(subcription);
 							nodeTree.addItem(subcriptionItem);
 						}
@@ -78,15 +80,24 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 
 	public void onTreeItemSelected(TreeItem treeItem) {
 		System.out.println("Selected " + treeItem.getText());
+		if (treeItem.getUserObject()!=null && Node.class.equals(treeItem.getUserObject().getClass())) {
+			Node node = (Node) treeItem.getUserObject();
+			selectedNode = node;
+		}
 		if (treeItem.getUserObject()!=null && Subscription.class.equals(treeItem.getUserObject().getClass())) {
 			Subscription subscription = (Subscription) treeItem.getUserObject();
 			UDDISubscription.getInstance().displaySubscription(subscription);
+			selectedNode = subscription.getNode();
 		}
 	}
 
 	public void onTreeItemStateChanged(TreeItem arg0) {
 		// TODO Auto-generated method stub
 		System.out.println("StateChanged " + arg0.getText());
+	}
+	
+	public Node getSelectedNode() {
+		return selectedNode;
 	}
 	
 }

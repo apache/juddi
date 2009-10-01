@@ -1,5 +1,6 @@
 package org.apache.juddi.portlets.client;
 
+import org.apache.juddi.portlets.client.model.Node;
 import org.apache.juddi.portlets.client.model.Subscription;
 import org.apache.juddi.portlets.client.service.SubscriptionResponse;
 import org.apache.juddi.portlets.client.service.SubscriptionService;
@@ -27,17 +28,21 @@ public class SubscriptionPanel extends FlowPanel {
 	private TextBox subscriptionKeyBox = new TextBox();
 	Subscription subscription = null;
 	
-	public SubscriptionPanel(Subscription subscription) {
+	public SubscriptionPanel(Subscription subscription, Node node) {
 		
 		if (subscription==null) {
-			newSubscription();
+			newSubscription(node);
 		} else {
 			this.subscription = subscription;
 		}
 		
+		
 		FlexTable flexTable = new FlexTable();
 		add(flexTable);
 
+		Label nodeLabel = new Label("Subscription on node " + node.getName());
+		add(nodeLabel);
+		
 		Label id = new Label ("Binding Key:");
 		id.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(0, 0, id);
@@ -109,13 +114,13 @@ public class SubscriptionPanel extends FlowPanel {
 //		}
 //	}
 //	
-	protected void newSubscription(){
+	protected void newSubscription(Node node){
 		subscription = new Subscription();
+		subscription.setSubscriptionKey("uddi:uddi.listeningforchanges.com:callthiskeytonotify");
 		subscription.setBindingKey("uddi:uddi.example.com:subscriptionone");
 		subscription.setBrief(true);
 		subscription.setMaxEntities(1000);
 		subscription.setNotificationInterval("P5D");
-		subscription.setSubscriptionKey("uddi:uddi.listeningforchanges.com:callthiskeytonotify");
 		subscription.setSubscriptionFilter(
 				  "<subscriptionFilter xmlns=\"urn:uddi-org:sub_v3\">"
 			    + "  <find_service xmlns=\"urn:uddi-org:api_v3\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\">"
@@ -132,6 +137,7 @@ public class SubscriptionPanel extends FlowPanel {
 			    + "    </categoryBag>"
 			    + "    </find_service>"
 			    + "</subscriptionFilter>");
+		subscription.setNode(node);
 				
 	}
 	
@@ -154,9 +160,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 				public void onSuccess(SubscriptionResponse response) {
 					if (response.isSuccess()) {
-						//Publisher publisher = response.getPublishers().get(0);
-						////JUDDIPublisher.getInstance().setSelectedPublisher(publisher.getAuthorizedName());
-						//JUDDIPublisher.getInstance().displayPublisher(publisher);
+						UDDISubscription.getInstance().displaySubscription(subscription);
 					} else {
 						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
 					}

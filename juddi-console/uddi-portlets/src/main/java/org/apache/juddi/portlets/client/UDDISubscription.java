@@ -16,7 +16,12 @@
  */
 package org.apache.juddi.portlets.client;
 
+import java.util.Set;
+
 import org.apache.juddi.portlets.client.model.Subscription;
+import org.apache.juddi.v3.client.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.XRegistration;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -76,7 +81,7 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void displaySubscription(Subscription subscription) {
 		if (detailPanel!=null ) dockPanel.remove(detailPanel);
-		detailPanel = new SubscriptionPanel(subscription);
+		detailPanel = new SubscriptionPanel(subscription, subscription.getNode());
 		dockPanel.add(detailPanel,DockPanel.EAST);
 		treePanel.loadSubscriptions();
 	}
@@ -105,9 +110,11 @@ public class UDDISubscription implements EntryPoint, Login {
 	}
 	
 	public void newSubscription() {
-		if (detailPanel!=null ) dockPanel.remove(detailPanel);
-		detailPanel = new SubscriptionPanel(null);
-		dockPanel.add(detailPanel,DockPanel.EAST);
+		if (treePanel.getSelectedNode()!=null) {
+			if (detailPanel!=null ) dockPanel.remove(detailPanel);
+			detailPanel = new SubscriptionPanel(null, treePanel.getSelectedNode());
+			dockPanel.add(detailPanel,DockPanel.EAST);
+		}
 		//treePanel.selectRow(0);
 	}
 	
@@ -115,6 +122,10 @@ public class UDDISubscription implements EntryPoint, Login {
 		if (detailPanel!=null) {
 	//		subscriptionPanel.deleteSubscription(getToken());
 		}
+	}
+	
+	public void syncListedServices() {
+		
 	}
 
 
