@@ -49,7 +49,8 @@ limitations under the License.
     <page name="jUDDI Admin" uri="/WEB-INF/themes/pluto-default-theme.jsp">
       <portlet context="/uddi-portlets" name="JUDDIPublisherPortlet"/>
     </page>
-    <page name="jUDDI Subscription Logger" uri="/WEB-INF/themes/pluto-default-theme.jsp">
+    <page name="jUDDI Subscriptions" uri="/WEB-INF/themes/pluto-default-theme.jsp">
+      <portlet context="/uddi-portlets" name="UDDISubscriptionPortlet"/>
       <portlet context="/uddi-portlets" name="UDDISubscriptionNotificationPortlet"/>
     </page>
     <page name="Pluto Admin" uri="/WEB-INF/themes/pluto-default-theme.jsp">

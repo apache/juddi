@@ -103,7 +103,7 @@ public class AppConfig
 		try {
 			tx.begin();
 	
-			if (!Install.alreadyInstalled(em)) {
+			if (!Install.alreadyInstalled(em, config)) {
 				log.info("The 'root' publisher was not found, loading...");
 				try {
 					Install.install(config);
@@ -119,7 +119,8 @@ public class AppConfig
 			tx.commit();
 			tx.begin();
 	
-			UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(Constants.ROOT_PUBLISHER);
+			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
+			UddiEntityPublisher  rootPublisher = new UddiEntityPublisher(rootPublisherStr);
 			rootPublisher.populateKeyGeneratorKeys(em);
 			List<String> rootKeyGenList = rootPublisher.getKeyGeneratorKeys();
 			if (rootKeyGenList == null || rootKeyGenList.size() == 0)

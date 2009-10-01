@@ -5,6 +5,8 @@
   <role rolename="role1"/>
   <role rolename="manager"/>
   <user username="root" password="root" roles="pluto,tomcat,manager"/>
+  <user username="affa" password="affa" roles="pluto"/>
+  <user username="uddi" password="uddi" roles="pluto"/>
   <user username="juddi" password="juddi" roles="pluto,tomcat,manager"/>
   <user username="pluto" password="pluto" roles="pluto,tomcat,manager"/>
   <user username="tomcat" password="tomcat" roles="tomcat,pluto,manager"/>

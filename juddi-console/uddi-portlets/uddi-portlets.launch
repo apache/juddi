@@ -64,11 +64,9 @@
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/jUDDI/juddi-console/uddi-portlets/target/uddi-portlets-3.0.0.SNAPSHOT/WEB-INF/lib/uddi-ws-3.0.0.SNAPSHOT.jar&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/juddi-console/uddi-portlets/src/main/resources&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.maven.ide.eclipse.launchconfig.classpathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out target/www org.apache.juddi.portlets.UDDIBrowser/UDDIBrowser.html"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="juddi-console"/>
-<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.maven.ide.eclipse.launchconfig.sourcepathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-XstartOnFirstThread -Xmx256M"/>
 </launchConfiguration>

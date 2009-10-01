@@ -23,8 +23,6 @@ package org.apache.juddi.config;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class Constants {
-	public static final String ROOT_PUBLISHER = "root";
-	public static final String UDDI_PUBLISHER = "uddi";
 	
 	public static final String GENERAL_KEYWORD_TMODEL = "uddi:uddi-org:general_keywords";
 	public static final String NODE_CATEGORY_TMODEL = "uddi:uddi.org:categorization:nodes";

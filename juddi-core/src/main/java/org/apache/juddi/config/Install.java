@@ -59,45 +59,64 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class Install {
 
-	public static final String FILE_ROOT_BUSINESSENTITY = "root_BusinessEntity.xml";
-	public static final String FILE_ROOT_PUBLISHER = "root_Publisher.xml";
-	public static final String FILE_ROOT_TMODELKEYGEN = "root_tModelKeyGen.xml";
-	public static final String FILE_UDDI_PUBLISHER = "UDDI_Publisher.xml";
-	public static final String FILE_UDDI_TMODELS = "UDDI_tModels.xml";
+	public static final String FILE_BUSINESSENTITY = "_BusinessEntity.xml";
+	public static final String FILE_PUBLISHER = "_Publisher.xml";
+	public static final String FILE_TMODELKEYGEN = "_tModelKeyGen.xml";
+	public static final String FILE_TMODELS = "_tModels.xml";
 	
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
 	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
 	public static Logger log = Logger.getLogger(Install.class);
 
+	@SuppressWarnings("unchecked")
 	protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 				
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		
 		UddiEntityPublisher rootPublisher = null;
-		UddiEntityPublisher uddiPublisher = null;
+		
 		try {
 			tx.begin();
 	
-			if (alreadyInstalled(em))
+			if (alreadyInstalled(em, config))
 				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
-			TModel rootTModelKeyGen = (TModel)buildInstallEntity(FILE_ROOT_TMODELKEYGEN, "org.uddi.api_v3", config);
-			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(FILE_ROOT_BUSINESSENTITY, "org.uddi.api_v3",config);
+			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
+			String fileRootTModelKeygen = rootPublisherStr + FILE_TMODELKEYGEN;
+			TModel rootTModelKeyGen = (TModel)buildInstallEntity(fileRootTModelKeygen, "org.uddi.api_v3", config);
+			String fileRootBusinessEntity = rootPublisherStr + FILE_BUSINESSENTITY;
+			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(fileRootBusinessEntity, "org.uddi.api_v3",config);
 			
 			String rootPartition = getRootPartition(rootTModelKeyGen);
 			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			
-			rootPublisher = installPublisher(em, FILE_ROOT_PUBLISHER, config);
-			uddiPublisher = installPublisher(em, FILE_UDDI_PUBLISHER, config);
-
+			String fileRootPublisher = rootPublisherStr + FILE_PUBLISHER;
+			rootPublisher = installPublisher(em, fileRootPublisher, config);
+			
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 
 			rootBusinessEntity.setBusinessKey(nodeId);
-			installRootBusinessEntity(em, rootBusinessEntity, rootPublisher, rootPartition);
-
-			installSaveTModel(em, FILE_UDDI_TMODELS, uddiPublisher, nodeId, config);
+			installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
+			
+			List<String> juddiPublishers = config.getList(Property.JUDDI_PUBLISHERS);
+			for (String publisherStr : juddiPublishers) {
+				String filePublisher = publisherStr + FILE_PUBLISHER;
+				String fileTModelKeygen = publisherStr + FILE_TMODELKEYGEN;
+				TModel tModelKeyGen = (TModel)buildInstallEntity(fileTModelKeygen, "org.uddi.api_v3", config);
+				String fileBusinessEntity = publisherStr + FILE_BUSINESSENTITY;
+				org.uddi.api_v3.BusinessEntity businessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(fileBusinessEntity, "org.uddi.api_v3",config);
+				UddiEntityPublisher publisher = installPublisher(em, filePublisher, config);
+				if (publisher==null) {
+					throw new ConfigurationException("File " + filePublisher + " not found.");
+				} else {
+					if (tModelKeyGen!=null) installPublisherKeyGen(em, tModelKeyGen, publisher, nodeId);
+					if (businessEntity!=null) installBusinessEntity(false, em, businessEntity, publisher, null, config);
+					String fileTModels = publisherStr + FILE_TMODELS;
+					installSaveTModel(em, fileTModels, publisher, nodeId, config);
+				}
+			}
 			
 			tx.commit();
 		}
@@ -134,13 +153,13 @@ public class Install {
 		
 	}
 	
-	protected static boolean alreadyInstalled() {
+	protected static boolean alreadyInstalled(Configuration config) throws ConfigurationException {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
 			
-			boolean result = alreadyInstalled(em);
+			boolean result = alreadyInstalled(em, config);
 			
 			tx.commit();
 			return result;
@@ -152,15 +171,21 @@ public class Install {
 		}
 	}
 
-	protected static boolean alreadyInstalled(EntityManager em) {
+	@SuppressWarnings("unchecked")
+	protected static boolean alreadyInstalled(EntityManager em, Configuration config) throws ConfigurationException {
 		
-		org.apache.juddi.model.Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, Constants.ROOT_PUBLISHER);
+		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
+		org.apache.juddi.model.Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, rootPublisherStr);
 		if (publisher != null)
 			return true;
 
-		publisher = em.find(org.apache.juddi.model.Publisher.class, Constants.UDDI_PUBLISHER);
-		if (publisher != null)
-			return true;
+		List<String> publishers = config.getList(Property.JUDDI_PUBLISHERS);
+		for (String publisherStr : publishers) {
+			publisher = em.find(org.apache.juddi.model.Publisher.class, publisherStr);
+			if (publisher != null)
+				return true;
+		}
+		
 		
 		return false;
 	}
@@ -211,10 +236,11 @@ public class Install {
 	
 	
 	
-	private static String installRootBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, UddiEntityPublisher rootPublisher, String rootPartition) 
+	private static String installBusinessEntity(boolean isRoot, EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, 
+			UddiEntityPublisher rootPublisher, String rootPartition, Configuration config) 
 	throws JAXBException, DispositionReportFaultMessage, IOException {
 		
-		validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition);
+		if (isRoot) validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition, config);
 		
 		org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity);
@@ -252,9 +278,11 @@ public class Install {
 
 	}
 	
+	
 	// A watered down version of ValidatePublish's validateBusinessEntity, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBusinessEntity(org.uddi.api_v3.BusinessEntity businessEntity, UddiEntityPublisher rootPublisher, String rootPartition) 
+	private static void validateRootBusinessEntity(org.uddi.api_v3.BusinessEntity businessEntity, UddiEntityPublisher rootPublisher, 
+			String rootPartition, Configuration config)
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -280,8 +308,8 @@ public class Install {
 		validatePublish.validateNames(businessEntity.getName());
 		validatePublish.validateDiscoveryUrls(businessEntity.getDiscoveryURLs());
 		validatePublish.validateContacts(businessEntity.getContacts());
-		validatePublish.validateCategoryBag(businessEntity.getCategoryBag());
-		validatePublish.validateIdentifierBag(businessEntity.getIdentifierBag());
+		validatePublish.validateCategoryBag(businessEntity.getCategoryBag(),config);
+		validatePublish.validateIdentifierBag(businessEntity.getIdentifierBag(),config);
 
 		org.uddi.api_v3.BusinessServices businessServices = businessEntity.getBusinessServices();
 		if (businessServices != null) {
@@ -290,7 +318,7 @@ public class Install {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.businessservices.NoInput"));
 			
 			for (org.uddi.api_v3.BusinessService businessService : businessServiceList) {
-				validateRootBusinessService(businessService, businessEntity, rootPublisher, rootPartition);
+				validateRootBusinessService(businessService, businessEntity, rootPublisher, rootPartition, config);
 			}
 		}
 
@@ -298,7 +326,8 @@ public class Install {
 	
 	// A watered down version of ValidatePublish's validateBusinessService, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBusinessService(org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent, UddiEntityPublisher rootPublisher, String rootPartition) 
+	private static void validateRootBusinessService(org.uddi.api_v3.BusinessService businessService, org.uddi.api_v3.BusinessEntity parent, 
+			UddiEntityPublisher rootPublisher, String rootPartition, Configuration config)
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -328,7 +357,7 @@ public class Install {
 		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
 		
 		validatePublish.validateNames(businessService.getName());
-		validatePublish.validateCategoryBag(businessService.getCategoryBag());
+		validatePublish.validateCategoryBag(businessService.getCategoryBag(), config);
 
 		org.uddi.api_v3.BindingTemplates bindingTemplates = businessService.getBindingTemplates();
 		if (bindingTemplates != null) {
@@ -337,14 +366,15 @@ public class Install {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.bindingtemplates.NoInput"));
 			
 			for (org.uddi.api_v3.BindingTemplate bindingTemplate : bindingTemplateList) {
-				validateRootBindingTemplate(bindingTemplate, businessService, rootPublisher, rootPartition);
+				validateRootBindingTemplate(bindingTemplate, businessService, rootPublisher, rootPartition, config);
 			}
 		}
 	}
 
 	// A watered down version of ValidatePublish's validatBindingTemplate, designed for the specific condition that this is run upon the initial
 	// jUDDI install.
-	private static void validateRootBindingTemplate(org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent, UddiEntityPublisher rootPublisher, String rootPartition) 
+	private static void validateRootBindingTemplate(org.uddi.api_v3.BindingTemplate bindingTemplate, org.uddi.api_v3.BusinessService parent, 
+			UddiEntityPublisher rootPublisher, String rootPartition, Configuration config) 
 	throws DispositionReportFaultMessage {
 
 		// A supplied businessService can't be null
@@ -373,7 +403,7 @@ public class Install {
 		
 		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
 		
-		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag());
+		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag(), config);
 		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails());
 
 	}
@@ -439,14 +469,19 @@ public class Install {
 		
 		// First try the custom install directory
 		URL url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName);
-		if (url != null)
-			resourceStream = url.openStream();
+		if (url != null) resourceStream = url.openStream();
 		
 		// If the custom install directory doesn't exist, then use the standard install directory where the resource is guaranteed to exist.
 		if (resourceStream == null) {
 			url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_INSTALL_DATA_DIR + fileName);
-			resourceStream = url.openStream();
+			if (url != null) resourceStream = url.openStream();
 		}
+		
+		// If file still does not exist then return null;
+		if (resourceStream == null) {
+			return null;
+		}
+		
 		StringBuilder xml = new StringBuilder();
 	    byte[] b = new byte[4096];
 	    for (int n; (n = resourceStream.read(b)) != -1;) {
@@ -525,7 +560,7 @@ public class Install {
 		throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
 		SaveTModel apiSaveTModel = (SaveTModel)buildInstallEntity(fileName, "org.uddi.api_v3", config);
-		installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
+		if (apiSaveTModel!=null) installTModels(em, apiSaveTModel.getTModel(), publisher, nodeId);
 	}
 
 	/**
@@ -543,6 +578,7 @@ public class Install {
 		throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 
 		org.apache.juddi.api_v3.Publisher apiPub = (org.apache.juddi.api_v3.Publisher)buildInstallEntity(fileName, "org.apache.juddi.api_v3", config);
+		if (apiPub==null) return null;
 		org.apache.juddi.model.Publisher modelPub = new org.apache.juddi.model.Publisher();
 		MappingApiToModel.mapPublisher(apiPub, modelPub);
 		em.persist(modelPub);

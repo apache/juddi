@@ -433,7 +433,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveBinding(em, body);
+			new ValidatePublish(publisher).validateSaveBinding(em, body, null);
 	
 			BindingDetail result = new BindingDetail();
 			
@@ -474,7 +474,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveBusiness(em, body);
+			new ValidatePublish(publisher).validateSaveBusiness(em, body, null);
 	
 			BusinessDetail result = new BusinessDetail();
 			
@@ -513,7 +513,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveService(em, body);
+			new ValidatePublish(publisher).validateSaveService(em, body, null);
 			
 			ServiceDetail result = new ServiceDetail();
 	
@@ -554,7 +554,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 	
-			new ValidatePublish(publisher).validateSaveTModel(em, body);
+			new ValidatePublish(publisher).validateSaveTModel(em, body, null);
 	
 			TModelDetail result = new TModelDetail();
 	

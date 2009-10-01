@@ -192,12 +192,6 @@ public class ClientConfig
 	}
 	
 	public Map<String, UDDINode> getNodes() {
-		try {
-			getInstance();
-		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return nodes;
 	}
 	public Map<String,UDDIClerk> getClerks() {

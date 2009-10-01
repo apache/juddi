@@ -29,7 +29,8 @@ import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
-import org.apache.juddi.config.Constants;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.transport.InVMTransport;
@@ -191,7 +192,8 @@ public class JUDDI_010_PublisherIntegrationTest {
  	
  	private void savePublisher(String publisherId, String publisherXML) {
 		try {
-			authInfo = TckSecurity.getAuthToken(security, Constants.ROOT_PUBLISHER, "");
+			String rootPublisherStr = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PUBLISHER);
+			authInfo = TckSecurity.getAuthToken(security, rootPublisherStr, "");
 			logger.debug("Saving new publisher: " + publisherXML);
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
@@ -236,7 +238,8 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	private void deletePublisher(String publisherId) {
 		try {
-			authInfo = TckSecurity.getAuthToken(security, Constants.ROOT_PUBLISHER, "");
+			String rootPublisherStr = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PUBLISHER);
+			authInfo = TckSecurity.getAuthToken(security, rootPublisherStr, "");
 			logger.debug("Delete publisher: " + publisherId);
 			//Now deleting this publisher
 			DeletePublisher dp = new DeletePublisher();
