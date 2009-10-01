@@ -56,6 +56,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 						nodeTree.setUserObject(node);
 						TreeItem nodeItem = new TreeItem(UDDIBrowser.images.description().getHTML() + " " + node.getDescription());
 						nodeItem.setStyleName("portlet-form-field-label");
+						nodeItem.setUserObject(node);
 						nodeTree.addItem(nodeItem);
 						
 						for (Subscription subcription : node.getSubscriptions()) {

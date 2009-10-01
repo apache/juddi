@@ -75,28 +75,28 @@ public class PublisherPanel extends FlowPanel {
 		isEnabledBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(4, 1,isEnabledBox);
 		
-		Label maxBusinesses = new Label ("MaxBusinesses:");
+		Label maxBusinesses = new Label ("Max Businesses:");
 		maxBusinesses.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(5, 0,maxBusinesses);
 		maxBusinessesBox.setText(String.valueOf(this.publisher.getMaxBusinesses()));
 		maxBusinessesBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(5, 1,maxBusinessesBox);
 		
-		Label maxServicesPerBusiness = new Label ("MaxServicePerBusiness:");
+		Label maxServicesPerBusiness = new Label ("Max Service Per Business:");
 		maxServicesPerBusiness.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(6, 0,maxServicesPerBusiness);
 		maxServicesPerBusinessBox.setText(String.valueOf(this.publisher.getMaxServicePerBusiness()));
 		maxServicesPerBusinessBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(6, 1,maxServicesPerBusinessBox);
 		
-		Label maxBindingsPerService = new Label ("MaxBindingsPerService:");
+		Label maxBindingsPerService = new Label ("Max Bindings Per Service:");
 		maxBindingsPerService.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(7, 0,maxBindingsPerService);
 		maxBindingsPerServiceBox.setText(String.valueOf(this.publisher.getMaxBindingsPerService()));
 		maxBindingsPerServiceBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(7, 1,maxBindingsPerServiceBox);
 		
-		Label maxTModels = new Label ("MaxTModels:");
+		Label maxTModels = new Label ("Max TModels:");
 		maxTModels.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(8, 0,maxTModels);
 		maxTModelBox.setText(String.valueOf(this.publisher.getMaxTModels()));
