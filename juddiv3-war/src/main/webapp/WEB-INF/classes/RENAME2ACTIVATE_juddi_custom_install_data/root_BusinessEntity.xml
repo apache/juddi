@@ -54,7 +54,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" serviceKey="uddi:juddi.apache.org:services-subscriptionlistener">
           <description>UDDI Subscription Listener API V3</description>
-          <accessPoint useType="wsdlDeployment">http://${juddi.server.name}:${juddi.server.port}/juddiv3/services/subscription-listener?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">http://macdaddy:8080/juddiv3/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
           </tModelInstanceDetails>
