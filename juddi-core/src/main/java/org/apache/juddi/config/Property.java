@@ -3,7 +3,6 @@ package org.apache.juddi.config;
 public interface Property 
 {
     public final static String JUDDI_ROOT_PUBLISHER              ="juddi.root.publisher";
-    public final static String JUDDI_PUBLISHERS                  ="juddi.publishers";
 	public final static String JUDDI_PERSISTENCEUNIT_NAME        ="juddi.persistenceunit.name";
 	public final static String JUDDI_AUTHENTICATOR               ="juddi.authenticator";
 	public final static String JUDDI_CONFIGURATION_RELOAD_DELAY  ="juddi.configuration.reload.delay";

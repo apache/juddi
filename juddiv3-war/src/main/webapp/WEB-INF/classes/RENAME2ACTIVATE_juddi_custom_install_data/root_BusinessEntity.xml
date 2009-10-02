@@ -47,9 +47,6 @@
     <!-- This discovery URL should point to the home installation URL of jUDDI -->
     <discoveryURL useType="home">http://${juddi.server.name}:${juddi.server.port}/juddiv3</discoveryURL>
   </discoveryURLs>
-  <categoryBag>
-    <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node" />
-  </categoryBag>
   <businessServices>
     <businessService serviceKey="uddi:juddi.apache.org:services-subscriptionlistener" businessKey="uddi:juddi.apache.org:businesses-asf">
       <name xml:lang="en">UDDI Subscription Listener Service</name>

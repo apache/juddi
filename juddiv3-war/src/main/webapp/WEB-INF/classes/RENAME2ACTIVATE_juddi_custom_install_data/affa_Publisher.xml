@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="affa">
+<publisher xmlns="urn:juddi-affiliatea-org:api_v3" authorizedName="affa">
   <publisherName>root of affiliate A publisher</publisherName>
   <isAdmin>true</isAdmin>
 </publisher>

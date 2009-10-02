@@ -17,14 +17,21 @@
 
 package org.apache.juddi.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +57,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidateUDDIKey;
 import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -69,7 +77,6 @@ public class Install {
 	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
 	public static Logger log = Logger.getLogger(Install.class);
 
-	@SuppressWarnings("unchecked")
 	protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 				
 		EntityManager em = PersistenceManager.getEntityManager();
@@ -93,6 +100,7 @@ public class Install {
 			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			
 			String fileRootPublisher = rootPublisherStr + FILE_PUBLISHER;
+			log.info("Loading the root Publisher from file " + fileRootPublisher);
 			rootPublisher = installPublisher(em, fileRootPublisher, config);
 			
 			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
@@ -100,7 +108,7 @@ public class Install {
 			rootBusinessEntity.setBusinessKey(nodeId);
 			installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
 			
-			List<String> juddiPublishers = config.getList(Property.JUDDI_PUBLISHERS);
+			List<String> juddiPublishers = getPublishers(config);
 			for (String publisherStr : juddiPublishers) {
 				String filePublisher = publisherStr + FILE_PUBLISHER;
 				String fileTModelKeygen = publisherStr + FILE_TMODELKEYGEN;
@@ -171,7 +179,6 @@ public class Install {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	protected static boolean alreadyInstalled(EntityManager em, Configuration config) throws ConfigurationException {
 		
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
@@ -179,7 +186,7 @@ public class Install {
 		if (publisher != null)
 			return true;
 
-		List<String> publishers = config.getList(Property.JUDDI_PUBLISHERS);
+		List<String> publishers = getPublishers(config);
 		for (String publisherStr : publishers) {
 			publisher = em.find(org.apache.juddi.model.Publisher.class, publisherStr);
 			if (publisher != null)
@@ -464,24 +471,75 @@ public class Install {
 		
 	}
 	
-	private static Object buildInstallEntity(String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException {
+	private static List<String> getPublishers(Configuration config) throws ConfigurationException {
+		List<String> publishers = new ArrayList<String>();
+		String basePath = JUDDI_CUSTOM_INSTALL_DATA_DIR;
+		URL url = Loader.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR);
+		if (url==null) {
+			url = Loader.getResource(JUDDI_INSTALL_DATA_DIR);
+			basePath = JUDDI_INSTALL_DATA_DIR;
+		}
+		String path=url.getPath();
+		File dir = new File(path);
+		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
+		if (dir.exists()) {
+			log.debug("Discovering the Publisher XML data files in directory: " + path);
+			File[] files = dir.listFiles(new PublisherFileFilter());
+		    for (File f : files)
+		    {	
+		        String publisher = f.getName().substring(0,f.getName().indexOf(FILE_PUBLISHER));
+		        if (! rootPublisherStr.equalsIgnoreCase(publisher)) {
+		        	publishers.add(publisher);
+		        } 
+		    }
+		} else {
+			String[] paths = path.split("!");
+			try {
+				log.debug("Discovering the Publisher XML data files in jar: " + paths[0]);
+				Enumeration<JarEntry> en = new JarFile(new File(new URI(paths[0]))).entries();
+				while (en.hasMoreElements()) {
+					String name = en.nextElement().getName();
+					if (name.endsWith(FILE_PUBLISHER)) {
+						log.debug("Found publisher file=" + name);
+						String publisher = name.substring(basePath.length(),name.indexOf(FILE_PUBLISHER));
+				        if (! rootPublisherStr.equalsIgnoreCase(publisher)) {
+				        	publishers.add(publisher);
+				        } 
+					}
+				}
+			} catch (IOException e) {
+				throw new ConfigurationException(e);
+			} catch (URISyntaxException e) {
+				throw new ConfigurationException(e);
+			}
+		}
+		return publishers;
+	}
+	
+	private static Object buildInstallEntity(final String fileName, String packageName, Configuration config) throws JAXBException, IOException, ConfigurationException {
 		InputStream resourceStream = null;
 		
 		// First try the custom install directory
-		URL url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName);
+		URL url = Loader.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName);
 		if (url != null) resourceStream = url.openStream();
 		
 		// If the custom install directory doesn't exist, then use the standard install directory where the resource is guaranteed to exist.
 		if (resourceStream == null) {
-			url = Thread.currentThread().getContextClassLoader().getResource(JUDDI_INSTALL_DATA_DIR + fileName);
-			if (url != null) resourceStream = url.openStream();
+			url = Loader.getResource(JUDDI_INSTALL_DATA_DIR + fileName);
+			if (url != null) { 
+				resourceStream = url.openStream();
+			}
+			// If file still does not exist then return null;
+			if (url ==null || resourceStream == null) {
+				if (fileName.endsWith(FILE_PUBLISHER)) {
+					throw new ConfigurationException("Could not locate " + JUDDI_INSTALL_DATA_DIR + fileName);
+				} else {
+					log.debug("Could not locate: " + url);
+				}
+				return null;
+			}
 		}
-		
-		// If file still does not exist then return null;
-		if (resourceStream == null) {
-			return null;
-		}
-		
+		log.info("Loading the content of file: " + url);
 		StringBuilder xml = new StringBuilder();
 	    byte[] b = new byte[4096];
 	    for (int n; (n = resourceStream.read(b)) != -1;) {

@@ -38,7 +38,6 @@ public class XRegistration {
 			BusinessService businessService = fromClerk.findService(bindingTemplate.getServiceKey());
 			businessService.getBindingTemplates().getBindingTemplate().clear();
 			businessService.getBindingTemplates().getBindingTemplate().add(bindingTemplate);
-			//TODO Check the keyGenTModel
 			toClerk.register(businessService);
 		} catch (Exception e) {
 			log.error("Could not cross-register. " + e.getMessage() + " " + e.getCause(),e);
