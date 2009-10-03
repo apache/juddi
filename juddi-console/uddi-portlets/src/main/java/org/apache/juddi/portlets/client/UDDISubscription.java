@@ -16,12 +16,7 @@
  */
 package org.apache.juddi.portlets.client;
 
-import java.util.Set;
-
 import org.apache.juddi.portlets.client.model.Subscription;
-import org.apache.juddi.v3.client.UDDIClerkManager;
-import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.XRegistration;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.DockPanel;

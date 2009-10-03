@@ -16,19 +16,26 @@
  */
 package org.apache.juddi.portlets.server.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
 import java.security.Principal;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.GetAuthToken;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -41,20 +48,20 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class SecurityServiceImpl extends RemoteServiceServlet implements
 		SecurityService {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Logger log = Logger.getLogger(this.getClass());
 	private static final long serialVersionUID = 1L;
 
 	public SecurityResponse get(String username, String password) {
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
-		logger.debug("User " + username + " sending token request..");
+		log.debug("User " + username + " sending token request..");
 		SecurityResponse response = new SecurityResponse();
 		String token = (String) session.getAttribute("AuthToken");
 		if (username==null) {
 			username = (String) session.getAttribute("UserName");
 		}
 		Principal user = request.getUserPrincipal();
-		logger.debug("UserPrincipal " + user);
+		log.debug("UserPrincipal " + user);
 		if (username==null && user!=null) {
 			username = user.getName();
 			password = "";
@@ -65,28 +72,34 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 				return response;
 			} else {
 				try {
-					String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
-					Class<?> transportClass = Loader.loadClass(clazz);
-					Transport transport = (Transport) transportClass.newInstance();
-					UDDISecurityPortType securityService = transport.getUDDISecurityService();
-					GetAuthToken getAuthToken = new GetAuthToken();
-					getAuthToken.setUserID(username);
-					getAuthToken.setCred(password);
-					AuthToken authToken = securityService
-							.getAuthToken(getAuthToken);
-					logger.debug("User " + username + " obtained token="
-							+ authToken.getAuthInfo());
+					AuthToken authToken = login(username, password,"default");
 					response.setSuccess(true);
 					response.setResponse(authToken.getAuthInfo());
+					
 					session.setAttribute("AuthToken", authToken.getAuthInfo());
 					session.setAttribute("UserName", username);
+				
+					//upon success obtain tokens from other registries
+					Map<String, UDDIClerk> clerks = ClientConfig.getInstance().getClerks();
+					for (UDDIClerk clerk : clerks.values()) {
+						if (username.equals(clerk.getPublisher())) {
+							try {
+								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getNode().getName());
+								//set the clerkToken into the session
+								session.setAttribute(clerk.getName(), clerkToken.getAuthInfo());
+							} catch (Exception e) {
+								log.warn("Could not obtain authToken for clerk=" + clerk.getName());
+							} 
+						}
+					}
+					
 				} catch (Exception e) {
-					logger.error("Could not obtain token. " + e.getMessage(), e);
+					log.error("Could not obtain token. " + e.getMessage(), e);
 					response.setSuccess(false);
 					response.setMessage(e.getMessage());
 					response.setErrorCode("101");
 				} catch (Throwable t) {
-					logger.error("Could not obtain token. " + t.getMessage(), t);
+					log.error("Could not obtain token. " + t.getMessage(), t);
 					response.setSuccess(false);
 					response.setMessage(t.getMessage());
 					response.setErrorCode("101");
@@ -98,5 +111,21 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		}
 		response.setUsername(username);
 		return response;
+	}
+	
+	private AuthToken login(String username, String password, String node) throws ConfigurationException, ClassNotFoundException,
+		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
+		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
+		
+		String clazz = ClientConfig.getInstance().getNodes().get(node).getProxyTransport();
+		Class<?> transportClass = Loader.loadClass(clazz);
+		Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);
+		UDDISecurityPortType securityService = transport.getUDDISecurityService();
+		GetAuthToken getAuthToken = new GetAuthToken();
+		getAuthToken.setUserID(username);
+		getAuthToken.setCred(password);
+		AuthToken authToken = securityService.getAuthToken(getAuthToken);
+		log.info("User " + username + " obtained token from node=" + node);
+		return authToken;
 	}
 }
