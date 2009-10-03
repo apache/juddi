@@ -567,7 +567,9 @@ public class MappingApiToModel {
 
 		modelSubscription.setSubscriptionKey(apiSubscription.getSubscriptionKey());
 		modelSubscription.setBindingKey(apiSubscription.getBindingKey());
-		modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+		if (apiSubscription.getNotificationInterval()!=null) {
+			modelSubscription.setNotificationInterval(apiSubscription.getNotificationInterval().toString());
+		}
 		modelSubscription.setMaxEntities(apiSubscription.getMaxEntities());
 		if (apiSubscription.getExpiresAfter() != null) {
 			GregorianCalendar gc = apiSubscription.getExpiresAfter().toGregorianCalendar();

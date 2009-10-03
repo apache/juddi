@@ -34,11 +34,13 @@ public class TypeConvertor {
 	public static XMLGregorianCalendar convertDateToXMLGregorianCalendar(Date date) throws DispositionReportFaultMessage {
 		XMLGregorianCalendar result = null;
 		try { 
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.setTimeInMillis(date.getTime());
-			
-			DatatypeFactory df = DatatypeFactory.newInstance();
-			result = df.newXMLGregorianCalendar(gc);
+			if (date!=null) {
+				GregorianCalendar gc = new GregorianCalendar();
+				gc.setTimeInMillis(date.getTime());
+				
+				DatatypeFactory df = DatatypeFactory.newInstance();
+				result = df.newXMLGregorianCalendar(gc);
+			}
 		}
 		catch(DatatypeConfigurationException ce) { 
 			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
