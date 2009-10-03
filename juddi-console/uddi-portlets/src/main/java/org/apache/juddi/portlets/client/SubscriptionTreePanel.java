@@ -34,7 +34,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 	
 	protected void getSubscriptions() {
 
-		subscriptionService.getSubscriptions(UDDISubscription.getInstance().getToken(), new AsyncCallback<SubscriptionResponse>() 
+		subscriptionService.getSubscriptions(new AsyncCallback<SubscriptionResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
@@ -43,7 +43,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 			public void onSuccess(SubscriptionResponse response) {
 				if (response.isSuccess()) {
 					List<Node> nodes = response.getNodes();
-					System.out.println("Node=" + nodes);
+					System.out.println("Nodes=" + nodes);
 					for (Node node : nodes) {
 						String statusImg = UDDIBrowser.images.down().getHTML();
 						if ("Up".equals(node.getStatus())) {
@@ -69,7 +69,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 						
 						for (Subscription subcription : node.getSubscriptions()) {
 							TreeItem subcriptionItem = new TreeItem(UDDIBrowser.images.subscription().getHTML() + " " 
-									+ subcription.getSubscriptionKey() + ":" + subcription.getExpiresAfter());
+									+ subcription.getSubscriptionKey());
 							subcriptionItem.setStyleName("portlet-form-field-label");
 							subcription.setNode(node);
 							subcriptionItem.setUserObject(subcription);
@@ -88,15 +88,17 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 	
 
 	public void onTreeItemSelected(TreeItem treeItem) {
-		System.out.println("Selected " + treeItem.getText());
+		
 		if (treeItem.getUserObject()!=null && Node.class.equals(treeItem.getUserObject().getClass())) {
 			Node node = (Node) treeItem.getUserObject();
 			selectedNode = node;
+			System.out.println("Selected " + selectedNode);
 		}
 		if (treeItem.getUserObject()!=null && Subscription.class.equals(treeItem.getUserObject().getClass())) {
 			Subscription subscription = (Subscription) treeItem.getUserObject();
 			UDDISubscription.getInstance().displaySubscription(subscription);
 			selectedNode = subscription.getNode();
+			System.out.println("Selected " + selectedNode);
 		}
 	}
 
@@ -107,6 +109,10 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 	
 	public Node getSelectedNode() {
 		return selectedNode;
+	}
+
+	public Tree getSubscriptionTree() {
+		return subscriptionTree;
 	}
 	
 }

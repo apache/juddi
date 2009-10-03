@@ -78,7 +78,6 @@ public class UDDISubscription implements EntryPoint, Login {
 		if (detailPanel!=null ) dockPanel.remove(detailPanel);
 		detailPanel = new SubscriptionPanel(subscription, subscription.getNode());
 		dockPanel.add(detailPanel,DockPanel.EAST);
-		treePanel.loadSubscriptions();
 	}
 	
 //	public void setSelectedSubscription(String selectedSubscriptionId) {
@@ -100,8 +99,10 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void saveSubscription() {
 		if (detailPanel!=null) {
-			detailPanel.saveSubscription(getToken());
+			detailPanel.saveSubscription();
 		}
+		treePanel.getSubscriptionTree().clear();
+		treePanel.loadSubscriptions();
 	}
 	
 	public void newSubscription() {
@@ -110,7 +111,6 @@ public class UDDISubscription implements EntryPoint, Login {
 			detailPanel = new SubscriptionPanel(null, treePanel.getSelectedNode());
 			dockPanel.add(detailPanel,DockPanel.EAST);
 		}
-		//treePanel.selectRow(0);
 	}
 	
 	public void deleteSubscription() {

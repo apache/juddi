@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
  *
  */
 public interface SubscriptionServiceAsync extends RemoteService {
-	public void getSubscriptions(String authToken, AsyncCallback<SubscriptionResponse> callback);
-	public void saveSubscription(String authToken, Subscription subscription, AsyncCallback<SubscriptionResponse> callback);
+	public void getSubscriptions(AsyncCallback<SubscriptionResponse> callback);
+	public void saveSubscription(Subscription subscription, AsyncCallback<SubscriptionResponse> callback);
 }
 

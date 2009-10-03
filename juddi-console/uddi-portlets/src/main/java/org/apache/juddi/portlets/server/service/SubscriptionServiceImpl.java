@@ -55,7 +55,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	private final static String UP = "Up";
 	private static final long serialVersionUID = 1L;
 	
-	public SubscriptionResponse getSubscriptions(String authToken) 
+	public SubscriptionResponse getSubscriptions() 
 	{
 		SubscriptionResponse response = new SubscriptionResponse();
 		response.setSuccess(false);
@@ -94,6 +94,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		Node modelNode = new Node();
 		UDDINode node = clerk.getNode();
 		modelNode.setName(node.getName());
+		modelNode.setClerkName(clerk.getName());
 		modelNode.setDescription(node.getDescription());
 		try {
 	    	 String clazz = ClientConfig.getInstance().getNodes().get(node.getName()).getProxyTransport();
@@ -126,14 +127,18 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		 return modelNode;
 	}
 	
-	public SubscriptionResponse saveSubscription(String authToken, Subscription modelSubscription) {
+	public SubscriptionResponse saveSubscription(Subscription modelSubscription) {
+		
+		HttpServletRequest request = getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		SubscriptionResponse response = new SubscriptionResponse();
-		Node modelNode = modelSubscription.getNode();
+	
 		logger.debug("Sending saveSubscriptions request..");
 		try {
-	    	 String clazz = ClientConfig.getInstance().getNodes().get(modelNode.getName()).getProxyTransport();
+			 UDDIClerk clerk = ClientConfig.getInstance().getClerks().get(modelSubscription.getClerkName());
+	    	 String clazz = ClientConfig.getInstance().getNodes().get(clerk.getNode().getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(modelNode.getName()); 
+	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 	       	 List<org.uddi.sub_v3.Subscription> subscriptionList = new ArrayList<org.uddi.sub_v3.Subscription>();
 	       	 org.uddi.sub_v3.Subscription subscription = new org.uddi.sub_v3.Subscription();
@@ -156,6 +161,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			 subscriptionList.add(subscription);
 			 Holder<List<org.uddi.sub_v3.Subscription>> subscriptionHolder = new Holder<List<org.uddi.sub_v3.Subscription>>();
 			 subscriptionHolder.value = subscriptionList;
+			 String authToken = (String) session.getAttribute(clerk.getName());
 	       	 subscriptionService.saveSubscription(authToken, subscriptionHolder);
 	       	 response.setSuccess(true);
 	     } catch (Exception e) {

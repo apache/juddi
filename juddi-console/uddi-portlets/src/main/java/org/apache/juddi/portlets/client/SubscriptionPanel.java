@@ -19,6 +19,7 @@ public class SubscriptionPanel extends FlowPanel {
 
 	private SubscriptionServiceAsync subscriptionServiceAsync = (SubscriptionServiceAsync) GWT.create(SubscriptionService.class);
 	
+	private TextBox clerkNameBox = new TextBox();
 	private TextBox bindingKeyBox = new TextBox();
 	private CheckBox isBriefBox = new CheckBox();
 	private TextBox expiresAfterBox = new TextBox();
@@ -36,62 +37,65 @@ public class SubscriptionPanel extends FlowPanel {
 			this.subscription = subscription;
 		}
 		
-		
 		FlexTable flexTable = new FlexTable();
 		add(flexTable);
-
-		Label nodeLabel = new Label("Subscription on node " + node.getName());
-		add(nodeLabel);
 		
-		Label id = new Label ("Binding Key:");
-		id.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(0, 0, id);
-		bindingKeyBox.setText(this.subscription.getBindingKey());
-		bindingKeyBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(0, 1, bindingKeyBox);
+		Label clerkName = new Label ("Clerk:");
+		clerkName.setStyleName("portlet-form-field-label-right");
+		flexTable.setWidget(0, 0, clerkName);
+		clerkNameBox.setText(String.valueOf(this.subscription.getNode().getClerkName()));
+		clerkNameBox.setStyleName("portlet-form-input-field");
+		flexTable.setWidget(0, 1, clerkNameBox);
+
+		Label subscriptionKey = new Label ("Subscription Key:");
+		subscriptionKey.setStyleName("portlet-form-field-label-right");
+		flexTable.setWidget(1, 0, subscriptionKey);
+		subscriptionKeyBox.setText(String.valueOf(this.subscription.getSubscriptionKey()));
+		subscriptionKeyBox.setStyleName("portlet-form-input-field");
+		flexTable.setWidget(1, 1, subscriptionKeyBox);
 		
 		Label isBrief = new Label ("Is Brief:");
 		isBrief.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(1, 0,isBrief);
+		flexTable.setWidget(2, 0,isBrief);
 		isBriefBox.setChecked(this.subscription.getBrief());
 		isBriefBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(1, 1,isBriefBox);
+		flexTable.setWidget(2, 1, isBriefBox);
 		
 		Label expiresAfter = new Label ("Expires After:");
 		expiresAfter.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(2, 0, expiresAfter);
+		flexTable.setWidget(3, 0, expiresAfter);
 		expiresAfterBox.setText(this.subscription.getExpiresAfter());
 		expiresAfterBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(2, 1,expiresAfterBox);
+		flexTable.setWidget(3, 1, expiresAfterBox);
 		
 		Label maxEntities = new Label ("Max Entities:");
 		maxEntities.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(3, 0, maxEntities);
+		flexTable.setWidget(4, 0, maxEntities);
 		maxEntitiesBox.setText(String.valueOf(this.subscription.getMaxEntities()));
 		maxEntitiesBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(3, 1,maxEntitiesBox);
-		
-		Label notificationInterval = new Label ("Notification Interval:");
-		notificationInterval.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(4, 0, notificationInterval);
-		notificationIntervalBox.setText(String.valueOf(this.subscription.getNotificationInterval()));
-		notificationIntervalBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(4, 1,notificationIntervalBox);
-		
-		Label subscriptionKey = new Label ("Subscription Key:");
-		subscriptionKey.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(5, 0, subscriptionKey);
-		subscriptionKeyBox.setText(String.valueOf(this.subscription.getSubscriptionKey()));
-		subscriptionKeyBox.setStyleName("portlet-form-input-field");
-		flexTable.setWidget(5, 1,subscriptionKeyBox);
+		flexTable.setWidget(4, 1, maxEntitiesBox);
 		
 		Label subscriptionFilter = new Label ("Search Filter:");
 		subscriptionFilter.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(6, 0, subscriptionFilter);
+		flexTable.setWidget(5, 0, subscriptionFilter);
 		subscriptionFilterBox.setText(String.valueOf(this.subscription.getSubscriptionFilter()));
 		subscriptionFilterBox.setStyleName("portlet-form-input-field");
 		subscriptionFilterBox.setHeight("100px");
-		flexTable.setWidget(6, 1,subscriptionFilterBox);
+		flexTable.setWidget(5, 1, subscriptionFilterBox);
+		
+		Label id = new Label ("Binding Key:");
+		id.setStyleName("portlet-form-field-label-right");
+		flexTable.setWidget(6, 0, id);
+		bindingKeyBox.setText(this.subscription.getBindingKey());
+		bindingKeyBox.setStyleName("portlet-form-input-field");
+		flexTable.setWidget(6, 1, bindingKeyBox);
+		
+		Label notificationInterval = new Label ("Notification Interval:");
+		notificationInterval.setStyleName("portlet-form-field-label-right");
+		flexTable.setWidget(7, 0, notificationInterval);
+		notificationIntervalBox.setText(String.valueOf(this.subscription.getNotificationInterval()));
+		notificationIntervalBox.setStyleName("portlet-form-input-field");
+		flexTable.setWidget(7, 1, notificationIntervalBox);
 		
 	}
 	
@@ -141,7 +145,7 @@ public class SubscriptionPanel extends FlowPanel {
 				
 	}
 	
-	protected void saveSubscription(String token) {
+	protected void saveSubscription() {
 		if (subscription!=null) {
 			
 			subscription.setBindingKey(bindingKeyBox.getText());
@@ -151,8 +155,9 @@ public class SubscriptionPanel extends FlowPanel {
 			subscription.setNotificationInterval(notificationIntervalBox.getText());
 			subscription.setSubscriptionFilter(subscriptionFilterBox.getText());
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
+			subscription.setClerkName(clerkNameBox.getText());
 			
-			subscriptionServiceAsync.saveSubscription(token, subscription, new AsyncCallback<SubscriptionResponse>()
+			subscriptionServiceAsync.saveSubscription(subscription, new AsyncCallback<SubscriptionResponse>()
 			{
 				public void onFailure(Throwable caught) {
 					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());

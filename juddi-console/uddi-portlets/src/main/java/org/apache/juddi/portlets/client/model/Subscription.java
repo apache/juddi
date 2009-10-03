@@ -39,6 +39,7 @@ public class Subscription implements Serializable{
     protected String subscriptionKey;
     
     private Node node;
+    private String clerkName;
     
 	public Subscription() {
 		super();
@@ -111,16 +112,23 @@ public class Subscription implements Serializable{
 		return subscriptionFilter;
 	}
 	
+	public void setSubscriptionFilter(String subscriptionFilter) {
+		this.subscriptionFilter = subscriptionFilter;
+	}
+	
 	public Node getNode() {
 			return node;
 	}
 	public void setNode(Node node) {
 		this.node = node;
 	}
-
-	public void setSubscriptionFilter(String subscriptionFilter) {
-		this.subscriptionFilter = subscriptionFilter;
+	public String getClerkName() {
+		return clerkName;
 	}
+	public void setClerkName(String clerkName) {
+		this.clerkName = clerkName;
+	}
+
 	
 }
 
