@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.juddi.portlets.client.model.Node;
+import org.apache.juddi.portlets.client.model.Subscription;
 
 /**
  * 
@@ -30,14 +31,23 @@ public class SubscriptionResponse extends Response {
 	
 	private static final long serialVersionUID = 1L;
 	
-	List<Node> nodes = new ArrayList<Node>();
-	
+	private List<Node> nodes = new ArrayList<Node>();
+	private Subscription subscription;
+
 	public List<Node> getNodes() {
 		return nodes;
 	}
 	
 	public void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
+	}
+	
+	public Subscription getSubscription() {
+		return subscription;
+	}
+
+	public void setSubscription(Subscription subscription) {
+		this.subscription = subscription;
 	}
 
 }

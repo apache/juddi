@@ -164,6 +164,20 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			 subscriptionHolder.value = subscriptionList;
 			 String authToken = (String) session.getAttribute(clerk.getName());
 	       	 subscriptionService.saveSubscription(authToken, subscriptionHolder);
+	       	 subscription = subscriptionHolder.value.get(0);
+	       	 String expiresAfter = null;
+      		 if (subscription.getExpiresAfter()!=null) expiresAfter = subscription.getExpiresAfter().toString();
+      		 String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(subscription.getSubscriptionFilter()), "org.uddi.sub_v3");
+	       	 Subscription savedModelSubscription = new Subscription(
+      				 subscription.getBindingKey(),
+      				 subscription.isBrief(),
+      				 expiresAfter,
+      				 subscription.getMaxEntities(),
+      				 subscription.getNotificationInterval().toString(),
+      				 rawFilter,
+      				 subscription.getSubscriptionKey());
+	       	 savedModelSubscription.setNode(modelSubscription.getNode());
+	       	 response.setSubscription(savedModelSubscription);
 	       	 response.setSuccess(true);
 	     } catch (Exception e) {
 	    	 logger.error("Could not save subscription. " + e.getMessage(), e);

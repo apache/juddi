@@ -169,6 +169,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 				public void onSuccess(SubscriptionResponse response) {
 					if (response.isSuccess()) {
+						UDDISubscription.getInstance().displaySubscription(response.getSubscription());
 						UDDISubscription.getInstance().refreshSubscriptionTree();
 					} else {
 						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
