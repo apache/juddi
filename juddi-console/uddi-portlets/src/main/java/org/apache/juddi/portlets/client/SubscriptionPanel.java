@@ -99,25 +99,29 @@ public class SubscriptionPanel extends FlowPanel {
 		
 	}
 	
-//	protected void deleteSubscription(String token){
-//		if (subscription!=null) {
-//			juddiApiService.deletePublisher(token, publisher.getAuthorizedName(), new AsyncCallback<JUDDIApiResponse>() 
-//			{
-//				public void onFailure(Throwable caught) {
-//					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
-//				}
-//	
-//				public void onSuccess(JUDDIApiResponse response) {
-//					if (response.isSuccess()) {
-//						JUDDIPublisher.getInstance().hidePublisher();
-//					} else {
-//						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
-//					}
-//				}
-//			});
-//		}
-//	}
-//	
+	protected void deleteSubscription(){
+		if (subscription!=null) {
+			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
+			subscription.setClerkName(clerkNameBox.getText());
+			
+			subscriptionServiceAsync.deleteSubscription(subscription, new AsyncCallback<SubscriptionResponse>()
+					{
+						public void onFailure(Throwable caught) {
+							Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+						}
+			
+						public void onSuccess(SubscriptionResponse response) {
+							if (response.isSuccess()) {
+								UDDISubscription.getInstance().refreshSubscriptionTree();
+								UDDISubscription.getInstance().removeDetailPanel();
+							} else {
+								Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+							}
+						}
+					}); 
+		}
+	}
+	
 	protected void newSubscription(Node node){
 		subscription = new Subscription();
 		subscription.setSubscriptionKey("uddi:uddi.listeningforchanges.com:callthiskeytonotify");
@@ -165,7 +169,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 				public void onSuccess(SubscriptionResponse response) {
 					if (response.isSuccess()) {
-						UDDISubscription.getInstance().displaySubscription(subscription);
+						UDDISubscription.getInstance().refreshSubscriptionTree();
 					} else {
 						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
 					}

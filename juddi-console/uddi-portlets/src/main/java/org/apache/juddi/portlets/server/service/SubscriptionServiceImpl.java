@@ -39,6 +39,7 @@ import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
+import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.UDDISubscriptionPortType;
@@ -165,12 +166,47 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	       	 subscriptionService.saveSubscription(authToken, subscriptionHolder);
 	       	 response.setSuccess(true);
 	     } catch (Exception e) {
-	    	 logger.error("Could not obtain subscription. " + e.getMessage(), e);
+	    	 logger.error("Could not save subscription. " + e.getMessage(), e);
 	    	 response.setSuccess(false);
 	    	 response.setMessage(e.getMessage());
 	    	 response.setErrorCode("102");
 	     } catch (Throwable t) {
-	    	 logger.error("Could not obtain token subscription. " + t.getMessage(), t);
+	    	 logger.error("Could not save subscription. " + t.getMessage(), t);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(t.getMessage());
+	    	 response.setErrorCode("102");
+	     } 
+		
+		return response;
+	}
+	
+public SubscriptionResponse deleteSubscription(Subscription modelSubscription) {
+		
+		HttpServletRequest request = getThreadLocalRequest();
+		HttpSession session = request.getSession();
+		SubscriptionResponse response = new SubscriptionResponse();
+	
+		logger.debug("Sending deleteSubscriptions request for subscriptionKey=" 
+				+ modelSubscription.getSubscriptionKey());
+		try {
+			 UDDIClerk clerk = ClientConfig.getInstance().getClerks().get(modelSubscription.getClerkName());
+	    	 String clazz = ClientConfig.getInstance().getNodes().get(clerk.getNode().getName()).getProxyTransport();
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
+	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
+	       	 DeleteSubscription deleteSubscription = new DeleteSubscription();
+	       	 String authToken = (String) session.getAttribute(clerk.getName());
+	       	 deleteSubscription.setAuthInfo(authToken);
+	       	 deleteSubscription.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
+	       	 subscriptionService.deleteSubscription(deleteSubscription);
+	       	 response.setSuccess(true);
+	     } catch (Exception e) {
+	    	 logger.error("Could not delete subscription. " + e.getMessage(), e);
+	    	 response.setSuccess(false);
+	    	 response.setMessage(e.getMessage());
+	    	 response.setErrorCode("102");
+	     } catch (Throwable t) {
+	    	 logger.error("Could not delete subscription. " + t.getMessage(), t);
 	    	 response.setSuccess(false);
 	    	 response.setMessage(t.getMessage());
 	    	 response.setErrorCode("102");

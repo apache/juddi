@@ -30,4 +30,5 @@ public interface SubscriptionService extends RemoteService {
 	
 	public SubscriptionResponse getSubscriptions();
 	public SubscriptionResponse saveSubscription(Subscription subscription);
+	public SubscriptionResponse deleteSubscription(Subscription subscription);
 }

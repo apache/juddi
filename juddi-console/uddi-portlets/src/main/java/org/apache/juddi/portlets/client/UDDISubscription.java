@@ -101,8 +101,6 @@ public class UDDISubscription implements EntryPoint, Login {
 		if (detailPanel!=null) {
 			detailPanel.saveSubscription();
 		}
-		treePanel.getSubscriptionTree().clear();
-		treePanel.loadSubscriptions();
 	}
 	
 	public void newSubscription() {
@@ -115,8 +113,17 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void deleteSubscription() {
 		if (detailPanel!=null) {
-	//		subscriptionPanel.deleteSubscription(getToken());
+			detailPanel.deleteSubscription();
 		}
+	}
+	
+	public void refreshSubscriptionTree() {
+		treePanel.getSubscriptionTree().clear();
+		treePanel.loadSubscriptions();
+	}
+	
+	public void removeDetailPanel() {
+		if (detailPanel!=null ) dockPanel.remove(detailPanel); 
 	}
 	
 	public void syncListedServices() {
