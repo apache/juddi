@@ -1,5 +1,7 @@
 package org.apache.juddi.v3.client.config;
 
+import java.util.Properties;
+
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.helpers.Loader;
@@ -20,6 +22,8 @@ public class UDDINode {
 	private String factoryInitial;
 	private String factoryURLPkgs;
 	private String factoryNamingProvider;
+	
+	private Properties properties;
 	
 	private Transport transport;
 	
@@ -42,6 +46,7 @@ public class UDDINode {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public String getDescription() {
 		return description;
 	}
@@ -113,6 +118,14 @@ public class UDDINode {
 	}
 	public void setFactoryNamingProvider(String factoryNamingProvider) {
 		this.factoryNamingProvider = factoryNamingProvider;
+	}
+
+	public Properties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
 	}
 	
 	

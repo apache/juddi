@@ -11,7 +11,9 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 @UDDIServiceBinding(
 		bindingKey="uddi:juddi.apache.org:bindings-helloworld-wsdl",
 	    description="WSDL endpoint for the HelloWorld Service. This service is used for "
-				  + "testing the jUDDI annotation functionality")
+				  + "testing the jUDDI annotation functionality",
+	    accessPointType="wsdlDeployment",
+		accessPoint="http://${serverName}:${serverPort}/subscription-listener/helloworld")
 
 public class HelloWorldMockup2 {
     

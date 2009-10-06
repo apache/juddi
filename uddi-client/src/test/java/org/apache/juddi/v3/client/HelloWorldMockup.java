@@ -1,4 +1,4 @@
-package org.apache.juddi.v3.annotations;
+package org.apache.juddi.v3.client;
 
 import javax.jws.WebService;
 

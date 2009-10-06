@@ -19,7 +19,10 @@ package org.apache.juddi.v3.client.config;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -143,21 +146,32 @@ public class ClientConfig
 		log.debug("node names=" + names);
 		for (int i=0; i<names.length; i++) {
 			UDDINode uddiNode = new UDDINode();
-			String name = config.getString("nodes.node(" + i +").name");
+			String nodeName = config.getString("nodes.node(" + i +").name");
+			String[] propertyKeys = config.getStringArray("nodes.node(" + i +").properties.property[@name]");
+			Properties properties = null;
+			if (propertyKeys!=null && propertyKeys.length>0) {
+				properties = new Properties();
+				for (int p=0; p<propertyKeys.length; p++) {
+					String name=config.getString("nodes.node(" + i +").properties.property(" + p + ")[@name]");
+					String value=config.getString("nodes.node(" + i +").properties.property(" + p + ")[@value]");
+					log.debug("Property: name=" + name + " value=" + value);
+					properties.put(name, value);
+				}
+			}
 			uddiNode.setName(                   config.getString("nodes.node(" + i +").name"));
 			uddiNode.setDescription(            config.getString("nodes.node(" + i +").description"));
 			uddiNode.setProxyTransport(         config.getString("nodes.node(" + i +").proxyTransport"));
-			uddiNode.setInquiryUrl(             config.getString("nodes.node(" + i +").inquiryUrl"));
-			uddiNode.setPublishUrl(             config.getString("nodes.node(" + i +").publishUrl"));
-			uddiNode.setCustodyTransferUrl(     config.getString("nodes.node(" + i +").custodyTransferUrl"));
-			uddiNode.setSecurityUrl(            config.getString("nodes.node(" + i +").securityUrl"));
-			uddiNode.setSubscriptionUrl(        config.getString("nodes.node(" + i +").subscriptionUrl"));
-			uddiNode.setSubscriptionListenerUrl(config.getString("nodes.node(" + i +").subscriptionListenerUrl"));
-			uddiNode.setJuddiApiUrl(            config.getString("nodes.node(" + i +").juddiApiUrl"));
+			uddiNode.setInquiryUrl(             replaceTokens(config.getString("nodes.node(" + i +").inquiryUrl"),properties));
+			uddiNode.setPublishUrl(             replaceTokens(config.getString("nodes.node(" + i +").publishUrl"),properties));
+			uddiNode.setCustodyTransferUrl(     replaceTokens(config.getString("nodes.node(" + i +").custodyTransferUrl"),properties));
+			uddiNode.setSecurityUrl(            replaceTokens(config.getString("nodes.node(" + i +").securityUrl"),properties));
+			uddiNode.setSubscriptionUrl(        replaceTokens(config.getString("nodes.node(" + i +").subscriptionUrl"),properties));
+			uddiNode.setSubscriptionListenerUrl(replaceTokens(config.getString("nodes.node(" + i +").subscriptionListenerUrl"),properties));
+			uddiNode.setJuddiApiUrl(            replaceTokens(config.getString("nodes.node(" + i +").juddiApiUrl"),properties));
 			uddiNode.setFactoryInitial(         config.getString("nodes.node(" + i +").javaNamingFactoryInitial"));
 			uddiNode.setFactoryURLPkgs(         config.getString("nodes.node(" + i +").javaNamingFactoryUrlPkgs"));
-			uddiNode.setFactoryNamingProvider(  config.getString("nodes.node(" + i +").javaNamingProviderUrl"));
-			nodes.put(name,uddiNode);
+			uddiNode.setFactoryNamingProvider(  replaceTokens(config.getString("nodes.node(" + i +").javaNamingProviderUrl"),properties));
+			nodes.put(nodeName,uddiNode);
 		}
 		if (!nodes.containsKey("default")) {
 			throw new ConfigurationException("Required node named 'default' is not found.");
@@ -199,5 +213,30 @@ public class ClientConfig
 	}
 	public Set<XRegistration> getXRegistrations() {
 		return xRegistrations;
+	}
+	
+    public static String replaceTokens(String string, Properties properties) {
+    	
+    	if (properties==null || string==null) return string;
+    	string = string.replaceAll("\\n"," ").replaceAll("\\r", "");
+		/* pattern that is multi-line (?m), and looks for a pattern of
+		 * ${token}, in a 'reluctant' manner, by using the ? to 
+		 * make sure we find ALL the tokens.
+		 */
+		Pattern pattern = Pattern.compile("(?m)\\$\\{.*?\\}");
+        Matcher matcher = pattern.matcher(string);
+        while (matcher.find()) {
+            String token = matcher.group();
+            token = token.substring(2,token.length()-1);
+            String replacement = properties.getProperty(token);
+            if (replacement!=null) {
+            	log.debug("Found token " + token + " and replacement value " + replacement);
+            	string = string.replaceAll("\\$\\{" + token + "\\}", replacement);
+            } else {
+            	log.error("Found token " + token + " but could not obtain its value. Data: " + string);
+            }
+        }
+        log.debug("Data after token replacement: " + string);
+        return string;
 	}
 }

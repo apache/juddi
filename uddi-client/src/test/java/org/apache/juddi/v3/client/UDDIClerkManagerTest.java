@@ -14,8 +14,16 @@
  */
 package org.apache.juddi.v3.client;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
+
+import org.apache.juddi.v3.annotations.AnnotationProcessor;
+import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.junit.Assert;
 import org.junit.Test;
+import org.uddi.api_v3.BusinessService;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
@@ -26,11 +34,30 @@ public class UDDIClerkManagerTest {
      public void testReadingTheConfig() {
 	     try {
 	    	UDDIClerkManager.start();
+	    	
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
 	         Assert.fail();
 	     } 
+     }
+     
+     @Test
+     public void testAnnotation() {
+    	 try {
+	    	 Map<String,UDDIClerk> clerks = ClientConfig.getInstance().getClerks();
+	 		 AnnotationProcessor ap = new AnnotationProcessor();
+	 		 UDDIClerk clerk = clerks.get("default");
+	 		 BusinessService service = ap.readServiceAnnotations(
+	 				 HelloWorldMockup.class.getName(), clerk.getNode().getProperties());
+	 		 BusinessService serviceOut = clerk.register(service);
+	 		 assertEquals(service.getServiceKey(),serviceOut.getServiceKey());
+    	 } catch (Exception e) {
+	    	 //we should not have any issues reading the config
+	         e.printStackTrace();
+	         Assert.fail();
+	     } 
+    	 
      }
      
    

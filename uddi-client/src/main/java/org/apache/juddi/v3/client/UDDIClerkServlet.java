@@ -28,7 +28,8 @@ import org.apache.log4j.Logger;
  * @author Kurt Stam (kstam@apache.org)
  */
 public class UDDIClerkServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = -91998529871296125L;
 	private static Logger logger = Logger.getLogger(UDDIClerkServlet.class);
 
 	/**

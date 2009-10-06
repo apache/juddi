@@ -53,6 +53,9 @@ public class UDDIClerk {
 		} catch (Exception e) {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to register service " + service.getName().get(0).getValue()
+					+ " ." + t.getMessage(),t);
 		}
 		return businessService;
 	}

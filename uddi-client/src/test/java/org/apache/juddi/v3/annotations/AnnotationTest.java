@@ -14,6 +14,8 @@
  */
 package org.apache.juddi.v3.annotations;
 
+import java.util.Properties;
+
 import org.apache.log4j.helpers.Loader;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
@@ -53,7 +55,7 @@ public class AnnotationTest {
 	     try {
 	    	Class classWithAnnotations = Loader.loadClass(HelloWorldMockup.class.getName());
 	    	AnnotationProcessor ap = new AnnotationProcessor();
-	    	BindingTemplate bindingTemplate = ap.parseServiceBinding(classWithAnnotations, "en", null);
+	    	BindingTemplate bindingTemplate = ap.parseServiceBinding(classWithAnnotations, "en", null, null);
 	    	assertNotNull(bindingTemplate);
 	    	//expecting references to two keys
 	    	assertEquals(2, bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().size());
@@ -75,7 +77,7 @@ public class AnnotationTest {
      public void testReadingServiceAnnotation() {
     	 try {
 	    	 AnnotationProcessor ap = new AnnotationProcessor();
-	    	 BusinessService service = ap.readServiceAnnotations(HelloWorldMockup.class.getName());
+	    	 BusinessService service = ap.readServiceAnnotations(HelloWorldMockup.class.getName(),null);
 	    	 assertNotNull(service);
 	    	 assertEquals("HelloWorld",service.getName().get(0).getValue());
 	    	 assertEquals(1,service.getBindingTemplates().getBindingTemplate().size());
@@ -91,10 +93,18 @@ public class AnnotationTest {
      public void testReadingServiceAnnotation2() {
     	 try {
 	    	 AnnotationProcessor ap = new AnnotationProcessor();
-	    	 BusinessService service = ap.readServiceAnnotations(HelloWorldMockup2.class.getName());
+	    	 Properties properties = new Properties();
+	    	 properties.put("serverName", "localhost");
+	    	 properties.put("serverPort", "8080");
+	    	 BusinessService service = ap.readServiceAnnotations(HelloWorldMockup2.class.getName(),properties);
 	    	 assertNotNull(service);
 	    	 assertEquals("HelloWorldMockup2",service.getName().get(0).getValue());
 	    	 assertEquals(1,service.getBindingTemplates().getBindingTemplate().size());
+	    	 BindingTemplate binding = service.getBindingTemplates().getBindingTemplate().get(0);
+	    	 String endPoint = binding.getAccessPoint().getValue();
+	    	 assertEquals("http://localhost:8080/subscription-listener/helloworld",endPoint);
+	    	 String serviceKey = binding.getServiceKey();
+	    	 assertEquals(service.getServiceKey(),serviceKey);
 	    	 assertNull(service.getCategoryBag());
     	 } catch (Exception e) {
 	    	 //we should not have any issues reading the annotations

@@ -64,7 +64,8 @@ public class UDDIClerkManager {
 		if (clerks.size() > 0) {
 			AnnotationProcessor ap = new AnnotationProcessor();
 			for (UDDIClerk clerk : clerks.values()) {
-				Collection<BusinessService> services = ap.readServiceAnnotations(clerk.getClassWithAnnotations());
+				Collection<BusinessService> services = ap.readServiceAnnotations(
+						clerk.getClassWithAnnotations(),clerk.getNode().getProperties());
 				for (BusinessService businessService : services) {
 					clerk.register(businessService);
 				}

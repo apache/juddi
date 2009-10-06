@@ -2,11 +2,13 @@ package org.apache.juddi.v3.annotations;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.jws.WebService;
 
 //import org.apache.log4j.Logger;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AccessPoint;
@@ -29,11 +31,11 @@ public class AnnotationProcessor {
 	
 	private Logger log = Logger.getLogger(AnnotationProcessor.class);
 	
-	public Collection<BusinessService> readServiceAnnotations(String[] classesWithAnnotations) {
+	public Collection<BusinessService> readServiceAnnotations(String[] classesWithAnnotations, Properties properties) {
 		Collection<BusinessService> services = new ArrayList<BusinessService>();
 		for (String className : classesWithAnnotations) {
 			try {		
-				BusinessService service = readServiceAnnotations(className);
+				BusinessService service = readServiceAnnotations(className, properties);
 				services.add(service);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -42,7 +44,7 @@ public class AnnotationProcessor {
 		return services;
 	}
 	
-	public BusinessService readServiceAnnotations(String classWithAnnotations) throws ClassNotFoundException {
+	public BusinessService readServiceAnnotations(String classWithAnnotations, Properties properties) throws ClassNotFoundException {
 		
 		BusinessService service = new BusinessService();
 		Class<?> clazz = Loader.loadClass(classWithAnnotations);
@@ -78,7 +80,8 @@ public class AnnotationProcessor {
 		        service.setCategoryBag(categoryBag);
 			}
 			
-			BindingTemplate bindingTemplate = parseServiceBinding(clazz, lang, webServiceAnnotation);
+			//bindingTemplate on service
+			BindingTemplate bindingTemplate = parseServiceBinding(clazz, lang, webServiceAnnotation, properties);
 			if (bindingTemplate!=null) {
 				bindingTemplate.setServiceKey(service.getServiceKey());
 				if (service.getBindingTemplates()==null) {
@@ -96,7 +99,8 @@ public class AnnotationProcessor {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected BindingTemplate parseServiceBinding(Class classWithAnnotations, String lang, WebService webServiceAnnotation) {
+	protected BindingTemplate parseServiceBinding(Class classWithAnnotations, String lang, 
+			WebService webServiceAnnotation, Properties properties) {
 		
 		BindingTemplate bindingTemplate = null;
 		UDDIServiceBinding uddiServiceBinding= (UDDIServiceBinding) classWithAnnotations.getAnnotation(UDDIServiceBinding.class);
@@ -120,7 +124,10 @@ public class AnnotationProcessor {
 				accessPoint.setUseType(uddiServiceBinding.accessPointType());
 			}
 			if (!"".equals(uddiServiceBinding.accessPoint())) {
-				accessPoint.setValue(uddiServiceBinding.accessPoint());
+				String endPoint = uddiServiceBinding.accessPoint();
+				endPoint = ClientConfig.replaceTokens(endPoint, properties);
+                log.debug("AccessPoint EndPoint=" + endPoint);
+				accessPoint.setValue(endPoint);
 			} else if (webServiceAnnotation!=null && webServiceAnnotation.wsdlLocation()!=null) {
 				accessPoint.setValue(webServiceAnnotation.wsdlLocation());
 			}
