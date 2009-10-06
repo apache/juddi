@@ -30,5 +30,15 @@
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
+  
+  <jaxws:endpoint id="helloworld" implementor="org.apache.juddi.test.HelloWorldImpl" address="/helloworld" 
+   >
+   <!-- 
+   serviceName="a:SubscriptionListenerService" endpointName="a:SubscriptionListenerServicePort" xmlns:a="urn:uddi-org:subr_v3_portType">
+    <jaxws:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </jaxws:properties>
+     -->
+  </jaxws:endpoint>
 
 </beans>

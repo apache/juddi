@@ -52,7 +52,16 @@
     <servlet-name>NotifyServlet</servlet-name>
     <display-name>Notify Servlet</display-name>
     <servlet-class>
-      org.apache.juddi.NotifyServlet
+      org.apache.juddi.subscription.NotifyServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>UDDIClerkServlet</servlet-name>
+    <display-name>Clerk Servlet</display-name>
+    <servlet-class>
+      org.apache.juddi.v3.client.UDDIClerkServlet
     </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -66,4 +75,5 @@
     <servlet-name>CXFServlet</servlet-name>
     <url-pattern>/services/*</url-pattern>
    </servlet-mapping>
+   
 </web-app>

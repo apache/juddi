@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <uddi>
-    <reloadDelay>5001</reloadDelay>
+    <reloadDelay>5000</reloadDelay>
 	<nodes>
 		<node>
 			<name>default</name>
+			<properties>
+				<property name="serverName" value="localhost"/>
+				<property name="serverPort" value="8080"/>
+				<property name="rmiPort" value="1099"/>
+			</properties>
 			<description>Main jUDDI node</description>
 			<!-- JAX-WS Transport -->
 			<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-			<custodyTransferUrl>http://localhost:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-			<inquiryUrl>http://localhost:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-	        <publishUrl>http://localhost:8080/juddiv3/services/publish?wsdl</publishUrl>
-	        <securityUrl>http://localhost:8080/juddiv3/services/security?wsdl</securityUrl>
-			<subscriptionUrl>http://localhost:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-			<subscriptionListenerUrl>http://localhost:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-			<juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+			<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+			<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+	        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+	        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+			<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+			<subscriptionListenerUrl>http://${serverPort}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+			<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			<!-- In VM Transport Settings 
 			<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
 			<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
@@ -36,26 +41,30 @@
 			<juddiApiUrl>/juddiv3/JUDDIApiService</juddiApiUrl>
 			<javaNamingFactoryInitial>org.jnp.interfaces.NamingContextFactory</javaNamingFactoryInitial>
 			<javaNamingFactoryUrlPkgs>org.jboss.naming</javaNamingFactoryUrlPkgs>
-			<javaNamingProviderUrl>jnp://localhost:1099</javaNamingProviderUrl>
+			<javaNamingProviderUrl>jnp://${serverName}:${rmiPort}</javaNamingProviderUrl>
 			-->
 		</node>
 		<node>
 			<name>med</name>
+			<properties>
+				<property name="serverName" value="med"/>
+				<property name="serverPort" value="8080"/>
+			</properties>
 			<description>jUDDI node in other Department</description>
 			<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-			<custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-			<inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-	        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
-	        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
-			<subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-			<subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-			<juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+			<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+			<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+	        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+	        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+			<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+			<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+			<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 		</node>
 	</nodes>
 	<clerks>
 	   <clerk name="default" node="default" publisher="root" password="root"/>
        <clerk name="medroot" node="med"     publisher="root" password="root"/>
-       <xregister >
+       <xregister>
 	       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
 	   </xregister>
    </clerks> 

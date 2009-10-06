@@ -131,7 +131,8 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 						bindingtable.setHTML(bindingRow, 0, UDDIBrowser.images.description().getHTML());
 						bindingtable.setText(bindingRow++, 1,  serviceBinding.getDescription());
 						bindingtable.setHTML(bindingRow, 0, UDDIBrowser.images.endpointlive().getHTML());
-						bindingtable.setHTML(bindingRow++, 1, new HTML("<a href='" 
+						bindingtable.setHTML(bindingRow++, 1, serviceBinding.getUrlType() + ":" 
+								+  new HTML("<a href='" 
 								+ serviceBinding.getAccessPoint() + "'>" 
 								+ serviceBinding.getAccessPoint() + "</a>").getHTML());
 						table.setHTML(row, 1, bindingtable.toString());
