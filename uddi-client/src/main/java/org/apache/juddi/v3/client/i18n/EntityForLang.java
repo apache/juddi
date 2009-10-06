@@ -29,6 +29,12 @@ public class EntityForLang {
 	
 	public static Name getName(List<Name> entityList, String lang) {
 		
+		if (entityList.size()==0) {
+			Name name = new Name();
+			name.setValue("");
+			name.setLang(lang);
+			entityList.add(name);
+		}
 		if (lang==null) return entityList.get(0);
 		for (Name entity : entityList) {
 			if (lang.equalsIgnoreCase(entity.getLang())) {
@@ -40,6 +46,11 @@ public class EntityForLang {
 	
 	public static Address getAddress(List<Address> entityList, String lang) {
 		
+		if (entityList.size()==0) {
+			Address address = new Address();
+			address.setLang(lang);
+			entityList.add(address);
+		}
 		if (lang==null) return entityList.get(0);
 		for (Address entity : entityList) {
 			if (lang.equalsIgnoreCase(entity.getLang())) {
@@ -51,6 +62,12 @@ public class EntityForLang {
 	
 	public static Description getDescription(List<Description> entityList, String lang) {
 		
+		if (entityList.size()==0) {
+			Description description = new Description();
+			description.setValue("");
+			description.setLang(lang);
+			entityList.add(description);
+		}
 		if (lang==null) return entityList.get(0);
 		for (Description entity : entityList) {
 			if (lang.equalsIgnoreCase(entity.getLang())) {

@@ -117,6 +117,7 @@ public class AnnotationProcessor {
 			Description bindingDescription = new Description();
 			bindingDescription.setLang(bindingLang);
 			bindingDescription.setValue(uddiServiceBinding.description());
+			bindingTemplate.getDescription().add(bindingDescription);
 			
 			AccessPoint accessPoint = new AccessPoint();
 			accessPoint.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());
