@@ -35,8 +35,8 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.api.AccessPointType;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
+import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -218,7 +218,7 @@ public class SubscriptionNotifier extends TimerTask {
 				resultList.getServiceList().setServiceInfos(null);
 			}
 			body.setSubscriptionResultsList(resultList);
-			//body.setAuthInfo();  //where would I get the authInfo from?
+			//body.setAuthInfo();  //where would I get the authInfo from? 
 			if (bindingTemplate!=null) {
 				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 					QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER);

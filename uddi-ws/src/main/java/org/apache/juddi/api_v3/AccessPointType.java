@@ -1,4 +1,4 @@
-package org.apache.juddi.api;
+package org.apache.juddi.api_v3;
 
 public enum AccessPointType {
 	

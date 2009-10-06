@@ -1,28 +1,28 @@
 package org.apache.juddi.v3.client.config;
 
 import java.rmi.RemoteException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.NotFoundException;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIClerk {
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Logger log = Logger.getLogger(this.getClass());
 	private String name;
 	private UDDINode node;
 	private String publisher;
@@ -37,19 +37,42 @@ public class UDDIClerk {
 
 	/**
 	 * Register a service.
-	 * @throws ConfigurationException 
+	 * 
 	 */
-	public void register(BusinessService service) throws ConfigurationException {
+	public BusinessService register(BusinessService service) {
 		
-			logger.info("Registering service " + service);
-			
+		BusinessService businessService=null;
+		log.info("Registering service " + service);
+		try {
+			String authToken = getAuthToken();
+			SaveService saveService = new SaveService();
+			saveService.setAuthInfo(authToken);
+			saveService.getBusinessService().add(service);
+			ServiceDetail serviceDetail = node.getTransport().getUDDIPublishService().saveService(saveService);
+			businessService = serviceDetail.getBusinessService().get(0);
+		} catch (Exception e) {
+			log.error("Unable to register service " + service.getName().get(0).getValue()
+					+ " ." + e.getMessage(),e);
+		}
+		return businessService;
 	}
-	
-	public void unRegister(Collection<BusinessService> services) throws ConfigurationException {
-		if (services.size()>0) {
-			for (BusinessService service : services) {
-				logger.info("UnRegistering service/binding " + service);
+	/**
+	 * Unregisters the BindingTemplates for this service.
+	 * @param service
+	 */
+	public void unRegister(BusinessService service) {
+		log.info("UnRegistering binding for service " + service.getName().get(0).getValue());
+		try {
+			String authToken = getAuthToken();
+			DeleteBinding deleteBinding = new DeleteBinding();
+			deleteBinding.setAuthInfo(authToken);
+			for (BindingTemplate binding : service.getBindingTemplates().getBindingTemplate()) {
+				deleteBinding.getBindingKey().add(binding.getBindingKey());
 			}
+			node.getTransport().getUDDIPublishService().deleteBinding(deleteBinding);
+		} catch (Exception e) {
+			log.error("Unable to register service " + service.getName().get(0).getValue()
+					+ " ." + e.getMessage(),e);
 		}
 	}
 	

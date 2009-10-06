@@ -16,4 +16,6 @@ public @interface UDDIService {
 	public String businessKey() default "";
 	/** Language code i.e.: en, fr, nl. */
 	public String lang() default "en";
+	/** List of KeyedReferences */
+	public String categoryBag() default "";
 }
