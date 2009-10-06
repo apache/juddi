@@ -46,8 +46,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class FindServiceImpl extends RemoteServiceServlet implements FindService {
 
+	private static final long serialVersionUID = 1939609260067702168L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
+	
 	
 	public FindResponse getBusinesses(String nameStr, String[] findQualifyers) 
 	{
