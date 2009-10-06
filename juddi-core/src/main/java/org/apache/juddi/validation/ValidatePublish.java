@@ -593,7 +593,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		if (parent != null) {
 			if (parentKey != null && parentKey.length() > 0) {
-				if (!parentKey.equalsIgnoreCase(parent.getBusinessKey()))
+				if (!parentKey.equalsIgnoreCase(parent.getServiceKey()))
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.bindingtemplate.ParentMismatch", parentKey + ", " + parent.getBusinessKey()));
 			}
 			else
