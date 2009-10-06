@@ -29,7 +29,7 @@ import javax.persistence.Transient;
 //@PrimaryKeyJoinColumn(name = "authorized_name")
 public class Publisher extends UddiEntityPublisher implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1960575191518050887L;
 	private String publisherName;
 	private String emailAddress;
 	private String isAdmin;

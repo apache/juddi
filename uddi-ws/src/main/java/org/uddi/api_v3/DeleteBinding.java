@@ -54,9 +54,8 @@ import javax.xml.bind.annotation.XmlType;
     "bindingKey"
 })
 public class DeleteBinding implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5955879000838882559L;
     protected String authInfo;
     @XmlElement(required = true)
     protected List<String> bindingKey;

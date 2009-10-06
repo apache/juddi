@@ -39,9 +39,8 @@ import javax.xml.bind.annotation.XmlType;
     "publisherId"
 })
 public class DeletePublisher implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3984153946328762738L;
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> publisherId;

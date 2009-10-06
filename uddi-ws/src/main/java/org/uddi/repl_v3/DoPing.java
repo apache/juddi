@@ -50,7 +50,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "do_ping")
 public class DoPing implements Serializable{
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 2553480490233010262L;
 }
 

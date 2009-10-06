@@ -52,8 +52,9 @@ import javax.xml.bind.annotation.XmlValue;
 public class AccessPoint implements Serializable {
 	
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlValue
+	private static final long serialVersionUID = -6377843530866292358L;
+
+	@XmlValue
     protected String value;
     @XmlAttribute
     protected String useType;

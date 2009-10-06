@@ -51,10 +51,10 @@ import javax.xml.bind.annotation.XmlType;
     "highWaterMark"
 })
 public class HighWaterMarkVectorType implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<ChangeRecordIDType> highWaterMark;
+	private static final long serialVersionUID = 6805212209636479397L;
+
+	protected List<ChangeRecordIDType> highWaterMark;
 
     /**
      * Gets the value of the highWaterMark property.

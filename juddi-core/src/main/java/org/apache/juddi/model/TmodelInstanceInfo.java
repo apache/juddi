@@ -39,7 +39,7 @@ import javax.persistence.Table;
 @Table(name = "j3_tmodel_instance_info")
 public class TmodelInstanceInfo implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6375499794977257231L;
 	private Long id;
 	private BindingTemplate bindingTemplate;
 	private String tmodelKey;

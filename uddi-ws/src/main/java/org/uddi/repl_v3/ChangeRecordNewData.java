@@ -68,10 +68,9 @@ import org.uddi.api_v3.TModel;
 })
 @XmlRootElement(name = "changeRecordNewData")
 public class ChangeRecordNewData implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = 3254341966186893497L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected BusinessEntity businessEntity;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected BusinessService businessService;

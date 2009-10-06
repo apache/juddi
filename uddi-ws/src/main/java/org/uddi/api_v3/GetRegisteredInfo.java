@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "authInfo"
 })
 public class GetRegisteredInfo implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 6809655852042662369L;
+	protected String authInfo;
     @XmlAttribute(required = true)
     protected InfoSelection infoSelection;
 

@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
     "validValue"
 })
 public class ValidValuesList implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String chunkToken;
+	private static final long serialVersionUID = 2508003803603481625L;
+	protected String chunkToken;
     protected List<ValidValue> validValue;
 
     /**

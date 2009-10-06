@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class FatalErrorException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6396216072725959470L;
 
 	public FatalErrorException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_FATAL_ERROR));

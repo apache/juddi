@@ -51,10 +51,9 @@ import javax.xml.bind.annotation.XmlType;
     "subscription"
 })
 public class Subscriptions implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Subscription> subscription;
+	private static final long serialVersionUID = 8633354170434626816L;
+	protected List<Subscription> subscription;
 
     /**
      * Gets the value of the subscription property.

@@ -54,10 +54,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "endPoint"
 })
 public class CoveragePeriod implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlSchemaType(name = "dateTime")
+	private static final long serialVersionUID = 6451073006135864305L;
+	@XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar startPoint;
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar endPoint;

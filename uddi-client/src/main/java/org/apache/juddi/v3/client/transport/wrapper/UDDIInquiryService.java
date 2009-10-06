@@ -21,7 +21,6 @@ import org.w3c.dom.Node;
  * @author Tom Cunningham (tcunning@apache.org)
  */
 public class UDDIInquiryService {
-	private static final long serialVersionUID = 1L;
 	//private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 	
 	private HashMap<String, Handler> operations = null;

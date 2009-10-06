@@ -66,10 +66,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement(name = "changeRecord")
 public class ChangeRecord implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 5218553502385587391L;
+	@XmlElement(required = true)
     protected ChangeRecordIDType changeID;
     protected Object changeRecordNull;
     protected ChangeRecordNewData changeRecordNewData;

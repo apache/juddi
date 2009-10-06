@@ -55,7 +55,7 @@ import javax.xml.bind.annotation.XmlType;
 public class KeysOwned implements Serializable {
 
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6857337672894793291L;
 
     @XmlElement(required=false)
     protected String fromKey;

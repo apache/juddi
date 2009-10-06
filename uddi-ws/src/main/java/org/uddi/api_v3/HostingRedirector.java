@@ -47,10 +47,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "hostingRedirector")
 public class HostingRedirector implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlAttribute(required = true)
+	private static final long serialVersionUID = -336892833489292449L;
+	@XmlAttribute(required = true)
     protected String bindingKey;
 
     /**

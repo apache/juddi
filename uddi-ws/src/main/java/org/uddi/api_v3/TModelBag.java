@@ -52,9 +52,8 @@ import javax.xml.bind.annotation.XmlType;
     "tModelKey"
 })
 public class TModelBag implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1963035508181203339L;
 	@XmlElement()
     protected List<String> tModelKey;
 

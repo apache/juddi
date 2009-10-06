@@ -25,7 +25,7 @@ package org.apache.juddi.error;
  */
 public class TransferNotAllowedException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8070707155768168717L;
 
 	public TransferNotAllowedException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_TRANSFER_NOT_ALLOWED));

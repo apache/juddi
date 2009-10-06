@@ -62,10 +62,9 @@ import javax.xml.bind.annotation.XmlType;
     "address"
 })
 public class Contact implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Description> description;
+	private static final long serialVersionUID = -714656423425450747L;
+	protected List<Description> description;
     @XmlElement(required = true)
     protected List<PersonName> personName;
     protected List<Phone> phone;

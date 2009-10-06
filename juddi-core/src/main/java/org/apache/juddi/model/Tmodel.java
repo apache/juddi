@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "j3_tmodel")
 public class Tmodel extends UddiEntity implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4577524699559324289L;
 	private String name;
 	private String langCode;
 	private boolean deleted;

@@ -54,10 +54,10 @@ import javax.xml.bind.annotation.XmlType;
     "bindingKey"
 })
 public class GetBindingDetail implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = -1195313688335586992L;
+
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> bindingKey;
 

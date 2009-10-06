@@ -69,10 +69,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "signature"
 })
 public class BusinessEntity implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected DiscoveryURLs discoveryURLs;
+	private static final long serialVersionUID = -8418387236934632049L;
+	protected DiscoveryURLs discoveryURLs;
     @XmlElement(required = true)
     protected List<Name> name;
     protected List<Description> description;

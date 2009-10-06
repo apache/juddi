@@ -52,11 +52,10 @@ import javax.xml.bind.annotation.XmlType;
     "authInfo"
 })
 @XmlRootElement
-public class AuthToken implements Serializable{
-
+public class AuthToken implements Serializable {
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 8507113421929924349L;
+	@XmlElement(required = true)
     protected String authInfo;
 
     /**

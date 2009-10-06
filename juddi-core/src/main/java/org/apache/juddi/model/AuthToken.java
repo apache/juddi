@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 @Table(name = "j3_auth_token")
 public class AuthToken implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1147567747533293480L;
 	private String authToken;
 	private String authorizedName;
 	private String publisherName;

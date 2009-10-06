@@ -55,10 +55,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 })
 @XmlRootElement(name = "fromSignatures")
 public class FromSignatures implements Serializable{
-	
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
+	private static final long serialVersionUID = 1569550759811006814L;
+	@XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
     protected List<SignatureType> signature;
 
     /**

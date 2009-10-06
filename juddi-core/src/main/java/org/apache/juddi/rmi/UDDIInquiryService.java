@@ -48,7 +48,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
  */
 public class UDDIInquiryService extends UnicastRemoteObject implements UDDIInquiryPortType {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8384112899703963130L;
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
 	protected UDDIInquiryService() throws RemoteException {

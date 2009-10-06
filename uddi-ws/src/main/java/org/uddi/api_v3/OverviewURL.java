@@ -50,10 +50,9 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 public class OverviewURL implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlValue
+	private static final long serialVersionUID = 7142971435321837783L;
+	@XmlValue
     protected String value;
     @XmlAttribute
     protected String useType;

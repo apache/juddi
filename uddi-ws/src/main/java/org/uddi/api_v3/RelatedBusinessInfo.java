@@ -58,10 +58,9 @@ import javax.xml.bind.annotation.XmlType;
     "sharedRelationships"
 })
 public class RelatedBusinessInfo implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -8398683613825506892L;
+	@XmlElement(required = true)
     protected String businessKey;
     @XmlElement(required = true)
     protected List<Name> name;

@@ -64,10 +64,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "signature"
 })
 public class BusinessService implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Name> name;
+	private static final long serialVersionUID = 37125899295218502L;
+	protected List<Name> name;
     protected List<Description> description;
     protected BindingTemplates bindingTemplates;
     protected CategoryBag categoryBag;

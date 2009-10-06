@@ -27,8 +27,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ServiceProjectionId implements java.io.Serializable {
 	
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 3146022787279005205L;
 	@Column(name = "business_key", nullable = false, length = 255)
 	String businessKey;
 	@Column(name = "service_key", nullable = false, length = 255)

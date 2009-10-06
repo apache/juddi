@@ -37,7 +37,7 @@ import org.uddi.v3_service.UDDICustodyTransferPortType;
  */
 public class UDDICustodyTransferService extends UnicastRemoteObject implements UDDICustodyTransferPortType {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8900970766388210839L;
 	private UDDICustodyTransferPortType custodyTransfer = new UDDICustodyTransferImpl();
 	
 	protected UDDICustodyTransferService() throws RemoteException {

@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "bindingTemplate"
 })
 public class SaveBinding implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 6922687643389755761L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<BindingTemplate> bindingTemplate;
 

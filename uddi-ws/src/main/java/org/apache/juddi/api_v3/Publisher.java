@@ -51,10 +51,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "authorizedName"
 })
 public class Publisher implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required=true)
+	private static final long serialVersionUID = 9145476126076932380L;
+	@XmlElement(required=true)
 	protected String publisherName;
     protected String emailAddress;
     protected String isAdmin;

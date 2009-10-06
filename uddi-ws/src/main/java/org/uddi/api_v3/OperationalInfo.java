@@ -61,10 +61,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "authorizedName"
 })
 public class OperationalInfo implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected XMLGregorianCalendar created;
+	private static final long serialVersionUID = -3112659463581534112L;
+	protected XMLGregorianCalendar created;
     protected XMLGregorianCalendar modified;
     protected XMLGregorianCalendar modifiedIncludingChildren;
     protected String nodeID;

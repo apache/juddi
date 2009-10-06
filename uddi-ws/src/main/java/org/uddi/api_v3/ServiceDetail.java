@@ -55,10 +55,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement
 public class ServiceDetail implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<BusinessService> businessService;
+	private static final long serialVersionUID = 7659347852244620056L;
+	protected List<BusinessService> businessService;
     @XmlAttribute
     protected Boolean truncated;
 

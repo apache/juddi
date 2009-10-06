@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class UnsupportedException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2979768558052264874L;
 
 	public UnsupportedException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_UNSUPPORTED));

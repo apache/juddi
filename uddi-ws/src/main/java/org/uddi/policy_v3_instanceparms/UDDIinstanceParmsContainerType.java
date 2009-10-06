@@ -53,10 +53,9 @@ import org.w3c.dom.Element;
     "any"
 })
 public class UDDIinstanceParmsContainerType implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlAnyElement(lax = true)
+	private static final long serialVersionUID = 6751400167361052618L;
+	@XmlAnyElement(lax = true)
     protected List<Object> any;
 
     /**

@@ -65,10 +65,9 @@ import org.w3._2000._09.xmldsig_.KeyInfoType;
 })
 @XmlRootElement(name = "operator")
 public class Operator implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 3012475870316361941L;
+	@XmlElement(required = true)
     protected String operatorNodeID;
     @XmlElement(required = true)
     protected OperatorStatusType operatorStatus;

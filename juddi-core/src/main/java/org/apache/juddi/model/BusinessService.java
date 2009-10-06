@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "j3_business_service")
 public class BusinessService extends UddiEntity implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 7793243417208829793L;
 	private BusinessEntity businessEntity;
 	private List<ServiceName> serviceNames = new ArrayList<ServiceName>(0);
 	private List<ServiceDescr> serviceDescrs = new ArrayList<ServiceDescr>(0);

@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class KeyUnavailableException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 7532508672433733387L;
 
 	public KeyUnavailableException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_KEY_UNAVAILABLE));

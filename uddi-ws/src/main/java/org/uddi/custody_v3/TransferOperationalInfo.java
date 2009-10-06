@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
     "nodeID"
 })
 public class TransferOperationalInfo implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = -8877700672971324033L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authorizedName;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String nodeID;

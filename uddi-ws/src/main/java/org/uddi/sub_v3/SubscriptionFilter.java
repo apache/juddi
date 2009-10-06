@@ -79,10 +79,9 @@ import org.uddi.api_v3.GetTModelDetail;
     "getAssertionStatusReport"
 })
 public class SubscriptionFilter implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(name = "find_binding", namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = -1832900660546271425L;
+	@XmlElement(name = "find_binding", namespace = "urn:uddi-org:api_v3")
     protected FindBinding findBinding;
     @XmlElement(name = "find_business", namespace = "urn:uddi-org:api_v3")
     protected FindBusiness findBusiness;

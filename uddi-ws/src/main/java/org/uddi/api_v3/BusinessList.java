@@ -56,10 +56,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement
 public class BusinessList implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected ListDescription listDescription;
+	private static final long serialVersionUID = -7650531142241444489L;
+	protected ListDescription listDescription;
     protected BusinessInfos businessInfos;
     @XmlAttribute
     protected Boolean truncated;

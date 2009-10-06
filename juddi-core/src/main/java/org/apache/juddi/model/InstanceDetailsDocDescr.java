@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_instance_details_doc_descr")
 public class InstanceDetailsDocDescr implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6936654678202381863L;
 	private Long id;
 	private TmodelInstanceInfo tmodelInstanceInfo;
 	private String langCode;

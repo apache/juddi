@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
     "originatingUSN"
 })
 public class ChangeRecordIDType implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -8665882376068031545L;
+	@XmlElement(required = true)
     protected String nodeID;
     protected Long originatingUSN;
 

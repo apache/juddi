@@ -57,10 +57,9 @@ import javax.xml.bind.annotation.XmlType;
     "chunkToken"
 })
 public class GetSubscriptionResults implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = 1677722415954673870L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
     @XmlElement(required = true)
     protected String subscriptionKey;

@@ -50,10 +50,9 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 public class Name implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlValue
+	private static final long serialVersionUID = -8258541617735086377L;
+	@XmlValue
     protected String value;
     @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;

@@ -56,10 +56,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement
 public class DispositionReport implements Serializable {
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 5852663849477002516L;
+	@XmlElement(required = true)
     protected List<Result> result;
     @XmlAttribute
     protected Boolean truncated;

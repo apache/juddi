@@ -57,10 +57,9 @@ import javax.xml.bind.annotation.XmlType;
     "addressLine"
 })
 public class Address implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -8188040108029962551L;
+	@XmlElement(required = true)
     protected List<AddressLine> addressLine;
     @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;

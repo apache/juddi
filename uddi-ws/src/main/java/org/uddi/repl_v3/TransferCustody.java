@@ -58,10 +58,9 @@ import org.uddi.custody_v3.TransferToken;
     "transferOperationalInfo"
 })
 public class TransferCustody implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:custody_v3", required = true)
+	private static final long serialVersionUID = 8770604650672969536L;
+	@XmlElement(namespace = "urn:uddi-org:custody_v3", required = true)
     protected TransferToken transferToken;
     @XmlElement(namespace = "urn:uddi-org:custody_v3", required = true)
     protected KeyBag keyBag;

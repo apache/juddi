@@ -25,7 +25,7 @@ package org.apache.juddi.error;
  */
 public class TokenAlreadyExistsException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2721076133362327262L;
 
 	public TokenAlreadyExistsException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_TOKEN_ALREADY_EXISTS));

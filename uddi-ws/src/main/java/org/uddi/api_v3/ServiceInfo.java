@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "name"
 })
 public class ServiceInfo implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Name> name;
+	private static final long serialVersionUID = 7482031574974280179L;
+	protected List<Name> name;
     @XmlAttribute(required = true)
     protected String serviceKey;
     @XmlAttribute(required = true)

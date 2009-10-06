@@ -50,10 +50,10 @@ import javax.xml.bind.annotation.XmlType;
     "authInfo"
 })
 public class GetPublisherAssertions implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 7296907630373884558L;
+
+	protected String authInfo;
 
     /**
      * Gets the value of the authInfo property.

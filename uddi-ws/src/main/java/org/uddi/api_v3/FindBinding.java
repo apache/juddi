@@ -63,10 +63,9 @@ import javax.xml.bind.annotation.XmlType;
     "categoryBag"
 })
 public class FindBinding implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 5788351026931169344L;
+	protected String authInfo;
     protected FindQualifiers findQualifiers;
     protected TModelBag tModelBag;
     @XmlElement(name = "find_tModel")

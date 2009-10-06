@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
 @Table(name = "j3_subscription")
 public class Subscription implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2271361594186854662L;
 	private String subscriptionKey;
 	private String authorizedName;
 	private String subscriptionFilter;

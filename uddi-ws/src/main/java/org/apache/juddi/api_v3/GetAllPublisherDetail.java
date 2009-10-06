@@ -37,10 +37,9 @@ import javax.xml.bind.annotation.XmlType;
     "authInfo"
 })
 public class GetAllPublisherDetail implements Serializable{
-
-    @XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	@XmlTransient
+	private static final long serialVersionUID = 699262934433717857L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
 
     /**

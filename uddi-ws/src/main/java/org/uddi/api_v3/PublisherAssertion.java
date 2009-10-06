@@ -61,10 +61,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 })
 @XmlRootElement
 public class PublisherAssertion implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 3597927238376778536L;
+	@XmlElement(required = true)
     protected String fromKey;
     @XmlElement(required = true)
     protected String toKey;

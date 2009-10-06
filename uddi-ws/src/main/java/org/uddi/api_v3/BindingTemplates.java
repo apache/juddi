@@ -52,10 +52,10 @@ import javax.xml.bind.annotation.XmlType;
     "bindingTemplate"
 })
 public class BindingTemplates implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 1991891061731176364L;
+
+	@XmlElement(required = true)
     protected List<BindingTemplate> bindingTemplate;
 
     /**

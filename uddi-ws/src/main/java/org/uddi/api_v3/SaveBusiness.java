@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "businessEntity"
 })
 public class SaveBusiness implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 5005995544916422431L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<BusinessEntity> businessEntity;
 

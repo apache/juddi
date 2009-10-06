@@ -38,7 +38,7 @@ import javax.persistence.Table;
 @Table(name = "j3_binding_template")
 public class BindingTemplate extends UddiEntity implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -813683306021520411L;
 	private BusinessService businessService;
 	private List<BindingDescr> bindingDescrs = new ArrayList<BindingDescr>(0);
 

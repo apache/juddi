@@ -38,7 +38,7 @@ import javax.persistence.Table;
 @Table(name = "j3_address")
 public class Address implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 7767275374035531912L;
 	private Long id;
 	private Contact contact;
 	private String useType;

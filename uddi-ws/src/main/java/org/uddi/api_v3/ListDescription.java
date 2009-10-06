@@ -54,10 +54,10 @@ import javax.xml.bind.annotation.XmlType;
     "listHead"
 })
 public class ListDescription implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected int includeCount;
+	private static final long serialVersionUID = 77138243591130431L;
+
+	protected int includeCount;
     protected int actualCount;
     protected int listHead;
 

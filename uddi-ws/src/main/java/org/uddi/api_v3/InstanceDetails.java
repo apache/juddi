@@ -59,10 +59,8 @@ import javax.xml.bind.annotation.XmlType;
     "instanceParms", "description", "overviewDoc"
 })
 public class InstanceDetails implements Serializable {
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -8133581381978826309L;
     @XmlElement(required=false)
     protected String instanceParms;
     @XmlElement(required=false)

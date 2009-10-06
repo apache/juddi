@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class AuthTokenRequiredException extends AuthenticationException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 911181181554360596L;
 
 	public AuthTokenRequiredException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_AUTH_TOKEN_REQUIRED));

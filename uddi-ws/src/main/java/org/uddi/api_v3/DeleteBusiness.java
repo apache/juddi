@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "businessKey"
 })
 public class DeleteBusiness implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 5600456199046226809L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> businessKey;
 

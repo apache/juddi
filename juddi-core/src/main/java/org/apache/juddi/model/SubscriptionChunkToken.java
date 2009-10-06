@@ -31,9 +31,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "j3_subscription_chunk_token")
 public class SubscriptionChunkToken implements java.io.Serializable  {
-
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 3839994259992953856L;
 	private String chunkToken;
 	private String subscriptionKey;
 	private Date startPoint;

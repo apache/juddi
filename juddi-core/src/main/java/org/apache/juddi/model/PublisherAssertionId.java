@@ -24,7 +24,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class PublisherAssertionId implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8329568181003010492L;
 	private String fromKey;
 	private String toKey;
 

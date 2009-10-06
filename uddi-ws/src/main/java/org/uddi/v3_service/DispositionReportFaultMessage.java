@@ -34,7 +34,7 @@ import org.uddi.api_v3.DispositionReport;
 public class DispositionReportFaultMessage
     extends RemoteException
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -3901821587689888649L;
 	/**
      * Java type that goes as soapenv:Fault detail element.
      * 

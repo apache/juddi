@@ -66,10 +66,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "signature"
 })
 public class TModel implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -6854071436459289470L;
+	@XmlElement(required = true)
     protected Name name;
     protected List<Description> description;
     protected List<OverviewDoc> overviewDoc;

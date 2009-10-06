@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "j3_transfer_token")
 public class TransferToken implements java.io.Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7361461730400118274L;
 	private String transferToken;
 	private Date expirationDate;
 	protected List<TransferTokenKey> transferKeys = new ArrayList<TransferTokenKey>(0);

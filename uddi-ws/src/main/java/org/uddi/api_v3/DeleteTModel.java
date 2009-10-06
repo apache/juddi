@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "tModelKey"
 })
 public class DeleteTModel implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 8655600509970326307L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> tModelKey;
 

@@ -36,7 +36,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPortType {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1404805184314952141L;
 	private JUDDIApiPortType juddiAPI = new JUDDIApiImpl();
 	
 	protected JUDDIApiService() throws RemoteException {

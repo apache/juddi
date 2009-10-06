@@ -48,10 +48,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "get_highWaterMarks")
-public class GetHighWaterMarks implements Serializable{
-	
+public class GetHighWaterMarks implements Serializable{	
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 6871793356516130202L;
 }
 

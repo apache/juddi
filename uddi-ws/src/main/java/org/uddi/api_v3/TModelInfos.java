@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "tModelInfo"
 })
 public class TModelInfos implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -2133047990983925267L;
+	@XmlElement(required = true)
     protected List<TModelInfo> tModelInfo;
 
     /**

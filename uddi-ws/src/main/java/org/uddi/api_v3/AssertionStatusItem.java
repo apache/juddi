@@ -61,10 +61,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement
 public class AssertionStatusItem implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 2275087906912814101L;
+	@XmlElement(required = true)
     protected String fromKey;
     @XmlElement(required = true)
     protected String toKey;

@@ -62,8 +62,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Policy implements Serializable{
 
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -3788182208582126483L;
+	@XmlElement(required = true)
     protected String policyName;
     @XmlElement(required = true)
     protected List<PolicyDescriptionType> policyDescription;

@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_service_descr")
 public class ServiceDescr implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7648405299782163994L;
 	private Long id;
 	private BusinessService businessService;
 	private String langCode;

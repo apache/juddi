@@ -28,7 +28,7 @@ package org.apache.juddi.error;
  */
 public class InvalidValueException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5108592555540144175L;
 
 	public InvalidValueException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_VALUE));

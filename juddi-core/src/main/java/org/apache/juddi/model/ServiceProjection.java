@@ -28,10 +28,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "j3_service_projection")
 public class ServiceProjection implements java.io.Serializable {
-
 		
-		private static final long serialVersionUID = 1L;
-		
+		private static final long serialVersionUID = -8404899558507142913L;
 		@EmbeddedId
 		private ServiceProjectionId id = new ServiceProjectionId();
 		@ManyToOne

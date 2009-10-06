@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement(name = "changeRecordConditionFailed")
 public class ChangeRecordConditionFailed implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 7067612338047869508L;
+	@XmlElement(required = true)
     protected ChangeRecordIDType failedChangeID;
 
     /**

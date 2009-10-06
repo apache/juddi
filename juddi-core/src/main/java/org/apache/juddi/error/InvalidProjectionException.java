@@ -25,7 +25,7 @@ package org.apache.juddi.error;
  */
 public class InvalidProjectionException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2447287220774262681L;
 
 	public InvalidProjectionException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_PROJECTION));

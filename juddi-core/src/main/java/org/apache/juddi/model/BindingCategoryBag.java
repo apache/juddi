@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Table(name = "j3_binding_category_bag")
 public class BindingCategoryBag extends CategoryBag {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 328415084782176174L;
 	private BindingTemplate bindingTemplate;
 
 	public BindingCategoryBag() {

@@ -56,10 +56,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 })
 @XmlRootElement(name = "changeRecordHide")
 public class ChangeRecordHide implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
+	private static final long serialVersionUID = 161128451954472777L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected String tModelKey;
     @XmlElement(required = true)
     protected XMLGregorianCalendar modified;

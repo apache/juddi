@@ -61,8 +61,8 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 public class Policies implements Serializable{
 
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Policy> policy;
+	private static final long serialVersionUID = 3101747856169577400L;
+	protected List<Policy> policy;
     @XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
     protected List<SignatureType> signature;
 

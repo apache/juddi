@@ -69,10 +69,9 @@ import org.uddi.api_v3.TModel;
     "publisherAssertion"
 })
 public class ValidateValues implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = 940644923802364940L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected List<BusinessEntity> businessEntity;

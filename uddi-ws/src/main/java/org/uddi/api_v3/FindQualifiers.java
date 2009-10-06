@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "findQualifier"
 })
 public class FindQualifiers implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 434280754172817782L;
+	@XmlElement(required = true)
     protected List<String> findQualifier;
 
     /**

@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_binding_descr")
 public class BindingDescr implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5776673477204182405L;
 	private Long id;
 	private BindingTemplate bindingTemplate;
 	private String langCode;

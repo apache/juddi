@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @Table(name = "j3_business_category_bag")
 public class BusinessCategoryBag extends CategoryBag {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4532396240197577553L;
 	private BusinessEntity businessEntity;
 	
 	public BusinessCategoryBag() {

@@ -68,10 +68,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "signature"
 })
 public class BindingTemplate implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Description> description;
+	private static final long serialVersionUID = 4486129441515025032L;
+	protected List<Description> description;
     protected AccessPoint accessPoint;
     protected HostingRedirector hostingRedirector;
     protected TModelInstanceDetails tModelInstanceDetails;

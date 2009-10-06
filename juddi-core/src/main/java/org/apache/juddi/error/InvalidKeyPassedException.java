@@ -25,7 +25,7 @@ package org.apache.juddi.error;
  */
 public class InvalidKeyPassedException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3302122187004457095L;
 
 	public InvalidKeyPassedException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_INVALID_KEY_PASSED));

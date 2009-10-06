@@ -51,10 +51,9 @@ import javax.xml.bind.annotation.XmlType;
     "publisherAssertion"
 })
 public class PublisherAssertionsResponse implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<PublisherAssertion> publisherAssertion;
+	private static final long serialVersionUID = 6579381609449920785L;
+	protected List<PublisherAssertion> publisherAssertion;
 
     /**
      * Gets the value of the publisherAssertion property.

@@ -57,10 +57,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "opaqueToken"
 })
 public class TransferToken implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
+	private static final long serialVersionUID = 4303304106321293163L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected String nodeID;
     @XmlElement(required = true)
     @XmlSchemaType(name = "dateTime")

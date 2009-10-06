@@ -52,10 +52,10 @@ import javax.xml.bind.annotation.XmlType;
     "completionStatus"
 })
 public class GetAssertionStatusReport implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = -2865303569661044848L;
+
+	protected String authInfo;
     protected CompletionStatus completionStatus;
 
     /**

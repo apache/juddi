@@ -66,10 +66,9 @@ import javax.xml.bind.annotation.XmlType;
     "findTModel"
 })
 public class FindService implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = -3908869734136713799L;
+	protected String authInfo;
     protected FindQualifiers findQualifiers;
     protected List<Name> name;
     protected CategoryBag categoryBag;

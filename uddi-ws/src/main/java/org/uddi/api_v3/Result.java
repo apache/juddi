@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
     "errInfo"
 })
 public class Result implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected ErrInfo errInfo;
+	private static final long serialVersionUID = -4308146039486136383L;
+	protected ErrInfo errInfo;
     @XmlAttribute
     protected KeyType keyType;
     @XmlAttribute(required = true)

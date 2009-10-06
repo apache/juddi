@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_business_identifier")
 public class BusinessIdentifier implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4262205627713188502L;
 	private Long id;
 	private BusinessEntity businessEntity;
 	private String tmodelKeyRef;

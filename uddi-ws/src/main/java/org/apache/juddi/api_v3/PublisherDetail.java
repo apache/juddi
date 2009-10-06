@@ -38,10 +38,9 @@ import javax.xml.bind.annotation.XmlType;
     "publisher"
 })
 public class PublisherDetail implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<Publisher> publisher;
+	private static final long serialVersionUID = -409328006334478420L;
+	protected List<Publisher> publisher;
     @XmlAttribute
     protected Boolean truncated;
 

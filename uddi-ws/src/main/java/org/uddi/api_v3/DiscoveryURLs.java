@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "discoveryURL"
 })
 public class DiscoveryURLs implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -8829698837684132695L;
+	@XmlElement(required = true)
     protected List<DiscoveryURL> discoveryURL;
 
     /**

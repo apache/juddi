@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_tmodel_identifier")
 public class TmodelIdentifier implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1601849737660400357L;
 	private Long id;
 	private Tmodel tmodel;
 	private String tmodelKeyRef;

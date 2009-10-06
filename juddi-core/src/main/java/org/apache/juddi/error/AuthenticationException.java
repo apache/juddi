@@ -26,7 +26,7 @@ import org.uddi.api_v3.DispositionReport;
  */
 public class AuthenticationException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2117503081874302954L;
 
 	public AuthenticationException(ErrorMessage message, DispositionReport dispositionReport) {
 		super(message, dispositionReport);

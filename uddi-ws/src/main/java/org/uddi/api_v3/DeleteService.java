@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "serviceKey"
 })
 public class DeleteService implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = -2321762773181966012L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> serviceKey;
 

@@ -54,10 +54,9 @@ import javax.xml.bind.annotation.XmlType;
     "tModel"
 })
 public class SaveTModel implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = -2588170431381406976L;
+	protected String authInfo;
     @XmlElement(required = true)
     protected List<TModel> tModel;
 

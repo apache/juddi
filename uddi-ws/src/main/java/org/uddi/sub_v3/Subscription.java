@@ -65,10 +65,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "expiresAfter"
 })
 public class Subscription implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String subscriptionKey;
+	private static final long serialVersionUID = -1016771256986173140L;
+	protected String subscriptionKey;
     protected SubscriptionFilter subscriptionFilter;
     @XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String bindingKey;

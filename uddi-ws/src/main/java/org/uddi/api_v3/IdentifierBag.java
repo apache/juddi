@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "keyedReference"
 })
 public class IdentifierBag implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -164149328927968779L;
+	@XmlElement(required = true)
     protected List<KeyedReference> keyedReference;
 
     /**

@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement(name = "changeRecordCorrection")
 public class ChangeRecordCorrection implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -4858102532894902587L;
+	@XmlElement(required = true)
     protected ChangeRecord changeRecord;
 
     /**

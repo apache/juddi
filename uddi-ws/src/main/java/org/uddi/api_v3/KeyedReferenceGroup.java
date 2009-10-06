@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
     "keyedReference"
 })
 public class KeyedReferenceGroup implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<KeyedReference> keyedReference;
+	private static final long serialVersionUID = -2001599970824282657L;	
+	protected List<KeyedReference> keyedReference;
     @XmlAttribute(required = true)
     protected String tModelKey;
 

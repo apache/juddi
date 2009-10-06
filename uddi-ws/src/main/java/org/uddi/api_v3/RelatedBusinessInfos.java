@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "relatedBusinessInfo"
 })
 public class RelatedBusinessInfos implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 8187418208027215109L;
+	@XmlElement(required = true)
     protected List<RelatedBusinessInfo> relatedBusinessInfo;
 
     /**

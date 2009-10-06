@@ -55,10 +55,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement
 public class OperationalInfos implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<OperationalInfo> operationalInfo;
+	private static final long serialVersionUID = -1000457136871068785L;
+	protected List<OperationalInfo> operationalInfo;
     @XmlAttribute
     protected Boolean truncated;
 

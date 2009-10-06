@@ -59,8 +59,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class CategoryBag implements Serializable {
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -2685864001789149451L;
 	@XmlElement
     protected List<KeyedReference> keyedReference;
 	@XmlElement

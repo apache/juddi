@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "contact"
 })
 public class Contacts implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -6438391991038401023L;
+	@XmlElement(required = true)
     protected List<Contact> contact;
 
     /**

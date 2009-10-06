@@ -52,8 +52,9 @@ import javax.xml.bind.annotation.XmlValue;
 public class PolicyDescriptionType implements Serializable{
 
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlValue
+	private static final long serialVersionUID = -7663085495898201372L;
+
+	@XmlValue
     protected String value;
     @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;

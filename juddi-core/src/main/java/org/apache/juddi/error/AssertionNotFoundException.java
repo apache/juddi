@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class AssertionNotFoundException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2172986368788753140L;
 
 	public AssertionNotFoundException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_ASSERTION_NOT_FOUND));

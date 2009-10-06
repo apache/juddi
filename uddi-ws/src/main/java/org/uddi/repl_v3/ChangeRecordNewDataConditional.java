@@ -53,10 +53,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 @XmlRootElement(name = "changeRecordNewDataConditional")
 public class ChangeRecordNewDataConditional implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -5631615951563463814L;
+	@XmlElement(required = true)
     protected ChangeRecordNewData changeRecordNewData;
 
     /**

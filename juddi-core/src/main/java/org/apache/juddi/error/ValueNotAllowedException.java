@@ -25,7 +25,7 @@ package org.apache.juddi.error;
  */
 public class ValueNotAllowedException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4003033708851434957L;
 
 	public ValueNotAllowedException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_VALUE_NOT_ALLOWED));

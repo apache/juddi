@@ -27,7 +27,7 @@ import org.uddi.api_v3.DispositionReport;
  */
 public class RegistryException extends DispositionReportFaultMessage {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4200811689537798618L;
 
 	public RegistryException(ErrorMessage message, DispositionReport dispReport) {
 		super(message.toString(), dispReport);

@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class UnknownUserException extends AuthenticationException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -3435412795602392194L;
 
 	public UnknownUserException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_UNKNOWN_USER));

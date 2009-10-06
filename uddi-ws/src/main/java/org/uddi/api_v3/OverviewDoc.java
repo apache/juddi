@@ -58,9 +58,8 @@ import javax.xml.bind.annotation.XmlType;
     "overviewURL", "description"
 })
 public class OverviewDoc implements Serializable {
-	
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2375126956490542327L;
 	@XmlElement
     protected List<Description> description;
     @XmlElement(required = false)

@@ -81,10 +81,9 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 })
 @XmlRootElement(name = "replicationConfiguration")
 public class ReplicationConfiguration implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected long serialNumber;
+	private static final long serialVersionUID = 621260248291581845L;
+	protected long serialNumber;
     @XmlElement(required = true)
     protected String timeOfConfigurationUpdate;
     @XmlElement(required = true)

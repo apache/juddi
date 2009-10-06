@@ -48,9 +48,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "get_authToken")
 public class GetAuthToken implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2736132681478711038L;
 	@XmlAttribute(required = true)
     protected String userID;
     @XmlAttribute(required = true)

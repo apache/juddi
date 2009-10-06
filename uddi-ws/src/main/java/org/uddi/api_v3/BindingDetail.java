@@ -59,8 +59,9 @@ import javax.xml.bind.annotation.XmlType;
 public class BindingDetail implements Serializable{
 
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected ListDescription listDescription;
+	private static final long serialVersionUID = 7390772738800524046L;
+
+	protected ListDescription listDescription;
     protected List<BindingTemplate> bindingTemplate;
     @XmlAttribute
     protected Boolean truncated;

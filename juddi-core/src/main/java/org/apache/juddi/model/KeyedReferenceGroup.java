@@ -38,7 +38,7 @@ import javax.persistence.Table;
 @Table(name = "j3_keyed_reference_group")
 public class KeyedReferenceGroup implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 837654280200149969L;
 	private Long id;
 	private CategoryBag categoryBag;
 	private String tmodelKey;

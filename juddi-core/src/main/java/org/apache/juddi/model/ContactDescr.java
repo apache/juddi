@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_contact_descr")
 public class ContactDescr implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2157712879946636410L;
 	private Long id;
 	private Contact contact;
 	private String langCode;

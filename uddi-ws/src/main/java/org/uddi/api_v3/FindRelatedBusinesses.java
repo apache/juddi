@@ -65,10 +65,9 @@ import javax.xml.bind.annotation.XmlType;
     "keyedReference"
 })
 public class FindRelatedBusinesses implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String authInfo;
+	private static final long serialVersionUID = 7121248322606286741L;
+	protected String authInfo;
     protected FindQualifiers findQualifiers;
     protected String businessKey;
     protected String fromKey;

@@ -32,7 +32,7 @@ import javax.persistence.Table;
 @Table(name = "j3_publisher_assertion")
 public class PublisherAssertion implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5285434317957104272L;
 	private PublisherAssertionId id;
 	private BusinessEntity businessEntityByToKey;
 	private BusinessEntity businessEntityByFromKey;

@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class AuthTokenExpiredException extends AuthenticationException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2993033147078083022L;
 
 	public AuthTokenExpiredException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_AUTH_TOKEN_EXPIRED));

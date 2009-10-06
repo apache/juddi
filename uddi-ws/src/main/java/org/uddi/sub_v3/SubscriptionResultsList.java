@@ -89,10 +89,9 @@ import org.uddi.api_v3.TModelList;
     "keyBag"
 })
 public class SubscriptionResultsList implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected String chunkToken;
+	private static final long serialVersionUID = 8704510604661100139L;
+	protected String chunkToken;
     @XmlElement(required = true)
     protected CoveragePeriod coveragePeriod;
     @XmlElement(required = true)

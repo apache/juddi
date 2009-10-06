@@ -33,7 +33,7 @@ import javax.persistence.Table;
 @Table(name = "j3_transfer_token_keys")
 public class TransferTokenKey implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8163650692808546199L;
 	private Long id;
 	private TransferToken transferToken;
 	private String entityKey;

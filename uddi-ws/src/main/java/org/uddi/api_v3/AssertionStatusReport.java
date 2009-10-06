@@ -50,11 +50,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "assertionStatusReport", propOrder = {
     "assertionStatusItem"
 })
-public class AssertionStatusReport implements Serializable{
-	
+public class AssertionStatusReport implements Serializable {	
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    protected List<AssertionStatusItem> assertionStatusItem;
+	private static final long serialVersionUID = 4363994518196953147L;
+
+	protected List<AssertionStatusItem> assertionStatusItem;
 
     /**
      * Gets the value of the assertionStatusItem property.

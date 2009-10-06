@@ -56,10 +56,9 @@ import org.uddi.sub_v3.SubscriptionResultsList;
 })
 @XmlRootElement(name="notify_subscriptionListener")
 public class NotifySubscriptionListener implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = 4531235329051418025L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
     @XmlElement(namespace = "urn:uddi-org:sub_v3", required = true)
     protected SubscriptionResultsList subscriptionResultsList;

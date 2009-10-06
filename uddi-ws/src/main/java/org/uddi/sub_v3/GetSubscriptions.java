@@ -51,10 +51,9 @@ import javax.xml.bind.annotation.XmlType;
     "authInfo"
 })
 public class GetSubscriptions implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = 1141285909567735012L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
 
     /**

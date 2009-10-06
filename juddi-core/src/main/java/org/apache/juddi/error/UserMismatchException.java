@@ -24,7 +24,7 @@ package org.apache.juddi.error;
  */
 public class UserMismatchException extends RegistryException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -3459894364164959205L;
 
 	public UserMismatchException(ErrorMessage message) {
 		super(message, UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_USER_MISMATCH));

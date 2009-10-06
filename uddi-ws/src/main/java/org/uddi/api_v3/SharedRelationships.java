@@ -56,10 +56,9 @@ import javax.xml.bind.annotation.XmlType;
     "publisherAssertion"
 })
 public class SharedRelationships implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = 33682029473397546L;
+	@XmlElement(required = true)
     protected List<KeyedReference> keyedReference;
     protected List<PublisherAssertion> publisherAssertion;
     @XmlAttribute(required = true)

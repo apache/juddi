@@ -57,10 +57,9 @@ import javax.xml.bind.annotation.XmlType;
     "keyBag"
 })
 public class DiscardTransferToken implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3")
+	private static final long serialVersionUID = -6277573385151936734L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
     protected String authInfo;
     protected TransferToken transferToken;
     protected KeyBag keyBag;

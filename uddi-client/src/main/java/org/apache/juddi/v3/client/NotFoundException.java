@@ -17,8 +17,8 @@
 package org.apache.juddi.v3.client;
 
 public class NotFoundException extends Exception {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1318288347704020734L;
+
 	public NotFoundException() {
 		super();
 	}

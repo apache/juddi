@@ -65,10 +65,9 @@ import org.uddi.api_v3.PublisherAssertion;
 })
 @XmlRootElement(name = "changeRecordPublisherAssertion")
 public class ChangeRecordPublisherAssertion implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
+	private static final long serialVersionUID = -7934282484968024201L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3", required = true)
     protected PublisherAssertion publisherAssertion;
     protected boolean fromBusinessCheck;
     protected boolean toBusinessCheck;

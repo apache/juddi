@@ -39,7 +39,7 @@ import javax.persistence.Table;
 
 public class CategoryBag implements java.io.Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 972745223104626841L;
 	private Long id;
 	private List<KeyedReference> keyedReferences = new ArrayList<KeyedReference>(0);
 	private List<KeyedReferenceGroup> keyedReferenceGroups = new ArrayList<KeyedReferenceGroup>(0);

@@ -52,10 +52,9 @@ import javax.xml.bind.annotation.XmlType;
     "key"
 })
 public class KeyBag implements Serializable{
-
 	@XmlTransient
-	private static final long serialVersionUID = 1L;
-    @XmlElement(required = true)
+	private static final long serialVersionUID = -965586924432616342L;
+	@XmlElement(required = true)
     protected List<String> key;
 
     /**
