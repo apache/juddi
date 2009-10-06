@@ -48,8 +48,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class SecurityServiceImpl extends RemoteServiceServlet implements
 		SecurityService {
 
+	private static final long serialVersionUID = -154327520485409858L;
 	private Logger log = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
+	
 
 	public SecurityResponse get(String username, String password) {
 		HttpServletRequest request = getThreadLocalRequest();

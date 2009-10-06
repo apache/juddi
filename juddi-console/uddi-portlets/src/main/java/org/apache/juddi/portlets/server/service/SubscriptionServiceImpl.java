@@ -52,9 +52,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements SubscriptionService {
 
+	private static final long serialVersionUID = 6366224282740095468L;
 	private Logger logger = Logger.getLogger(this.getClass());
 	private final static String UP = "Up";
-	private static final long serialVersionUID = 1L;
+	
 	
 	public SubscriptionResponse getSubscriptions() 
 	{

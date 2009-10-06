@@ -35,8 +35,8 @@ import org.apache.juddi.util.NotificationList;
  */
 public class NotifyServlet extends HttpServlet
 {
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 4862936257096400737L;
+
 	@SuppressWarnings("unchecked")
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws

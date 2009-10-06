@@ -42,8 +42,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIApiService {
 
+	private static final long serialVersionUID = -4079331701560975888L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
+	
 	
 	public JUDDIApiResponse getPublishers(String authToken, String publisherId) 
 	{	

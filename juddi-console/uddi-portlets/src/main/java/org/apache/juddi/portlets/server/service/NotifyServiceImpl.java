@@ -34,8 +34,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  *
  */
 public class NotifyServiceImpl extends RemoteServiceServlet implements NotifyService {
+	
+	private static final long serialVersionUID = 6312615857204115941L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
+	
 	
 	public NotifyServiceImpl() {
 		super();

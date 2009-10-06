@@ -46,8 +46,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class PublicationServiceImpl extends RemoteServiceServlet implements PublicationService {
 
+	private static final long serialVersionUID = 8903795371009202903L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
+	
 	
 	public PublicationResponse getBusinesses(String authToken, String infoSelection) 
 	{

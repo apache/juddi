@@ -52,8 +52,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryService {
 
+	private static final long serialVersionUID = 8509627428299232161L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private static final long serialVersionUID = 1L;
 	private Transport transport = null;
 	
 	public InquiryServiceImpl() {
