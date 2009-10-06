@@ -3,9 +3,8 @@ package org.apache.juddi.portlets.client.model;
 import java.io.Serializable;
 
 public class ServiceBinding implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-    private String key;
+	private static final long serialVersionUID = 2545194828715859854L;
+	private String key;
 	private String accessPoint;
 	private String description;
 	private String urlType;

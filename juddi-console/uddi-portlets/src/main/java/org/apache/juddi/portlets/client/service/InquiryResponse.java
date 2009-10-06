@@ -24,8 +24,7 @@ import org.apache.juddi.portlets.client.model.Service;
  *
  */
 public class InquiryResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5552581332320361677L;
 	private Service service;
 	private Business business;
 	

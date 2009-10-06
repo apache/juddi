@@ -28,9 +28,7 @@ import org.apache.juddi.portlets.client.model.Subscription;
  *
  */
 public class SubscriptionResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -1729549521486172296L;
 	private List<Node> nodes = new ArrayList<Node>();
 	private Subscription subscription;
 

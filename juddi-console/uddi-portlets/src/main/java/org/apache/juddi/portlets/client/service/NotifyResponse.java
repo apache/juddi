@@ -22,8 +22,7 @@ package org.apache.juddi.portlets.client.service;
  *
  */
 public class NotifyResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4760892414401741984L;
 	String subscriptionNotifications;
 	
 	public String getSubscriptionNotifications() {

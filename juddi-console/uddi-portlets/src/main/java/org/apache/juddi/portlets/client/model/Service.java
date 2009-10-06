@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Service implements Serializable{
-
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -4116192376614022055L;
 	private String key;
 	private String name;
 	private String description;

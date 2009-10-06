@@ -25,9 +25,7 @@ import org.apache.juddi.portlets.client.model.Publisher;
  *
  */
 public class JUDDIApiResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 9118551366254201642L;
 	List<Publisher> publishers;
 	
 	public List<Publisher> getPublishers() {

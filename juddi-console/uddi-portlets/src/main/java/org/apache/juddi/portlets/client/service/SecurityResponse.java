@@ -21,8 +21,7 @@ package org.apache.juddi.portlets.client.service;
  *
  */
 public class SecurityResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -893906995719630663L;
 	String response;
 	String username;
 	

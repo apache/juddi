@@ -25,8 +25,7 @@ import org.apache.juddi.portlets.client.model.Business;
  *
  */
 public class FindResponse extends Response {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -521849649236443710L;
 	List<Business> businesses;
 	
 	public List<Business> getBusinesses() {

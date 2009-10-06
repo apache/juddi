@@ -28,8 +28,7 @@ import java.io.Serializable;
  * 
  */
 public class Subscription implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4857108890203941634L;
 	protected String bindingKey;
     protected Boolean brief;
     protected String expiresAfter;

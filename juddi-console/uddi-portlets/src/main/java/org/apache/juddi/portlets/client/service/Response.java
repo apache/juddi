@@ -23,8 +23,7 @@ import java.io.Serializable;
  *
  */
 public class Response implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8428365608070621881L;
 	boolean isSuccess;
 	String errorCode;
 	String message;

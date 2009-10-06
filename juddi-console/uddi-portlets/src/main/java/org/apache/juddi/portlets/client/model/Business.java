@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Business implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -102266226642620387L;
 	private String key;
 	private String name;
 	private String description;
