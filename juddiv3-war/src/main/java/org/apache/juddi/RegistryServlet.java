@@ -29,7 +29,8 @@ import org.apache.log4j.Logger;
  * @author Steve Viens (sviens@apache.org)
  */
 public class RegistryServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = 4653310291840334765L;
 	private static Logger logger = Logger.getLogger(RegistryServlet.class);
 
 	/**

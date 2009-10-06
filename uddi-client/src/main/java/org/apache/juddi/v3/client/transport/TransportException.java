@@ -18,7 +18,9 @@ package org.apache.juddi.v3.client.transport;
 
 public class TransportException extends Exception {
 	
-	private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = 8462667570467061246L;
+
 	public TransportException() {
 		super();
 	}
