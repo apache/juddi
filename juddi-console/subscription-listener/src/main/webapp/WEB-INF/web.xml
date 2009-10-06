@@ -57,6 +57,7 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
+  <!--  
   <servlet>
     <servlet-name>UDDIClerkServlet</servlet-name>
     <display-name>Clerk Servlet</display-name>
@@ -65,7 +66,8 @@
     </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
+  -->
+  
   <servlet-mapping>
   	<servlet-name>NotifyServlet</servlet-name>
   	<url-pattern>/notify/*</url-pattern>
