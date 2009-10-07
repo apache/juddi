@@ -84,7 +84,8 @@ public class UDDIInquiryService {
 	public String inquire(UDDIInquiryPortType inquiry, String request) throws Exception {
 	    java.io.InputStream sbis = new StringBufferInputStream(request);
 	    javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-
+	    dbf.setNamespaceAware(true);
+	    dbf.setValidating(false);
 	    DocumentBuilder db = dbf.newDocumentBuilder();
 	    Document doc = db.parse(sbis);
 		Element reqElem = doc.getDocumentElement();

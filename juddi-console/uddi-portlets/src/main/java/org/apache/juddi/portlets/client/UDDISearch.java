@@ -57,6 +57,11 @@ public class UDDISearch implements EntryPoint, ClickListener {
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class);
 	
 	private FlowPanel searchPanel = new FlowPanel();
+	
+	private final static String DEFAULT_QUERY = "<find_tModel xmlns=\"urn:uddi-org:api_v3\">"
+					+ "<name>uddi-org:v3_policy</name>"
+					+ "</find_tModel>";
+	
 	/**
 	 * This is the entry point method.
 	 */
@@ -68,6 +73,7 @@ public class UDDISearch implements EntryPoint, ClickListener {
 		
 	    queryTextArea.setCharacterWidth(55);
 	    queryTextArea.setVisibleLines(10);
+	    queryTextArea.setText(DEFAULT_QUERY);
 	    searchPanel.add(queryTextArea);
 
 		Label spacerLabel = new Label ("Query Result");
