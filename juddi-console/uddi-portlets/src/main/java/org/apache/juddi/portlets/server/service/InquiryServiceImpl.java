@@ -27,6 +27,7 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
+import org.apache.juddi.portlets.client.service.SearchResponse;
 import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -71,24 +72,26 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		return transport;
 	}
 
-	public String queryJUDDI(String query) {
-		 String response = null;
+	public SearchResponse queryJUDDI(String query) {
+		SearchResponse response = new SearchResponse();
+
 		 try {
 			 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
 			 org.apache.juddi.v3.client.transport.wrapper.UDDIInquiryService uis = 
 				 new org.apache.juddi.v3.client.transport.wrapper.UDDIInquiryService();
-       		 response = uis.inquire(inquiryService, query);
-       		//response.setSuccess(true);       	 
+       		 String reply = uis.inquire(inquiryService, query);
+       		 response.setMessage(reply);
+       		 response.setSuccess(true);       	 
 	     } catch (Exception e) {
 	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
-	    	 //response.setSuccess(false);
-	    	 //response.setMessage(e.getMessage());
-	    	 //response.setErrorCode("102");
+	    	 response.setSuccess(false);
+	    	 response.setMessage(e.getMessage());
+	    	 response.setErrorCode("102");
 	     }  catch (Throwable t) {
 	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
-	    	 //response.setSuccess(false);
-	    	 //response.setMessage(t.getMessage());
-	    	 //response.setErrorCode("102");
+	    	 response.setSuccess(false);
+	    	 response.setMessage(t.getMessage());
+	    	 response.setErrorCode("102");
 	     } 
 		 return response;
 	}

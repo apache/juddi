@@ -19,6 +19,7 @@ package org.apache.juddi.portlets.client;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.juddi.portlets.client.service.InquiryServiceAsync;
+import org.apache.juddi.portlets.client.service.SearchResponse;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -94,22 +95,20 @@ public class UDDISearch implements EntryPoint, ClickListener {
 	}
 	
 	private void queryJUDDI(String query) {
-		inquiryService.queryJUDDI(query, new AsyncCallback<String>() 
+		inquiryService.queryJUDDI(query, new AsyncCallback<SearchResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}
 
-			public void onSuccess(String response) {
-/*				if (response.isSuccess()) {
+			public void onSuccess(SearchResponse response) {
+				if (response.isSuccess()) {
 					//Map<String,String> tModelMap= response.getResponse();
 					//tmodelLabel.setText("tmodelMap: " + tModelMap);
 					resultTextArea.setText(response.getMessage());
 				} else {
 					resultTextArea.setText(response.getMessage());
 				}
-*/
-				resultTextArea.setText(response);					
 			}
 		});
 	}
