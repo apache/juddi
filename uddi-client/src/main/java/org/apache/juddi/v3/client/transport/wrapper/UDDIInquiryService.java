@@ -1,6 +1,15 @@
 package org.apache.juddi.v3.client.transport.wrapper;
 
+import java.io.StringBufferInputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.uddi.api_v3.FindBinding;
@@ -14,6 +23,7 @@ import org.uddi.api_v3.GetOperationalInfo;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.v3_service.UDDIInquiryPortType;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -40,6 +50,7 @@ public class UDDIInquiryService {
 		operations.put("get_operationalInfo", new Handler("getOperationalInfo", GetOperationalInfo.class));
 	}
 
+	
 
 	//Verify that the appropriate endpoint was targeted for
 	// this service request.  The validateRequest method will
@@ -49,25 +60,48 @@ public class UDDIInquiryService {
 	{
 	    if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
-	  }
+	}
 
-	  public Node inquire(Element uddiReq) throws Exception{		  
-		  InVMTransport invmtransport = new InVMTransport();		
-	      UDDIInquiryPortType inquiry = invmtransport.getUDDIInquiryService();
+	public Node inquire(Element uddiReq) throws Exception{		  
+		InVMTransport invmtransport = new InVMTransport();		
+	    UDDIInquiryPortType inquiry = invmtransport.getUDDIInquiryService();
 
-	      //new RequestHandler on it's own thread
-	      RequestHandler requestHandler = new RequestHandler();
-	      requestHandler.setPortType(inquiry);
+	    //new RequestHandler on it's own thread
+	    RequestHandler requestHandler = new RequestHandler();
+	    requestHandler.setPortType(inquiry);
 	      
-	      String operation = requestHandler.getOperation(uddiReq);
-		  Handler opHandler = operations.get(operation);
-	      requestHandler.setMethodName(opHandler.getMethodName());
-		  requestHandler.setOperationClass(opHandler.getParameter());
+	    String operation = requestHandler.getOperation(uddiReq);
+		Handler opHandler = operations.get(operation);
+	    requestHandler.setMethodName(opHandler.getMethodName());
+		requestHandler.setOperationClass(opHandler.getParameter());
 
-	      @SuppressWarnings("unused")
-		  String version   = requestHandler.getVersion(uddiReq,operation);
-	      validateRequest(operation);
-	      return requestHandler.invoke(uddiReq);
-	  }
+	    @SuppressWarnings("unused")
+		String version   = requestHandler.getVersion(uddiReq,operation);
+	    validateRequest(operation);
+	    return requestHandler.invoke(uddiReq);
+	}	
 	
+	public String inquire(UDDIInquiryPortType inquiry, String request) throws Exception {
+	    java.io.InputStream sbis = new StringBufferInputStream(request);
+	    javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+
+	    DocumentBuilder db = dbf.newDocumentBuilder();
+	    Document doc = db.parse(sbis);
+		Element reqElem = doc.getDocumentElement();
+			
+		RequestHandler requestHandler = new RequestHandler();
+		requestHandler.setPortType(inquiry);
+		
+		String operation = reqElem.getTagName().toString();
+		Handler opHandler = operations.get(operation);
+	    requestHandler.setMethodName(opHandler.getMethodName());
+		requestHandler.setOperationClass(opHandler.getParameter());
+
+	    Node n = requestHandler.invoke(reqElem);
+	    
+	    StringWriter sw = new StringWriter();
+        Transformer t = TransformerFactory.newInstance().newTransformer();
+	    t.transform(new DOMSource(n), new StreamResult(sw));
+	    return sw.toString();
+	}
 }

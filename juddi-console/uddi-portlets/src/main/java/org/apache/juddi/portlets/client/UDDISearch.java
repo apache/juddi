@@ -29,6 +29,8 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
+
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,9 +47,12 @@ public class UDDISearch implements EntryPoint, ClickListener {
 	private String token = null;
 	private TextBox tmodelKeyBox = new TextBox();
 	
+    private TextArea queryTextArea = new TextArea();
+    private TextArea resultTextArea = new TextArea();
+	
+	private Button searchButton = new Button("Search");
+	
 	private VerticalPanel tmodelPanel = new VerticalPanel();
-	Label tmodelLabel = new Label("");
-	private Button getTModelButton = new Button("getTModel");
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class);
 	
 	private FlowPanel searchPanel = new FlowPanel();
@@ -55,50 +60,56 @@ public class UDDISearch implements EntryPoint, ClickListener {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() { 
-		
-		getTModelButton.addClickListener(this);
-		Label tmodel = new Label ("TModel Key:");
-		tmodel.setStyleName("portlet-form-field-label");
-		tmodelPanel.add(tmodel);
-		tmodelKeyBox.setStyleName("portlet-form-input-field");
-		tmodelPanel.add(tmodelKeyBox);
-		getTModelButton.setStyleName(("portlet-form-button"));
-		tmodelPanel.add(getTModelButton);
-		tmodelLabel.setStyleName("portlet-form-field-label");
-		tmodelPanel.add(tmodelLabel);
-		
+				
 		Label searchQuery = new Label ("Search Query");
 		searchQuery.setStyleName("portlet-form-field-label");
 		searchPanel.add(searchQuery);
+		
+	    queryTextArea.setCharacterWidth(55);
+	    queryTextArea.setVisibleLines(10);
+	    searchPanel.add(queryTextArea);
+
+		Label spacerLabel = new Label ("Query Result");
+		spacerLabel.setStyleName("portlet-form-field-label");
+		searchPanel.add(spacerLabel);
+	    
+	    resultTextArea.setCharacterWidth(55);
+	    resultTextArea.setVisibleLines(10);
+	    searchPanel.add(resultTextArea);
+		searchButton.addClickListener(this);
+		searchButton.setStyleName("portlet-form-button");
+
+	    searchPanel.add(searchButton);	    
+		
 		RootPanel.get("search").add(searchPanel);
 		
 	}
 
 	public void onClick(Widget sender) {
-	    if (sender == getTModelButton) {
-			if (token!=null) {
-				getTModels(token,tmodelKeyBox.getText());
-			}
+	    if (sender == searchButton) {
+			queryJUDDI(queryTextArea.getText());
 		} else {
 			System.err.println("undefined");
 		}
 	}
 	
-	private void getTModels(String token, String tmodelKey) {
-
-		inquiryService.getTModelDetail(token, tmodelKey, new AsyncCallback<InquiryResponse>() 
+	private void queryJUDDI(String query) {
+		inquiryService.queryJUDDI(query, new AsyncCallback<String>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry.");
 			}
 
-			public void onSuccess(InquiryResponse response) {
-				if (response.isSuccess()) {
+			public void onSuccess(String response) {
+/*				if (response.isSuccess()) {
 					//Map<String,String> tModelMap= response.getResponse();
 					//tmodelLabel.setText("tmodelMap: " + tModelMap);
+					resultTextArea.setText(response.getMessage());
 				} else {
-					tmodelLabel.setText("error: " + response.getMessage());
+					resultTextArea.setText(response.getMessage());
 				}
+*/
+				resultTextArea.setText(response);					
 			}
 		});
 	}
