@@ -1,6 +1,6 @@
 package org.apache.juddi.v3.client.transport.wrapper;
 
-import java.io.StringBufferInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -81,7 +81,7 @@ public class UDDIInquiryService {
 	}	
 	
 	public String inquire(UDDIInquiryPortType inquiry, String request) throws Exception {
-	    java.io.InputStream sbis = new StringBufferInputStream(request);
+	    java.io.InputStream sbis = new ByteArrayInputStream(request.getBytes());
 	    javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
 	    dbf.setNamespaceAware(true);
 	    dbf.setValidating(false);
