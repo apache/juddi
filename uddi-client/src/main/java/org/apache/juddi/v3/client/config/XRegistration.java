@@ -43,9 +43,12 @@ public class XRegistration {
 					+ fromClerk.getName() + " to " + toClerk.getName());
 			toClerk.register(businessService);
 		} catch (Exception e) {
-			log.error("Could not xregister binding " + bindingKey + " + from "
-					+ fromClerk.getName() + " to " + toClerk.getName() + ". " + e.getMessage() + " " + e.getCause(),e);
+			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);
 		}
+	}
+	
+	public String toString() {
+		return " xregister binding: " + bindingKey + " + from " + fromClerk.getName() + " to " + toClerk.getName(); 
 	}
 	
 	

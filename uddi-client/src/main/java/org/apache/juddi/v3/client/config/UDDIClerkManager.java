@@ -61,6 +61,21 @@ public class UDDIClerkManager {
 		}
 		log.info("Clerks started succesfully for manager " + manager.clientConfig.getManagerName());
  	}
+	
+	public synchronized static void restart() throws ConfigurationException {
+		if (manager==null) {
+			log.warn("ClerkManager nor running..");
+		} else {
+			log.info("Restarting UDDI Clerks...");
+			manager.releaseResources();
+			manager.clientConfig.loadManager();
+			manager = new UDDIClerkManager();
+			manager.registerAnnotatedServices();
+			manager.xRegister();
+			log.info("Clerks restarted succesfully for manager " + manager.clientConfig.getManagerName());
+		}
+ 	}
+	
 	/**
 	 * X-Register services listed in the uddi.xml
 	 */
