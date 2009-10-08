@@ -6,9 +6,8 @@ import java.util.Properties;
 
 import javax.jws.WebService;
 
-//import org.apache.log4j.Logger;
 import org.apache.juddi.api_v3.AccessPointType;
-import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.TokenResolver;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AccessPoint;
@@ -126,7 +125,7 @@ public class AnnotationProcessor {
 			}
 			if (!"".equals(uddiServiceBinding.accessPoint())) {
 				String endPoint = uddiServiceBinding.accessPoint();
-				endPoint = ClientConfig.replaceTokens(endPoint, properties);
+				endPoint = TokenResolver.replaceTokens(endPoint, properties);
                 log.debug("AccessPoint EndPoint=" + endPoint);
 				accessPoint.setValue(endPoint);
 			} else if (webServiceAnnotation!=null && webServiceAnnotation.wsdlLocation()!=null) {

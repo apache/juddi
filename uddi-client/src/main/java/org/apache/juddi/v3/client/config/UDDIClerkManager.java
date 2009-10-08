@@ -1,47 +1,47 @@
-package org.apache.juddi.v3.client;
+package org.apache.juddi.v3.client.config;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
-import org.apache.juddi.v3.client.config.ClientConfig;
-import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.XRegistration;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BusinessService;
 
 public class UDDIClerkManager {
 	
-	private static UDDIClerkManager manager = null;
+	private static Map<String,UDDIClerkManager> managers = new ConcurrentHashMap<String,UDDIClerkManager>();
 	private static Logger log = Logger.getLogger(UDDIClerkManager.class);
-    private static ClientConfig clientConfig = null;
+    private ClientConfig clientConfig = null;
 	
 	/**
 	 * Singleton.
 	 * @throws ConfigurationException 
 	 */
-	private UDDIClerkManager() throws ConfigurationException {
+	public UDDIClerkManager() throws ConfigurationException {
 		super();
-		clientConfig = ClientConfig.getInstance();
+		clientConfig = new ClientConfig();
 	}
 	/**
 	 * Stops the clerks.
 	 * @throws ConfigurationException 
 	 */
-	public synchronized static void stop() throws ConfigurationException {
+	public void stop(String managerName) throws ConfigurationException {
 		log.info("Stopping UDDI Clerks...");
-		if (manager!=null) {
+		if (managers.containsKey(managerName)) {
+			UDDIClerkManager manager = managers.get(managerName);
 			manager.releaseResources();
 			manager=null;
+			managers.remove(managerName);
 			log.info("UDDI Clerks shutdown completed.");
 		} else {
-			log.warn("UDDI Clerks where not running.");
+			log.warn("UDDI Clerks for Manager" + managerName+ " where not running.");
 		}
 	}
 	
-	private synchronized void releaseResources() {
+	private void releaseResources() {
 		//TODO unregister bindings from the annotation
 	}
  	/**
@@ -50,12 +50,14 @@ public class UDDIClerkManager {
 	 * @throws ConfigurationException
 	 * @throws  
 	 */
-	public synchronized static UDDIClerkManager start() throws ConfigurationException {
+	public void start(String managerName) throws ConfigurationException {
 		log.info("Starting UDDI Clerks...");
-		if (manager==null) {
-			manager = new UDDIClerkManager();
+		if (!managers.containsKey(managerName)) {
+			UDDIClerkManager manager = new UDDIClerkManager();
+			managers.put(managerName, manager);
 		} else {
 			log.warn("ClerkManager was already started. Going to restart..");
+			UDDIClerkManager manager = managers.get(managerName);
 			manager.releaseResources();
 			manager = new UDDIClerkManager();
 		}
@@ -79,13 +81,24 @@ public class UDDIClerkManager {
 		}
 		log.info("Cross registration completed");
 		log.info("Clerks started succesfully.");
-		
-		return manager;
  	}
 	
-	public ClientConfig getClientConfig() {
-		return clientConfig;
+	public static ClientConfig getClientConfig(String managerName) throws ConfigurationException {
+		UDDIClerkManager manager = getManager(managerName);
+		return manager.clientConfig;
 	}
+	
+	public static UDDIClerkManager getManager(String managerName) throws ConfigurationException {
+		if (managers.size()==0) new UDDIClerkManager().start(managerName);
+		if (managers.containsKey(managerName)) {
+			return managers.get(managerName);
+		} else {
+			//creating a new manager, making sure the name matches.
+			throw new ConfigurationException("No UDDI ClerkManager by that name.");
+		}
+	}
+	
+	
 	
 }
 

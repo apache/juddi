@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.v3.client;
+package org.apache.juddi.v3.client.config;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -30,8 +30,9 @@ import org.apache.log4j.Logger;
 public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
-	private static Logger logger = Logger.getLogger(UDDIClerkServlet.class);
-
+	private Logger logger = Logger.getLogger(UDDIClerkServlet.class);
+    private UDDIClerkManager clerkManager= null;
+    private String managerName = null;
 	/**
 	 * Create the shared instance of jUDDI's Registry class and call it's
 	 * "init()" method to initialize all core components.
@@ -40,7 +41,10 @@ public class UDDIClerkServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			UDDIClerkManager.start();
+			clerkManager = new UDDIClerkManager();
+			managerName = config.getInitParameter("managerName");
+			logger.info("Starting Clerk Manager with Name: " + managerName);
+			clerkManager.start(managerName);
 		} catch (Exception e) {
 			logger.error("UDDI-client could not be started."
 					+ e.getMessage(), e);
@@ -53,7 +57,9 @@ public class UDDIClerkServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		try {
-			UDDIClerkManager.stop();
+			if (clerkManager!=null) {
+				clerkManager.stop(managerName);
+			}
 		} catch (Exception e) {
 			logger.error("UDDI-client could not be stopped."
 					+ e.getMessage(), e);

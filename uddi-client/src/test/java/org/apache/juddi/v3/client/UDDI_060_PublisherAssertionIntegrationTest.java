@@ -20,7 +20,7 @@ package org.apache.juddi.v3.client;
  */
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
-import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.tck.TckBusiness;
@@ -50,7 +50,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -58,7 +58,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 		try {
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.newInstance();
+	        	 Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance("test-manager", "default");
 	        	 
 	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
@@ -83,7 +83,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

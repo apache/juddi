@@ -32,7 +32,7 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.tck.EntityCreator;
@@ -63,7 +63,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -71,7 +71,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 		try {
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.newInstance();
+	        	 Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance("test-manager", "default");
 	        	 security = transport.getUDDISecurityService();
 	        	 GetAuthToken getAuthToken = new GetAuthToken();
 	        	 getAuthToken.setUserID("root");
@@ -89,7 +89,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -98,10 +98,10 @@ public class JUDDI_010_PublisherIntegrationTest {
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
+	    	 String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.newInstance();
+	        	 Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance("test-manager", "default");
 	        	 
 	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
 	        	 GetAuthToken getAuthToken = new GetAuthToken();

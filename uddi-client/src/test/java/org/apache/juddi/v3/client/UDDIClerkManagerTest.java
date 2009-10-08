@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Map;
 
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
-import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessService;
@@ -33,7 +33,8 @@ public class UDDIClerkManagerTest {
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	UDDIClerkManager.start();
+	    	 UDDIClerkManager clerkManager = new UDDIClerkManager();
+	    	 clerkManager.start("test-manager");
 	    	
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
@@ -45,7 +46,7 @@ public class UDDIClerkManagerTest {
      @Test
      public void testAnnotation() {
     	 try {
-	    	 Map<String,UDDIClerk> clerks = ClientConfig.getInstance().getClerks();
+	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig("test-manager").getClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 UDDIClerk clerk = clerks.get("default");
 	 		 BusinessService service = ap.readServiceAnnotations(

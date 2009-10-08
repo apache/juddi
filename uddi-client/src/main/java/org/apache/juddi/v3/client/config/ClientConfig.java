@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -41,9 +39,8 @@ import org.apache.log4j.Logger;
 public class ClientConfig 
 {
 	private final static String UDDI_CONFIG = "META-INF/uddi.xml";
-	private static Logger log = Logger.getLogger(ClientConfig.class);
+	private Logger log = Logger.getLogger(ClientConfig.class);
 	private Configuration config = null;;
-	private static ClientConfig instance=null;
 	private Map<String,UDDINode> nodes = null;
 	private Map<String,UDDIClerk> clerks = null;
 	private Set<XRegistration> xRegistrations = null;
@@ -52,7 +49,7 @@ public class ClientConfig
 	 * Constructor (note Singleton pattern).
 	 * @throws ConfigurationException
 	 */
-	private ClientConfig() throws ConfigurationException 
+	public ClientConfig() throws ConfigurationException 
 	{
 		loadConfiguration();
 	}
@@ -62,7 +59,7 @@ public class ClientConfig
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */
-	private synchronized void loadConfiguration() throws ConfigurationException {
+	private void loadConfiguration() throws ConfigurationException {
 		//Properties from system properties
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
@@ -81,96 +78,62 @@ public class ClientConfig
 		xRegistrations = readXRegConfig(config,clerks);
 	}
 
-	/**
-	 * Obtains the reference to the Singleton instance.
-	 * 
-	 * @return the APplicationConfuration Singleton Instance.
-	 * @throws ConfigurationException
-	 */
-	public static ClientConfig getInstance() throws ConfigurationException 
-	{
-		if (instance==null) {
-			instance = new ClientConfig();
-		}
-		return instance;
-	}
-	
-	public static void init() throws ConfigurationException 
-	{
-		getInstance();
-	}
-	/**
-	 * Hook to receive configuration reload events from an external application.
-	 * 
-	 * @throws ConfigurationException
-	 */
-	public static void reloadConfig() throws ConfigurationException
-	{
-		getInstance().loadConfiguration();
-	}
-	/**
-	 * The object from which property values can be obtained.
-	 * @return the commons Configuration interface
-	 * @throws ConfigurationException 
-	 */
-	public static Configuration getConfiguration() throws ConfigurationException
-	{
-		return getInstance().config;
-	}
-
-	private static Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
+	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
 	throws ConfigurationException {
-		String[] names = config.getStringArray("clerks.clerk[@name]");
+		String managerName = config.getString("manager[@name]");
+		String[] names = config.getStringArray("manager.clerks.clerk[@name]");
 		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
 		log.debug("clerk names=" + names);
 		for (int i=0; i<names.length; i++) {
 			UDDIClerk uddiClerk = new UDDIClerk();
-			uddiClerk.setName(     config.getString("clerks.clerk(" + i + ")[@name]"));
-			String nodeRef = config.getString("clerks.clerk(" + i + ")[@node]");
+			uddiClerk.setManagerName(managerName);
+			uddiClerk.setName(     config.getString("manager.clerks.clerk(" + i + ")[@name]"));
+			String nodeRef = config.getString("manager.clerks.clerk(" + i + ")[@node]");
 			if (!nodes.containsKey(nodeRef)) throw new ConfigurationException("Could not find Node with name=" + nodeRef);
 			UDDINode node = nodes.get(nodeRef);
 			uddiClerk.setNode(node);
-			uddiClerk.setPublisher(config.getString("clerks.clerk(" + i + ")[@publisher]"));
-			uddiClerk.setPassword( config.getString("clerks.clerk(" + i + ")[@password]"));
-			String[] classes = config.getStringArray("clerks.clerk(" + i + ").class");
+			uddiClerk.setPublisher(config.getString("manager.clerks.clerk(" + i + ")[@publisher]"));
+			uddiClerk.setPassword( config.getString("manager.clerks.clerk(" + i + ")[@password]"));
+			String[] classes = config.getStringArray("manager.clerks.clerk(" + i + ").class");
 			uddiClerk.setClassWithAnnotations(classes);
 			clerks.put(names[i],uddiClerk);
 		}
 		return clerks;
 	}
 
-	private static Map<String,UDDINode> readNodeConfig(Configuration config) 
+	private Map<String,UDDINode> readNodeConfig(Configuration config) 
 	throws ConfigurationException {
-		String[] names = config.getStringArray("nodes.node.name");
+		String[] names = config.getStringArray("manager.nodes.node.name");
 		Map<String,UDDINode> nodes = new HashMap<String,UDDINode>();
 		log.debug("node names=" + names);
 		for (int i=0; i<names.length; i++) {
 			UDDINode uddiNode = new UDDINode();
-			String nodeName = config.getString("nodes.node(" + i +").name");
-			String[] propertyKeys = config.getStringArray("nodes.node(" + i +").properties.property[@name]");
+			String nodeName = config.getString("manager.nodes.node(" + i +").name");
+			String[] propertyKeys = config.getStringArray("manager.nodes.node(" + i +").properties.property[@name]");
 			Properties properties = null;
 			if (propertyKeys!=null && propertyKeys.length>0) {
 				properties = new Properties();
 				for (int p=0; p<propertyKeys.length; p++) {
-					String name=config.getString("nodes.node(" + i +").properties.property(" + p + ")[@name]");
-					String value=config.getString("nodes.node(" + i +").properties.property(" + p + ")[@value]");
+					String name=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@name]");
+					String value=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@value]");
 					log.debug("Property: name=" + name + " value=" + value);
 					properties.put(name, value);
 				}
+				uddiNode.setProperties(properties);
 			}
-			uddiNode.setName(                   config.getString("nodes.node(" + i +").name"));
-			uddiNode.setDescription(            config.getString("nodes.node(" + i +").description"));
-			uddiNode.setProxyTransport(         config.getString("nodes.node(" + i +").proxyTransport"));
-			uddiNode.setInquiryUrl(             replaceTokens(config.getString("nodes.node(" + i +").inquiryUrl"),properties));
-			uddiNode.setPublishUrl(             replaceTokens(config.getString("nodes.node(" + i +").publishUrl"),properties));
-			uddiNode.setCustodyTransferUrl(     replaceTokens(config.getString("nodes.node(" + i +").custodyTransferUrl"),properties));
-			uddiNode.setSecurityUrl(            replaceTokens(config.getString("nodes.node(" + i +").securityUrl"),properties));
-			uddiNode.setSubscriptionUrl(        replaceTokens(config.getString("nodes.node(" + i +").subscriptionUrl"),properties));
-			uddiNode.setSubscriptionListenerUrl(replaceTokens(config.getString("nodes.node(" + i +").subscriptionListenerUrl"),properties));
-			uddiNode.setJuddiApiUrl(            replaceTokens(config.getString("nodes.node(" + i +").juddiApiUrl"),properties));
-			uddiNode.setFactoryInitial(         config.getString("nodes.node(" + i +").javaNamingFactoryInitial"));
-			uddiNode.setFactoryURLPkgs(         config.getString("nodes.node(" + i +").javaNamingFactoryUrlPkgs"));
-			uddiNode.setFactoryNamingProvider(  replaceTokens(config.getString("nodes.node(" + i +").javaNamingProviderUrl"),properties));
+			uddiNode.setName(                   config.getString("manager.nodes.node(" + i +").name"));
+			uddiNode.setDescription(            config.getString("manager.nodes.node(" + i +").description"));
+			uddiNode.setProxyTransport(         config.getString("manager.nodes.node(" + i +").proxyTransport"));
+			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").inquiryUrl"),properties));
+			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").publishUrl"),properties));
+			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").custodyTransferUrl"),properties));
+			uddiNode.setSecurityUrl(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").securityUrl"),properties));
+			uddiNode.setSubscriptionUrl(        TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionUrl"),properties));
+			uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionListenerUrl"),properties));
+			uddiNode.setJuddiApiUrl(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").juddiApiUrl"),properties));
+			uddiNode.setFactoryInitial(         config.getString("manager.nodes.node(" + i +").javaNamingFactoryInitial"));
+			uddiNode.setFactoryURLPkgs(         config.getString("manager.nodes.node(" + i +").javaNamingFactoryUrlPkgs"));
+			uddiNode.setFactoryNamingProvider(  TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingProviderUrl"),properties));
 			nodes.put(nodeName,uddiNode);
 		}
 		if (!nodes.containsKey("default")) {
@@ -181,7 +144,7 @@ public class ClientConfig
 	/*
 	 * only works for services right now
 	 */
-	private static Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
+	private Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
 	throws ConfigurationException {
 		String[] bindingKeys = config.getStringArray("clerks.xregister.service[@bindingKey]");
 		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
@@ -208,35 +171,18 @@ public class ClientConfig
 	public Map<String, UDDINode> getNodes() {
 		return nodes;
 	}
+	
 	public Map<String,UDDIClerk> getClerks() {
 		return clerks;
 	}
+	
 	public Set<XRegistration> getXRegistrations() {
 		return xRegistrations;
 	}
 	
-    public static String replaceTokens(String string, Properties properties) {
-    	
-    	if (properties==null || string==null) return string;
-    	string = string.replaceAll("\\n"," ").replaceAll("\\r", "");
-		/* pattern that is multi-line (?m), and looks for a pattern of
-		 * ${token}, in a 'reluctant' manner, by using the ? to 
-		 * make sure we find ALL the tokens.
-		 */
-		Pattern pattern = Pattern.compile("(?m)\\$\\{.*?\\}");
-        Matcher matcher = pattern.matcher(string);
-        while (matcher.find()) {
-            String token = matcher.group();
-            token = token.substring(2,token.length()-1);
-            String replacement = properties.getProperty(token);
-            if (replacement!=null) {
-            	log.debug("Found token " + token + " and replacement value " + replacement);
-            	string = string.replaceAll("\\$\\{" + token + "\\}", replacement);
-            } else {
-            	log.error("Found token " + token + " but could not obtain its value. Data: " + string);
-            }
-        }
-        log.debug("Data after token replacement: " + string);
-        return string;
-	}
+    
+    
+    public Configuration getConfiguration() {
+    	return config;
+    }
 }

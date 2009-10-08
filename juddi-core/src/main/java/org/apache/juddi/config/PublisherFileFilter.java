@@ -15,7 +15,7 @@ public class PublisherFileFilter implements FileFilter {
 	private Logger log = Logger.getLogger(this.getClass());
 	
 	public boolean accept(File file) {
-		log.info("file=" + file);
+		log.debug("file=" + file);
 		if (file.getName().endsWith(Install.FILE_PUBLISHER)) {
 			return true;
 		}
