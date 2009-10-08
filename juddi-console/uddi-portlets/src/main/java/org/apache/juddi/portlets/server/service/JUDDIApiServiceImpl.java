@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
@@ -65,10 +64,10 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
         	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
-        	 PublisherDetail publisherDetail = null;
-        	 publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
+        	 PublisherDetail publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
         	 //if the publisher is an admin, then return ALL publishers
         	 if ("true".equalsIgnoreCase(publisherDetail.getPublisher().get(0).getIsAdmin())) {
+        		 
         		 GetAllPublisherDetail getAllPublisherDetail = new GetAllPublisherDetail();
 				 getAllPublisherDetail.setAuthInfo(authToken);
 				 logger.debug("GetAllPublisherDetail " + getAllPublisherDetail + " sending get AllPublisherDetail request..");
@@ -98,7 +97,7 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	public JUDDIApiResponse savePublisher(String token, Publisher publisher) {
 		JUDDIApiResponse response = new JUDDIApiResponse();
 		try {
-			String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
+			 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
 	       	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
@@ -156,7 +155,9 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 		return response;
 	}
 
-	public JUDDIApiResponse startManagers(String authToken) {
+	public JUDDIApiResponse restartManager(String authToken) {
+		
+		JUDDIApiResponse response = new JUDDIApiResponse();
 		
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
@@ -167,16 +168,35 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 				username = user.getName();
 			}
 		}
+		GetPublisherDetail getPublisherDetail = new GetPublisherDetail();
+		getPublisherDetail.setAuthInfo(authToken);
+		getPublisherDetail.getPublisherId().add(username);
 		
 		try {
-			System.out.println("managerName=" + UDDIClerkManager.getClientConfig().getManagerName());
-			
-		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
+	        Class<?> transportClass = Loader.loadClass(clazz);
+	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+	         JUDDIApiPortType apiService = transport.getJUDDIApiService();
+	         PublisherDetail publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
+       	     org.apache.juddi.api_v3.Publisher publisher = publisherDetail.getPublisher().get(0);
+       	     if ("true".equalsIgnoreCase(publisher.getIsAdmin())) {
+       	    	logger.info("managerName=" + UDDIClerkManager.getClientConfig().getManagerName());
+       	    	UDDIClerkManager.restart();
+       	    	response.setMessage("Successfull manager restart.");
+       	    	response.setSuccess(true);
+       	     } else {
+       	    	response.setMessage("Only publishers with Admin privileges can perform a restart.");
+       	    	response.setSuccess(false);
+       	     }
+		} catch (Exception e) {
+			response.setMessage("Configuration issue: " + e.getMessage());
+			response.setErrorCode("104");
+		} catch (Throwable t) {
+			response.setMessage("Configuration issue: " + t.getMessage());
+			response.setErrorCode("104");
 		}
 		
-		return null;
+		return response;
 	}
 	
 }

@@ -2,7 +2,7 @@
 
 <uddi>
     <reloadDelay>5000</reloadDelay>
-    <manager name="uddi-portlet-man">
+    <manager name="uddi-portlet-manager">
 		<nodes>
 			<node>
 				<name>default</name>

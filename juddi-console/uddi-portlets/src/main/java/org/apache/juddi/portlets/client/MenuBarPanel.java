@@ -71,7 +71,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 		} else if (sender == syncButton) {
 			UDDISubscription.getInstance().syncListedServices();
 		} else if (sender == managerButton) {
-			JUDDIPublisher.getInstance().startManagers();
+			JUDDIPublisher.getInstance().crossRegister();
 		}
 		
 	}

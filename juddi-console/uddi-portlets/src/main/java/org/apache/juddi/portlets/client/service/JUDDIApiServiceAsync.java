@@ -29,6 +29,6 @@ public interface JUDDIApiServiceAsync extends RemoteService {
 	public void getPublishers(String authToken, String publisherId, AsyncCallback<JUDDIApiResponse> callback);
 	public void savePublisher(String authToken, Publisher publisher, AsyncCallback<JUDDIApiResponse> callback);
 	public void deletePublisher(String authToken, String publisherId, AsyncCallback<JUDDIApiResponse> callback);
-	public void startManagers(String authToken, AsyncCallback<JUDDIApiResponse> callback);
+	public void restartManager(String authToken, AsyncCallback<JUDDIApiResponse> callback);
 }
 

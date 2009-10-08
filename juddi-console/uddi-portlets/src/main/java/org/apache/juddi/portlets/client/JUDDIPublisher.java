@@ -134,9 +134,9 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		}
 	}
 	
-	public void startManagers() {
+	public void crossRegister() {
 		String token = getToken();
-		juddiApiService.startManagers(token, new AsyncCallback<JUDDIApiResponse>() 
+		juddiApiService.restartManager(token, new AsyncCallback<JUDDIApiResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
@@ -144,7 +144,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 
 			public void onSuccess(JUDDIApiResponse response) {
 				if (response.isSuccess()) {
-					
+					Window.alert(response.getMessage());
 				} else {
 					Window.alert("error: " + response.getMessage());
 				}
