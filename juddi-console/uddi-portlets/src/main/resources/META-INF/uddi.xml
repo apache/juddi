@@ -62,7 +62,7 @@
 				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			</node>
 		</nodes>
-		<clerks>
+		<clerks registerOnStartup="false">
 		   <clerk name="default" node="default" publisher="root" password="root"/>
 	       <clerk name="medroot" node="med"     publisher="root" password="root"/>
 	       <xregister>

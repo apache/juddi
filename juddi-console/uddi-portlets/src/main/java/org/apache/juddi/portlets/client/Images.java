@@ -23,4 +23,5 @@ public interface Images extends  ImageBundle, TreeImages {
 	AbstractImagePrototype save();
 	AbstractImagePrototype delete();
 	AbstractImagePrototype sync();
+	AbstractImagePrototype manager();
 }

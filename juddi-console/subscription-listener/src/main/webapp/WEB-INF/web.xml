@@ -56,8 +56,7 @@
     </servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
-  <!--  
+    
   <servlet>
     <servlet-name>UDDIClerkServlet</servlet-name>
     <display-name>Clerk Servlet</display-name>
@@ -65,13 +64,8 @@
       org.apache.juddi.v3.client.config.UDDIClerkServlet
     </servlet-class>
     <load-on-startup>1</load-on-startup>
-    <init-param>
-      <param-name>managerName</param-name>
-      <param-value>sub-man</param-value>
-    </init-param>
-    
+   
   </servlet>
-  -->
   
   <servlet-mapping>
   	<servlet-name>NotifyServlet</servlet-name>

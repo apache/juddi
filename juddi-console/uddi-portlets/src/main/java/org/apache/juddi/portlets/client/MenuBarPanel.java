@@ -10,12 +10,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class MenuBarPanel extends FlowPanel implements ClickListener {
 
 	public static final String PUBLISHER = "publisher";
+	public static final String ADMIN = "admin";
 	public static final String SUBSCRIPTION = "subscription";
 	public static final Images images = (Images) GWT.create(Images.class);
 	PushButton saveButton = new PushButton();
 	PushButton newButton = new PushButton();
 	PushButton deleteButton = new PushButton();
 	PushButton syncButton = new PushButton();
+	PushButton managerButton = new PushButton();
 	String context = PUBLISHER;
 
 	public MenuBarPanel(String context) {
@@ -43,6 +45,14 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			syncButton.setHTML(images.sync().getHTML());
 			syncButton.setStyleName(("portlet-form-button"));
 			syncButton.addClickListener(this);
+			pushPanel.add(syncButton);
+		}
+		
+		if (PUBLISHER.equals(context)) {
+			managerButton.setHTML(images.manager().getHTML());
+			managerButton.setStyleName(("portlet-form-button"));
+			managerButton.addClickListener(this);
+			pushPanel.add(managerButton);
 		}
 		add(pushPanel);
 		
@@ -59,7 +69,9 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			if (PUBLISHER.equals(context)) JUDDIPublisher.getInstance().deletePublisher();
 			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().deleteSubscription();
 		} else if (sender == syncButton) {
-			if (PUBLISHER.equals(context)) UDDISubscription.getInstance().syncListedServices();
+			UDDISubscription.getInstance().syncListedServices();
+		} else if (sender == managerButton) {
+			JUDDIPublisher.getInstance().startManagers();
 		}
 		
 	}

@@ -66,9 +66,9 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	private Transport getTransport() 
 		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		if (transport==null) {
-			String clazz = UDDIClerkManager.getClientConfig(Constants.MANAGER_NAME).getNodes().get(Constants.NODE_NAME).getProxyTransport();
+			String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
+	         transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
 		}
 		return transport;
 	}
