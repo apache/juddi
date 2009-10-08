@@ -2,29 +2,31 @@
 
 <uddi>
     <reloadDelay>5000</reloadDelay>
-	<nodes>
-		<node>
-			<name>default</name>
-			<properties>
-				<property name="serverName" value="localhost"/>
-				<property name="serverPort" value="8080"/>
-			</properties>
-			<description>Main jUDDI node</description>
-			<!-- JAX-WS Transport -->
-			<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-			<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-			<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
-	        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
-	        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
-			<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
-			<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-			<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
-		</node>
-	</nodes>
-	<clerks>
-	   <clerk name="default" node="default" publisher="root" password="root">
-	       <class>org.apache.juddi.test.HelloWorldImpl</class>
-	   </clerk>
-   </clerks> 
+    <manager name="sub-man">
+		<nodes>
+			<node>
+				<name>default</name>
+				<properties>
+					<property name="serverName" value="localhost"/>
+					<property name="serverPort" value="8080"/>
+				</properties>
+				<description>Main jUDDI node</description>
+				<!-- JAX-WS Transport -->
+				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+				<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+				<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+		        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+		        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+			</node>
+		</nodes>
+		<clerks>
+		   <clerk name="default" node="default" publisher="root" password="root">
+		       <class>org.apache.juddi.test.HelloWorldImpl</class>
+		   </clerk>
+	   </clerks>
+	</manager>
    
 </uddi>

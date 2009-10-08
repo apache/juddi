@@ -27,8 +27,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
-import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
@@ -81,7 +81,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 					session.setAttribute("UserName", username);
 				
 					//upon success obtain tokens from other registries
-					Map<String, UDDIClerk> clerks = ClientConfig.getInstance().getClerks();
+					Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig("uddi-portlet-man").getClerks();
 					for (UDDIClerk clerk : clerks.values()) {
 						if (username.equals(clerk.getPublisher())) {
 							try {
@@ -118,9 +118,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
 		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		
-		String clazz = ClientConfig.getInstance().getNodes().get(node).getProxyTransport();
-		Class<?> transportClass = Loader.loadClass(clazz);
-		Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);
+		String clazz = UDDIClerkManager.getClientConfig(Constants.MANAGER_NAME).getNodes().get(Constants.NODE_NAME).getProxyTransport();
+        Class<?> transportClass = Loader.loadClass(clazz);
+        Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();
 		GetAuthToken getAuthToken = new GetAuthToken();
 		getAuthToken.setUserID(username);

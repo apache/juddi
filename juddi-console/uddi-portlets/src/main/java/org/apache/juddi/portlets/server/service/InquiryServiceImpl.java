@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.portlets.server.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,8 +28,8 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.portlets.client.service.SearchResponse;
-import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -63,11 +64,11 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	}
 	
 	private Transport getTransport() 
-		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		if (transport==null) {
-			String clazz = ClientConfig.getInstance().getNodes().get("default").getProxyTransport();
-	        Class<?> transportClass = Loader.loadClass(clazz);
-	   	 	transport = (Transport) transportClass.newInstance(); 
+			String clazz = UDDIClerkManager.getClientConfig(Constants.MANAGER_NAME).getNodes().get(Constants.NODE_NAME).getProxyTransport();
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	         transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
 		}
 		return transport;
 	}

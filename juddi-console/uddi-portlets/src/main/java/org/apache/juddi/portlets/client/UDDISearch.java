@@ -16,7 +16,6 @@
  */
 package org.apache.juddi.portlets.client;
 
-import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.juddi.portlets.client.service.InquiryServiceAsync;
 import org.apache.juddi.portlets.client.service.SearchResponse;
@@ -31,9 +30,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
-
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -44,18 +40,13 @@ import com.google.gwt.user.client.ui.Widget;
 public class UDDISearch implements EntryPoint, ClickListener {
 
 	Label tokenLabel = new Label("");
-
-	private String token = null;
-	private TextBox tmodelKeyBox = new TextBox();
 	
     private TextArea queryTextArea = new TextArea();
     private TextArea resultTextArea = new TextArea();
 	
 	private Button searchButton = new Button("Search");
 	
-	private VerticalPanel tmodelPanel = new VerticalPanel();
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class);
-	
 	private FlowPanel searchPanel = new FlowPanel();
 	
 	private final static String DEFAULT_QUERY = "<find_tModel xmlns=\"urn:uddi-org:api_v3\">"
