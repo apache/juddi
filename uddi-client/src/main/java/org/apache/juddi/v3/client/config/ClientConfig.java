@@ -44,6 +44,7 @@ public class ClientConfig
 	private Map<String,UDDINode> nodes = null;
 	private Map<String,UDDIClerk> clerks = null;
 	private Set<XRegistration> xRegistrations = null;
+	private String managerName = null;
 	
 	/**
 	 * Constructor (note Singleton pattern).
@@ -53,9 +54,14 @@ public class ClientConfig
 	{
 		loadConfiguration();
 	}
+	protected void loadManager() throws ConfigurationException {
+		nodes = readNodeConfig(config);
+		clerks = readClerkConfig(config, nodes);
+		xRegistrations = readXRegConfig(config,clerks);
+	}
 	/**
 	 * Does the actual work of reading the configuration from System
-	 * Properties and/or juddiv3.properties file. When the juddiv3.properties
+	 * Properties and/or uddi.xml file. When the uddi.xml
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */
@@ -73,14 +79,12 @@ public class ClientConfig
 		compositeConfig.addConfiguration(xmlConfig);
 		//Making the new configuration globally accessible.
 		config = compositeConfig;
-		nodes = readNodeConfig(config);
-		clerks = readClerkConfig(config, nodes);
-		xRegistrations = readXRegConfig(config,clerks);
+		loadManager();
 	}
 
 	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
 	throws ConfigurationException {
-		String managerName = config.getString("manager[@name]");
+		managerName = config.getString("manager[@name]");
 		String[] names = config.getStringArray("manager.clerks.clerk[@name]");
 		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
 		log.debug("clerk names=" + names);
@@ -99,6 +103,11 @@ public class ClientConfig
 			clerks.put(names[i],uddiClerk);
 		}
 		return clerks;
+	}
+	
+	public boolean isRegisterOnStartup() {
+		boolean isRegisterOnStartup = config.getBoolean("manager.clerks[@registerOnStartup]");
+		return isRegisterOnStartup;
 	}
 
 	private Map<String,UDDINode> readNodeConfig(Configuration config) 
@@ -179,10 +188,12 @@ public class ClientConfig
 	public Set<XRegistration> getXRegistrations() {
 		return xRegistrations;
 	}
-	
-    
     
     public Configuration getConfiguration() {
     	return config;
     }
+    
+    public String getManagerName() {
+		return managerName;
+	}
 }

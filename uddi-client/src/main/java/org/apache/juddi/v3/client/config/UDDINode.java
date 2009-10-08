@@ -27,12 +27,12 @@ public class UDDINode {
 	
 	private Transport transport;
 	
-	public Transport getTransport(String managerName) throws TransportException {
+	public Transport getTransport() throws TransportException {
 		if (transport==null) {
 			try {
-				String clazz = UDDIClerkManager.getClientConfig(managerName).getNodes().get(name).getProxyTransport();
+				String clazz = UDDIClerkManager.getClientConfig().getNodes().get(name).getProxyTransport();
 				Class<?> transportClass = Loader.loadClass(clazz);
-				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,name);
+				transport = (Transport) transportClass.getConstructor(String.class).newInstance(name);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(),e);
 			}

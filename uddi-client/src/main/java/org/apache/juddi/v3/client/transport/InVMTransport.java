@@ -29,7 +29,6 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 public class InVMTransport implements Transport {
 
 	private String nodeName = null;
-	private String managerName = null;
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
 	UDDIPublicationPortType publishService = null;
@@ -41,19 +40,17 @@ public class InVMTransport implements Transport {
 	public InVMTransport() {
 		super();
 		this.nodeName = Transport.DEFAULT_NODE_NAME;
-		this.nodeName = Transport.DEFAULT_MANAGER_NAME;
 	}
 	
-	public InVMTransport(String managerName, String nodeName) {
+	public InVMTransport(String nodeName) {
 		super();
-		this.managerName = managerName;
 		this.nodeName = nodeName;
 	}
 	
 	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
 		if (inquiryService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getInquiryUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getInquiryUrl();
 				Class<?> c = Class.forName(endpointURL);
 				inquiryService = (UDDIInquiryPortType) c.newInstance();
 			} catch (Exception e) {
@@ -66,7 +63,7 @@ public class InVMTransport implements Transport {
 	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
 		if (securityService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getSecurityUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getSecurityUrl();
 				Class<?> c = Class.forName(endpointURL);
 				securityService = (UDDISecurityPortType) c.newInstance();
 			} catch (Exception e) {
@@ -79,7 +76,7 @@ public class InVMTransport implements Transport {
 	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
 		if (publishService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getPublishUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getPublishUrl();
 				Class<?> c = Class.forName(endpointURL);
 				publishService = (UDDIPublicationPortType) c.newInstance();
 			} catch (Exception e) {
@@ -92,7 +89,7 @@ public class InVMTransport implements Transport {
 	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
 		if (subscriptionService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getSubscriptionUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getSubscriptionUrl();
 				Class<?> c = Class.forName(endpointURL);
 				subscriptionService = (UDDISubscriptionPortType) c.newInstance();
 			} catch (Exception e) {
@@ -105,7 +102,7 @@ public class InVMTransport implements Transport {
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
 		if (subscriptionListenerService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getSubscriptionListenerUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getSubscriptionListenerUrl();
 				Class<?> c = Class.forName(endpointURL);
 				subscriptionListenerService = (UDDISubscriptionListenerPortType) c.newInstance();
 			} catch (Exception e) {
@@ -118,7 +115,7 @@ public class InVMTransport implements Transport {
 	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
 		if (custodyTransferService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getCustodyTransferUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getCustodyTransferUrl();
 				Class<?> c = Class.forName(endpointURL);
 				custodyTransferService = (UDDICustodyTransferPortType) c.newInstance();
 			} catch (Exception e) {
@@ -131,7 +128,7 @@ public class InVMTransport implements Transport {
 	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
 		if (publisherService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig(managerName).getNodes().get(nodeName).getJuddiApiUrl();
+				String endpointURL = UDDIClerkManager.getClientConfig().getNodes().get(nodeName).getJuddiApiUrl();
 				Class<?> c = Class.forName(endpointURL);
 				publisherService = (JUDDIApiPortType) c.newInstance();
 			} catch (Exception e) {

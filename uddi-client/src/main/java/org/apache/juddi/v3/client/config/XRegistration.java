@@ -33,14 +33,18 @@ public class XRegistration {
 	}
 	
 	public void xRegister() {
+		BusinessService businessService;
 		try {
 			BindingTemplate bindingTemplate = fromClerk.findServiceBinding(bindingKey);
-			BusinessService businessService = fromClerk.findService(bindingTemplate.getServiceKey());
+			businessService = fromClerk.findService(bindingTemplate.getServiceKey());
 			businessService.getBindingTemplates().getBindingTemplate().clear();
 			businessService.getBindingTemplates().getBindingTemplate().add(bindingTemplate);
+			log.info("xregister service " + businessService.getName().get(0).getValue() + " + from "
+					+ fromClerk.getName() + " to " + toClerk.getName());
 			toClerk.register(businessService);
 		} catch (Exception e) {
-			log.error("Could not cross-register. " + e.getMessage() + " " + e.getCause(),e);
+			log.error("Could not xregister binding " + bindingKey + " + from "
+					+ fromClerk.getName() + " to " + toClerk.getName() + ". " + e.getMessage() + " " + e.getCause(),e);
 		}
 	}
 	

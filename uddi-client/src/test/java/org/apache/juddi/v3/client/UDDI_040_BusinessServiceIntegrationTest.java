@@ -52,7 +52,7 @@ public class UDDI_040_BusinessServiceIntegrationTest
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -60,7 +60,7 @@ public class UDDI_040_BusinessServiceIntegrationTest
 		try {
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance("test-manager", "default");
+	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
 	        	 
 	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
@@ -85,7 +85,7 @@ public class UDDI_040_BusinessServiceIntegrationTest
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig("test-manager").getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

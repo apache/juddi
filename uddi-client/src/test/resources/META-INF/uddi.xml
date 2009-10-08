@@ -58,12 +58,12 @@
 				<juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			</node>
 		</nodes>
-		<clerks>
+		<clerks registerOnStartup="false">
 		   <clerk name="default" node="default" publisher="root" password="root"/>
-	       <clerk name="medroot" node="med" publisher="root" password="root"/>
-	        <xregister>
+	       <clerk name="medroot" node="med"     publisher="root" password="root"/>
+	       <xregister>
 		       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-		    </xregister>
+		   </xregister>
 	   </clerks>
 	</manager>
 </uddi>

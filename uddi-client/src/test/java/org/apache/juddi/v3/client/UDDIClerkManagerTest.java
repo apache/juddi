@@ -33,9 +33,7 @@ public class UDDIClerkManagerTest {
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	 UDDIClerkManager clerkManager = new UDDIClerkManager();
-	    	 clerkManager.start("test-manager");
-	    	
+	    	 UDDIClerkManager.start();
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
@@ -46,7 +44,7 @@ public class UDDIClerkManagerTest {
      @Test
      public void testAnnotation() {
     	 try {
-	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig("test-manager").getClerks();
+	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 UDDIClerk clerk = clerks.get("default");
 	 		 BusinessService service = ap.readServiceAnnotations(

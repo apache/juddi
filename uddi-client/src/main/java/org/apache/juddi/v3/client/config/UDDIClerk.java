@@ -49,7 +49,7 @@ public class UDDIClerk {
 			SaveService saveService = new SaveService();
 			saveService.setAuthInfo(authToken);
 			saveService.getBusinessService().add(service);
-			ServiceDetail serviceDetail = node.getTransport(managerName).getUDDIPublishService().saveService(saveService);
+			ServiceDetail serviceDetail = node.getTransport().getUDDIPublishService().saveService(saveService);
 			businessService = serviceDetail.getBusinessService().get(0);
 		} catch (Exception e) {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
@@ -73,7 +73,7 @@ public class UDDIClerk {
 			for (BindingTemplate binding : service.getBindingTemplates().getBindingTemplate()) {
 				deleteBinding.getBindingKey().add(binding.getBindingKey());
 			}
-			node.getTransport(managerName).getUDDIPublishService().deleteBinding(deleteBinding);
+			node.getTransport().getUDDIPublishService().deleteBinding(deleteBinding);
 		} catch (Exception e) {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + e.getMessage(),e);
@@ -85,7 +85,7 @@ public class UDDIClerk {
 		GetServiceDetail getServiceDetail = new GetServiceDetail();
 		getServiceDetail.getServiceKey().add(serviceKey);
 		getServiceDetail.setAuthInfo(getAuthToken());
-		ServiceDetail sd = node.getTransport(managerName).getUDDIInquiryService().getServiceDetail(getServiceDetail);
+		ServiceDetail sd = node.getTransport().getUDDIInquiryService().getServiceDetail(getServiceDetail);
 		List<BusinessService> businessServiceList = sd.getBusinessService();
 		if (businessServiceList.size() == 0) throw new NotFoundException("Could not find Service with key=" + serviceKey);
 		return businessServiceList.get(0);
@@ -96,7 +96,7 @@ public class UDDIClerk {
 		GetBindingDetail getBindingDetail = new GetBindingDetail();
 		getBindingDetail.getBindingKey().add(bindingKey);
 		getBindingDetail.setAuthInfo(getAuthToken());
-		BindingDetail bd = node.getTransport(managerName).getUDDIInquiryService().getBindingDetail(getBindingDetail);
+		BindingDetail bd = node.getTransport().getUDDIInquiryService().getBindingDetail(getBindingDetail);
 		List<BindingTemplate> bindingTemplateList = bd.getBindingTemplate();
 		if (bindingTemplateList.size() == 0) throw new NotFoundException("Could not find ServiceBbinding with key=" + bindingKey);
 		return bindingTemplateList.get(0);
@@ -107,7 +107,7 @@ public class UDDIClerk {
 			GetAuthToken getAuthToken = new GetAuthToken();
 			getAuthToken.setUserID(getPublisher());
 			getAuthToken.setCred(getPassword());
-			authToken = node.getTransport(managerName).getUDDISecurityService().getAuthToken(getAuthToken).getAuthInfo();
+			authToken = node.getTransport().getUDDISecurityService().getAuthToken(getAuthToken).getAuthInfo();
 		}
 		return authToken;
 	}
