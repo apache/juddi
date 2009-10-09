@@ -470,7 +470,8 @@ public class MappingModelToApi {
 										  org.uddi.api_v3.InstanceDetails apiInstanceDetails,
 										  org.uddi.api_v3.TModelInstanceInfo apiTModelInstInfo) 
 				   throws DispositionReportFaultMessage {
-		if (modelTModelInstInfo == null)
+		if (modelTModelInstInfo == null || 
+				(modelTModelInstInfo.getInstanceParms() == null && modelTModelInstInfo.getOverviewDocs().size() == 0))
 			return;
 		
 		if (apiInstanceDetails == null)
@@ -488,7 +489,7 @@ public class MappingModelToApi {
 		}
 		//OverviewDoc
 		mapOverviewDocs(modelTModelInstInfo.getOverviewDocs(),apiInstanceDetails,null);
-			
+	    
 		apiTModelInstInfo.setInstanceDetails(apiInstanceDetails);
 	}
 	
