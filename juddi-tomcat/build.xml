@@ -17,7 +17,7 @@
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
-		<copy file="${basedir}/context.xml" todir="${conf.dir}"/>
+		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF"/>
 		<copy file="${basedir}/server.xml" todir="${conf.dir}"/>
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
