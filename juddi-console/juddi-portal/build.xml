@@ -20,6 +20,7 @@
 		<copy todir="${webapps.dir}/pluto">
 			<fileset dir="${basedir}/pluto"/>
 		</copy>
+		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/bin" overwrite="true"/>
 		<chmod perm="ugo+x">
 			<fileset dir="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/bin">
 				<include name="*.sh"/>
