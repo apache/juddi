@@ -99,10 +99,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		modelNode.setClerkName(clerk.getName());
 		modelNode.setDescription(node.getDescription());
 		try {
-			 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
+			 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(clerk.getNode().getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
-	       	 String authToken = (String) session.getAttribute(clerk.getName());
+	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName());  
+	       	 String authToken = (String) session.getAttribute("token-" + clerk.getName());
 	       	 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 	       	 List<org.uddi.sub_v3.Subscription> subscriptions = subscriptionService.getSubscriptions(authToken);
@@ -163,7 +163,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			 subscriptionList.add(subscription);
 			 Holder<List<org.uddi.sub_v3.Subscription>> subscriptionHolder = new Holder<List<org.uddi.sub_v3.Subscription>>();
 			 subscriptionHolder.value = subscriptionList;
-			 String authToken = (String) session.getAttribute(clerk.getName());
+			 String authToken = (String) session.getAttribute("token-" + clerk.getName());
 	       	 subscriptionService.saveSubscription(authToken, subscriptionHolder);
 	       	 subscription = subscriptionHolder.value.get(0);
 	       	 String expiresAfter = null;
@@ -210,7 +210,7 @@ public SubscriptionResponse deleteSubscription(Subscription modelSubscription) {
 	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 	       	 DeleteSubscription deleteSubscription = new DeleteSubscription();
-	       	 String authToken = (String) session.getAttribute(clerk.getName());
+	       	 String authToken = (String) session.getAttribute("token-" + clerk.getName());
 	       	 deleteSubscription.setAuthInfo(authToken);
 	       	 deleteSubscription.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
 	       	 subscriptionService.deleteSubscription(deleteSubscription);

@@ -124,8 +124,8 @@ public class SubscriptionPanel extends FlowPanel {
 	
 	protected void newSubscription(Node node){
 		subscription = new Subscription();
-		subscription.setSubscriptionKey("uddi:uddi.listeningforchanges.com:callthiskeytonotify");
-		subscription.setBindingKey("uddi:uddi.example.com:subscriptionone");
+		subscription.setSubscriptionKey("uddi:juddi.apache.org:subscriptions-key1");
+		subscription.setBindingKey("uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws");
 		subscription.setBrief(true);
 		subscription.setMaxEntities(1000);
 		subscription.setNotificationInterval("P5D");

@@ -87,7 +87,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 							try {
 								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getNode().getName());
 								//set the clerkToken into the session
-								session.setAttribute(clerk.getName(), clerkToken.getAuthInfo());
+								session.setAttribute("token-" + clerk.getName(), clerkToken.getAuthInfo());
 							} catch (Exception e) {
 								log.warn("Could not obtain authToken for clerk=" + clerk.getName());
 							} 
@@ -118,9 +118,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
 		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get(Constants.NODE_NAME).getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getNodes().get(node).getProxyTransport();
         Class<?> transportClass = Loader.loadClass(clazz);
-        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
+        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();
 		GetAuthToken getAuthToken = new GetAuthToken();
 		getAuthToken.setUserID(username);
