@@ -31,6 +31,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <cxf.version>2.1.3</cxf.version>
+    <persistence>hibernate</persistence>
   </properties>
   <dependencies>
     <dependency>
