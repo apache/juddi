@@ -100,9 +100,6 @@
 				  <target name="package-war"/>
 				</ant>
 
-				<copy file ="${basedir}/persistence/${persistence}-persistence.xml"
-					tofile="${basedir}/src/main/resources/META-INF/persistence.xml"
-					overwrite="true"/>
 			</tasks>
 			</configuration>
 			<goals>
