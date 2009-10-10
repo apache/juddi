@@ -1,0 +1,4 @@
+This example is a command line demonstration of how to interact with JUDDI.  
+
+For further examples, see the uddi-client module, which includes a number
+of unit tests that exercise API other than just the security API.
