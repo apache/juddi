@@ -108,7 +108,7 @@ public class UddiEntityPublisher {
 		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
 		for (String keyGenKey : keyGeneratorKeys) {
-			String keyGenPartition = keyGenKey.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
+			String keyGenPartition = keyGenKey.substring(0, keyGenKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (keyGenPartition.equalsIgnoreCase(keyPartition))
 				return true;
 		}
