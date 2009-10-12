@@ -29,7 +29,7 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.v3.tck.EntityCreator;
+import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.log4j.Logger;

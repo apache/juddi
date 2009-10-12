@@ -24,22 +24,29 @@
 
   <display-name>jUDDI</display-name>
   <description>
-    jUDDI is Java-based implmementation of a UDDI version 2.0 registry.
+    jUDDI is Java-based implementation of a UDDI version 4.0 registry.
   </description>
 
-    <servlet>
-        <servlet-name>AxisServlet</servlet-name>
-        <display-name>Apache-Axis Servlet</display-name>
-        <servlet-class>
-            org.apache.axis2.transport.http.AxisServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+   <servlet>
+    <servlet-name>RegistryServlet</servlet-name>
+    <display-name>Registry Servlet</display-name>
+    <servlet-class>org.apache.juddi.servlets.RegistryServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>NotifyServlet</servlet-name>
+    <display-name>Notify Servlet</display-name>
+    <servlet-class>
+      org.apache.juddi.servlets.NotifyServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
-    <servlet-name>AxisServlet</servlet-name>
-    <url-pattern>/services/*</url-pattern>
+  	<servlet-name>NotifyServlet</servlet-name>
+  	<url-pattern>/notify/*</url-pattern>
   </servlet-mapping>
-
 
   <welcome-file-list id="WelcomeFileList">
     <welcome-file>index.jsp</welcome-file>

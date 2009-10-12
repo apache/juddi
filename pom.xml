@@ -154,12 +154,15 @@
 	</reporting>
 	<modules>
 		<module>uddi-ws</module>
-		<module>uddi-tck</module>
+		<module>juddi-client</module>
+		<module>uddi-tck-base</module>
 		<module>juddi-core</module>
 		<module>juddiv3-war</module>
 		<module>juddi-cxf</module>
+		<module>juddi-samples</module>
 		<module>juddi-tomcat</module>
-		<module>uddi-client</module>
+		<module>uddi-tck</module>
+		
 	</modules>
 	<distributionManagement>
 		<repository>
