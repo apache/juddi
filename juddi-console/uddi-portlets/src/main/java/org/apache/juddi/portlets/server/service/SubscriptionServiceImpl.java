@@ -71,10 +71,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		}
 		logger.debug("Publisher " + publisher + " sending getSubscription request..");
 		try {
+			boolean isMatchingClerk=false;
 			Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getClerks();
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher())) {
-					
+					isMatchingClerk = true;
 					Node modelNode = getSubscriptions(session, clerk);
 					if (UP.equals(modelNode.getStatus())) {
 						response.setSuccess(true);
@@ -82,6 +83,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 					modelNode.setClerkName(clerk.getName());
 					response.getNodes().add(modelNode);
 				}
+			}
+			if (! isMatchingClerk) {
+				response.setMessage("This user is  not setup to own subscriptions");
 			}
 		} catch (Exception e) {
 			response.setSuccess(false);

@@ -63,10 +63,11 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="false">
-		   <clerk name="default" node="default" publisher="root" password="root"/>
-	       <clerk name="medroot" node="med"     publisher="root" password="root"/>
+		   <clerk name="marketing" node="default" publisher="marketinglistener" password="marketinglistener"/>
+	       <clerk name="marketingmed" node="med"  publisher="marketinglistener" password="marketinglistener"/>
 	       <xregister>
-		       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+	           
+		       <servicebinding bindingKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="marketing" toClerk="sales"/>
 		   </xregister>
 	   </clerks>
 	</manager> 

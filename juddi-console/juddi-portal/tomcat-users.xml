@@ -2,14 +2,11 @@
 <tomcat-users>
   <role rolename="pluto"/>
   <role rolename="tomcat"/>
-  <role rolename="role1"/>
   <role rolename="manager"/>
   <user username="root" password="root" roles="pluto,tomcat,manager"/>
-  <user username="affa" password="affa" roles="pluto"/>
-  <user username="uddi" password="uddi" roles="pluto"/>
-  <user username="juddi" password="juddi" roles="pluto,tomcat,manager"/>
-  <user username="pluto" password="pluto" roles="pluto,tomcat,manager"/>
-  <user username="tomcat" password="tomcat" roles="tomcat,pluto,manager"/>
-  <user username="role1" password="tomcat" roles="role1"/>
-  <user username="both" password="tomcat" roles="tomcat,role1"/>
+  <user username="uddi" password="uddi" roles="pluto,tomcat,manager"/>
+  <user username="itmark" password="itmark" roles="pluto,tomcat,manager"/>
+  <user username="itsales" password="itsales" roles="pluto,tomcat,manager"/>
+  <user username="saleslistener" password="saleslistener" roles="pluto,tomcat,manager"/>
+  <user username="marketinglistener" password="marketinglistener" roles="pluto,tomcat,manager"/>
 </tomcat-users>

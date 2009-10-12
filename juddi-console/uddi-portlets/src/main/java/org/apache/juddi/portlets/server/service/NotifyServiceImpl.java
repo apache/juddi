@@ -50,7 +50,7 @@ public class NotifyServiceImpl extends RemoteServiceServlet implements NotifySer
 			URL url = new URL(getThreadLocalRequest().getScheme(),
 							getThreadLocalRequest().getRemoteHost(), 
 							getThreadLocalRequest().getLocalPort(), 
-							"/subscription-listener/notify/");	
+							"/juddiv3/notify/");	
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
 			con.setDoInput(true);

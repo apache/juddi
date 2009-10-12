@@ -80,7 +80,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 					}
 					
 				} else {
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+					Window.alert(response.getMessage());
 				}
 			}
 		});
