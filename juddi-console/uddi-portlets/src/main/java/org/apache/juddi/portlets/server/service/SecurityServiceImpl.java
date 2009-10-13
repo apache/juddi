@@ -81,11 +81,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 					session.setAttribute("UserName", username);
 				
 					//upon success obtain tokens from other registries
-					Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getClerks();
+					Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
 					for (UDDIClerk clerk : clerks.values()) {
 						if (username.equals(clerk.getPublisher())) {
 							try {
-								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getNode().getName());
+								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getUDDINode().getName());
 								//set the clerkToken into the session
 								session.setAttribute("token-" + clerk.getName(), clerkToken.getAuthInfo());
 							} catch (Exception e) {
@@ -118,7 +118,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
 		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get(node).getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(node).getProxyTransport();
         Class<?> transportClass = Loader.loadClass(clazz);
         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();

@@ -72,7 +72,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.debug("Publisher " + publisher + " sending getSubscription request..");
 		try {
 			boolean isMatchingClerk=false;
-			Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getClerks();
+			Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher())) {
 					isMatchingClerk = true;
@@ -98,14 +98,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	private Node getSubscriptions(HttpSession session, UDDIClerk clerk) {
 		
 		Node modelNode = new Node();
-		UDDINode node = clerk.getNode();
+		UDDINode node = clerk.getUDDINode();
 		modelNode.setName(node.getName());
 		modelNode.setClerkName(clerk.getName());
 		modelNode.setDescription(node.getDescription());
 		try {
-			 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(clerk.getNode().getName()).getProxyTransport();
+			 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(clerk.getUDDINode().getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName());  
+	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName());  
 	       	 String authToken = (String) session.getAttribute("token-" + clerk.getName());
 	       	 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
@@ -141,10 +141,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	
 		logger.debug("Sending saveSubscriptions request..");
 		try {
-			 UDDIClerk clerk = UDDIClerkManager.getClientConfig().getClerks().get(modelSubscription.getClerkName());
-			 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(clerk.getNode().getName()).getProxyTransport();
+			 UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(clerk.getUDDINode().getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz); 
-	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
+	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 	       	 List<org.uddi.sub_v3.Subscription> subscriptionList = new ArrayList<org.uddi.sub_v3.Subscription>();
 	       	 org.uddi.sub_v3.Subscription subscription = new org.uddi.sub_v3.Subscription();
@@ -208,10 +208,10 @@ public SubscriptionResponse deleteSubscription(Subscription modelSubscription) {
 		logger.debug("Sending deleteSubscriptions request for subscriptionKey=" 
 				+ modelSubscription.getSubscriptionKey());
 		try {
-			 UDDIClerk clerk = UDDIClerkManager.getClientConfig().getClerks().get(modelSubscription.getClerkName());
-	    	 String clazz = UDDIClerkManager.getClientConfig().getNodes().get(clerk.getNode().getName()).getProxyTransport();
+			 UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(clerk.getUDDINode().getName()).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
+	       	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
 	       	 UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 	       	 DeleteSubscription deleteSubscription = new DeleteSubscription();
 	       	 String authToken = (String) session.getAttribute("token-" + clerk.getName());
