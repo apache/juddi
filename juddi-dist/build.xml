@@ -13,5 +13,9 @@
 			todir="${dist.dir}"/>
 		<copy file="${dependency.juddiv3.war}"
 			tofile="${dist.dir}/juddiv3.war"/>
+		<copy file="${dependency.juddi.samples}"
+			todir="${dist.dir}"/>
+		<copy file="LICENSE"
+			todir="${dist.dir}"/>
 	</target>
 </project>
