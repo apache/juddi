@@ -37,7 +37,7 @@
       <version>3.0.0.SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>uddi-client</artifactId>
+      <artifactId>juddi-client</artifactId>
       <groupId>org.apache.juddi</groupId>
       <version>3.0.0.SNAPSHOT</version>
     </dependency>
