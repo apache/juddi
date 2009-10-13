@@ -3,6 +3,7 @@ package org.apache.juddi.v3.client.config;
 import java.io.Serializable;
 import java.util.Properties;
 
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.helpers.Loader;
@@ -33,6 +34,23 @@ public class UDDINode implements Serializable {
 
 	public void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+	
+	public Node getApiNode() {
+		Node apiNode = new Node();
+		apiNode.setCustodyTransferUrl(custodyTransferUrl);
+		apiNode.setDescription(description);
+		apiNode.setFactoryInitial(factoryInitial);
+		apiNode.setFactoryNamingProvider(factoryNamingProvider);
+		apiNode.setFactoryURLPkgs(factoryURLPkgs);
+		apiNode.setInquiryUrl(inquiryUrl);
+		apiNode.setJuddiApiUrl(juddiApiUrl);
+		apiNode.setName(name);
+		apiNode.setProxyTransport(proxyTransport);
+		apiNode.setPublishUrl(publishUrl);
+		apiNode.setSecurityUrl(securityUrl);
+		apiNode.setSubscriptionUrl(subscriptionUrl);
+		return apiNode;
 	}
 	
 	

@@ -19,12 +19,16 @@ import java.rmi.RemoteException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.Clerk;
+import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
@@ -71,12 +75,43 @@ public class API_100_ClientSubscriptionInfoTest {
 		
 		Node node = new Node();
 		node.setSecurityUrl("http://localhost:8080/services/securityUrl");
+		node.setCustodyTransferUrl("http://localhost:8080/services/securityUrl");
+		node.setDescription("description");
+		node.setInquiryUrl("http://localhost:8080/services/securityUrl");
+		node.setPublishUrl("http://localhost:8080/services/securityUrl");
+		node.setProxyTransport("class");
+		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
+		SaveNode saveNode = new SaveNode();
+		saveNode.setAuthInfo(authInfoJoe);
+		saveNode.getNode().add(node);
 		
 		Clerk clerk = new Clerk();
 		clerk.setName("clerkName");
 		clerk.setPublisher("root");
 		clerk.setNode(node);
+		SaveClerk saveClerk = new SaveClerk();
+		saveClerk.setAuthInfo(authInfoJoe);
+		saveClerk.getClerk().add(clerk);
+		
+		clientSubscriptionInfo.setClerk(clerk);
+		
+		Node node2 = new Node();
+		node2.setSecurityUrl("http://localhost:8080/services/securityUrl2");
+		node2.setCustodyTransferUrl("https://localhost:8080/services/securityUrl2");
+		node2.setDescription("description2");
+		node2.setInquiryUrl("http://localhost:8080/services/securityUrl2");
+		node2.setPublishUrl("http://localhost:8080/services/securityUrl2");
+		node2.setProxyTransport("class2");
+		node2.setSubscriptionUrl("http://localhost:8080/services/securityUrl2");
+		node2.setName("default2");
+		saveNode.getNode().add(node2);
+		
+		Clerk clerk2 = new Clerk();
+		clerk2.setName("clerkName2");
+		clerk2.setPublisher("root");
+		clerk2.setNode(node2);
+		saveClerk.getClerk().add(clerk2);
 		
 		clientSubscriptionInfo.setClerk(clerk);
 		
@@ -86,14 +121,24 @@ public class API_100_ClientSubscriptionInfoTest {
 		saveClientSubscriptionInfo.setAuthInfo(authInfoJoe);
 		saveClientSubscriptionInfo.getClientSubscriptionInfo().add(clientSubscriptionInfo);
 		
-		try {
-			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
+		ClientSubscriptionInfo clientSubscriptionInfo2 = new ClientSubscriptionInfo();
+		clientSubscriptionInfo2.setSubscriptionKey("mykey2");
+		clientSubscriptionInfo2.setClerk(clerk2);
+		saveClientSubscriptionInfo.getClientSubscriptionInfo().add(clientSubscriptionInfo2);
 		
+		try {
+
+			NodeDetail nodeDetail = publisher.saveNode(saveNode);
+			ClerkDetail clerkDetail = publisher.saveClerk(saveClerk);
+			Assert.assertEquals(2,nodeDetail.getNode().size());
+			Assert.assertEquals(2,clerkDetail.getClerk().size());
+			
+			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
+			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
+			
 			GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
 			getDetail.setAuthInfo(authInfoJoe);
 			getDetail.getClientSubscriptionKey().add("mykey");
-			
-			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 			
 			ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(getDetail);
 			Assert.assertEquals("mykey", detail2.getClientSubscriptionInfo().get(0).getSubscriptionKey());

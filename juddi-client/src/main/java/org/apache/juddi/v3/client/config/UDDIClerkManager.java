@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BusinessService;
 
@@ -56,6 +57,7 @@ public class UDDIClerkManager {
 			manager = new UDDIClerkManager();
 		}
 		if (manager.clientConfig.isRegisterOnStartup()) {
+			manager.saveClerkAndNodeInfo();
 			manager.registerAnnotatedServices();
 			manager.xRegister();
 		}
@@ -75,6 +77,26 @@ public class UDDIClerkManager {
 			log.info("Clerks restarted succesfully for manager " + manager.clientConfig.getManagerName());
 		}
  	}
+	/**
+	 * Saves the clerk and node info from the uddi.xml to the jUDDI registry.
+	 */
+	public void saveClerkAndNodeInfo() {
+		
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
+			for (UDDIClerk defaultClerk : uddiClerks.values()) {
+				if (Transport.DEFAULT_NODE_NAME.equals(defaultClerk.uddiNode.getName())) {
+					for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {
+						defaultClerk.saveNode(uddiNode.getApiNode());
+					}
+					for (UDDIClerk uddiClerk : clientConfig.getUDDIClerks().values()) {
+						defaultClerk.saveClerk(uddiClerk);
+					}
+					break;
+				}
+			}
+		}	
+	}
 	
 	/**
 	 * X-Register services listed in the uddi.xml
@@ -96,11 +118,11 @@ public class UDDIClerkManager {
 		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
 		if (uddiClerks.size() > 0) {
 			AnnotationProcessor ap = new AnnotationProcessor();
-			for (UDDIClerk uddiCerk : uddiClerks.values()) {
+			for (UDDIClerk uddiClerk : uddiClerks.values()) {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
-						uddiCerk.getClassWithAnnotations(),uddiCerk.getUDDINode().getProperties());
+						uddiClerk.getClassWithAnnotations(),uddiClerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					uddiCerk.register(businessService);
+					uddiClerk.register(businessService);
 				}
 			}
 		}

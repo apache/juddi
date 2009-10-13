@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
@@ -32,8 +33,11 @@ import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.ErrorMessage;
@@ -44,7 +48,9 @@ import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.apache.juddi.validation.ValidateClerk;
 import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
+import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
 import org.uddi.api_v3.DeleteTModel;
@@ -386,6 +392,94 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			em.close();
 		}
 
+	}
+	
+	/**
+	 * Saves clerk(s) to the persistence layer.  This method is specific to jUDDI.
+	 */
+	public ClerkDetail saveClerk(SaveClerk body)
+			throws DispositionReportFaultMessage {
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidateClerk(publisher).validateSaveClerk(em, body);
+			
+			ClerkDetail result = new ClerkDetail();
+	
+			List<org.apache.juddi.api_v3.Clerk> apiClerkList = body.getClerk();;
+			for (org.apache.juddi.api_v3.Clerk apiClerk : apiClerkList) {
+				
+				org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
+				
+				MappingApiToModel.mapClerk(apiClerk, modelClerk);
+				
+				Object existingUddiEntity = em.find(modelClerk.getClass(), modelClerk.getClerkName());
+				if (existingUddiEntity != null) {
+					em.merge(modelClerk);
+				} else {
+					em.persist(modelClerk);
+				}
+				
+				result.getClerk().add(apiClerk);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+	
+	/**
+	 * Saves nodes(s) to the persistence layer.  This method is specific to jUDDI.
+	 */
+	public NodeDetail saveNode(SaveNode body)
+			throws DispositionReportFaultMessage {
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidateNode(publisher).validateSaveNode(em, body);
+			
+			NodeDetail result = new NodeDetail();
+	
+			List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();;
+			for (org.apache.juddi.api_v3.Node apiNode : apiNodeList) {
+				
+				org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
+				
+				MappingApiToModel.mapNode(apiNode, modelNode);
+				
+				Object existingUddiEntity = em.find(modelNode.getClass(), modelNode.getName());
+				if (existingUddiEntity != null) {
+					em.merge(modelNode);
+				} else {
+				    em.persist(modelNode);
+				}
+				
+				result.getNode().add(apiNode);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 
 	

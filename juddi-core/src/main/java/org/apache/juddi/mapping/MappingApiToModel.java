@@ -603,6 +603,7 @@ public class MappingApiToModel {
 		if (apiClientSubscriptionInfo.getClerk()!=null) {
 			org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
 			mapClerk(apiClientSubscriptionInfo.getClerk(), modelClerk);
+			modelClientSubscriptionInfo.setClerk(modelClerk);
 		}
 		
 	}
@@ -616,6 +617,7 @@ public class MappingApiToModel {
 			if (apiClerk.getNode()!=null) {
 				org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
 				mapNode(apiClerk.getNode(), modelNode);
+				modelClerk.setNode(modelNode);
 			}
 		}
 	}
@@ -623,7 +625,7 @@ public class MappingApiToModel {
 	public static void mapNode(org.apache.juddi.api_v3.Node apiNode,org.apache.juddi.model.Node modelNode) {
 		if (apiNode!=null) {
 			
-			modelNode.setCustodyTransferUrl(modelNode.getCustodyTransferUrl());
+			modelNode.setCustodyTransferUrl(apiNode.getCustodyTransferUrl());
 			modelNode.setInquiryUrl(apiNode.getInquiryUrl());
 			modelNode.setJuddiApiUrl(apiNode.getJuddiApiUrl());
 			modelNode.setName(apiNode.getName());

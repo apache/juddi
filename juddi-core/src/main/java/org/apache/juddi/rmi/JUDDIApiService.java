@@ -20,13 +20,17 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.juddi.api.impl.JUDDIApiImpl;
+import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.DeleteTModel;
@@ -80,6 +84,18 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 			throws DispositionReportFaultMessage, RemoteException {
 		return juddiAPI.saveClientSubscriptionInfo(body);
 		
+	}
+	
+	public ClerkDetail saveClerk(SaveClerk body)
+			throws DispositionReportFaultMessage, RemoteException {
+		return juddiAPI.saveClerk(body);
+
+	}
+	
+	public NodeDetail saveNode(SaveNode body)
+			throws DispositionReportFaultMessage, RemoteException {
+		return juddiAPI.saveNode(body);
+	
 	}
 	
 	

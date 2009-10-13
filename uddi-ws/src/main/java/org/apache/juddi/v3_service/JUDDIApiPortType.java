@@ -28,13 +28,17 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -142,6 +146,32 @@ public interface JUDDIApiPortType extends Remote{
         DeleteClientSubscriptionInfo body)
         throws DispositionReportFaultMessage, RemoteException
     ;
+    
+    /**
+     * @param body
+     * @throws DispositionReportFaultMessage, RemoteException
+     */
+    @WebMethod(operationName = "save_Clerk", action = "save_Clerk")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public ClerkDetail saveClerk(
+		@WebParam(name = "save_Clerk", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        SaveClerk body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
+    
+    /**
+     * @param body
+     * @throws DispositionReportFaultMessage, RemoteException
+     */
+    @WebMethod(operationName = "save_Node", action = "save_Node")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public NodeDetail saveNode(
+		@WebParam(name = "save_Node", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        SaveNode body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
+    
+    
     
 }
 

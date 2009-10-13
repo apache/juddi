@@ -26,8 +26,6 @@ import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
-//import org.apache.juddi.api_v3.GetPublisherDetail;
-import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
@@ -104,15 +102,11 @@ public class ValidateClientSubscriptionInfo extends ValidateUDDIApi {
 		String name = clerk.getName();
 		if (name == null || name.length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.clerk.NoName"));
-	
-		String publisherName = clerk.getPublisher();
-		if (publisherName == null || publisherName.length() == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.clerk.NoPublisherName"));
 		
-		Node node = clerk.getNode();
-		if (node == null) 
-			throw new ValueNotAllowedException(new ErrorMessage("errors.clerk.NullNodeInput"));
-
+		//make sure clerk exists
+		Object obj = em.find(org.apache.juddi.model.Clerk.class, name);
+		if (obj == null)
+			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ClerkNotFound", name));
 	}
 	
 	public void validateGetClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body) throws DispositionReportFaultMessage {

@@ -8,6 +8,12 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.api_v3.Clerk;
+import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingDetail;
@@ -135,6 +141,49 @@ public class UDDIClerk implements Serializable {
 			authToken = getUDDINode().getTransport().getUDDISecurityService().getAuthToken(getAuthToken).getAuthInfo();
 		}
 		return authToken;
+	}
+	
+	public NodeDetail saveNode(Node node)  {
+		NodeDetail nodeDetail = null;
+		try {
+			SaveNode saveNode = new SaveNode();
+			saveNode.setAuthInfo(getAuthToken());
+			saveNode.getNode().add(node);
+			nodeDetail =getUDDINode().getTransport().getJUDDIApiService().saveNode(saveNode);
+		} catch (Exception e) {
+			log.error("Unable to save node " + node.getName()
+					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to save node " + node.getName()
+					+ " ." + t.getMessage(),t);
+		}
+		return nodeDetail;
+	}
+	
+	public ClerkDetail saveClerk(UDDIClerk senderClerk)  {
+		ClerkDetail clerkDetail = null;
+		try {
+			SaveClerk saveClerk = new SaveClerk();
+			saveClerk.setAuthInfo(getAuthToken());
+			saveClerk.getClerk().add(getApiClerk());
+			clerkDetail = senderClerk.getUDDINode().getTransport().getJUDDIApiService().saveClerk(saveClerk);
+		} catch (Exception e) {
+			log.error("Unable to save clerk " + getName()
+					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to save clerk " + getName()
+					+ " ." + t.getMessage(),t);
+		}
+		return clerkDetail;
+	}
+	
+	private Clerk getApiClerk() {
+		Clerk apiClerk = new Clerk();
+		apiClerk.setName(name);
+		apiClerk.setNode(uddiNode.getApiNode());
+		apiClerk.setPassword(password);
+		apiClerk.setPublisher(publisher);
+		return apiClerk;
 	}
 	
 	public UDDINode getUDDINode() {

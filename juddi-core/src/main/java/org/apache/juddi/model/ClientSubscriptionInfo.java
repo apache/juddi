@@ -17,7 +17,6 @@ package org.apache.juddi.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,7 +40,7 @@ public class ClientSubscriptionInfo implements java.io.Serializable {
 	@Id()
 	@Column(name="subscription_key", nullable = false, length=255)
 	private String subscriptionKey;
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Clerk clerk;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="last_notified", length = 29)
