@@ -68,6 +68,17 @@
 				<wsdlFiles> <wsdlFile>uddi_v3_service.wsdl</wsdlFile> </wsdlFiles>
 				<keep>true</keep> </configuration> </plugin>
 			-->
+                        <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-source-plugin</artifactId>
+                          <executions>
+                            <execution>
+                              <goals>
+                                <goal>jar</goal>
+                  	      </goals>
+               		    </execution>
+            		  </executions>
+            		</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.4</version>

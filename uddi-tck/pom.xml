@@ -145,6 +145,17 @@
 				</configuration>
 			</plugin>
 			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+ 			  <artifactId>maven-source-plugin</artifactId>
+ 		  	  <executions>
+			    <execution>
+ 			      <goals>
+			        <goal>jar</goal>
+			      </goals>
+ 		            </execution>
+		 	  </executions>
+            		</plugin>
+			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
 				<version>1.0</version>
