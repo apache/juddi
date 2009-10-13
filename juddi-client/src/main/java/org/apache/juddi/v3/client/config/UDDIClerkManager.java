@@ -93,14 +93,14 @@ public class UDDIClerkManager {
 	 * configuration.
 	 */
 	public void registerAnnotatedServices() {
-		Map<String,UDDIClerk> clerks = clientConfig.getClerks();
-		if (clerks.size() > 0) {
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
 			AnnotationProcessor ap = new AnnotationProcessor();
-			for (UDDIClerk clerk : clerks.values()) {
+			for (UDDIClerk uddiCerk : uddiClerks.values()) {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
-						clerk.getClassWithAnnotations(),clerk.getNode().getProperties());
+						uddiCerk.getClassWithAnnotations(),uddiCerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					clerk.register(businessService);
+					uddiCerk.register(businessService);
 				}
 			}
 		}
@@ -109,12 +109,12 @@ public class UDDIClerkManager {
 	 * Removes the bindings of the services of the annotated classes.
 	 */
 	public void unRegisterAnnotatedServices() {
-		Map<String,UDDIClerk> clerks = clientConfig.getClerks();
+		Map<String,UDDIClerk> clerks = clientConfig.getUDDIClerks();
 		if (clerks.size() > 0) {
 			AnnotationProcessor ap = new AnnotationProcessor();
 			for (UDDIClerk clerk : clerks.values()) {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
-						clerk.getClassWithAnnotations(),clerk.getNode().getProperties());
+						clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
 					clerk.unRegister(businessService);
 				}

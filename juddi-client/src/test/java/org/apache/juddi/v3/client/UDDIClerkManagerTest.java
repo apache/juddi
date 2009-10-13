@@ -35,8 +35,8 @@ public class UDDIClerkManagerTest {
 	     try {
 	    	 UDDIClerkManager.start();
 	    	 
-	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getNodes().size());
-	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getClerks().size());
+	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getUDDINodes().size());
+	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getUDDIClerks().size());
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
@@ -47,12 +47,12 @@ public class UDDIClerkManagerTest {
      @Test
      public void testAnnotation() {
     	 try {
-	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getClerks();
+	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 if (clerks.containsKey("default")) {
 		 		 UDDIClerk clerk = clerks.get("default");
 		 		 BusinessService service = ap.readServiceAnnotations(
-		 				 HelloWorldMockup.class.getName(), clerk.getNode().getProperties());
+		 				 HelloWorldMockup.class.getName(), clerk.getUDDINode().getProperties());
 		 		 assertEquals("uddi:juddi.apache.org:services-helloworld",service.getServiceKey());
 	 		 } else {
 	 			Assert.fail("Could not find expected clerk='default'");

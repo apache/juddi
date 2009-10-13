@@ -20,6 +20,8 @@
     <class>org.apache.juddi.model.BusinessName</class>
     <class>org.apache.juddi.model.BusinessService</class>
     <class>org.apache.juddi.model.CategoryBag</class>
+    <class>org.apache.juddi.model.Clerk</class>
+    <class>org.apache.juddi.model.ClientSubscriptionInfo</class>
     <class>org.apache.juddi.model.Contact</class>
     <class>org.apache.juddi.model.ContactDescr</class>
     <class>org.apache.juddi.model.DiscoveryUrl</class>
@@ -28,6 +30,7 @@
     <class>org.apache.juddi.model.InstanceDetailsDocDescr</class>
     <class>org.apache.juddi.model.KeyedReference</class>
     <class>org.apache.juddi.model.KeyedReferenceGroup</class>
+    <class>org.apache.juddi.model.Node</class>
     <class>org.apache.juddi.model.OverviewDoc</class>
     <class>org.apache.juddi.model.OverviewDocDescr</class>
     <class>org.apache.juddi.model.PersonName</class>

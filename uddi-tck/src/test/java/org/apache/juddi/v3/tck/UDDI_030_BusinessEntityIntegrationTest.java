@@ -48,7 +48,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -79,7 +79,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

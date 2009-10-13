@@ -20,10 +20,13 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.juddi.api.impl.JUDDIApiImpl;
+import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.DeleteTModel;
@@ -66,6 +69,17 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 	public void adminDeleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage, RemoteException {
 		juddiAPI.adminDeleteTModel(body);
+	}
+
+	public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+		juddiAPI.deleteClientSubscriptionInfo(body);
+	}
+
+	public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+		return juddiAPI.saveClientSubscriptionInfo(body);
+		
 	}
 	
 	

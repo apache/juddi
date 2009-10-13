@@ -25,19 +25,26 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
+import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
+import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
+import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
 import org.uddi.api_v3.DeleteTModel;
@@ -231,6 +238,155 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			em.close();
 		}
 }
+
+	public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+		
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidateClientSubscriptionInfo(publisher).validateDeleteClientSubscriptionInfo(em, body);
+	
+			List<String> entityKeyList = body.getSubscriptionKey();
+			for (String entityKey : entityKeyList) {
+				Object obj = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, entityKey);
+				em.remove(obj);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+		
+	}
+
+	public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
+			throws DispositionReportFaultMessage, RemoteException {
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+			
+			new ValidateClientSubscriptionInfo(publisher).validateSaveClientSubscriptionInfo(em, body);
+			
+			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+	
+			List<org.apache.juddi.api_v3.ClientSubscriptionInfo> apiClientSubscriptionInfoList = body.getClientSubscriptionInfo();
+			for (org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo : apiClientSubscriptionInfoList) {
+				
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = new org.apache.juddi.model.ClientSubscriptionInfo();
+				
+				MappingApiToModel.mapClientSubscriptionInfo(apiClientSubscriptionInfo, modelClientSubscriptionInfo);
+				
+				Object existingUddiEntity = em.find(modelClientSubscriptionInfo.getClass(), modelClientSubscriptionInfo.getSubscriptionKey());
+				if (existingUddiEntity != null)
+					em.remove(existingUddiEntity);
+				
+				em.persist(modelClientSubscriptionInfo);
+				
+				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ClientSubscriptionInfoDetail getAllClientSubscriptionInfoDetail(GetAllClientSubscriptionInfoDetail body) 
+		throws DispositionReportFaultMessage {
+		
+		new ValidateClientSubscriptionInfo(null).validateGetAllClientSubscriptionDetail(body);
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			this.getEntityPublisher(em, body.getAuthInfo());
+			
+			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+			
+			Query query = em.createQuery("SELECT cs from ClientSubscriptionInfo as cs");
+			List<org.apache.juddi.model.ClientSubscriptionInfo> modelClientSubscriptionInfoList = query.getResultList();
+			
+			for (ClientSubscriptionInfo modelClientSubscriptionInfo : modelClientSubscriptionInfoList) {
+				
+				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+				
+				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+				
+				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+		
+	}
+	
+	/**
+	 * Retrieves clientSubscriptionKey(s) from the persistence layer.  This method is specific to jUDDI.
+	 */
+	public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body)
+			throws DispositionReportFaultMessage {
+
+		new ValidateClientSubscriptionInfo(null).validateGetClientSubscriptionInfoDetail(body);
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			this.getEntityPublisher(em, body.getAuthInfo());
+			
+			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+			
+			List<String> subscriptionKeyList = body.getClientSubscriptionKey();
+			for (String subscriptionKey : subscriptionKeyList) {
+				
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
+					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				if (modelClientSubscriptionInfo == null) {
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
+				}
+				
+				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+				
+				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+				
+				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+			}
+	
+			tx.commit();
+			return result;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+
+	}
 
 	
 	

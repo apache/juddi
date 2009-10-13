@@ -594,5 +594,48 @@ public class MappingApiToModel {
 		
 	}
 	
+	public static void mapClientSubscriptionInfo(org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo,
+									   org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo)
+			throws DispositionReportFaultMessage {
+		
+		modelClientSubscriptionInfo.setLastNotified(new Date());
+		modelClientSubscriptionInfo.setSubscriptionKey(apiClientSubscriptionInfo.getSubscriptionKey());
+		if (apiClientSubscriptionInfo.getClerk()!=null) {
+			org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
+			mapClerk(apiClientSubscriptionInfo.getClerk(), modelClerk);
+		}
+		
+	}
+	
+	public static void mapClerk(org.apache.juddi.api_v3.Clerk apiClerk,org.apache.juddi.model.Clerk modelClerk) {
+		if (apiClerk!=null) {
+			
+			modelClerk.setClerkName(apiClerk.getName());
+			modelClerk.setCred(apiClerk.getPassword());
+			modelClerk.setPublisherId(apiClerk.getPublisher());
+			if (apiClerk.getNode()!=null) {
+				org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
+				mapNode(apiClerk.getNode(), modelNode);
+			}
+		}
+	}
+	
+	public static void mapNode(org.apache.juddi.api_v3.Node apiNode,org.apache.juddi.model.Node modelNode) {
+		if (apiNode!=null) {
+			
+			modelNode.setCustodyTransferUrl(modelNode.getCustodyTransferUrl());
+			modelNode.setInquiryUrl(apiNode.getInquiryUrl());
+			modelNode.setJuddiApiUrl(apiNode.getJuddiApiUrl());
+			modelNode.setName(apiNode.getName());
+			modelNode.setProxyTransport(apiNode.getProxyTransport());
+			modelNode.setPublishUrl(apiNode.getPublishUrl());
+			modelNode.setSecurityUrl(apiNode.getSecurityUrl());
+			modelNode.setSubscriptionUrl(apiNode.getSubscriptionUrl());
+			modelNode.setFactoryInitial(apiNode.getFactoryInitial());
+			modelNode.setFactoryNamingProvider(apiNode.getFactoryNamingProvider());
+			modelNode.setFactoryURLPkgs(apiNode.getFactoryURLPkgs());
+		}
+	}
+	
 }
 	

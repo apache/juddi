@@ -28,10 +28,13 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
+import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -109,7 +112,6 @@ public interface JUDDIApiPortType extends Remote{
 
 
     /**
-     * 
      * @param body
      * @throws DispositionReportFaultMessage, RemoteException
      */
@@ -118,6 +120,26 @@ public interface JUDDIApiPortType extends Remote{
     public void adminDeleteTModel(
         @WebParam(name = "adminDelete_tmodel", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         DeleteTModel body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
+    
+    /**
+     * @param body
+     * @throws DispositionReportFaultMessage, RemoteException
+     */
+    @WebMethod(operationName = "save_ClientSubscriptionInfo", action = "save_ClientSubscriptionInfo")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(
+		@WebParam(name = "save_ClientSubscriptionInfo", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        SaveClientSubscriptionInfo body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
+    
+    @WebMethod(operationName = "delete_ClientSubscriptionInfo", action = "delete_ClientSubscriptionInfo")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public void deleteClientSubscriptionInfo(
+		@WebParam(name = "delete_ClientSubscriptionInfo", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        DeleteClientSubscriptionInfo body)
         throws DispositionReportFaultMessage, RemoteException
     ;
     

@@ -41,8 +41,8 @@ public class ClientConfig
 	private final static String UDDI_CONFIG = "META-INF/uddi.xml";
 	private Logger log = Logger.getLogger(ClientConfig.class);
 	private Configuration config = null;;
-	private Map<String,UDDINode> nodes = null;
-	private Map<String,UDDIClerk> clerks = null;
+	private Map<String,UDDINode> uddiNodes = null;
+	private Map<String,UDDIClerk> uddiClerks = null;
 	private Set<XRegistration> xRegistrations = null;
 	private String managerName = null;
 	
@@ -55,9 +55,9 @@ public class ClientConfig
 		loadConfiguration();
 	}
 	protected void loadManager() throws ConfigurationException {
-		nodes = readNodeConfig(config);
-		clerks = readClerkConfig(config, nodes);
-		xRegistrations = readXRegConfig(config,clerks);
+		uddiNodes = readNodeConfig(config);
+		uddiClerks = readClerkConfig(config, uddiNodes);
+		xRegistrations = readXRegConfig(config,uddiClerks);
 	}
 	/**
 	 * Does the actual work of reading the configuration from System
@@ -82,7 +82,7 @@ public class ClientConfig
 		loadManager();
 	}
 
-	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> nodes) 
+	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> uddiNodes) 
 	throws ConfigurationException {
 		managerName = config.getString("manager[@name]");
 		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
@@ -95,9 +95,9 @@ public class ClientConfig
 				uddiClerk.setManagerName(managerName);
 				uddiClerk.setName(     config.getString("manager.clerks.clerk(" + i + ")[@name]"));
 				String nodeRef = config.getString("manager.clerks.clerk(" + i + ")[@node]");
-				if (!nodes.containsKey(nodeRef)) throw new ConfigurationException("Could not find Node with name=" + nodeRef);
-				UDDINode node = nodes.get(nodeRef);
-				uddiClerk.setNode(node);
+				if (!uddiNodes.containsKey(nodeRef)) throw new ConfigurationException("Could not find Node with name=" + nodeRef);
+				UDDINode uddiNode = uddiNodes.get(nodeRef);
+				uddiClerk.setUDDINode(uddiNode);
 				uddiClerk.setPublisher(config.getString("manager.clerks.clerk(" + i + ")[@publisher]"));
 				uddiClerk.setPassword( config.getString("manager.clerks.clerk(" + i + ")[@password]"));
 				String[] classes = config.getStringArray("manager.clerks.clerk(" + i + ").class");
@@ -184,12 +184,12 @@ public class ClientConfig
 		return xRegistrations;
 	}
 	
-	public Map<String, UDDINode> getNodes() {
-		return nodes;
+	public Map<String, UDDINode> getUDDINodes() {
+		return uddiNodes;
 	}
 	
-	public Map<String,UDDIClerk> getClerks() {
-		return clerks;
+	public Map<String,UDDIClerk> getUDDIClerks() {
+		return uddiClerks;
 	}
 	
 	public Set<XRegistration> getXRegistrations() {

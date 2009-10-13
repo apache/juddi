@@ -754,7 +754,46 @@ public class MappingModelToApi {
 		} 
 	}
 	
+	public static void mapClientSubscriptionInfo(org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo, 
+			                                     org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo) 
+				throws DispositionReportFaultMessage {
+		
+		apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());
+		apiClientSubscriptionInfo.setLastModified(modelClientSubscriptionInfo.getLastNotified());
+		
+		if (modelClientSubscriptionInfo.getClerk()!=null) {
+			org.apache.juddi.api_v3.Clerk apiClerk = new org.apache.juddi.api_v3.Clerk();
+			mapClerk(modelClientSubscriptionInfo.getClerk(), apiClerk);
+		}
+	}
 	
-	
+	public static void mapClerk(org.apache.juddi.model.Clerk modelClerk, 
+            org.apache.juddi.api_v3.Clerk apiClerk) 
+		throws DispositionReportFaultMessage {
+		
+		apiClerk.setName(modelClerk.getClerkName());
+		apiClerk.setPassword(modelClerk.getCred());
+		apiClerk.setPublisher(modelClerk.getPublisherId());
+		if (modelClerk.getNode()!=null) {
+			org.apache.juddi.api_v3.Node node = new org.apache.juddi.api_v3.Node();
+			mapNode(modelClerk.getNode(), node);
+		}
+	}
 
+	public static void mapNode(org.apache.juddi.model.Node modelNode, 
+            org.apache.juddi.api_v3.Node apiNode) 
+		throws DispositionReportFaultMessage {
+		
+		apiNode.setCustodyTransferUrl(modelNode.getCustodyTransferUrl());
+		apiNode.setFactoryInitial(modelNode.getFactoryInitial());
+		apiNode.setFactoryNamingProvider(modelNode.getFactoryNamingProvider());
+		apiNode.setFactoryURLPkgs(modelNode.getFactoryURLPkgs());
+		apiNode.setInquiryUrl(modelNode.getInquiryUrl());
+		apiNode.setJuddiApiUrl(modelNode.getJuddiApiUrl());
+		apiNode.setName(modelNode.getName());
+		apiNode.setProxyTransport(modelNode.getProxyTransport());
+		apiNode.setPublishUrl(modelNode.getPublishUrl());
+		apiNode.setSecurityUrl(modelNode.getSecurityUrl());
+		apiNode.setSubscriptionUrl(modelNode.getSubscriptionUrl());
+	}
 }

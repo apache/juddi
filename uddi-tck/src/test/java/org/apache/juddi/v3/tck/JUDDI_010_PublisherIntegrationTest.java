@@ -63,7 +63,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -89,7 +89,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -98,7 +98,7 @@ public class JUDDI_010_PublisherIntegrationTest {
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
