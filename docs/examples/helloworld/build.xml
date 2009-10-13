@@ -8,18 +8,30 @@
 	<pathelement location="." />
 	<pathelement location="${classes}"/>
 	<pathelement location="${basedir}/src" />
+	<fileset dir="${basedir}/build/lib" includes="*.jar"/>
+<!--	
 	<fileset dir="${juddi.parent.dir}/juddi-core/target" includes="*.jar" /> 	<fileset dir="${juddi.parent.dir}/uddi-client/target" includes="*.jar"/>
-	<fileset dir="${juddi.parent.dir}/uddi-client/target/juddi-tomcat-3.0.0.SNAPSHOT/lib/" includes="log4j-*.jar"/>
-	<fileset dir="${juddi.parent.dir}/juddiv3-war/target/juddi/WEB-INF/lib" includes="commons-configuration-*.jar, commons-lang-*.jar"/>
-	<fileset dir="${juddi.parent.dir}/uddi-client/target/juddi-tomcat-3.0.0.SNAPSHOT/webapps/juddiv3/WEB-INF/lib" includes="commons-logging-*.jar, commons-collections-*.jar"/>
 	<fileset dir="${juddi.parent.dir}/uddi-ws/target" includes="*.jar"/>
+-->
 </path>
 
 <target name="clean">
 	<delete dir="build"/>
 </target>
 
-<target name="compile">
+<target name="dependencies.get">
+	<ant antfile="ivy-build.xml" />
+</target>
+
+<target name="dependencies.report">
+	<ant antfile="ivy-build.xml" target="report" />
+</target>
+
+<target name="dependencies.cleancache">
+	<ant antfile="ivy-build.xml" target="cleancache" />
+</target>
+
+<target name="compile" depends="dependencies.get">
 	<mkdir dir="${classes}"/>
 	<javac srcdir="${src.dir}" destdir="${classes}" 
 		debug="true" deprecation="true">

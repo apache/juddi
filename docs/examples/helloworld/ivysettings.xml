@@ -1,0 +1,17 @@
+<ivysettings>
+
+    <settings defaultResolver="chained"/>
+    <resolvers>
+        <chain name="chained">
+            <ibiblio name="ibiblio" m2compatible="true"/> 
+            <url name="jboss" m2compatible="true">                
+		<artifact pattern="http://repository.jboss.org/maven2/[organisation]/[artifact]/[revision]/[artifact]-[revision].[ext]"/>
+            </url>
+            <url name="juddi" m2compatible="true">
+                <artifact pattern="http://people.apache.org/~kstam/releases/juddi-3.0.0.rc1/repo/[artifact]/[artifact]-[revision].[ext]"/>
+            </url> 
+        </chain>
+    </resolvers>
+    <modules>
+    </modules>
+</ivysettings>
