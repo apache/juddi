@@ -29,8 +29,8 @@
 		<url>http://issues.apache.org/jira/browse/JUDDI</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Continuum</system>
-		<url>http://vmbuild.apache.org</url>
+		<system>BuildBot</system>
+		<url>http://ci.apache.org/buildbot.html</url>
 		<notifiers>
 			<notifier>
 				<sendOnError>true</sendOnError>
