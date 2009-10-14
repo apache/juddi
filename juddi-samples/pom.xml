@@ -125,7 +125,7 @@
                         <phase>package</phase>
                         <configuration>
                         <tasks>
-                        <mkdir dir="target/jv3"/>
+                        <echo>getting the war from: ${maven.dependency.org.apache.juddi.juddiv3-war.war.path}</echo>
                         <unzip src="${maven.dependency.org.apache.juddi.juddiv3-war.war.path}"
                                 dest="target/jv3">
                                 <patternset>
