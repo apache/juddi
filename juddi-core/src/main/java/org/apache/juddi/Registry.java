@@ -45,11 +45,9 @@ public class Registry {
 	}
 	/**
 	 * Starts the registry.
-	 * @return
-	 * @throws ConfigurationException
-	 * @throws  
+	 * @throws ConfigurationException 
 	 */
-	public synchronized static Registry start() throws ConfigurationException {
+	public synchronized static void start() throws ConfigurationException {
 		if (registry==null) {
 			log.info("Starting jUDDI registry...");
 			registry = new Registry();
@@ -66,7 +64,6 @@ public class Registry {
 			}
 			log.info("jUDDI registry started succesfully.");
 		}
-		return registry;
  	}
 	
 }

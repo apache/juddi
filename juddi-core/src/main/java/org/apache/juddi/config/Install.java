@@ -583,7 +583,7 @@ public class Install {
 	 * initiate the install process).
 	 * 
 	 * @param businessKey
-	 * @return
+	 * @return BusinessEntity Object
 	 * @throws DispositionReportFaultMessage
 	 */
 	public static org.uddi.api_v3.BusinessEntity getNodeBusinessEntity(String businessKey) throws DispositionReportFaultMessage {
@@ -626,7 +626,7 @@ public class Install {
 	 * 
 	 * @param em - the entity manager to the juddi model
 	 * @param fileName - name of Publisher xml file
-	 * @return
+	 * @return UddiEntityPublisher object, can be any UDDIEntity
 	 * @throws JAXBException
 	 * @throws DispositionReportFaultMessage
 	 * @throws IOException
