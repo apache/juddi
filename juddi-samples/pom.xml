@@ -125,14 +125,15 @@
                         <phase>package</phase>
                         <configuration>
                         <tasks>
+                        <mkdir dir="target/jv3"/>
                         <unzip src="${maven.dependency.org.apache.juddi.juddiv3-war.war.path}"
                                 dest="target/jv3">
                                 <patternset>
                                         <include name="**/persistence.xml"/>
                                 </patternset>
                         </unzip>
-                        <copy todir="src/main/webapp">
-                                <fileset dir="target/jv3"/>
+                        <copy todir="src/main/webapp" overwrite="true">
+                                <fileset dir="target/jv3" />
                         </copy>
 
                         </tasks>
