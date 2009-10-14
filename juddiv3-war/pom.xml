@@ -200,4 +200,26 @@
       </plugin>
      </plugins>
   </build>
+	<profiles>
+		<profile>
+			<id>hibernate</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>persistence</name>
+					<value>hibernate</value>
+				</property>
+				
+			</activation>
+		</profile>
+		<profile>
+			<id>openjpa</id>
+			<activation>
+				<property>
+					<name>persistence</name>
+					<value>openjpa</value>
+				</property>
+			</activation>
+		</profile>
+	</profiles>
 </project>
