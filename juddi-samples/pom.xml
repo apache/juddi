@@ -122,7 +122,7 @@
             <executions>
                  <execution>
                         <id>foo</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <configuration>
                         <tasks>
                         <echo>getting the war from: ${maven.dependency.org.apache.juddi.juddiv3-war.war.path}</echo>
@@ -132,8 +132,8 @@
                                         <include name="**/persistence.xml"/>
                                 </patternset>
                         </unzip>
-                        <copy todir="src/main/webapp" overwrite="true">
-                                <fileset dir="target/jv3" />
+                        <copy todir="target/classes" overwrite="true">
+                                <fileset dir="target/jv3/WEB-INF/classes" />
                         </copy>
 
                         </tasks>
