@@ -177,7 +177,7 @@ public class UDDIClerk implements Serializable {
 		return clerkDetail;
 	}
 	
-	private Clerk getApiClerk() {
+	public Clerk getApiClerk() {
 		Clerk apiClerk = new Clerk();
 		apiClerk.setName(name);
 		apiClerk.setNode(uddiNode.getApiNode());
