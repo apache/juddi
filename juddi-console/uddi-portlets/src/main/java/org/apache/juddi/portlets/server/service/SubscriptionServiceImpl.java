@@ -298,6 +298,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		getSubscriptionResults.setSubscriptionKey(modelSubscription.getSubscriptionKey());
 		//getSubscriptionResults.set
 		
+		
 		return response;
 	}
 
