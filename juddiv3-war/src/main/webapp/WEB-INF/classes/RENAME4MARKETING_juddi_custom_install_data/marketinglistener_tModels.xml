@@ -16,10 +16,22 @@
  *
  */ -->
 <save_tModel xmlns="urn:uddi-org:api_v3">
-	<tModel tModelKey="uddi:it.marketing.apache.org:keygenerator"
+	<tModel tModelKey="uddi:marketing.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+	  <name>uddi-org:keyGenerator</name>
+	  <description>Marketing Root domain key generator</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+	      keyValue="keyGenerator" />
+	  </categoryBag>
+	</tModel>
+	<tModel tModelKey="uddi:it.sales.apache.org:keygenerator"
 		xmlns="urn:uddi-org:api_v3">
 		<name>uddi-org:keyGenerator</name>
-		<description>Marketing domain key generator</description>
+		<description>IT Sales domain key generator</description>
 		<overviewDoc>
 			<overviewURL useType="text">
 				http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
@@ -29,9 +41,9 @@
 				keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" />
 		</categoryBag>
 	</tModel>
-	<tModel tModelKey="uddi:marketing.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+	<tModel tModelKey="uddi:sales.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
 	  <name>uddi-org:keyGenerator</name>
-	  <description>Marketing Root domain key generator</description>
+	  <description>Sales Root domain key generator</description>
 	  <overviewDoc>
 	    <overviewURL useType="text">
 	      http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
