@@ -99,7 +99,7 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void saveSubscription() {
 		if (detailPanel!=null) {
-			detailPanel.saveSubscription();
+			detailPanel.saveSubscription(getToken());
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void deleteSubscription() {
 		if (detailPanel!=null) {
-			detailPanel.deleteSubscription();
+			detailPanel.deleteSubscription(getToken());
 		}
 	}
 	

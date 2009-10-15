@@ -29,6 +29,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface SubscriptionService extends RemoteService {
 	
 	public SubscriptionResponse getSubscriptions();
-	public SubscriptionResponse saveSubscription(Subscription subscription);
-	public SubscriptionResponse deleteSubscription(Subscription subscription);
+	public SubscriptionResponse saveSubscription(String authToken, Subscription subscription);
+	public SubscriptionResponse deleteSubscription(String authToken, Subscription subscription);
+	public SubscriptionResponse invokeSyncSubscription(String authToken, Subscription subscription);
 }

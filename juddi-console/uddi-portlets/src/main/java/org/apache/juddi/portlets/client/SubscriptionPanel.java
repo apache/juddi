@@ -99,12 +99,12 @@ public class SubscriptionPanel extends FlowPanel {
 		
 	}
 	
-	protected void deleteSubscription(){
+	protected void deleteSubscription(String authToken){
 		if (subscription!=null) {
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
 			subscription.setClerkName(clerkNameBox.getText());
 			
-			subscriptionServiceAsync.deleteSubscription(subscription, new AsyncCallback<SubscriptionResponse>()
+			subscriptionServiceAsync.deleteSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 					{
 						public void onFailure(Throwable caught) {
 							Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
@@ -149,7 +149,7 @@ public class SubscriptionPanel extends FlowPanel {
 				
 	}
 	
-	protected void saveSubscription() {
+	protected void saveSubscription(String authToken) {
 		if (subscription!=null) {
 			
 			subscription.setBindingKey(bindingKeyBox.getText());
@@ -161,7 +161,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
 			subscription.setClerkName(clerkNameBox.getText());
 			
-			subscriptionServiceAsync.saveSubscription(subscription, new AsyncCallback<SubscriptionResponse>()
+			subscriptionServiceAsync.saveSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 			{
 				public void onFailure(Throwable caught) {
 					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
