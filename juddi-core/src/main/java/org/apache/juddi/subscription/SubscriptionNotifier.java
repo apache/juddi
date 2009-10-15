@@ -35,6 +35,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
@@ -177,7 +178,7 @@ public class SubscriptionNotifier extends TimerTask {
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-			Query query = em.createQuery("SELECT s FROM Subscription s");
+			Query query = em.createQuery("SELECT s FROM Subscription s WHERE s.bindingKey IS NOT NULL");
 		    subscriptions = (Collection<Subscription>) query.getResultList();
 		    tx.commit();
 		} finally {
@@ -214,11 +215,22 @@ public class SubscriptionNotifier extends TimerTask {
 			}
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
-			if (resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
+			if (resultList.getServiceList().getServiceInfos()!=null &&
+					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
 				resultList.getServiceList().setServiceInfos(null);
 			}
 			body.setSubscriptionResultsList(resultList);
-			//body.setAuthInfo();  //where would I get the authInfo from? 
+			String authorizedName = modelSubscription.getAuthorizedName();
+			UDDISecurityImpl security = new UDDISecurityImpl();
+			try {
+				//obtain a token for this publisher
+				org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);
+				body.setAuthInfo(token.getAuthInfo());
+			} catch (DispositionReportFaultMessage e) {
+				body.setAuthInfo("Failed to generate token, please contact UDDI admin");
+				log.error(e.getMessage(),e);
+			}
+			
 			if (bindingTemplate!=null) {
 				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 					QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER);

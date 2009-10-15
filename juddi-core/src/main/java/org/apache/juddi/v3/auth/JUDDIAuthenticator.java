@@ -54,7 +54,7 @@ public class JUDDIAuthenticator implements Authenticator {
 			tx.begin();
 			Publisher publisher = em.find(Publisher.class, authorizedName);
 			if (publisher == null) {
-				log.info("Publisher was not found, adding the publisher in on the fly.");
+				log.warn("Publisher was not found, adding the publisher in on the fly.");
 				publisher = new Publisher();
 				publisher.setAuthorizedName(authorizedName);
 				publisher.setIsAdmin("false");

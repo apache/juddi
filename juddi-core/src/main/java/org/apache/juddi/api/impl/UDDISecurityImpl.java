@@ -81,15 +81,21 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		
 		String publisherId = authenticator.authenticate(body.getUserID(), body.getCred());
 		
+		return getAuthToken(publisherId);
+	}
+	
+	public AuthToken getAuthToken(String publisherId)
+	throws DispositionReportFaultMessage {
+
 		if (publisherId == null || publisherId.length() == 0)
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials", publisherId));
-		
+
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-	
-					
+
+
 			// Generate auth token and store it!
 			String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
 			org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();
@@ -100,14 +106,14 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 				modelAuthToken.setAuthorizedName(publisherId);
 				modelAuthToken.setNumberOfUses(0);
 				modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
-				
+
 				em.persist(modelAuthToken);
 			}
-			
+
 			org.uddi.api_v3.AuthToken apiAuthToken = new org.uddi.api_v3.AuthToken();
-			
+
 			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
-			
+
 			tx.commit();
 			return apiAuthToken;
 		} finally {
