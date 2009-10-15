@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.config;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,6 +36,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 
@@ -72,6 +74,8 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+		URL url = Loader.getResource(JUDDI_PROPERTIES); 
+		log.info("Reading from properties file:  " + url);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
