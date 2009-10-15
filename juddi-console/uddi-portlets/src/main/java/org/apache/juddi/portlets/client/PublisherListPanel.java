@@ -84,7 +84,7 @@ public class PublisherListPanel extends Composite implements TableListener {
 		juddiApiService.getPublishers(token, publisherId,  new AsyncCallback<JUDDIApiResponse>() 
 				{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+				Window.alert("Error: " + caught.getMessage());
 			}
 
 			public void onSuccess(JUDDIApiResponse response) {

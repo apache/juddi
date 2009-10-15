@@ -191,7 +191,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscriptionServiceAsync.deleteSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 					{
 						public void onFailure(Throwable caught) {
-							Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+							Window.alert("Error: " + caught.getMessage());
 						}
 			
 						public void onSuccess(SubscriptionResponse response) {
@@ -199,7 +199,7 @@ public class SubscriptionPanel extends FlowPanel {
 								UDDISubscription.getInstance().refreshSubscriptionTree();
 								UDDISubscription.getInstance().removeDetailPanel();
 							} else {
-								Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+								Window.alert("error: " + response.getMessage());
 							}
 						}
 					}); 
@@ -248,7 +248,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscriptionServiceAsync.saveSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 			{
 				public void onFailure(Throwable caught) {
-					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+					Window.alert("Error: " + caught.getMessage());
 				}
 	
 				public void onSuccess(SubscriptionResponse response) {
@@ -256,7 +256,7 @@ public class SubscriptionPanel extends FlowPanel {
 						UDDISubscription.getInstance().displaySubscription(response.getSubscription());
 						UDDISubscription.getInstance().refreshSubscriptionTree();
 					} else {
-						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+						Window.alert("error: " + response.getMessage());
 					}
 				}
 			}); 

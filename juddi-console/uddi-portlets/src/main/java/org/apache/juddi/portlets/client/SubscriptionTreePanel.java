@@ -53,7 +53,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 		subscriptionService.getSubscriptions(new AsyncCallback<SubscriptionResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(SubscriptionResponse response) {
@@ -96,7 +96,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 					}
 					
 				} else {
-					Window.alert(response.getMessage());
+					Window.alert("error" + response.getMessage());
 				}
 			}
 		});

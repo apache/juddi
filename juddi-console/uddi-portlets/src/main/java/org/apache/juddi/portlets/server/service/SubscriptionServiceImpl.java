@@ -69,7 +69,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	public SubscriptionResponse getSubscriptions() 
 	{
 		SubscriptionResponse response = new SubscriptionResponse();
-		response.setSuccess(false);
+		response.setSuccess(true);
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
 		String publisher = (String) session.getAttribute("UserName");
@@ -86,9 +86,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 				if (publisher.equals(clerk.getPublisher())) {
 					isMatchingClerk = true;
 					Node modelNode = getSubscriptions(session, clerk);
-					if (UP.equals(modelNode.getStatus())) {
-						response.setSuccess(true);
-					}
+					//if (UP.equals(modelNode.getStatus())) {
+						
+					//}
 					modelNode.setClerkName(clerk.getName());
 					response.getNodes().add(modelNode);
 				}
@@ -136,8 +136,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			}
 			modelNode.setStatus(UP);
 		} catch (Exception e) {
-			logger.error("Could not obtain subscription due to " + e.getMessage(), e);
-			modelNode.setStatus("Down, communication problem: " + e.getMessage());
+			logger.error("Could not obtain subscription due to " + e.getCause(), e);
+			modelNode.setStatus("Down, communication problem: " + e.getCause());
 		} 
 		return modelNode;
 	}

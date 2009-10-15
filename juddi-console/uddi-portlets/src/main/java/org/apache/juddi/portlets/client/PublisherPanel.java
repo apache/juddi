@@ -126,14 +126,14 @@ public class PublisherPanel extends FlowPanel {
 			juddiApiService.deletePublisher(token, publisher.getAuthorizedName(), new AsyncCallback<JUDDIApiResponse>() 
 			{
 				public void onFailure(Throwable caught) {
-					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+					Window.alert("Error: " + caught.getMessage());
 				}
 	
 				public void onSuccess(JUDDIApiResponse response) {
 					if (response.isSuccess()) {
 						JUDDIPublisher.getInstance().hidePublisher();
 					} else {
-						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+						Window.alert("error: " + response.getMessage());
 					}
 				}
 			});
@@ -164,7 +164,7 @@ public class PublisherPanel extends FlowPanel {
 			juddiApiService.savePublisher(token, publisher, new AsyncCallback<JUDDIApiResponse>() 
 			{
 				public void onFailure(Throwable caught) {
-					Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+					Window.alert("Error:  " + caught.getMessage());
 				}
 	
 				public void onSuccess(JUDDIApiResponse response) {
@@ -173,7 +173,7 @@ public class PublisherPanel extends FlowPanel {
 						JUDDIPublisher.getInstance().setSelectedPublisher(publisher.getAuthorizedName());
 						JUDDIPublisher.getInstance().displayPublisher(publisher);
 					} else {
-						Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+						Window.alert("error: " + response.getMessage());
 					}
 				}
 			}); 

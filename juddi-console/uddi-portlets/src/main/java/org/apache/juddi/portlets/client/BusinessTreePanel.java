@@ -61,7 +61,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		publicationService.getBusinesses(UDDIBrowser.getInstance().getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(PublicationResponse response) {
@@ -90,7 +90,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 					}
 					
 				} else {
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		});
@@ -107,7 +107,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		findService.getBusinesses(name, findQualifyers, new AsyncCallback<FindResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(FindResponse response) {
@@ -136,7 +136,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 					}
 					
 				} else {
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		});

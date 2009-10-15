@@ -95,7 +95,7 @@ public class UDDISearch implements EntryPoint, ClickListener {
 		inquiryService.queryJUDDI(query, new AsyncCallback<SearchResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(SearchResponse response) {

@@ -82,7 +82,7 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 		securityService.get(user, password, new AsyncCallback<SecurityResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry. " + caught.getMessage());
+				Window.alert("Error: " + caught.getMessage());
 			}
 
 			public void onSuccess(SecurityResponse response) {
@@ -91,7 +91,7 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 					publisherId = response.getUsername();
 					application.login();
 				} else {
-					Window.alert("error: " + response.getMessage() + ". Make sure the UDDI server is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		}); 

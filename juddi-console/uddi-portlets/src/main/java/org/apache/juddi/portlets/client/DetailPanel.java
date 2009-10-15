@@ -49,7 +49,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 	public void displayServices( String businessKey) {
 		inquiryService.getBusinessDetail(UDDIBrowser.getInstance().getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(InquiryResponse response) {
@@ -70,8 +70,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 						table.setHTML(row++, 1, service.getDescription());
 					}
 				} else {
-					Window.alert("error: " + response.getMessage() 
-							+ ". Make sure the UDDI service is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		});
@@ -80,7 +79,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 	public void displayBusiness( String businessKey) {
 		inquiryService.getBusinessDetail(UDDIBrowser.getInstance().getToken(), businessKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(InquiryResponse response) {
@@ -102,8 +101,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 					//Business Contact
 					
 				} else {
-					Window.alert("error: " + response.getMessage() 
-							+ ". Make sure the UDDI service is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		});
@@ -113,7 +111,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 
 		inquiryService.getServiceDetail(UDDIBrowser.getInstance().getToken(), serviceKey, new AsyncCallback<InquiryResponse>() {
 			public void onFailure(Throwable caught) {
-				Window.alert("Could not connect to the UDDI registry.");
+				Window.alert("Error:" + caught.getMessage());
 			}
 
 			public void onSuccess(InquiryResponse response) {
@@ -154,8 +152,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 						table.setHTML(row, 1, bindingtable.toString());
 					}
 				} else {
-					Window.alert("error: " + response.getMessage() 
-							+ ". Make sure the UDDI service is up and running.");
+					Window.alert("error: " + response.getMessage());
 				}
 			}
 		});
