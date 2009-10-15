@@ -171,7 +171,7 @@
 						<properties>
 							<cargo.hostname>localhost</cargo.hostname>
 							<cargo.servlet.port>8880</cargo.servlet.port>
-							<cargo.jvmargs>-Xmx128m</cargo.jvmargs>
+							<cargo.jvmargs>-Xms256m -Xmx256m -XX:PermSize=256M -XX:MaxPermSize=256M</cargo.jvmargs>
 						</properties>
 					</configuration>
 				</configuration>
