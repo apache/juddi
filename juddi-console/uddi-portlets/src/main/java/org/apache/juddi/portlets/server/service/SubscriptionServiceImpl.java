@@ -45,10 +45,12 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
+import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -288,16 +290,40 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	
 	public SubscriptionResponse invokeSyncSubscription(String userAuthToken, Subscription modelSubscription) {
 
-		HttpServletRequest request = getThreadLocalRequest();
-		HttpSession session = request.getSession();
 		SubscriptionResponse response = new SubscriptionResponse();
 	
-		//Send a request to the listener serverNode
-		GetSubscriptionResults getSubscriptionResults = new GetSubscriptionResults();
-		getSubscriptionResults.setAuthInfo(userAuthToken);
-		getSubscriptionResults.setSubscriptionKey(modelSubscription.getSubscriptionKey());
-		//getSubscriptionResults.set
-		
+		try {
+			//Send a request to the listener serverNode
+			GetSubscriptionResults getSubscriptionResults = new GetSubscriptionResults();
+			getSubscriptionResults.setAuthInfo(userAuthToken);
+			getSubscriptionResults.setSubscriptionKey(modelSubscription.getSubscriptionKey());
+			
+			XMLGregorianCalendar calendarStart = DatatypeFactory.newInstance().newXMLGregorianCalendar(modelSubscription.getCoverageStart());
+			XMLGregorianCalendar calendarEnd = DatatypeFactory.newInstance().newXMLGregorianCalendar(modelSubscription.getCoverageEnd());
+			CoveragePeriod coverage = new CoveragePeriod();
+			coverage.setStartPoint(calendarStart);
+			coverage.setEndPoint(calendarEnd);
+			getSubscriptionResults.setCoveragePeriod(coverage);
+			
+			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(clerk.getUDDINode().getName()).getProxyTransport();
+			Class<?> transportClass = Loader.loadClass(clazz);
+			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
+			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
+			
+			SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResults);
+			System.out.println("list=" + list);
+		} catch (Exception e) {
+			logger.error("Could not save subscription. " + e.getMessage(), e);
+			response.setSuccess(false);
+			response.setMessage(e.getMessage());
+			response.setErrorCode("102");
+		} catch (Throwable t) {
+			logger.error("Could not save subscription. " + t.getMessage(), t);
+			response.setSuccess(false);
+			response.setMessage(t.getMessage());
+			response.setErrorCode("102");
+		} 
 		
 		
 		return response;

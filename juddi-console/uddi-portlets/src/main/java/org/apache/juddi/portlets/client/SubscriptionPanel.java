@@ -47,6 +47,9 @@ public class SubscriptionPanel extends FlowPanel {
 	private TextBox coverageEndBox = new TextBox();
 	
 	Subscription subscription = null;
+	FlexTable flexTable = null;
+	
+	boolean isAsync=true;
 	
 	public SubscriptionPanel(Subscription subscription, Node node) {
 		
@@ -56,8 +59,13 @@ public class SubscriptionPanel extends FlowPanel {
 			this.subscription = subscription;
 		}
 		
-		FlexTable flexTable = new FlexTable();
+		flexTable = new FlexTable();
 		add(flexTable);
+		drawPanel();
+		
+	}
+	
+	public void drawPanel() {
 		
 		Label clerkName = new Label ("Clerk:");
 		clerkName.setStyleName("portlet-form-field-label-right");
@@ -73,48 +81,105 @@ public class SubscriptionPanel extends FlowPanel {
 		subscriptionKeyBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(1, 1, subscriptionKeyBox);
 		
+		//async
 		Label isBrief = new Label ("Is Brief:");
 		isBrief.setStyleName("portlet-form-field-label-right");
+		isBrief.setVisible(isAsync);
 		flexTable.setWidget(2, 0,isBrief);
 		isBriefBox.setChecked(this.subscription.getBrief());
 		isBriefBox.setStyleName("portlet-form-input-field");
+		isBriefBox.setVisible(isAsync);
 		flexTable.setWidget(2, 1, isBriefBox);
 		
 		Label expiresAfter = new Label ("Expires After:");
 		expiresAfter.setStyleName("portlet-form-field-label-right");
+		expiresAfter.setVisible(isAsync);
 		flexTable.setWidget(3, 0, expiresAfter);
 		expiresAfterBox.setText(this.subscription.getExpiresAfter());
 		expiresAfterBox.setStyleName("portlet-form-input-field");
+		expiresAfterBox.setVisible(isAsync);
 		flexTable.setWidget(3, 1, expiresAfterBox);
 		
 		Label maxEntities = new Label ("Max Entities:");
 		maxEntities.setStyleName("portlet-form-field-label-right");
+		maxEntities.setVisible(isAsync);
 		flexTable.setWidget(4, 0, maxEntities);
 		maxEntitiesBox.setText(String.valueOf(this.subscription.getMaxEntities()));
 		maxEntitiesBox.setStyleName("portlet-form-input-field");
+		maxEntitiesBox.setVisible(isAsync);
 		flexTable.setWidget(4, 1, maxEntitiesBox);
 		
 		Label subscriptionFilter = new Label ("Search Filter:");
 		subscriptionFilter.setStyleName("portlet-form-field-label-right");
+		subscriptionFilter.setVisible(isAsync);
 		flexTable.setWidget(5, 0, subscriptionFilter);
 		subscriptionFilterBox.setText(String.valueOf(this.subscription.getSubscriptionFilter()));
 		subscriptionFilterBox.setStyleName("portlet-form-input-field");
 		subscriptionFilterBox.setHeight("100px");
+		subscriptionFilterBox.setVisible(isAsync);
 		flexTable.setWidget(5, 1, subscriptionFilterBox);
 		
-		Label id = new Label ("Binding Key:");
-		id.setStyleName("portlet-form-field-label-right");
-		flexTable.setWidget(6, 0, id);
+		Label bindingKey = new Label ("Binding Key:");
+		bindingKey.setStyleName("portlet-form-field-label-right");
+		bindingKey.setVisible(isAsync);
+		flexTable.setWidget(6, 0, bindingKey);
 		bindingKeyBox.setText(this.subscription.getBindingKey());
 		bindingKeyBox.setStyleName("portlet-form-input-field");
+		bindingKeyBox.setVisible(isAsync);
 		flexTable.setWidget(6, 1, bindingKeyBox);
 		
 		Label notificationInterval = new Label ("Notification Interval:");
 		notificationInterval.setStyleName("portlet-form-field-label-right");
+		notificationInterval.setVisible(isAsync);
 		flexTable.setWidget(7, 0, notificationInterval);
 		notificationIntervalBox.setText(String.valueOf(this.subscription.getNotificationInterval()));
 		notificationIntervalBox.setStyleName("portlet-form-input-field");
+		notificationIntervalBox.setVisible(isAsync);
 		flexTable.setWidget(7, 1, notificationIntervalBox);
+		
+		Label coverageStart = new Label ("Coverage Start Date:");
+		coverageStart.setStyleName("portlet-form-field-label-right");
+		coverageStart.setVisible(!isAsync);
+		flexTable.setWidget(8, 0, coverageStart);
+		coverageStartBox.setText(this.subscription.getCoverageStart());
+		coverageStartBox.setStyleName("portlet-form-input-field");
+		coverageStartBox.setVisible(!isAsync);
+		flexTable.setWidget(8, 1, coverageStartBox);
+		
+		Label coverageEnd = new Label ("Coverage End Date:");
+		coverageEnd.setStyleName("portlet-form-field-label-right");
+		coverageEnd.setVisible(!isAsync);
+		flexTable.setWidget(9, 0, coverageEnd);
+		coverageEndBox.setText(this.subscription.getCoverageStart());
+		coverageEndBox.setStyleName("portlet-form-input-field");
+		coverageEndBox.setVisible(!isAsync);
+		flexTable.setWidget(9, 1, coverageEndBox);
+		
+	}
+	
+	protected void invokeSyncSubscription(String authToken) {
+		if (subscription!=null) {
+			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
+			subscription.setClerkName(clerkNameBox.getText());
+			subscription.setCoverageStart(coverageStartBox.getText());
+			subscription.setCoverageEnd(coverageEndBox.getText());
+			
+			subscriptionServiceAsync.invokeSyncSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
+					{
+				public void onFailure(Throwable caught) {
+					Window.alert("error:" + caught.getMessage());
+				}
+	
+				public void onSuccess(SubscriptionResponse response) {
+					if (response.isSuccess()) {
+						UDDISubscription.getInstance().refreshSubscriptionTree();
+						UDDISubscription.getInstance().removeDetailPanel();
+					} else {
+						Window.alert("error: " + response.getMessage());
+					}
+				}
+			}); 
+		}
 		
 	}
 	

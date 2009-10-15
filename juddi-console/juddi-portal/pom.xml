@@ -43,12 +43,6 @@
 	    <type>war</type>
     </dependency>
     <dependency>
-    	    <groupId>org.apache.juddi</groupId>
-    	    <artifactId>subscription-listener</artifactId>
-    	    <version>3.0.0.SNAPSHOT</version>
-    	    <type>war</type>
-    </dependency>
-    <dependency>
 	    <groupId>org.apache.pluto</groupId>
 	    <artifactId>pluto-portal</artifactId>
 	    <version>1.1.7</version>
@@ -156,7 +150,6 @@
 		       <property name="dependency.commons-logging.jar" value="${maven.dependency.commons-logging.commons-logging.jar.path}"/> 
 		       <property name="dependency.portlet-api.jar"  value="${maven.dependency.javax.portlet.portlet-api.jar.path}"/>
 		       <property name="dependency.uddi-portlets.war"  value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}"/>
-		       <property name="dependency.subscription-listener.war" value="${maven.dependency.org.apache.juddi.subscription-listener.war.path}"/>
 		       <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
 		       <ant antfile="${basedir}/build.xml">
                   <target name="package-tomcat"/>
