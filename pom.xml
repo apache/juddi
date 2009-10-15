@@ -159,7 +159,7 @@
 		<module>juddi-core</module>
 		<module>juddiv3-war</module>
 		<module>juddi-cxf</module>
-		<module>juddi-samples</module>
+		<module>juddiv3-samples</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
 		<module>docs</module>		
