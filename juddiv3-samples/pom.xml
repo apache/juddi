@@ -23,7 +23,7 @@
     <version>3.0.0.SNAPSHOT</version>
   </parent>
   <groupId>org.apache.juddi</groupId>
-  <artifactId>juddi-samples</artifactId>
+  <artifactId>juddiv3-samples</artifactId>
   <version>3.0.0.SNAPSHOT</version>
   <name>jUDDI Service Registration Examples</name>
   <packaging>war</packaging>
