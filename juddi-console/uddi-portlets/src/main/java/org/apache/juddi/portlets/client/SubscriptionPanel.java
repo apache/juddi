@@ -1,3 +1,19 @@
+/*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package org.apache.juddi.portlets.client;
 
 import org.apache.juddi.portlets.client.model.Node;
@@ -27,6 +43,9 @@ public class SubscriptionPanel extends FlowPanel {
 	private TextBox notificationIntervalBox = new TextBox();
 	private TextBox subscriptionFilterBox = new TextBox();
 	private TextBox subscriptionKeyBox = new TextBox();
+	private TextBox coverageStartBox = new TextBox();
+	private TextBox coverageEndBox = new TextBox();
+	
 	Subscription subscription = null;
 	
 	public SubscriptionPanel(Subscription subscription, Node node) {

@@ -29,13 +29,17 @@ import java.io.Serializable;
  */
 public class Subscription implements Serializable{
 	private static final long serialVersionUID = 4857108890203941634L;
-	protected String bindingKey;
-    protected Boolean brief;
-    protected String expiresAfter;
-    protected Integer maxEntities;
-	protected String notificationInterval;
-    protected String subscriptionFilter;
-    protected String subscriptionKey;
+	private String bindingKey;
+	private Boolean brief;
+	private String expiresAfter;
+	private Integer maxEntities;
+	private String notificationInterval;
+	private String subscriptionFilter;
+	private String subscriptionKey;
+    
+    //for sync requests.
+	private String coverageStart;
+	private String coverageEnd;
     
     private Node node;
     private String clerkName;
@@ -126,6 +130,18 @@ public class Subscription implements Serializable{
 	}
 	public void setClerkName(String clerkName) {
 		this.clerkName = clerkName;
+	}
+	public String getCoverageStart() {
+		return coverageStart;
+	}
+	public void setCoverageStart(String coverageStart) {
+		this.coverageStart = coverageStart;
+	}
+	public String getCoverageEnd() {
+		return coverageEnd;
+	}
+	public void setCoverageEnd(String coverageEnd) {
+		this.coverageEnd = coverageEnd;
 	}
 
 	
