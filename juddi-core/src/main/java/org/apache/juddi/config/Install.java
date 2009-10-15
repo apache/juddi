@@ -87,7 +87,7 @@ public class Install {
 		try {
 			tx.begin();
 	
-			if (alreadyInstalled(em, config))
+			if (alreadyInstalled(config))
 				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
 			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
@@ -161,38 +161,51 @@ public class Install {
 		
 	}
 	
+    /**
+     * Checks if there is a database with a root publisher. If it is not found
+     * an
+     * 
+     * @param em
+     * @param config
+     * @return true if it finds a database with the root publisher in it.
+     * @throws ConfigurationException
+     */
 	protected static boolean alreadyInstalled(Configuration config) throws ConfigurationException {
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			
-			boolean result = alreadyInstalled(em, config);
-			
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-
-	protected static boolean alreadyInstalled(EntityManager em, Configuration config) throws ConfigurationException {
 		
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
-		org.apache.juddi.model.Publisher publisher = em.find(org.apache.juddi.model.Publisher.class, rootPublisherStr);
-		if (publisher != null)
-			return true;
-
-		List<String> publishers = getPublishers(config);
-		for (String publisherStr : publishers) {
-			publisher = em.find(org.apache.juddi.model.Publisher.class, publisherStr);
-			if (publisher != null)
-				return true;
+		org.apache.juddi.model.Publisher publisher = null;
+		int numberOfTries=0;
+		while (numberOfTries++ < 20) {
+			EntityManager em = PersistenceManager.getEntityManager();
+			EntityTransaction tx = em.getTransaction();
+			try {
+				tx.begin();
+				publisher = em.find(org.apache.juddi.model.Publisher.class, rootPublisherStr);
+				tx.commit();
+			} finally {
+				if (tx.isActive()) {
+					tx.rollback();
+				}
+				em.close();
+			}
+			if (publisher != null) return true;
+	
+			if (config.getBoolean(Property.JUDDI_LOAD_INSTALL_DATA,Property.DEFAULT_LOAD_INSTALL_DATA)) {
+				log.debug("Install data not yet installed.");
+				break;
+			} else {
+				try {
+					log.info("Install data not yet installed.");
+					log.info("Going to sleep and retry...");
+					Thread.sleep(5000l);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(),e);
+				}
+			}
 		}
-		
+		if (numberOfTries>=19) {
+			throw new ConfigurationException("Could not load the Root node data. Please check for errors.");
+		}
 		
 		return false;
 	}

@@ -3,6 +3,7 @@ package org.apache.juddi.config;
 public interface Property 
 {
     public final static String JUDDI_ROOT_PUBLISHER              ="juddi.root.publisher";
+    public final static String JUDDI_LOAD_INSTALL_DATA           ="juddi.load.install.data";
 	public final static String JUDDI_PERSISTENCEUNIT_NAME        ="juddi.persistenceunit.name";
 	public final static String JUDDI_AUTHENTICATOR               ="juddi.authenticator";
 	public final static String JUDDI_CONFIGURATION_RELOAD_DELAY  ="juddi.configuration.reload.delay";
@@ -36,5 +37,6 @@ public interface Property
 	public final static String DEFAULT_XML_USERSFILE             ="juddi-users.xml";
 	public final static String DEFAULT_ENCRYPTED_XML_USERSFILE   ="juddi-users-encrypted.xml";
 	public final static String DEFAULT_SECURITY_DOMAIN           ="java:/jaas/other";
+	public final static boolean DEFAULT_LOAD_INSTALL_DATA        =true;
 	
 }

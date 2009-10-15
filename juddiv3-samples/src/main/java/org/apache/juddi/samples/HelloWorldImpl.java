@@ -7,12 +7,12 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 
 
 @UDDIService(
-		businessKey="uddi:juddi.apache.org:businesses-asf",
-		serviceKey="uddi:juddi.apache.org:services-helloworld", 
+		businessKey="uddi:${keyDomain}:{department}-asf",
+		serviceKey="uddi:${keyDomain}:services-hello${department}", 
 		description = "Hello World test service")
 @UDDIServiceBinding(
-		bindingKey="uddi:juddi.apache.org:bindings-helloworld-wsdl",
-	    description="WSDL endpoint for the HelloWorld Service. This service is used for "
+		bindingKey="uddi:${keyDomain}:bindings-hello${department}-wsdl",
+	    description="WSDL endpoint for the hello${department} Service. This service is used for "
 				  + "testing the jUDDI annotation functionality",
 	    accessPointType="wsdlDeployment",
 	    accessPoint="http://${serverName}:${serverPort}/juddiv3-samples/services/helloworld?wsdl")

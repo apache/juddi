@@ -58,10 +58,10 @@ public class AnnotationProcessor {
 			}
 			Name name = new Name();
 			name.setLang(lang); 
-			service.setBusinessKey(uddiService.businessKey());
-			service.setServiceKey(uddiService.serviceKey());
+			service.setBusinessKey(TokenResolver.replaceTokens(uddiService.businessKey(),properties));
+			service.setServiceKey(TokenResolver.replaceTokens(uddiService.serviceKey(),properties));
 			if (!"".equals(uddiService.serviceName())) {
-				name.setValue(uddiService.serviceName());
+				name.setValue(TokenResolver.replaceTokens(uddiService.serviceName(),properties));
 			} else if (webServiceAnnotation!=null && !"".equals(webServiceAnnotation.serviceName())) {
 				name.setValue(webServiceAnnotation.serviceName());
 			} else {
@@ -70,7 +70,7 @@ public class AnnotationProcessor {
 			service.getName().add(name);
 			Description description = new Description();
 			description.setLang(lang);
-			description.setValue(uddiService.description());
+			description.setValue(TokenResolver.replaceTokens(uddiService.description(),properties));
 			service.getDescription().add(description);
 			
 			//categoryBag on the service
@@ -107,15 +107,15 @@ public class AnnotationProcessor {
 		if (uddiServiceBinding!=null) {
 			bindingTemplate = new BindingTemplate();
 			
-			bindingTemplate.setBindingKey(uddiServiceBinding.bindingKey());
+			bindingTemplate.setBindingKey(TokenResolver.replaceTokens(uddiServiceBinding.bindingKey(), properties));
 			
 			String bindingLang = String.valueOf(lang);
 			if (uddiServiceBinding.lang()!=null) {
-				bindingLang = uddiServiceBinding.lang();
+				bindingLang = TokenResolver.replaceTokens(uddiServiceBinding.lang(),properties);
 			}
 			Description bindingDescription = new Description();
 			bindingDescription.setLang(bindingLang);
-			bindingDescription.setValue(uddiServiceBinding.description());
+			bindingDescription.setValue(TokenResolver.replaceTokens(uddiServiceBinding.description(),properties));
 			bindingTemplate.getDescription().add(bindingDescription);
 			
 			AccessPoint accessPoint = new AccessPoint();

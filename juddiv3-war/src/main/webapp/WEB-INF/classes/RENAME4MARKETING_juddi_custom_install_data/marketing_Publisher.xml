@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="marketinglistener">
+<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="marketing">
   <publisherName>Marketing Listener Publisher</publisherName>
   <isAdmin>false</isAdmin>
 </publisher>

@@ -16,13 +16,11 @@
  */
 package org.apache.juddi.config;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -39,7 +37,6 @@ import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
-import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * Handles the application level configuration for jUDDI. By default it first
@@ -101,22 +98,18 @@ public class AppConfig
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
-			tx.begin();
 	
-			if (!Install.alreadyInstalled(em, config)) {
+			if (!Install.alreadyInstalled(config)) {
 				log.info("The 'root' publisher was not found, loading...");
 				try {
 					Install.install(config);
-				} catch (JAXBException e) {
+				} catch (Exception e) {
 					throw new ConfigurationException(e);
-				} catch (DispositionReportFaultMessage e) {
-					throw new ConfigurationException(e);
-				} catch (IOException e) {
-					throw new ConfigurationException(e);
+				} catch (Throwable t) {
+					throw new ConfigurationException(t);
 				}
-	
 			}
-			tx.commit();
+
 			tx.begin();
 	
 			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);

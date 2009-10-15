@@ -15,7 +15,17 @@
  * limitations under the License.
  *
  */ -->
-<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="itsales">
-  <publisherName>Sales (in affiliate A) publisher</publisherName>
-  <isAdmin>false</isAdmin>
-</publisher>
+<save_tModel xmlns="urn:uddi-org:api_v3">
+	<tModel tModelKey="uddi:marketing.apache.org:subscription:keygenerator" xmlns="urn:uddi-org:api_v3">
+	  <name>uddi-org:keyGenerator</name>
+	  <description>Marketing Root domain key generator</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+	      keyValue="keyGenerator" />
+	  </categoryBag>
+	</tModel>
+</save_tModel>

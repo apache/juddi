@@ -26,7 +26,7 @@
   uddi:uddi.acme.com:keygenerator
   uddi:engineering.umich.edu:soa:ubr:keygenerator
  -->
-<tModel tModelKey="uddi:marketing.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+<tModel tModelKey="uddi:juddi.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
   <name>uddi-org:keyGenerator</name>
   <description>Root domain key generator</description>
   <overviewDoc>
