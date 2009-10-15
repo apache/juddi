@@ -175,7 +175,7 @@ public class Install {
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
 		org.apache.juddi.model.Publisher publisher = null;
 		int numberOfTries=0;
-		while (numberOfTries++ < 20) {
+		while (numberOfTries++ < 100) {
 			EntityManager em = PersistenceManager.getEntityManager();
 			EntityTransaction tx = em.getTransaction();
 			try {
@@ -192,22 +192,18 @@ public class Install {
 	
 			if (config.getBoolean(Property.JUDDI_LOAD_INSTALL_DATA,Property.DEFAULT_LOAD_INSTALL_DATA)) {
 				log.debug("Install data not yet installed.");
-				break;
+				return false;
 			} else {
 				try {
 					log.info("Install data not yet installed.");
 					log.info("Going to sleep and retry...");
-					Thread.sleep(5000l);
+					Thread.sleep(1000l);
 				} catch (InterruptedException e) {
 					log.error(e.getMessage(),e);
 				}
 			}
 		}
-		if (numberOfTries>=19) {
-			throw new ConfigurationException("Could not load the Root node data. Please check for errors.");
-		}
-		
-		return false;
+		throw new ConfigurationException("Could not load the Root node data. Please check for errors.");
 	}
 	
 	protected static String getRootPartition(TModel rootTModelKeyGen) throws JAXBException, IOException, DispositionReportFaultMessage {
