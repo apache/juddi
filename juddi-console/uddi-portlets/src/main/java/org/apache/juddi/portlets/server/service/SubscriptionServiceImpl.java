@@ -299,6 +299,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		//getSubscriptionResults.set
 		
 		
+		
 		return response;
 	}
 
