@@ -7,7 +7,7 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 
 
 @UDDIService(
-		businessKey="uddi:${keyDomain}:{department}-asf",
+		businessKey="uddi:${keyDomain}:${department}-asf",
 		serviceKey="uddi:${keyDomain}:services-hello${department}", 
 		description = "Hello World test service")
 @UDDIServiceBinding(
