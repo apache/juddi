@@ -16,7 +16,7 @@
  *
  */ -->
 <publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="marketing">
-  <publisherName>Marketing Listener Publisher</publisherName>
+  <publisherName>Marketing Publisher</publisherName>
   <isAdmin>false</isAdmin>
 </publisher>
 

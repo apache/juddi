@@ -38,7 +38,7 @@
   
   See below for other fields that you may want to edit...
   -->
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:juddi.apache.org:business-sales-asf">
   <!-- Change the name field to represent the name of your registry -->
   <name xml:lang="en">An Root Sales jUDDI Node</name>
   <!-- Change the description field to provided a brief description of your registry -->
@@ -53,7 +53,7 @@
   <businessServices>
     <!-- As mentioned above, you may want to provide user-defined keys for these (and the services/bindingTemplates below.  Services that you
     don't intend to support should be removed entirely -->
-    <businessService serviceKey="uddi:juddi.apache.org:services-inquiry" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+    <businessService serviceKey="uddi:juddi.apache.org:services-inquiry" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">UDDI Inquiry Service</name>
       <description xml:lang="en">Web Service supporting UDDI Inquiry API</description>
       <bindingTemplates>
@@ -84,7 +84,7 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
-    <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+    <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">UDDI Publish Service</name>
       <description xml:lang="en">Web Service supporting UDDI Publish API</description>
       <bindingTemplates>
@@ -111,7 +111,7 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
-    <businessService serviceKey="uddi:juddi.apache.org:services-security" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+    <businessService serviceKey="uddi:juddi.apache.org:services-security" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">UDDI Security Service</name>
       <description xml:lang="en">Web Service supporting UDDI Security API</description>
       <bindingTemplates>
@@ -127,7 +127,7 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
-    <businessService serviceKey="uddi:juddi.apache.org:services-custodytransfer" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+    <businessService serviceKey="uddi:juddi.apache.org:services-custodytransfer" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">UDDI Custody and Ownership Transfer Service</name>
       <description xml:lang="en">Web Service supporting UDDI Custody and Ownership Transfer API</description>
       <bindingTemplates>
@@ -155,7 +155,7 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
-    <businessService serviceKey="uddi:juddi.apache.org:services-subscription" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+    <businessService serviceKey="uddi:juddi.apache.org:services-subscription" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">UDDI Subscription Service</name>
       <description xml:lang="en">Web Service supporting UDDI Subscription API</description>
       <bindingTemplates>
@@ -184,7 +184,7 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
-     <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:business-marketing-asf">
+     <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:business-sales-asf">
       <name xml:lang="en">jUDDI Publisher Service</name>
       <description xml:lang="en">Web Service supporting jUDDI specific API</description>
       <bindingTemplates>

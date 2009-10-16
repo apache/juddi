@@ -165,7 +165,6 @@ public class Install {
      * Checks if there is a database with a root publisher. If it is not found
      * an
      * 
-     * @param em
      * @param config
      * @return true if it finds a database with the root publisher in it.
      * @throws ConfigurationException
