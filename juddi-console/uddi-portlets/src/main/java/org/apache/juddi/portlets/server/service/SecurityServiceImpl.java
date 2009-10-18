@@ -73,7 +73,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 				return response;
 			} else {
 				try {
-					AuthToken authToken = login(username, password,"default");
+					AuthToken authToken = login(username, password,Constants.NODE_NAME);
 					response.setSuccess(true);
 					response.setResponse(authToken.getAuthInfo());
 					
@@ -118,7 +118,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
 		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(node).getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode(node).getProxyTransport();
         Class<?> transportClass = Loader.loadClass(clazz);
         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();

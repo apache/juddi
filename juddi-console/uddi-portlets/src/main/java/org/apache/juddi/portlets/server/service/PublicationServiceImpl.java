@@ -62,7 +62,7 @@ public class PublicationServiceImpl extends RemoteServiceServlet implements Publ
 		logger.debug("GetRegistrationInfo " + getRegistrationInfo + " sending get Busineses request..");
 		List<Business> businesses = new ArrayList<Business>();
 		try {
-			 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(Constants.NODE_NAME).getProxyTransport();
+			 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
         	 UDDIPublicationPortType publicationService = transport.getUDDIPublishService();

@@ -71,7 +71,7 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 			logger.debug("FindBusiness " + findBusiness + " sending findBusinesses request..");
 			List<Business> businesses = new ArrayList<Business>();
 		
-	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get(Constants.NODE_NAME).getProxyTransport();
+	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
         	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
