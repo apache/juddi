@@ -5,9 +5,9 @@
     <manager name="uddi-portlet-manager">
 		<nodes>
 			<node>
-				<name>default</name>
+				<name>default-ws</name>
 				<properties>
-					<property name="serverName" value="localhost"/>
+					<property name="serverName" value="marketing"/>
 					<property name="serverPort" value="8080"/>
 					<property name="rmiPort" value="1099"/>
 				</properties>
@@ -46,9 +46,9 @@
 				-->
 			</node>
 			<node>
-				<name>med</name>
+				<name>sales-ws</name>
 				<properties>
-					<property name="serverName" value="med"/>
+					<property name="serverName" value="sales"/>
 					<property name="serverPort" value="8080"/>
 				</properties>
 				<description>jUDDI node in other Department</description>
@@ -63,12 +63,13 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="false">
-		   <clerk name="marketing" node="default" publisher="marketinglistener" password="marketinglistener"/>
-	       <clerk name="marketingmed" node="med"  publisher="marketinglistener" password="marketinglistener"/>
+		   <clerk name="MarketingCratchit" node="default-ws" publisher="marketing" password="marketing"/>
+	       <clerk name="SalesCratchit"     node="sales-ws"   publisher="marketing" password="marketing"/>
+	       <!--  optional 
 	       <xregister>
-	           
-		       <servicebinding bindingKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="marketing" toClerk="sales"/>
+		       <servicebinding bindingKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="MarketingCratchit" toClerk="SalesCratchit"/>
 		   </xregister>
+		   -->
 	   </clerks>
 	</manager> 
    

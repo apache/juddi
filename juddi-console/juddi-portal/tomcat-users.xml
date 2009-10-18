@@ -5,8 +5,6 @@
   <role rolename="manager"/>
   <user username="root" password="root" roles="pluto,tomcat,manager"/>
   <user username="uddi" password="uddi" roles="pluto,tomcat,manager"/>
-  <user username="itmark" password="itmark" roles="pluto,tomcat,manager"/>
-  <user username="itsales" password="itsales" roles="pluto,tomcat,manager"/>
-  <user username="saleslistener" password="saleslistener" roles="pluto,tomcat,manager"/>
-  <user username="marketinglistener" password="marketinglistener" roles="pluto,tomcat,manager"/>
+  <user username="sales" password="sales" roles="pluto,tomcat,manager"/>
+  <user username="marketing" password="marketing" roles="pluto,tomcat,manager"/>
 </tomcat-users>
