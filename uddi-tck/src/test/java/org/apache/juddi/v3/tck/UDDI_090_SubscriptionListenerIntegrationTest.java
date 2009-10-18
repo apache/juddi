@@ -58,7 +58,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -93,7 +93,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

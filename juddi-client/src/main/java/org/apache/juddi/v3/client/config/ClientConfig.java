@@ -181,8 +181,16 @@ public class ClientConfig
 		return xRegistrations;
 	}
 	
-	public Map<String, UDDINode> getUDDINodes() {
+	protected Map<String, UDDINode> getUDDINodes() {
 		return uddiNodes;
+	}
+	
+	public UDDINode getUDDINode(String nodeName) throws ConfigurationException {
+		if (! uddiNodes.containsKey(nodeName)) {
+			throw new ConfigurationException("Node '" + nodeName 
+					+ "' cannot be found in the config '"+  getManagerName() + "'" );
+		}
+		return uddiNodes.get(nodeName);
 	}
 	
 	public Map<String,UDDIClerk> getUDDIClerks() {

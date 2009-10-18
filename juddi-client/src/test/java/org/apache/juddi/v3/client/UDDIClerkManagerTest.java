@@ -35,7 +35,7 @@ public class UDDIClerkManagerTest {
 	     try {
 	    	 UDDIClerkManager.start();
 	    	 
-	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getUDDINodes().size());
+	    	 UDDIClerkManager.getClientConfig().getUDDINode("default");
 	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getUDDIClerks().size());
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config

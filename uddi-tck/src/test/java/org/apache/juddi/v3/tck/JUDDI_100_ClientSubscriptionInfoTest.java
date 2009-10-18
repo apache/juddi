@@ -48,7 +48,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -74,7 +74,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINodes().get("default").getProxyTransport();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
