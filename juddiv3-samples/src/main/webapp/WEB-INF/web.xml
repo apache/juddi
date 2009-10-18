@@ -61,6 +61,14 @@
     </servlet-class>
     <load-on-startup>1</load-on-startup>
    
+    <resource-ref>
+	  <description>jUDDI DataSource</description>
+	  <res-ref-name>jdbc/juddiDB</res-ref-name>
+	  <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+	  u<res-sharing-scope>Shareable</res-sharing-scope>
+	</resource-ref>
+  
   </servlet>
    
 </web-app>

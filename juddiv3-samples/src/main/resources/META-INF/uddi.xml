@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
 <uddi>
     <reloadDelay>5000</reloadDelay>
     <manager name="example-manager">
 		<nodes>
 			<node>
 				<name>default</name>
-				<description>Main jUDDI node</description>  
+				<description>Sales jUDDI node</description>  
 				<properties>
-					<property name="serverName"  value="localhost"/>
+					<property name="serverName"  value="sales"/>
 					<property name="serverPort"  value="8080"/>
-					<property name="keyDomain"   value="juddi.apache.org"/>
-					<property name="department"  value="businesses" />
+					<property name="keyDomain"   value="sales.apache.org"/>
+					<property name="department"  value="sales" />
 				</properties>
                 <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
                 <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
@@ -24,16 +23,10 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="true">
-		   <clerk name="default" node="default" publisher="root" password="root">
-		       <class>org.apache.juddi.samples.HelloWorldImpl</class>
-		   </clerk>
-		   <!--  
-	       <clerk name="medroot" node="med" publisher="root" password="root" />
-		   <xregister>
-		       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-		   </xregister>
-		   -->
-	   </clerks>
+           <clerk name="BobCratchit" node="default" publisher="sales" password="sales">
+                <class>org.apache.juddi.samples.HelloWorldImpl</class>
+           </clerk>
+        </clerks>
 	</manager>
-   
+	
 </uddi>

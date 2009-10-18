@@ -73,7 +73,8 @@ public class UDDIClerk implements Serializable {
 	public BusinessService register(BusinessService service) {
 		
 		BusinessService businessService=null;
-		log.info("Registering service " + service);
+		log.info("Registering service " + service.getName().get(0).getValue()
+				+ " with key " + service.getServiceKey());
 		try {
 			String authToken = getAuthToken();
 			SaveService saveService = new SaveService();
@@ -88,7 +89,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering service " + service + " completed.");
+		log.info("Registering service " + service.getName().get(0).getValue() + " completed.");
 		return businessService;
 	}
 	/**

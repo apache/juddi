@@ -151,9 +151,6 @@ public class ClientConfig
 			uddiNode.setFactoryNamingProvider(  TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingProviderUrl"),properties));
 			nodes.put(nodeName,uddiNode);
 		}
-		if (!nodes.containsKey("default")) {
-			throw new ConfigurationException("Required node named 'default' is not found.");
-		}
 		return nodes;
 	}
 	/*
