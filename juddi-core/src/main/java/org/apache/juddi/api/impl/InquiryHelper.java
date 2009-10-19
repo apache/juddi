@@ -276,6 +276,7 @@ public class InquiryHelper {
 		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 		
+		if (body.getTModelBag().getTModelKey().size()==0) body.setTModelBag(null);
 		return keysFound;
 	}
 	
@@ -341,6 +342,10 @@ public class InquiryHelper {
 		else {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = null;
+		}
+		
+		if (result.getServiceInfos()==null || result.getServiceInfos().getServiceInfo().size()==0) {
+			return null;
 		}
 		
 		return result;

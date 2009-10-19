@@ -95,7 +95,7 @@ public class Subscription implements java.io.Serializable {
 		this.bindingKey = bindingKey;
 	}
 
-	@Column(name = "notification_interval", nullable = false)
+	@Column(name = "notification_interval")
 	public String getNotificationInterval() {
 		return this.notificationInterval;
 	}

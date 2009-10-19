@@ -17,6 +17,7 @@ package org.apache.juddi.subscription;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
@@ -71,7 +72,7 @@ public class SubscriptionNotifierTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
-			tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
+			//tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
@@ -83,10 +84,10 @@ public class SubscriptionNotifierTest
 	{
 		SubscriptionNotifier notifier = new SubscriptionNotifier();
 		notifier.cancel();
-		Collection<Subscription> subscriptions = notifier.getAllSubscriptions();
+		Collection<Subscription> subscriptions = notifier.getAllAsyncSubscriptions();
 		Assert.assertEquals(1, subscriptions.size());
 		Subscription subscription = subscriptions.iterator().next();
-		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription);
+		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription, new Date());
 		getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 		UddiEntityPublisher publisher = new UddiEntityPublisher();
 		publisher.setAuthorizedName(subscription.getAuthorizedName());

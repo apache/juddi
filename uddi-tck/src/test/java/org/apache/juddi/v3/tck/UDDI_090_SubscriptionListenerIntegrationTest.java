@@ -112,7 +112,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			
             //waiting up to 10 seconds for the listener to notice the change.
 			String test="";
-			for (int i=0; i<20; i++) {
+			for (int i=0; i<200; i++) {
 				Thread.sleep(500);
 				test = readLogAsString("./target/uddiclient.log");
 				System.out.print(".");

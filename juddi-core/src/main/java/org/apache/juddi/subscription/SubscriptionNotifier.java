@@ -59,16 +59,17 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class SubscriptionNotifier extends TimerTask {
 
 	private Logger log = Logger.getLogger(this.getClass());
-	private Timer timer = new Timer();
+	private Timer timer = null;
 	private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
-	private static long ACCEPTABLE_LAG_TIME = 500l; //20 milliseconds
+	private static long ACCEPTABLE_LAG_TIME = 500l; //500 milliseconds
 	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:subr_v3_portType";
 	private static String SUBSCRIPTION_LISTENER = "UDDISubscriptionListenerService";
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
+		timer = new Timer();
 		timer.scheduleAtFixedRate(this, startBuffer, interval);
 	}
 
@@ -78,11 +79,11 @@ public class SubscriptionNotifier extends TimerTask {
 			long startTime = System.currentTimeMillis();
 			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
 			
-			Collection<Subscription> subscriptions = getAllSubscriptions();
+			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
 				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
 					try {
-						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription);
+						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
 						getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 						UddiEntityPublisher publisher = new UddiEntityPublisher();
 						publisher.setAuthorizedName(subscription.getAuthorizedName());
@@ -129,16 +130,15 @@ public class SubscriptionNotifier extends TimerTask {
 			return false;
 		}
 	}
-	protected GetSubscriptionResults buildGetSubscriptionResults(Subscription subscription) 
+	protected GetSubscriptionResults buildGetSubscriptionResults(Subscription subscription, Date endPoint) 
 		throws DispositionReportFaultMessage, DatatypeConfigurationException {
 		
 		GetSubscriptionResults getSubscriptionResults = null;
 		Date startPoint = subscription.getLastNotified();
-		if (startPoint==null) startPoint = subscription.getCreateDate();
-		Date endPoint   = new Date(scheduledExecutionTime());
+		if (startPoint==null) startPoint = new Date(0);
 
 		Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());
-		Date nextDesiredNotificationDate = startPoint;
+		Date nextDesiredNotificationDate = new Date(startPoint.getTime());
 		duration.addTo(nextDesiredNotificationDate);
 
 		if (subscription.getLastNotified()==null || nextDesiredNotificationDate.after(startPoint) && nextDesiredNotificationDate.before(endPoint)) {
@@ -172,7 +172,7 @@ public class SubscriptionNotifier extends TimerTask {
 	 * @return Collection of All Subscriptions in the system.
 	 */
 	@SuppressWarnings("unchecked")
-	protected Collection<Subscription> getAllSubscriptions() {
+	protected Collection<Subscription> getAllAsyncSubscriptions() {
 		Collection<Subscription> subscriptions = null;
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
