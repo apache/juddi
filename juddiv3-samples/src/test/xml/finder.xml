@@ -1,8 +1,0 @@
-<subscriptionFilter xmlns="urn:uddi-org:sub_v3">
-	<find_service xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
-		<findQualifiers>
-			<findQualifier>exactMatch</findQualifier>
-		</findQualifiers>
-		<name xml:lang="en">HelloWorld</name>
-	</find_service>
-</subscriptionFilter>

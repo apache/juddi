@@ -28,7 +28,7 @@
 	      keyValue="keyGenerator" />
 	  </categoryBag>
 	</tModel>
-	<tModel tModelKey="uddi:marketing-subs.apache.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+	<tModel tModelKey="uddi:marketing.apache.org:subscription:keygenerator" xmlns="urn:uddi-org:api_v3">
 	  <name>marketing-apache-org:subscription:keyGenerator</name>
 	  <description>Marketing Subscriptions domain key generator</description>
 	  <overviewDoc>

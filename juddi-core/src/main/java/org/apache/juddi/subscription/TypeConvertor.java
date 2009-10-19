@@ -50,6 +50,7 @@ public class TypeConvertor {
 	}
 	
 	public static Duration convertStringToDuration(String duration) throws DispositionReportFaultMessage {
+		if (duration==null) return null;
 		Duration result = null;
 		try { 
 			
