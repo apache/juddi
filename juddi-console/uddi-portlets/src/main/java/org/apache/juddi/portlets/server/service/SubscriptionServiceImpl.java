@@ -293,6 +293,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 	
 	public SubscriptionResponse invokeSyncSubscription(String userAuthToken, Subscription modelSubscription) {
 
+		HttpServletRequest request = getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		SubscriptionResponse response = new SubscriptionResponse();
 	
 		try {
@@ -309,6 +311,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			getSubscriptionResults.setCoveragePeriod(coverage);
 			
 			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			String authToken = (String) session.getAttribute("token-" + clerk.getName());
+			getSubscriptionResults.setAuthInfo(authToken);
+			
 			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz);
 			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
@@ -316,6 +321,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			
 			SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResults);
 			System.out.println("list=" + list);
+			response.setSuccess(true);
 		} catch (Exception e) {
 			logger.error("Could not save subscription. " + e.getMessage(), e);
 			response.setSuccess(false);

@@ -137,6 +137,9 @@ public class SubscriptionPanel extends FlowPanel {
 		notificationIntervalBox.setVisible(isAsync);
 		flexTable.setWidget(7, 1, notificationIntervalBox);
 		
+		subscription.setCoverageStart("2008-01-01T00:00:00");
+		subscription.setCoverageEnd("2010-01-01T00:00:00");
+		
 		Label coverageStart = new Label ("Coverage Start Date:");
 		coverageStart.setStyleName("portlet-form-field-label-right");
 		coverageStart.setVisible(!isAsync);
@@ -150,7 +153,7 @@ public class SubscriptionPanel extends FlowPanel {
 		coverageEnd.setStyleName("portlet-form-field-label-right");
 		coverageEnd.setVisible(!isAsync);
 		flexTable.setWidget(9, 0, coverageEnd);
-		coverageEndBox.setText(this.subscription.getCoverageStart());
+		coverageEndBox.setText(this.subscription.getCoverageEnd());
 		coverageEndBox.setStyleName("portlet-form-input-field");
 		coverageEndBox.setVisible(!isAsync);
 		flexTable.setWidget(9, 1, coverageEndBox);
@@ -172,8 +175,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 				public void onSuccess(SubscriptionResponse response) {
 					if (response.isSuccess()) {
-						UDDISubscription.getInstance().refreshSubscriptionTree();
-						UDDISubscription.getInstance().removeDetailPanel();
+						Window.alert("successfull sync");
 					} else {
 						Window.alert("error: " + response.getMessage());
 					}
@@ -208,28 +210,23 @@ public class SubscriptionPanel extends FlowPanel {
 	
 	protected void newSubscription(Node node){
 		subscription = new Subscription();
-		subscription.setSubscriptionKey("uddi:juddi.apache.org:subscriptions-key1");
+		subscription.setSubscriptionKey("uddi:marketing.apache.org:subscription:key1");
 		subscription.setBindingKey("uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws");
-		subscription.setBrief(true);
+		subscription.setBrief(false);
 		subscription.setMaxEntities(1000);
 		subscription.setNotificationInterval("P5D");
 		subscription.setSubscriptionFilter(
 				  "<subscriptionFilter xmlns=\"urn:uddi-org:sub_v3\">"
-			    + "  <find_service xmlns=\"urn:uddi-org:api_v3\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\">"
-			    + "    <findQualifiers>"
-			    + "      <findQualifier>exactMatch</findQualifier>"
-			    + "    </findQualifiers>"
-			    + "    <name xml:lang=\"en\">Notifier One</name>"
-			    + "    <categoryBag>"
-			    + "      <keyedReference tModelKey=\"uddi:tmodelkey:categories\" keyName=\"category\" keyValue=\"peaches\" />"
-			    + "      <keyedReference tModelKey=\"uddi:tmodelkey:categories\" keyName=\"category\" keyValue=\"plums\" />"
-			    + "      <keyedReferenceGroup tModelKey=\"uddi:tmodelKey:group\">"
-			    + "        <keyedReference tModelKey=\"uddi:tmodelKey:blank\" keyName=\"blank\" keyValue=\"blank\" />"
-			    + "      </keyedReferenceGroup>"
-			    + "    </categoryBag>"
-			    + "    </find_service>"
+				    + "<find_service xmlns=\"urn:uddi-org:api_v3\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\">"
+					+ "<findQualifiers>"
+					+	"<findQualifier>exactMatch</findQualifier>"
+					+ "</findQualifiers>"
+					+ "<name xml:lang=\"en\">HelloWorld</name>"
+				    + "</find_service>"
 			    + "</subscriptionFilter>");
 		subscription.setNode(node);
+		subscription.setCoverageStart("2008-01-01T00:00:00");
+		subscription.setCoverageEnd("2010-01-01T00:00:00");
 				
 	}
 	

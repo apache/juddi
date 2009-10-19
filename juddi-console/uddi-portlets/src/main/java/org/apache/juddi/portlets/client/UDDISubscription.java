@@ -128,7 +128,6 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void syncListedServices() {
 		if (detailPanel!=null) {
-			System.out.println("hello");
 			if (detailPanel.isAsync) {
 				detailPanel.isAsync=false;
 				detailPanel.drawPanel();
