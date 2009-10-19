@@ -124,11 +124,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 				if (subscription.getExpiresAfter()!=null) expiresAfter = subscription.getExpiresAfter().toString();
 				String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(subscription.getSubscriptionFilter()), "org.uddi.sub_v3");
 				Subscription modelSubscription = new Subscription(
-						subscription.getBindingKey(),
+						(subscription.getBindingKey()==null)?"":subscription.getBindingKey(),
 						subscription.isBrief(),
 						expiresAfter,
 						subscription.getMaxEntities(),
-						subscription.getNotificationInterval().toString(),
+						(subscription.getNotificationInterval()==null)?"":subscription.getNotificationInterval().toString(),
 						rawFilter,
 						subscription.getSubscriptionKey());
 				modelSubscription.setNode(modelNode);
@@ -187,7 +187,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 			List<org.uddi.sub_v3.Subscription> subscriptionList = new ArrayList<org.uddi.sub_v3.Subscription>();
 			org.uddi.sub_v3.Subscription subscription = new org.uddi.sub_v3.Subscription();
-			subscription.setBindingKey(modelSubscription.getBindingKey());
+			if (!"".equals(modelSubscription.getBindingKey())) {
+				subscription.setBindingKey(modelSubscription.getBindingKey());
+			}
+			
 			subscription.setBrief(modelSubscription.getBrief());
 			if (!"".equals(modelSubscription.getExpiresAfter())) {
 				XMLGregorianCalendar calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(modelSubscription.getExpiresAfter());
@@ -213,11 +216,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			if (subscription.getExpiresAfter()!=null) expiresAfter = subscription.getExpiresAfter().toString();
 			String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(subscription.getSubscriptionFilter()), "org.uddi.sub_v3");
 			Subscription savedModelSubscription = new Subscription(
-					subscription.getBindingKey(),
+					(subscription.getBindingKey()==null)?"":subscription.getBindingKey(),
 					subscription.isBrief(),
 					expiresAfter,
 					subscription.getMaxEntities(),
-					subscription.getNotificationInterval().toString(),
+					(subscription.getNotificationInterval()==null)?"":subscription.getNotificationInterval().toString(),
 					rawFilter,
 					subscription.getSubscriptionKey());
 			savedModelSubscription.setNode(modelSubscription.getNode());
