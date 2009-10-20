@@ -20,10 +20,10 @@ package org.apache.juddi.validation;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**

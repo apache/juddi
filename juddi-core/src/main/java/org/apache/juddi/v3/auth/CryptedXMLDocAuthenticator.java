@@ -32,11 +32,11 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
-import org.apache.juddi.error.AuthenticationException;
-import org.apache.juddi.error.RegistryException;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.UnknownUserException;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.RegistryException;
+import org.apache.juddi.v3.error.UnknownUserException;
 import org.apache.log4j.Logger;
 
 /**

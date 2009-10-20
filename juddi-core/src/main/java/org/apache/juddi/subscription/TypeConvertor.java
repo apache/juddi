@@ -24,8 +24,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * 

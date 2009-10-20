@@ -26,13 +26,13 @@ import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.UserMismatchException;
-import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.UserMismatchException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 

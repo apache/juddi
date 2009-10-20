@@ -51,9 +51,11 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.error.UDDIErrorHelper;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.UDDIErrorHelper;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
@@ -66,8 +68,6 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 

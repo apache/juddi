@@ -30,11 +30,11 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.error.AuthenticationException;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.UnknownUserException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 

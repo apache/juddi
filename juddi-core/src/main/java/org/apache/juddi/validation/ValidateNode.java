@@ -22,10 +22,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.apache.juddi.api_v3.Node;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 

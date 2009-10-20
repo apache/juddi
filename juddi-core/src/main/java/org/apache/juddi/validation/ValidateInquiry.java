@@ -38,13 +38,13 @@ import org.uddi.api_v3.TModelBag;
 
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.ValueNotAllowedException;
-import org.apache.juddi.error.InvalidCombinationException;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidCombinationException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>

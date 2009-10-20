@@ -17,8 +17,8 @@
 
  package org.apache.juddi.validation;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 
 /**

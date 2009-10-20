@@ -22,10 +22,10 @@ import javax.persistence.EntityTransaction;
 
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.error.AuthenticationException;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.UnknownUserException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnknownUserException;
 import org.apache.log4j.Logger;
 
 /**

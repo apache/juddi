@@ -23,8 +23,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.xml.ws.Holder;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.InvalidKeyPassedException;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
@@ -48,6 +46,8 @@ import org.apache.juddi.query.FindTModelByCategoryQuery;
 import org.apache.juddi.query.FindTModelByIdentifierQuery;
 import org.apache.juddi.query.FindTModelByNameQuery;
 import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.Direction;

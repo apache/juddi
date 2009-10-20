@@ -22,12 +22,12 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.subscription.TypeConvertor;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.OperationalInfo;

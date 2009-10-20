@@ -21,10 +21,10 @@ package org.apache.juddi.validation;
 import javax.persistence.EntityManager;
 
 import org.apache.juddi.model.Subscription;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.UnsupportedException;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnsupportedException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**

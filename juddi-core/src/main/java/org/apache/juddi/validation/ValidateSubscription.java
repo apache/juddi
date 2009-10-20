@@ -24,16 +24,16 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
-import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.InvalidTimeException;
-import org.apache.juddi.error.KeyUnavailableException;
-import org.apache.juddi.error.UserMismatchException;
-import org.apache.juddi.error.ValueNotAllowedException;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidTimeException;
+import org.apache.juddi.v3.error.KeyUnavailableException;
+import org.apache.juddi.v3.error.UserMismatchException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;

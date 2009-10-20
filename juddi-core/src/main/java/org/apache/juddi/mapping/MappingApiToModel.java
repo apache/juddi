@@ -23,9 +23,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.Description;
 import org.uddi.sub_v3.ObjectFactory;

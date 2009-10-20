@@ -17,9 +17,9 @@
 
 package org.apache.juddi.v3.auth;
 
-import org.apache.juddi.error.AuthenticationException;
-import org.apache.juddi.error.FatalErrorException;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.FatalErrorException;
 
 /**
  * Authenticator interface. Any class implementing this interface can be invoked by

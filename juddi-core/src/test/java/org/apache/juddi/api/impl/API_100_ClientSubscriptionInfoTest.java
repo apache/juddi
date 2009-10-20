@@ -29,7 +29,7 @@ import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
-import org.apache.juddi.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.log4j.Logger;

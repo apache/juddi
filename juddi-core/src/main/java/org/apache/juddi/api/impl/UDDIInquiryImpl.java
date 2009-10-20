@@ -24,12 +24,12 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateInquiry;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.error.InvalidKeyPassedException;
-import org.apache.juddi.error.ErrorMessage;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessList;
