@@ -330,7 +330,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	
 					ServiceList serviceList = InquiryHelper.getServiceListFromKeys(fs, findQualifiers, em, currentMatchingKeys,
 																				   startPointDate, endPointDate, subscriptionStartIndex, modelSubscription.getMaxEntities());
-					if (serviceList.getServiceInfos().getServiceInfo().size()==0) {
+					if (serviceList.getServiceInfos()==null || serviceList.getServiceInfos().getServiceInfo().size()==0) {
 						serviceList=null;
 					}
 					// Upon exiting above function, if more results are to be had, the subscriptionStartIndex will contain the latest value (or null

@@ -203,7 +203,7 @@ public class UDDIClerk implements Serializable {
 		NodeDetail nodeDetail = null;
 		try {
 			SaveNode saveNode = new SaveNode();
-			saveNode.setAuthInfo(node.getSecurityUrl());
+			saveNode.setAuthInfo(getAuthToken(node.getSecurityUrl()));
 			saveNode.getNode().add(node);
 			nodeDetail =getUDDINode().getTransport().getJUDDIApiService(node.getJuddiApiUrl()).saveNode(saveNode);
 		} catch (Exception e) {
