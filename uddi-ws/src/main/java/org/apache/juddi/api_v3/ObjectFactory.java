@@ -50,7 +50,9 @@ public class ObjectFactory {
     private final static QName _PublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetail");
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
-
+    private final static QName _SyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscription");
+    private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscriptionDetail");
+    
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.apache.juddi.api_v3
      * 
@@ -108,6 +110,24 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetPublisherDetail }
+     * 
+     */
+    public SyncSubscription createSyncSubscription() {
+        return new SyncSubscription();
+    }
+    
+    /**
+     * Create an instance of {@link GetPublisherDetail }
+     * 
+     */
+    public SyncSubscriptionDetail createSyncSubscriptionDetail() {
+        return new SyncSubscriptionDetail();
+    }
+
+    
+    
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
      * 
      */
@@ -160,5 +180,22 @@ public class ObjectFactory {
     public JAXBElement<GetAllPublisherDetail> createGetAllPublisherDetail(GetAllPublisherDetail value) {
         return new JAXBElement<GetAllPublisherDetail>(_GetAllPublisherDetail_QNAME, GetAllPublisherDetail.class, null, value);
     }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscription }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "sync_subscription")
+    public JAXBElement<SyncSubscription> createSyncSubscription(SyncSubscription value) {
+        return new JAXBElement<SyncSubscription>(_SyncSubscription_QNAME, SyncSubscription.class, null, value);
+    }
+    
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscriptionDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "sync_subscriptionDetail")
+    public JAXBElement<SyncSubscriptionDetail> createGetAllPublisherDetail(SyncSubscriptionDetail value) {
+        return new JAXBElement<SyncSubscriptionDetail>(_SyncSubscriptionDetail_QNAME, SyncSubscriptionDetail.class, null, value);
+    }   
 }
-
