@@ -33,6 +33,8 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SyncSubscription;
+import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.portlets.client.model.Node;
 import org.apache.juddi.portlets.client.model.Subscription;
@@ -313,14 +315,19 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
 			getSubscriptionResults.setAuthInfo(authToken);
+            SyncSubscription syncSubscription = new SyncSubscription();
+            syncSubscription.getGetSubscriptionResultsList().add(getSubscriptionResults);
 			
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
-			Class<?> transportClass = Loader.loadClass(clazz);
-			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
-			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
+			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+	        Class<?> transportClass = Loader.loadClass(clazz);
+	        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+       	    JUDDIApiPortType apiService = transport.getJUDDIApiService();
 			
-			SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResults);
+       	    syncSubscription.setAuthInfo(userAuthToken);
+       	    SyncSubscriptionDetail detail = apiService.invokeSyncSubscription(syncSubscription);
+			SubscriptionResultsList list = detail.getSubscriptionResultsList().get(0);
 			System.out.println("list=" + list);
+			
 			response.setSuccess(true);
 		} catch (Exception e) {
 			logger.error("Could not save subscription. " + e.getMessage(), e);
