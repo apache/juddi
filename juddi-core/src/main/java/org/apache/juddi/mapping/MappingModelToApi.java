@@ -764,6 +764,7 @@ public class MappingModelToApi {
 		if (modelClientSubscriptionInfo.getClerk()!=null) {
 			org.apache.juddi.api_v3.Clerk apiClerk = new org.apache.juddi.api_v3.Clerk();
 			mapClerk(modelClientSubscriptionInfo.getClerk(), apiClerk);
+			apiClientSubscriptionInfo.setClerk(apiClerk);
 		}
 	}
 	
@@ -775,8 +776,9 @@ public class MappingModelToApi {
 		apiClerk.setPassword(modelClerk.getCred());
 		apiClerk.setPublisher(modelClerk.getPublisherId());
 		if (modelClerk.getNode()!=null) {
-			org.apache.juddi.api_v3.Node node = new org.apache.juddi.api_v3.Node();
-			mapNode(modelClerk.getNode(), node);
+			org.apache.juddi.api_v3.Node apiNode = new org.apache.juddi.api_v3.Node();
+			mapNode(modelClerk.getNode(), apiNode);
+			apiClerk.setNode(apiNode);
 		}
 	}
 

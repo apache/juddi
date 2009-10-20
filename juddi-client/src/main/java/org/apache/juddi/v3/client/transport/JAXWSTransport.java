@@ -31,7 +31,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
-public class JAXWSTransport implements Transport {
+public class JAXWSTransport extends Transport {
 
 	String nodeName = null;
 	UDDIInquiryPortType inquiryService = null;
@@ -51,12 +51,12 @@ public class JAXWSTransport implements Transport {
 		super();
 		this.nodeName = nodeName;
 	}
-
-	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
+	
+	public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
 
 		if (inquiryService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
 				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.INQUIRY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				inquiryService = (UDDIInquiryPortType) service.getPort(UDDIInquiryPortType.class);
@@ -67,11 +67,11 @@ public class JAXWSTransport implements Transport {
 		return inquiryService;
 	}
 	
-	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
+	public UDDISecurityPortType getUDDISecurityService(String endpointURL) throws TransportException {
 
 		if (securityService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
 				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.SECURITY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				securityService = (UDDISecurityPortType) service.getPort(UDDISecurityPortType.class);
@@ -82,11 +82,11 @@ public class JAXWSTransport implements Transport {
 		return securityService;
 	}
 	
-	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
+	public UDDIPublicationPortType getUDDIPublishService(String endpointURL) throws TransportException {
 
 		if (publishService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
 				QName qName = new QName(Transport.API_V3_NAMESPACE, Transport.PUBLISH_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publishService = (UDDIPublicationPortType) service.getPort(UDDIPublicationPortType.class);
@@ -97,11 +97,11 @@ public class JAXWSTransport implements Transport {
 		return publishService;
 	}
 	
-	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
+	public UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException {
 
 		if (subscriptionService==null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
 				QName qName = new QName(Transport.SUB_V3_NAMESPACE, Transport.SUBSCRIPTION_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionService = (UDDISubscriptionPortType) service.getPort(UDDISubscriptionPortType.class);
@@ -112,10 +112,10 @@ public class JAXWSTransport implements Transport {
 		return subscriptionService;
 	}
 	
-	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
+	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException {
 		if (subscriptionListenerService == null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
 				QName qName = new QName(Transport.SUBR_V3_NAMESPACE, Transport.SUBSCRIPTION_LISTENER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionListenerService = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
@@ -126,10 +126,10 @@ public class JAXWSTransport implements Transport {
 		return subscriptionListenerService;
 	}
 	
-	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
+	public UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException {
 		if (custodyTransferService == null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
 				QName qName = new QName(Transport.CUSTODY_V3_NAMESPACE, Transport.CUSTODY_TRANSFER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDICustodyTransferPortType.class);
@@ -140,10 +140,10 @@ public class JAXWSTransport implements Transport {
 		return custodyTransferService;
 	}
 	
-	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
+	public JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException {
 		if (publisherService == null) {
 			try {
-				String endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
 				QName qName = new QName(Transport.JUDDI_API_V3_NAMESPACE, Transport.PUBLISHER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);

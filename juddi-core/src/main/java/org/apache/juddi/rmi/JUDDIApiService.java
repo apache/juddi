@@ -32,6 +32,8 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SyncSubscription;
+import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -96,6 +98,11 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 			throws DispositionReportFaultMessage, RemoteException {
 		return juddiAPI.saveNode(body);
 	
+	}
+
+	public SyncSubscriptionDetail invokeSyncSubscription(SyncSubscription body)
+			throws DispositionReportFaultMessage, RemoteException {
+		return juddiAPI.invokeSyncSubscription(body);
 	}
 	
 	

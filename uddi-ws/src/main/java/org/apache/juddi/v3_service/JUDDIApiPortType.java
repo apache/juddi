@@ -40,6 +40,8 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SyncSubscription;
+import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -171,7 +173,16 @@ public interface JUDDIApiPortType extends Remote{
         throws DispositionReportFaultMessage, RemoteException
     ;
     
-    
-    
+    /**
+     * @param body
+     * @throws DispositionReportFaultMessage, RemoteException
+     */
+    @WebMethod(operationName = "invoke_SyncSubscription", action = "invoke_SyncSubscription")
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public SyncSubscriptionDetail  invokeSyncSubscription(
+		@WebParam(name = "invoke_SyncSubscription", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        SyncSubscription body)
+        throws DispositionReportFaultMessage, RemoteException
+    ;
 }
 

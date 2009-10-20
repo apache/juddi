@@ -24,7 +24,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;;
 
-public interface Transport {
+public abstract class Transport {
 	
 	public final static String API_V3_NAMESPACE              = "urn:uddi-org:api_v3_portType";
 	public final static String SUB_V3_NAMESPACE              = "urn:uddi-org:sub_v3_portType";
@@ -41,12 +41,33 @@ public interface Transport {
 	public final static String CUSTODY_TRANSFER_SERVICE      = "UDDICustodyTransferService";
 	public final static String PUBLISHER_SERVICE             = "JUDDIApiService";
 	
-	UDDIInquiryPortType getUDDIInquiryService()           throws TransportException;
-	UDDISecurityPortType getUDDISecurityService()         throws TransportException;
-	UDDIPublicationPortType getUDDIPublishService()       throws TransportException;
-	UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException;
-	UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException;
-	UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException;
-	JUDDIApiPortType getJUDDIApiService() throws TransportException;
+	public abstract UDDIInquiryPortType getUDDIInquiryService(String enpointURL)           throws TransportException;
+	public abstract UDDISecurityPortType getUDDISecurityService(String enpointURL)         throws TransportException;
+	public abstract UDDIPublicationPortType getUDDIPublishService(String enpointURL)       throws TransportException;
+	public abstract UDDISubscriptionPortType getUDDISubscriptionService(String enpointURL) throws TransportException;
+	public abstract UDDICustodyTransferPortType getUDDICustodyTransferService(String enpointURL) throws TransportException;
+	public abstract UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String enpointURL) throws TransportException;
+	public abstract JUDDIApiPortType getJUDDIApiService(String enpointURL) throws TransportException;
 	
+	public UDDIInquiryPortType getUDDIInquiryService() throws TransportException {
+		return getUDDIInquiryService(null);
+	}
+	public UDDISecurityPortType getUDDISecurityService() throws TransportException {
+		return getUDDISecurityService(null);
+	}
+	public UDDIPublicationPortType getUDDIPublishService() throws TransportException {
+		return getUDDIPublishService(null);
+	}
+	public UDDISubscriptionPortType getUDDISubscriptionService() throws TransportException {
+		return getUDDISubscriptionService(null);
+	}
+	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService() throws TransportException {
+		return getUDDISubscriptionListenerService(null);
+	}
+	public UDDICustodyTransferPortType getUDDICustodyTransferService() throws TransportException {
+		return getUDDICustodyTransferService(null);
+	}
+	public JUDDIApiPortType getJUDDIApiService() throws TransportException {
+		return getJUDDIApiService(null);
+	}
 }

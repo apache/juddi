@@ -17,6 +17,7 @@
 
 package org.apache.juddi.api.impl;
 
+import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -24,7 +25,10 @@ import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
@@ -39,6 +43,8 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SyncSubscription;
+import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.InvalidKeyPassedException;
@@ -47,14 +53,21 @@ import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.ClientSubscriptionInfo;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.subscription.NotificationList;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidateClerk;
 import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
+import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -65,6 +78,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 			targetNamespace = "urn:juddi-apache-org:api_v3_portType")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
+	private Logger log = Logger.getLogger(this.getClass());
 	/**
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
 	 */
@@ -480,6 +494,84 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			}
 			em.close();
 		}
+	}
+
+	/**
+	 * Instructs the registry to perform a synchronous subscription response.
+	 */
+	@SuppressWarnings("unchecked")
+	public SyncSubscriptionDetail invokeSyncSubscription(
+			SyncSubscription body) throws DispositionReportFaultMessage,
+			RemoteException {
+		
+		//validate
+		
+		SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
+		
+		//find the clerks to go with these subscriptions
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+	
+			this.getEntityPublisher(em, body.getAuthInfo());
+			for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
+				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
+					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				if (modelClientSubscriptionInfo == null) {
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
+				}
+				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+				syncSubscriptionDetail.getClientSubscriptionInfoMap().put(apiClientSubscriptionInfo.getSubscriptionKey(),apiClientSubscriptionInfo);
+			}
+	
+			tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+		
+		for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
+			try {
+				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
+				Clerk clerk = syncSubscriptionDetail.getClientSubscriptionInfoMap().get(subscriptionKey).getClerk();
+				String clazz = clerk.getNode().getProxyTransport();
+				Class<?> transportClass = Loader.loadClass(clazz);
+				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
+				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(clerk.getNode().getSubscriptionUrl());
+				SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResult);
+				
+				JAXBContext context = JAXBContext.newInstance(list.getClass());
+				Marshaller marshaller = context.createMarshaller();
+				StringWriter sw = new StringWriter();
+				marshaller.marshal(body, sw);
+
+				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+				
+				NotificationList nl = NotificationList.getInstance();
+				nl.getNotifications().add(sw.toString());
+				
+				//update the registry with the notification list.
+				//TODO
+				
+				
+				syncSubscriptionDetail.getSubscriptionResultsList().add(list);
+			} catch (Exception ce) {
+				log.error(ce.getMessage(),ce);
+				if (ce instanceof DispositionReportFaultMessage) {
+					throw (DispositionReportFaultMessage) ce;
+				}
+				if (ce instanceof RemoteException) {
+					throw (RemoteException) ce;
+				}
+			}
+		}
+		
+		return syncSubscriptionDetail;
 	}
 
 	
