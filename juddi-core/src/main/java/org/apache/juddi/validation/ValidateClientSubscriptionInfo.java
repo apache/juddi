@@ -89,7 +89,7 @@ public class ValidateClientSubscriptionInfo extends ValidateUDDIApi {
 			if (clientSubscriptionInfo.getSubscriptionKey()==null || clientSubscriptionInfo.getSubscriptionKey().equals("")) {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.saveclientsubscriptionKey.NoInput"));
 			}
-			validateClerk(em, clientSubscriptionInfo.getClerk());
+			validateClerk(em, clientSubscriptionInfo.getFromClerk());
 		}
 	}
 

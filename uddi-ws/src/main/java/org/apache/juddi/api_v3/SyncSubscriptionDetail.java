@@ -20,9 +20,7 @@ package org.apache.juddi.api_v3;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -39,28 +37,19 @@ import org.uddi.sub_v3.SubscriptionResultsList;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "syncSubscriptionDetail", propOrder = {
-    "list",
-	"clientSubcriptionInfoMap"
+    "list"
 })
 public class SyncSubscriptionDetail implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = -4039550325209019888L;
 	private List<SubscriptionResultsList> list;
-	private Map<String,ClientSubscriptionInfo> clientSubcriptionInfoMap;
 
 	public List<SubscriptionResultsList> getSubscriptionResultsList() {
 		if (this.list==null) {
 			this.list = new ArrayList<SubscriptionResultsList>();
 		}
         return this.list;
-    }
-	
-	public Map<String,ClientSubscriptionInfo> getClientSubscriptionInfoMap() {
-		if (this.clientSubcriptionInfoMap==null) {
-			this.clientSubcriptionInfoMap = new HashMap<String,ClientSubscriptionInfo>();
-		}
-        return this.clientSubcriptionInfoMap;
     }
 
 }

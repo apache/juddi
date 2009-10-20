@@ -93,7 +93,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 		clerk.setPublisher("root");
 		clerk.setNode(node);
 		
-		clientSubscriptionInfo.setClerk(clerk);
+		clientSubscriptionInfo.setFromClerk(clerk);
 		
 		clientSubscriptionInfo.setSubscriptionKey("mykey");
 		

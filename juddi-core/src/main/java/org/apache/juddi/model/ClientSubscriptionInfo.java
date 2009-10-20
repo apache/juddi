@@ -41,17 +41,20 @@ public class ClientSubscriptionInfo implements java.io.Serializable {
 	@Column(name="subscription_key", nullable = false, length=255)
 	private String subscriptionKey;
 	@ManyToOne(fetch = FetchType.EAGER)
-	private Clerk clerk;
+	private Clerk fromClerk;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Clerk toClerk;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="last_notified", length = 29)
 	private Date lastNotified;
 	
 	public ClientSubscriptionInfo(){}
 	
-	public ClientSubscriptionInfo(Clerk clerk, Date lastNotified,
+	public ClientSubscriptionInfo(Clerk fromClerk, Clerk toClerk, Date lastNotified,
 			String subscriptionKey) {
 		super();
-		this.clerk = clerk;
+		this.fromClerk = fromClerk;
+		this.toClerk = toClerk;
 		this.lastNotified = lastNotified;
 		this.subscriptionKey = subscriptionKey;
 	}
@@ -61,11 +64,17 @@ public class ClientSubscriptionInfo implements java.io.Serializable {
 	public void setSubscriptionKey(String subscriptionKey) {
 		this.subscriptionKey = subscriptionKey;
 	}
-	public Clerk getClerk() {
-		return clerk;
+	public Clerk getFromClerk() {
+		return fromClerk;
 	}
-	public void setClerk(Clerk clerk) {
-		this.clerk = clerk;
+	public void setFromClerk(Clerk fromClerk) {
+		this.fromClerk = fromClerk;
+	}
+	public Clerk getToClerk() {
+		return toClerk;
+	}
+	public void setToClerk(Clerk toClerk) {
+		this.toClerk = toClerk;
 	}
 	public Date getLastNotified() {
 		return lastNotified;

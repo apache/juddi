@@ -19,7 +19,9 @@ package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -508,6 +510,8 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 		
 		SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
 		
+		Map<String,org.apache.juddi.api_v3.ClientSubscriptionInfo> clientSubscriptionInfoMap 
+				= new HashMap<String,org.apache.juddi.api_v3.ClientSubscriptionInfo>();
 		//find the clerks to go with these subscriptions
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -524,7 +528,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				}
 				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
 				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
-				syncSubscriptionDetail.getClientSubscriptionInfoMap().put(apiClientSubscriptionInfo.getSubscriptionKey(),apiClientSubscriptionInfo);
+				clientSubscriptionInfoMap.put(apiClientSubscriptionInfo.getSubscriptionKey(),apiClientSubscriptionInfo);
 			}
 	
 			tx.commit();
@@ -538,17 +542,18 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 		for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
 			try {
 				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
-				Clerk clerk = syncSubscriptionDetail.getClientSubscriptionInfoMap().get(subscriptionKey).getClerk();
-				String clazz = clerk.getNode().getProxyTransport();
+				Clerk fromClerk = clientSubscriptionInfoMap.get(subscriptionKey).getFromClerk();
+				Clerk toClerk = clientSubscriptionInfoMap.get(subscriptionKey).getToClerk();
+				String clazz = fromClerk.getNode().getProxyTransport();
 				Class<?> transportClass = Loader.loadClass(clazz);
-				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getNode().getName()); 
-				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(clerk.getNode().getSubscriptionUrl());
+				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(fromClerk.getNode().getName()); 
+				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(fromClerk.getNode().getSubscriptionUrl());
 				SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResult);
 				
 				JAXBContext context = JAXBContext.newInstance(list.getClass());
 				Marshaller marshaller = context.createMarshaller();
 				StringWriter sw = new StringWriter();
-				marshaller.marshal(body, sw);
+				marshaller.marshal(list, sw);
 
 				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 				
@@ -556,8 +561,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				nl.getNotifications().add(sw.toString());
 				
 				//update the registry with the notification list.
-				//TODO
-				
+				XRegisterHelper.handle(fromClerk, toClerk, list);
 				
 				syncSubscriptionDetail.getSubscriptionResultsList().add(list);
 			} catch (Exception ce) {
@@ -570,6 +574,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				}
 			}
 		}
+		//for now sending a clean object back
 		
 		return syncSubscriptionDetail;
 	}

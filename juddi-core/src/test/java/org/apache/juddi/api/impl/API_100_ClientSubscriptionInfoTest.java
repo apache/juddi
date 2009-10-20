@@ -94,7 +94,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		saveClerk.setAuthInfo(authInfoJoe);
 		saveClerk.getClerk().add(clerk);
 		
-		clientSubscriptionInfo.setClerk(clerk);
+		clientSubscriptionInfo.setFromClerk(clerk);
 		
 		Node node2 = new Node();
 		node2.setSecurityUrl("http://localhost:8080/services/securityUrl2");
@@ -113,7 +113,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		clerk2.setNode(node2);
 		saveClerk.getClerk().add(clerk2);
 		
-		clientSubscriptionInfo.setClerk(clerk);
+		clientSubscriptionInfo.setFromClerk(clerk);
 		
 		clientSubscriptionInfo.setSubscriptionKey("mykey");
 		
@@ -123,7 +123,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		
 		ClientSubscriptionInfo clientSubscriptionInfo2 = new ClientSubscriptionInfo();
 		clientSubscriptionInfo2.setSubscriptionKey("mykey2");
-		clientSubscriptionInfo2.setClerk(clerk2);
+		clientSubscriptionInfo2.setFromClerk(clerk2);
 		saveClientSubscriptionInfo.getClientSubscriptionInfo().add(clientSubscriptionInfo2);
 		
 		try {

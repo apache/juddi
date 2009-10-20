@@ -43,7 +43,8 @@ public class ClientConfig
 	private Configuration config = null;;
 	private Map<String,UDDINode> uddiNodes = null;
 	private Map<String,UDDIClerk> uddiClerks = null;
-	private Set<XRegistration> xRegistrations = null;
+	private Set<XRegistration> xBusinessRegistrations = null;
+	private Set<XRegistration> xServiceBindingRegistrations = null;
 	private String managerName = null;
 	
 	/**
@@ -57,7 +58,8 @@ public class ClientConfig
 	protected void loadManager() throws ConfigurationException {
 		uddiNodes = readNodeConfig(config);
 		uddiClerks = readClerkConfig(config, uddiNodes);
-		xRegistrations = readXRegConfig(config,uddiClerks);
+		xServiceBindingRegistrations = readXServiceBindingRegConfig(config,uddiClerks);
+		xBusinessRegistrations = readXBusinessRegConfig(config, uddiClerks);
 	}
 	/**
 	 * Does the actual work of reading the configuration from System
@@ -153,24 +155,32 @@ public class ClientConfig
 		}
 		return nodes;
 	}
-	/*
-	 * only works for services right now
-	 */
-	private Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
+	
+	private Set<XRegistration> readXBusinessRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
 	throws ConfigurationException {
-		String[] bindingKeys = config.getStringArray("manager.clerks.xregister.service[@bindingKey]");
+		return readXRegConfig(config, clerks, "business");
+	}
+	
+	private Set<XRegistration> readXServiceBindingRegConfig(Configuration config, Map<String,UDDIClerk> clerks) 
+	throws ConfigurationException {
+		return readXRegConfig(config, clerks, "servicebinding");
+	}
+	
+	private Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks, String entityType) 
+	throws ConfigurationException {
+		String[] entityKeys = config.getStringArray("manager.clerks.xregister." + entityType + "[@entityKey]");
 		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
-		log.info("XRegistration bindingKeys=" + bindingKeys);
-		for (int i=0; i<bindingKeys.length; i++) {
+		log.info("XRegistration " + entityKeys.length + " " + entityType + "Keys");
+		for (int i=0; i<entityKeys.length; i++) {
 			XRegistration xRegistration = new XRegistration();
-			xRegistration.setBindingKey(config.getString("manager.clerks.xregister.service(" + i + ")[@bindingKey]"));
+			xRegistration.setEntityKey(config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@entityKey]"));
 			
-			String fromClerkRef = config.getString("manager.clerks.xregister.service(" + i + ")[@fromClerk]");
+			String fromClerkRef = config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@fromClerk]");
 			if (!clerks.containsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
 			UDDIClerk fromClerk = clerks.get(fromClerkRef);
 			xRegistration.setFromClerk(fromClerk);
 			
-			String toClerkRef = config.getString("manager.clerks.xregister.service(" + i + ")[@toClerk]");
+			String toClerkRef = config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@toClerk]");
 			if (!clerks.containsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
 			UDDIClerk toClerk = clerks.get(toClerkRef);
 			xRegistration.setToClerk(toClerk);
@@ -197,8 +207,12 @@ public class ClientConfig
 		return uddiClerks;
 	}
 	
-	public Set<XRegistration> getXRegistrations() {
-		return xRegistrations;
+	public Set<XRegistration> getXServiceBindingRegistrations() {
+		return xServiceBindingRegistrations;
+	}
+	
+	public Set<XRegistration> getXBusinessRegistrations() {
+		return xBusinessRegistrations;
 	}
     
     public Configuration getConfiguration() {

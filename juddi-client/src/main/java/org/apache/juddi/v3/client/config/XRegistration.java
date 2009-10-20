@@ -2,16 +2,25 @@ package org.apache.juddi.v3.client.config;
 
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 
 public class XRegistration {
 
-	
-
 	private Logger log = Logger.getLogger(this.getClass());
 	private UDDIClerk toClerk;
 	private UDDIClerk fromClerk;
-	private String bindingKey;
+	private String entityKey;
+    
+	public XRegistration() {}
+	
+	public XRegistration(String entityKey, UDDIClerk fromClerk,
+			UDDIClerk toClerk) {
+		super();
+		this.fromClerk = fromClerk;
+		this.toClerk = toClerk;
+		this.entityKey = entityKey;
+	}
 	
 	public UDDIClerk getToClerk() {
 		return toClerk;
@@ -25,30 +34,56 @@ public class XRegistration {
 	public void setFromClerk(UDDIClerk fromClerk) {
 		this.fromClerk = fromClerk;
 	}
-	public String getBindingKey() {
-		return bindingKey;
+	public String getEntityKey() {
+		return entityKey;
 	}
-	public void setBindingKey(String bindingKey) {
-		this.bindingKey = bindingKey;
+	public void setEntityKey(String entityKey) {
+		this.entityKey = entityKey;
 	}
 	
-	public void xRegister() {
+	
+	public void xRegisterBusiness() {
+		BusinessEntity businessEntity;
+		try {
+			businessEntity = fromClerk.findBusiness(entityKey,fromClerk.getUDDINode().getApiNode());
+			log.info("xregister business " + businessEntity.getName().get(0).getValue() + " + from "
+					+ fromClerk.getName() + " to " + toClerk.getName());
+			businessEntity.setBusinessServices(null);
+			toClerk.register(businessEntity,toClerk.getUDDINode().getApiNode());
+		} catch (Exception e) {
+			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);
+		}
+	}
+	
+	public void xRegisterService() {
 		BusinessService businessService;
 		try {
-			BindingTemplate bindingTemplate = fromClerk.findServiceBinding(bindingKey);
-			businessService = fromClerk.findService(bindingTemplate.getServiceKey());
+			businessService = fromClerk.findService(entityKey,fromClerk.getUDDINode().getApiNode());
+			log.info("xregister service " + businessService.getName().get(0).getValue() + " + from "
+					+ fromClerk.getName() + " to " + toClerk.getName());
+			toClerk.register(businessService,toClerk.getUDDINode().getApiNode());
+		} catch (Exception e) {
+			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);
+		}
+	}
+	
+	public void xRegisterServiceBinding() {
+		BusinessService businessService;
+		try {
+			BindingTemplate bindingTemplate = fromClerk.findServiceBinding(entityKey,fromClerk.getUDDINode().getApiNode());
+			businessService = fromClerk.findService(bindingTemplate.getServiceKey(),fromClerk.getUDDINode().getApiNode());
 			businessService.getBindingTemplates().getBindingTemplate().clear();
 			businessService.getBindingTemplates().getBindingTemplate().add(bindingTemplate);
 			log.info("xregister service " + businessService.getName().get(0).getValue() + " + from "
 					+ fromClerk.getName() + " to " + toClerk.getName());
-			toClerk.register(businessService);
+			toClerk.register(businessService,toClerk.getUDDINode().getApiNode());
 		} catch (Exception e) {
 			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);
 		}
 	}
 	
 	public String toString() {
-		return " xregister binding: " + bindingKey + " + from " + fromClerk.getName() + " to " + toClerk.getName(); 
+		return " xregister entityKey: " + entityKey + " + from " + fromClerk.getName() + " to " + toClerk.getName(); 
 	}
 	
 	

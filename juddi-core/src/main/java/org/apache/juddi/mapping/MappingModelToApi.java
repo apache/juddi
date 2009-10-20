@@ -761,10 +761,15 @@ public class MappingModelToApi {
 		apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());
 		apiClientSubscriptionInfo.setLastModified(modelClientSubscriptionInfo.getLastNotified());
 		
-		if (modelClientSubscriptionInfo.getClerk()!=null) {
-			org.apache.juddi.api_v3.Clerk apiClerk = new org.apache.juddi.api_v3.Clerk();
-			mapClerk(modelClientSubscriptionInfo.getClerk(), apiClerk);
-			apiClientSubscriptionInfo.setClerk(apiClerk);
+		if (modelClientSubscriptionInfo.getFromClerk()!=null) {
+			org.apache.juddi.api_v3.Clerk apiFromClerk = new org.apache.juddi.api_v3.Clerk();
+			mapClerk(modelClientSubscriptionInfo.getFromClerk(), apiFromClerk);
+			apiClientSubscriptionInfo.setFromClerk(apiFromClerk);
+		}
+		if (modelClientSubscriptionInfo.getToClerk()!=null) {
+			org.apache.juddi.api_v3.Clerk apiToClerk = new org.apache.juddi.api_v3.Clerk();
+			mapClerk(modelClientSubscriptionInfo.getToClerk(), apiToClerk);
+			apiClientSubscriptionInfo.setToClerk(apiToClerk);
 		}
 	}
 	

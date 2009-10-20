@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "clientSubscriptionInfo", propOrder = {
     "subscriptionKey",
-    "clerk",
+    "fromClerk",
+    "toClerk",
     "lastModified"
 })
 public class ClientSubscriptionInfo implements Serializable{
@@ -46,7 +47,9 @@ public class ClientSubscriptionInfo implements Serializable{
     @XmlElement(required = true)
     protected String subscriptionKey;
     @XmlElement(required = true)
-    protected Clerk clerk;
+    protected Clerk toClerk;
+    @XmlElement(required = true)
+    protected Clerk fromClerk;
     protected Date lastModified;
     
 	public String getSubscriptionKey() {
@@ -55,11 +58,17 @@ public class ClientSubscriptionInfo implements Serializable{
 	public void setSubscriptionKey(String subscriptionKey) {
 		this.subscriptionKey = subscriptionKey;
 	}
-	public Clerk getClerk() {
-		return clerk;
+	public Clerk getToClerk() {
+		return toClerk;
 	}
-	public void setClerk(Clerk clerk) {
-		this.clerk = clerk;
+	public void setToClerk(Clerk toClerk) {
+		this.toClerk = toClerk;
+	}
+	public Clerk getFromClerk() {
+		return fromClerk;
+	}
+	public void setFromClerk(Clerk fromClerk) {
+		this.fromClerk = fromClerk;
 	}
 	public Date getLastModified() {
 		return lastModified;

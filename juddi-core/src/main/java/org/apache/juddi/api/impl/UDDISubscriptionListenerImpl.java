@@ -20,13 +20,17 @@ package org.apache.juddi.api.impl;
 import java.io.StringWriter;
 
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.error.ErrorMessage;
 import org.apache.juddi.error.FatalErrorException;
-
+import org.apache.juddi.error.InvalidKeyPassedException;
+import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
 import org.apache.log4j.Logger;
@@ -59,8 +63,34 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 			NotificationList nl = NotificationList.getInstance();
 			nl.getNotifications().add(sw.toString());
 			
-			logger.info("Notification received by UDDISubscriptionListenerService : " 
-					+ sw.toString());
+			org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = null;
+			
+			//find the clerks to go with this subscription
+			EntityManager em = PersistenceManager.getEntityManager();
+			EntityTransaction tx = em.getTransaction();
+			try {
+				tx.begin();
+		
+				this.getEntityPublisher(em, body.getAuthInfo());
+				String subscriptionKey = body.getSubscriptionResultsList().getSubscription().getSubscriptionKey();
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
+					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				if (modelClientSubscriptionInfo == null) {
+					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
+				}
+				apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+		
+				tx.commit();
+			} finally {
+				if (tx.isActive()) {
+					tx.rollback();
+				}
+				em.close();
+			}
+			
+			XRegisterHelper.handle(apiClientSubscriptionInfo.getFromClerk(),apiClientSubscriptionInfo.getToClerk(), body.getSubscriptionResultsList());
+			
 		} catch (JAXBException jaxbe) {
 			logger.error("", jaxbe);
 			throw new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client"));

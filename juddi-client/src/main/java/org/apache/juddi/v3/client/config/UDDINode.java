@@ -28,6 +28,28 @@ public class UDDINode implements Serializable {
 	private String factoryURLPkgs;
 	private String factoryNamingProvider;
 	
+	
+	public UDDINode() {
+		super();
+	}
+	
+	public UDDINode(Node node) {
+		super();
+		name = node.getName();
+		description = node.getDescription();
+		custodyTransferUrl = node.getCustodyTransferUrl();
+		inquiryUrl = node.getInquiryUrl();
+		publishUrl = node.getPublishUrl();
+		securityUrl = node.getSecurityUrl();
+		subscriptionUrl = node.getSubscriptionUrl();
+		subscriptionListenerUrl = node.getSubscriptionListenerUrl();
+		juddiApiUrl = node.getJuddiApiUrl();
+		proxyTransport = node.getProxyTransport();
+		factoryInitial = node.getFactoryInitial();
+		factoryURLPkgs = node.getFactoryURLPkgs();
+		factoryNamingProvider = node.getFactoryNamingProvider();
+	}
+
 	public Properties getProperties() {
 		return properties;
 	}
@@ -57,7 +79,7 @@ public class UDDINode implements Serializable {
 	public Transport getTransport() throws TransportException {
 		if (transport==null) {
 			try {
-				String clazz = UDDIClerkManager.getClientConfig().getUDDINode(name).getProxyTransport();
+				String clazz = getProxyTransport();
 				Class<?> transportClass = Loader.loadClass(clazz);
 				transport = (Transport) transportClass.getConstructor(String.class).newInstance(name);
 			} catch (Exception e) {

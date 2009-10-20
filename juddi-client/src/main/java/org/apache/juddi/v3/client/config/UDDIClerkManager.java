@@ -102,11 +102,16 @@ public class UDDIClerkManager {
 	 * X-Register services listed in the uddi.xml
 	 */
 	public void xRegister() {
-		//XRegistration of listed services
-		Set<XRegistration> xRegistrations = clientConfig.getXRegistrations();
 		log.info("Starting cross registration...");
-		for (XRegistration xRegistration : xRegistrations) {
-			xRegistration.xRegister();
+		//XRegistration of listed businesses
+		Set<XRegistration> xBusinessRegistrations = clientConfig.getXBusinessRegistrations();
+		for (XRegistration xRegistration : xBusinessRegistrations) {
+			xRegistration.xRegisterBusiness();
+		}
+		//XRegistration of listed serviceBindings
+		Set<XRegistration> xServiceBindingRegistrations = clientConfig.getXServiceBindingRegistrations();
+		for (XRegistration xRegistration : xServiceBindingRegistrations) {
+			xRegistration.xRegisterServiceBinding();
 		}
 		log.info("Cross registration completed");
 	}
@@ -122,7 +127,7 @@ public class UDDIClerkManager {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
 						uddiClerk.getClassWithAnnotations(),uddiClerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					uddiClerk.register(businessService);
+					uddiClerk.register(businessService,null);
 				}
 			}
 		}
@@ -138,7 +143,7 @@ public class UDDIClerkManager {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
 						clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					clerk.unRegister(businessService);
+					clerk.unRegister(businessService,clerk.getUDDINode().getApiNode());
 				}
 			}
 		}
