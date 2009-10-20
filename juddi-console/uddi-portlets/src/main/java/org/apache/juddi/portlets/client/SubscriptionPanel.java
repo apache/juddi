@@ -21,6 +21,7 @@ import org.apache.juddi.portlets.client.model.Subscription;
 import org.apache.juddi.portlets.client.service.SubscriptionResponse;
 import org.apache.juddi.portlets.client.service.SubscriptionService;
 import org.apache.juddi.portlets.client.service.SubscriptionServiceAsync;
+import org.apache.juddi.portlets.server.service.Constants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -56,8 +57,10 @@ public class SubscriptionPanel extends FlowPanel {
 		
 		if (subscription==null) {
 			newSubscription(node);
+			toClerkName = null;
 		} else {
 			this.subscription = subscription;
+			toClerkName = subscription.getToClerkName();
 		}
 		
 		flexTable = new FlexTable();
@@ -68,7 +71,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 	public void drawPanel() {
 		
-		toClerkName = subscription.getToClerkName();
+		
 		Label clerkName = new Label ("Clerk:");
 		clerkName.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(0, 0, clerkName);

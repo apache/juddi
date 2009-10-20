@@ -160,6 +160,16 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			//before sending this we need to ready the listener node 
 			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 			UDDIClerk toClerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
+			if (toClerk==null) {
+				String publisher = (String) session.getAttribute("UserName"); 
+				Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+				for (UDDIClerk uddiClerk : clerks.values()) {
+					if (publisher.equals(uddiClerk.getPublisher()) 
+							&& Constants.NODE_NAME.equals(uddiClerk.getUDDINode().getName())) {
+						toClerk = clerk;
+					}
+				}
+			}
 			
 			logger.info("Updating default UDDI server..");
 			String defaultClazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
