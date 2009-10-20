@@ -344,10 +344,6 @@ public class InquiryHelper {
 				subscriptionStartIndex.value = null;
 		}
 		
-		if (result.getServiceInfos()==null || result.getServiceInfos().getServiceInfo().size()==0) {
-			return null;
-		}
-		
 		return result;
 	}
 
