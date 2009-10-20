@@ -83,14 +83,18 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.debug("Publisher " + publisher + " sending getSubscription request..");
 		try {
 			boolean isMatchingClerk=false;
+			UDDIClerk toClerk = null;
 			Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+			for (UDDIClerk clerk : clerks.values()) {
+				if (publisher.equals(clerk.getPublisher()) 
+						&& Constants.NODE_NAME.equals(clerk.getUDDINode().getName())) {
+					toClerk = clerk;
+				}
+			}
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher())) {
 					isMatchingClerk = true;
-					Node modelNode = getSubscriptions(session, clerk);
-					//if (UP.equals(modelNode.getStatus())) {
-						
-					//}
+					Node modelNode = getSubscriptions(session, clerk, toClerk);
 					modelNode.setClerkName(clerk.getName());
 					response.getNodes().add(modelNode);
 				}
@@ -106,7 +110,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		return response;
 	}
 
-	private Node getSubscriptions(HttpSession session, UDDIClerk clerk) {
+	private Node getSubscriptions(HttpSession session, UDDIClerk clerk, UDDIClerk toClerk) {
 
 		Node modelNode = new Node();
 		UDDINode node = clerk.getUDDINode();
@@ -134,6 +138,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 						rawFilter,
 						subscription.getSubscriptionKey());
 				modelSubscription.setNode(modelNode);
+				modelSubscription.setToClerkName(toClerk.getName());
 				modelNode.getSubscriptions().add(modelSubscription);
 			}
 			modelNode.setStatus(UP);
@@ -153,13 +158,15 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.info("Sending saveSubscriptions request..");
 		try {
 			//before sending this we need to ready the listener node 
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+			UDDIClerk toClerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
 			
 			logger.info("Updating default UDDI server..");
 			String defaultClazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 			Class<?> defaultTransportClass = Loader.loadClass(defaultClazz); 
 			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME); 
 			JUDDIApiPortType juddiApiService = defaultTransport.getJUDDIApiService();
+			
 			//making sure our node info is there and up to date.
 			SaveNode saveNode = new SaveNode();
 			saveNode.setAuthInfo(userAuthToken);
@@ -170,13 +177,25 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			saveClerk.setAuthInfo(userAuthToken);
 			saveClerk.getClerk().add(clerk.getApiClerk());
 			juddiApiService.saveClerk(saveClerk);
+			//making sure our node info is there and up to date.
+			SaveNode saveToNode = new SaveNode();
+			saveToNode.setAuthInfo(userAuthToken);
+			saveToNode.getNode().add(toClerk.getApiClerk().getNode());
+			juddiApiService.saveNode(saveToNode);
+			//making sure our clerk info is there and up to date
+			SaveClerk saveToClerk = new SaveClerk();
+			saveToClerk.setAuthInfo(userAuthToken);
+			saveToClerk.getClerk().add(toClerk.getApiClerk());
+			juddiApiService.saveClerk(saveToClerk);
 			logger.debug("Updating default UDDI server completed.");
 			
 			SaveClientSubscriptionInfo saveClientSubscriptionInfo = new SaveClientSubscriptionInfo();
 			saveClientSubscriptionInfo.setAuthInfo(userAuthToken);
 			ClientSubscriptionInfo clientSubscriptionInfo = new ClientSubscriptionInfo();
 			clientSubscriptionInfo.setSubscriptionKey(modelSubscription.getSubscriptionKey());
-			clientSubscriptionInfo.setClerk(clerk.getApiClerk());
+			clientSubscriptionInfo.setFromClerk(clerk.getApiClerk());
+			clientSubscriptionInfo.setToClerk(toClerk.getApiClerk());
+			
 			saveClientSubscriptionInfo.getClientSubscriptionInfo().add(clientSubscriptionInfo);
 			//save clientSubscription to the listening UDDI default server.
 			juddiApiService.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
@@ -253,7 +272,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.info("Sending deleteSubscriptions request for subscriptionKey=" 
 				+ modelSubscription.getSubscriptionKey());
 		try {
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz);
 			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
@@ -312,7 +331,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			coverage.setEndPoint(calendarEnd);
 			getSubscriptionResults.setCoveragePeriod(coverage);
 			
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getClerkName());
+			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
 			getSubscriptionResults.setAuthInfo(authToken);
             SyncSubscription syncSubscription = new SyncSubscription();

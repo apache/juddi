@@ -35,6 +35,7 @@ public class SubscriptionPanel extends FlowPanel {
 
 	private SubscriptionServiceAsync subscriptionServiceAsync = (SubscriptionServiceAsync) GWT.create(SubscriptionService.class);
 	
+	private String toClerkName = null;
 	private TextBox clerkNameBox = new TextBox();
 	private TextBox bindingKeyBox = new TextBox();
 	private CheckBox isBriefBox = new CheckBox();
@@ -67,6 +68,7 @@ public class SubscriptionPanel extends FlowPanel {
 	
 	public void drawPanel() {
 		
+		toClerkName = subscription.getToClerkName();
 		Label clerkName = new Label ("Clerk:");
 		clerkName.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(0, 0, clerkName);
@@ -163,7 +165,7 @@ public class SubscriptionPanel extends FlowPanel {
 	protected void invokeSyncSubscription(String authToken) {
 		if (subscription!=null) {
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
-			subscription.setClerkName(clerkNameBox.getText());
+			subscription.setFromClerkName(clerkNameBox.getText());
 			subscription.setCoverageStart(coverageStartBox.getText());
 			subscription.setCoverageEnd(coverageEndBox.getText());
 			
@@ -188,7 +190,7 @@ public class SubscriptionPanel extends FlowPanel {
 	protected void deleteSubscription(String authToken){
 		if (subscription!=null) {
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
-			subscription.setClerkName(clerkNameBox.getText());
+			subscription.setFromClerkName(clerkNameBox.getText());
 			
 			subscriptionServiceAsync.deleteSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 					{
@@ -240,7 +242,8 @@ public class SubscriptionPanel extends FlowPanel {
 			subscription.setNotificationInterval(notificationIntervalBox.getText());
 			subscription.setSubscriptionFilter(subscriptionFilterBox.getText());
 			subscription.setSubscriptionKey(subscriptionKeyBox.getText());
-			subscription.setClerkName(clerkNameBox.getText());
+			subscription.setFromClerkName(clerkNameBox.getText());
+			subscription.setToClerkName(toClerkName);
 			
 			subscriptionServiceAsync.saveSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 			{

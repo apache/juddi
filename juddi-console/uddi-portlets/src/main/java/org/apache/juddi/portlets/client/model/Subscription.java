@@ -42,7 +42,8 @@ public class Subscription implements Serializable{
 	private String coverageEnd;
     
     private Node node;
-    private String clerkName;
+    private String fromClerkName;
+    private String toClerkName;
     
 	public Subscription() {
 		super();
@@ -125,11 +126,17 @@ public class Subscription implements Serializable{
 	public void setNode(Node node) {
 		this.node = node;
 	}
-	public String getClerkName() {
-		return clerkName;
+	public String getFromClerkName() {
+		return fromClerkName;
 	}
-	public void setClerkName(String clerkName) {
-		this.clerkName = clerkName;
+	public void setFromClerkName(String fromClerkName) {
+		this.fromClerkName = fromClerkName;
+	}
+	public String getToClerkName() {
+		return toClerkName;
+	}
+	public void setToClerkName(String toClerkName) {
+		this.toClerkName = toClerkName;
 	}
 	public String getCoverageStart() {
 		return coverageStart;
