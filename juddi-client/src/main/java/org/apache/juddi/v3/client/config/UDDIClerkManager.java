@@ -127,7 +127,7 @@ public class UDDIClerkManager {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
 						uddiClerk.getClassWithAnnotations(),uddiClerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					uddiClerk.register(businessService,null);
+					uddiClerk.register(businessService, uddiClerk.getUDDINode().getApiNode());
 				}
 			}
 		}
