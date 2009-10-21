@@ -21,7 +21,6 @@ import org.apache.juddi.portlets.client.model.Subscription;
 import org.apache.juddi.portlets.client.service.SubscriptionResponse;
 import org.apache.juddi.portlets.client.service.SubscriptionService;
 import org.apache.juddi.portlets.client.service.SubscriptionServiceAsync;
-import org.apache.juddi.portlets.server.service.Constants;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
