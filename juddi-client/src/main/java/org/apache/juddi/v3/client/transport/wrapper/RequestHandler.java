@@ -16,6 +16,7 @@
 package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
 
@@ -155,6 +156,9 @@ public class RequestHandler
       // this child to the soap response body
       document.appendChild(element.getFirstChild());
       setResponse(document);
+    } catch (InvocationTargetException ite) {
+    	log.error(ite.getTargetException().getMessage());
+    	setException(ite.getTargetException().getMessage());
     }
     catch(Exception ex) // Catch any other exceptions
     {

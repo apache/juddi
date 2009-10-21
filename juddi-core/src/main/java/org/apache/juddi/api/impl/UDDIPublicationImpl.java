@@ -55,6 +55,7 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.RegistryException;
 import org.apache.juddi.v3.error.UDDIErrorHelper;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
@@ -455,6 +456,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 			tx.commit();
 			return result;
+		} catch (RegistryException e) {
+			throw e;
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

@@ -52,32 +52,37 @@ public class UDDIPublicationService {
 	}
 
 	//Verify that the appropriate endpoint was targeted for
-		// this service request.  The validateRequest method will
-		// throw an UnsupportedOperationException if anything's amiss.
-		public void validateRequest(String operation)
-				throws UnsupportedOperationException
-		{
-		    if ((operation == null) || (operation.trim().length() == 0))
-		    	throw new UnsupportedOperationException("operation " + operation + " not supported");
-		  }
+	// this service request.  The validateRequest method will
+	// throw an UnsupportedOperationException if anything's amiss.
+	public void validateRequest(String operation)
+		throws UnsupportedOperationException
+	{
+	    if ((operation == null) || (operation.trim().length() == 0))
+	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
+	}
 
-	  public Node publish(Element uddiReq) throws Exception
-	  {
-		  InVMTransport invmtransport = new InVMTransport();		
-		  UDDIPublicationPortType publish = invmtransport.getUDDIPublishService();
+	public Node publish(Element uddiReq) throws Exception
+	{
+		InVMTransport invmtransport = new InVMTransport();		
+		UDDIPublicationPortType publish = invmtransport.getUDDIPublishService();
 
-	      //new RequestHandler on it's own thread
-	      RequestHandler requestHandler = new RequestHandler();
-	      requestHandler.setPortType(publish);
-	      String operation = requestHandler.getOperation(uddiReq);
-		  Handler opHandler = operations.get(operation);
-	      requestHandler.setMethodName(opHandler.getMethodName());
-		  requestHandler.setOperationClass(opHandler.getParameter());
+	    //new RequestHandler on it's own thread
+	    RequestHandler requestHandler = new RequestHandler();
+	    requestHandler.setPortType(publish);
+	    String operation = requestHandler.getOperation(uddiReq);
+		Handler opHandler = operations.get(operation);
+	    requestHandler.setMethodName(opHandler.getMethodName());
+		requestHandler.setOperationClass(opHandler.getParameter());
 		  
-		  @SuppressWarnings("unused")
-	      String version   = requestHandler.getVersion(uddiReq, operation);
-	      validateRequest(operation);
+		@SuppressWarnings("unused")
+	    String version   = requestHandler.getVersion(uddiReq, operation);
+	    validateRequest(operation);
+	    
+	    Node temp = requestHandler.invoke(uddiReq);
+	    if (requestHandler.getException()!=null) {
+	    	throw new Exception(requestHandler.getException());
+	    }
 
-	      return requestHandler.invoke(uddiReq);
-	  }
+	    return temp;
+	}
 }
