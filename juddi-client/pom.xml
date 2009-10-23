@@ -1,4 +1,4 @@
-	<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * Copyright 2001-2009 The Apache Software Foundation.
  *
@@ -19,19 +19,19 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.0.SNAPSHOT</version>
+    <version>3.0.0</version>
   </parent> 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-client</artifactId>
-  <version>3.0.0.SNAPSHOT</version>
+  <version>3.0.0</version>
   <name>jUDDI Client side Code</name>
   <packaging>jar</packaging>  
   <dependencies>
     <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
-        <version>3.0.0.SNAPSHOT</version>
+        <version>3.0.0</version>
      </dependency>
     <dependency>
         <groupId>log4j</groupId>

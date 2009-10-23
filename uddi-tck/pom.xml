@@ -17,19 +17,19 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.0.SNAPSHOT</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>uddi-tck</artifactId>
-	<version>3.0.0.SNAPSHOT</version>
+	<version>3.0.0</version>
 	<name>UDDI TCK Tests</name>
 	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
@@ -55,25 +55,25 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
+			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
+			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
+			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-tomcat</artifactId>
-			<version>3.0.0.SNAPSHOT</version>
+			<version>3.0.0</version>
 			<type>zip</type>
 			<scope>test</scope>
 		</dependency>
@@ -104,7 +104,7 @@
 								<artifactItem>
 									<groupId>org.apache.juddi</groupId>
 									<artifactId>juddi-tomcat</artifactId>
-									<version>3.0.0.SNAPSHOT</version>
+									<version>3.0.0</version>
 									<type>zip</type>
 									<outputDirectory>${basedir}/target</outputDirectory>
 								</artifactItem>
@@ -123,7 +123,7 @@
 						<phase>pre-integration-test</phase>
 						<configuration>
 							<tasks>
-								<unzip dest="target" src="target/juddi-tomcat-3.0.0.SNAPSHOT.zip" />
+								<unzip dest="target" src="target/juddi-tomcat-3.0.0.zip" />
 								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf" overwrite="true"/>
 								<copy file="${basedir}/log4j.properties" todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true"/>
 								<!--
@@ -163,11 +163,11 @@
 					<wait>false</wait>
 					<container>
 						<containerId>tomcat6x</containerId>
-						<home>${basedir}/target/juddi-tomcat-3.0.0.SNAPSHOT</home>
+						<home>${basedir}/target/juddi-tomcat-3.0.0</home>
 					</container>
 					<configuration>
 						<type>existing</type>
-						<home>${project.build.directory}/juddi-tomcat-3.0.0.SNAPSHOT</home>
+						<home>${project.build.directory}/juddi-tomcat-3.0.0</home>
 						<properties>
 							<cargo.hostname>localhost</cargo.hostname>
 							<cargo.servlet.port>8880</cargo.servlet.port>

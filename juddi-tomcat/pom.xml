@@ -20,17 +20,17 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.0.SNAPSHOT</version>
+    <version>3.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion> 
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-tomcat</artifactId>
-  <version>3.0.0.SNAPSHOT</version>
+  <version>3.0.0</version>
   <name>jUDDI Tomcat Packaging</name>
   <url>http://maven.apache.org</url>
   <packaging>pom</packaging>
   <properties>
-    <juddi-cxf-version>3.0.0.SNAPSHOT</juddi-cxf-version>
+    <juddi-cxf-version>3.0.0</juddi-cxf-version>
   </properties>
   <dependencies>
     <dependency>
@@ -53,13 +53,13 @@
      <dependency>
      <artifactId>juddiv3-samples</artifactId>
      <groupId>org.apache.juddi</groupId>
-     <version>3.0.0.SNAPSHOT</version> 
+     <version>3.0.0</version> 
      <type>war</type>
     </dependency>
     <dependency>
      <artifactId>juddi-core</artifactId>
      <groupId>org.apache.juddi</groupId>
-     <version>3.0.0.SNAPSHOT</version>
+     <version>3.0.0</version>
      <type>jar</type>
     </dependency>
     <dependency>
