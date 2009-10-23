@@ -56,7 +56,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.juddi</groupId>
-      <artifactId>juddi-samples</artifactId>
+      <artifactId>juddiv3-samples</artifactId>
       <version>3.0.0</version>
       <type>war</type>
     </dependency>
@@ -87,7 +87,7 @@
 	       <property name="dependency.juddi.javadoc" value="${maven.dependency.org.apache.juddi.juddi-core.javadoc.jar.path}"/>
 	       <property name="dependency.juddi.sources" value="${maven.dependency.org.apache.juddi.juddi-core.sources.jar.path}"/>
 	       <property name="dependency.juddi.docs" value="${maven.dependency.org.apache.juddi.juddi-docs.tar.gz.path}"/>
-	       <property name="dependency.juddi.samples" value="${maven.dependency.org.apache.juddi.juddi-samples.war.path}"/>
+	       <property name="dependency.juddi.samples" value="${maven.dependency.org.apache.juddi.juddiv3-samples.war.path}"/>
 	       <ant antfile="${basedir}/build.xml">
                   <target name="package-dist"/>
                </ant>
