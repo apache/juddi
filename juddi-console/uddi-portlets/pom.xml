@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-console</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1.SNAPSHOT</version>
 	</parent>
 	<!--
 		GWT-Maven archetype generated POM 
@@ -13,7 +13,7 @@
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>uddi-portlets</artifactId>
 	<packaging>war</packaging>
-	<version>3.0.0</version>
+	<version>3.0.1.SNAPSHOT</version>
 	<name>UDDI Portlets</name>
 	
 	<!--  include pluginRepository and repository for GWT-Maven -->
@@ -70,17 +70,17 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1.SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1.SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1.SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

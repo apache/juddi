@@ -21,12 +21,12 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1.SNAPSHOT</version>
   </parent>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddiv3-war</artifactId>
   <packaging>war</packaging>
-  <version>3.0.0</version>
+  <version>3.0.1.SNAPSHOT</version>
   <name>jUDDI Axis2 Deployment</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -36,7 +36,7 @@
     <dependency>
       <artifactId>uddi-ws</artifactId>
       <groupId>org.apache.juddi</groupId>
-      <version>3.0.0</version>
+      <version>3.0.1.SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <groupId>javax.xml.bind</groupId>
@@ -55,7 +55,7 @@
     <dependency>
       <artifactId>juddi-core</artifactId>
       <groupId>org.apache.juddi</groupId>
-      <version>3.0.0</version> 
+      <version>3.0.1.SNAPSHOT</version> 
       <exclusions>
         <exclusion>
           <groupId>org.apache.juddi</groupId>
