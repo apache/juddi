@@ -15,6 +15,11 @@
           <td><strong>Description</strong></td>
         </tr>
         <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0</a></td>
+          <td>Oct 26, 2009</td>
+          <td>Stable 3.0.0 Release</td>
+        </tr>
+        <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.rc1</a></td>
           <td>Oct 12, 2009</td>
           <td>Stable Release Candidate 1 for Release Version 3.0.0</td>
