@@ -730,6 +730,7 @@ public class MappingModelToApi {
 		apiOperationalInfo.setModifiedIncludingChildren(TypeConvertor.convertDateToXMLGregorianCalendar(modelUddiEntity.getModifiedIncludingChildren()));
 		apiOperationalInfo.setNodeID(modelUddiEntity.getNodeId());
 		apiOperationalInfo.setAuthorizedName(modelUddiEntity.getAuthorizedName());
+		apiOperationalInfo.setEntityKey(modelUddiEntity.getEntityKey());
 	}
 
 
