@@ -69,7 +69,7 @@ public class SubscriptionNotifier extends TimerTask {
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
-		timer = new Timer();
+		timer = new Timer(true);
 		timer.scheduleAtFixedRate(this, startBuffer, interval);
 	}
 
