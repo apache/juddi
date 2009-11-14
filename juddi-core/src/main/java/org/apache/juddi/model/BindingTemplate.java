@@ -81,7 +81,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.businessService = businessService;
 	}
 
-	@Column(name = "access_point_type", length = 20)
+	@Column(name = "access_point_type", length = 255)
 	public String getAccessPointType() {
 		return this.accessPointType;
 	}
