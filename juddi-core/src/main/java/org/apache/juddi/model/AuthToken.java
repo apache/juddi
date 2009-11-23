@@ -34,7 +34,6 @@ public class AuthToken implements java.io.Serializable {
 	private static final long serialVersionUID = 1147567747533293480L;
 	private String authToken;
 	private String authorizedName;
-	private String publisherName;
 	private Date created;
 	private Date lastUsed;
 	private int numberOfUses;
@@ -48,7 +47,6 @@ public class AuthToken implements java.io.Serializable {
 			int numberOfUses, int tokenState) {
 		this.authToken = authToken;
 		this.authorizedName = authorizedName;
-		this.publisherName = publisherName;
 		this.created = created;
 		this.lastUsed = lastUsed;
 		this.numberOfUses = numberOfUses;
@@ -64,20 +62,12 @@ public class AuthToken implements java.io.Serializable {
 		this.authToken = authToken;
 	}
 
-	@Column(name = "authorized_name", nullable = false, length = 20)
+	@Column(name = "authorized_name", nullable = false, length = 255)
 	public String getAuthorizedName() {
 		return this.authorizedName;
 	}
 	public void setAuthorizedName(String authorizedName) {
 		this.authorizedName = authorizedName;
-	}
-
-	@Column(name = "publisher_name")
-	public String getPublisherName() {
-		return this.publisherName;
-	}
-	public void setPublisherName(String publisherName) {
-		this.publisherName = publisherName;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
