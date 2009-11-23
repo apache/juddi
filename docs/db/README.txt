@@ -1,0 +1,1 @@
+The ER diagram is produced using the MySQL Workbench (version 5.2.6 alpha).  
