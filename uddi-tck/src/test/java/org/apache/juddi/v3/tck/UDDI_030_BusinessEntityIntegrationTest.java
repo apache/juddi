@@ -43,6 +43,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	
 	protected static TckTModel tckTModel          = null;
 	protected static TckBusiness tckBusiness      = null;
+	protected static TckFindEntity tckFindEntity  = null;
 	protected static String authInfoJoe           = null;
 	protected static String authInfoSam           = null;
 	
@@ -68,6 +69,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
+	        	 tckFindEntity = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -90,6 +92,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckFindEntity.findAllBusiness();
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 		} finally {
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);

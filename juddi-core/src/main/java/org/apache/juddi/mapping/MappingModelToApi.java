@@ -594,6 +594,7 @@ public class MappingModelToApi {
 									   org.uddi.api_v3.ServiceInfos apiServiceInfos,
 									   org.uddi.api_v3.BusinessInfo apiBusinessInfo) 
 				   throws DispositionReportFaultMessage {
+		if (modelBusinessServiceList.size()==0) return;
 		if (apiServiceInfos == null)
 			apiServiceInfos = new org.uddi.api_v3.ServiceInfos();
 		
