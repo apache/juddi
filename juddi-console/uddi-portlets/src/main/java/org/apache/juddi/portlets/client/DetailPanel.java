@@ -145,10 +145,18 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 						bindingtable.setHTML(bindingRow, 0, UDDIBrowser.images.description().getHTML());
 						bindingtable.setText(bindingRow++, 1,  serviceBinding.getDescription());
 						bindingtable.setHTML(bindingRow, 0, UDDIBrowser.images.endpointlive().getHTML());
-						bindingtable.setHTML(bindingRow++, 1, serviceBinding.getUrlType() + ":" 
+						
+						// For JBossESB or others using "other" as UrlType, don't display the accesspoint as 
+						// http URL
+						if ("other".equals(serviceBinding.getUrlType())) {
+							bindingtable.setHTML(bindingRow++, 1, serviceBinding.getUrlType() + ":" 
+									+  new HTML(serviceBinding.getAccessPoint()).getHTML());							
+						} else {
+							bindingtable.setHTML(bindingRow++, 1, serviceBinding.getUrlType() + ":" 
 								+  new HTML("<a href='" 
 								+ serviceBinding.getAccessPoint() + "'>" 
 								+ serviceBinding.getAccessPoint() + "</a>").getHTML());
+						}
 						table.setHTML(row, 1, bindingtable.toString());
 					}
 				} else {
