@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 
 public class DetailPanel  extends FlowPanel  implements TableListener{
-
+	private static final String OTHER_BINDING_TYPE = "other";
 	private InquiryServiceAsync inquiryService = (InquiryServiceAsync) GWT.create(InquiryService.class); 
 	private DetailPanel detailPanel = null;
 	FlexTable table = new FlexTable();;
@@ -148,7 +148,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 						
 						// For JBossESB or others using "other" as UrlType, don't display the accesspoint as 
 						// http URL
-						if ("other".equals(serviceBinding.getUrlType())) {
+						if (OTHER_BINDING_TYPE.equals(serviceBinding.getUrlType())) {
 							bindingtable.setHTML(bindingRow++, 1, serviceBinding.getUrlType() + ":" 
 									+  new HTML(serviceBinding.getAccessPoint()).getHTML());							
 						} else {
