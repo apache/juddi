@@ -89,7 +89,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.accessPointType = accessPointType;
 	}
 
-	@Column(name = "access_point_url", length = 2000)
+	@Column(name = "access_point_url", length = 4000)
 	public String getAccessPointUrl() {
 		return this.accessPointUrl;
 	}
