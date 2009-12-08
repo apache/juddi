@@ -2,7 +2,9 @@ package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.util.HashMap;
 
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
@@ -25,9 +27,9 @@ import org.w3c.dom.Node;
  * @author Tom Cunningham (tcunning@apache.org)
  */
 public class UDDIPublicationService {
+	private final static String DEFAULT_NODE_NAME = "default";
 
 	  // collection of valid operations
-
 
 	private HashMap<String, Handler> operations = null;
 
@@ -63,8 +65,10 @@ public class UDDIPublicationService {
 
 	public Node publish(Element uddiReq) throws Exception
 	{
-		InVMTransport invmtransport = new InVMTransport();		
-		UDDIPublicationPortType publish = invmtransport.getUDDIPublishService();
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+        Class<?> transportClass = Loader.loadClass(clazz);
+        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+		UDDIPublicationPortType publish = transport.getUDDIPublishService();
 
 	    //new RequestHandler on it's own thread
 	    RequestHandler requestHandler = new RequestHandler();

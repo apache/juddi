@@ -10,7 +10,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.log4j.helpers.Loader;
+import org.apache.juddi.v3.client.transport.Transport;
+
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -30,8 +33,8 @@ import org.w3c.dom.Node;
  * @author Tom Cunningham (tcunning@apache.org)
  */
 public class UDDIInquiryService {
-	//private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
-	
+	private final static String DEFAULT_NODE_NAME = "default";
+
 	private HashMap<String, Handler> operations = null;
 
 	public UDDIInquiryService() {
@@ -60,11 +63,13 @@ public class UDDIInquiryService {
 	    if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 	}
-
-	public Node inquire(Element uddiReq) throws Exception{		  
-		InVMTransport invmtransport = new InVMTransport();		
-	    UDDIInquiryPortType inquiry = invmtransport.getUDDIInquiryService();
-
+	
+	public Node inquire(Element uddiReq) throws Exception{
+		String clazz = UDDIClerkManager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+        Class<?> transportClass = Loader.loadClass(clazz);
+        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+		UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+        
 	    //new RequestHandler on it's own thread
 	    RequestHandler requestHandler = new RequestHandler();
 	    requestHandler.setPortType(inquiry);
