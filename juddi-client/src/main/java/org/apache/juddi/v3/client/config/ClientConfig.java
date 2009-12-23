@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
  */
 public class ClientConfig 
 {
+	private final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
 	private final static String UDDI_CONFIG = "META-INF/uddi.xml";
 	private Logger log = Logger.getLogger(ClientConfig.class);
 	private Configuration config = null;;
@@ -72,7 +73,14 @@ public class ClientConfig
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from XML file
-		XMLConfiguration xmlConfig = new XMLConfiguration(UDDI_CONFIG);
+		XMLConfiguration xmlConfig = null;	
+		final String filename = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);
+		if (filename != null) 
+		{
+			xmlConfig = new XMLConfiguration(filename);
+		} else { 
+			xmlConfig = new XMLConfiguration(UDDI_CONFIG);	
+		}
 		long refreshDelay = xmlConfig.getLong(Property.UDDI_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
