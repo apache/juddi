@@ -29,6 +29,7 @@ import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
+import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.KeyBag;
@@ -235,7 +236,7 @@ public class TckSubscription
 		try {
 			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(SAM_SUBSCRIPTIONRESULTS3_XML, "org.uddi.sub_v3");
 			getSubResultsIn.setAuthInfo(authInfoSam);
-			
+					
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION3_XML, "org.uddi.sub_v3");
 			
 			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
