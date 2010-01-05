@@ -487,7 +487,18 @@ public class Install {
 			url = Loader.getResource(JUDDI_INSTALL_DATA_DIR);
 			basePath = JUDDI_INSTALL_DATA_DIR;
 		}
-		String path=url.getPath();
+		
+		String path = null;
+		if ("vfsfile".equals(url.getProtocol())) {
+			try {
+				path = url.toURI().getPath() ;
+			} catch (URISyntaxException e) {
+				throw new ConfigurationException(e);
+			}
+		} else {
+			path = url.getPath();
+		}
+		
 		File dir = new File(path);
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
 		if (dir.exists()) {
