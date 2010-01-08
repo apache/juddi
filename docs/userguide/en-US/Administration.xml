@@ -77,7 +77,15 @@
         
         
     </section>
-    
-
-    
+    <section id="sect-changing_oracle_sequence_name">
+        <title>Changing the Oracle Sequence name</title>
+        <para>
+	If you are using Hibernate as a persistence layer for jUDDI, then Oracle will generate a default sequence for you ("HIBERNATE_SEQUENCE").     If you are using hibernate elsewhere, you may wish to change the sequence name so that you do not share this sequence with any other applications.    If other applications try to manually create the default hibernate sequence, you may even run into situations where you find conflicts or a race condition.   
+        </para>
+   	<para>
+	The easiest way to handle this is to create an <filename>orm.xml</filename> file and place it within the classpath in a META-INF directory, which will override the jUDDI persistence annotations and will allow you to specify a specific sequence name for use with jUDDI.   The following <filename>orm.xml</filename> specifies a "juddi_sequence" sequence to be used with jUDDI.   
+	</para>
+	 <programlisting language="XML" ><xi:include href="extras/Administration_orm.xml" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+    </section>
+ 
 </chapter>
