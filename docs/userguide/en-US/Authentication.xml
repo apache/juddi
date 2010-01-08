@@ -1,0 +1,222 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<!-- chapter: Authentication -->
+<chapter id="chap-Authentication">
+    <title>Authentication</title>
+    
+    <!-- section: Introduction -->
+    <section id="sect-authentication_intro">
+        <title>Introduction</title>
+        <para>
+        In order to enforce proper write access to jUDDI, each request to jUDDI needs a
+        valid <classname>authToken</classname>. Note that read access is not restricted
+        and therefore queries into the registries are not restricted.
+        </para>
+        
+        <para>
+        To obtain a valid <classname>authToken</classname> a
+        <methodname>getAuthToken()</methodname> request must be made, where a
+        <classname>GetAuthToken</classname> object is passed. On the
+        <classname>GetAuthToken</classname> object a <property>userid</property> and
+        <property>credential</property> (password) needs to be set.
+        </para>
+            
+       <programlisting language="Java"><xi:include href="extras/Authentication_1.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        The property <property>juddi.auth</property> in the
+        <filename>juddi.properties</filename> configuration file can be used to configure
+        how jUDDI is going to check the credentials passed in on the
+        <classname>GetAuthToken</classname> request. By default jUDDI uses the
+        <classname>JUDDIAuthenticator</classname> implementation. You can provide your own
+        authentication implementation or use any of the ones mention below. The
+        implementation needs to implement the
+        <interfacename>org.apache.juddi.auth.Authenticator</interfacename> interface, and
+        <property>juddi.auth</property> property should refer to the implementation class.
+        </para>
+
+        <para>
+        There are two phases involved in Authentication. The authenticate phase and the
+        identify phase. Both of these phases are represented by a method in the
+        <interfacename>Authenticator</interfacename> interface.
+        </para>
+        
+        <para>
+        The authenticate phase occurs during the <methodname>GetAuthToken</methodname>
+        request as described above. The goal of this phase is to turn a user id and
+        credentials into a valid publisher id. The publisher id (referred to as the
+        “authorized name” in UDDI terminology) is the value that assigns ownership within
+        UDDI. Whenever a new entity is created, it must be tagged with ownership by the
+        authorized name of the publisher. The value of the publisher id can be completely
+        transparent to jUDDI – the only requirement is that one exists to assign to new
+        entities. Thus, the authenticate phase must return a non-null publisher id. Upon
+        completion of the <methodname>GetAuthToken</methodname> request, an authentication
+        token is issued to the caller.
+        </para>
+    
+        <para>
+        In subsequent calls to the UDDI API that require authentication, the token issued
+        from the <methodname>GetAuthToken</methodname> request must be provided. This
+        leads to the next phase of jUDDI authentication – the identify phase.
+        </para>
+
+        <para>
+        The identify phase is responsible for turning the authentication token (or the
+        publisher id associated with that authentication token) into a valid
+        <classname>UddiEntityPublisher</classname> object. The
+        <classname>UddiEntityPublisher</classname> object contains all the properties
+        necessary to handle ownership of UDDI entities. Thus, the token (or publisher id)
+        is used to “identify” the publisher.
+        </para>
+
+        <para>
+        The two phases provide compliance with the UDDI authentication structure and grant
+        flexibility for users that wish to provide their own authentication mechanism.
+        Handling of credentials and publisher properties can be done entirely outside of
+        jUDDI. However, jUDDI provides the Publisher entity, which is a sub-class of
+        <classname>UddiEntityPublisher</classname>, to persist publisher properties within
+        jUDDI. This is used in the default authentication and is the subject of the next
+        section.      
+        </para>
+    </section>
+    
+    <!-- section:  -->
+    <section id="sect-jUDDI_Authentication">
+        <title>jUDDI Authentication</title>
+        <para>
+        The default authentication mechanism provided by jUDDI is the
+        <classname>JUDDIAuthenticator</classname>. The authenticate phase of the
+        <classname>JUDDIAuthenticator</classname> simply checks to see if the user id
+        passed in has an associated record in the Publisher table. No credentials checks
+        are made. If, during authentication, the publisher does not exist, it the
+        publisher is added on the fly.
+        </para>
+
+        <warning>
+            <para>
+            Do not use jUDDI authentication in production.
+            </para>
+        </warning>
+
+        <para>
+        The identify phase uses the publisher id to retrieve the Publisher record and return
+        it. All necessary publisher properties are populated as Publisher inherits from
+        <classname>UddiEntityPublisher</classname>.
+        </para>
+        
+        <programlisting language="Java"><xi:include href="extras/Authentication_2.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+    </section>
+    
+    
+    <!-- section: XMLDocAuthentication -->
+    <section id="sect-XMLDocAuthentication">
+        <title>XMLDocAuthentication</title>
+        
+        <para>
+        The <classname>XMLDocAuthentication</classname> implementation needs a XML file on
+        the classpath. The <filename>juddi.properties</filename> file would need to look
+        like
+        </para>
+        
+        <programlisting language="Java"><xi:include href="extras/Authentication_3.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        where the name of the XML can be provided but it defaults to
+        <filename>juddi-users.xml</filename>, and the content of the file would looks
+        something like
+        </para>
+    
+        <programlisting language="XML"><xi:include href="extras/Authentication_1.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        The authenticate phase checks that the user id and password match a value in the
+        XML file. The identify phase simply uses the user id to populate a new
+        <classname>UddiEntityPublisher</classname>.
+        </para>
+    
+    </section>
+    
+    
+    <!-- section: CryptedXMLDocAuthentication  -->
+    <section id="sect-CryptedXMLDocAuthentication">
+        <title>CryptedXMLDocAuthentication</title>
+
+        <para>
+        The <classname>CryptedXMLDocAuthentication</classname> implementation is similar
+        to the <classname>XMLDocAuthentication</classname> implementation, but the
+        passwords are encrypted
+        </para>
+
+        <programlisting language="Java"><xi:include href="extras/Authentication_4.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        where the name user credential file is
+        <filename>juddi-users-encrypted.xml</filename>, and the content of the file would
+        looks something like
+        </para>
+
+        <programlisting language="XML" ><xi:include href="extras/Authentication_2.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        The <classname>DefaultCryptor</classname> implementation uses
+        <literal>BEWithMD5AndDES</literal> and <literal>Base64</literal> to encrypt the
+        passwords. Note that the code in the <classname>AuthenticatorTest</classname> can
+        be used to learn more about how to use this Authenticator implementation. You can
+        plugin your own encryption algorithm by implementing the
+        <interfacename>org.apache.juddi.cryptor.Cryptor</interfacename> interface and
+        referencing your implementation class in the <property>juddi.cryptor</property>
+        property.
+        </para>
+
+        <para>
+        The authenticate phase checks that the user id and password match a value in the XML
+        file. The identify phase simply uses the user id to populate a new
+        <classname>UddiEntityPublisher</classname>.
+        </para>
+        
+    </section>
+    
+
+    <!-- section: JBoss Authentication -->
+    <section id="sect-JBoss_Authentication">
+        <title>JBoss Authentication</title>
+
+        <para>
+        Finally is it possible to hook up to third party credential stores. If for example
+        jUDDI is deployed to the JBoss Application server it is possible to hook up to
+        it's authentication machinery. The <classname>JBossAuthenticator</classname> class
+        is provided in the <filename>docs/examples/auth</filename> directory. This class
+        enables jUDDI deployments on JBoss use a server security domain to authenticate
+        users.
+        </para>
+
+        <para>
+        To use this class you must add the following properties to the
+        <filename>juddi.properties</filename> file:
+        </para>
+
+        <programlisting language="XML"><xi:include href="extras/Authentication_3.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        The <property>juddi.auth</property> property plugs the
+        <classname>JbossAuthenticator</classname> class into the jUDDI the Authenticator
+        framework. The <classname>juddi.sercuity.domain</classname>, configures the
+        <classname>JBossAuthenticator</classname> class where it can lookup the
+        application server's security domain, which it will use to perform the
+        authentication. Note that JBoss creates one security domain for each application
+        policy element on the
+        <filename>$JBOSS_HOME/server/default/conf/login-config.xml</filename> file, which
+        gets bound to the server JNDI tree with name
+        <code>java:/jaas/&lt;application-policy-name&gt;</code>. If a lookup refers to a
+        non existent application policy it defaults to a policy named other.
+        </para>
+
+    </section>
+    
+</chapter>

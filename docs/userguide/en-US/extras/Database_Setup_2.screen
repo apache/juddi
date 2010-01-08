@@ -1,0 +1,5 @@
+# psql
+
+postgres= CREATE USER juddi with PASSWORD 'password';
+postgres= CREATE DATABASE juddi;
+postgres= GRANT ALL PRIVILEGES ON DATABASE juddi to juddi;

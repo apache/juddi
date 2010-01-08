@@ -1,0 +1,37 @@
+<?xml version='1.0'?>
+<!DOCTYPE authorgroup PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_Dev_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<authorgroup>
+
+	<author>
+		<firstname>Tom</firstname>
+		<surname>Cunningham</surname>
+		<email>tcunning@apache.org</email>
+	</author>
+
+	<author>
+		<firstname>Kurt</firstname>
+		<surname>Stam</surname>
+		<email>kstam@apache.org</email>
+	</author>
+
+	<author>
+		<firstname>The jUDDI Community</firstname>
+		<surname></surname>
+		<affiliation>
+			<orgname></orgname>
+			<orgdiv></orgdiv>
+		</affiliation>
+		<email></email>
+	</author>
+
+	<othercredit>
+		<firstname>Darrin</firstname>
+		<surname>Mison</surname>
+		<email>dmison@redhat.com</email>
+	</othercredit> 
+
+</authorgroup>

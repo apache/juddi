@@ -1,0 +1,45 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_Dev_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<!-- chapter: Getting Started -->
+<chapter id="chap-jUDDI_Configuration">
+    <title>jUDDI_Configuration</title>
+
+    <!-- section:  -->
+    <section id="sect-config_Introduction">
+        <title>Introduction</title>
+        <para>
+        jUDDI will look for a juddiv3.properties file on the root of the classpath. In the
+        <filename>juddiv3.war</filename> you can find it in
+        <filename>juddiv3.war/WEB_INF/classes/juddiv3.properties</filename>
+        </para>
+    </section>
+    
+    <!-- section: Startup -->
+    <section id="sect-startup">
+        <title>Startup</title>
+        <para>
+        <!-- TODO -->
+        </para>
+    </section>
+    
+    <!-- section: Subscription -->
+    <section id="sect-config_subscription">
+        <title>Subscription</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_1.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        This is the upper boundary set by the registry. Between the user defined endDate
+        of a Subscription and this value, the registry will pick the earliest date.
+        </para>
+
+        <programlisting><xi:include href="extras/jUDDI_configuration_2.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        This is the expiration time of a subscription “chunk”.
+        </para>
+    </section>
+    
+</chapter>

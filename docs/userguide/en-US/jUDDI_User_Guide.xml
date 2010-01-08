@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<book status="final">
+	<xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="UDDI_Registry.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Getting_Started.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="Authentication.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Database_Setup.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Root_seed_data.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="jUDDI_configuration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Using_jUDDI-Client.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="UDDI_Annotations.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+
+	<xi:include href="Subscription.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Administration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</book>
+

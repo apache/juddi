@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_Dev_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<!-- chapter: Release Process -->
+<chapter id="chap-release_process">
+    <title>Release Process</title>
+
+    <section id="addgpg">
+        <title>Add your gpg key to KEYS</title>
+    </section>
+    <section id="Release steps">
+	<title>Release steps</title>
+	<para>
+Environment: 
+Maven version: 2.0.8
+Java version: 1.5.0_16
+OS name: "mac os x" version: "10.5.6" arch: "i386" Family: "unix"
+
+1. Run mvn clean install -Prelease Dpersistence=hibernate.
+2. Copy the release artifacts to people.apache.org:/public_html/releases/juddi-3.0.0.alpha
+3. Start a vote referencing the build artifacts, leave the vote open for 72 hrs.
+
+On successfull vote:
+4. Create a Tag in SVN for the release
+5. Run mvn clean deploy -Prelease -Dpersistence=hibernate
+6. Update the website
+	</para>
+    </section>
+</chapter>

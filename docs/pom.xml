@@ -59,4 +59,9 @@
       </plugin>
     </plugins>
   </build>
+  <modules>
+     <module>userguide</module>
+     <module>devguide</module>
+  </modules>
+
 </project>

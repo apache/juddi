@@ -1,0 +1,69 @@
+<businessEntity xmlns="urn:uddi-org:api_v3" 
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    businessKey="uddi:juddi.apache.org:businesses-asf">
+    <!-- Change the name field to represent the name of your registry -->
+    <name xml:lang="en">An Apache jUDDI Node</name>
+        <!-- Change the description field to provided 
+        a brief description of your registry -->
+        <description xml:lang="en">
+            This is a UDDI v3 registry node as implemented by Apache jUDDI.
+        </description>
+        <discoveryURLs>
+        <!-- This discovery URL should point to the home installation URL of jUDDI -->
+        <discoveryURL useType="home">
+            http://${juddi.server.name}:${juddi.server.port}/juddiv3
+        </discoveryURL>
+    </discoveryURLs>
+    <categoryBag>
+        <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node" />
+    </categoryBag>
+
+    <businessServices>
+    <!-- As mentioned above, you may want to provide user-defined keys for 
+    these (and the services/bindingTemplates below.  Services that you
+    don't intend to support should be removed entirely -->
+        <businessService serviceKey="uddi:juddi.apache.org:services-inquiry" 
+            businessKey="uddi:juddi.apache.org:businesses-asf">
+            <name xml:lang="en">UDDI Inquiry Service</name>
+            <description xml:lang="en">Web Service supporting UDDI Inquiry API</description>
+            <bindingTemplates>
+                <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-ws" 
+                    serviceKey="uddi:juddi.apache.org:services-inquiry">
+                    <description>UDDI Inquiry API V3</description>
+                    <!-- This should be changed to the WSDL URL of the inquiry API.  
+                    An access point inside a bindingTemplate will be found for every service
+                    in this file.  They all must point to their API's WSDL URL -->
+                    <accessPoint useType="wsdlDeployment">
+                        http://${juddi.server.name}:${juddi.server.port}/juddiv3/services/inquiry?wsdl
+                    </accessPoint>
+                    <tModelInstanceDetails>
+                        <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
+                            <instanceDetails>
+                                <instanceParms>
+                                <![CDATA[
+                                <?xml version="1.0" encoding="utf-8" ?>
+                                <UDDIinstanceParmsContainer 
+                                    xmlns="urn:uddi-org:policy_v3_instanceParms">
+                                    <defaultSortOrder>
+                                        uddi:uddi.org:sortorder:binarysort
+                                    </defaultSortOrder>
+                                </UDDIinstanceParmsContainer>
+                                ]]>
+                                </instanceParms>
+                            </instanceDetails>
+                        </tModelInstanceInfo>
+                    </tModelInstanceDetails>
+                    <categoryBag>
+                        <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" 
+                            tModelKey="uddi:uddi.org:categorization:types"/>
+                    </categoryBag>
+                </bindingTemplate>
+            </bindingTemplates>
+        </businessService>
+        <businessService serviceKey="uddi:juddi.apache.org:services-publish" 
+            businessKey="uddi:juddi.apache.org:businesses-asf">
+            <name xml:lang="en">UDDI Publish Service</name>
+            ...........
+        </businessService>
+    </businessServices>
+</businessEntity>

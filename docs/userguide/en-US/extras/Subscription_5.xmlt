@@ -1,0 +1,14 @@
+<clerks registerOnStartup="false">
+    <clerk  name="MarketingCratchit"    node="default-ws" 
+            publisher="marketing"       password="marketing"/>
+
+    <clerk  name="SalesCratchit"        node="sales-ws"   
+            publisher="marketing"       password="marketing"/>
+    <!--  optional 
+    <xregister>
+        <servicebinding 
+            entityKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" 
+            fromClerk="MarketingCratchit" toClerk="SalesCratchit"/>
+    </xregister>
+    -->
+</clerks>

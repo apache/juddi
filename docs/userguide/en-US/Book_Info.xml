@@ -1,0 +1,44 @@
+<?xml version='1.0'?>
+<!DOCTYPE bookinfo PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<bookinfo id="User_Guide-demobooks">
+	<title>jUDDI User Guide</title>
+	<subtitle>A guide to using jUDDI</subtitle>
+	<productname>jUDDI</productname>
+	<edition>1</edition>
+    <pubsnumber>1</pubsnumber>
+    <productnumber>5.0.0</productnumber>
+	<abstract>
+		<para>
+        This document is a User Guide for jUDDI. jUDDI (pronounced "Judy") is an open
+        source Java implementation of the Universal Description, Discovery, and
+        Integration (UDDI v3) specification for Web Services.
+		</para>
+	</abstract>
+	<corpauthor>
+		<inlinemediaobject>
+			<imageobject>
+				<imagedata format='SVG' fileref="Common_Content/images/title_logo.svg" />
+			</imageobject>
+			<textobject><phrase>Logo</phrase></textobject>
+		</inlinemediaobject>
+	</corpauthor>
+	<copyright>
+		<year>&YEAR;</year>
+		<holder>&HOLDER;</holder>
+	</copyright>
+	
+	<xi:include href="Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude">
+		<xi:fallback xmlns:xi="http://www.w3.org/2001/XInclude">
+			<xi:include href="Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		</xi:fallback>
+	</xi:include>
+	
+	<xi:include href="Author_Group.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</bookinfo>
+
+
+

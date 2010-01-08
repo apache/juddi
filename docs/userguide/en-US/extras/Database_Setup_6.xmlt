@@ -1,0 +1,3 @@
+<jta-data-source>java:comp/env/jdbc/JuddiDS</jta-data-source>
+    .....
+<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

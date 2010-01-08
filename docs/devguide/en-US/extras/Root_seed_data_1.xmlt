@@ -1,0 +1,4 @@
+<publisher xmlns="urn:juddi-apache-org:api_v3" authorizedName="root">
+    <publisherName>root publisher</publisherName>
+    <isAdmin>true</isAdmin>
+</publisher>

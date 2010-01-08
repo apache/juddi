@@ -1,0 +1,130 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<!-- chapter: Database Setup -->
+<chapter id="chap-database_setup">
+    <title>Database Setup</title>
+    
+    <!-- section: Derby Out-of-the-Box -->
+    <section id="sect-derby_OOB">
+        <title>Derby Out-of-the-Box</title>
+        <para>
+        By default jUDDI uses an embedded Derby database. This allows us to build a 
+        downloadable distribution that works out-of-the-box, without having to do any 
+        database setup work. We recommend switching to an enterprise-level database 
+        before going to production. JUDDI uses the Java Persistence API (JPA) in the back 
+        end and we've tested with both OpenJPA and Hibernate. To configure which JPA 
+        provider you want to use, you will need to edit the configuration in the 
+        <filename>persistence.xml</filename>. This file can be found in the 
+        <filename>juddi.war/WEB-INF/classes/META-INF/persistence.xml</filename>
+        </para>
+    
+        <para>
+        For Hibernate the content of this file looks like
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_1.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        The <filename>persistence.xml</filename> reference a datasource
+        <property>“java:comp/env/jdbc/JuddiDS”</property>. Datasource deployment is
+        Application Server specific. If you are using Tomcat, then the datasource is
+        defined in <filename>juddi/META-INF/context.xml</filename> which by default looks
+        like
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_2.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+    </section>
+    
+
+    <!-- section: Switch to MySQL -->
+    <section id="sect-switch_to_mysql">
+        <title>Switch to MySQL</title>
+
+        <para>
+        To switch over to MySQL you need to add the mysql driver (i.e. The
+        <filename>mysql-connector-java-5.1.6.jar</filename>) to the classpath and you will
+        need to edit the <filename>persistence.xml</filename>
+        </para>
+
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_3.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        and the datasource. For tomcat you the <filename>context.xml</filename> should
+        look something like
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_4.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <warning>
+            <para>
+            Tomcat copies the <filename>context.xml</filename> to <filename>conf/CATALINA/localhost/juddiv3.xml</filename>, and if
+            you update the <filename>context.xml</filename> it may not update this copy. You should simply
+            delete the <filename>juddiv3.xml</filename> file after updating the <filename>context.xml</filename>.
+            </para>
+        </warning>
+
+        <para>
+        To create a MySQL database name <literal>juddiv3</literal> use
+        </para>
+
+        <screen><xi:include href="extras/Database_Setup_1.screen" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></screen>
+
+        <para>
+        and finally you probably want to switch to a user which is a bit less potent then
+        '<literal>root</literal>'.
+        </para>
+        
+    </section>
+    
+    <!-- section: Switch to Postgres -->
+    <section id="sect-switch_to_postres">
+        <title>Switch to Postgres</title>
+        <para>
+        This was written from a JBoss - jUDDI perspective. Non-JBoss-users may have to
+        tweak this a little bit, but for the most part, the files and information needed
+        is here.
+        </para>
+    
+        <para>
+        Logged in as postgres user, access psql:
+        </para>
+    
+        <screen><xi:include href="extras/Database_Setup_2.screen" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></screen>
+
+        <para>
+        Note, for this example, my database is called juddi, as is the user who has full
+        privileges to the database. The user 'juddi' has a password set to 'password'.
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_5.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        In <filename>persistence.xml</filename>, reference the correct JNDI name of the
+        datasource and remove the derby Dialect and add in the postgresql Dialect:
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_6.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        Be sure to have <filename>postgresql-8.3-604.jdbc4.jar</filename> in the
+        <filename>lib</filename> folder!
+        </para>
+    </section>
+    
+    <!-- section: Switch to &lt;other db&gt; -->
+    <section id="sect-switch_to_other_DB">
+        <title>Switch to &lt;other db&gt;</title>
+        <para>
+        If you use another database, please document, and send us what you had to change
+        to make it work and we will include it here.
+        </para>
+    </section>
+    
+    
+</chapter>
