@@ -29,7 +29,7 @@
 	</target>
 	
 	<target name="loadtest" depends="configure">
-	   <ant antfile="juddi-xlt/build.xml" target="loadtest" />
+	   <ant antfile="build.xml" target="loadtest" dir="${basedir}/juddi-xlt" />
 	</target>
 	
 </project>
