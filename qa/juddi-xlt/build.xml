@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+		* Copyright 2001-2010 The Apache Software Foundation. * * Licensed
+		under the Apache License, Version 2.0 (the "License"); * you may not
+		use this file except in compliance with the License. * You may obtain
+		a copy of the License at * *
+		http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by
+		applicable law or agreed to in writing, software * distributed under
+		the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES
+		OR CONDITIONS OF ANY KIND, either express or implied. * See the
+		License for the specific language governing permissions and *
+		limitations under the License. * */
+	-->
+<project default="all" basedir=".">
+
+	<!-- 
+        Reads the properties from a file.  
+    -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- 
+        Builds the XLT class path for further reference.  
+    -->
+	<path id="xlt.class.path">
+		<pathelement path="${xlt.classes.dir}" />
+		<fileset dir="${xlt.lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${test.lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- 
+        Deletes any result file from a previous test run.  
+    -->
+	<target name="clean">
+		<delete includeEmptyDirs="true" failonerror="false">
+			<fileset dir="${test.classes.dir}" includes="**/*" />
+			<fileset dir="${test.results.dir}" includes="**/*" />
+		</delete>
+	</target>
+
+	<!-- 
+        Compiles the Java sources in ${test.src.dir} to ${test.classes.dir}. 
+        Any non-Java file in the sources dir will be copied there, too.
+    -->
+	<target name="compile">
+		<mkdir dir="${test.classes.dir}" />
+		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="on" optimize="off" deprecation="on">
+			<classpath refid="xlt.class.path" />
+		</javac>
+		<copy todir="${test.classes.dir}">
+			<fileset dir="${test.src.dir}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- 
+        Performs a functional test by running the configured junit tests. 
+    -->
+	<target name="test" depends="compile">
+		<!-- 
+            Run the junit tests. 
+        -->
+		<junit forkmode="once" printsummary="on">
+			<!-- build the class path -->
+			<classpath>
+				<path refid="xlt.class.path" />
+				<pathelement location="${test.classes.dir}" />
+			</classpath>
+			<!-- configure the environment for XLT-based test cases -->
+			<sysproperty key="com.xceptance.xlt.home" value="${basedir}" />
+			<sysproperty key="com.xceptance.xlt.data.directory" value="${test.config.dir}/data" />
+			<sysproperty key="log4j.configuration" value="file:${test.config.dir}/dev-log4j.properties" />
+			<!-- configure the test result formatter -->
+			<formatter type="xml" />
+			<!-- execute all configured tests -->
+			<batchtest fork="yes" todir="${test.results.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="${test.cases}" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<!-- 
+            Create a test report from the test results. 
+        -->
+		<junitreport todir="${test.results.dir}">
+			<!-- determine the test result files -->
+			<fileset dir="${test.results.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<!-- generate the HTML report -->
+			<report format="noframes" todir="${test.results.dir}" />
+		</junitreport>
+	</target>
+
+	<!-- 
+        Performs a load test with the test cases configured in the test suite.
+        For this, the XLT load test environment is used. 
+    -->
+	<target name="loadtest" depends="compile">
+		<!-- 
+			Determine the command to run depending on the OS.
+		-->
+		<condition property="command" value="mastercontroller.cmd" else="mastercontroller.sh">
+			<os family="windows" />
+		</condition>
+		<!-- 
+            Run the master controller using an embedded agent controller. 
+        -->
+		<exec executable="${xlt.bin.dir}/${command}">
+			<arg line="-auto -embedded -report" />
+		</exec>
+	</target>
+
+	<!-- 
+        Executes all targets one after the other.  
+    -->
+	<target name="all" depends="clean, test, loadtest" />
+
+</project>
