@@ -1,0 +1,50 @@
+To run the qa tests
+
+1. Start the jUDDI server at port 8080.
+
+2. Place the license.xml.donotcheckin file in the qa/xlt directory. If you are a developer on
+the jUDDI project you can receive a copy of this file by asking for it at the juddi-dev mailing
+list. Without the license XLT is limited to running 5 users
+
+3. Run 'ant loadtest'. This will download XLT, configure the XLT software and start the loadtest
+
+
+
+
+
+
+*********************************************************************************************************
+A succesful test output will look like this:
+
+
+setup:
+      [get] Getting: https://lab.xceptance.de/releases/xlt/3.3.0/xlt-3.3.0-r3088.zip
+      [get] To: /home/kstam/osc/juddi/trunk/qa/xlt/xlt-3.3.0-r3088.zip
+      [get] local file date : Fri Aug 28 12:37:57 EDT 2009
+      [get] Not modified - so not downloaded
+    [unzip] Expanding: /home/kstam/osc/juddi/trunk/qa/xlt/xlt-3.3.0-r3088.zip into /home/kstam/osc/juddi/trunk/qa/target
+
+configure:
+
+loadtest:
+
+compile:
+
+loadtest:
+     [exec] 
+     [exec] Xceptance LoadTest 3.3.0 (r3088)
+     [exec] Copyright (c) 2005-2009 Xceptance Software Technologies GmbH. All rights reserved.
+     [exec] Community License (unlimited virtual users). Your license is valid until 2010-12-31 (356 days left).
+     [exec] 
+     [exec] Uploading agent files ... 
+     [exec]  -> embedded ... OK
+     [exec] 
+     [exec] Starting agents ... 
+     [exec]  -> embedded ... OK
+     [exec] 
+     [exec] Test Case             State         Running Users   Iterations   Last Time   Avg. Time   Elapsed Time      Events   Errors   Progress
+     [exec] -------------------   --------   ----------------   ----------   ---------   ---------   ------------   ---------   ------   --------
+     [exec] TDeleteBusinessPT     Running         1 of     10            0      0.00 s      0.00 s        0:00:02           0        0         0%
+     [exec] TFindBusinessPT       Running         1 of     10            0      0.00 s      0.00 s        0:00:02           0        0         0%
+     [exec] TRegisterBusinessPT   Running         1 of     10            0      0.00 s      0.00 s        0:00:02           0        0         0%
+     [exec] 
