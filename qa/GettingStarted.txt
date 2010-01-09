@@ -3,8 +3,8 @@ To run the qa tests
 1. Start the jUDDI server at port 8080.
 
 2. Place the license.xml.donotcheckin file in the qa/xlt directory. If you are a developer on
-the jUDDI project you can receive a copy of this file by asking for it at the juddi-dev mailing
-list. Without the license XLT is limited to running 5 users
+the jUDDI project you can receive a copy of this file by asking for it on the juddi-dev mailing
+list. Without the license XLT is limited to running 5 users.
 
 3. Run 'ant loadtest'. This will download XLT, configure the XLT software and start the loadtest
 
