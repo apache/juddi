@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.portlets.client;
 
+import java.util.ArrayList;
+
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
@@ -157,7 +159,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 								+ serviceBinding.getAccessPoint() + "'>" 
 								+ serviceBinding.getAccessPoint() + "</a>").getHTML());
 						}
-						table.setHTML(row, 1, bindingtable.toString());
+						table.setHTML(row++, 1, bindingtable.toString());
 					}
 				} else {
 					Window.alert("error: " + response.getMessage());
