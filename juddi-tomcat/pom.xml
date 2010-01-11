@@ -111,6 +111,7 @@
 	       <property name="dependency.juddiv3-samples.war" value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${juddi-cxf-version}.war"/>
 	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
 	       <ant antfile="${basedir}/build.xml">
+		  <property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}"/>
                   <target name="package-tomcat"/>
                </ant>
               </tasks>
