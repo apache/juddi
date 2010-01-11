@@ -36,39 +36,38 @@
   <listener>
     <listener-class>
       org.springframework.web.context.ContextLoaderListener
-		</listener-class>
+    </listener-class>
   </listener>
 
   <servlet>
-    <servlet-name>CXFServlet</servlet-name>
-    <display-name>CXF Servlet</display-name>
-    <servlet-class>
-      org.apache.cxf.transport.servlet.CXFServlet
-		</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
-   <servlet-mapping>
-    <servlet-name>CXFServlet</servlet-name>
-    <url-pattern>/services/*</url-pattern>
-   </servlet-mapping>
-   
-   <servlet>
     <servlet-name>UDDIClerkServlet</servlet-name>
     <display-name>Clerk Servlet</display-name>
     <servlet-class>
       org.apache.juddi.v3.client.config.UDDIClerkServlet
     </servlet-class>
     <load-on-startup>1</load-on-startup>
-   
-    <resource-ref>
-	  <description>jUDDI DataSource</description>
-	  <res-ref-name>jdbc/juddiDB</res-ref-name>
-	  <res-type>javax.sql.DataSource</res-type>
-      <res-auth>Container</res-auth>
-	  u<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-  
   </servlet>
+
+  <servlet>
+    <servlet-name>CXFServlet</servlet-name>
+    <display-name>CXF Servlet</display-name>
+    <servlet-class>
+      org.apache.cxf.transport.servlet.CXFServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>CXFServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
    
+  <resource-ref>
+    <description>jUDDI DataSource</description>
+    <res-ref-name>jdbc/juddiDB</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+  
 </web-app>
