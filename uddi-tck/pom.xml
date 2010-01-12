@@ -126,9 +126,6 @@
 								<unzip dest="target" src="target/juddi-tomcat-3.0.1.SNAPSHOT.zip" />
 								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf" overwrite="true"/>
 								<copy file="${basedir}/log4j.properties" todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true"/>
-								<!--
-								     <copy file="${basedir}/log4j.xml" todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/log4j.xml"/>
-								-->
 							</tasks>
 						</configuration>
 						<goals>
@@ -169,6 +166,7 @@
 						<type>existing</type>
 						<home>${project.build.directory}/juddi-tomcat-3.0.1.SNAPSHOT</home>
 						<properties>
+							<cargo.logging>high</cargo.logging>
 							<cargo.hostname>localhost</cargo.hostname>
 							<cargo.servlet.port>8880</cargo.servlet.port>
 							<cargo.jvmargs>-Xms256m -Xmx256m -XX:PermSize=256M -XX:MaxPermSize=256M</cargo.jvmargs>
@@ -206,6 +204,10 @@
 							<name>derby.stream.error.file</name>
 							<value>target/derby.log</value>
 						</property>
+						<property>
+							<name>java.io.tmpdir</name>
+							<value>${basedir}/temp</value>
+						</property>
 					</systemProperties>
 				</configuration>
 				<executions>
@@ -221,6 +223,10 @@
 								<property>
 									<name>cactus.contextURL</name>
 									<value>http://localhost:8880/juddi</value>
+								</property>
+								<property>
+									<name>java.io.tmpdir</name>
+									<value>${basedir}/temp</value>
 								</property>
 							</systemProperties>
 						</configuration>

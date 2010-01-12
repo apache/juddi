@@ -15,6 +15,7 @@ package org.apache.juddi.v3.tck;
  * limitations under the License.
  */
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -114,7 +115,9 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			String test="";
 			for (int i=0; i<200; i++) {
 				Thread.sleep(500);
-				test = readLogAsString("./target/uddiclient.log");
+				String tempdir = System.getProperty("java.io.tmpdir");
+
+				test = readLogAsString(tempdir + File.separator + "uddiclient.log");
 				System.out.print(".");
 				if (test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
 					System.out.print("Found String");
