@@ -24,7 +24,7 @@
 
   <display-name>jUDDI</display-name>
   <description>
-    jUDDI is Java-based implementation of a UDDI version 4.0 registry.
+    jUDDI is Java-based implementation of a UDDI version 3.0 registry.
   </description>
 
    <servlet>
