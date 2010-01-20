@@ -111,17 +111,21 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
 			
-            //waiting up to 10 seconds for the listener to notice the change.
+			String tempdir = System.getProperty("java.io.tmpdir");
+			String file = tempdir + File.separator + "uddiclient.log";
+			System.out.println("Going to read from file: " + file);
+			
+            //waiting up to 100 seconds for the listener to notice the change.
 			String test="";
 			for (int i=0; i<200; i++) {
 				Thread.sleep(500);
-				String tempdir = System.getProperty("java.io.tmpdir");
-
-				test = readLogAsString(tempdir + File.separator + "uddiclient.log");
+				test = readLogAsString(file);
 				System.out.print(".");
 				if (test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
 					System.out.print("Found String");
 					break;
+				} else {
+					System.out.print(test);
 				}
 			}
 			if (! test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
