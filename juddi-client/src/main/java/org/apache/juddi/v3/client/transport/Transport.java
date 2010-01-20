@@ -26,20 +26,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;;
 
 public abstract class Transport {
 	
-	public final static String API_V3_NAMESPACE              = "urn:uddi-org:api_v3_portType";
-	public final static String SUB_V3_NAMESPACE              = "urn:uddi-org:sub_v3_portType";
-	public final static String SUBR_V3_NAMESPACE	         = "urn:uddi-org:subr_v3_portType";
-	public final static String CUSTODY_V3_NAMESPACE          = "urn:uddi-org:custody_v3_portType";
-	public final static String JUDDI_API_V3_NAMESPACE        = "urn:juddi-apache-org:api_v3_portType";
 	public final static String DEFAULT_NODE_NAME             = "default";
-	
-	public final static String INQUIRY_SERVICE               = "UDDIInquiryService";
-	public final static String SECURITY_SERVICE              = "UDDISecurityService";
-	public final static String PUBLISH_SERVICE               = "UDDIPublishService";
-	public final static String SUBSCRIPTION_SERVICE          = "UDDISubscriptionService";
-	public final static String SUBSCRIPTION_LISTENER_SERVICE = "UDDISubscriptionListenerService";
-	public final static String CUSTODY_TRANSFER_SERVICE      = "UDDICustodyTransferService";
-	public final static String PUBLISHER_SERVICE             = "JUDDIApiService";
 	
 	public abstract UDDIInquiryPortType getUDDIInquiryService(String enpointURL)           throws TransportException;
 	public abstract UDDISecurityPortType getUDDISecurityService(String enpointURL)         throws TransportException;

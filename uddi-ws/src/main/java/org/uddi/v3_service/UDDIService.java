@@ -34,7 +34,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.1
  * 
  */
-@WebServiceClient(name = "UDDI_Service", targetNamespace = "urn:uddi-org:v3_service", wsdlLocation = "file:/C:/Development/Projects/jUDDI_v3/uddi-ws/src/main/resources/uddi_v3_service.wsdl")
+@WebServiceClient(name = "UDDI_Service", targetNamespace = "urn:uddi-org:v3_service", wsdlLocation = "classpath:/uddi_v3_service.wsdl")
 public class UDDIService
     extends Service
 {
@@ -47,9 +47,9 @@ public class UDDIService
         try {
             URL baseUrl;
             baseUrl = org.uddi.v3_service.UDDIService.class.getResource(".");
-            url = new URL(baseUrl, "file:/C:/Development/Projects/jUDDI_v3/uddi-ws/src/main/resources/uddi_v3_service.wsdl");
+            url = new URL(baseUrl, "classpath:/uddi_v3_service.wsdl");
         } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'file:/C:/Development/Projects/jUDDI_v3/uddi-ws/src/main/resources/uddi_v3_service.wsdl', retrying as a local file");
+            logger.warning("Failed to create URL for the wsdl Location: 'classpath:/uddi_v3_service.wsdl', retrying as a local file");
             logger.warning(e.getMessage());
         }
         UDDISERVICE_WSDL_LOCATION = url;
