@@ -49,4 +49,5 @@ public class ApplicationConfigurationTest
 			Assert.fail();
 		}
 	}
+	
 }

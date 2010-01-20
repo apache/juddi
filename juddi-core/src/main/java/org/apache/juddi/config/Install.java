@@ -32,8 +32,6 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -565,36 +563,12 @@ public class Install {
 	    	xml.append(new String(b, 0, n));
 	    }
 	    log.debug("inserting: " + xml.toString());
-	    StringReader reader = new StringReader(replaceTokens(xml.toString(), config));
+	    StringReader reader = new StringReader(xml.toString());
 		
 		JAXBContext jc = JAXBContext.newInstance(packageName);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		Object obj = ((JAXBElement<?>)unmarshaller.unmarshal(new StreamSource(reader))).getValue();
 		return obj;
-	}
-	
-	private static String replaceTokens(String installData, Configuration config) throws ConfigurationException {
-		
-		installData = installData.replaceAll("\\n"," ").replaceAll("\\r", "");
-		/* pattern that is multi-line (?m), and looks for a pattern of
-		 * ${token}, in a 'reluctant' manner, by using the ? to 
-		 * make sure we find ALL the tokens.
-		 */
-		Pattern pattern = Pattern.compile("(?m)\\$\\{.*?\\}");
-        Matcher matcher = pattern.matcher(installData);
-        while (matcher.find()) {
-            String token = matcher.group();
-            token = token.substring(2,token.length()-1);
-            String replacement = config.getString(token);
-            if (replacement!=null) {
-            	log.debug("Found token " + token + " and replacement value " + replacement);
-            	installData = installData.replaceAll("\\$\\{" + token + "\\}", replacement);
-            } else {
-            	log.error("Found token " + token + " but could not obtain its value. Data: " + installData);
-            }
-        }
-        log.debug("Data after token replacement: " + installData);
-        return installData;
 	}
 
 	/**

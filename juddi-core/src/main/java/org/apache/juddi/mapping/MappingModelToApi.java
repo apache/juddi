@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.UddiEntity;
@@ -360,7 +362,20 @@ public class MappingModelToApi {
 		apiBindingTemplate.setBindingKey(modelBindingTemplate.getEntityKey());
 		org.uddi.api_v3.AccessPoint apiAccessPoint = new org.uddi.api_v3.AccessPoint();
 		apiAccessPoint.setUseType(modelBindingTemplate.getAccessPointType());
-		apiAccessPoint.setValue(modelBindingTemplate.getAccessPointUrl());
+		String accessPointValue = modelBindingTemplate.getAccessPointUrl();
+		if (accessPointValue!=null) {
+			try {
+				String baseUrl = AppConfig.getConfiguration().getString("juddi.server.baseurl");
+				if (baseUrl==null) {
+					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to 'http://localhost:8080'");
+					baseUrl = "http://localhost:8080";
+				}
+				accessPointValue = accessPointValue.replaceAll("\\$\\{juddi.server.url\\}", baseUrl);
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage(),e);
+			}
+		}
+		apiAccessPoint.setValue(accessPointValue);
 		apiBindingTemplate.setAccessPoint(apiAccessPoint);
 		if (modelBindingTemplate.getHostingRedirector()!=null) {
 			org.uddi.api_v3.HostingRedirector apiHost = new org.uddi.api_v3.HostingRedirector();
