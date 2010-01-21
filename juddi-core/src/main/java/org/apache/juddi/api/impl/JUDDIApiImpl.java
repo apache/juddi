@@ -17,7 +17,6 @@
 
 package org.apache.juddi.api.impl;
 
-import java.util.Vector;
 import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -504,7 +503,6 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 	/**
 	 * Instructs the registry to perform a synchronous subscription response.
 	 */
-	@SuppressWarnings("unchecked")
 	public SyncSubscriptionDetail invokeSyncSubscription(
 			SyncSubscription body) throws DispositionReportFaultMessage,
 			RemoteException {
@@ -565,10 +563,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 					nl.getNotifications().setSize(MAX_NOTIFICATIONS - 1);
 				}
 				nl.getNotifications().add(0, sw.toString());
-				Vector vect = nl.getNotifications();
-				for (int i = 0; i < vect.size(); i++) {
-					String str = (String) vect.get(i);
-				}		
+//				Vector vect = nl.getNotifications();
+//				for (int i = 0; i < vect.size(); i++) {
+//					String str = (String) vect.get(i);
+//				}		
 				
 				//update the registry with the notification list.
 				XRegisterHelper.handle(fromClerk, toClerk, list);

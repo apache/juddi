@@ -21,7 +21,6 @@ import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

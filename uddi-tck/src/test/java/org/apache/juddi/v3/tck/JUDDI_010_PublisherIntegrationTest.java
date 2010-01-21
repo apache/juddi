@@ -39,7 +39,6 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
