@@ -17,6 +17,7 @@
 
 package org.apache.juddi.api.impl;
 
+import java.util.Vector;
 import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -81,6 +82,8 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
 	private Logger log = Logger.getLogger(this.getClass());
+	private static int MAX_NOTIFICATIONS = 5;
+	
 	/**
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
 	 */
@@ -558,7 +561,14 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 				
 				NotificationList nl = NotificationList.getInstance();
-				nl.getNotifications().add(sw.toString());
+				if (nl.getNotifications().size() == MAX_NOTIFICATIONS) {
+					nl.getNotifications().setSize(MAX_NOTIFICATIONS - 1);
+				}
+				nl.getNotifications().add(0, sw.toString());
+				Vector vect = nl.getNotifications();
+				for (int i = 0; i < vect.size(); i++) {
+					String str = (String) vect.get(i);
+				}		
 				
 				//update the registry with the notification list.
 				XRegisterHelper.handle(fromClerk, toClerk, list);

@@ -7,13 +7,13 @@ public class NotificationList {
 	private static Vector<?> list = null;
 	
 	private NotificationList() {	
+		list = new Vector();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static NotificationList getInstance() {
 		if (nl == null) {
 			nl = new NotificationList();
-			list = new Vector();
 		}
 		return nl;
 	}
