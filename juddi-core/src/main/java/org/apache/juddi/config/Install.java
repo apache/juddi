@@ -84,8 +84,8 @@ public class Install {
 		
 		try {
 			tx.begin();
-	
-			if (alreadyInstalled(config))
+			boolean seedAlways = config.getBoolean("juddi.seed.always", false);
+			if (!seedAlways && alreadyInstalled(config))
 				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
 			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);

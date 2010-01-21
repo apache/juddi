@@ -102,9 +102,13 @@ public class AppConfig
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
-	
-			if (!Install.alreadyInstalled(config)) {
-				log.info("The 'root' publisher was not found, loading...");
+			boolean seedAlways = config.getBoolean("juddi.seed.always",false);
+			if (seedAlways || !Install.alreadyInstalled(config)) {
+			    if (seedAlways) {
+			    	log.info("Installing UDDI seed data, loading...");
+			    } else {
+			    	log.info("The 'root' publisher was not found, loading...");
+			    }
 				try {
 					Install.install(config);
 				} catch (Exception e) {
