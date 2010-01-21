@@ -73,7 +73,14 @@ public class AppConfig
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
-		PropertiesConfiguration propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+		PropertiesConfiguration propConfig = null;
+	        final String filename = System.getProperty("juddi.propertiesFile");
+		if (filename != null)
+        	{
+			propConfig = new PropertiesConfiguration(filename);
+		} else {
+			propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+		}
 		URL url = Loader.getResource(JUDDI_PROPERTIES); 
 		log.info("Reading from properties file:  " + url);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
