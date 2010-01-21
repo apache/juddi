@@ -65,7 +65,7 @@ public class SubscriptionNotifier extends TimerTask {
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private static long ACCEPTABLE_LAG_TIME = 500l; //500 milliseconds
 	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:subr_v3_portType";
-	private static String SUBSCRIPTION_LISTENER = "UDDISubscriptionListenerService";
+	private static String SUBSCRIPTION_LISTENER = "UDDI_SubscriptionListener_Port";
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
