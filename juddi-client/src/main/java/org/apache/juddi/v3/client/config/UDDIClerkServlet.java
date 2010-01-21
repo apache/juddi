@@ -31,6 +31,7 @@ public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
 	private Logger logger = Logger.getLogger(UDDIClerkServlet.class);
+	UDDIClerkManager manager = null;
 	/**
 	 * Starting the UDDIClerkManager
 	 */
@@ -38,11 +39,14 @@ public class UDDIClerkServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			
-			logger.info("Starting Clerk Manager");
-			UDDIClerkManager.start();
+			String clientConfigFile = config.getInitParameter("uddi.client.config");
+			if (clientConfigFile==null) clientConfigFile = ClientConfig.UDDI_CONFIG;
+			logger.info("Starting Clerk Manager..");
+			UDDIClerkManager manager = new UDDIClerkManager(clientConfigFile);
+			manager.start();
+			logger.info("Successfully Started Clerk Manager " + manager.getName());
 		} catch (Exception e) {
-			logger.error("UDDI-client could not be started."
+			logger.error("UDDI-client could not be started for manager " + manager.getName() + ". "
 					+ e.getMessage(), e);
 		} catch (Throwable t) {
 			logger.error("UDDI-client could not be started."
@@ -53,9 +57,9 @@ public class UDDIClerkServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		try {
-			UDDIClerkManager.stop();
+			manager.stop();
 		} catch (Exception e) {
-			logger.error("UDDI-client could not be stopped."
+			logger.error("UDDI-Clerk Manager could not be stopped for manager " + manager.getName() + ". "
 					+ e.getMessage(), e);
 		} catch (Throwable t) {
 			logger.error("UDDI-client could not be stopped."

@@ -14,6 +14,7 @@ import org.apache.log4j.helpers.Loader;
 import org.apache.juddi.v3.client.transport.Transport;
 
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -64,8 +65,9 @@ public class UDDIInquiryService {
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 	}
 	
-	public Node inquire(Element uddiReq) throws Exception{
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+	public Node inquire(Element uddiReq) throws Exception {
+		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+		String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
         Class<?> transportClass = Loader.loadClass(clazz);
         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
 		UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();

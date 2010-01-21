@@ -16,14 +16,9 @@ package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.Registry;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3.tck.TckBusiness;
-import org.apache.juddi.v3.tck.TckBusinessService;
-import org.apache.juddi.v3.tck.TckPublisher;
-import org.apache.juddi.v3.tck.TckSecurity;
-import org.apache.juddi.v3.tck.TckTModel;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
 import org.junit.AfterClass;
@@ -52,7 +47,7 @@ public class UDDI_040_BusinessServiceIntegrationTest
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -85,7 +80,7 @@ public class UDDI_040_BusinessServiceIntegrationTest
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

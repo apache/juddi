@@ -32,12 +32,10 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
-import org.apache.juddi.v3.tck.TckPublisher;
-import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.Loader;
@@ -63,7 +61,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -89,7 +87,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}
@@ -98,7 +96,7 @@ public class JUDDI_010_PublisherIntegrationTest {
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+	    	 String clazz = UDDIClientContainer.getDefaultTransportClass();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");

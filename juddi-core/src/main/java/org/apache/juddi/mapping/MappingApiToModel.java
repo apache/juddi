@@ -634,6 +634,7 @@ public class MappingApiToModel {
 			modelNode.setInquiryUrl(apiNode.getInquiryUrl());
 			modelNode.setJuddiApiUrl(apiNode.getJuddiApiUrl());
 			modelNode.setName(apiNode.getName());
+			modelNode.setManagerName(apiNode.getManagerName());
 			modelNode.setProxyTransport(apiNode.getProxyTransport());
 			modelNode.setPublishUrl(apiNode.getPublishUrl());
 			modelNode.setSecurityUrl(apiNode.getSecurityUrl());

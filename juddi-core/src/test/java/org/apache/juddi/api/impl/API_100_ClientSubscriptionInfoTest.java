@@ -82,6 +82,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		node.setProxyTransport("class");
 		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
+		node.setManagerName("defaultManager");
 		SaveNode saveNode = new SaveNode();
 		saveNode.setAuthInfo(authInfoJoe);
 		saveNode.getNode().add(node);
@@ -105,6 +106,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		node2.setProxyTransport("class2");
 		node2.setSubscriptionUrl("http://localhost:8080/services/securityUrl2");
 		node2.setName("default2");
+		node2.setManagerName("default2Manager");
 		saveNode.getNode().add(node2);
 		
 		Clerk clerk2 = new Clerk();

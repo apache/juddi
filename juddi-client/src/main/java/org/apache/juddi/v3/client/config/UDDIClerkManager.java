@@ -12,32 +12,26 @@ import org.uddi.api_v3.BusinessService;
 
 public class UDDIClerkManager {
 	
-	private static UDDIClerkManager manager = null;
 	private static Logger log = Logger.getLogger(UDDIClerkManager.class);
     private ClientConfig clientConfig = null;
 	
 	/**
-	 * Singleton.
+	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
 	 * @throws ConfigurationException 
 	 */
-	public UDDIClerkManager() throws ConfigurationException {
+	public UDDIClerkManager(String configurationFile) throws ConfigurationException {
 		super();
-		clientConfig = new ClientConfig();
+		clientConfig = new ClientConfig(configurationFile);
 	}
 	/**
 	 * Stops the clerks.
 	 * @throws ConfigurationException 
 	 */
-	public synchronized static void stop() throws ConfigurationException {
-		
-		if (manager!=null) {
-			log.info("Stopping UDDI Clerks for manager " + manager.clientConfig.getManagerName());
-			manager.releaseResources();
-			manager=null;
-			log.info("UDDI Clerks shutdown completed for manager " + manager.clientConfig.getManagerName());
-		} else {
-			log.warn("UDDI Clerks where not running for manager " + manager.clientConfig.getManagerName());
-		}
+	public void stop() throws ConfigurationException {
+		log.info("Stopping UDDI Clerks for manager " + clientConfig.getManagerName());
+		releaseResources();
+		UDDIClientContainer.removeClerkManager(getName());
+		log.info("UDDI Clerks shutdown completed for manager " + clientConfig.getManagerName());
 	}
 	
 	private void releaseResources() {
@@ -47,35 +41,20 @@ public class UDDIClerkManager {
 	 * Initializes the UDDI Clerk.
 	 * @throws ConfigurationException  
 	 */
-	public synchronized static void start() throws ConfigurationException {
-		if (manager!=null) {
-			log.warn("ClerkManager was already started. Going to reload..");
-			manager.releaseResources();
-			manager.clientConfig.loadManager();
-		} else {
-			log.info("Starting UDDI Clerks...");
-			manager = new UDDIClerkManager();
+	public void start() throws ConfigurationException {
+		log.info("Starting UDDI Clerks for manager " + clientConfig.getManagerName() + "...");
+		UDDIClientContainer.addClerkManager(this);
+		if (clientConfig.isRegisterOnStartup()) {
+			saveClerkAndNodeInfo();
+			registerAnnotatedServices();
+			xRegister();
 		}
-		if (manager.clientConfig.isRegisterOnStartup()) {
-			manager.saveClerkAndNodeInfo();
-			manager.registerAnnotatedServices();
-			manager.xRegister();
-		}
-		log.info("Clerks started succesfully for manager " + manager.clientConfig.getManagerName());
+		log.info("Clerks started succesfully for manager " + clientConfig.getManagerName());
  	}
 	
-	public synchronized static void restart() throws ConfigurationException {
-		if (manager==null) {
-			log.warn("ClerkManager nor running..");
-		} else {
-			log.info("Restarting UDDI Clerks...");
-			manager.releaseResources();
-			manager.clientConfig.loadManager();
-			manager = new UDDIClerkManager();
-			manager.registerAnnotatedServices();
-			manager.xRegister();
-			log.info("Clerks restarted succesfully for manager " + manager.clientConfig.getManagerName());
-		}
+	public void restart() throws ConfigurationException {
+		stop();
+		start();
  	}
 	/**
 	 * Saves the clerk and node info from the uddi.xml to the jUDDI registry.
@@ -87,10 +66,10 @@ public class UDDIClerkManager {
 			for (UDDIClerk defaultClerk : uddiClerks.values()) {
 				if (Transport.DEFAULT_NODE_NAME.equals(defaultClerk.uddiNode.getName())) {
 					for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {
-						defaultClerk.saveNode(uddiNode.getApiNode());
+						if (uddiNode.isAllowJUDDIAPI()) defaultClerk.saveNode(uddiNode.getApiNode());
 					}
 					for (UDDIClerk uddiClerk : clientConfig.getUDDIClerks().values()) {
-						defaultClerk.saveClerk(uddiClerk);
+						if (uddiClerk.getUDDINode().isAllowJUDDIAPI()) defaultClerk.saveClerk(uddiClerk);
 					}
 					break;
 				}
@@ -150,20 +129,13 @@ public class UDDIClerkManager {
 		}
 	}
 	
-	public static ClientConfig getClientConfig() throws ConfigurationException {
-		return getManager().clientConfig;
+	public ClientConfig getClientConfig() {
+		return clientConfig;
 	}
 	
-	public static UDDIClerkManager getManager() throws ConfigurationException {
-		
-		if (manager==null) {
-			UDDIClerkManager.start();
-		}
-		return manager;
+	public String getName() {
+		return clientConfig.getManagerName();
 	}
-	
-	
-	
 	
 }
 

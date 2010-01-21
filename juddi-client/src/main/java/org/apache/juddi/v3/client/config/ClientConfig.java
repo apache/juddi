@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 public class ClientConfig 
 {
 	private final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
-	private final static String UDDI_CONFIG = "META-INF/uddi.xml";
+	public final static String UDDI_CONFIG = "META-INF/uddi.xml";
 	private Logger log = Logger.getLogger(ClientConfig.class);
 	private Configuration config = null;;
 	private Map<String,UDDINode> uddiNodes = null;
@@ -52,9 +52,9 @@ public class ClientConfig
 	 * Constructor (note Singleton pattern).
 	 * @throws ConfigurationException
 	 */
-	public ClientConfig() throws ConfigurationException 
+	public ClientConfig(String configurationFile) throws ConfigurationException 
 	{
-		loadConfiguration();
+		loadConfiguration(configurationFile);
 	}
 	protected void loadManager() throws ConfigurationException {
 		uddiNodes = readNodeConfig(config);
@@ -68,19 +68,24 @@ public class ClientConfig
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */
-	private void loadConfiguration() throws ConfigurationException {
+	private void loadConfiguration(String configurationFile) throws ConfigurationException {
 		//Properties from system properties
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from XML file
-		XMLConfiguration xmlConfig = null;	
-		final String filename = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);
-		if (filename != null) 
-		{
-			xmlConfig = new XMLConfiguration(filename);
-		} else { 
-			xmlConfig = new XMLConfiguration(UDDI_CONFIG);	
+		XMLConfiguration xmlConfig = null;
+		if (configurationFile!=null) {
+			xmlConfig = new XMLConfiguration(configurationFile);
+		} else {
+			final String filename = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);
+			if (filename != null) 
+			{
+				xmlConfig = new XMLConfiguration(filename);
+			} else { 
+				xmlConfig = new XMLConfiguration(UDDI_CONFIG);	
+			}
 		}
+		log.info("Reading UDDI Client properties file " + xmlConfig.getBasePath());
 		long refreshDelay = xmlConfig.getLong(Property.UDDI_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
@@ -146,7 +151,9 @@ public class ClientConfig
 				}
 				uddiNode.setProperties(properties);
 			}
+			uddiNode.setAllowJUDDIAPI(          config.getBoolean("manager.nodes.node(" + i +")[@allowJUDDIAPI]",true));
 			uddiNode.setName(                   config.getString("manager.nodes.node(" + i +").name"));
+			uddiNode.setManagerName(            config.getString("manager[@name]"));
 			uddiNode.setDescription(            config.getString("manager.nodes.node(" + i +").description"));
 			uddiNode.setProxyTransport(         config.getString("manager.nodes.node(" + i +").proxyTransport"));
 			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").inquiryUrl"),properties));

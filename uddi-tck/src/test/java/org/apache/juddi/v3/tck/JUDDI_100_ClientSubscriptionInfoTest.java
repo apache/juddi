@@ -23,7 +23,7 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -48,7 +48,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -74,7 +74,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = UDDIClientContainer.getDefaultTransportClass();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

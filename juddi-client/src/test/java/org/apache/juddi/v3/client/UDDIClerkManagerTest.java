@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessService;
@@ -33,10 +34,9 @@ public class UDDIClerkManagerTest {
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	 UDDIClerkManager.start();
-	    	 
-	    	 UDDIClerkManager.getClientConfig().getUDDINode("default");
-	    	 assertEquals(2,UDDIClerkManager.getClientConfig().getUDDIClerks().size());
+	    	 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+	    	 manager.getClientConfig().getUDDINode("default");
+	    	 assertEquals(2,manager.getClientConfig().getUDDIClerks().size());
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
@@ -47,7 +47,8 @@ public class UDDIClerkManagerTest {
      @Test
      public void testAnnotation() {
     	 try {
-	    	 Map<String,UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+    		 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+	    	 Map<String,UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 if (clerks.containsKey("default")) {
 		 		 UDDIClerk clerk = clerks.get("default");

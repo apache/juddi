@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -48,6 +49,7 @@ public class JAXWSTransport extends Transport {
 	public final static String PUBLISHER_SERVICE             = "JUDDI_Api_Port";
 	
 	String nodeName = null;
+	String managerName = null;
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
 	UDDIPublicationPortType publishService = null;
@@ -66,11 +68,20 @@ public class JAXWSTransport extends Transport {
 		this.nodeName = nodeName;
 	}
 	
+	public JAXWSTransport(String managerName, String nodeName) {
+		super();
+		this.managerName = managerName;
+		this.nodeName = nodeName;
+	}
+	
 	public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
 
 		if (inquiryService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+				}
 				QName qName = new QName(API_V3_NAMESPACE, INQUIRY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				inquiryService = (UDDIInquiryPortType) service.getPort(UDDIInquiryPortType.class);
@@ -85,7 +96,10 @@ public class JAXWSTransport extends Transport {
 
 		if (securityService==null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+				}
 				QName qName = new QName(API_V3_NAMESPACE, SECURITY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				securityService = (UDDISecurityPortType) service.getPort(UDDISecurityPortType.class);
@@ -100,7 +114,10 @@ public class JAXWSTransport extends Transport {
 
 		if (publishService==null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+				}
 				QName qName = new QName(API_V3_NAMESPACE, PUBLISH_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publishService = (UDDIPublicationPortType) service.getPort(UDDIPublicationPortType.class);
@@ -115,7 +132,10 @@ public class JAXWSTransport extends Transport {
 
 		if (subscriptionService==null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+				}
 				QName qName = new QName(SUB_V3_NAMESPACE, SUBSCRIPTION_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionService = (UDDISubscriptionPortType) service.getPort(UDDISubscriptionPortType.class);
@@ -129,7 +149,10 @@ public class JAXWSTransport extends Transport {
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException {
 		if (subscriptionListenerService == null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+				}
 				QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionListenerService = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
@@ -143,7 +166,10 @@ public class JAXWSTransport extends Transport {
 	public UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException {
 		if (custodyTransferService == null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+				}
 				QName qName = new QName(CUSTODY_V3_NAMESPACE, CUSTODY_TRANSFER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDICustodyTransferPortType.class);
@@ -157,7 +183,10 @@ public class JAXWSTransport extends Transport {
 	public JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException {
 		if (publisherService == null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+				if (endpointURL==null)  {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+				}
 				QName qName = new QName(JUDDI_API_V3_NAMESPACE, PUBLISHER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);

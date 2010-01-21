@@ -25,6 +25,7 @@ import javax.naming.NamingException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -40,6 +41,7 @@ public class RMITransport extends Transport {
 	InitialContext context = null;
 	private Logger logger = Logger.getLogger(this.getClass());
 	private String nodeName = null;
+	private String managerName = null;
 	
 	public RMITransport() {
 		super();
@@ -52,11 +54,19 @@ public class RMITransport extends Transport {
 		initContext();
 	}
 	
+	public RMITransport(String managerName, String nodeName) throws NamingException, ConfigurationException {
+		super();
+		this.nodeName = nodeName;
+		this.managerName = managerName;
+		initContext();
+	}
+	
 	private void initContext() throws NamingException, ConfigurationException {
 		Properties env = new Properties();
-		String factoryInitial = UDDIClerkManager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_INITIAL);
-		String factoryURLPkgs = UDDIClerkManager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_URL_PKS);
-		String factoryNamingProvider = UDDIClerkManager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_PROVIDER_URL);
+		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+		String factoryInitial = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_INITIAL);
+		String factoryURLPkgs = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_URL_PKS);
+		String factoryNamingProvider = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_PROVIDER_URL);
         if (factoryInitial!=null && factoryInitial!="") env.setProperty(Property.UDDI_PROXY_FACTORY_INITIAL, factoryInitial);
         if (factoryURLPkgs!=null && factoryURLPkgs!="") env.setProperty(Property.UDDI_PROXY_FACTORY_URL_PKS, factoryURLPkgs);
         if (factoryNamingProvider!=null && factoryNamingProvider!="") env.setProperty(Property.UDDI_PROXY_PROVIDER_URL, factoryNamingProvider);
@@ -76,7 +86,10 @@ public class RMITransport extends Transport {
 	public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
 		if (inquiryService==null) {
 			try {
-				if (endpointURL==null)  endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -92,7 +105,10 @@ public class RMITransport extends Transport {
 	public UDDISecurityPortType getUDDISecurityService(String endpointURL) throws TransportException {
 		if (securityService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -108,7 +124,10 @@ public class RMITransport extends Transport {
 	public UDDIPublicationPortType getUDDIPublishService(String endpointURL) throws TransportException {
 		if (publishService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -124,7 +143,10 @@ public class RMITransport extends Transport {
 	public UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException {
 		if (subscriptionService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -140,7 +162,10 @@ public class RMITransport extends Transport {
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException {
 		if (subscriptionListenerService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -156,7 +181,10 @@ public class RMITransport extends Transport {
 	public UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException {
 		if (custodyTransferService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);
@@ -172,7 +200,10 @@ public class RMITransport extends Transport {
 	public JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException {
 		if (publisherService==null) {
 			try {
-				if (endpointURL==null) endpointURL = UDDIClerkManager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+				if (endpointURL==null) {
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+				}
 				URI endpointURI = new URI(endpointURL);
 		    	String service    = endpointURI.getPath();
 		    	logger.debug("Looking up service=" + service);

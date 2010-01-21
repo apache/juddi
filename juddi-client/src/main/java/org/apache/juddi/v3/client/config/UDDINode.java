@@ -14,7 +14,9 @@ public class UDDINode implements Serializable {
 	private Properties properties;
 	private Transport transport;
 	
+	private boolean allowJUDDIAPI;
 	private String name;
+	private String managerName;
 	private String description;
 	private String custodyTransferUrl;
 	private String inquiryUrl;
@@ -36,6 +38,7 @@ public class UDDINode implements Serializable {
 	public UDDINode(Node node) {
 		super();
 		name = node.getName();
+		managerName = node.getManagerName();
 		description = node.getDescription();
 		custodyTransferUrl = node.getCustodyTransferUrl();
 		inquiryUrl = node.getInquiryUrl();
@@ -81,7 +84,7 @@ public class UDDINode implements Serializable {
 			try {
 				String clazz = getProxyTransport();
 				Class<?> transportClass = Loader.loadClass(clazz);
-				transport = (Transport) transportClass.getConstructor(String.class).newInstance(name);
+				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,name);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(),e);
 			}
@@ -95,6 +98,14 @@ public class UDDINode implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
 	}
 
 	public String getDescription() {
@@ -191,5 +202,13 @@ public class UDDINode implements Serializable {
 
 	public void setFactoryNamingProvider(String factoryNamingProvider) {
 		this.factoryNamingProvider = factoryNamingProvider;
+	}
+
+	public boolean isAllowJUDDIAPI() {
+		return allowJUDDIAPI;
+	}
+
+	public void setAllowJUDDIAPI(boolean allowJUDDIAPI) {
+		this.allowJUDDIAPI = allowJUDDIAPI;
 	}
 }
