@@ -370,7 +370,7 @@ public class MappingModelToApi {
 					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to 'http://localhost:8080'");
 					baseUrl = "http://localhost:8080";
 				}
-				accessPointValue = accessPointValue.replaceAll("\\$\\{juddi.server.url\\}", baseUrl);
+				accessPointValue = accessPointValue.replaceAll("\\$\\{juddi.server.baseurl\\}", baseUrl);
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage(),e);
 			}
