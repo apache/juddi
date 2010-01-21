@@ -32,13 +32,12 @@ public class UDDIClientContainer {
 			return (managers.get(managerName));
 		} else if (managers.size()==1 && managerName==null) {
 			return managers.values().iterator().next();
-		} else if (managers.size()==0 && managerName==null) {
+		} else {
 			UDDIClerkManager manager = new UDDIClerkManager(null);
 			manager.start();
 			addClerkManager(manager);
 			return manager;
 		}
-		throw new ConfigurationException("Could not find UDDIClerkManager for name " + managerName);
 	}
 	
 	public static void addClerkManager(UDDIClerkManager manager) {
