@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.InVMTransport;
@@ -51,7 +52,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 		}
 		logger.debug("Getting auth tokens..");
 		try {
-	         Class<?> transportClass = Loader.loadClass(clazz);
+	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
 	         if (transportClass!=null) {
 	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
 	        	 
