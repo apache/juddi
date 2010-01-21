@@ -33,6 +33,7 @@ import org.apache.juddi.portlets.client.model.Publisher;
 import org.apache.juddi.portlets.client.service.JUDDIApiResponse;
 import org.apache.juddi.portlets.client.service.JUDDIApiService;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
@@ -60,9 +61,10 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 		JUDDIApiResponse response = new JUDDIApiResponse();
 		List<Publisher> publishers = new ArrayList<Publisher>();
 		try {
-	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+	         Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);   
         	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
         	 PublisherDetail publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
         	 //if the publisher is an admin, then return ALL publishers
@@ -97,9 +99,10 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	public JUDDIApiResponse savePublisher(String token, Publisher publisher) {
 		JUDDIApiResponse response = new JUDDIApiResponse();
 		try {
-			 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+	         Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);   
 	       	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
 	       	 SavePublisher savePublisher = new SavePublisher();
 	       	 savePublisher.setAuthInfo(token);
@@ -132,9 +135,10 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	public JUDDIApiResponse deletePublisher(String token, String publisherId) {
 		JUDDIApiResponse response = new JUDDIApiResponse();
 		try {
-			 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
+	         Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
 	       	 JUDDIApiPortType apiService = transport.getJUDDIApiService();
 	       	 DeletePublisher deletePublisher = new DeletePublisher();
 	         deletePublisher.setAuthInfo(token);
@@ -173,15 +177,16 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 		getPublisherDetail.getPublisherId().add(username);
 		
 		try {
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-	        Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+	         Class<?> transportClass = Loader.loadClass(clazz);
+	         Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);   
 	         JUDDIApiPortType apiService = transport.getJUDDIApiService();
 	         PublisherDetail publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
        	     org.apache.juddi.api_v3.Publisher publisher = publisherDetail.getPublisher().get(0);
        	     if ("true".equalsIgnoreCase(publisher.getIsAdmin())) {
-       	    	logger.info("managerName=" + UDDIClerkManager.getClientConfig().getManagerName());
-       	    	UDDIClerkManager.restart();
+       	    	logger.info("managerName=" + manager.getClientConfig().getManagerName());
+       	    	manager.restart();
        	    	response.setMessage("Successfull manager restart.");
        	    	response.setSuccess(true);
        	     } else {

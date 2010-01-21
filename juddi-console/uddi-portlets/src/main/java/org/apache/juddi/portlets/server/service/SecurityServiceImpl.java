@@ -29,6 +29,7 @@ import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
@@ -73,7 +74,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 				return response;
 			} else {
 				try {
-					AuthToken authToken = login(username, password,Constants.NODE_NAME);
+					AuthToken authToken = login(username, password, Constants.MANAGER_NAME, Constants.NODE_NAME);
 					response.setSuccess(true);
 					response.setResponse(authToken.getAuthInfo());
 					
@@ -81,11 +82,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 					session.setAttribute("UserName", username);
 				
 					//upon success obtain tokens from other registries
-					Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+					Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 					for (UDDIClerk clerk : clerks.values()) {
 						if (username.equals(clerk.getPublisher())) {
 							try {
-								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getUDDINode().getName());
+								AuthToken clerkToken = login(clerk.getPublisher(), clerk.getPassword(), clerk.getManagerName(),clerk.getUDDINode().getName());
 								//set the clerkToken into the session
 								session.setAttribute("token-" + clerk.getName(), clerkToken.getAuthInfo());
 							} catch (Exception e) {
@@ -114,13 +116,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 	
-	private AuthToken login(String username, String password, String node) throws ConfigurationException, ClassNotFoundException,
+	private AuthToken login(String username, String password, String managerName, String node) throws ConfigurationException, ClassNotFoundException,
 		InstantiationException, IllegalAccessException, TransportException, DispositionReportFaultMessage, RemoteException, 
 		IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		
-		String clazz = UDDIClerkManager.getClientConfig().getUDDINode(node).getProxyTransport();
+		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+		String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
         Class<?> transportClass = Loader.loadClass(clazz);
-        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(node);  
+        Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName, node);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();
 		GetAuthToken getAuthToken = new GetAuthToken();
 		getAuthToken.setUserID(username);

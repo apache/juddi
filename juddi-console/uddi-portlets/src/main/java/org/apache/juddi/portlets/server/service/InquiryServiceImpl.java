@@ -29,6 +29,7 @@ import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.portlets.client.service.SearchResponse;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -66,7 +67,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	private Transport getTransport() 
 		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
 		if (transport==null) {
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	         Class<?> transportClass = Loader.loadClass(clazz);
 	         transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
 		}

@@ -26,6 +26,7 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
 import org.apache.juddi.portlets.client.service.FindService;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
@@ -48,8 +49,8 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 
 	private static final long serialVersionUID = 1939609260067702168L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	
-	
+
+
 	public FindResponse getBusinesses(String nameStr, String[] findQualifyers) 
 	{
 		HttpServletRequest request = this.getThreadLocalRequest();
@@ -62,21 +63,22 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 				findQualifiers.getFindQualifier().add(string);
 			}
 			findBusiness.setFindQualifiers(findQualifiers);
-			
+
 			Name name = new Name();
 			name.setValue(nameStr);
 			findBusiness.getName().add(name);
-			
-			
+
+
 			logger.debug("FindBusiness " + findBusiness + " sending findBusinesses request..");
 			List<Business> businesses = new ArrayList<Business>();
-		
-	    	 String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-	         Class<?> transportClass = Loader.loadClass(clazz);
-	         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
-        	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
-        	 BusinessList businessList = inquiryService.findBusiness(findBusiness);
-        	 for (BusinessInfo businessInfo : businessList.getBusinessInfos().getBusinessInfo()) {
+
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			Class<?> transportClass = Loader.loadClass(clazz);
+			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
+			UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
+			BusinessList businessList = inquiryService.findBusiness(findBusiness);
+			for (BusinessInfo businessInfo : businessList.getBusinessInfos().getBusinessInfo()) {
 				Business business = new Business(
 						businessInfo.getBusinessKey(),
 						EntityForLang.getName(businessInfo.getName(),lang).getValue(),
@@ -90,20 +92,20 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 				}
 				business.setServices(services);
 				businesses.add(business);
-			 }
-        	 response.setSuccess(true);
-        	 response.setBusinesses(businesses);
-	     } catch (Exception e) {
-	    	 logger.error("Could not obtain token. " + e.getMessage(), e);
-	    	 response.setSuccess(false);
-	    	 response.setMessage(e.getMessage());
-	    	 response.setErrorCode("102");
-	     }  catch (Throwable t) {
-	    	 logger.error("Could not obtain token. " + t.getMessage(), t);
-	    	 response.setSuccess(false);
-	    	 response.setMessage(t.getMessage());
-	    	 response.setErrorCode("102");
-	     } 
-		 return response;
+			}
+			response.setSuccess(true);
+			response.setBusinesses(businesses);
+		} catch (Exception e) {
+			logger.error("Could not obtain token. " + e.getMessage(), e);
+			response.setSuccess(false);
+			response.setMessage(e.getMessage());
+			response.setErrorCode("102");
+		}  catch (Throwable t) {
+			logger.error("Could not obtain token. " + t.getMessage(), t);
+			response.setSuccess(false);
+			response.setMessage(t.getMessage());
+			response.setErrorCode("102");
+		} 
+		return response;
 	}
 }

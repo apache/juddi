@@ -42,6 +42,7 @@ import org.apache.juddi.portlets.client.service.SubscriptionResponse;
 import org.apache.juddi.portlets.client.service.SubscriptionService;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -84,7 +85,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		try {
 			boolean isMatchingClerk=false;
 			UDDIClerk toClerk = null;
-			Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher()) 
 						&& Constants.NODE_NAME.equals(clerk.getUDDINode().getName())) {
@@ -118,9 +120,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		modelNode.setClerkName(clerk.getName());
 		modelNode.setDescription(node.getDescription());
 		try {
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(clerk.getManagerName());
+			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz);
-			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName());  
+			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clerk.getManagerName(),clerk.getUDDINode().getName());  
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
 
 			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
@@ -157,12 +160,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 
 		logger.info("Sending saveSubscriptions request..");
 		try {
-			//before sending this we need to ready the listener node 
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
-			UDDIClerk toClerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
+			//before sending this we need to ready the listener node
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+			UDDIClerk toClerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
 			if (toClerk==null) {
 				String publisher = (String) session.getAttribute("UserName"); 
-				Map<String, UDDIClerk> clerks = UDDIClerkManager.getClientConfig().getUDDIClerks();
+				Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 				for (UDDIClerk uddiClerk : clerks.values()) {
 					if (publisher.equals(uddiClerk.getPublisher()) 
 							&& Constants.NODE_NAME.equals(uddiClerk.getUDDINode().getName())) {
@@ -172,9 +176,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			}
 			
 			logger.info("Updating default UDDI server..");
-			String defaultClazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			String defaultClazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 			Class<?> defaultTransportClass = Loader.loadClass(defaultClazz); 
-			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME); 
+			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME); 
 			JUDDIApiPortType juddiApiService = defaultTransport.getJUDDIApiService();
 			
 			//making sure our node info is there and up to date.
@@ -212,7 +216,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			logger.debug("Saved ClientSubscriptionInfo to the default UDDI server");
 			
 			//the listening server is ready; now add the subscription
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
+			
+			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz); 
 			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
 			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
@@ -282,10 +287,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.info("Sending deleteSubscriptions request for subscriptionKey=" 
 				+ modelSubscription.getSubscriptionKey());
 		try {
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz);
-			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
+			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clerk.getManagerName(),clerk.getUDDINode().getName()); 
 			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 			DeleteSubscription deleteSubscription = new DeleteSubscription();
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
@@ -294,7 +300,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			subscriptionService.deleteSubscription(deleteSubscription);
 			
 			//now remove it from the listener UDDI server too
-			String defaultClazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			String defaultClazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 			Class<?> defaultTransportClass = Loader.loadClass(defaultClazz); 
 			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME); 
 			JUDDIApiPortType juddiApiService = defaultTransport.getJUDDIApiService();
@@ -341,15 +347,16 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			coverage.setEndPoint(calendarEnd);
 			getSubscriptionResults.setCoveragePeriod(coverage);
 			
-			UDDIClerk clerk = UDDIClerkManager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
 			getSubscriptionResults.setAuthInfo(authToken);
             SyncSubscription syncSubscription = new SyncSubscription();
             syncSubscription.getGetSubscriptionResultsList().add(getSubscriptionResults);
 			
-			String clazz = UDDIClerkManager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
+			String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
 	        Class<?> transportClass = Loader.loadClass(clazz);
-	        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);   
+	        Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);   
        	    JUDDIApiPortType apiService = transport.getJUDDIApiService();
 			
        	    syncSubscription.setAuthInfo(userAuthToken);

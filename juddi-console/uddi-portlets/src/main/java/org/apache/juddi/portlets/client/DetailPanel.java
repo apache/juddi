@@ -16,8 +16,6 @@
  */
 package org.apache.juddi.portlets.client;
 
-import java.util.ArrayList;
-
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;

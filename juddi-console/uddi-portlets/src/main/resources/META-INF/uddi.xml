@@ -4,10 +4,10 @@
     <reloadDelay>5000</reloadDelay>
     <manager name="uddi-portlet-manager">
 		<nodes>
-			<node>
+			<node allowJUDDIApi="true">
 				<name>default-ws</name>
 				<properties>
-					<property name="serverName" value="marketing"/>
+					<property name="serverName" value="localhost"/>
 					<property name="serverPort" value="8080"/>
 					<property name="rmiPort" value="1099"/>
 				</properties>
@@ -45,6 +45,7 @@
 				<javaNamingProviderUrl>jnp://${serverName}:${rmiPort}</javaNamingProviderUrl>
 				-->
 			</node>
+			<!--  
 			<node>
 				<name>sales-ws</name>
 				<properties>
@@ -61,10 +62,13 @@
 				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
 				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			</node>
+			-->
 		</nodes>
 		<clerks registerOnStartup="false">
 		   <clerk name="MarketingCratchit" node="default-ws" publisher="marketing" password="marketing"/>
+		   <!--  
 	       <clerk name="SalesCratchit"     node="sales-ws"   publisher="marketing" password="marketing"/>
+	       -->
 	       <!--  optional 
 	       <xregister>
 		       <servicebinding entityKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="MarketingCratchit" toClerk="SalesCratchit"/>
