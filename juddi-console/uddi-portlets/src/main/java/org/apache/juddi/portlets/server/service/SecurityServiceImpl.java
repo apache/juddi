@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.config.UDDIClerk;
@@ -122,7 +123,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
 		String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-        Class<?> transportClass = Loader.loadClass(clazz);
+        Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
         Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName, node);  
 		UDDISecurityPortType securityService = transport.getUDDISecurityService();
 		GetAuthToken getAuthToken = new GetAuthToken();

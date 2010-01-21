@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
@@ -69,7 +70,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		if (transport==null) {
 			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
 			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-	         Class<?> transportClass = Loader.loadClass(clazz);
+	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
 	         transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
 		}
 		return transport;

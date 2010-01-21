@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
@@ -74,7 +75,7 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 
 			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
 			String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-			Class<?> transportClass = Loader.loadClass(clazz);
+			Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
 			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
 			UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
 			BusinessList businessList = inquiryService.findBusiness(findBusiness);
