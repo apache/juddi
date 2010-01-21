@@ -4,13 +4,12 @@ import java.util.Vector;
 
 public class NotificationList {
 	private static NotificationList nl = null;
-	private static Vector<?> list = null;
+	private static Vector<String> list = null;
 	
 	private NotificationList() {	
-		list = new Vector();
+		list = new Vector<String>();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static NotificationList getInstance() {
 		if (nl == null) {
 			nl = new NotificationList();
@@ -18,8 +17,7 @@ public class NotificationList {
 		return nl;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Vector getNotifications() {
+	public Vector<String> getNotifications() {
 		return list;
 	}
 	
