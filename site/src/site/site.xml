@@ -50,7 +50,8 @@
             </item>
             <item name="Participation" href="participate.html" description="Participation"/>
             <item name="Documentation">
-                <item name="jUDDI v3 docs" href="http://svn.apache.org/repos/asf/webservices/juddi/trunk/docs/"/>
+                <item name="jUDDI v3 User guide" href="userguide.pdf"/>
+		<item name="jUDDI v3 Developer's guide" href="devguide.pdf"/>
                 <item name="jUDDI v2 User guide" href="usersguide.html"/>
                 <item name="Wiki" href="http://wiki.apache.org/ws/jUDDI"/>
                 <item name="UDDI Library" href="library.html" />

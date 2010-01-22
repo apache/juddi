@@ -18,6 +18,7 @@ package org.apache.juddi.v3.client.transport.wrapper;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.rmi.Remote;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -157,12 +158,14 @@ public class RequestHandler
       document.appendChild(element.getFirstChild());
       setResponse(document);
     } catch (InvocationTargetException ite) {
-    	log.error(ite.getTargetException().getMessage());
+    	String message = URLEncoder.encode(ite.getTargetException().getMessage());
+    	log.error(message);
     	setException(ite.getTargetException().getMessage());
     }
     catch(Exception ex) // Catch any other exceptions
     {
-        log.error(ex.getMessage());
+    	String message = URLEncoder.encode(ex.getMessage());
+        log.error(message);
         setException(ex.getMessage());
     }
     return response;
