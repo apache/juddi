@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "j3_uddi_entity")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class UddiEntity {
+public abstract class UddiEntity implements Comparable<UddiEntity>{
 
 	protected String entityKey;
 	protected Date created;
@@ -92,6 +92,12 @@ public abstract class UddiEntity {
 	}
 	public void setAuthorizedName(String authorizedName) {
 		this.authorizedName = authorizedName;
+	}
+	
+	public int compareTo(UddiEntity o) {
+		if (o==null || o.getEntityKey()==null) return 0;
+		if (o.getEntityKey().equals(entityKey)) return 1;
+		else return 0;
 	}
 
 }

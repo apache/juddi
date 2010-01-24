@@ -36,7 +36,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "j3_subscription")
-public class Subscription implements java.io.Serializable {
+public class Subscription implements java.io.Serializable, Comparable<Subscription> {
 
 	private static final long serialVersionUID = -2271361594186854662L;
 	private String subscriptionKey;
@@ -154,5 +154,11 @@ public class Subscription implements java.io.Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public int compareTo(Subscription o) {
+		if (o==null || o.getSubscriptionKey()==null) return 0;
+		if (o.getSubscriptionKey().equals(subscriptionKey)) return 1;
+		else return 0;
 	}
 }
