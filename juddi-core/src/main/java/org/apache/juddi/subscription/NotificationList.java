@@ -1,24 +1,25 @@
 package org.apache.juddi.subscription;
 
-import java.util.Vector;
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
+import org.apache.commons.collections.Buffer;
+import org.apache.commons.collections.BufferUtils;
 
-public class NotificationList {
+public class NotificationList  {
 	private static NotificationList nl = null;
-	private static Vector<String> list = null;
+	private static Buffer list = null;
 	
 	private NotificationList() {	
-		list = new Vector<String>();
+		list = BufferUtils.synchronizedBuffer(new CircularFifoBuffer(10));
 	}
 	
 	public static NotificationList getInstance() {
 		if (nl == null) {
 			nl = new NotificationList();
 		}
-		return nl;
+		return nl;	
 	}
 	
-	public Vector<String> getNotifications() {
+	public Buffer getNotifications() {
 		return list;
 	}
-	
 }

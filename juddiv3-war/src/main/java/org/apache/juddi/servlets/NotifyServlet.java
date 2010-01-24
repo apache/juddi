@@ -17,6 +17,7 @@ package org.apache.juddi.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.Buffer;
 import org.apache.juddi.subscription.NotificationList;
 
 
@@ -43,11 +45,11 @@ public class NotifyServlet extends HttpServlet
 		ServletException, IOException {
 		StringBuffer sb = new StringBuffer();
 
-		Vector nl = NotificationList.getInstance().getNotifications();
-		if (nl.size() != 0) {
-			for (int i = 0; i<nl.size(); i++) {
-				sb.append(nl.get(i));
-			}	
+		Buffer nl = NotificationList.getInstance().getNotifications();
+		Iterator it = nl.iterator();
+		while (it.hasNext()) {
+			String notification = (String) it.next();		
+			sb.append(notification);
 		}
 		nl.clear();
 		PrintWriter out = response.getWriter();

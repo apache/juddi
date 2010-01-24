@@ -70,6 +70,7 @@ import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
+import org.apache.commons.collections.Buffer;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -559,14 +560,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 				
 				NotificationList nl = NotificationList.getInstance();
-				if (nl.getNotifications().size() == MAX_NOTIFICATIONS) {
-					nl.getNotifications().setSize(MAX_NOTIFICATIONS - 1);
-				}
-				nl.getNotifications().add(0, sw.toString());
-//				Vector vect = nl.getNotifications();
-//				for (int i = 0; i < vect.size(); i++) {
-//					String str = (String) vect.get(i);
-//				}		
+				nl.getNotifications().add(sw.toString());
 				
 				//update the registry with the notification list.
 				XRegisterHelper.handle(fromClerk, toClerk, list);
