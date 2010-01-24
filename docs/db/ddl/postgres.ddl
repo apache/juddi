@@ -628,4 +628,4 @@
         foreign key (transfer_token) 
         references j3_transfer_token;
 
-    create sequence hibernate_sequence;
+    create sequence juddi_sequence;

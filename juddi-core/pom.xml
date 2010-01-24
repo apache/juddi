@@ -62,6 +62,7 @@
 						<exclude>**/persistence.xml</exclude>
 						<exclude>**/hibernate-persistence.xml</exclude>
 						<exclude>**/openjpa-persistence.xml</exclude>
+						<exclude>**/juddi-orm.xml</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
