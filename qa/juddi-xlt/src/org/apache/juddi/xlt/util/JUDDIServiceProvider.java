@@ -23,11 +23,10 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.helpers.Loader;
-import org.uddi.api_v3.client.config.ClientConfig;
-import org.uddi.api_v3.client.config.Property;
-import org.uddi.api_v3.client.transport.Transport;
-import org.uddi.api_v3.client.transport.TransportException;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -49,9 +48,8 @@ public class JUDDIServiceProvider {
 
 	private JUDDIServiceProvider() {
 		try {
-			String clazz = ClientConfig.getConfiguration().getString(
-					Property.UDDI_PROXY_TRANSPORT,
-					Property.DEFAULT_UDDI_PROXY_TRANSPORT);
+			
+			String clazz = UDDIClientContainer.getDefaultTransportClass();
 			Class<?> transportClass = Loader.loadClass(clazz);
 
 			if (transportClass != null) {

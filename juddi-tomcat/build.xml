@@ -12,11 +12,7 @@
 		<unzip dest="${webapps.dir}/juddiv3-samples" src="${dependency.juddiv3-samples.war}"/>
         -->
 		
-		<chmod perm="ugo+x">
-			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
-				<include name="*.sh"/>
-			</fileset>
-		</chmod>
+		
 	</target>
 	
 	<target name="copy-resources" depends="unzip-tomcat">
@@ -46,6 +42,12 @@
 		-->
 	</target>
 	
-	<target name="package-tomcat" depends="copy-resources"/>
+	<target name="package-tomcat" depends="copy-resources">
+		<chmod perm="ugo+x">
+			<fileset dir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin">
+				<include name="*.sh"/>
+			</fileset>
+		</chmod>
+	</target>
 
 </project>
