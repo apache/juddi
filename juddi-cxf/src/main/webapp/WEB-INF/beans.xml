@@ -17,7 +17,9 @@
 	specific language governing permissions and limitations
 	under the License.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
   <import resource="classpath:META-INF/cxf/cxf.xml" />
@@ -25,70 +27,70 @@
   <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
   <jaxws:endpoint id="inquiry" implementor="org.apache.juddi.api.impl.UDDIInquiryImpl" address="/inquiry"
-   serviceName="a:UDDI_Inquiry_Port" endpointName="a:UDDIInquiryServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+   serviceName="a:UDDI_Inquiry_Port" endpointName="a:UDDIInquiryServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
   
   <jaxws:endpoint id="publish" implementor="org.apache.juddi.api.impl.UDDIPublicationImpl" address="/publish" 
-   serviceName="a:UDDI_Publish_Port" endpointName="a:UDDIPublishServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+   serviceName="a:UDDI_Publish_Port" endpointName="a:UDDIPublishServicePort"  xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="security" implementor="org.apache.juddi.api.impl.UDDISecurityImpl" address="/security" 
-   serviceName="a:UDDI_Security_Port" endpointName="a:UDDISecurityServicePort" xmlns:a="urn:uddi-org:api_v3_portType">
+   serviceName="a:UDDI_Security_Port" endpointName="a:UDDISecurityServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
    
   <jaxws:endpoint id="subscription" implementor="org.apache.juddi.api.impl.UDDISubscriptionImpl" address="/subscription" 
-   serviceName="a:UDDI_Subscription_Port" endpointName="a:UDDISubscriptionServicePort" xmlns:a="urn:uddi-org:sub_v3_portType">
+   serviceName="a:UDDI_Subscription_Port" endpointName="a:UDDISubscriptionServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
   
   <jaxws:endpoint id="subscription-listener" implementor="org.apache.juddi.api.impl.UDDISubscriptionListenerImpl" address="/subscription-listener" 
-   serviceName="a:UDDI_SubscriptionListener_Port" endpointName="a:UDDISubscriptionListenerServicePort" xmlns:a="urn:uddi-org:subr_v3_portType">
+   serviceName="a:UDDI_SubscriptionListener_Port" endpointName="a:UDDISubscriptionListenerServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="custody-transfer" implementor="org.apache.juddi.api.impl.UDDICustodyTransferImpl" address="/custody-transfer" 
-   serviceName="a:UDDI_CustodyTransfer_Port" endpointName="a:UDDICustodyTransferServicePort" xmlns:a="urn:uddi-org:custody_v3_portType">
+   serviceName="a:UDDI_CustodyTransfer_Port" endpointName="a:UDDICustodyTransferServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="replication" implementor="org.apache.juddi.api.impl.UDDIReplicationImpl" address="/replication" 
-   serviceName="a:UDDI_Replication_Port" endpointName="a:UDDIReplicationServicePort" xmlns:a="urn:uddi-org:repl_v3_portType">
+   serviceName="a:UDDI_Replication_Port" endpointName="a:UDDIReplicationServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="valueset-validation" implementor="org.apache.juddi.api.impl.UDDIValueSetValidationImpl" address="/valueset-validation" 
-   serviceName="a:UDDI_ValueSetValidation_Port" endpointName="a:UDDIValueSetValidationServicePort" xmlns:a="urn:uddi-org:vs_v3_portType">
+   serviceName="a:UDDI_ValueSetValidation_Port" endpointName="a:UDDIValueSetValidationServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
 
   <jaxws:endpoint id="valueset-caching" implementor="org.apache.juddi.api.impl.UDDIValueSetCachingImpl" address="/valueset-caching"
-   serviceName="a:UDDI_ValueSetCaching_Port" endpointName="a:UDDIValueSetCachingServicePort" xmlns:a="urn:uddi-org:vscache_v3_portType">
+   serviceName="a:UDDI_ValueSetCaching_Port" endpointName="a:UDDIValueSetCachingServicePort" xmlns:a="urn:uddi-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
   
    <jaxws:endpoint id="juddi-api" implementor="org.apache.juddi.api.impl.JUDDIApiImpl" address="/juddi-api"
-   serviceName="a:JUDDI_Api_Port" endpointName="a:JUDDIApiServicePort" xmlns:a="urn:juddi-apache-org:api_v3_portType">
+   serviceName="a:JUDDI_Api_Port" endpointName="a:JUDDIApiServicePort" xmlns:a="urn:juddi-apache-org:v3_service">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>

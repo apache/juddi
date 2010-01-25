@@ -64,7 +64,7 @@ public class SubscriptionNotifier extends TimerTask {
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private static long ACCEPTABLE_LAG_TIME = 500l; //500 milliseconds
-	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:subr_v3_portType";
+	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:v3_service";
 	private static String SUBSCRIPTION_LISTENER = "UDDI_SubscriptionListener_Port";
 	
 	public SubscriptionNotifier() throws ConfigurationException {

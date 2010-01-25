@@ -39,7 +39,7 @@ import org.uddi.vs_v3.ValidateValues;
  * Generated source version: 2.1
  * 
  */
-@WebService(name = "UDDI_ValueSetValidation_PortType", targetNamespace = "urn:uddi-org:vs_v3_portType")
+@WebService(name = "UDDI_ValueSetValidation_PortType", targetNamespace = "urn:uddi-org:v3_service")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

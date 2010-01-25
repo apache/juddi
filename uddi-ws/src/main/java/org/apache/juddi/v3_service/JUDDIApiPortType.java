@@ -50,7 +50,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * This portType defines all of the jUDDI publisher operations.
  * 
  */
-@WebService(name = "JUDDI_Api_PortType", targetNamespace = "urn:juddi-apache-org:api_v3_portType")
+@WebService(name = "JUDDI_Api_PortType", targetNamespace = "urn:juddi-apache-org:v3_service")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     org.uddi.api_v3.ObjectFactory.class,

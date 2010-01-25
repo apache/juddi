@@ -34,11 +34,8 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 public class JAXWSTransport extends Transport {
 
-	public final static String API_V3_NAMESPACE              = "urn:uddi-org:api_v3_portType";
-	public final static String SUB_V3_NAMESPACE              = "urn:uddi-org:sub_v3_portType";
-	public final static String SUBR_V3_NAMESPACE	         = "urn:uddi-org:subr_v3_portType";
-	public final static String CUSTODY_V3_NAMESPACE          = "urn:uddi-org:custody_v3_portType";
-	public final static String JUDDI_API_V3_NAMESPACE        = "urn:juddi-apache-org:api_v3_portType";
+	public final static String UDDI_V3_SERVICE_NAMESPACE     = "urn:uddi-org:v3_service";
+	public final static String JUDDI_V3_SERVICE_NAMESPACE    = "urn:juddi-apache-org:v3_service";
 	
 	public final static String INQUIRY_SERVICE               = "UDDI_Inquiry_Port";
 	public final static String SECURITY_SERVICE              = "UDDI_Security_Port";
@@ -82,7 +79,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
 				}
-				QName qName = new QName(API_V3_NAMESPACE, INQUIRY_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, INQUIRY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				inquiryService = (UDDIInquiryPortType) service.getPort(UDDIInquiryPortType.class);
 			} catch (Exception e) {
@@ -100,7 +97,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
 				}
-				QName qName = new QName(API_V3_NAMESPACE, SECURITY_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, SECURITY_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				securityService = (UDDISecurityPortType) service.getPort(UDDISecurityPortType.class);
 			} catch (Exception e) {
@@ -118,7 +115,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
 				}
-				QName qName = new QName(API_V3_NAMESPACE, PUBLISH_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, PUBLISH_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publishService = (UDDIPublicationPortType) service.getPort(UDDIPublicationPortType.class);
 			} catch (Exception e) {
@@ -136,7 +133,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
 				}
-				QName qName = new QName(SUB_V3_NAMESPACE, SUBSCRIPTION_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, SUBSCRIPTION_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionService = (UDDISubscriptionPortType) service.getPort(UDDISubscriptionPortType.class);
 			} catch (Exception e) {
@@ -153,7 +150,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
 				}
-				QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, SUBSCRIPTION_LISTENER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				subscriptionListenerService = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
 			} catch (Exception e) {
@@ -170,7 +167,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
 				}
-				QName qName = new QName(CUSTODY_V3_NAMESPACE, CUSTODY_TRANSFER_SERVICE);
+				QName qName = new QName(UDDI_V3_SERVICE_NAMESPACE, CUSTODY_TRANSFER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				custodyTransferService = (UDDICustodyTransferPortType) service.getPort(UDDICustodyTransferPortType.class);
 			} catch (Exception e) {
@@ -187,7 +184,7 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
 				}
-				QName qName = new QName(JUDDI_API_V3_NAMESPACE, PUBLISHER_SERVICE);
+				QName qName = new QName(JUDDI_V3_SERVICE_NAMESPACE, PUBLISHER_SERVICE);
 				Service service = Service.create(new URL(endpointURL), qName);
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);
 			} catch (Exception e) {

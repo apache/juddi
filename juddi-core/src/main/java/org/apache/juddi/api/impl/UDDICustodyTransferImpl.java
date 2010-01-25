@@ -53,7 +53,7 @@ import org.uddi.v3_service.UDDICustodyTransferPortType;
 
 @WebService(serviceName="UDDICustodyTransferService", 
 			endpointInterface="org.uddi.v3_service.UDDICustodyTransferPortType",
-			targetNamespace = "urn:uddi-org:custody_v3_portType")
+			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDICustodyTransferImpl extends AuthenticatedService implements UDDICustodyTransferPortType {
 
 	public static final String TRANSFER_TOKEN_PREFIX = "transfertoken:";

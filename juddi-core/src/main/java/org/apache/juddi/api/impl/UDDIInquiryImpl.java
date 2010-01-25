@@ -59,7 +59,7 @@ import org.apache.log4j.Logger;
  */
 @WebService(serviceName="UDDIInquiryService", 
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType",
-			targetNamespace = "urn:uddi-org:api_v3_portType")
+			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
 
 	private static Logger log = Logger.getLogger(UDDIInquiryImpl.class);

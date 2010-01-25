@@ -46,7 +46,7 @@ import org.uddi.repl_v3.TransferCustody;
  * Generated source version: 2.1
  * 
  */
-@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:repl_v3_portType")
+@WebService(name = "UDDI_Replication_PortType", targetNamespace = "urn:uddi-org:v3_service")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,

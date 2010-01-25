@@ -42,7 +42,7 @@ import org.apache.juddi.v3.error.UnknownUserException;
  */
 @WebService(serviceName="UDDISecurityService", 
 			endpointInterface="org.uddi.v3_service.UDDISecurityPortType",
-			targetNamespace = "urn:uddi-org:api_v3_portType")
+			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDISecurityImpl extends AuthenticatedService implements UDDISecurityPortType {
 
 	public static final String AUTH_TOKEN_PREFIX = "authtoken:";

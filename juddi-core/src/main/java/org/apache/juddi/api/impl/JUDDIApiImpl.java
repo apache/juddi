@@ -70,7 +70,6 @@ import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
-import org.apache.commons.collections.Buffer;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -78,11 +77,10 @@ import org.apache.commons.collections.Buffer;
  */
 @WebService(serviceName="JUDDIApiService", 
 			endpointInterface="org.apache.juddi.v3_service.JUDDIApiPortType",
-			targetNamespace = "urn:juddi-apache-org:api_v3_portType")
+			targetNamespace = "urn:juddi-apache-org:v3_service")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
 	private Logger log = Logger.getLogger(this.getClass());
-	private static int MAX_NOTIFICATIONS = 5;
 	
 	/**
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.

@@ -29,7 +29,7 @@ import org.uddi.vscache_v3.ValidValue;
 
 @WebService(serviceName="UDDIValueSetCachingService", 
 			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType",
-			targetNamespace = "urn:uddi-org:vscache_v3_portType")
+			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDDIValueSetCachingPortType {
 	public void getAllValidValues(String authInfo, String modelKey,
 			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)

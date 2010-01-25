@@ -40,7 +40,7 @@ import org.uddi.api_v3.GetAuthToken;
  * Generated source version: 2.1
  * 
  */
-@WebService(name = "UDDI_Security_PortType", targetNamespace = "urn:uddi-org:api_v3_portType")
+@WebService(name = "UDDI_Security_PortType", targetNamespace = "urn:uddi-org:v3_service")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,

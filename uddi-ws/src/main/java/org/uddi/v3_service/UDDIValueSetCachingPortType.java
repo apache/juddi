@@ -39,7 +39,7 @@ import org.uddi.vscache_v3.ValidValue;
  * Generated source version: 2.1
  * 
  */
-@WebService(name = "UDDI_ValueSetCaching_PortType", targetNamespace = "urn:uddi-org:vscache_v3_portType")
+@WebService(name = "UDDI_ValueSetCaching_PortType", targetNamespace = "urn:uddi-org:v3_service")
 @XmlSeeAlso({
     org.uddi.custody_v3.ObjectFactory.class,
     org.uddi.repl_v3.ObjectFactory.class,
