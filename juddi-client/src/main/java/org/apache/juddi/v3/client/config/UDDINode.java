@@ -70,6 +70,7 @@ public class UDDINode implements Serializable {
 		apiNode.setFactoryURLPkgs(factoryURLPkgs);
 		apiNode.setInquiryUrl(inquiryUrl);
 		apiNode.setJuddiApiUrl(juddiApiUrl);
+		apiNode.setManagerName(managerName);
 		apiNode.setName(name);
 		apiNode.setProxyTransport(proxyTransport);
 		apiNode.setPublishUrl(publishUrl);
