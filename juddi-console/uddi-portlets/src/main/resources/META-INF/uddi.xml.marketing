@@ -7,7 +7,7 @@
 			<node isHomeJUDDI="true">
 				<name>default</name>
 				<properties>
-					<property name="serverName" value="sales"/>
+					<property name="serverName" value="localhost"/>
 					<property name="serverPort" value="8080"/>
 					<property name="rmiPort" value="1099"/>
 				</properties>
@@ -23,9 +23,9 @@
 				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			</node>
 			<node>
-				<name>marketing</name>
+				<name>sales</name>
 				<properties>
-					<property name="serverName" value="marketing"/>
+					<property name="serverName" value="sales"/>
 					<property name="serverPort" value="8080"/>
 				</properties>
 				<description>jUDDI node in other Department</description>
@@ -40,8 +40,8 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="false">
-		   <clerk name="SalesCratchit" node="default" publisher="sales" password="sales"/>
-	       <clerk name="MarketingCratchit" node="marketing" publisher="sales" password="sales"/>
+		   <clerk name="MarketingCratchit" node="default" publisher="marketing" password="marketing"/> 
+	       <clerk name="SalesCratchit"     node="sales"   publisher="marketing" password="marketing"/>
 	   </clerks>
 	</manager> 
    

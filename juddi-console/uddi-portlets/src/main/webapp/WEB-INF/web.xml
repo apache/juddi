@@ -10,7 +10,7 @@
 	     -->
 	<servlet>
 		<servlet-name>UDDIClerkServlet</servlet-name>
-		<servlet-class>org.apache.juddi.v3.client.UDDIClerkServlet</servlet-class>
+		<servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	 

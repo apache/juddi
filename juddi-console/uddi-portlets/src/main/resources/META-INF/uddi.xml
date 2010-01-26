@@ -4,8 +4,8 @@
     <reloadDelay>5000</reloadDelay>
     <manager name="uddi-portlet-manager">
 		<nodes>
-			<node allowJUDDIApi="true">
-				<name>default-ws</name>
+			<node isHomeJUDDI="true">
+				<name>default</name>
 				<properties>
 					<property name="serverName" value="localhost"/>
 					<property name="serverPort" value="8080"/>
@@ -45,35 +45,9 @@
 				<javaNamingProviderUrl>jnp://${serverName}:${rmiPort}</javaNamingProviderUrl>
 				-->
 			</node>
-			<!--  
-			<node>
-				<name>sales-ws</name>
-				<properties>
-					<property name="serverName" value="sales"/>
-					<property name="serverPort" value="8080"/>
-				</properties>
-				<description>jUDDI node in other Department</description>
-				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-				<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-				<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
-		        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
-		        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
-				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
-				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
-			</node>
-			-->
 		</nodes>
 		<clerks registerOnStartup="false">
-		   <clerk name="MarketingCratchit" node="default-ws" publisher="marketing" password="marketing"/>
-		   <!--  
-	       <clerk name="SalesCratchit"     node="sales-ws"   publisher="marketing" password="marketing"/>
-	       -->
-	       <!--  optional 
-	       <xregister>
-		       <servicebinding entityKey="uddi:marketing.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="MarketingCratchit" toClerk="SalesCratchit"/>
-		   </xregister>
-		   -->
+		   <clerk name="MarketingCratchit" node="default" publisher="marketing" password="marketing"/> 
 	   </clerks>
 	</manager> 
    
