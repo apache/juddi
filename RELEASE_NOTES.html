@@ -1,3 +1,116 @@
+       <h1>Release Notes - jUDDI - Version 3.0.1</h1>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-267'>JUDDI-267</a>] -         Memory leak during load testing
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-300'>JUDDI-300</a>] -         Change versions from 3.0.0 to 3.0.1-SNAPSHOT
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-301'>JUDDI-301</a>] -         vfszip: URI protocol not absolute
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-302'>JUDDI-302</a>] -         web.xml should have the entries in the correct order
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-303'>JUDDI-303</a>] -         JUDDI_ 100_ClientSubscriptionInfoTest fails when deployed to JBoss-5
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-305'>JUDDI-305</a>] -         junit being pulled in as a dependency
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-306'>JUDDI-306</a>] -         errors calling getOperationalInfo 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-307'>JUDDI-307</a>] -         Need to grab the current transport from the wrapper classes (UDDInquiryService, etc)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-308'>JUDDI-308</a>] -         tomcat hangs on shutdown + patch
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-309'>JUDDI-309</a>] -         truncation error  for endPoint field
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-310'>JUDDI-310</a>] -         Detail how to change the sequence name in Oracle
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-311'>JUDDI-311</a>] -         Datatype for j3_auth_token.authorized_name should match j3_publisher.authorized_name
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-312'>JUDDI-312</a>] -         Set collection container to null when the collection has no elements
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-313'>JUDDI-313</a>] -         ACCESS_POINT_URL in BINDING_TEMPLATE table is too short - 2000 chars
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-315'>JUDDI-315</a>] -         AccessPointURL should not be displayed as anchortext if it is of &quot;other&quot; type
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-318'>JUDDI-318</a>] -         Need a way of passing UDDI configs into a map
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-320'>JUDDI-320</a>] -         jUDDI console doesn't display all information for business service bindings
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-321'>JUDDI-321</a>] -         juddi-samples.war web.xml not properly configured
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-323'>JUDDI-323</a>] -         JTA  Warnings during jUDDI 3 startup
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-324'>JUDDI-324</a>] -         jUDDI client config ignores the JNDI settings of remote machine in RMI transport
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-325'>JUDDI-325</a>] -         org.apache.juddi.config.Install can't deal with spaces in the path if vfszip
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-326'>JUDDI-326</a>] -         jUDDI AuthenticatorFactory may fail to correctly resolve the implementation
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-327'>JUDDI-327</a>] -         Document how to change the sequence name using orm.xml
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-328'>JUDDI-328</a>] -         NotificationList is a possible memory leak
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-332'>JUDDI-332</a>] -         Add the docbook docs to the project
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-333'>JUDDI-333</a>] -         File message.properties does not contain key errors.keybag.NullInput and the relevant value.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-334'>JUDDI-334</a>] -         Marshaling error when calling getTransferToken method via the RMI custody transfer interface.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-335'>JUDDI-335</a>] -         jUDDI test data request has an endPoint of 2010-01-01
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-337'>JUDDI-337</a>] -         Missing errors.invalidkey.NodeNotFound key in messages.properties.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-338'>JUDDI-338</a>] -         Fix site links to point to built docbook HTML
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-339'>JUDDI-339</a>] -         Need to be able to accept a system property for the juddiv3.properties file filename
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-341'>JUDDI-341</a>] -         Distinct query is causing an issue on Db2 and SqlServer
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-343'>JUDDI-343</a>] -         UDDIClerkManager will not save the clerk unless it is DEFAULT
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-344'>JUDDI-344</a>] -         Clerks functionality fails with WS transport because tomcat's ports aren't open to save
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-347'>JUDDI-347</a>] -         Need to review uddi.xml's in juddi project and make sure they all have manager names in the right place
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-348'>JUDDI-348</a>] -         Remove the RENAME4* juddi_custom_data from the juddiv3_samples war
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-349'>JUDDI-349</a>] -         Document in userguide - where juddiv3.properties should be
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-350'>JUDDI-350</a>] -         docs artifact having problems uploading
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-304'>JUDDI-304</a>] -         uddi_090_SubscriptionListenerIntegrationTest fails easily
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-336'>JUDDI-336</a>] -         Fix WSDL endpoint so they align with the spec.
+</li>
+</ul>
+                    
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-316'>JUDDI-316</a>] -         Make EndPoint Registration more dynamic
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-329'>JUDDI-329</a>] -         Add SQL scripts
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-330'>JUDDI-330</a>] -         fix logging
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-340'>JUDDI-340</a>] -         Upgrade XLT tests to the 3.0.1 jUDDI client libs
+</li>
+</ul>
+            
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-274'>JUDDI-274</a>] -         XLT test suite
+</li>
+</ul>
+    
+
    <h1>Release Notes - jUDDI - Version 3.0</h1>
     
 <h2>        Sub-task
