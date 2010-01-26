@@ -8,12 +8,6 @@
   <version>3.0.1</version>
   <packaging>jdocbook</packaging>
   <name>jUDDI Dev Guide -(en-US)</name>
-  <parent>
-        <groupId>org.apache.juddi</groupId>
-        <artifactId>juddi-docs</artifactId>
-        <version>3.0.1</version>
-  </parent>
-
   <properties>
     <translation>en-US</translation>
     <docname>devguide</docname>

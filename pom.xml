@@ -162,7 +162,6 @@
 		<module>juddiv3-samples</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
-		<module>docs</module>		
 	</modules>
 	<distributionManagement>
 		<repository>
