@@ -3,7 +3,7 @@
     <reloadDelay>5000</reloadDelay>
     <manager name="example-manager">
 		<nodes>
-			<node>
+			<node isHomeJUDDI="true">
 				<name>default</name>
 				<description>Sales jUDDI node</description>  
 				<properties>
