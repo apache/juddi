@@ -151,7 +151,7 @@ public class ClientConfig
 				}
 				uddiNode.setProperties(properties);
 			}
-			uddiNode.setAllowJUDDIAPI(          config.getBoolean("manager.nodes.node(" + i +")[@allowJUDDIAPI]",true));
+			uddiNode.setHomeJUDDI(              config.getBoolean("manager.nodes.node(" + i +")[@isHomeJUDDI]",true));
 			uddiNode.setName(                   config.getString("manager.nodes.node(" + i +").name"));
 			uddiNode.setManagerName(            config.getString("manager[@name]"));
 			uddiNode.setDescription(            config.getString("manager.nodes.node(" + i +").description"));

@@ -14,7 +14,7 @@ public class UDDINode implements Serializable {
 	private Properties properties;
 	private Transport transport;
 	
-	private boolean allowJUDDIAPI;
+	private boolean isHomeJUDDI;
 	private String name;
 	private String managerName;
 	private String description;
@@ -205,11 +205,11 @@ public class UDDINode implements Serializable {
 		this.factoryNamingProvider = factoryNamingProvider;
 	}
 
-	public boolean isAllowJUDDIAPI() {
-		return allowJUDDIAPI;
+	public boolean isHomeJUDDI() {
+		return isHomeJUDDI;
 	}
 
-	public void setAllowJUDDIAPI(boolean allowJUDDIAPI) {
-		this.allowJUDDIAPI = allowJUDDIAPI;
+	public void setHomeJUDDI(boolean isHomeJUDDI) {
+		this.isHomeJUDDI = isHomeJUDDI;
 	}
 }
