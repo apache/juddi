@@ -82,17 +82,6 @@
   </dependencies>
   <build>
         <plugins>
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                   <execution>
-                      <goals>
-                         <goal>jar</goal>
-                      </goals>
-                   </execution>
-                </executions>
-             </plugin>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-surefire-plugin</artifactId>
@@ -107,6 +96,12 @@
            <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+	    <version>2.1</version>
+	    <configuration>
+		<excludes>	
+			<exclude>*.xml</exclude>
+		</excludes>
+	    </configuration>
             <executions>
                <execution>
                   <goals>
@@ -122,7 +117,7 @@
             <executions>
                  <execution>
                         <id>foo</id>
-                        <phase>compile</phase>
+                        <phase>package</phase>
                         <configuration>
                         <tasks>
                         <echo>getting the war from: ${maven.dependency.org.apache.juddi.juddiv3-war.war.path}</echo>
@@ -135,7 +130,6 @@
                         <copy todir="target/classes" overwrite="true">
                                 <fileset dir="target/jv3/WEB-INF/classes" />
                         </copy>
-
                         </tasks>
                         </configuration>
                         <goals>
@@ -144,6 +138,14 @@
                  </execution>
             </executions>
            </plugin>
+	   <plugin>
+		<groupId>org.apache.maven.plugins</groupId>	
+		<artifactId>maven-war-plugin</artifactId>
+		<version>2.0</version>
+		<configuration>
+			<dependentWarExcludes>WEB-INF/classes/RENAME4SALES_juddi_custom_install_data/*, WEB-INF/classes/RENAME4MARKETING_juddi_custom_install_data/*</dependentWarExcludes>
+		</configuration>
+	   </plugin>
          </plugins>
     </build>
 </project>
