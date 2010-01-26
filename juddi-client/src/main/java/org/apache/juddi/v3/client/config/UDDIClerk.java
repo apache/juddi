@@ -202,6 +202,7 @@ public class UDDIClerk implements Serializable {
 	public NodeDetail saveNode(Node node)  {
 		NodeDetail nodeDetail = null;
 		try {
+			log.info("Sending Node " + node.getName() + " info to jUDDI " + getUDDINode().getName());
 			SaveNode saveNode = new SaveNode();
 			saveNode.setAuthInfo(getAuthToken(node.getSecurityUrl()));
 			saveNode.getNode().add(node);
@@ -219,6 +220,7 @@ public class UDDIClerk implements Serializable {
 	public ClerkDetail saveClerk(UDDIClerk senderClerk)  {
 		ClerkDetail clerkDetail = null;
 		try {
+			log.info("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
 			SaveClerk saveClerk = new SaveClerk();
 			saveClerk.setAuthInfo(getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
 			saveClerk.getClerk().add(getApiClerk());
