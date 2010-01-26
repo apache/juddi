@@ -224,7 +224,7 @@ public class UDDIClerk implements Serializable {
 			SaveClerk saveClerk = new SaveClerk();
 			saveClerk.setAuthInfo(getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
 			saveClerk.getClerk().add(getApiClerk());
-			clerkDetail = senderClerk.getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).saveClerk(saveClerk);
+			clerkDetail = getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).saveClerk(saveClerk);
 		} catch (Exception e) {
 			log.error("Unable to save clerk " + getName()
 					+ " ." + e.getMessage(),e);
