@@ -19,19 +19,19 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.1.SNAPSHOT</version>
+    <version>3.0.1</version>
   </parent> 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-client</artifactId>
-  <version>3.0.1.SNAPSHOT</version>
+  <version>3.0.1</version>
   <name>jUDDI Client side Code</name>
   <packaging>jar</packaging>  
   <dependencies>
     <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
-        <version>3.0.1.SNAPSHOT</version>
+        <version>3.0.1</version>
      </dependency>
     <dependency>
         <groupId>log4j</groupId>

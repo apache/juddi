@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.juddi</groupId>
   <artifactId>userguide</artifactId>
-  <version>3.0.1.SNAPSHOT</version>
+  <version>3.0.1</version>
   <packaging>jdocbook</packaging>
   <name>jUDDI User Guide -(en-US)</name>
 

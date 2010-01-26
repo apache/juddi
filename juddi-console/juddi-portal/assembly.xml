@@ -5,7 +5,7 @@
   </formats>
   <fileSets>
     <fileSet>
-	  <directory>${project.build.directory}/tomcat/juddi-tomcat-3.0.1.SNAPSHOT</directory>
+	  <directory>${project.build.directory}/tomcat/juddi-tomcat-3.0.1</directory>
 	  <outputDirectory></outputDirectory>
     </fileSet>
   </fileSets>
