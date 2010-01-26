@@ -26,7 +26,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.collections.Buffer;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.subscription.NotificationList;

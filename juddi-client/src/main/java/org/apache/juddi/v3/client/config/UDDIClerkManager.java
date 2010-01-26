@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
-import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.BusinessService;
 
@@ -42,37 +41,49 @@ public class UDDIClerkManager {
 	 * @throws ConfigurationException  
 	 */
 	public void start() throws ConfigurationException {
-		log.info("Starting UDDI Clerks for manager " + clientConfig.getManagerName() + "...");
-		UDDIClientContainer.addClerkManager(this);
-		if (clientConfig.isRegisterOnStartup()) {
-			saveClerkAndNodeInfo();
-			registerAnnotatedServices();
-			xRegister();
-		}
-		log.info("Clerks started succesfully for manager " + clientConfig.getManagerName());
+		Runnable runnable = new BackGroundRegistration(this);
+		Thread thread = new Thread(runnable);
+		thread.start();
  	}
 	
 	public void restart() throws ConfigurationException {
 		stop();
 		start();
- 	}
+	}
+	
 	/**
-	 * Saves the clerk and node info from the uddi.xml to the jUDDI registry.
+	 * Saves the clerk and node info from the uddi.xml to the home jUDDI registry.
+	 * This info is needed if you want to JUDDI Server to do XRegistration/"replication".
 	 */
 	public void saveClerkAndNodeInfo() {
 		
 		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		
 		if (uddiClerks.size() > 0) {
-			for (UDDIClerk defaultClerk : uddiClerks.values()) {
-				if (Transport.DEFAULT_NODE_NAME.equals(defaultClerk.uddiNode.getName())) {
-					for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {
-						if (uddiNode.isAllowJUDDIAPI()) defaultClerk.saveNode(uddiNode.getApiNode());
-					}
-					for (UDDIClerk uddiClerk : clientConfig.getUDDIClerks().values()) {
-						if (uddiClerk.getUDDINode().isAllowJUDDIAPI()) defaultClerk.saveClerk(uddiClerk);
-					}
-					break;
+			
+			//obtaining a clerk that can write to the home registry
+			UDDIClerk homeClerk=null;
+			for (UDDIClerk clerk : uddiClerks.values()) {
+				if (clerk.getUDDINode().isHomeJUDDI()) {
+					homeClerk = clerk;
+				}	
+			}
+			//registering nodes and clerks
+			if (homeClerk!=null) {
+				int numberOfHomeJUDDIs=0;
+				for (UDDINode uddiNode : clientConfig.getUDDINodes().values()) {
+					if (uddiNode.isHomeJUDDI()) numberOfHomeJUDDIs++;
+					homeClerk.saveNode(uddiNode.getApiNode());
 				}
+				if (numberOfHomeJUDDIs==1) {
+					for (UDDIClerk clerk : clientConfig.getUDDIClerks().values()) {
+						homeClerk.saveClerk(clerk);
+					}
+				} else {
+					log.error("The client config needs to have one homeJUDDI node.");
+				}
+			} else {
+				log.info("No home clerk found.");
 			}
 		}	
 	}

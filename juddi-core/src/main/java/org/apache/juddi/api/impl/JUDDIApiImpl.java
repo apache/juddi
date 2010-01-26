@@ -557,7 +557,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
 				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 				
-				NotificationList nl = NotificationList.getInstance();
+				NotificationList<String> nl = NotificationList.getInstance();
 				nl.getNotifications().add(sw.toString());
 				
 				//update the registry with the notification list.
