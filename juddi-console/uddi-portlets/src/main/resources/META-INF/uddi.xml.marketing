@@ -39,7 +39,7 @@
 				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 			</node>
 		</nodes>
-		<clerks registerOnStartup="false">
+		<clerks registerOnStartup="true">
 		   <clerk name="MarketingCratchit" node="default" publisher="marketing" password="marketing"/> 
 	       <clerk name="SalesCratchit"     node="sales"   publisher="marketing" password="marketing"/>
 	   </clerks>
