@@ -20,12 +20,12 @@
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-console</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2.SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion> 
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-portal-bundle</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2.SNAPSHOT</version>
   <name>jUDDI Portal</name>
   <url>http://maven.apache.org</url>
   <packaging>pom</packaging>
@@ -33,13 +33,13 @@
     <dependency>
       <groupId>org.apache.juddi</groupId>
       <artifactId>juddi-tomcat</artifactId>
-      <version>3.0.1</version> 
+      <version>3.0.2.SNAPSHOT</version> 
       <type>zip</type>
     </dependency>
     <dependency>
 	    <groupId>org.apache.juddi</groupId>
 	    <artifactId>uddi-portlets</artifactId>
-	    <version>3.0.1</version>
+	    <version>3.0.2.SNAPSHOT</version>
 	    <type>war</type>
     </dependency>
     <dependency>
