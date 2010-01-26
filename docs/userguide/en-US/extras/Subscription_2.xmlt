@@ -1,6 +1,6 @@
-<name>default-ws</name>
+<name>default</name>
 <properties>
-    <property name="serverName" value="sales"/>
+    <property name="serverName" value="marketing"/>
     <property name="serverPort" value="8080"/>
     <property name="rmiPort" value="1099"/>
 </properties>

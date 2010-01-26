@@ -74,7 +74,7 @@
             </step>
             <step>
                 <para>
-                edit: <filename>juddiv3.properties</filename> and set the following
+                edit: <filename>webapps/juddiv3/WEB-INF/classes/juddiv3.properties</filename> and set the following
                 property values where 'sales' is the DNS name of your server.
                 </para>
                 <programlisting><xi:include href="extras/Subscription_1.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
@@ -119,7 +119,7 @@
             </step>
             <step>
                 <para>
-                edit: <filename>juddiv3.properties</filename> and set the following
+                edit: <filename>webapps/juddiv3/WEB-INF/classes/juddiv3.properties</filename> and set the following
                 property values where 'marketing' is the DNS name of your server.
                 </para>
                 <programlisting><xi:include href="extras/Subscription_2.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
@@ -161,8 +161,11 @@
         </para>
 
         <para>
-        Finally you will need to edit the
-        <filename>uddi-portlet.war/WEB-INF/classes/META_INF/uddi.xml</filename> and set
+        Finally you will need to replace the sales server's
+	<filename>uddi-portlets.war/WEB-INF/classes/META-INF/uddi.xml</filename>
+	with <filename>uddi-portlets.war/WEB-INF/classes/META-INF/uddi.xml.sales</filename>.
+	Then, edit the
+        <filename>uddi-portlets.war/WEB-INF/classes/META-INF/uddi.xml</filename> and set
         the following properties:
         </para>
 
@@ -187,7 +190,10 @@
         </figure>
 
         <para>
-        Before logging into the marketing portal you will need to edit the
+        Before logging into the marketing portal, replace marketing's 
+	<filename>uddi-portlet.war/WEB-INF/classes/META-INF/uddi.xml</filename>
+	with <filename>udd-portlet.war/WEB-INF/classes/META-INF/uddi.xml.marketing</filename>.    
+	Then you will need to edit the
         <filename>uddi-portlet.war/WEB-INF/classes/META_INF/uddi.xml</filename> and set
         the following properties:
         </para>

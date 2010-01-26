@@ -1,5 +1,5 @@
 <clerks registerOnStartup="false">
-    <clerk  name="MarketingCratchit"    node="default-ws" 
+    <clerk  name="MarketingCratchit"    node="default" 
             publisher="marketing"       password="marketing"/>
 
     <clerk  name="SalesCratchit"        node="sales-ws"   
