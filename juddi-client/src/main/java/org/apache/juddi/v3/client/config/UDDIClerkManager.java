@@ -80,7 +80,7 @@ public class UDDIClerkManager {
 						homeClerk.saveClerk(clerk);
 					}
 				} else {
-					log.error("The client config needs to have one homeJUDDI node.");
+					log.error("The client config needs to have one homeJUDDI node and found " + numberOfHomeJUDDIs);
 				}
 			} else {
 				log.info("No home clerk found.");
