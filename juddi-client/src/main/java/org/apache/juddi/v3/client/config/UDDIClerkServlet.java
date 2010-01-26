@@ -41,10 +41,9 @@ public class UDDIClerkServlet extends HttpServlet {
 		try {
 			String clientConfigFile = config.getInitParameter("uddi.client.config");
 			if (clientConfigFile==null) clientConfigFile = ClientConfig.UDDI_CONFIG;
-			logger.info("Starting Clerk Manager..");
 			UDDIClerkManager manager = new UDDIClerkManager(clientConfigFile);
+			logger.info("Starting Clerk Manager " + manager.getName() + "...");
 			manager.start();
-			logger.info("Successfully Started Clerk Manager " + manager.getName());
 		} catch (Exception e) {
 			logger.error("UDDI-client could not be started for manager " + manager.getName() + ". "
 					+ e.getMessage(), e);

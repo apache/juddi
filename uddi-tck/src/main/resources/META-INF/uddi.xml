@@ -4,7 +4,7 @@
     <reloadDelay>5000</reloadDelay>
     <manager name="test-manager">
 		<nodes>
-			<node >
+			<node isHomeJUDDI="true">
 			    <!-- required 'default' node -->
 				<name>default</name> 
 				<description>Main jUDDI node</description>
