@@ -19,27 +19,176 @@
         </para>
     </section>
     
+	<!-- section: Authentication -->
+    <section id="sect-config_authentication">
+        <title>Authentication</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_authenticate_Inquiry.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		This flag determines whether authentication (the presence of a getAuthToken) is required on queries invoking the Inquiry API.      By default, jUDDI sets this to
+		false for ease of use.
+        </para>
+
+        <programlisting><xi:include href="extras/jUDDI_configuration_authenticator.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The jUDDI authenticator class to use.    See Chapter 3 of the Userguide for the choices provided.
+        </para>
+	</section>
+	
     <!-- section: Startup -->
     <section id="sect-startup">
         <title>Startup</title>
+		<programlisting><xi:include href="extras/jUDDI_configuration_server_baseurl.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
-        <!-- TODO -->
+        Token that can be accessed in accessPointURLs and resolved at runtime.
+		</para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_root_publisher.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        The username for the jUDDI root publisher.     This is usually just set to "root".
+		</para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_seed_always.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Forces seeding of the jUDDI data.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_load_install_data.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		This property allows you to cancel loading of the jUDDI install data.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_locale.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The default local to use.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_persistenceunit_name.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The persistence name for the jUDDI database that is specified in the <filename>persistence.xml</filename> file.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_reload_delay.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The time in milliseconds in which juddiv3.properties is polled for changes.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_server_name.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The server name and port number of the server.
+		</para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_operatorEmailAddress.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The jUDDI operator email address.
+		</para>
+		
+    </section>
+	
+	<!-- section: Queries -->
+    <section id="sect-config_queries">
+        <title>Queries</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_maxBindingsPerService.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The maximum number of bindings that can be specified per service.
         </para>
+
+        <programlisting><xi:include href="extras/jUDDI_configuration_maxBusinessesPerPublisher.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The maximum number of businesses that can be registered per publisher.
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxInClause.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		The maximum number of parameters within an IN clause.
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxNameElementsAllowed.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Maximum number of name elements allowed in a jUDDI query.
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxNameLength.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Maximum name size within a jUDDI query. 
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxRows.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Maximum number of rows within a response.
+        </para>
+
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxServicesPerBusiness.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Maxmimum number of services in a business.
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_maxTModelsPerPublisher.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		Maximum number of TModels a publisher can create.
+        </para>
+
     </section>
     
-    <!-- section: Subscription -->
-    <section id="sect-config_subscription">
-        <title>Subscription</title>
-        <programlisting><xi:include href="extras/jUDDI_configuration_1.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+	<!-- section: Proxy -->
+    <section id="sect-config_proxy">
+        <title>Proxy Settings</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_proxy.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
         This is the upper boundary set by the registry. Between the user defined endDate
         of a Subscription and this value, the registry will pick the earliest date.
         </para>
+    </section>
 
-        <programlisting><xi:include href="extras/jUDDI_configuration_2.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+	<!-- section: Key Generation -->
+    <section id="sect-config_keygeneration">
+        <title>KeyGeneration</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_cryptor.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+
+        <programlisting><xi:include href="extras/jUDDI_configuration_keygenerator.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+
+        <programlisting><xi:include href="extras/jUDDI_configuration_uuidgen.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+
+    </section>
+	
+    <!-- section: Subscription -->
+    <section id="sect-config_subscription">
+        <title>Subscription</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_subscription_chunkexpiration_minutes.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
         This is the expiration time of a subscription “chunk”.
         </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_subscription_service.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_subscription_expiration_days.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+		This is the upper boundary set by the registry. Between the user defined endDate
+        of a Subscription and this value, the registry will pick the earliest date.
+        </para>
+		
+		<programlisting><xi:include href="extras/jUDDI_configuration_notification_interval.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+				
+		<programlisting><xi:include href="extras/jUDDI_configuration_notification_start_buffer.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>		
     </section>
+	
+	<!-- section: Transfer -->
+    <section id="sect-config_transfer">
+        <title>Transfer</title>
+        <programlisting><xi:include href="extras/jUDDI_configuration_transfer_expiration_days.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        <para>
+        </para>
+	</section>
     
 </chapter>
