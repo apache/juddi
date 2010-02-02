@@ -16,131 +16,136 @@
  *
  */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.apache.juddi</groupId>
-    <artifactId>juddi-parent</artifactId>
-    <version>3.0.2.SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion> 
-  <groupId>org.apache.juddi</groupId>
-  <artifactId>juddi-tomcat</artifactId>
-  <version>3.0.2.SNAPSHOT</version>
-  <name>jUDDI Tomcat Packaging</name>
-  <url>http://maven.apache.org</url>
-  <packaging>pom</packaging>
-  <properties>
-    <juddi-cxf-version>3.0.2.SNAPSHOT</juddi-cxf-version>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>commons-discovery</groupId>
-      <artifactId>commons-discovery</artifactId>
-      <version>0.2</version>
-    </dependency>
-    <dependency>
-      <artifactId>apache-tomcat</artifactId>
-      <groupId>org.apache.juddi.bootstrap</groupId>
-      <version>6.0.20</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-     <artifactId>juddi-cxf</artifactId>
-     <groupId>org.apache.juddi</groupId>
-     <version>${juddi-cxf-version}</version> 
-     <type>war</type>
-    </dependency>
-     <dependency>
-     <artifactId>juddiv3-samples</artifactId>
-     <groupId>org.apache.juddi</groupId>
-     <version>3.0.2.SNAPSHOT</version> 
-     <type>war</type>
-    </dependency>
-    <dependency>
-     <artifactId>juddi-core</artifactId>
-     <groupId>org.apache.juddi</groupId>
-     <version>3.0.2.SNAPSHOT</version>
-     <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>10.4.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.6</version>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.13</version>
-    </dependency>
-  </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>2.1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.3</version>
-        <executions>
-          <execution>
-            <id>test</id>
-            <phase>package</phase>
-            <configuration>
-              <tasks>
-               <property name="compile_classpath" refid="maven.compile.classpath"/>
-               <property name="runtime_classpath" refid="maven.runtime.classpath"/>
-               <property name="test_classpath" refid="maven.test.classpath"/>
-               <property name="plugin_classpath" refid="maven.plugin.classpath"/>
-               <property name="project.version" value="${project.version}"/>
-
-	       <property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}"/>
-	       <property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}"/>
-	       <property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}"/>
-	       <property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}"/>
-	       <property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}"/>
-	       <property name="dependency.juddiv3.war" value="${basedir}/../juddi-cxf/target/juddi-cxf-${juddi-cxf-version}.war"/>
-	       <echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
-	       <property name="dependency.juddiv3-samples.war" value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${juddi-cxf-version}.war"/>
-	       <property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}"/>
-	       <ant antfile="${basedir}/build.xml">
-		  <property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}"/>
-                  <target name="package-tomcat"/>
-               </ant>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-assembly-plugin</artifactId>
-	  <version>2.2-beta-3</version>
-	  <executions>
-	  <execution>
-          <id>make-assembly</id>
-          <phase>package</phase>
-          <goals>
-              <goal>attached</goal>
-          </goals>
-	  <configuration>
-	  <descriptors>
-	    <descriptor>${basedir}/assembly.xml</descriptor>
-	  </descriptors>
-	  </configuration>
-	  </execution>
-          </executions>
-      </plugin>
-    </plugins>
-  </build>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.apache.juddi</groupId>
+		<artifactId>juddi-parent</artifactId>
+		<version>3.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>juddi-tomcat</artifactId>
+	<name>jUDDI Tomcat Packaging</name>
+	<packaging>pom</packaging>
+	<properties>
+		<juddi-cxf-version>${version}</juddi-cxf-version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<artifactId>apache-tomcat</artifactId>
+			<groupId>org.apache.juddi.bootstrap</groupId>
+			<version>6.0.20</version>
+			<type>zip</type>
+		</dependency>
+		<dependency>
+			<artifactId>juddi-cxf</artifactId>
+			<groupId>org.apache.juddi</groupId>
+			<version>${juddi-cxf-version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<artifactId>juddiv3-samples</artifactId>
+			<groupId>org.apache.juddi</groupId>
+			<version>3.0.2-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<artifactId>juddi-core</artifactId>
+			<groupId>org.apache.juddi</groupId>
+			<version>3.0.2-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.4.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<property name="test_classpath" refid="maven.test.classpath" />
+								<property name="plugin_classpath" refid="maven.plugin.classpath" />
+								<property name="project.version" value="${project.version}" />
+								
+								<property name="dependency.log4j.jar"
+									value="${maven.dependency.log4j.log4j.jar.path}" />
+								<property name="dependency.mysql.jar"
+									value="${maven.dependency.mysql.mysql-connector-java.jar.path}" />
+								<property name="dependency.commons-discovery.jar"
+									value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
+								<property name="dependency.derby.jar"
+									value="${maven.dependency.org.apache.derby.derby.jar.path}" />
+								<property name="dependency.tomcat.zip"
+									value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
+								<property name="dependency.juddiv3.war"
+									value="${basedir}/../juddi-cxf/target/juddi-cxf-${juddi-cxf-version}.war" />
+								<echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
+								<property name="dependency.juddiv3-samples.war"
+									value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${juddi-cxf-version}.war" />
+								<property name="dependency.juddi.jar"
+									value="${maven.dependency.org.apache.juddi.juddi.jar.path}" />
+								<ant antfile="${basedir}/build.xml">
+									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
+									<target name="package-tomcat" />
+								</ant>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-3</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>${basedir}/assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -1,58 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<!--
-		* Copyright 2001-2009 The Apache Software Foundation. * * Licensed
-		under the Apache License, Version 2.0 (the "License"); * you may not
-		use this file except in compliance with the License. * You may obtain
-		a copy of the License at * *
-		http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by
-		applicable law or agreed to in writing, software * distributed under
-		the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES
-		OR CONDITIONS OF ANY KIND, either express or implied. * See the
-		License for the specific language governing permissions and *
-		limitations under the License. * */
-	-->
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2.SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-core</artifactId>
-	<version>3.0.2.SNAPSHOT</version>
+	<packaging>bundle</packaging>
 	<properties>
 		<persistence>hibernate</persistence>
 	</properties>
-	<packaging>jar</packaging>
+	
 	<name>jUDDI Core</name>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -79,13 +57,13 @@
 								<delete dir="src/main/java/META-INF" />
 								<delete dir="src/main/resources/META-INF" />
 								<mkdir dir="src/main/java/META-INF" />
-								<copy
-									file="src/main/resources/persistence/${persistence}-persistence.xml"
-									tofile="src/main/java/META-INF/persistence.xml" overwrite="true" />
+								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
+									  tofile="src/main/java/META-INF/persistence.xml" 
+									  overwrite="true" />
 								<mkdir dir="src/main/resources/META-INF" />
-								<copy
-									file="src/main/resources/persistence/${persistence}-persistence.xml"
-									tofile="src/main/resources/META-INF/persistence.xml" overwrite="true" />
+								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
+									  tofile="src/main/resources/META-INF/persistence.xml"
+									  overwrite="true" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -133,17 +111,17 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -236,40 +214,33 @@
 				</dependency>
 			</dependencies>
 			<build>
-			    <plugins>
-			<plugin>
-		      <groupId>org.codehaus.mojo</groupId>
-		      <artifactId>hibernate3-maven-plugin</artifactId>
-		      <version>2.2</version>
-		      <!--  
-		      <executions>
-		        <execution>
-		          <phase>process-classes</phase>
-		          <goals>
-		            <goal>hbm2ddl</goal>
-		          </goals>
-		        </execution>
-		      </executions>
-		      -->
-		      <configuration>
-		        <components>
-		          <component>
-		            <name>hbm2ddl</name>
-		            <implementation>jpaconfiguration</implementation>
-		          </component>
-		        </components>
-		        <componentProperties>
-		          <persistenceunit>juddiDatabase</persistenceunit>
-		          <outputfilename>schema.ddl</outputfilename>
-		          <drop>false</drop>
-		          <create>true</create>
-		          <export>false</export>
-		          <format>true</format>
-		        </componentProperties>
-		      </configuration>
-		    </plugin>
-			
-			    </plugins>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>hibernate3-maven-plugin</artifactId>
+						<version>2.2</version>
+						<!--
+							<executions> <execution> <phase>process-classes</phase> <goals>
+							<goal>hbm2ddl</goal> </goals> </execution> </executions>
+						-->
+						<configuration>
+							<components>
+								<component>
+									<name>hbm2ddl</name>
+									<implementation>jpaconfiguration</implementation>
+								</component>
+							</components>
+							<componentProperties>
+								<persistenceunit>juddiDatabase</persistenceunit>
+								<outputfilename>schema.ddl</outputfilename>
+								<drop>false</drop>
+								<create>true</create>
+								<export>false</export>
+								<format>true</format>
+							</componentProperties>
+						</configuration>
+					</plugin>
+				</plugins>
 				<pluginManagement>
 					<plugins>
 						<plugin>
@@ -353,15 +324,14 @@
 									<goal>enhance</goal>
 								</goals>
 							</execution>
-							</executions>
-							<dependencies>
-								<dependency>
-									<groupId>org.apache.openjpa</groupId>
-									<artifactId>openjpa</artifactId>
-									<version>1.2.1</version>
-								</dependency>
-							</dependencies>
-						
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.openjpa</groupId>
+								<artifactId>openjpa</artifactId>
+								<version>1.2.1</version>
+							</dependency>
+						</dependencies>
 					</plugin>
 				</plugins>
 			</build>

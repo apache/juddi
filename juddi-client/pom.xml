@@ -16,22 +16,20 @@
  *
  */ -->
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.juddi</groupId>
     <artifactId>juddi-parent</artifactId>
-    <version>3.0.2.SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT</version>
   </parent> 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-client</artifactId>
-  <version>3.0.2.SNAPSHOT</version>
+  <packaging>bundle</packaging>
   <name>jUDDI Client side Code</name>
-  <packaging>jar</packaging>  
   <dependencies>
     <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
-        <version>3.0.2.SNAPSHOT</version>
+        <version>3.0.2-SNAPSHOT</version>
      </dependency>
     <dependency>
         <groupId>log4j</groupId>
@@ -66,19 +64,4 @@
         <scope>test</scope>
      </dependency>
   </dependencies> 
-  <build>
-    <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>jar</goal>
-                  </goals>
-               </execution>
-             </executions>
-        </plugin>
-    </plugins>
-  </build>
 </project>

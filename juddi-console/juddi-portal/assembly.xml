@@ -1,12 +1,14 @@
 <assembly>
-  <id></id>
-  <formats>
-    <format>zip</format>
-  </formats>
-  <fileSets>
-    <fileSet>
-	  <directory>${project.build.directory}/tomcat/juddi-tomcat-3.0.2.SNAPSHOT</directory>
-	  <outputDirectory></outputDirectory>
-    </fileSet>
-  </fileSets>
+	<id />
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>
+				${project.build.directory}/tomcat/juddi-tomcat-3.0.2-SNAPSHOT
+			</directory>
+			<outputDirectory />
+		</fileSet>
+	</fileSets>
 </assembly>

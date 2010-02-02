@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<!--
-		* Copyright 2001-2009 The Apache Software Foundation. * * Licensed
-		under the Apache License, Version 2.0 (the "License"); * you may not
-		use this file except in compliance with the License. * You may obtain
-		a copy of the License at * *
-		http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by
-		applicable law or agreed to in writing, software * distributed under
-		the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES
-		OR CONDITIONS OF ANY KIND, either express or implied. * See the
-		License for the specific language governing permissions and *
-		limitations under the License. * */
-	-->
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2.SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.apache.juddi</groupId>
 	<artifactId>uddi-ws</artifactId>
-	<version>3.0.2.SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>UDDI_v3 WS Stubs and Schema Bindings Generated from WSDL</name>
 	<repositories>
 		<repository>
@@ -57,40 +59,34 @@
 			<layout>legacy</layout>
 		</pluginRepository>
 	</pluginRepositories>
-	<build>
-		<plugins>
-			<!--
-				uncomment this section to regenerate the java classes <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxws-maven-plugin</artifactId> <executions> <execution>
-				<goals> <goal>wsimport</goal> </goals> </execution> </executions>
-				<configuration> <wsdlDirectory>src/main/resources</wsdlDirectory>
-				<wsdlFiles> <wsdlFile>uddi_v3_service.wsdl</wsdlFile> </wsdlFiles>
-				<keep>true</keep> </configuration> </plugin>
-			-->
-                        <plugin>
-                          <groupId>org.apache.maven.plugins</groupId>
-                          <artifactId>maven-source-plugin</artifactId>
-                          <executions>
+	<profiles>
+        <profile>
+            <id>regenerate-source</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jaxws-maven-plugin</artifactId>
+                        <!-- version??? -->
+                        <executions>
                             <execution>
-                              <goals>
-                                <goal>jar</goal>
-                  	      </goals>
-               		    </execution>
-            		  </executions>
-            		</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<skip>false</skip>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                                <goals>
+                                    <goal>wsimport</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <wsdlDirectory>src/main/resources</wsdlDirectory>
+                            <wsdlFiles>
+                                <wsdlFile>uddi_v3_service.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <keep>true</keep>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 	<dependencies>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -108,10 +104,10 @@
 			<version>2.1.9</version>
 		</dependency>
 		<dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.13</version>
-        </dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

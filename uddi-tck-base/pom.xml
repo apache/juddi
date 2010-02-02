@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
  * Copyright 2001-2009 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,48 +14,33 @@
  * limitations under the License.
  *
  */ -->
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <parent>
-    <groupId>org.apache.juddi</groupId>
-    <artifactId>juddi-parent</artifactId>
-    <version>3.0.2.SNAPSHOT</version>
-  </parent> 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.juddi</groupId>
-  <artifactId>uddi-tck-base</artifactId>
-  <version>3.0.2.SNAPSHOT</version>
-  <name>UDDI Technical Compatibility Kit (TCK) Base</name>
-  <packaging>jar</packaging>  
-  <dependencies>
-    <dependency>
-        <groupId>org.apache.juddi</groupId>
-        <artifactId>uddi-ws</artifactId>
-        <version>3.0.2.SNAPSHOT</version>
-     </dependency>
-    <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.13</version>
-     </dependency>
-	<dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.5</version>
-     </dependency>
-  </dependencies> 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-           <execution>
-           <goals>
-            <goal>jar</goal>
-           </goals>
-           </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.apache.juddi</groupId>
+		<artifactId>juddi-parent</artifactId>
+		<version>3.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>uddi-tck-base</artifactId>
+	<packaging>bundle</packaging>
+	<name>UDDI Technical Compatibility Kit (TCK) Base</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>uddi-ws</artifactId>
+			<version>3.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+		</dependency>
+	</dependencies>
 </project>

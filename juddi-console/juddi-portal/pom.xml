@@ -16,172 +16,178 @@
  *
  */ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <groupId>org.apache.juddi</groupId>
-    <artifactId>juddi-console</artifactId>
-    <version>3.0.2.SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion> 
-  <groupId>org.apache.juddi</groupId>
-  <artifactId>juddi-portal-bundle</artifactId>
-  <version>3.0.2.SNAPSHOT</version>
-  <name>jUDDI Portal</name>
-  <url>http://maven.apache.org</url>
-  <packaging>pom</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.juddi</groupId>
-      <artifactId>juddi-tomcat</artifactId>
-      <version>3.0.2.SNAPSHOT</version> 
-      <type>zip</type>
-    </dependency>
-    <dependency>
-	    <groupId>org.apache.juddi</groupId>
-	    <artifactId>uddi-portlets</artifactId>
-	    <version>3.0.2.SNAPSHOT</version>
-	    <type>war</type>
-    </dependency>
-    <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-portal</artifactId>
-	    <version>1.1.7</version>
-	    <type>war</type>
-     </dependency>
-     <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-container</artifactId>
-	    <version>1.1.7</version>
-	    <type>jar</type>
-     </dependency>
-     <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-descriptor-api</artifactId>
-	    <version>1.1.7</version>
-	    <type>jar</type>
-     </dependency>
-     <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-descriptor-impl</artifactId>
-	    <version>1.1.7</version>
-	    <type>jar</type>
-     </dependency>
-     <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-taglib</artifactId>
-	    <version>1.1.7</version>
-	    <type>jar</type>
-     </dependency>
-     <dependency>
-	    <groupId>org.apache.pluto</groupId>
-	    <artifactId>pluto-container</artifactId>
-	    <version>1.1.7</version>
-	    <type>jar</type>
-     </dependency>
-     <dependency>
-      <groupId>javax.portlet</groupId>
-      <artifactId>portlet-api</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.castor</groupId>
-      <artifactId>castor</artifactId>
-      <version>1.1.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.transaction</groupId>
-          <artifactId>jta</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xerces</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-    	<groupId>commons-logging</groupId>
-    	<artifactId>commons-logging</artifactId>
-    	<version>1.1</version>
-    </dependency> 
-  </dependencies>
-  <repositories>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.apache.juddi</groupId>
+		<artifactId>juddi-console</artifactId>
+		<version>3.0.2-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>juddi-portal-bundle</artifactId>
+	<name>jUDDI Portal</name>
+	<url>http://maven.apache.org</url>
+	<packaging>pom</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>juddi-tomcat</artifactId>
+			<version>3.0.2-SNAPSHOT</version>
+			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>uddi-portlets</artifactId>
+			<version>3.0.2-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-portal</artifactId>
+			<version>1.1.7</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-container</artifactId>
+			<version>1.1.7</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-descriptor-api</artifactId>
+			<version>1.1.7</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-descriptor-impl</artifactId>
+			<version>1.1.7</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-taglib</artifactId>
+			<version>1.1.7</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pluto</groupId>
+			<artifactId>pluto-container</artifactId>
+			<version>1.1.7</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>1.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.transaction</groupId>
+					<artifactId>jta</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xerces</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+	</dependencies>
+	<repositories>
 		<repository>
 			<id>apache</id>
 			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
 		</repository>
 	</repositories>
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>2.1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.3</version>
-        <executions>
-          <execution>
-            <id>test</id>
-            <phase>package</phase>
-            <configuration>
-              <tasks>
-               <property name="compile_classpath" refid="maven.compile.classpath"/>
-               <property name="runtime_classpath" refid="maven.runtime.classpath"/>
-               <property name="test_classpath"    refid="maven.test.classpath"/>
-               <property name="plugin_classpath"  refid="maven.plugin.classpath"/>
-               <property name="project.version"       value="${project.version}"/>
-		       <property name="dependency.castor.jar"  value="${maven.dependency.org.codehaus.castor.castor.jar.path}"/>
-		       <property name="dependency.pluto-container.jar"  value="${maven.dependency.org.apache.pluto.pluto-container.jar.path}"/>
-		       <property name="dependency.pluto-descriptor-api.jar" value="${maven.dependency.org.apache.pluto.pluto-descriptor-api.jar.path}"/>
-		       <property name="dependency.pluto-descriptor-impl.jar"  value="${maven.dependency.org.apache.pluto.pluto-descriptor-impl.jar.path}"/>
-		       <property name="dependency.pluto-taglib.jar"  value="${maven.dependency.org.apache.pluto.pluto-taglib.jar.path}"/>
-		       <property name="dependency.pluto-portal.war"  value="${maven.dependency.org.apache.pluto.pluto-portal.war.path}"/>
-		       <property name="dependency.commons-logging.jar" value="${maven.dependency.commons-logging.commons-logging.jar.path}"/> 
-		       <property name="dependency.portlet-api.jar"  value="${maven.dependency.javax.portlet.portlet-api.jar.path}"/>
-		       <property name="dependency.uddi-portlets.war"  value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}"/>
-		       <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
-		       <ant antfile="${basedir}/build.xml">
-                  <target name="package-tomcat"/>
-               </ant>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-     
-      <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-assembly-plugin</artifactId>
-	  <version>2.2-beta-3</version>
-	  <executions>
-	  <execution>
-          <id>make-assembly</id>
-          <phase>package</phase>
-          <goals>
-              <goal>attached</goal>
-          </goals>
-	  <configuration>
-	  <descriptors>
-	    <descriptor>${basedir}/assembly.xml</descriptor>
-	  </descriptors>
-	  </configuration>
-	  </execution>
-          </executions>
-      </plugin>
-    </plugins>
-  </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.3</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+							    <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
+								<property name="compile_classpath" refid="maven.compile.classpath" />
+								<property name="runtime_classpath" refid="maven.runtime.classpath" />
+								<property name="test_classpath" refid="maven.test.classpath" />
+								<property name="plugin_classpath" refid="maven.plugin.classpath" />
+								<property name="project.version" value="${project.version}" />
+								<property name="dependency.castor.jar"
+									value="${maven.dependency.org.codehaus.castor.castor.jar.path}" />
+								<property name="dependency.pluto-container.jar"
+									value="${maven.dependency.org.apache.pluto.pluto-container.jar.path}" />
+								<property name="dependency.pluto-descriptor-api.jar"
+									value="${maven.dependency.org.apache.pluto.pluto-descriptor-api.jar.path}" />
+								<property name="dependency.pluto-descriptor-impl.jar"
+									value="${maven.dependency.org.apache.pluto.pluto-descriptor-impl.jar.path}" />
+								<property name="dependency.pluto-taglib.jar"
+									value="${maven.dependency.org.apache.pluto.pluto-taglib.jar.path}" />
+								<property name="dependency.pluto-portal.war"
+									value="${maven.dependency.org.apache.pluto.pluto-portal.war.path}" />
+								<property name="dependency.commons-logging.jar"
+									value="${maven.dependency.commons-logging.commons-logging.jar.path}" />
+								<property name="dependency.portlet-api.jar"
+									value="${maven.dependency.javax.portlet.portlet-api.jar.path}" />
+								<property name="dependency.uddi-portlets.war"
+									value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}" />
+								<ant antfile="${basedir}/build.xml">
+									<target name="package-tomcat" />
+								</ant>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-3</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>${basedir}/assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

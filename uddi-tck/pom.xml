@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	* Copyright 2001-2009 The Apache Software Foundation. * * Licensed
-	under the Apache License, Version 2.0 (the "License"); * you may not
-	use this file except in compliance with the License. * You may obtain
-	a copy of the License at * *
-		http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by
-		applicable law or agreed to in writing, software * distributed under
-		the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES
-		OR CONDITIONS OF ANY KIND, either express or implied. * See the
-		License for the specific language governing permissions and *
-		limitations under the License. * */
-	-->
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */ -->
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2.SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.apache.juddi</groupId>
 	<artifactId>uddi-tck</artifactId>
-	<version>3.0.2.SNAPSHOT</version>
+	<packaging>bundle</packaging>
 	<name>UDDI TCK Tests</name>
-	<packaging>jar</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
@@ -55,35 +57,32 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-tomcat</artifactId>
-			<version>3.0.2.SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<type>zip</type>
 			<scope>test</scope>
 		</dependency>
-		<!-- for RMI 
-		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jbossall-client</artifactId>
-			<version>4.2.2.GA</version>
-			<scope>test</scope>
-		</dependency>
+		<!--
+			for RMI <dependency> <groupId>jboss</groupId>
+			<artifactId>jbossall-client</artifactId> <version>4.2.2.GA</version>
+			<scope>test</scope> </dependency>
 		-->
 	</dependencies>
 	<build>
@@ -104,7 +103,7 @@
 								<artifactItem>
 									<groupId>org.apache.juddi</groupId>
 									<artifactId>juddi-tomcat</artifactId>
-									<version>3.0.2.SNAPSHOT</version>
+									<version>3.0.2-SNAPSHOT</version>
 									<type>zip</type>
 									<outputDirectory>${basedir}/target</outputDirectory>
 								</artifactItem>
@@ -123,9 +122,12 @@
 						<phase>pre-integration-test</phase>
 						<configuration>
 							<tasks>
-								<unzip dest="target" src="target/juddi-tomcat-3.0.2.SNAPSHOT.zip" />
-								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf" overwrite="true"/>
-								<copy file="${basedir}/log4j.properties" todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true"/>
+								<unzip dest="target" src="target/juddi-tomcat-3.0.2-SNAPSHOT.zip" />
+								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf"
+									overwrite="true" />
+								<copy file="${basedir}/log4j.properties"
+									todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/WEB-INF/classes"
+									overwrite="true" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -135,24 +137,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
- 			  <artifactId>maven-source-plugin</artifactId>
- 		  	  <executions>
-			    <execution>
- 			      <goals>
-			        <goal>jar</goal>
-			      </goals>
- 		            </execution>
-		 	  </executions>
-            		</plugin>
-			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
 				<version>1.0</version>
@@ -160,16 +144,16 @@
 					<wait>false</wait>
 					<container>
 						<containerId>tomcat6x</containerId>
-						<home>${basedir}/target/juddi-tomcat-3.0.2.SNAPSHOT</home>
+						<home>${basedir}/target/juddi-tomcat-3.0.2-SNAPSHOT</home>
 					</container>
 					<configuration>
 						<type>existing</type>
-						<home>${project.build.directory}/juddi-tomcat-3.0.2.SNAPSHOT</home>
+						<home>${project.build.directory}/juddi-tomcat-3.0.2-SNAPSHOT</home>
 						<properties>
 							<cargo.logging>high</cargo.logging>
 							<cargo.hostname>localhost</cargo.hostname>
 							<cargo.servlet.port>8880</cargo.servlet.port>
-							<cargo.jvmargs>-Xms256m -Xmx256m -XX:PermSize=256M -XX:MaxPermSize=256M</cargo.jvmargs>
+							<cargo.jvmargs>-Xms256m -Xmx256m -XX:MaxPermSize=256M</cargo.jvmargs>
 						</properties>
 					</configuration>
 				</configuration>
