@@ -158,7 +158,7 @@ public class Subscription implements java.io.Serializable, Comparable<Subscripti
 
 	public int compareTo(Subscription o) {
 		if (o==null || o.getSubscriptionKey()==null) return 0;
-		if (o.getSubscriptionKey().equals(subscriptionKey)) return 1;
+		if (o.getSubscriptionKey().equals(getSubscriptionKey())) return 1;
 		else return 0;
 	}
 }
