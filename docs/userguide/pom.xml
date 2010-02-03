@@ -14,17 +14,6 @@
     <docname>userguide</docname>
     <bookname>jUDDI User Guide</bookname>
   </properties> 
-  <repositories>
-      <repository>
-          <id>repository.jboss.org</id>
-          <name>JBoss Repository</name>
-          <layout>default</layout>
-          <url>http://repository.jboss.org/maven2/</url>
-          <snapshots>
-              <enabled>false</enabled>
-          </snapshots>
-      </repository>
-  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>repository.jboss.org</id>
@@ -35,7 +24,17 @@
         <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
+    <pluginRepository>
+		<id>snapshots</id>
+		<name>Apache SnapShot Repository</name>
+		<layout>default</layout>
+		<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</pluginRepository>
   </pluginRepositories>
+  
   <profiles>
 
     <!-- mvn compile -->
@@ -55,17 +54,17 @@
     				  <formats>
         				<format>
         				  <formatName>pdf</formatName>
-        					<stylesheetResource>classpath:/xslt/org/jboss/pdf.xsl</stylesheetResource>
+        					<stylesheetResource>classpath:/xslt/org/apache/juddi/pdf.xsl</stylesheetResource>
         					<finalName>${docname}.pdf</finalName>
         				</format>
     					<format>
     					  <formatName>html</formatName>
-    					  <stylesheetResource>classpath:/xslt/org/jboss/xhtml.xsl</stylesheetResource>
+    					  <stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml.xsl</stylesheetResource>
     					  <finalName>index.html</finalName>
     					  </format>
         				<format>
         				  <formatName>html_single</formatName>
-        				  <stylesheetResource>classpath:/xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
+        				  <stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml-single.xsl</stylesheetResource>
         				  <finalName>index.html</finalName>
         				</format>
     					</formats>
@@ -165,19 +164,21 @@
 				<artifactId>maven-jdocbook-plugin</artifactId>
 				<version>2.2.0</version>
 				<extensions>true</extensions>
+				  
 				<dependencies>	
 					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-docbook-xslt</artifactId>
-						<version>1.1.0</version>
+						<groupId>org.apache.juddi</groupId>
+						<artifactId>juddi-docbook-xslt</artifactId>
+						<version>0.1-SNAPSHOT</version>
 					</dependency>
 					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-jdocbook-style</artifactId>
-						<version>1.1.0</version>
+						<groupId>org.apache.juddi</groupId>
+						<artifactId>juddi-docbook-style</artifactId>
+						<version>0.1-SNAPSHOT</version>
 						<type>jdocbook-style</type>
 					</dependency>
 				</dependencies>
+				
 				<configuration>
 		      		<sourceDocumentName>jUDDI_User_Guide.xml</sourceDocumentName>
 			  	<sourceDirectory>.</sourceDirectory>
