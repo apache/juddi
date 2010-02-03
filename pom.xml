@@ -243,12 +243,6 @@
 			<url>http://download.java.net/maven/1</url>
 			<layout>legacy</layout>
 		</repository>
-		<repository>
-			<id>apache</id>
-			<name>ASF Repository (legacy)</name>
-			<url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
-			<layout>default</layout>
-		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
