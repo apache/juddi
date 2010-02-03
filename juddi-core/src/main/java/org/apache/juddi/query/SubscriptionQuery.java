@@ -29,7 +29,7 @@ public class SubscriptionQuery extends EntityQuery {
 
 	static {
 		StringBuffer sql = new StringBuffer(200);
-		sql.append("select distinct "+ ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
+		sql.append("select "+ ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		selectSQL = sql.toString();
 	}
 

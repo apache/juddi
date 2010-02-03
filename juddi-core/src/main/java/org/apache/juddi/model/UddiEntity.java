@@ -96,7 +96,7 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	
 	public int compareTo(UddiEntity o) {
 		if (o==null || o.getEntityKey()==null) return 0;
-		if (o.getEntityKey().equals(entityKey)) return 1;
+		if (o.getEntityKey().equals(getEntityKey())) return 1;
 		else return 0;
 	}
 
