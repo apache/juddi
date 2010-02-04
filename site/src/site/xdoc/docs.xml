@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "http://forrest.apache.org/dtd/document-v12.dtd">
+<document>
+  <properties>
+    <title>jUDDI User and Developer Documentation</title>
+  </properties>
+  <body>
+    <section name="Guides">    
+        
+      <table>   
+           
+        <tr> 
+          <td><strong>Name</strong></td>
+          <td><strong>Date</strong></td>
+          <td><strong>Description</strong></td>
+        </tr>
+        <tr>
+          <td>3.0.1 User Guide</td>
+          <td>Feb 1, 2010</td>
+          <td><a href="docs/3.0.1/userguide/html/index.html">HTML</a>,
+              <a href="docs/3.0.1/userguide/html_single/index.html">HTML-SINGLE</a>,
+              <a href="docs/3.0.1/userguide/pdf/userguide.pdf">PDF</a>
+          </td>
+        </tr>
+        <tr>
+          <td>3.0.1 Developer Guide</td>
+          <td>Feb 1, 2010</td>
+          <td><a href="docs/3.0.1/devguide/html/index.html">HTML</a>,
+              <a href="docs/3.0.1/devguide/html_single/index.html">HTML-SINGLE</a>,
+              <a href="docs/3.0.1/devguide/pdf/devguide.pdf">PDF</a>
+          </td>
+        </tr>
+        <tr>
+          <td>2.0 User Guide</td>
+          <td>Jun 1, 2005</td>
+          <td><a href="usersguide.html">HTML</a></td>
+        </tr>
+      </table>
+		
+    </section>
+  </body>
+</document>
