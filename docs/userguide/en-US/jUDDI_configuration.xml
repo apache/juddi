@@ -144,14 +144,17 @@
         <title>KeyGeneration</title>
         <programlisting><xi:include href="extras/jUDDI_configuration_cryptor.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
+		Cryptor implementation that jUDDI will use.
         </para>
 
         <programlisting><xi:include href="extras/jUDDI_configuration_keygenerator.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
+		Key generator implementation that jUDDI will use.
         </para>
 
         <programlisting><xi:include href="extras/jUDDI_configuration_uuidgen.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
+		UUID generation implementation that jUDDI will use.
         </para>
 
     </section>
@@ -164,10 +167,6 @@
         This is the expiration time of a subscription “chunk”.
         </para>
 		
-		<programlisting><xi:include href="extras/jUDDI_configuration_subscription_service.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
-        <para>
-        </para>
-		
 		<programlisting><xi:include href="extras/jUDDI_configuration_subscription_expiration_days.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
 		This is the upper boundary set by the registry. Between the user defined endDate
@@ -176,10 +175,12 @@
 		
 		<programlisting><xi:include href="extras/jUDDI_configuration_notification_interval.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
-        </para>
+		Specifies the interval at which the notification timer triggers.
+		</para>
 				
 		<programlisting><xi:include href="extras/jUDDI_configuration_notification_start_buffer.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
+		Specifies the amount of time to wait before the notification timer initially fires.
         </para>		
     </section>
 	
@@ -188,7 +189,8 @@
         <title>Transfer</title>
         <programlisting><xi:include href="extras/jUDDI_configuration_transfer_expiration_days.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
-        </para>
+        Days before a transfer request expires.
+		</para>
 	</section>
     
 </chapter>
