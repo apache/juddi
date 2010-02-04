@@ -25,10 +25,10 @@
 		<version>3.0.2-SNAPSHOT</version>
 	</parent>
 	<packaging>pom</packaging>
-	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-site</artifactId>
 	<name>jUDDI_v3 Site</name>
 	
+	<!--  
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
@@ -37,6 +37,7 @@
 			<type>zip</type>
 		</dependency>
 	</dependencies>
+	-->
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -56,6 +57,7 @@
 					<templateFile>maven-site.vm</templateFile>
 				</configuration>
 			</plugin>
+			<!--  
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -83,6 +85,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>
