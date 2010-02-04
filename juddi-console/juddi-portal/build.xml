@@ -1,5 +1,4 @@
 <project name="juddi-portal.tomcat" default="package-tomcat" basedir=".">
-	<property file="package.properties"/>
 	<property name="lib.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/lib"/>
 	<property name="conf.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/conf"/>
 	<property name="webapps.dir" value="${basedir}/target/tomcat/juddi-tomcat-${juddi.tomcat.version}/webapps"/>

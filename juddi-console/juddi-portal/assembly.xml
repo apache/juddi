@@ -6,7 +6,7 @@
 	<fileSets>
 		<fileSet>
 			<directory>
-				${project.build.directory}/tomcat/juddi-tomcat-3.0.2-SNAPSHOT
+				${project.build.directory}/tomcat/juddi-tomcat-${project.parent.version}
 			</directory>
 			<outputDirectory />
 		</fileSet>

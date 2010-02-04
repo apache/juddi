@@ -50,13 +50,13 @@
 		<dependency>
 			<artifactId>juddiv3-samples</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<artifactId>juddi-core</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>

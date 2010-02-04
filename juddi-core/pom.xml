@@ -25,7 +25,7 @@
 	<artifactId>juddi-core</artifactId>
 	<packaging>bundle</packaging>
 	<properties>
-		<persistence>hibernate</persistence>
+		<persistence>openjpa</persistence>
 	</properties>
 	
 	<name>jUDDI Core</name>
@@ -111,17 +111,17 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -178,7 +178,6 @@
 		<profile>
 			<id>hibernate</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>persistence</name>
 					<value>hibernate</value>
@@ -272,6 +271,7 @@
 		<profile>
 			<id>openjpa</id>
 			<activation>
+			    <activeByDefault>true</activeByDefault>
 				<property>
 					<name>persistence</name>
 					<value>openjpa</value>

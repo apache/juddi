@@ -84,17 +84,17 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
