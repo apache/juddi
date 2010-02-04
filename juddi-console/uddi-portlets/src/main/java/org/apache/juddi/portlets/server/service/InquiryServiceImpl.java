@@ -151,12 +151,14 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
         				 businessEntity.getBusinessKey(),
         				 EntityForLang.getName(businessEntity.getName(),lang).getValue(),
         				 EntityForLang.getDescription(businessEntity.getDescription(),lang).getValue());
-        		 for (BusinessService businessService : businessEntity.getBusinessServices().getBusinessService()) {
-        			 Service service = new Service(
-        					 businessService.getServiceKey(),
-        					 EntityForLang.getName(businessService.getName(),lang).getValue(),
-        					 EntityForLang.getDescription(businessService.getDescription(),lang).getValue());
-        			 business.getServices().add(service);
+        		 if (businessEntity.getBusinessServices()!=null) {
+	        		 for (BusinessService businessService : businessEntity.getBusinessServices().getBusinessService()) {
+	        			 Service service = new Service(
+	        					 businessService.getServiceKey(),
+	        					 EntityForLang.getName(businessService.getName(),lang).getValue(),
+	        					 EntityForLang.getDescription(businessService.getDescription(),lang).getValue());
+	        			 business.getServices().add(service);
+	        		 }
         		 }
         		 //for (Contact contact : businessEntity.getContacts().getContact()) {
         			 //contact.get
