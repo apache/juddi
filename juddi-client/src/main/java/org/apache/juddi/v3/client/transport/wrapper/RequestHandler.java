@@ -160,13 +160,13 @@ public class RequestHandler
     } catch (InvocationTargetException ite) {
     	String message = URLEncoder.encode(ite.getTargetException().getMessage());
     	log.error(message);
-    	setException(ite.getTargetException().getMessage());
+    	setException(message);
     }
     catch(Exception ex) // Catch any other exceptions
     {
     	String message = URLEncoder.encode(ex.getMessage());
         log.error(message);
-        setException(ex.getMessage());
+        setException(message);
     }
     return response;
   }
