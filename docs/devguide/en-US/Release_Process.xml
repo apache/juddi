@@ -11,23 +11,40 @@
 
     <section id="addgpg">
         <title>Add your gpg key to KEYS</title>
+        <para>
+        	In the root of the project there is a KEYS file. Add your key to this file and check it into source control.
+        	Depending on your tool of choice you can use on of the following commands:
+        	<programlisting>
+        	pgp -kxa &lt;your name&gt; and append it to this file.
+        	(pgpk -ll &lt;your name&gt; &amp;&amp; pgpk -xa &lt;your name&gt;) &gt;&gt; this file.
+        	(gpg --list-sigs &lt;your name&gt;
+             	&amp;&amp; gpg --armor --export &lt;your name&gt;) &gt;&gt; this file.
+             </programlisting>
+        </para>
     </section>
     <section id="Release steps">
 	<title>Release steps</title>
 	<para>
-Environment: 
-Maven version: 2.0.8
-Java version: 1.5.0_16
-OS name: "mac os x" version: "10.5.6" arch: "i386" Family: "unix"
-
-1. Run mvn clean install -Prelease Dpersistence=hibernate.
-2. Copy the release artifacts to people.apache.org:/public_html/releases/juddi-3.0.0.alpha
-3. Start a vote referencing the build artifacts, leave the vote open for 72 hrs.
-
-On successfull vote:
-4. Create a Tag in SVN for the release
-5. Run mvn clean deploy -Prelease -Dpersistence=hibernate
-6. Update the website
+		<command>
+		Environment: 
+		Apache Maven 2.2.1 (r801777; 2009-08-06 15:16:01-0400)
+		Java version: 1.6.0_17
+		</command>
+		
+		<orderedlist numeration="arabic">
+			<listitem>Run mvn release:prepare, this will set all the right version numbers and create a tag in SVN.</listitem>
+			<listitem>Run mvn release:perform, will upload the release to a staging area in the Apache Nexus Repository.</listitem>
+			<listitem>Go into the juddi-dist, and run mvn clean install -Prelease</listitem>
+			<listitem>Upload the signed distribution artifacts to apache people.</listitem>
+			<listitem>Start a vote referencing the build artifacts, leave the vote open for 72 hrs.</listitem>
+		</orderedlist>
+		
+		On successful vote:
+		<orderedlist numeration="continuation">
+			<listitem>Release the staging artifacts in Nexus.</listitem>
+			<listitem>Copy the distribution artifacts to the mirror.</listitem>
+			<listitem>Update the website.</listitem>
+		</orderedlist>
 	</para>
     </section>
 </chapter>
