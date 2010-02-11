@@ -22,14 +22,7 @@
 	<artifactId>juddi-cxf</artifactId>
 	<name>jUDDI CXF Deployment</name>
 	<packaging>pom</packaging>
-	<repositories>
-    <!-- for jaxb-impl -->
-		<repository>
-			<id>java.net</id>
-			<url>http://download.java.net/maven/1/</url>
-			<layout>legacy</layout>
-		</repository>
-	</repositories>
+	
 	<properties>
 		<cxf.version>2.1.3</cxf.version>
 		<persistence>hibernate</persistence>

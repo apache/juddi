@@ -29,10 +29,10 @@
     <src>images/juddi.gif</src>
   </bannerRight>
     <skin>
-        <groupId>org.apache.maven.skins</groupId>
-        <artifactId>maven-default-skin</artifactId>
-        <version>1.0</version>
-    </skin>
+	    <groupId>org.apache.juddi</groupId>
+	    <artifactId>juddi-site-style</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</skin>
 
     <publishDate format="dd MMM yyyy" position="right"/>
 
@@ -53,8 +53,8 @@
                 <item name="jUDDI Docs" href="docs.html"/>
                 <item name="Wiki" href="http://wiki.apache.org/ws/jUDDI"/>
                 <item name="UDDI Library" href="library.html" />
-                <item name="Javadocs v2" href="apidocs/index.html"/>
-                <item name="Javadocs v3" href="apidocs3/index.html"/>
+                <item name="Javadocs v2" href="apidocs2/index.html"/>
+                <item name="Javadocs v3" href="apidocs/index.html"/>
                 <item name="XRef v3" href="xref/index.html"/>
             </item>
             <item name="Project Information">
