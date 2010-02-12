@@ -13,24 +13,170 @@
     <section id="sect-intro_annotations">
         <title>Introduction</title>
         <para>
-        
+        	Conventionally Services (BusinessService) and their EndPoints (BindingTemplates) are registered to a UDDI Registry using a GUI, where an
+        	admin user manually adds the necessary info. This process tends to make the data in the Registry rather static
+        	and the data can grow stale over time. To make the data in the UDDI more dynamic it makes sense to register
+        	and EndPoint (BindingTemplate) when it comes online, which is when it gets deployed. The UDDI annotations are 
+        	designed to just that: register a Service when it get deployed to an Application Server. There
+        	are two annotations: UDDIService, and UDDIServiceBinding. You need to use both annotations to register an EndPoint. 
+        	Upon undeployment of the Service, the EndPoint will be de-registered from the UDDI. The Service information stays
+        	in the UDDI. It makes sense to leave the Service level information in the Registry since this reflects that the 
+        	Service is there, however there is no EndPoint at the moment ("Check back later"). It is a manual process to remove
+        	the Service information. The annotations use the juddi-client library which means that they can be used to register
+        	to any UDDIv3 registry.
         </para>
     </section>
     
-
     <!-- section: @UDDIService -->
     <section id="sect-UDDIService">
-        <title>@UDDIService</title>
+        <title>UDDIService Annotation</title>
         <para>
-        
+        The UDDIService annotation is used to register a service under an already existing business in the Registry. The
+        annotation should be added at the class level of the java class.
+        <table><title>UDDIService attributes</title>
+			<tgroup cols="3" >
+			<colspec colnum="1" colname="col1" />
+			<colspec colnum="2" colname="col2" />
+			<colspec colnum="3" colname="col3" />
+			<thead>
+				<row>
+				 	<entry>attribute</entry><entry>description</entry><entry>required</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+				 	<entry>serviceName</entry>
+				 	<entry>The name of the service, by default the clerk will use the one name specified in the WebService annotation</entry>
+				 	<entry>no</entry>
+				 </row>
+				 <row>
+				 	<entry>description</entry>
+				 	<entry>Human readable description of the service</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>serviceKey</entry>
+				 	<entry>UDDI v3 Key of the Service</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>businessKey</entry>
+				 	<entry>UDDI v3 Key of the Business that should own this Service. The business should exist in the registry at time of registration</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>lang</entry>
+				 	<entry>Language locale which will be used for the name and description, defaults to "en" if omitted</entry>
+				 	<entry>no</entry>
+				 </row>
+				 <row>
+				 	<entry>categoryBag</entry>
+				 	<entry>Definition of a CategoryBag, see below for details</entry>
+				 	<entry>no</entry>
+				 </row>
+			</tbody>
+			</tgroup>
+		</table>
         </para>
     </section>
     
     <!-- section: @UDDIServiceBinding -->
     <section id="sect-UDDIServiceBinding">
-        <title>@UDDIServiceBinding</title>
+        <title>UDDIServiceBinding Annotation</title>
         <para>
-        
+            The UDDIServiceBinding annotation is used to register a BindingTemplate to the UDDI registry. This annotation
+            cannot be used by itself. It needs to go along side a UDDIService annotation.
+        	<table><title>UDDIServiceBinding attributes</title>
+			<tgroup cols="3" >
+			<colspec colnum="1" colname="col1" />
+			<colspec colnum="2" colname="col2" />
+			<colspec colnum="3" colname="col3" />
+			<thead>
+				<row>
+				 	<entry>attribute</entry><entry>description</entry><entry>required</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+				 	<entry>bindingKey</entry>
+				 	<entry>UDDI v3 Key of the ServiceBinding</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>description</entry>
+				 	<entry>Human readable description of the service</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>accessPointType</entry>
+				 	<entry>UDDI v3 AccessPointType, defaults to wsdlDeployment if omitted</entry>
+				 	<entry>no</entry>
+				 </row>
+				 <row>
+				 	<entry>accessPoint</entry>
+				 	<entry>Endpoint reference</entry>
+				 	<entry>yes</entry>
+				 </row>
+				 <row>
+				 	<entry>lang</entry>
+				 	<entry>Language locale which will be used for the name and description, defaults to "en" if omitted</entry>
+				 	<entry>no</entry>
+				 </row>
+				 <row>
+				 	<entry>tModelKeys</entry>
+				 	<entry>Comma-separated list of tModelKeys key references</entry>
+				 	<entry>no</entry>
+				 </row>
+				 <row>
+				 	<entry>categoryBag</entry>
+				 	<entry>Definition of a CategoryBag, see below for further details</entry>
+				 	<entry>no</entry>
+				 </row>
+		    </tbody>
+		    </tgroup>
+		    </table>
+        </para>
+    </section>
+    
+    <section id="sect-WebServiceExample">
+        <title>WebService Example</title>
+        <para>
+        The annotations can be used on any class that defines a service. Here they are added to a WebService, a POJO with a 
+        JAX-WS 'WebService' annotation.
+        <programlisting><xi:include href="extras/HelloWorldImpl.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        On deployment of this WebService, the juddi-client code will scan this class for UDDI annotations and take care of the
+        registration process. The configuration file <filename>uddi.xml</filename> of the juddi-client is described in the chapter 
+        <xref  linkend="chap-Using_jUDDI-Client">Using the jUDDI Client</xref>. In the clerk section you need to reference
+        the Service class 'org.apache.juddi.samples.HelloWorldImpl':
+        <programlisting>
+            &lt;clerk name="BobCratchit" node="default" publisher="sales" password="sales"&gt; 
+                 &lt;class&gt;org.apache.juddi.samples.HelloWorldImpl&lt;/class&gt;  
+            &lt;/clerk&gt;
+        </programlisting>
+        which means that Bob is using the node connection setting of the node with name "default", and that he will be 
+        using the "sales" publisher, for which the password it "sales". There is some analogy here as to how datasources 
+        are defined.
+        </para>
+    </section>
+    
+    <section id="sect-CategoryBag">
+        <title>CategoryBag Attribute</title>
+        <para>
+        The CategoryBag attribute allows you to reference tModels. For example the following categoryBag
+        <programlisting>
+        &lt;categoryBag&gt;
+           &lt;keyedReference tModelKey="uddi:uddi.org:categorization:types" 
+           	keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" /&gt; 
+           &lt;keyedReference tModelKey="uddi:uddi.org:categorization:types" 
+           	keyName="uddi-org:types:wsdl2" keyValue="wsdlDeployment2" /&gt;
+        &lt;/categoryBag&gt; 
+        </programlisting>
+        can be put in like
+        <programlisting>categoryBag="keyedReference=keyName=uddi-org:types:wsdl;keyValue=wsdlDeployment;" +
+                     "tModelKey=uddi:uddi.org:categorization:types," +  
+                     "keyedReference=keyName=uddi-org:types:wsdl2;keyValue=wsdlDeployment2;" +
+                     "tModelKey=uddi:uddi.org:categorization:types2",
+        </programlisting>
         </para>
     </section>
 
