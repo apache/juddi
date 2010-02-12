@@ -52,15 +52,17 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!--
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>1.4.0</version>
 				<configuration>
+				<instructions>
+				<Include-Resource>juddi_install_data=src/main/resources/juddi_install_data, src/main/resources/messages.properties</Include-Resource>
+			
+				</instructions>
 				</configuration>
 			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
