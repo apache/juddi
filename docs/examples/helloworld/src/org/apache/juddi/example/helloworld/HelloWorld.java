@@ -4,6 +4,7 @@ import org.apache.log4j.helpers.Loader;
 
 import org.uddi.api_v3.*;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -12,8 +13,8 @@ public class HelloWorld {
 	private static UDDISecurityPortType security = null;
 
 	public HelloWorld() {
-                try {
-	                String clazz = UDDIClerkManager.getClientConfig().getNodes().get("default").getProxyTransport();
+        try {
+            String clazz = UDDIClientContainer.getUDDIClerkManager(null).getClientConfig().getUDDINode("default").getProxyTransport();
 			Class<?> transportClass = Loader.loadClass(clazz);
 			if (transportClass!=null) {
 				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");

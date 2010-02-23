@@ -1,4 +1,18 @@
-This example is a command line demonstration of how to interact with JUDDI.  
+This example is a command line demonstration of how to interact with JUDDI.
 
+1. Download Apache Ivy and update the project.properties
+
+2. Check the settings of the META-INF/uddi.xml, to make sure the serverName and serverPort are set correctly.
+
+3. ant run
+
+  run:
+     [echo] HelloWorld Grab AuthToken
+     [java] log4j:WARN No appenders could be found for logger (org.apache.commons.configuration.ConfigurationUtils).
+     [java] log4j:WARN Please initialize the log4j system properly.
+     [java] AUTHTOKEN = authtoken:8f18d677-b19d-454f-b1ba-61bc5947c16e
+  
+  
+  
 For further examples, see the uddi-client module, which includes a number
 of unit tests that exercise API other than just the security API.
