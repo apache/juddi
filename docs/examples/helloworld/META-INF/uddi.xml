@@ -7,10 +7,10 @@
 			<node>
 			    <!-- required 'default' node -->
 				<name>default</name> 
-                                <properties>
-                                    <property name="serverName" value="localhost"/>
-                                    <property name="serverPort" value="8080"/>
-                                </properties>
+                <properties>
+                    <property name="serverName" value="localhost"/>
+                    <property name="serverPort" value="8080"/>
+                </properties>
 				<description>Main jUDDI node</description>
 				<!-- JAX-WS Transport -->
 				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>

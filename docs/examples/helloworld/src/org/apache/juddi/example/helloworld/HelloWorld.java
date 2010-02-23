@@ -1,8 +1,7 @@
 package org.apache.juddi.examples.helloworld;
 
-import org.apache.log4j.helpers.Loader;
-
 import org.uddi.api_v3.*;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -14,10 +13,12 @@ public class HelloWorld {
 
 	public HelloWorld() {
         try {
-            String clazz = UDDIClientContainer.getUDDIClerkManager(null).getClientConfig().getUDDINode("default").getProxyTransport();
-			Class<?> transportClass = Loader.loadClass(clazz);
+            String clazz = UDDIClientContainer.getUDDIClerkManager(null).
+            	getClientConfig().getUDDINode("default").getProxyTransport();
+            Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
 			if (transportClass!=null) {
-				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
+				Transport transport = (Transport) transportClass.
+					getConstructor(String.class).newInstance("default");
 				security = transport.getUDDISecurityService();
 			}	
 		} catch (Exception e) {
