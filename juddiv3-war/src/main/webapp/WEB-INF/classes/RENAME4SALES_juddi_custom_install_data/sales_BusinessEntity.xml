@@ -45,7 +45,7 @@
   <description xml:lang="en">This is a UDDI v3 registry for Sales</description>
   <discoveryURLs>
     <!-- This discovery URL should point to the home installation URL of jUDDI -->
-    <discoveryURL useType="home">http://${juddi.server.name}:${juddi.server.port}/juddiv3</discoveryURL>
+    <discoveryURL useType="home">${juddi.server.baseurl}/juddiv3</discoveryURL>
   </discoveryURLs>
   <businessServices>
     <!-- As mentioned above, you may want to provide user-defined keys for these (and the services/bindingTemplates below.  Services that you
@@ -56,7 +56,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:sales.apache.org:servicebindings-subscriptionlistener-ws" serviceKey="uddi:sales.apache.org:services-subscriptionlistener">
           <description>UDDI Subscription Listener API V3</description>
-          <accessPoint useType="wsdlDeployment">http://${juddi.server.name}:${juddi.server.port}/juddiv3/services/subscription-listener?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
           </tModelInstanceDetails>
