@@ -1,0 +1,75 @@
+<?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "jUDDI_User_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<!-- chapter: Subscription -->
+<chapter id="chap-deployjboss">
+    <title>Deploying to JBoss 5.1.0.GA</title>
+    
+    <!-- section: Introduction -->
+    <section id="sect-deployjboss">
+        <title>Introduction</title>
+        <para>
+	This section describes how to deploy juddi to JBoss 5.1.0.GA.     These instructions will use CXF as a webservice framework rather than JBoss WS native.
+        </para>
+
+        <para>
+	First, download jboss-5.1.0.GA - the zip or tar.gz bundle may be found 
+at http://www.jboss.org/jbossas/downloads/.      Download the bundle and uncompress it.
+        </para>
+   
+	<para>
+	Next, download jbossws-cxf-3.2.0.zip - which can be found at http://www.jboss.org/jbossws/downloads/.     Uncompress it.	
+	</para>	
+
+	<para>
+	In the uncompressed jbossws-cxf-3.2.0, rename <filename>ant.properties-example</filename> to <filename>ant.properties</filename>.    Edit ant.properties and set the jboss.510.home property to the directory where you unpacked your jboss-5.1.0.GA installation.    
+	</para>
+
+	<para>	
+	Next, execute the ant target "ant deploy-jboss510".    Once CXF is deployed, start the server and verify the installation with 'ant tests'.
+	</para> 
+
+    </section>
+   
+    <section id="sect-juddi-war">
+	<title>Add juddiv3.war</title>
+	<para>
+	Copy juddiv3.war to server/default/deploy and unpack it.
+	</para>
+	
+	<para>
+	Insert <filename>jboss-web.xml</filename> into the juddiv3.war/WEB-INF directory , should look like the following :
+	<programlisting><xi:include href="extras/jboss-web.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>	
+	</para>
+    </section> 
+
+    <!-- section: Two node example setup: Sales and Marketing -->
+    <section id="sect-datasource">
+        <title>Configure Datasource</title>
+        <para>
+	The first step for configuring a datasource is to copy your JDBC driver into the classpath.    Copy your JDBC driver into <filename>${jboss.home.dir}/server/${configuration}/lib</filename>, where configuration is the profile you wish to start with (default, all, etc.). 
+
+	Example : 
+	<programlisting>cp mysql-connector-java-5.0.8-bin.jar /opt/jboss-5.1.0.GA/server/default/lib</programlisting> 
+        </para>
+
+        <para>
+	Next, configure a JBoss datasource file for your db.   Listed below is an example datasource for MySQL :	
+        </para>
+        <programlisting><xi:include href="extras/juddiv3-ds.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+	Next, make a few changes to the <filename>juddiv3.war/classes/META-INF/persistence.xml</filename>. 
+	
+	Change the "hibernate.dialect" property to match the database you have chosen for persistence.      For MySQL, change the value of hibernate.dialect to "org.hibernate.dialect.MySQLDialect".     A full list of dialects available can be found in the hibernate documentation (https://www.hibernate.org/hib_docs/v3/api/org/hibernate/dialect/package-summary.html).  
+
+	Next, change the &lt;jta-data-source&gt; tags so that it reads &lt;non-jta-data-source&gt;, and change the value from java:comp/env/jdbc/JuddiDS to java:/JuddiDS.
+        </para>
+
+    </section>
+    
+</chapter>
