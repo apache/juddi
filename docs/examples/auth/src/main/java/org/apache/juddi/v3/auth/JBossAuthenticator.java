@@ -15,12 +15,17 @@
  */
 package org.apache.juddi.v3.auth;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.error.AuthenticationException;
-import org.apache.juddi.error.ErrorMessage;
-import org.apache.juddi.error.UnknownUserException;
+
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.AuthenticationException;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnknownUserException;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.log4j.Logger;
 import org.jboss.security.AuthenticationManager;
@@ -28,6 +33,9 @@ import org.jboss.security.AuthenticationManager;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
 import java.security.Principal;
 
 /**
@@ -54,7 +62,7 @@ public class JBossAuthenticator implements Authenticator {
 	// JBoss authentication manager
 	AuthenticationManager authManager;
 
-	public JBossAuthenticator() {
+	public JBossAuthenticator() throws NamingException, ConfigurationException {
 		init();
 	}
 
@@ -80,7 +88,7 @@ public class JBossAuthenticator implements Authenticator {
 		return userID;
 	}
 
-	private void init() throws NamingException {
+	private void init() throws NamingException, ConfigurationException {
 		String securityDomain = AppConfig.getConfiguration().getString(
 				Property.JUDDI_SECURITY_DOMAIN,
 				Property.DEFAULT_SECURITY_DOMAIN);
@@ -89,5 +97,23 @@ public class JBossAuthenticator implements Authenticator {
 		Context ctx = new InitialContext();
 		authManager = (AuthenticationManager) ctx.lookup(securityDomain);
 		ctx.close();
+	}
+	
+	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			Publisher publisher = em.find(Publisher.class, authorizedName);
+			if (publisher == null)
+				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
+			
+			return publisher;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
 	}
 }
