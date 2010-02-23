@@ -40,8 +40,8 @@
 	</td>
 	<td>
 	<ul>
-	    <li><a href="http://svn.apache.org/repos/asf/webservices/juddi/trunk/docs/jUDDI-UserGuide.pdf">jUDDI User Guide</a></li>
-	    <li><a href="http://svn.apache.org/repos/asf/webservices/juddi/trunk/docs/jUDDI-DevGuide.pdf">jUDDI Developer Guide</a></li>
+	    <li><a href="http://ws.apache.org/juddi/docs/3.0/userguide/pdf/userguide.pdf">jUDDI User Guide</a></li>
+	    <li><a href="http://ws.apache.org/juddi/docs/3.0/userguide/pdf/devguide.pdf">jUDDI Developer Guide</a></li>
 	    <li><a href="http://svn.apache.org/repos/asf/webservices/juddi/trunk/docs/uddi3-specification/uddi-v3.0.2-20041019.pdf">UDDI v3.0.2 Specification</a></li>
 	    <li><a href="http://wiki.apache.org/ws/jUDDI">jUDDI wiki</a> - add your own docs</li>
 	    <li><a href="http://apachejuddi.blogspot.com/">jUDDI Blog</a></li>
