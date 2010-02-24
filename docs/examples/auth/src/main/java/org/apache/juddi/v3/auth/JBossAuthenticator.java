@@ -19,8 +19,10 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.juddi.model.AuthToken;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.error.AuthTokenRequiredException;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.UnknownUserException;
@@ -54,6 +56,7 @@ import java.security.Principal;
  * juddi.securityDomain=java:/jaas/other
  * 
  * @author Antoni Reus (areus@ibit.org)
+ * @author Tom Cunningham (tcunning@apache.org)
  */
 public class JBossAuthenticator implements Authenticator {
 	// private reference to the logger
@@ -75,15 +78,40 @@ public class JBossAuthenticator implements Authenticator {
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
 		}
 
-		// Create a principal for the userID
-		Principal principal = new Principal() {
-			public String getName() {
-				return userID;
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			// Create a principal for the userID
+			Principal principal = new Principal() {
+				public String getName() {
+					return userID;
+				}
+			};
+	
+			if (!authManager.isValid(principal, credential)) {
+				throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+			} else {
+				tx.begin();
+				Publisher publisher = em.find(Publisher.class, userID);
+				if (publisher == null) {
+					publisher = new Publisher();
+					publisher.setAuthorizedName(userID);
+					publisher.setIsAdmin("false");
+					publisher.setIsEnabled("true");
+					publisher.setMaxBindingsPerService(199);
+					publisher.setMaxBusinesses(100);
+					publisher.setMaxServicesPerBusiness(100);
+					publisher.setMaxTmodels(100);
+					publisher.setPublisherName("Unknown");
+					em.persist(publisher);
+					tx.commit();
+				}
 			}
-		};
-
-		if (!authManager.isValid(principal, credential)) {
-			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials"));
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
 		}
 		return userID;
 	}
@@ -102,18 +130,22 @@ public class JBossAuthenticator implements Authenticator {
 	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		Publisher publisher = null;
 		try {
 			tx.begin();
-			Publisher publisher = em.find(Publisher.class, authorizedName);
+			publisher = em.find(Publisher.class, authorizedName);
 			if (publisher == null)
 				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
 			
-			return publisher;
+			AuthToken at = em.find(AuthToken.class, authInfo);
+			if (at == null) 
+				throw new AuthTokenRequiredException(new ErrorMessage("E_authTokenRequired", authInfo));				
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
 			}
 			em.close();
 		}
+		return publisher;
 	}
 }
