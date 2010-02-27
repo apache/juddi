@@ -23,6 +23,8 @@
 	<xi:include href="Administration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	
         <xi:include href="JBossDeploy.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+	
+	<xi:include href="GlassfishDeploy.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 
 	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
