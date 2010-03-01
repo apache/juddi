@@ -26,6 +26,12 @@
 		<email></email>
 	</author>
 
+    <author>
+      <firstname>Jeff</firstname>
+      <surname>Faath</surname>
+      <email>jfaath@apache.org</email>
+    </author>
+
 	<author>
 		<firstname>The jUDDI Community</firstname>
 		<surname></surname>
