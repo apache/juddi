@@ -7,31 +7,31 @@
 
 <!-- chapter: Subscription -->
 <chapter id="chap-deployglassfish">
-    <title>Deploying to Glassfish 2.1.1</title>
+	<title>Deploying to Glassfish 2.1.1</title>
     
     <!-- section: Introduction -->
-    <section id="sect-deployglassfish">
-        <title>Introduction</title>
-        <para>
-	This section describes how to deploy juddi to Glassfish 2.1.1.     These instructions will use CXF as a webservice framework.
-        </para>
-
-        <para>
-	First, download the glassfish-v2.1.1 installer JAR.     Once downloaded,install using the JAR and then run the ant setup script :
-
-<programlisting>
+	<section id="sect-deployglassfish">
+		<title>Introduction</title>
+		<para> This section describes how to deploy juddi to Glassfish 2.1.1.
+			These instructions will use CXF as a webservice framework.</para>
+		<para>
+			First, download the glassfish-v2.1.1 installer JAR. Once
+			downloaded,install using the JAR and then run the ant setup script :
+			<programlisting>
 java -jar glassfish-installer-v2.1.1-b31g-linux.jar
 cd glassfish
 ant -f setup.xml
 </programlisting>
-        </para>
-   
-    </section>
-  
-    <section id="sect-glassfish-jars">
-	<para>
-	Copy the following JARs into domains/domain1/lib/ext.     Note that for the purposes of this example, we have copied the MySQL driver to <filename>domains/domain1/lib/ext</filename> :
-<programlisting>
+		</para>
+	</section>
+	<section id="sect-glassfish-jars">
+		<title>Glassfish jars</title>
+		<para>
+			Copy the following JARs into domains/domain1/lib/ext. Note that for
+			the purposes of this example, we have copied the MySQL driver to
+			<filename>domains/domain1/lib/ext</filename>
+			:
+			<programlisting>
 antlr-2.7.6.jar
 cglib-nodep-2.1_3.jar
 commons-collections-3.2.1.jar
@@ -48,40 +48,51 @@ jta-1.0.1B.jar
 mysql-connector-java-5.0.8-bin.jar
 persistence-api-1.0.jar
 </programlisting>
-	</para>
-    </section>
-
-    <section id="sect-juddi-ds">
-	<title>Configure the JUDDI datasource</title>
-	<para>
-	First, using the asadmin administration tool, import the following file :
-        <programlisting><xi:include href="extras/resource.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
-	
-	<programlisting>
+		</para>
+	</section>
+	<section id="sect-juddi-ds">
+		<title>Configure the JUDDI datasource</title>
+		<para>
+			First, using the asadmin administration tool, import the following
+			file :
+			<programlisting><xi:include href="extras/resource.xmlt"
+				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+			<programlisting>
 	asadmin add-resources resource.xml
-	</programlisting>	
-
-	Then use the Glassfish administration console to create a "jdbc/juddiDB" JDBC datasource resource based on the mysql-pool Connection Pool.
-	</para>
-    </section>
- 
-    <section id="sect-glassfish-juddi-war">
-	<title>Add juddiv3-cxf.war</title>
-	<para>
-	Unzip the juddiv3-cxf WAR into <filename>domains/domain1/autodeploy/juddi.war</filename>.     	
-	</para>
-	
-	<para>
-	Add a <filename>sun-web.xml</filename> file into juddiv3.war/WEB-INF.	 Make sure that the JNDI references matches the JNDI location you configured in the Glassfish administration console.
-	<programlisting><xi:include href="extras/sun-web.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>	
-	</para>
-
-	<para>
-	Next, make a few changes to <filename>juddiv3.war/WEB-INF/classes/META-INF/persistence.xml</filename>.
-
-	Change the "hibernate.dialect" property to match the database that you have chosen for persistence.     For MySQL, change the value of hibernate.dialect to "org.hibernate.dialect.MySQLDialect".    A full list of dialects available can be found in the hibernate documentation (https://www.hibernate.org/hib_docs/v3/api/org/hibernate/dialect/package-summary.html).
-
-        Next, change the &lt;jta-data-source&gt; change the value from java:comp/env/jdbc/JuddiDS to java:comp/env/jdbc/JuddiDB.
+	</programlisting>
+			Then use the Glassfish administration console to create a
+			"jdbc/juddiDB" JDBC datasource resource based on the mysql-pool
+			Connection Pool.
+		</para>
+	</section>
+	<section id="sect-glassfish-juddi-war">
+		<title>Add juddiv3-cxf.war</title>
+		<para>
+			Unzip the juddiv3-cxf WAR into
+			<filename>domains/domain1/autodeploy/juddiv3.war
+			</filename>
+			.
+		</para>
+		<para>
+			Add a
+			<filename>sun-web.xml</filename>
+			file into juddiv3.war/WEB-INF. Make sure that the JNDI references
+			matches the JNDI location you configured in the Glassfish
+			administration console.
+			<programlisting><xi:include href="extras/sun-web.xmlt"
+				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+		</para>
+		<para>
+			Next, make a few changes to
+			<filename>juddiv3.war/WEB-INF/classes/META-INF/persistence.xml
+			</filename>.
+			Change the "hibernate.dialect" property to match the database that
+			you have chosen for persistence. For MySQL, change the value of
+			hibernate.dialect to "org.hibernate.dialect.MySQLDialect". A full
+			list of dialects available can be found in the hibernate
+			documentation
+			(https://www.hibernate.org/hib_docs/v3/api/org/hibernate/dialect/package-summary.html).
+			Next, change the &lt;jta-data-source&gt; change the value from java:comp/env/jdbc/JuddiDS to java:comp/env/jdbc/JuddiDB.
 
 	</para>
 
@@ -91,12 +102,12 @@ persistence-api-1.0.jar
         <title>Run juddi</title>
         <para>
 	Start up the server :
-	<programListing>
+	<programlisting>
 cd bin
 asadmin start-domain domain1
-        </programListing>
+        </programlisting>
 	
-	Once the server is deployed, browse to <url>http://localhost:8080/juddi</url>
+	Once the server is deployed, browse to <ulink url="http://localhost:8080/juddiv3">http://localhost:8080/juddiv3</ulink>
 	</para>
     </section>
 
