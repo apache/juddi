@@ -74,6 +74,8 @@
 									  tofile="src/main/java/META-INF/persistence.xml" 
 									  overwrite="true" />
 								<mkdir dir="src/main/resources/META-INF" />
+								<copy file="src/main/resources/juddi-orm.xml"
+									  tofile="src/main/resources/META-INF/orm.xml"/>
 								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
 									  tofile="src/main/resources/META-INF/persistence.xml"
 									  overwrite="true" />
@@ -121,6 +123,11 @@
 		</plugins>
 	</build>
 	<dependencies>
+ 		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.2-504.jdbc3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
