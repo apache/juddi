@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.v3.auth;
+package org.apache.juddi.v3.auth.jboss;
+
+import org.apache.juddi.v3.auth.Authenticator;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
