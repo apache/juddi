@@ -74,11 +74,24 @@
 									  tofile="src/main/java/META-INF/persistence.xml" 
 									  overwrite="true" />
 								<mkdir dir="src/main/resources/META-INF" />
-								<copy file="src/main/resources/juddi-orm.xml"
-									  tofile="src/main/resources/META-INF/orm.xml"/>
 								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
 									  tofile="src/main/resources/META-INF/persistence.xml"
 									  overwrite="true" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>initialize-orm</id>
+						<phase>generate-test-resources</phase>
+						<configuration>
+							<tasks>
+								<mkdir dir="src/main/resources/META-INF" />
+								<copy file="src/main/resources/juddi-orm.xml"
+									  tofile="src/main/resources/META-INF/orm.xml"
+									  overwrite="true"/>
 							</tasks>
 						</configuration>
 						<goals>
