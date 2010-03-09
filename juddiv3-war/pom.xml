@@ -173,7 +173,63 @@
 	</dependencies>
 	<build>
 		<finalName>juddi</finalName>
-		<plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>hibernate</id>
+			<activation>
+				<property>
+					<name>persistence</name>
+					<value>hibernate</value>
+				</property>
+			</activation>
+			<properties>
+				<persistence>hibernate</persistence>
+			</properties>
+			<build>
+				<plugins>
+                        	<plugin>
+                               	<groupId>org.apache.maven.plugins</groupId>
+                               	<artifactId>maven-antrun-plugin</artifactId>
+                                <version>1.3</version>
+                                <executions>
+                                        <execution>
+                                                <id>foo</id>
+                                                <phase>process-classes</phase>
+                                                <configuration>
+                                                        <tasks>
+								<echo>persistence=${persistence}</echo>
+								<copy file="${basedir}/persistence/${persistence}-persistence.xml"
+									tofile="${basedir}/target/classes/META-INF/persistence.xml"
+									overwrite="true" />
+                                                                <copy file="${basedir}/persistence/juddi-orm.xml"
+                                                                        tofile="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml"
+                                                                        overwrite="true" />
+                                                        </tasks>
+                                                </configuration>
+                                                <goals>
+                                                        <goal>run</goal>
+                                                </goals>
+                                        </execution>
+                                </executions>
+                        	</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>openjpa</id>
+			<activation>
+			    <activeByDefault>true</activeByDefault>
+				<property>
+					<name>persistence</name>
+					<value>openjpa</value>
+				</property>
+			</activation>
+			<properties>
+				<persistence>openjpa</persistence>
+			</properties>
+			<build>
+			<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -188,6 +244,7 @@
 								<copy file="${basedir}/persistence/${persistence}-persistence.xml"
 									tofile="${basedir}/target/classes/META-INF/persistence.xml"
 									overwrite="true" />
+								<delete file="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml"/>
 							</tasks>
 						</configuration>
 						<goals>
@@ -196,33 +253,8 @@
 					</execution>
 				</executions>
 			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>hibernate</id>
-			<activation>
-				<property>
-					<name>persistence</name>
-					<value>hibernate</value>
-				</property>
-			</activation>
-			<properties>
-				<persistence>hibernate</persistence>
-			</properties>
-		</profile>
-		<profile>
-			<id>openjpa</id>
-			<activation>
-			    <activeByDefault>true</activeByDefault>
-				<property>
-					<name>persistence</name>
-					<value>openjpa</value>
-				</property>
-			</activation>
-			<properties>
-				<persistence>openjpa</persistence>
-			</properties>
+			</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>
