@@ -576,7 +576,7 @@ public class MappingApiToModel {
 			modelSubscription.setExpiresAfter(new Date(gc.getTimeInMillis()));
 		}
 		
-		if (modelSubscription.isBrief() != null) {
+		if (apiSubscription.isBrief() != null) {
 			modelSubscription.setBrief(apiSubscription.isBrief());
 		} else {
 			modelSubscription.setBrief(new Boolean(false));
