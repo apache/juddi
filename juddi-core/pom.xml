@@ -84,21 +84,6 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>initialize-orm</id>
-						<phase>generate-test-resources</phase>
-						<configuration>
-							<tasks>
-								<mkdir dir="src/main/resources/META-INF" />
-								<copy file="src/main/resources/juddi-orm.xml"
-									  tofile="src/main/resources/META-INF/orm.xml"
-									  overwrite="true"/>
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>remove-meta-inf</id>
 						<phase>deploy</phase>
 						<configuration>
@@ -178,7 +163,7 @@
 			<version>2.3</version>
 		</dependency>
 		<dependency> 
-        <!--  not sure why maven does not figure this out by itself -->
+        		<!--  not sure why maven does not figure this out by itself -->
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
@@ -272,7 +257,29 @@
 							</componentProperties>
 						</configuration>
 					</plugin>
-				</plugins>
+					<plugin>
+                                		<groupId>org.apache.maven.plugins</groupId>
+                                		<artifactId>maven-antrun-plugin</artifactId>
+                                		<version>1.3</version>
+                                		<executions>
+	                                        <execution>
+                                                <id>init-orm</id>
+                                                <phase>generate-resources</phase>
+                                                <configuration>
+                                                        <tasks>
+                                                                <mkdir dir="src/main/resources/META-INF" />
+                                                                <copy file="src/main/resources/juddi-orm.xml"
+                                                                          tofile="src/main/resources/META-INF/orm.xml"
+                                                                          overwrite="true"/>
+                                                        </tasks>
+                                                </configuration>
+                                                <goals>
+                                                        <goal>run</goal>
+                                                </goals>
+                                        	</execution>
+						</executions>
+				</plugin>
+				</plugins>	
 				<pluginManagement>
 					<plugins>
 						<plugin>
