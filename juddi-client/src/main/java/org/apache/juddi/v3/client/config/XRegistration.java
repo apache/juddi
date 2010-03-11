@@ -57,16 +57,18 @@ public class XRegistration {
 		this.entityKey = entityKey;
 	}
 	
-	
+	/**
+	 * Copies the BusinessInformation from one UDDI to another UDDI. Note that no services are being
+	 * copied over by this service. Use xRegisterService to copy over services.
+	 */
 	public void xRegisterBusiness() {
 		BusinessEntity businessEntity;
 		try {
 			businessEntity = fromClerk.findBusiness(entityKey,fromClerk.getUDDINode().getApiNode());
 			log.info("xregister business " + businessEntity.getName().get(0).getValue() + " + from "
 					+ fromClerk.getName() + " to " + toClerk.getName());
-			if (businessEntity.getBusinessServices()==null || businessEntity.getBusinessServices().getBusinessService().size()==0) {
-				businessEntity.setBusinessServices(null);
-			}
+			//not bringing over the services. They need to be explicitly copied using xRegisterService.
+			businessEntity.setBusinessServices(null);
 			toClerk.register(businessEntity,toClerk.getUDDINode().getApiNode());
 		} catch (Exception e) {
 			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);

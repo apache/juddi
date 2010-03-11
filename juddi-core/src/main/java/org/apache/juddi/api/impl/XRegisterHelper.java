@@ -19,6 +19,8 @@ package org.apache.juddi.api.impl;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.XRegistration;
+import org.apache.log4j.Logger;
+import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.sub_v3.SubscriptionResultsList;
 
@@ -30,13 +32,25 @@ import org.uddi.sub_v3.SubscriptionResultsList;
  */
 public class XRegisterHelper {
 
+	private static Logger log = Logger.getLogger(XRegisterHelper.class);
+	
 	public static void handle(Clerk fromClerk, Clerk toClerk, SubscriptionResultsList list) {
 		
 		if (list.getServiceList()!=null) {
+			
 			for (ServiceInfo serviceInfo : list.getServiceList().getServiceInfos().getServiceInfo() ) {
-				serviceInfo.getBusinessKey();
-				new XRegistration(serviceInfo.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();
-				new XRegistration(serviceInfo.getServiceKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterService();
+				
+				UDDIClerk uddiToClerk = new UDDIClerk(toClerk);
+				try {
+					BusinessEntity existingEntity = uddiToClerk.findBusiness(serviceInfo.getBusinessKey(), toClerk.getNode());
+				    if (existingEntity==null) {
+				    	log.info("Business was not found in the destination UDDI " + toClerk.getNode().getName() 
+				    			+ ", going to add it in.");
+				    	new XRegistration(serviceInfo.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();
+				    }
+				    new XRegistration(serviceInfo.getServiceKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterService();
+				} catch (Exception e) {
+					log.error(e.getMessage(),e);				}
 			}
 		}
 		
