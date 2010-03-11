@@ -47,8 +47,8 @@ public class XRegisterHelper {
 					try {
 						BusinessEntity existingEntity = uddiToClerk.findBusiness(serviceInfo.getBusinessKey(), toClerk.getNode());
 						log.debug("Found business with key " +  existingEntity.getBusinessKey() + ". No need to add it again");
-					} catch (DispositionReportFaultMessage message) {
-						log.info(message);
+					} catch (DispositionReportFaultMessage e) {
+						if (! e.getClass().equals(InvalidKeyPassedException.class)) throw e;
 				    	log.info("Business was not found in the destination UDDI " + toClerk.getNode().getName() 
 				    			+ ", going to add it in.");
 				    	new XRegistration(serviceInfo.getBusinessKey(), new UDDIClerk(fromClerk), new UDDIClerk(toClerk)).xRegisterBusiness();
