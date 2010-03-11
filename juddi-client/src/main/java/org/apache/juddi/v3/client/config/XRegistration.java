@@ -64,7 +64,9 @@ public class XRegistration {
 			businessEntity = fromClerk.findBusiness(entityKey,fromClerk.getUDDINode().getApiNode());
 			log.info("xregister business " + businessEntity.getName().get(0).getValue() + " + from "
 					+ fromClerk.getName() + " to " + toClerk.getName());
-			businessEntity.setBusinessServices(null);
+			if (businessEntity.getBusinessServices()==null || businessEntity.getBusinessServices().getBusinessService().size()==0) {
+				businessEntity.setBusinessServices(null);
+			}
 			toClerk.register(businessEntity,toClerk.getUDDINode().getApiNode());
 		} catch (Exception e) {
 			log.error("Could not " + toString() + ". " + e.getMessage() + " " + e.getCause(),e);
