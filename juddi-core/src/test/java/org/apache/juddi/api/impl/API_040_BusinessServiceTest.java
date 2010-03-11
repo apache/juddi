@@ -82,6 +82,37 @@ public class API_040_BusinessServiceTest
 	}
 	
 	@Test
+	public void joepublisher2Services() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBusinessService.saveJoePublisherService2(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService2(authInfoJoe);
+		} finally {
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test
+	public void joepublisher2UpdateBusiness() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBusinessService.saveJoePublisherService2(authInfoJoe);
+			tckBusiness.updateJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService2(authInfoJoe);
+		} finally {
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test
 	public void samsyndicator() {
 		try {
 			// For sam's service projection, joe's information must be loaded

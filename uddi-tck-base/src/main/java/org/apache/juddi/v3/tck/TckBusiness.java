@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import org.junit.Assert;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.DeleteBusiness;
+import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -73,6 +75,10 @@ public class TckBusiness
 	
 	public void saveJoePublisherBusiness(String authInfoJoe) {
 		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+    }
+	
+	public void updateJoePublisherBusiness(String authInfoJoe) {
+		updateBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
 	public void saveJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
@@ -132,6 +138,47 @@ public class TckBusiness
 			TckValidator.checkDiscoveryUrls(beIn.getDiscoveryURLs(), beOut.getDiscoveryURLs());
 			TckValidator.checkContacts(beIn.getContacts(), beOut.getContacts());
 			TckValidator.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
+			
+		} catch(Throwable e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+
+	}
+	
+	private void updateBusiness(String authInfo, String businessXML, String businessKey) {
+		try {
+			
+			// Now get the entity and check the values
+			GetBusinessDetail gb = new GetBusinessDetail();
+			gb.getBusinessKey().add(businessKey);
+			BusinessDetail bd = inquiry.getBusinessDetail(gb);
+			List<BusinessEntity> beOutList = bd.getBusinessEntity();
+			BusinessEntity beOut = beOutList.get(0);
+			//We are expecting 2 services
+			assertEquals(2,beOut.getBusinessServices().getBusinessService().size());
+			
+			//Now updating the business by adding another description
+			SaveBusiness sb = new SaveBusiness();
+			sb.setAuthInfo(authInfo);
+			BusinessEntity beIn = beOut;
+			Description desc2= new Description();
+			desc2.setLang("nl");
+			desc2.setValue("Omschrijving");
+			beIn.getDescription().add(desc2);
+			sb.getBusinessEntity().add(beIn);
+			publication.saveBusiness(sb);
+	
+			// Now get the entity and check the values
+			BusinessDetail bdnew = inquiry.getBusinessDetail(gb);
+			List<BusinessEntity> beOutListNew = bdnew.getBusinessEntity();
+			BusinessEntity beOutNew = beOutListNew.get(0);
+
+			assertEquals(beIn.getBusinessKey(), beOutNew.getBusinessKey());
+			// After the update we still are supposed to see two services.
+			assertNotNull(beOutNew.getBusinessServices());
+			assertEquals(2,beOutNew.getBusinessServices().getBusinessService().size());
+			
 			
 		} catch(Throwable e) {
 			logger.error(e.getMessage(),e);

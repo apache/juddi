@@ -40,6 +40,8 @@ public class TckBusinessService
 
 	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
     final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
+    final static String JOE_SERVICE_XML_2              = "uddi_data/joepublisher/businessService2.xml";
+    final static String JOE_SERVICE_KEY_2              = "uddi:uddi.joepublisher.com:servicetwo";
     final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
     final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
    
@@ -57,6 +59,10 @@ public class TckBusinessService
 	public void saveJoePublisherService(String authInfoJoe) {
 		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
 	}
+	
+	public void saveJoePublisherService2(String authInfoJoe) {
+		saveService2(authInfoJoe, JOE_SERVICE_KEY, JOE_SERVICE_XML_2, JOE_SERVICE_KEY_2);
+	}
 
 	public void saveJoePublisherServices(String authInfoJoe, int numberOfCopies) {
 		saveServices(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies);
@@ -64,6 +70,10 @@ public class TckBusinessService
 	
 	public void deleteJoePublisherService(String authInfoJoe) {
 		deleteService(authInfoJoe, JOE_SERVICE_KEY);
+	}
+	
+	public void deleteJoePublisherService2(String authInfoJoe) {
+		deleteService(authInfoJoe, JOE_SERVICE_KEY_2);
 	}
 
 	public void saveNotifierService(String authInfoJoe) {
@@ -143,6 +153,35 @@ public class TckBusinessService
 			TckValidator.checkDescriptions(bsIn.getDescription(), bsOut.getDescription());
 			TckValidator.checkBindingTemplates(bsIn.getBindingTemplates(), bsOut.getBindingTemplates());
 			TckValidator.checkCategories(bsIn.getCategoryBag(), bsOut.getCategoryBag());
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+		
+	}
+	
+	private void saveService2(String authInfo, String serviceKey, String serviceXML2,  String serviceKey2) {
+		try {
+			// First save the entity
+			SaveService ss = new SaveService();
+			ss.setAuthInfo(authInfo);
+			
+			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(serviceXML2, "org.uddi.api_v3");
+			ss.getBusinessService().add(bsIn);
+			publication.saveService(ss);
+			
+			// Now get the entity and check the values
+			GetServiceDetail gs = new GetServiceDetail();
+			gs.getServiceKey().add(serviceKey);
+			gs.getServiceKey().add(serviceKey2);
+			ServiceDetail sd = inquiry.getServiceDetail(gs);
+			List<BusinessService> bsOutList = sd.getBusinessService();
+			int size = bsOutList.size();
+
+			assertEquals(2, size);
+			
+			
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
