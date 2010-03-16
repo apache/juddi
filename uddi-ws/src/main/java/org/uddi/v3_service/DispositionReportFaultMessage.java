@@ -18,6 +18,7 @@
 
 package org.uddi.v3_service;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
 
 import javax.xml.bind.JAXBException;
@@ -25,6 +26,7 @@ import javax.xml.soap.Detail;
 import javax.xml.ws.WebFault;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 
@@ -79,12 +81,10 @@ public class DispositionReportFaultMessage
     
     /** 
      * Convenience method to figure out if the Exception at hand contains a
-     * DispositionReport.
+     * DispositionReport. Disposition report will be null if none can be found.
      * 
      * @param e the Exception at hang
-     * @return DispositionReport if one can be found.
-     * @throws Exception, throws exception passed in back out if no DispositionReport is
-     * found.
+     * @return DispositionReport if one can be found, or null if it is not.
      */
     public static DispositionReport getDispositionReport(Exception e) {
     	DispositionReport report = null;
@@ -101,7 +101,16 @@ public class DispositionReportFaultMessage
     				log.error("Could not unmarshall detail to a DispositionReport");
     			}
     		}
-    	} //We might have to catch yet another type of Exception for RMI transport.
+    	} else if (e instanceof UndeclaredThrowableException) {
+    		UndeclaredThrowableException ute =(UndeclaredThrowableException) e;
+    		if (ute.getUndeclaredThrowable().getCause() instanceof InvalidKeyPassedException) {
+	    		InvalidKeyPassedException ike = (InvalidKeyPassedException) ute.getUndeclaredThrowable().getCause();
+	    		report = ike.getFaultInfo();
+    		}
+    	} else {
+    		log.error("Unsupported Exception: " + e.getClass());
+    	}
+    	//We might have to catch yet another type of Exception for RMI transport.
     	return report;
     }
 }
