@@ -104,8 +104,8 @@ public class DispositionReportFaultMessage
     	} else if (e instanceof UndeclaredThrowableException) {
     		UndeclaredThrowableException ute =(UndeclaredThrowableException) e;
     		if (ute.getUndeclaredThrowable().getCause() instanceof DispositionReportFaultMessage) {
-	    		InvalidKeyPassedException ike = (InvalidKeyPassedException) ute.getUndeclaredThrowable().getCause();
-	    		report = ike.getFaultInfo();
+    			DispositionReportFaultMessage faultMsg = (InvalidKeyPassedException) ute.getUndeclaredThrowable().getCause();
+	    		report = faultMsg.getFaultInfo();
     		}
     	} else {
     		log.error("Unsupported Exception: " + e.getClass());
