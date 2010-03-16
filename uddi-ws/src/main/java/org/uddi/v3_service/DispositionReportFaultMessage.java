@@ -109,7 +109,6 @@ public class DispositionReportFaultMessage
     	} else {
     		log.error("Unsupported Exception: " + e.getClass());
     	}
-    	//We might have to catch yet another type of Exception for RMI transport.
     	return report;
     }
 }

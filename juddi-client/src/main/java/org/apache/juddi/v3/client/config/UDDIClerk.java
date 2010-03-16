@@ -17,6 +17,7 @@
 package org.apache.juddi.v3.client.config;
 
 import java.io.Serializable;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
@@ -205,6 +206,15 @@ public class UDDIClerk implements Serializable {
 					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
 				}
 			}
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("serviceKey " + serviceKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
 		}
 		return null;
 	}
@@ -230,6 +240,15 @@ public class UDDIClerk implements Serializable {
 			}
 		} catch (SOAPFaultException sfe) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("bindingKey " + bindingKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
 			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
 				log.info("bindingKey " + bindingKey + " was not found in the registry");
 			} else {
@@ -269,6 +288,15 @@ public class UDDIClerk implements Serializable {
 			}
 		} catch (SOAPFaultException sfe) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("businessKey " + businessKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
 			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
 				log.info("businessKey " + businessKey + " was not found in the registry");
 			} else {
