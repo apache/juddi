@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.ws.soap.SOAPFaultException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
@@ -38,10 +40,12 @@ import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.Result;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
@@ -173,15 +177,36 @@ public class UDDIClerk implements Serializable {
 		}
 	}
 	
-	public BusinessService findService(String serviceKey, Node node) throws DispositionReportFaultMessage, RemoteException, 
+	public BusinessService findService(String serviceKey, Node node) throws RemoteException, 
 	TransportException, ConfigurationException  {
 		GetServiceDetail getServiceDetail = new GetServiceDetail();
 		getServiceDetail.getServiceKey().add(serviceKey);
 		getServiceDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
-		ServiceDetail sd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getServiceDetail);
-		List<BusinessService> businessServiceList = sd.getBusinessService();
-		if (businessServiceList.size() == 0) throw new ConfigurationException("Could not find Service with key=" + serviceKey);
-		return businessServiceList.get(0);
+		try {
+			ServiceDetail sd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getServiceDetail);
+			List<BusinessService> businessServiceList = sd.getBusinessService();
+			if (businessServiceList.size() == 0) throw new ConfigurationException("Could not find Service with key=" + serviceKey);
+			return businessServiceList.get(0);
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("serviceKey " + serviceKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("serviceKey " + serviceKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		}
+		return null;
 	}
 	
 	public BindingTemplate findServiceBinding(String bindingKey, Node node) throws DispositionReportFaultMessage, RemoteException, 
@@ -189,20 +214,70 @@ public class UDDIClerk implements Serializable {
 		GetBindingDetail getBindingDetail = new GetBindingDetail();
 		getBindingDetail.getBindingKey().add(bindingKey);
 		getBindingDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
-		BindingDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBindingDetail(getBindingDetail);
-		List<BindingTemplate> bindingTemplateList = bd.getBindingTemplate();
-		if (bindingTemplateList.size() == 0) throw new ConfigurationException("Could not find ServiceBinding with key=" + bindingKey);
-		return bindingTemplateList.get(0);
+		try {
+			BindingDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBindingDetail(getBindingDetail);
+			List<BindingTemplate> bindingTemplateList = bd.getBindingTemplate();
+			if (bindingTemplateList.size() == 0) throw new ConfigurationException("Could not find ServiceBinding with key=" + bindingKey);
+			return bindingTemplateList.get(0);
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("bindingKey " + bindingKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("bindingKey " + bindingKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		}
+		return null;
 	}
-	
-	public BusinessEntity findBusiness(String businessKey, Node node) throws DispositionReportFaultMessage, RemoteException, 
-	TransportException, ConfigurationException  {
+	/**
+	 * Looks up the BusinessEntiry in the registry, will return null if is not found.
+	 * 
+	 * @param businessKey - the key we are looking for
+	 * @param node - the node which is going to be queried
+	 * @return BusinessEntity is found, or null if not found.
+	 * @throws RemoteException
+	 * @throws TransportException
+	 * @throws ConfigurationException
+	 */
+	public BusinessEntity findBusiness(String businessKey, Node node) throws RemoteException, 
+			TransportException, ConfigurationException  {
 		GetBusinessDetail getBusinessDetail = new GetBusinessDetail();
 		getBusinessDetail.getBusinessKey().add(businessKey);
 		getBusinessDetail.setAuthInfo(node.getSecurityUrl());
-		BusinessDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);
-		if (bd.getBusinessEntity().size() == 0) throw new ConfigurationException("Could not find BusinessEntity with key=" + businessKey);
-		return bd.getBusinessEntity().get(0);
+		try {
+			BusinessDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);
+			return bd.getBusinessEntity().get(0);
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("businessKey " + businessKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+				log.info("businessKey " + businessKey + " was not found in the registry");
+			} else {
+	            for (Result result : report.getResult()) {
+					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
+				}
+			}
+		}
+		return null;
 	}
 	
 	private String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {

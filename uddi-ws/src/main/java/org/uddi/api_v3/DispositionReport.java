@@ -21,6 +21,10 @@ package org.uddi.api_v3;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -28,6 +32,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+
+import org.uddi.JAXBContextUtil;
+import org.w3c.dom.Node;
 
 
 /**
@@ -62,8 +69,67 @@ public class DispositionReport implements Serializable {
     protected List<Result> result;
     @XmlAttribute
     protected Boolean truncated;
+    
+    public final static transient String E_ACCOUNT_LIMIT_EXCEEDED     = "E_accountLimitExceeded";
+	public final static transient String E_ASSERTION_NOT_FOUND        = "E_assertionNotFound"; 
+	public final static transient String E_AUTH_TOKEN_EXPIRED         = "E_authTokenExpired";
+	public final static transient String E_AUTH_TOKEN_REQUIRED        = "E_authTokenRequired";
+	public final static transient String E_BUSY                       = "E_busy";
+	public final static transient String E_CATEGORIZATION_NOT_ALLOWED = "E_categorizationNotAllowed";
+	public final static transient String E_FATAL_ERROR                = "E_fatalError";
+	public final static transient String E_INVALID_COMBINATION        = "E_invalidCombination";
+	public final static transient String E_INVALID_CATEGORY           = "E_invalidCategory";
+	public final static transient String E_INVALID_COMPLETION_STATUS  = "E_invalidCompletionStatus";
+	public final static transient String E_INVALID_KEY_PASSED         = "E_invalidKeyPassed";
+	public final static transient String E_KEY_UNAVAILABLE         	  = "E_keyUnavailable";
+	public final static transient String E_INVALID_PROJECTION         = "E_invalidProjection";
+	public final static transient String E_INVALID_TIME               = "E_invalidTime";
+	public final static transient String E_INVALID_URL_PASSED         = "E_invalidURLPassed";
+	public final static transient String E_INVALID_VALUE              = "E_invalidValue";
+	public final static transient String E_KEY_RETIRED                = "E_keyRetired";
+	public final static transient String E_LANGUAGE_ERROR             = "E_languageError";
+	public final static transient String E_MESSAGE_TOO_LARGE          = "E_messageTooLarge";
+	public final static transient String E_NAME_TOO_LONG              = "E_nameTooLong";
+	public final static transient String E_OPERATOR_MISMATCH          = "E_operatorMismatch";
+	public final static transient String E_PUBLISHER_CANCELLED        = "E_publisherCancelled";
+	public final static transient String E_REQUEST_DENIED             = "E_requestDenied";
+	public final static transient String E_REQUEST_TIMEOUT            = "E_requestTimeout";
+	public final static transient String E_RESULT_SET_TOO_LARGE       = "E_resultSetTooLarge";
+	public final static transient String E_SECRET_UNKNOWN             = "E_secretUnknown";
+	public final static transient String E_SUCCESS                    = "E_success";
+	public final static transient String E_TOO_MANY_OPTIONS           = "E_tooManyOptions";
+	public final static transient String E_TRANSFER_ABORTED           = "E_transferAborted";
+	public final static transient String E_UNKNOWN_USER               = "E_unknownUser";
+	public final static transient String E_UNRECOGNIZED_VERSION       = "E_unrecognizedVersion";
+	public final static transient String E_UNSUPPORTED                = "E_unsupported";
+	public final static transient String E_UNVALIDATABLE              = "E_unvalidatable";
+	public final static transient String E_USER_MISMATCH              = "E_userMismatch";
+	public final static transient String E_VALUE_NOT_ALLOWED          = "E_valueNotAllowed";
+	public final static transient String E_TOKEN_ALREADY_EXISTS       = "E_tokenAlreadyExists";
+	public final static transient String E_TRANSFER_NOT_ALLOWED       = "E_transferNotAllowed";
 
     /**
+     * 
+     */
+    public DispositionReport() {
+		super();
+	}
+    /**
+     * 
+     * @param node
+     * @throws JAXBException 
+     */
+    public DispositionReport(Node node) throws JAXBException  {
+		super();
+		JAXBContextUtil.getContext(this.getClass().getPackage().getName());
+		Unmarshaller u = JAXBContextUtil.getContext(
+				this.getClass().getPackage().getName()).createUnmarshaller();
+		JAXBElement<DispositionReport> element =  u.unmarshal(node, DispositionReport.class);
+		this.result = element.getValue().getResult();
+		this.truncated = element.getValue().truncated;
+	}
+
+	/**
      * Gets the value of the result property.
      * 
      * <p>
@@ -114,6 +180,26 @@ public class DispositionReport implements Serializable {
      */
     public void setTruncated(Boolean value) {
         this.truncated = value;
+    }
+    
+    /**
+     * Determines if one of the Results in the this DispositionReport has a Error Code
+     * that matches the errCodeKey passed in. The errCodeKey should be one
+     * of the 
+     * 
+     * @param errCodeKey
+     * @return true if the errCodeKey matches with a code in the Results.
+     */
+    public boolean countainsErrorCode(final String errCodeKey) {
+    	boolean isKeyMatch = false;
+		for (Result result : getResult()) {
+			String errCode = result.getErrInfo().getErrCode();
+			if (errCodeKey.equals(errCode)) {
+				isKeyMatch = true;
+				break;
+			}
+		}
+    	return isKeyMatch;
     }
 
 }

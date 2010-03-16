@@ -15,6 +15,8 @@
 package org.apache.juddi.v3.tck;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessInfos;
@@ -32,6 +35,7 @@ import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
@@ -39,7 +43,10 @@ import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInfos;
 import org.uddi.api_v3.TModelList;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
+
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -84,6 +91,26 @@ public class TckFindEntity
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
+		}
+	}
+	
+	public void getNonExitingBusiness() {
+		String nonExistingKey = "nonexistingKey";
+		try {
+			GetBusinessDetail body = new GetBusinessDetail();
+			body.getBusinessKey().add(nonExistingKey);
+			BusinessDetail  result = inquiry.getBusinessDetail(body);
+			Assert.fail("No business should be found");
+			System.out.println(result.getBusinessEntity().size());
+		} catch (Exception e) {
+			try {
+				DispositionReport report = DispositionReportFaultMessage.getDispositionReport(e);
+				assertNotNull(report);
+				assertTrue(report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED));
+			} catch (Exception e1) {
+				Assert.fail("We only expect DispositionReportFaultMessage, not " + e1.getClass());
+				logger.error(e.getMessage(), e1);
+			}
 		}
 	}
 	

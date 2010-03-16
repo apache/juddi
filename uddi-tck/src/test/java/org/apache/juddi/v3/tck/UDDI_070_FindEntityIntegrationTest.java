@@ -98,6 +98,7 @@ public class UDDI_070_FindEntityIntegrationTest
 			tckFindEntity.findService();
 			tckFindEntity.findBinding();
 			tckFindEntity.findTModel();
+			tckFindEntity.getNonExitingBusiness();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail();

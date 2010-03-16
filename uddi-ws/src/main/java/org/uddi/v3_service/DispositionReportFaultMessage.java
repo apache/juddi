@@ -20,7 +20,12 @@ package org.uddi.v3_service;
 
 import java.rmi.RemoteException;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.soap.Detail;
 import javax.xml.ws.WebFault;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 
 
@@ -35,6 +40,7 @@ public class DispositionReportFaultMessage
     extends RemoteException
 {
 	private static final long serialVersionUID = -3901821587689888649L;
+	private static transient Logger log = Logger.getLogger(DispositionReportFaultMessage.class);
 	/**
      * Java type that goes as soapenv:Fault detail element.
      * 
@@ -70,6 +76,33 @@ public class DispositionReportFaultMessage
     public DispositionReport getFaultInfo() {
         return faultInfo;
     }
-
+    
+    /** 
+     * Convenience method to figure out if the Exception at hand contains a
+     * DispositionReport.
+     * 
+     * @param e the Exception at hang
+     * @return DispositionReport if one can be found.
+     * @throws Exception, throws exception passed in back out if no DispositionReport is
+     * found.
+     */
+    public static DispositionReport getDispositionReport(Exception e) {
+    	DispositionReport report = null;
+    	if (e instanceof DispositionReportFaultMessage) {
+    		DispositionReportFaultMessage faultMsg = (DispositionReportFaultMessage) e;
+    		report = faultMsg.getFaultInfo();
+    	} else if (e instanceof SOAPFaultException) {
+    		SOAPFaultException soapFault = (SOAPFaultException) e;
+    		Detail detail = soapFault.getFault().getDetail();
+    		if (detail.getFirstChild()!=null) {
+    			try {
+    				report =  new DispositionReport(detail.getFirstChild());
+    			} catch (JAXBException je) {
+    				log.error("Could not unmarshall detail to a DispositionReport");
+    			}
+    		}
+    	} //We might have to catch yet another type of Exception for RMI transport.
+    	return report;
+    }
 }
 
