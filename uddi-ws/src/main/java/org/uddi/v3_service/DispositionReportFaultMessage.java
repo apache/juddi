@@ -103,7 +103,7 @@ public class DispositionReportFaultMessage
     		}
     	} else if (e instanceof UndeclaredThrowableException) {
     		UndeclaredThrowableException ute =(UndeclaredThrowableException) e;
-    		if (ute.getUndeclaredThrowable().getCause() instanceof InvalidKeyPassedException) {
+    		if (ute.getUndeclaredThrowable().getCause() instanceof DispositionReportFaultMessage) {
 	    		InvalidKeyPassedException ike = (InvalidKeyPassedException) ute.getUndeclaredThrowable().getCause();
 	    		report = ike.getFaultInfo();
     		}
