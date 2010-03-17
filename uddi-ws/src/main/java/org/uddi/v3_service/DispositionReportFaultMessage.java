@@ -102,8 +102,9 @@ public class DispositionReportFaultMessage
     		}
     	} else if (e instanceof UndeclaredThrowableException) {
     		UndeclaredThrowableException ute =(UndeclaredThrowableException) e;
-    		if (ute.getUndeclaredThrowable().getCause() instanceof DispositionReportFaultMessage) {
-    			DispositionReportFaultMessage faultMsg = (DispositionReportFaultMessage) ute.getUndeclaredThrowable().getCause();
+    		if (ute.getUndeclaredThrowable()!=null && ute.getUndeclaredThrowable().getCause()!=null
+    		    && ute.getUndeclaredThrowable().getCause().getCause() instanceof DispositionReportFaultMessage) {
+    			DispositionReportFaultMessage faultMsg = (DispositionReportFaultMessage) ute.getUndeclaredThrowable().getCause().getCause();
 	    		report = faultMsg.getFaultInfo();
     		}
     	} else {

@@ -190,31 +190,13 @@ public class UDDIClerk implements Serializable {
 			return businessServiceList.get(0);
 		} catch (DispositionReportFaultMessage dr) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("serviceKey " + serviceKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
 		} catch (SOAPFaultException sfe) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("serviceKey " + serviceKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
 		} catch (UndeclaredThrowableException ute) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("serviceKey " + serviceKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
 		}
 		return null;
 	}
@@ -231,31 +213,13 @@ public class UDDIClerk implements Serializable {
 			return bindingTemplateList.get(0);
 		} catch (DispositionReportFaultMessage dr) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("bindingKey " + bindingKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
 		} catch (SOAPFaultException sfe) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("bindingKey " + bindingKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
 		} catch (UndeclaredThrowableException ute) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("bindingKey " + bindingKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
 		}
 		return null;
 	}
@@ -279,33 +243,30 @@ public class UDDIClerk implements Serializable {
 			return bd.getBusinessEntity().get(0);
 		} catch (DispositionReportFaultMessage dr) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("businessKey " + businessKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
 		} catch (SOAPFaultException sfe) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("businessKey " + businessKey + " was not found in the registry");
-			} else {
-	            for (Result result : report.getResult()) {
-					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
-				}
-			}
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
 		} catch (UndeclaredThrowableException ute) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
-			if (report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
-				log.info("businessKey " + businessKey + " was not found in the registry");
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+		}
+		return null;
+	}
+	
+	private void checkForErrorInDispositionReport(DispositionReport report, String Error, String entityKey) {
+		
+		if (report!=null &&report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+			log.info("entityKey " + entityKey + " was not found in the registry");
+		} else {
+			if (report == null) {
+				log.error("Missing DispositionReport");
 			} else {
-	            for (Result result : report.getResult()) {
+				for (Result result : report.getResult()) {
 					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
 				}
 			}
 		}
-		return null;
 	}
 	
 	private String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
