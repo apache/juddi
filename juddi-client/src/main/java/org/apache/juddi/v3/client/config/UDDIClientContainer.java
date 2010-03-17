@@ -28,11 +28,19 @@ public class UDDIClientContainer {
 	
 	public static UDDIClerkManager getUDDIClerkManager(String managerName) 
 		throws ConfigurationException {
-		if (managers.containsKey(managerName)) {
-			return (managers.get(managerName));
+
+		if (managerName!=null) {
+			if (managers.containsKey(managerName)) {
+				return (managers.get(managerName));
+			} else {
+				throw new ConfigurationException("No manager by name " + managerName + " was found. " +
+						" Please check your client uddi.xml files, and make sure this manager was started");
+			}
 		} else if (managers.size()==1 && managerName==null) {
+			log.debug("Deprecated, please specify a manager name");
 			return managers.values().iterator().next();
 		} else {
+			log.debug("Deprecated, please specify a manager name");
 			UDDIClerkManager manager = new UDDIClerkManager(null);
 			manager.start();
 			addClerkManager(manager);
@@ -61,5 +69,9 @@ public class UDDIClientContainer {
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
 		return manager.getClientConfig().getUDDINode("default").getProxyTransport();
 	}
+	
+	
+	
+	
 	
 }

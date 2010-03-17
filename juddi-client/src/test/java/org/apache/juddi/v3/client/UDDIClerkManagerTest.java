@@ -35,8 +35,11 @@ public class UDDIClerkManagerTest {
      public void testReadingTheConfig() {
 	     try {
 	    	 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+	    	 manager.start();
 	    	 manager.getClientConfig().getUDDINode("default");
 	    	 assertEquals(2,manager.getClientConfig().getUDDIClerks().size());
+	    	 Thread.sleep(500);
+	    	 manager.stop();
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
@@ -45,7 +48,68 @@ public class UDDIClerkManagerTest {
      }
      
      @Test
-     public void testAnnotation() {
+     public void testMultipleClientConfigFiles() {
+    	 try {
+    		 UDDIClerkManager manager = new UDDIClerkManager("META-INF/uddi.xml");
+    		 manager.start();
+			 assertEquals("test-manager", manager.getName());
+			 
+    		 UDDIClerkManager manager2 = new UDDIClerkManager("META-INF/uddi2.xml");
+    		 manager2.start();
+			 assertEquals("second-manager", manager2.getName());
+			 Thread.sleep(500);
+			 manager.stop();
+			 manager2.stop();
+			 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail("No exceptions are expected");
+		}
+    	 
+     }
+     
+     @Test
+     public void testDefaultConfigFile() {
+    	 try {
+    		 UDDIClerkManager manager = new UDDIClerkManager(null);
+    		 //We're expecting the manager defined in the META-INF/uddi.xml file.
+    		 manager.start();
+			 assertEquals("test-manager", manager.getName());
+			 Thread.sleep(500);
+			 manager.stop();
+			 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail("No exceptions are expected");
+		}
+    	 
+     }
+     
+     @Test
+     public void testDefaultManager() {
+    	 try {		
+    		 //This is a special case where the manager in the META-INF/uddi.xml file is 
+    		 //instantiated and started simply by getting it.
+    		 //This functionality was add for backwards compatibility. 
+    		 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+    		 manager.start();
+			 assertEquals("test-manager", manager.getName());
+			 assertEquals("default", manager.getClientConfig().getHomeNode().getName());
+			 Thread.sleep(500);
+			 manager.stop();
+			 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Assert.fail("No exceptions are expected");
+		}
+    	 
+     }
+     
+     @Test
+     public void testReadingAnnotations() {
     	 try {
     		 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
 	    	 Map<String,UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
@@ -61,7 +125,7 @@ public class UDDIClerkManagerTest {
     	 } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
-	         Assert.fail();
+	         Assert.fail("No exceptions are expected");
 	     } 
     	 
      }

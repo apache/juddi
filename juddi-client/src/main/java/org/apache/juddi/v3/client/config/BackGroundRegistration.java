@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
 public class BackGroundRegistration implements Runnable {
@@ -30,13 +31,19 @@ public class BackGroundRegistration implements Runnable {
 	}
 
 	public void run() {
-		log.info("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
-		if (manager.getClientConfig().isRegisterOnStartup()) {
-			manager.saveClerkAndNodeInfo();
-			manager.registerAnnotatedServices();
-			manager.xRegister();
+		try {
+			UDDIClientContainer.addClerkManager(manager);
+			if (UDDIClientContainer.getUDDIClerkManager(manager.getName())!=null && manager.getClientConfig().isRegisterOnStartup()) {
+				log.info("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
+				manager.saveClerkAndNodeInfo();
+				manager.registerAnnotatedServices();
+				manager.xRegister();
+				log.info("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
+			} else {
+				log.debug(manager.getName() + " already registered to the UDDIClientContainer.");
+			}
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(),e);
 		}
-		UDDIClientContainer.addClerkManager(manager);
-		log.info("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
 	}
 }

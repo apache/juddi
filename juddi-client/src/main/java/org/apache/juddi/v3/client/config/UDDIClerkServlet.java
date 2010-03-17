@@ -32,6 +32,10 @@ public class UDDIClerkServlet extends HttpServlet {
 	private static final long serialVersionUID = -91998529871296125L;
 	private Logger logger = Logger.getLogger(UDDIClerkServlet.class);
 	UDDIClerkManager manager = null;
+	
+	public static final String UDDI_CLIENT_MANAGER_NAME = "uddi.client.manager.name";
+	public static final String UDDI_CLIENT_CONFIG_FILE  = "uddi.client.config.file";
+	
 	/**
 	 * Starting the UDDIClerkManager
 	 */
@@ -39,11 +43,17 @@ public class UDDIClerkServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			String clientConfigFile = config.getInitParameter("uddi.client.config");
-			if (clientConfigFile==null) clientConfigFile = ClientConfig.UDDI_CONFIG;
-			UDDIClerkManager manager = new UDDIClerkManager(clientConfigFile);
-			logger.info("Starting Clerk Manager " + manager.getName() + "...");
-			manager.start();
+			manager = WebHelper.getUDDIClerkManager(config.getServletContext());
+			if (manager==null) {
+				String clientConfigFile = config.getInitParameter(UDDI_CLIENT_CONFIG_FILE);
+				if (clientConfigFile==null) clientConfigFile = ClientConfig.DEFAULT_UDDI_CONFIG;
+				manager = new UDDIClerkManager(clientConfigFile);
+				logger.info("Starting Clerk Manager " + manager.getName() + "...");
+				manager.start();
+			} else {
+				logger.debug(manager.getName() + " already registered to the UDDIClientContainer.");
+			}
+			
 		} catch (Exception e) {
 			logger.error("UDDI-client could not be started for manager " + manager.getName() + ". "
 					+ e.getMessage(), e);

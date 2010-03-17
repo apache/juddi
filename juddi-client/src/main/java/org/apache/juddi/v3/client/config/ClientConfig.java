@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 public class ClientConfig 
 {
 	private final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
-	public final static String UDDI_CONFIG = "META-INF/uddi.xml";
+	public final static String DEFAULT_UDDI_CONFIG = "META-INF/uddi.xml";
 	private Logger log = Logger.getLogger(ClientConfig.class);
 	private Configuration config = null;;
 	private Map<String,UDDINode> uddiNodes = null;
@@ -78,11 +78,10 @@ public class ClientConfig
 			xmlConfig = new XMLConfiguration(configurationFile);
 		} else {
 			final String filename = System.getProperty(UDDI_CONFIG_FILENAME_PROPERTY);
-			if (filename != null) 
-			{
+			if (filename != null) {
 				xmlConfig = new XMLConfiguration(filename);
 			} else { 
-				xmlConfig = new XMLConfiguration(UDDI_CONFIG);	
+				xmlConfig = new XMLConfiguration(DEFAULT_UDDI_CONFIG);	
 			}
 		}
 		log.info("Reading UDDI Client properties file " + xmlConfig.getBasePath());
@@ -208,6 +207,18 @@ public class ClientConfig
 	
 	protected Map<String, UDDINode> getUDDINodes() {
 		return uddiNodes;
+	}
+	
+	public UDDINode getHomeNode() throws ConfigurationException {
+		if (uddiNodes==null) throw new ConfigurationException("The juddi client configuration " +
+				"must contain at least one node element.");
+		if (uddiNodes.values().size()==1) return uddiNodes.values().iterator().next();
+		for (UDDINode uddiNode : uddiNodes.values()) {
+			if (uddiNode.isHomeJUDDI()) {
+				return uddiNode;
+			}
+		}
+		throw new ConfigurationException("One of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
 	}
 	
 	public UDDINode getUDDINode(String nodeName) throws ConfigurationException {
