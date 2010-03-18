@@ -45,10 +45,10 @@ import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
+import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
@@ -86,11 +86,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		try {
 			boolean isMatchingClerk=false;
 			UDDIClerk toClerk = null;
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
+			UDDINode homeNode = WebHelper.getUDDIHomeNode(session.getServletContext());
 			Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher()) 
-						&& Constants.NODE_NAME.equals(clerk.getUDDINode().getName())) {
+						&& homeNode.getName().equals(clerk.getUDDINode().getName())) {
 					toClerk = clerk;
 				}
 			}
@@ -162,7 +163,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.info("Sending saveSubscriptions request..");
 		try {
 			//before sending this we need to ready the listener node
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
+			UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
+			UDDINode homeNode = WebHelper.getUDDIHomeNode(session.getServletContext());
 			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 			UDDIClerk toClerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
 			if (toClerk==null) {
@@ -170,16 +172,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 				Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
 				for (UDDIClerk uddiClerk : clerks.values()) {
 					if (publisher.equals(uddiClerk.getPublisher()) 
-							&& Constants.NODE_NAME.equals(uddiClerk.getUDDINode().getName())) {
-						toClerk = clerk;
+							&& homeNode.getName().equals(uddiClerk.getUDDINode().getName())) {
+						toClerk = uddiClerk;
 					}
 				}
 			}
 			
-			logger.info("Updating default UDDI server..");
-			String defaultClazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-			Class<?> defaultTransportClass = ClassUtil.forName(defaultClazz, Transport.class); 
-			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME); 
+			logger.info("Updating homeNode server using jUDDI specific API..");
+			Transport defaultTransport = WebHelper.getTransport(session.getServletContext());
 			JUDDIApiPortType juddiApiService = defaultTransport.getJUDDIApiService();
 			
 			//making sure our node info is there and up to date.
@@ -217,10 +217,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			logger.debug("Saved ClientSubscriptionInfo to the default UDDI server");
 			
 			//the listening server is ready; now add the subscription
-			
-			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
-			Class<?> transportClass = ClassUtil.forName(clazz, Transport.class); 
-			Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(clerk.getUDDINode().getName()); 
+			Transport transport = WebHelper.getTransport(session.getServletContext(), clerk.getUDDINode());
 			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 			List<org.uddi.sub_v3.Subscription> subscriptionList = new ArrayList<org.uddi.sub_v3.Subscription>();
 			org.uddi.sub_v3.Subscription subscription = new org.uddi.sub_v3.Subscription();
@@ -287,33 +284,50 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 
 		logger.info("Sending deleteSubscriptions request for subscriptionKey=" 
 				+ modelSubscription.getSubscriptionKey());
+		
+		String error = null;
 		try {
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
-			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
-			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
-			Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clerk.getManagerName(),clerk.getUDDINode().getName()); 
-			UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
-			DeleteSubscription deleteSubscription = new DeleteSubscription();
-			String authToken = (String) session.getAttribute("token-" + clerk.getName());
-			deleteSubscription.setAuthInfo(authToken);
-			deleteSubscription.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
-			subscriptionService.deleteSubscription(deleteSubscription);
-			
-			//now remove it from the listener UDDI server too
-			String defaultClazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-			Class<?> defaultTransportClass = ClassUtil.forName(defaultClazz, Transport.class); 
-			Transport defaultTransport = (Transport) defaultTransportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME); 
-			JUDDIApiPortType juddiApiService = defaultTransport.getJUDDIApiService();
-			
-			DeleteClientSubscriptionInfo deleteClientSubscriptionInfo = new DeleteClientSubscriptionInfo();
-			deleteClientSubscriptionInfo.setAuthInfo(userAuthToken);
-			deleteClientSubscriptionInfo.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
-			//remove the clientSubscription to the listening UDDI default server.
-			juddiApiService.deleteClientSubscriptionInfo(deleteClientSubscriptionInfo);
-			logger.debug("Deleted ClientSubscriptionInfo to the default UDDI server");
-			
-			response.setSuccess(true);
+		
+			try {
+				UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
+				UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+				Transport transport = WebHelper.getTransport(session.getServletContext(), clerk.getUDDINode());
+				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
+				DeleteSubscription deleteSubscription = new DeleteSubscription();
+				String authToken = (String) session.getAttribute("token-" + clerk.getName());
+				deleteSubscription.setAuthInfo(authToken);
+				deleteSubscription.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
+				subscriptionService.deleteSubscription(deleteSubscription);
+				logger.info("Deleted Subscription " + modelSubscription.getSubscriptionKey()
+						+ " from UDDI server " + clerk.getUDDINode().getName());
+			} catch (Exception e) {
+				error = "Could not delete subscription. Reason: " + e.getMessage();
+				logger.error(error, e);
+			}
+			try {
+				//now remove it from the listener UDDI server too
+				Transport transport = WebHelper.getTransport(session.getServletContext());
+				JUDDIApiPortType juddiApiService = transport.getJUDDIApiService();
+				
+				DeleteClientSubscriptionInfo deleteClientSubscriptionInfo = new DeleteClientSubscriptionInfo();
+				deleteClientSubscriptionInfo.setAuthInfo(userAuthToken);
+				deleteClientSubscriptionInfo.getSubscriptionKey().add(modelSubscription.getSubscriptionKey());
+				//remove the clientSubscription to the listening UDDI default server.
+				juddiApiService.deleteClientSubscriptionInfo(deleteClientSubscriptionInfo);
+				logger.info("Deleted ClientSubscriptionInfo to the default UDDI server");
+				
+				response.setSuccess(true);
+			} catch (Exception e) {
+				if (error==null) {
+					error = "Could not delete clientSubscriptionInfo. Reason: " + e.getMessage();
+				} else {
+					error += " Could not delete clientSubscriptionInfo. Reason: " + e.getMessage();
+				}
+				logger.error(error, e);
+			}
+			if (error!=null) {
+				throw new Exception(error);
+			}
 		} catch (Exception e) {
 			logger.error("Could not delete subscription. " + e.getMessage(), e);
 			response.setSuccess(false);
@@ -348,16 +362,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 			coverage.setEndPoint(calendarEnd);
 			getSubscriptionResults.setCoveragePeriod(coverage);
 			
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
-			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
-			String authToken = (String) session.getAttribute("token-" + clerk.getName());
+			String authToken = (String) session.getAttribute("token-" + modelSubscription.getFromClerkName());
 			getSubscriptionResults.setAuthInfo(authToken);
             SyncSubscription syncSubscription = new SyncSubscription();
             syncSubscription.getGetSubscriptionResultsList().add(getSubscriptionResults);
 			
-			String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-	        Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	        Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);   
+	        Transport transport = WebHelper.getTransport(session.getServletContext());
        	    JUDDIApiPortType apiService = transport.getJUDDIApiService();
 			
        	    syncSubscription.setAuthInfo(userAuthToken);

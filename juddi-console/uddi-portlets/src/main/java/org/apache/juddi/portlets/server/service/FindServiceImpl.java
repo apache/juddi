@@ -20,18 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.apache.juddi.ClassUtil;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
 import org.apache.juddi.portlets.client.service.FindService;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
@@ -55,6 +53,7 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 	public FindResponse getBusinesses(String nameStr, String[] findQualifyers) 
 	{
 		HttpServletRequest request = this.getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		String lang = request.getLocale().getLanguage();
 		FindResponse response = new FindResponse();
 		try {
@@ -72,11 +71,8 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 
 			logger.debug("FindBusiness " + findBusiness + " sending findBusinesses request..");
 			List<Business> businesses = new ArrayList<Business>();
-
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
-			String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-			Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(Constants.MANAGER_NAME,Constants.NODE_NAME);  
+			
+			Transport transport = WebHelper.getTransport(session.getServletContext());
 			UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
 			BusinessList businessList = inquiryService.findBusiness(findBusiness);
 			for (BusinessInfo businessInfo : businessList.getBusinessInfos().getBusinessInfo()) {

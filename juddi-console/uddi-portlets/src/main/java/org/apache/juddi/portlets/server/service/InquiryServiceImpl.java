@@ -16,26 +16,22 @@
  */
 package org.apache.juddi.portlets.server.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
 import org.apache.juddi.portlets.client.service.InquiryResponse;
 import org.apache.juddi.portlets.client.service.InquiryService;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.portlets.client.service.SearchResponse;
+import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
@@ -58,29 +54,19 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 
 	private static final long serialVersionUID = 8509627428299232161L;
 	private Logger logger = Logger.getLogger(this.getClass());
-	private Transport transport = null;
 	
 	public InquiryServiceImpl() {
 		super();
 		
 	}
-	
-	private Transport getTransport() 
-		throws ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException {
-		if (transport==null) {
-			 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(Constants.MANAGER_NAME);
-			 String clazz = manager.getClientConfig().getUDDINode(Constants.NODE_NAME).getProxyTransport();
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         transport = (Transport) transportClass.getConstructor(String.class).newInstance(Constants.NODE_NAME);  
-		}
-		return transport;
-	}
 
 	public SearchResponse queryJUDDI(String query) {
+		HttpServletRequest request = this.getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		SearchResponse response = new SearchResponse();
-
 		 try {
-			 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
+			 Transport transport = WebHelper.getTransport(session.getServletContext());
+			 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
 			 org.apache.juddi.v3.client.transport.wrapper.UDDIInquiryService uis = 
 				 new org.apache.juddi.v3.client.transport.wrapper.UDDIInquiryService();
        		 String reply = uis.inquire(inquiryService, query);
@@ -102,8 +88,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	
 	public InquiryResponse getTModelDetail(String authToken, String tModelKey) 
 	{
-		//HttpServletRequest request = this.getThreadLocalRequest();
-		//HttpSession session = request.getSession();
+		HttpServletRequest request = this.getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		GetTModelDetail getTModelDetail = new GetTModelDetail();
 		getTModelDetail.setAuthInfo(authToken);
 		getTModelDetail.getTModelKey().add(tModelKey);
@@ -111,7 +97,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		logger.debug("TModelDetail " + getTModelDetail + " sending tmodelDetail request..");
 		Map<String,String> tmodelDetailMap = new HashMap<String,String>();
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
+			 Transport transport = WebHelper.getTransport(session.getServletContext());
+        	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
         	 TModelDetail tmodelDetail = inquiryService.getTModelDetail(getTModelDetail);
         	 //demo code fix up what to return for real.
         	 for (TModel tmodel : tmodelDetail.getTModel()) {
@@ -136,6 +123,7 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	public InquiryResponse getBusinessDetail(String authToken, String businessKey) 
 	{
 		HttpServletRequest request = this.getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		String lang = request.getLocale().getLanguage();
 		
 		GetBusinessDetail getBusinessDetail = new GetBusinessDetail();
@@ -144,7 +132,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		InquiryResponse response = new InquiryResponse();
 		logger.debug("BusinessDetail " + getBusinessDetail + " sending businessDetail request..");
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
+			 Transport transport = WebHelper.getTransport(session.getServletContext());
+        	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
         	 BusinessDetail businessDetail = inquiryService.getBusinessDetail(getBusinessDetail);
         	 for (BusinessEntity businessEntity : businessDetail.getBusinessEntity()) {
         		 Business business = new Business(
@@ -183,8 +172,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 	
 	public InquiryResponse getServiceDetail(String authToken, String serviceKey) 
 	{
-		
 		HttpServletRequest request = this.getThreadLocalRequest();
+		HttpSession session = request.getSession();
 		String lang = request.getLocale().getLanguage();
 	
 		GetServiceDetail getServiceDetail = new GetServiceDetail();
@@ -193,7 +182,8 @@ public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryS
 		InquiryResponse response = new InquiryResponse();
 		logger.debug("ServiceDetail " + getServiceDetail + " sending serviceDetail request..");
 		try {
-        	 UDDIInquiryPortType inquiryService = getTransport().getUDDIInquiryService();
+			 Transport transport = WebHelper.getTransport(session.getServletContext());
+        	 UDDIInquiryPortType inquiryService = transport.getUDDIInquiryService();
         	 ServiceDetail serviceDetail = inquiryService.getServiceDetail(getServiceDetail);
         	 for (BusinessService businessService : serviceDetail.getBusinessService()) {
         		 Service service = new Service(
