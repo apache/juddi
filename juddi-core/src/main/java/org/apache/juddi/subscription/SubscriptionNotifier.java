@@ -110,7 +110,7 @@ public class SubscriptionNotifier extends TimerTask {
             	log.debug("Notification background task took " + (endTime - startTime) + " milliseconds.");
             }
 		} else {
-			log.warn("Skipping current notification cycle because the registry is too busy.");
+			log.debug("Skipping current notification cycle because lagtime is too great.");
 		}
 	}
 	/**
