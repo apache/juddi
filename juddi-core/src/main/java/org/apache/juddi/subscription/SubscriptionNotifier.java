@@ -84,13 +84,15 @@ public class SubscriptionNotifier extends TimerTask {
 				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
 					try {
 						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
-						getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
-						UddiEntityPublisher publisher = new UddiEntityPublisher();
-						publisher.setAuthorizedName(subscription.getAuthorizedName());
-						SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
-						if (resultListContainsChanges(resultList)) {
-							log.info("We have a change and need to notify..");
-							notify(getSubscriptionResults,resultList);
+						if (getSubscriptionResults!=null) {
+							getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
+							UddiEntityPublisher publisher = new UddiEntityPublisher();
+							publisher.setAuthorizedName(subscription.getAuthorizedName());
+							SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+							if (resultListContainsChanges(resultList)) {
+								log.info("We have a change and need to notify..");
+								notify(getSubscriptionResults,resultList);
+							}
 						}
 					} catch (Exception e) {
 						log.error("Could not obtain subscriptionResult for subscriptionKey " 
