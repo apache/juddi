@@ -510,10 +510,23 @@ public class Install {
 		        } 
 		    }
 		} else {
-			String[] paths = path.split("!");
+			String[] paths = {};
+			Enumeration<JarEntry> en = null;
 			try {
+
+				if (path.indexOf("!") > 0) {
+					paths = path.split("!");
+					en = new JarFile(new File(new URI(paths[0]))).entries();
+				} else {
+					// Handle Windows / jboss-5.1.0 case
+					if (path.indexOf(".jar") > 0) {
+						paths = path.split(".jar");
+						paths[0] = paths[0] + ".jar";
+						en = new JarFile(new File(paths[0])).entries();
+					}
+				}
+			
 				log.debug("Discovering the Publisher XML data files in jar: " + paths[0]);
-				Enumeration<JarEntry> en = new JarFile(new File(new URI(paths[0]))).entries();
 				while (en.hasMoreElements()) {
 					String name = en.nextElement().getName();
 					if (name.endsWith(FILE_PUBLISHER)) {
