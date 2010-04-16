@@ -158,7 +158,19 @@ public class RequestHandler
       document.appendChild(element.getFirstChild());
       setResponse(document);
     } catch (InvocationTargetException ite) {
-    	String message = URLEncoder.encode(ite.getTargetException().getMessage());
+    	Throwable t = ite.getTargetException();
+    	String errorMessage = "";
+    	if (t.getCause() != null) {
+    		while (t.getCause() != null) {
+    			t = t.getCause();
+    		}
+    		errorMessage = t.getMessage() != null ?
+    				t.getMessage() : "";
+    	} else {
+    		errorMessage = ite.getTargetException().getMessage() != null ? 
+    				ite.getTargetException().getMessage() : "";
+    	}
+    	String message = URLEncoder.encode(errorMessage);
     	log.error(message);
     	setException(message);
     }
