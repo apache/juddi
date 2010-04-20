@@ -300,13 +300,13 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		
 		// If category bag does exist, it must have at least one element
 		List<KeyedReference> elems = categories.getKeyedReference();
-		if (elems == null || elems.size() == 0)
+		List<KeyedReferenceGroup> krgs = categories.getKeyedReferenceGroup();
+		if ((elems == null || elems.size() == 0) && (krgs == null || krgs.size() == 0))
 			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
 		
 		for (KeyedReference elem : elems) {
 			validateKeyedReference(elem);
 		}
-		List<KeyedReferenceGroup> krgs = categories.getKeyedReferenceGroup();
 		for (KeyedReferenceGroup elem : krgs) {
 			validateKeyedReferenceGroup(elem);
 		}
