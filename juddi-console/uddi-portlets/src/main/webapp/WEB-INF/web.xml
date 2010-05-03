@@ -11,6 +11,10 @@
 	<servlet>
 		<servlet-name>UDDIClerkServlet</servlet-name>
 		<servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
+		<init-param>
+			<param-name>uddi.client.manager.name</param-name>
+			<param-value>uddi-portlet-manager</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	 

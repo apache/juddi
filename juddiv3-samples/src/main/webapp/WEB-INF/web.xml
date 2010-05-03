@@ -42,9 +42,11 @@
   <servlet>
     <servlet-name>UDDIClerkServlet</servlet-name>
     <display-name>Clerk Servlet</display-name>
-    <servlet-class>
-      org.apache.juddi.v3.client.config.UDDIClerkServlet
-    </servlet-class>
+    <servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
+    <init-param>
+		<param-name>uddi.client.manager.name</param-name>
+		<param-value>example-manager</param-value>
+	</init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
