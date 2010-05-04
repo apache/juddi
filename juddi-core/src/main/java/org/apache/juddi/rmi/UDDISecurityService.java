@@ -36,8 +36,8 @@ public class UDDISecurityService extends UnicastRemoteObject implements UDDISecu
 	private static final long serialVersionUID = -7931578658303681458L;
 	private UDDISecurityPortType security = new UDDISecurityImpl();
 	
-	protected UDDISecurityService() throws RemoteException {
-		super();
+	protected UDDISecurityService(int port) throws RemoteException {
+		super(port);
 	}
 	
 	public void discardAuthToken(DiscardAuthToken body)

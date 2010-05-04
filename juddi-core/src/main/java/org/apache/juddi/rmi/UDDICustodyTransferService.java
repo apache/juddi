@@ -40,8 +40,8 @@ public class UDDICustodyTransferService extends UnicastRemoteObject implements U
 	private static final long serialVersionUID = 8900970766388210839L;
 	private UDDICustodyTransferPortType custodyTransfer = new UDDICustodyTransferImpl();
 	
-	protected UDDICustodyTransferService() throws RemoteException {
-		super();
+	protected UDDICustodyTransferService(int port) throws RemoteException {
+		super(port);
 	}
 
 	public void discardTransferToken(DiscardTransferToken body)

@@ -48,8 +48,8 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 	private static final long serialVersionUID = 1404805184314952141L;
 	private JUDDIApiPortType juddiAPI = new JUDDIApiImpl();
 	
-	protected JUDDIApiService() throws RemoteException {
-		super();
+	protected JUDDIApiService(int port) throws RemoteException {
+		super(port);
 	}
 
 	public void deletePublisher(DeletePublisher body)

@@ -57,7 +57,8 @@ public class Registry {
 			}
 			if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_JNDI_REGISTRATION, false)) {
 				try {
-					JNDIRegistration.getInstance().register();
+					int port = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_PORT,0);
+					JNDIRegistration.getInstance().register(port);
 				} catch (NamingException e) {
 					log.error("Unable to Register jUDDI services with JNDI. " + e.getMessage(), e);
 				}

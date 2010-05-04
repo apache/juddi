@@ -41,8 +41,8 @@ public class UDDISubscriptionService extends UnicastRemoteObject implements UDDI
 	private static final long serialVersionUID = 3534214581063707293L;
 	private UDDISubscriptionPortType subscription = new UDDISubscriptionImpl();
 	
-	protected UDDISubscriptionService() throws RemoteException {
-		super();
+	protected UDDISubscriptionService(int port) throws RemoteException {
+		super(port);
 	}
 
 	public void deleteSubscription(DeleteSubscription body)

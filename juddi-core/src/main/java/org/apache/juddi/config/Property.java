@@ -31,6 +31,7 @@ public interface Property
 	public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES="juddi.subscription.chunkexpiration.minutes";
 	public final static String JUDDI_JNDI_REGISTRATION           ="juddi.jndi.registration";
 	public final static String JUDDI_SUBSCRIPTION_NOTIFICATION   ="juddi.subscription.notification";
+	public final static String JUDDI_RMI_PORT                    ="juddi.rmi.port";
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";
 	public final static String DEFAULT_USERSFILE                 ="juddi-users.properties";

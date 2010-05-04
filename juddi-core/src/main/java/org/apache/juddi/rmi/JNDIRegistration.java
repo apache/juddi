@@ -62,37 +62,37 @@ public class JNDIRegistration
 	 * Registers the Publish and Inquiry Services to JNDI and instantiates a
 	 * instance of each so we can remotely attach to it later.
 	 */
-	public void register() {
+	public void register(int port) {
 		try {
 			Context juddiContext = context.createSubcontext(JUDDI);
 			
-			securityService = new UDDISecurityService();
+			securityService = new UDDISecurityService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SECURITY_SERVICE + ", " + securityService.getClass());
-			juddiContext.rebind(UDDI_SECURITY_SERVICE, securityService);
+			juddiContext.bind(UDDI_SECURITY_SERVICE, securityService);
 			
-			publicationService = new UDDIPublicationService();
+			publicationService = new UDDIPublicationService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_PUBLICATION_SERVICE + ", " + publicationService.getClass());
-			juddiContext.rebind(UDDI_PUBLICATION_SERVICE, publicationService);
+			juddiContext.bind(UDDI_PUBLICATION_SERVICE, publicationService);
 			
-			inquiryService = new UDDIInquiryService();
+			inquiryService = new UDDIInquiryService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_INQUIRY_SERVICE + ", " + inquiryService.getClass());
-			juddiContext.rebind(UDDI_INQUIRY_SERVICE, inquiryService);
+			juddiContext.bind(UDDI_INQUIRY_SERVICE, inquiryService);
 			
-			subscriptionService = new UDDISubscriptionService();
+			subscriptionService = new UDDISubscriptionService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_SERVICE + ", " + subscriptionService.getClass());
-			juddiContext.rebind(UDDI_SUBSCRIPTION_SERVICE, subscriptionService);
+			juddiContext.bind(UDDI_SUBSCRIPTION_SERVICE, subscriptionService);
 			
-			subscriptionListenerService = new UDDISubscriptionListenerService();
+			subscriptionListenerService = new UDDISubscriptionListenerService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_SUBSCRIPTION_LISTENER_SERVICE + ", " + subscriptionListenerService.getClass());
-			juddiContext.rebind(UDDI_SUBSCRIPTION_LISTENER_SERVICE, subscriptionListenerService);
+			juddiContext.bind(UDDI_SUBSCRIPTION_LISTENER_SERVICE, subscriptionListenerService);
 			
-			custodyTransferService = new UDDICustodyTransferService();
+			custodyTransferService = new UDDICustodyTransferService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + UDDI_CUSTODY_TRANSFER_SERVICE + ", " + custodyTransferService.getClass());
-			juddiContext.rebind(UDDI_CUSTODY_TRANSFER_SERVICE, custodyTransferService);
+			juddiContext.bind(UDDI_CUSTODY_TRANSFER_SERVICE, custodyTransferService);
 			
-			publisherService = new JUDDIApiService();
+			publisherService = new JUDDIApiService(port);
 			if (log.isDebugEnabled()) log.debug("Setting " + JUDDI_PUBLISHER_SERVICE + ", " + publisherService.getClass());
-			juddiContext.rebind(JUDDI_PUBLISHER_SERVICE, publisherService);
+			juddiContext.bind(JUDDI_PUBLISHER_SERVICE, publisherService);
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);

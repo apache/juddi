@@ -51,8 +51,8 @@ public class UDDIInquiryService extends UnicastRemoteObject implements UDDIInqui
 	private static final long serialVersionUID = -8384112899703963130L;
 	private UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
 
-	protected UDDIInquiryService() throws RemoteException {
-		super();
+	protected UDDIInquiryService(int port) throws RemoteException {
+		super(port);
 	}
 
 	public BindingDetail findBinding(FindBinding body)

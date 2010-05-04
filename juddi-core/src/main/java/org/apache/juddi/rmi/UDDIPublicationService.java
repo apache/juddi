@@ -55,8 +55,8 @@ public class UDDIPublicationService extends UnicastRemoteObject implements UDDIP
 	private static final long serialVersionUID = 8342463046574333026L;
 	private UDDIPublicationPortType publication = new UDDIPublicationImpl();
 	
-	protected UDDIPublicationService() throws RemoteException {
-		super();
+	protected UDDIPublicationService(int port) throws RemoteException {
+		super(port);
 	}
 
 	public DispositionReport addPublisherAssertions(AddPublisherAssertions body)

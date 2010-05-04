@@ -191,6 +191,19 @@
 			<version>5.1.6</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.mockejb</groupId>
+		    <artifactId>mockejb</artifactId>
+		    <version>0.6-beta2</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>cglib</groupId>
+		    <artifactId>cglib-nodep</artifactId>
+		    <version>2.2</version>
+		    <scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 	<profiles>
 		<profile>
