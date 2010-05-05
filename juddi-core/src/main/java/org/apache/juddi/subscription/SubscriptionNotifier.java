@@ -217,8 +217,8 @@ public class SubscriptionNotifier extends TimerTask {
 			}
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
-			if (resultList.getServiceList()!=null || (resultList.getServiceList().getServiceInfos()!=null &&
-					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0)) {
+			if (resultList.getServiceList()!=null && resultList.getServiceList().getServiceInfos()!=null &&
+					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
 				resultList.getServiceList().setServiceInfos(null);
 			}
 			body.setSubscriptionResultsList(resultList);
