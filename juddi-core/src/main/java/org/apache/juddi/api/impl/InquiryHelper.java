@@ -502,6 +502,7 @@ public class InquiryHelper {
 	
 	public static RelatedBusinessesList getRelatedBusinessesList(FindRelatedBusinesses body, EntityManager em, Date modifiedAfter, Date modifiedBefore) throws DispositionReportFaultMessage {
 		RelatedBusinessesList result = new RelatedBusinessesList();
+		result.setBusinessKey(body.getBusinessKey());
 		ListDescription listDesc = new ListDescription();
 		result.setListDescription(listDesc);
 		
