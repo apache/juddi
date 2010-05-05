@@ -802,10 +802,16 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				
 				org.apache.juddi.model.Subscription modelSubscription = new org.apache.juddi.model.Subscription();
 				
-				Object existingEntity = em.find(org.apache.juddi.model.Subscription.class, apiSubscription.getSubscriptionKey());
-				if (existingEntity != null) {
-					doRenewal((org.apache.juddi.model.Subscription)existingEntity, apiSubscription);
-					em.remove(existingEntity);
+				Object existing = em.find(org.apache.juddi.model.Subscription.class, apiSubscription.getSubscriptionKey());
+				if (existing != null) {
+					org.apache.juddi.model.Subscription existingEntity = (org.apache.juddi.model.Subscription) existing;
+					doRenewal(existingEntity, apiSubscription);
+					//carrying over the created and last notified dates if this is a renewal.
+					modelSubscription.setCreateDate(existingEntity.getCreateDate());
+					modelSubscription.setLastNotified(existingEntity.getLastNotified());
+					em.remove(existing);
+				} else {
+					modelSubscription.setCreateDate(new Date());
 				}
 	
 				doSubscriptionExpirationDate(apiSubscription);
@@ -813,8 +819,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);
 				
 				modelSubscription.setAuthorizedName(publisher.getAuthorizedName());
-				modelSubscription.setCreateDate(new Date());
-	
+				
 				// Add the matching keys to the match collection
 				List<?> keys = getSubscriptionMatches(apiSubscription.getSubscriptionFilter(), em);
 				if (keys != null && keys.size() > 0) {
