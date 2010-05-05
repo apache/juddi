@@ -17,6 +17,7 @@
 
 package org.apache.juddi.mapping;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -703,15 +704,21 @@ public class MappingModelToApi {
 		
 		org.uddi.api_v3.KeysOwned keysOwned = new org.uddi.api_v3.KeysOwned();
 		
-		Collections.sort((List<String>)businessKeys);
-		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) >= 0)
+		//converting resultList to simple List
+		List<String> businessKeyList = new ArrayList<String>();
+		for (Object businessKey : businessKeys) {
+			businessKeyList.add(String.valueOf(businessKey));
+		}
+		Collections.sort(businessKeyList);
+		if (Collections.binarySearch(businessKeyList, modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey()) >= 0)
 			keysOwned.setFromKey(modelPublisherAssertion.getBusinessEntityByFromKey().getEntityKey());
 		
-		if (Collections.binarySearch((List<String>)businessKeys, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) >= 0)
+		if (Collections.binarySearch(businessKeyList, modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey()) >= 0)
 			keysOwned.setToKey(modelPublisherAssertion.getBusinessEntityByToKey().getEntityKey());
 		if (keysOwned.getFromKey() == null && keysOwned.getToKey() == null) {
 			throw new FatalErrorException(new ErrorMessage("errors.invalidKey.KeysOwned"));
 		}
+		apiAssertionStatusItem.setKeysOwned(keysOwned);
 	}
 
 	public static void mapRelatedBusinessInfo(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion,
