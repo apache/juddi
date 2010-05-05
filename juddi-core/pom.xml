@@ -121,11 +121,7 @@
 		</plugins>
 	</build>
 	<dependencies>
- 		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>8.2-504.jdbc3</version>
-		</dependency>
+ 		
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
@@ -189,6 +185,12 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.2-504.jdbc3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
