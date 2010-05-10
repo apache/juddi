@@ -117,6 +117,35 @@
         </para>
     </section>
     
+     <!-- section: Switch to Oracle 10 -->
+    <section id="sect-switch_to_oracle">
+        <title>Switch to Oracle</title>
+        <para>
+        To switch over to Oracle you need to add the oracle driver (i.e.<filename>The myclasses12.jar</filename>) to the 
+        classpath and you will need to edit the <filename>persistence.xml</filename>
+        </para>
+        
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_7.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+        
+        <para>
+        To create a Oracle database name juddiv3 with the ultimate in minimalism use
+        <programlisting>sqlplus> create database juddiv3;</programlisting>
+        then you probably want to switch to a user which is a bit less potent then 'root' and set the appropriate password.
+        </para>
+        
+        <warning>
+			<title>Warning</title>
+			<para>
+				Tomcat copies the context.xml to conf/CATALINA/localhost/juddiv3.xml, and if you update the context.xml it may not update this copy. 
+				You should simply delete the juddiv3.xml file after updating the context.xml.
+			</para>
+		</warning>
+		
+		<para>
+		Please check the <xref linkend="sect-changing_oracle_sequence_name" >Administration Chapter</xref> if you want to change the Oracle Sequence name.
+		</para>
+        
+    </section>
     <!-- section: Switch to &lt;other db&gt; -->
     <section id="sect-switch_to_other_DB">
         <title>Switch to &lt;other db&gt;</title>

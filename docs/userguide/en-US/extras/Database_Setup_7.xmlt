@@ -1,0 +1,1 @@
+<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
