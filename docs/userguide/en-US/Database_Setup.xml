@@ -121,7 +121,7 @@
     <section id="sect-switch_to_oracle">
         <title>Switch to Oracle</title>
         <para>
-        To switch over to Oracle you need to add the oracle driver (i.e.<filename>The myclasses12.jar</filename>) to the 
+        To switch over to Oracle you need to add the oracle driver (i.e. the<filename>classes12.jar</filename>) to the 
         classpath and you will need to edit the <filename>persistence.xml</filename>
         </para>
         
