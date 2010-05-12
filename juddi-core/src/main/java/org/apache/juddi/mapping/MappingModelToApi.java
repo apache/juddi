@@ -673,7 +673,6 @@ public class MappingModelToApi {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static void mapAssertionStatusItem(org.apache.juddi.model.PublisherAssertion modelPublisherAssertion, 
 											  org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem,
 											  List<?> businessKeys) 
