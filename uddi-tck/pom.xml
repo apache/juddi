@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
@@ -103,7 +101,7 @@
 								<artifactItem>
 									<groupId>org.apache.juddi</groupId>
 									<artifactId>juddi-tomcat</artifactId>
-									<version>3.0.2-SNAPSHOT</version>
+									<version>${project.parent.version}</version>
 									<type>zip</type>
 									<outputDirectory>${basedir}/target</outputDirectory>
 								</artifactItem>
@@ -122,12 +120,9 @@
 						<phase>pre-integration-test</phase>
 						<configuration>
 							<tasks>
-								<unzip dest="target" src="target/juddi-tomcat-3.0.2-SNAPSHOT.zip" />
-								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.version}/conf"
-									overwrite="true" />
-								<copy file="${basedir}/log4j.properties"
-									todir="target/juddi-tomcat-${project.version}/webapps/juddiv3/WEB-INF/classes"
-									overwrite="true" />
+								<unzip dest="target" src="target/juddi-tomcat-${project.parent.version}.zip" />
+								<copy file="${basedir}/server.xml" todir="target/juddi-tomcat-${project.parent.version}/conf" overwrite="true" />
+								<copy file="${basedir}/log4j.properties" todir="target/juddi-tomcat-${project.parent.version}/webapps/juddiv3/WEB-INF/classes" overwrite="true" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -144,11 +139,11 @@
 					<wait>false</wait>
 					<container>
 						<containerId>tomcat6x</containerId>
-						<home>${basedir}/target/juddi-tomcat-3.0.2-SNAPSHOT</home>
+						<home>${basedir}/target/juddi-tomcat-${project.parent.version}</home>
 					</container>
 					<configuration>
 						<type>existing</type>
-						<home>${project.build.directory}/juddi-tomcat-3.0.2-SNAPSHOT</home>
+						<home>${project.build.directory}/juddi-tomcat-${project.parent.version}</home>
 						<properties>
 							<cargo.logging>high</cargo.logging>
 							<cargo.hostname>localhost</cargo.hostname>
