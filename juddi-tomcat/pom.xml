@@ -38,7 +38,7 @@
 		<dependency>
 			<artifactId>apache-tomcat</artifactId>
 			<groupId>org.apache.juddi.bootstrap</groupId>
-			<version>6.0.20</version>
+			<version>6.0.26</version>
 			<type>zip</type>
 		</dependency>
 		<dependency>

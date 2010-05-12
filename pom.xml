@@ -252,10 +252,10 @@
 		<repository>
 			<id>apache.nexus</id>
 			<name>Apache NEXUS Maven 2 Repository</name>
-			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+			<url>https://repository.apache.org/content/repositories/releases/</url>
 			<layout>default</layout>
 			<snapshots> 
-				<enabled>true</enabled> 
+				<enabled>false</enabled> 
 			</snapshots>
 		</repository>
 		<repository>
