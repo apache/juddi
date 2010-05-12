@@ -232,8 +232,8 @@
 		<module>docs</module>
         <!-- should these be an a profile? -->
         <!--<module>juddi-console</module>-->
-     
-        <module>juddi-dist</module>
+        <!-- requires some artifacts from the apache-release profile, so put it there -->
+        <!--<module>juddi-dist</module>-->
 	</modules>
 	<distributionManagement>
 	    <site>
