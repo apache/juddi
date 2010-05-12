@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */ -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.2</version>
 	</parent>
 	<artifactId>juddi-tomcat</artifactId>
 	<name>jUDDI Tomcat Packaging</name>
@@ -95,23 +94,15 @@
 								<property name="plugin_classpath" refid="maven.plugin.classpath" />
 								<property name="project.version" value="${project.version}" />
 								
-								<property name="dependency.log4j.jar"
-									value="${maven.dependency.log4j.log4j.jar.path}" />
-								<property name="dependency.mysql.jar"
-									value="${maven.dependency.mysql.mysql-connector-java.jar.path}" />
-								<property name="dependency.commons-discovery.jar"
-									value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
-								<property name="dependency.derby.jar"
-									value="${maven.dependency.org.apache.derby.derby.jar.path}" />
-								<property name="dependency.tomcat.zip"
-									value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
-								<property name="dependency.juddiv3.war"
-									value="${basedir}/../juddi-cxf/target/juddi-cxf-${project.parent.version}.war" />
+								<property name="dependency.log4j.jar" value="${maven.dependency.log4j.log4j.jar.path}" />
+								<property name="dependency.mysql.jar" value="${maven.dependency.mysql.mysql-connector-java.jar.path}" />
+								<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
+								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
+								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
+								<property name="dependency.juddiv3.war" value="${basedir}/../juddi-cxf/target/juddi-cxf-${project.parent.version}.war" />
 								<echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
-								<property name="dependency.juddiv3-samples.war"
-									value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${project.parent.version}.war" />
-								<property name="dependency.juddi.jar"
-									value="${maven.dependency.org.apache.juddi.juddi.jar.path}" />
+								<property name="dependency.juddiv3-samples.war" value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${project.parent.version}.war" />
+								<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="package-tomcat" />

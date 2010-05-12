@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */ -->
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.2</version>
 	</parent>
 	<artifactId>juddi-core</artifactId>
 	<packaging>bundle</packaging>
@@ -70,13 +70,9 @@
 								<delete dir="src/main/java/META-INF" />
 								<delete dir="src/main/resources/META-INF" />
 								<mkdir dir="src/main/java/META-INF" />
-								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
-									  tofile="src/main/java/META-INF/persistence.xml" 
-									  overwrite="true" />
+								<copy file="src/main/resources/persistence/${persistence}-persistence.xml" tofile="src/main/java/META-INF/persistence.xml" overwrite="true" />
 								<mkdir dir="src/main/resources/META-INF" />
-								<copy file="src/main/resources/persistence/${persistence}-persistence.xml"
-									  tofile="src/main/resources/META-INF/persistence.xml"
-									  overwrite="true" />
+								<copy file="src/main/resources/persistence/${persistence}-persistence.xml" tofile="src/main/resources/META-INF/persistence.xml" overwrite="true" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -101,9 +97,7 @@
 						<configuration>
 							<tasks>
 								<echo>PERSISTENCE = ${persistence}</echo>
-								<copy file="src/main/resources/version/Release.java.template"
-									tofile="src/main/java/org/apache/juddi/config/Release.java"
-									overwrite="true">
+								<copy file="src/main/resources/version/Release.java.template" tofile="src/main/java/org/apache/juddi/config/Release.java" overwrite="true">
 									<filterset>
 										<filter token="juddi.version" value="${project.version}" />
 									</filterset>
@@ -283,9 +277,7 @@
                                                 <configuration>
                                                         <tasks>
                                                                 <mkdir dir="src/main/resources/META-INF" />
-                                                                <copy file="src/main/resources/juddi-orm.xml"
-                                                                          tofile="src/main/resources/META-INF/orm.xml"
-                                                                          overwrite="true"/>
+                                                                <copy file="src/main/resources/juddi-orm.xml" tofile="src/main/resources/META-INF/orm.xml" overwrite="true" />
                                                         </tasks>
                                                 </configuration>
                                                 <goals>

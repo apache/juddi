@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */ -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.2</version>
 	</parent>
 	<artifactId>juddiv3-war</artifactId>
 	<packaging>war</packaging>
@@ -34,7 +33,7 @@
 		<dependency>
 			<artifactId>uddi-ws</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>3.0.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.xml.bind</groupId>
@@ -53,7 +52,7 @@
 		<dependency>
 			<artifactId>juddi-core</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.2-SNAPSHOT</version>
+			<version>3.0.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.juddi</groupId>
@@ -199,12 +198,8 @@
                                                 <configuration>
                                                         <tasks>
 								<echo>persistence=${persistence}</echo>
-								<copy file="${basedir}/persistence/${persistence}-persistence.xml"
-									tofile="${basedir}/target/classes/META-INF/persistence.xml"
-									overwrite="true" />
-                                                                <copy file="${basedir}/persistence/juddi-orm.xml"
-                                                                        tofile="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml"
-                                                                        overwrite="true" />
+								<copy file="${basedir}/persistence/${persistence}-persistence.xml" tofile="${basedir}/target/classes/META-INF/persistence.xml" overwrite="true" />
+                                                                <copy file="${basedir}/persistence/juddi-orm.xml" tofile="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml" overwrite="true" />
                                                         </tasks>
                                                 </configuration>
                                                 <goals>
@@ -241,10 +236,8 @@
 						<configuration>
 							<tasks>
 								<echo>persistence=${persistence}</echo>
-								<copy file="${basedir}/persistence/${persistence}-persistence.xml"
-									tofile="${basedir}/target/classes/META-INF/persistence.xml"
-									overwrite="true" />
-								<delete file="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml"/>
+								<copy file="${basedir}/persistence/${persistence}-persistence.xml" tofile="${basedir}/target/classes/META-INF/persistence.xml" overwrite="true" />
+								<delete file="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml" />
 							</tasks>
 						</configuration>
 						<goals>
