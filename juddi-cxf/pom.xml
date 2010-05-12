@@ -11,8 +11,7 @@
 		License for the specific language governing permissions and *
 		limitations under the License. * */
 	-->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.juddi</groupId>
@@ -24,8 +23,7 @@
 	<packaging>pom</packaging>
 	
 	<properties>
-		<cxf.version>2.1.3</cxf.version>
-		<persistence>hibernate</persistence>
+		<cxf.version>2.1.9</cxf.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -82,8 +80,7 @@
 						<phase>package</phase>
 						<configuration>
 							<tasks>
-								<property name="dependency.juddiv3.war"
-									value="${maven.dependency.org.apache.juddi.juddiv3-war.war.path}" />
+								<property name="dependency.juddiv3.war" value="${maven.dependency.org.apache.juddi.juddiv3-war.war.path}" />
 								<echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
 								<ant antfile="${basedir}/build.xml">
 									<target name="package-war" />
