@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.3-SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddiv3-war</artifactId>
 	<packaging>war</packaging>
@@ -33,7 +33,7 @@
 		<dependency>
 			<artifactId>uddi-ws</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.3-SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.xml.bind</groupId>
@@ -52,7 +52,7 @@
 		<dependency>
 			<artifactId>juddi-core</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.0.3-SNAPSHOT</version>
+			<version>3.0.2-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.juddi</groupId>

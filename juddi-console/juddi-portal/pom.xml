@@ -160,6 +160,7 @@
 								<property name="dependency.uddi-portlets.war"
 									value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}" />
 								<ant antfile="${basedir}/build.xml">
+								    <property name="dependency.juddi-tomcat.zip" value="${dependency.juddi-tomcat.zip}" />
 									<target name="package-tomcat" />
 								</ant>
 							</tasks>
