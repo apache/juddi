@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */ -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-console</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>juddi-portal-bundle</artifactId>
@@ -135,31 +134,22 @@
 						<configuration>
 							<tasks>
 							    <property name="juddi.tomcat.version" value="${project.parent.version}" />
-							    <property name="maven.dependency.org.apache.juddi.juddi-tomcat.zip.path" value="../../juddi-tomcat/target/juddi-tomcat-${project.parent.version}.zip"/>
-							    <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
+							    <property name="maven.dependency.org.apache.juddi.juddi-tomcat.zip.path" value="../../juddi-tomcat/target/juddi-tomcat-${project.parent.version}.zip" />
+							    <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}" />
 								<property name="compile_classpath" refid="maven.compile.classpath" />
 								<property name="runtime_classpath" refid="maven.runtime.classpath" />
 								<property name="test_classpath" refid="maven.test.classpath" />
 								<property name="plugin_classpath" refid="maven.plugin.classpath" />
 								<property name="project.version" value="${project.version}" />
-								<property name="dependency.castor.jar"
-									value="${maven.dependency.org.codehaus.castor.castor.jar.path}" />
-								<property name="dependency.pluto-container.jar"
-									value="${maven.dependency.org.apache.pluto.pluto-container.jar.path}" />
-								<property name="dependency.pluto-descriptor-api.jar"
-									value="${maven.dependency.org.apache.pluto.pluto-descriptor-api.jar.path}" />
-								<property name="dependency.pluto-descriptor-impl.jar"
-									value="${maven.dependency.org.apache.pluto.pluto-descriptor-impl.jar.path}" />
-								<property name="dependency.pluto-taglib.jar"
-									value="${maven.dependency.org.apache.pluto.pluto-taglib.jar.path}" />
-								<property name="dependency.pluto-portal.war"
-									value="${maven.dependency.org.apache.pluto.pluto-portal.war.path}" />
-								<property name="dependency.commons-logging.jar"
-									value="${maven.dependency.commons-logging.commons-logging.jar.path}" />
-								<property name="dependency.portlet-api.jar"
-									value="${maven.dependency.javax.portlet.portlet-api.jar.path}" />
-								<property name="dependency.uddi-portlets.war"
-									value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}" />
+								<property name="dependency.castor.jar" value="${maven.dependency.org.codehaus.castor.castor.jar.path}" />
+								<property name="dependency.pluto-container.jar" value="${maven.dependency.org.apache.pluto.pluto-container.jar.path}" />
+								<property name="dependency.pluto-descriptor-api.jar" value="${maven.dependency.org.apache.pluto.pluto-descriptor-api.jar.path}" />
+								<property name="dependency.pluto-descriptor-impl.jar" value="${maven.dependency.org.apache.pluto.pluto-descriptor-impl.jar.path}" />
+								<property name="dependency.pluto-taglib.jar" value="${maven.dependency.org.apache.pluto.pluto-taglib.jar.path}" />
+								<property name="dependency.pluto-portal.war" value="${maven.dependency.org.apache.pluto.pluto-portal.war.path}" />
+								<property name="dependency.commons-logging.jar" value="${maven.dependency.commons-logging.commons-logging.jar.path}" />
+								<property name="dependency.portlet-api.jar" value="${maven.dependency.javax.portlet.portlet-api.jar.path}" />
+								<property name="dependency.uddi-portlets.war" value="${maven.dependency.org.apache.juddi.uddi-portlets.war.path}" />
 								<ant antfile="${basedir}/build.xml">
 								    <property name="dependency.juddi-tomcat.zip" value="${dependency.juddi-tomcat.zip}" />
 									<target name="package-tomcat" />
