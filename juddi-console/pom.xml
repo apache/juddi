@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.2</version>
+		<version>3.0.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddi-console</artifactId>
 	<name>jUDDI Console</name>
