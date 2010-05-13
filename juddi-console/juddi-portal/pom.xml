@@ -135,6 +135,7 @@
 						<configuration>
 							<tasks>
 							    <property name="juddi.tomcat.version" value="${project.parent.version}" />
+							    <property name="maven.dependency.org.apache.juddi.juddi-tomcat.zip.path" value="../../juddi-tomcat/target/juddi-tomcat-${project.parent.version}.zip"/>
 							    <property name="dependency.juddi-tomcat.zip" value="${maven.dependency.org.apache.juddi.juddi-tomcat.zip.path}"/>
 								<property name="compile_classpath" refid="maven.compile.classpath" />
 								<property name="runtime_classpath" refid="maven.runtime.classpath" />
