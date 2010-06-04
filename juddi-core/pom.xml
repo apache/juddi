@@ -25,7 +25,7 @@
 	<artifactId>juddi-core</artifactId>
 	<packaging>bundle</packaging>
 	<properties>
-		<persistence>openjpa</persistence>
+		<persistence>hibernate</persistence>
 	</properties>
 	
 	<name>jUDDI Core</name>
@@ -67,6 +67,7 @@
 						<phase>initialize</phase>
 						<configuration>
 							<tasks>
+								<echo>PERSISTENCE=${persistence}</echo>
 								<delete dir="src/main/java/META-INF" />
 								<delete dir="src/main/resources/META-INF" />
 								<mkdir dir="src/main/java/META-INF" />
@@ -205,6 +206,7 @@
 		<profile>
 			<id>hibernate</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>persistence</name>
 					<value>hibernate</value>
@@ -318,7 +320,7 @@
 		<profile>
 			<id>openjpa</id>
 			<activation>
-			    <activeByDefault>true</activeByDefault>
+			    <activeByDefault>false</activeByDefault>
 				<property>
 					<name>persistence</name>
 					<value>openjpa</value>
