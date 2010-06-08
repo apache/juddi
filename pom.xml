@@ -222,7 +222,7 @@
 		<module>uddi-tck-base</module>
 		<module>juddi-client</module>
 		<module>juddi-core</module>
-		<module>juddi-core-jpa</module>
+		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
 		<module>juddi-cxf</module>
 		<module>juddiv3-samples</module>
