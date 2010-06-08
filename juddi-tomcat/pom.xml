@@ -50,7 +50,7 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-jpa</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>${project.parent.version}</version>
 			<type>jar</type>

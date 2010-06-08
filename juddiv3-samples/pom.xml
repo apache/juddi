@@ -30,7 +30,7 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-jpa</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>${project.parent.version}</version>
 		</dependency>

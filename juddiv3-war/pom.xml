@@ -50,7 +50,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<artifactId>juddi-core</artifactId>
+			<artifactId>juddi-core-jpa</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>3.0.3-SNAPSHOT</version>
 			<exclusions>
