@@ -1,0 +1,25 @@
+<assembly>
+<id></id>
+<baseDirectory></baseDirectory>
+<formats>
+	<format>jar</format>
+</formats>
+<fileSets>
+  <fileSet>
+  	<directory>${project.build.directory}/juddiv3war</directory>
+  	<outputDirectory></outputDirectory>
+  </fileSet>
+</fileSets>
+<dependencySets>
+  <dependencySet>
+    <includes>
+	<include>*:*</include>
+    </includes>
+    <excludes>
+	<exclude>javax.servlet:servlet-api</exclude>
+	<exclude>org.apache.juddi:juddiv3-war</exclude>
+    </excludes>
+    <outputDirectory>WEB-INF/lib</outputDirectory>
+  </dependencySet>
+</dependencySets>
+</assembly>
