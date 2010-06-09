@@ -67,6 +67,7 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
+							    <property name="persistence" value="${persistence}"/>
 								<property name="juddi.core.dir" value="${basedir}/../juddi-core"/>
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
 								<echo>Enhancing juddi-core=${dependency.juddi.core}</echo>
