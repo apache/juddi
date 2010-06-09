@@ -10,7 +10,7 @@
 	</target>
 	
 	<target name="copy-resources" depends="unzip-jar">
-		<copy file="${juddi.core.dir}/src/main/resources/persistence/openjpa-persistence.xml"
+		<copy file="${juddi.core.dir}/src/main/resources/persistence/${persistence}-persistence.xml"
 			tofile="${basedir}/target/classes/META-INF/persistence.xml"
 			overwrite="true"/>
 	</target>

@@ -346,42 +346,6 @@
 							</includes>
 						</configuration>
 					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>openjpa-maven-plugin</artifactId>
-						<version>1.0</version>
-						<executions>
-							<execution>
-								<id>enhancer</id>
-								<phase>process-classes</phase>
-								<configuration>
-									<classes>
-										${project.build.outputDirectory}/org/apache/juddi/model/ 
-									</classes>
-									<toolProperties>
-										<property>
-											<name>addDefaultConstructor</name>
-											<value>true</value>
-										</property>
-										<property>
-											<name>enforcePropertyRestrictions</name>
-											<value>true</value>
-										</property>
-									</toolProperties>
-								</configuration>
-								<goals>
-									<goal>enhance</goal>
-								</goals>
-							</execution>
-						</executions>
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.openjpa</groupId>
-								<artifactId>openjpa</artifactId>
-								<version>1.2.2</version>
-							</dependency>
-						</dependencies>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
