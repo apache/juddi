@@ -18,7 +18,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.assertNotNull;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.log4j.Logger;
@@ -33,9 +35,13 @@ import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessInfos;
+import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
@@ -55,6 +61,7 @@ public class TckFindEntity
 {
 	final static String FIND_BUSINESS_XML             = "uddi_data/find/findBusiness1.xml";
 	final static String FIND_ALL_BUSINESSES_XML       = "uddi_data/find/findAllBusinesses.xml";
+	final static String FIND_RELATED_BUSINESS_SORT_BY_NAME_XML = "uddi_data/find/findRelatedBusinesses_sortByName.xml";
 	final static String FIND_SERVICE_XML              = "uddi_data/find/findService1.xml";
 	final static String FIND_BINDING_XML              = "uddi_data/find/findBinding1.xml";
 	final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
@@ -129,6 +136,37 @@ public class TckFindEntity
 			//expecting more than 2 businesses
 			Assert.assertTrue(biList.size()>1);
 			
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+	}
+	
+	public void findRelatedBusiness_sortByName(boolean isOneSided) {
+		try {
+			FindRelatedBusinesses body = (FindRelatedBusinesses)EntityCreator.buildFromDoc(FIND_RELATED_BUSINESS_SORT_BY_NAME_XML, "org.uddi.api_v3");
+			RelatedBusinessesList result = inquiry.findRelatedBusinesses(body);
+			if (result == null)
+				Assert.fail("Null result from find related business operation");
+			RelatedBusinessInfos bInfos = result.getRelatedBusinessInfos();
+		
+			//both parties need to register the assertion for it to be live.
+			if (isOneSided) {
+				Assert.assertNull(bInfos);
+			} else {
+				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
+				if (bInfos == null)
+					Assert.fail("No result from find related business operation");
+				if (biList == null || biList.size() == 0)
+					Assert.fail("No result from find related business operation");
+				Set<String> keys = new HashSet<String>();
+				for (RelatedBusinessInfo relatedBusinessInfo : biList) {
+					keys.add(relatedBusinessInfo.getBusinessKey());
+				}
+				Assert.assertTrue(keys.contains("uddi:www.samco.com:samco"));
+				Assert.assertTrue(keys.contains("uddi:uddi.marypublisher.com:marybusinessone"));
+			}
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);

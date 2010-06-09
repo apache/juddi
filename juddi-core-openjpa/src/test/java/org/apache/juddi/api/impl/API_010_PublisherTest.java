@@ -98,6 +98,19 @@ public class API_010_PublisherTest {
 		}
 	}
 	/**
+	 * Persists Mary Publisher to the database.
+	 * @return - true if the published did not exist already, 
+	 * 		   - false in all other cases.
+	 */
+	public boolean saveMaryPublisher() {
+		if (!isExistPublisher(TckPublisher.MARY_PUBLISHER_ID)) {
+			savePublisher(TckPublisher.MARY_PUBLISHER_ID, TckPublisher.MARY_PUBLISHER_XML);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
 	 * Removes Joe Publisher from the database, this will fail if there
 	 * are child objects attached; think Services etc.
 	 */

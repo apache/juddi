@@ -38,6 +38,8 @@ public class TckBusiness
 {
 	final static String JOE_BUSINESS_XML        = "uddi_data/joepublisher/businessEntity.xml";
     final static String JOE_BUSINESS_KEY        = "uddi:uddi.joepublisher.com:businessone";
+    final static String MARY_BUSINESS_XML       = "uddi_data/marypublisher/businessEntity.xml";
+    final static String MARY_BUSINESS_KEY       = "uddi:uddi.marypublisher.com:marybusinessone";
     final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
     final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
     final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
@@ -77,6 +79,10 @@ public class TckBusiness
 		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
+	public void saveMaryPublisherBusiness(String authInfoMary) {
+		saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
+    }
+	
 	public void updateJoePublisherBusiness(String authInfoJoe) {
 		updateBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
@@ -87,6 +93,10 @@ public class TckBusiness
     
 	public void deleteJoePublisherBusiness(String authInfoJoe) {
     	deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+    }
+	
+	public void deleteMaryPublisherBusiness(String authInfoMary) {
+    	deleteBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
     }
 	
 	public void deleteJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {

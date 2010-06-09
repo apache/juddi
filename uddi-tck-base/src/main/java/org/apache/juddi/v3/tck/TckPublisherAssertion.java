@@ -33,6 +33,9 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckPublisherAssertion 
 {
 	final static String JOE_ASSERT_XML    = "uddi_data/joepublisher/publisherAssertion.xml";
+	final static String MARY_ASSERT_XML    = "uddi_data/marypublisher/publisherAssertion.xml";
+	final static String JOE_ASSERT2_XML    = "uddi_data/joepublisher/publisherAssertion2.xml";
+	final static String SAM_ASSERT_XML    = "uddi_data/samsyndicator/publisherAssertion.xml";
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -46,8 +49,32 @@ public class TckPublisherAssertion
 		addPublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
 	}
 	
+	public void saveSamPublisherPublisherAssertion(String authInfoSam) {
+		addPublisherAssertion(authInfoSam, SAM_ASSERT_XML);
+	}
+	
+	public void saveMaryPublisherPublisherAssertion(String authInfoMary) {
+		addPublisherAssertion(authInfoMary, MARY_ASSERT_XML);
+	}
+	
+	public void saveJoePublisherPublisherAssertion2(String authInfoJoe) {
+		addPublisherAssertion(authInfoJoe, JOE_ASSERT2_XML);
+	}
+	
 	public void deleteJoePublisherPublisherAssertion(String authInfoJoe) {
 		deletePublisherAssertion(authInfoJoe, JOE_ASSERT_XML);
+	}
+	
+	public void deleteMaryPublisherPublisherAssertion(String authInfoMary) {
+		deletePublisherAssertion(authInfoMary, MARY_ASSERT_XML);
+	}
+	
+	public void deleteSamPublisherPublisherAssertion(String authInfoSam) {
+		deletePublisherAssertion(authInfoSam, SAM_ASSERT_XML);
+	}
+	
+	public void deleteJoePublisherPublisherAssertion2(String authInfoJoe) {
+		deletePublisherAssertion(authInfoJoe, JOE_ASSERT2_XML);
 	}
 
 	
@@ -62,17 +89,19 @@ public class TckPublisherAssertion
 	
 			// Now get the entity and check the values
 			List<PublisherAssertion> paOutList = publication.getPublisherAssertions(authInfo);
-			PublisherAssertion paOut = paOutList.get(0);
-
-			assertEquals(paIn.getFromKey(), paOut.getFromKey());
-			assertEquals(paIn.getToKey(), paOut.getToKey());
-			
-			KeyedReference keyRefIn = paIn.getKeyedReference();
-			KeyedReference keyRefOut = paOut.getKeyedReference();
-			
-			assertEquals(keyRefIn.getTModelKey(), keyRefOut.getTModelKey());
-			assertEquals(keyRefIn.getKeyName(), keyRefOut.getKeyName());
-			assertEquals(keyRefIn.getKeyValue(), keyRefOut.getKeyValue());
+			if (paOutList.size()==1) {
+				PublisherAssertion paOut = paOutList.get(0);
+	
+				assertEquals(paIn.getFromKey(), paOut.getFromKey());
+				assertEquals(paIn.getToKey(), paOut.getToKey());
+				
+				KeyedReference keyRefIn = paIn.getKeyedReference();
+				KeyedReference keyRefOut = paOut.getKeyedReference();
+				
+				assertEquals(keyRefIn.getTModelKey(), keyRefOut.getTModelKey());
+				assertEquals(keyRefIn.getKeyName(), keyRefOut.getKeyName());
+				assertEquals(keyRefIn.getKeyValue(), keyRefOut.getKeyValue());
+			}
 			
 		}
 		catch(Exception e) {

@@ -36,6 +36,8 @@ public class TckTModel
 {
 	final static String JOE_PUBLISHER_TMODEL_XML      = "uddi_data/joepublisher/tModelKeyGen.xml";
     final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:uddi.joepublisher.com:keygenerator";
+    final static String MARY_PUBLISHER_TMODEL_XML     = "uddi_data/marypublisher/tModelKeyGen.xml";
+    final static String MARY_PUBLISHER_TMODEL_KEY     = "uddi:uddi.marypublisher.com:keygenerator";
     final static String SAM_SYNDICATOR_TMODEL_XML     = "uddi_data/samsyndicator/tModelKeyGen.xml";
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
  
@@ -107,6 +109,14 @@ public class TckTModel
 	
 	public void deleteJoePublisherTmodel(String authInfoJoe) {
 		deleteTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public void saveMaryPublisherTmodel(String authInfoMary) {
+		saveTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public void deleteMaryPublisherTmodel(String authInfoMary) {
+		deleteTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY);
 	}
 	
 	public void saveSamSyndicatorTmodel(String authInfoSam) {

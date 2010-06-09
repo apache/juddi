@@ -40,8 +40,10 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	private static TckTModel tckTModel                = null;
 	private static TckBusiness tckBusiness            = null;
 	private static TckPublisherAssertion tckAssertion = null;
+	private static TckFindEntity tckFindEntity        = null;
 	private static String authInfoJoe                 = null;
 	private static String authInfoSam                 = null;
+	private static String authInfoMary                = null;
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
@@ -58,6 +60,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
 	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
 	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
+	        	 authInfoMary = TckSecurity.getAuthToken(security, TckPublisher.MARY_PUBLISHER_ID,  TckPublisher.MARY_PUBLISHER_CRED);
 	        	 Assert.assertNotNull(authInfoJoe);
 	        	 Assert.assertNotNull(authInfoSam);
 	        	 
@@ -67,6 +70,7 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 	        	 tckTModel  = new TckTModel(publication, inquiry);
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
 	        	 tckAssertion = new TckPublisherAssertion(publication);
+	        	 tckFindEntity = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -98,6 +102,68 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+	}
+	
+	/**
+	 * This test should find no publisher assertions because we only save them
+	 * from the joe publisher side.
+	 */
+	@Test
+	public void testFindNoAssertions() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckTModel.saveMaryPublisherTmodel(authInfoMary);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusiness.saveMaryPublisherBusiness(authInfoMary);
+			tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+			tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
+			
+			tckFindEntity.findRelatedBusiness_sortByName(true);
+			
+			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
+		} finally {
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckBusiness.deleteMaryPublisherBusiness(authInfoMary);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+			tckTModel.deleteMaryPublisherTmodel(authInfoMary);
+		}
+	}
+	
+	/**
+	 * This test should find 2 publisher assertions.
+	 */
+	@Test
+	public void testFindAssertions() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckTModel.saveMaryPublisherTmodel(authInfoMary);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			tckBusiness.saveMaryPublisherBusiness(authInfoMary);
+			tckAssertion.saveJoePublisherPublisherAssertion(authInfoJoe);
+			tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
+			tckAssertion.saveSamPublisherPublisherAssertion(authInfoSam);
+			tckAssertion.saveMaryPublisherPublisherAssertion(authInfoMary);
+			
+			tckFindEntity.findRelatedBusiness_sortByName(false);
+			
+			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
+			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
+			
+		} finally {
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckBusiness.deleteMaryPublisherBusiness(authInfoMary);
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+			tckTModel.deleteMaryPublisherTmodel(authInfoMary);
 		}
 	}
 }
