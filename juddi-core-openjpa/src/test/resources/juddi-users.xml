@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<juddi-users>
+	<user userid="anou_mana" password="password" />
+	<user userid="bozo" password="clown" />
+	<user userid="sviens" password="password" />
+</juddi-users>
