@@ -6,6 +6,7 @@ public interface Property
     public final static String JUDDI_LOAD_INSTALL_DATA           ="juddi.load.install.data";
 	public final static String JUDDI_PERSISTENCEUNIT_NAME        ="juddi.persistenceunit.name";
 	public final static String JUDDI_AUTHENTICATOR               ="juddi.authenticator";
+	public final static String JUDDI_AUTHENTICATOR_URL 			 ="juddi.authenticator.url";
 	public final static String JUDDI_CONFIGURATION_RELOAD_DELAY  ="juddi.configuration.reload.delay";
 	public final static String JUDDI_LOCALE                      ="juddi.locale";
 	public final static String JUDDI_OPERATOR_EMAIL_ADDRESS      ="juddi.operatorEmailAddress";
