@@ -34,7 +34,7 @@ public abstract class KeyGeneratorFactory {
 	private static Logger log = Logger.getLogger(KeyGeneratorFactory.class);
 
 	// Key Generator default implementation
-	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.DefaultKeyGenerator";
+	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.KeyGenerator";
 
 	// the shared Key Generator instance
 	private static KeyGenerator keyGenerator = null;
@@ -76,19 +76,16 @@ public abstract class KeyGeneratorFactory {
 		try {
 			// Use Loader to locate & load the Key Generator implementation
 			keygenClass = org.apache.log4j.helpers.Loader.loadClass(className);
-		}
-		catch(ClassNotFoundException e) {
-			log.error("The specified Key Generator class '" + className + "' was not found in classpath.");
-			log.error(e);
-		}
-	
-		try {
 			// try to instantiate the Key Generator implementation
 			keyGenerator = (KeyGenerator)keygenClass.newInstance();
-		}
-		catch(Exception e) {
-			log.error("Exception while attempting to instantiate the implementation of Key Generator: " + keygenClass.getName() + "\n" + e.getMessage());
-			log.error(e);
+		} catch(ClassNotFoundException cnfe) {
+			throw new RuntimeException("The specified Key Generator class '" + className + "' was not found on classpath.",cnfe);
+		} catch(InstantiationException ie) {
+			throw new RuntimeException("The specified Key Generator class '" + className + "' cannot be instantiated.",ie);
+		} catch(IllegalAccessException iae) {
+			throw new RuntimeException("The specified Key Generator class '" + className + "' cannot be instantiated due to illegal access.",iae);
+		} catch(Exception e) {
+			throw new RuntimeException("Exception while attempting to instantiate the implementation of Key Generator: " + keygenClass.getName() + "\n" + e.getMessage());
 		}
 	
 		return keyGenerator;
