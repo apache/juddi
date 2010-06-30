@@ -34,7 +34,7 @@ First, check out the jUDDI sources:
 Then build the entire project using OpenJPA for persistance use:
 
 <screen>
-% cd v3_trunk
+% cd trunk
 % mvn clean install -Dpersistence=openjpa
 </screen>
 To use Hibernate change the persistence flag to hibernate. Optionally you can use a <filename>settings.xml</filename> to set your persistence choice on a permanent basis, so you don't have to provide the persistence variable every time you build. The default location of the <filename>settings.xml</filename> is in your <filename>.m2</filename> directory.  An example file is checked into our source tree at <filename>etc/.m2/settings.xml</filename>.
@@ -178,6 +178,9 @@ Hibernate
 % cd juddi-core
 % mvn clean install -Dpersistence=hibernate 
 </screen>
+<para>
+For juddi 3.0.0 and 3.0.1, the project built with Hibernate by default, but as of 3.0.2 the project now builds with openjpa as the default persistence layer.    Two flavors of juddi-core are available as maven artifacts - juddi-core for hibernate usage and juddi-core-openjpa for use with OpenJPA.
+</para>
     </section>
     <section id="Building the WAR">
         <title>Building the WAR</title>
