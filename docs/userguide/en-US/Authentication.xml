@@ -182,6 +182,35 @@
         
     </section>
     
+   <!-- section: LDAP Authentication -->
+    <section id="sect-LDAP_Authentication">
+        <title>LDAP Authentication</title>
+
+        <para>
+	<classname>LdapSimpleAuthenticator</classname> provides a way of authenticating
+	users using Ldap simple authentication.    It is fairly rudimentary and more 
+	LDAP integration is planned in the future, but this class allows you to authenticate
+	a user based on an LDAP prinicipal, provided that the principal and the juddi publisher ID
+	are the same.
+        </para>
+
+        <para>
+        To use this class you must add the following properties to the
+        <filename>juddi.properties</filename> file:
+        </para>
+
+        <programlisting language="XML"><xi:include href="extras/Authentication_5.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+	The <classname>juddi.auth.url</classname> property configures the
+        <classname>LdapSimpleAuthenticator</classname> class so that it knows where the LDAP
+	server resides.     Future work is planned in this area to use the LDAP uid rather than
+	the LDAP principal as the default publisher id.
+        </para>
+
+    </section>
+
+
 
     <!-- section: JBoss Authentication -->
     <section id="sect-JBoss_Authentication">

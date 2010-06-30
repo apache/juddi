@@ -87,5 +87,11 @@
 	</para>
 	 <programlisting language="XML" ><xi:include href="extras/Administration_orm.xml" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
     </section>
- 
+    <section id="sect-persistence">
+	<title>Persistence</title>
+	<para>jUDDI supports both OpenJPA and Hibernate as persistence providers.   If you are embedding jUDDI, it is important to note that there are two JARs provided through maven.    If you will be using Hibernate, please use the juddi-core JAR, if you are using OpenJPA, use juddi-core-openjpa.
+	</para>
+	<para>The difference between these JARs is that the persistence classes within juddi-core-openjpa have been enhanced (http://people.apache.org/~mprudhom/openjpa/site/openjpa-project/manual/ref_guide_pc_enhance.html).   Unfortunately, the Hibernate classloader does not deal well with these enhanced classes, so it it important to note not to use the juddi-core-openjpa JAR with Hibernate.
+	</para>
+    </section> 
 </chapter>
