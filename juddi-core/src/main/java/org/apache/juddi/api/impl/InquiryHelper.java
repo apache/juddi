@@ -542,7 +542,7 @@ public class InquiryHelper {
 		
 		if (findTmodel != null && tmodelBag != null) {
 			org.apache.juddi.query.util.FindQualifiers findQualifiers = new org.apache.juddi.query.util.FindQualifiers();
-			findQualifiers.mapApiFindQualifiers(fq);
+			findQualifiers.mapApiFindQualifiers(findTmodel.getFindQualifiers());
 
 			
 			List<?> tmodelKeysFound = null;
