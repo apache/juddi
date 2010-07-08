@@ -43,6 +43,7 @@
 		followed, or as required to translate it into languages other than
 		English.
 	-->
+    <documentation>WSDL service definition for UDDI 3.0.2 specification</documentation>
     <import namespace="urn:uddi-org:api_v3_binding" location="uddi_api_v3_binding.wsdl"/>
     <import namespace="urn:uddi-org:custody_v3_binding" location="uddi_custody_v3_binding.wsdl"/>
     <import namespace="urn:uddi-org:repl_v3_binding" location="uddi_repl_v3_binding.wsdl"/>
@@ -94,5 +95,4 @@
         </port>
     </service>
 
-	<documentation>WSDL service definition for UDDI 3.0.2 specification</documentation>
 </definitions>

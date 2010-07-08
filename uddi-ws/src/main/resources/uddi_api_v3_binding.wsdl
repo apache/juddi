@@ -162,8 +162,8 @@
 		</operation>
 	</binding>
 	<binding name="UDDI_Publication_SoapBinding" type="uddi_api_v3_portType:UDDI_Publication_PortType">
+        <documentation>This is the SOAP binding for the UDDI Publication portType.</documentation>
 		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
-		<documentation>This is the SOAP binding for the UDDI Publication portType.</documentation>
 		<operation name="add_publisherAssertions">
 			<soap:operation soapAction="add_publisherAssertions"/>
 			<input>
@@ -334,8 +334,8 @@
 		</operation>
 	</binding>
 	<binding name="UDDI_Security_SoapBinding" type="uddi_api_v3_portType:UDDI_Security_PortType">
+        <documentation>This is the SOAP binding for the UDDI Security portType.</documentation>
 		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
-		<documentation>This is the SOAP binding for the UDDI Security portType.</documentation>
 		<operation name="discard_authToken">
 			<soap:operation soapAction="discard_authToken"/>
 			<input>
