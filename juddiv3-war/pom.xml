@@ -54,6 +54,11 @@
 			<groupId>org.apache.juddi</groupId>
 			<version>3.0.3-SNAPSHOT</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<artifactId>juddi-core-openjpa</artifactId>
+			<groupId>org.apache.juddi</groupId>
+			<version>3.0.3-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.juddi</groupId>
