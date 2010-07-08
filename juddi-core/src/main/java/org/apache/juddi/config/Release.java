@@ -20,7 +20,7 @@ package org.apache.juddi.config;
  * in main/java/resources/version
  */
 public class Release {
-	private static final String REGISTRY_VERSION = "@juddi.version@";
+	private static final String REGISTRY_VERSION = "3.0.3-SNAPSHOT";
 	private static final String UDDI_VERSION = "3.0";
    
 	private Release () {
