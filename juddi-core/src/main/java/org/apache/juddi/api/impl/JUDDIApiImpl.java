@@ -502,6 +502,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 	/**
 	 * Instructs the registry to perform a synchronous subscription response.
 	 */
+	@SuppressWarnings("unchecked")
 	public SyncSubscriptionDetail invokeSyncSubscription(
 			SyncSubscription body) throws DispositionReportFaultMessage,
 			RemoteException {

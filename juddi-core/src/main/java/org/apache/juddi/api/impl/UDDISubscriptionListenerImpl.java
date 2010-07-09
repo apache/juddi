@@ -48,6 +48,7 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 	
 	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
 		
+	@SuppressWarnings("unchecked")
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage {
