@@ -56,7 +56,7 @@ public class TckBindingTemplate
 		deleteBinding(authInfoJoe, JOE_BINDING_KEY);
 	}
 	
-	private void saveBinding(String authInfo, String bindingXML, String bindingKey) {
+	public void saveBinding(String authInfo, String bindingXML, String bindingKey) {
 		try {
 			// First save the entity
 			SaveBinding sb = new SaveBinding();
@@ -86,7 +86,7 @@ public class TckBindingTemplate
 		
 	}
 	
-	private void deleteBinding(String authInfo, String bindingKey) {
+	public void deleteBinding(String authInfo, String bindingKey) {
 		try {
 			// Delete the entity and make sure it is removed
 			DeleteBinding db = new DeleteBinding();

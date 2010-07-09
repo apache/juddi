@@ -103,9 +103,8 @@ public class TckBusiness
     	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
     }
 	 
-	private void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
-		try {
-			
+	public void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+		try {			
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			String businessName = beIn.getName().get(0).getValue();
 			for (int i=0; i<numberOfCopies; i++) {
@@ -124,7 +123,7 @@ public class TckBusiness
 		}
 	}
 		
-	private void saveBusiness(String authInfo, String businessXML, String businessKey) {
+	public void saveBusiness(String authInfo, String businessXML, String businessKey) {
 		try {
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
@@ -156,7 +155,7 @@ public class TckBusiness
 
 	}
 	
-	private void updateBusiness(String authInfo, String businessXML, String businessKey) {
+	public void updateBusiness(String authInfo, String businessXML, String businessKey) {
 		try {
 			
 			// Now get the entity and check the values
@@ -197,7 +196,7 @@ public class TckBusiness
 
 	}
 	
-	private void deleteBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+	public void deleteBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
 		try {
 			for (int i=0; i<numberOfCopies; i++) {
 				// Delete the entity and make sure it is removed
@@ -216,7 +215,7 @@ public class TckBusiness
 	}
 	
 	
-	private void deleteBusiness(String authInfo, String businessXML, String businessKey) {
+	public void deleteBusiness(String authInfo, String businessXML, String businessKey) {
 		try {
 			// Delete the entity and make sure it is removed
 			DeleteBusiness db = new DeleteBusiness();

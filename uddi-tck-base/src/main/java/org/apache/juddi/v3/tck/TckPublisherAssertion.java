@@ -78,7 +78,7 @@ public class TckPublisherAssertion
 	}
 
 	
-	private void addPublisherAssertion(String authInfo, String pubassertXML) {
+	public void addPublisherAssertion(String authInfo, String pubassertXML) {
 		try {
 			AddPublisherAssertions ap = new AddPublisherAssertions();
 			ap.setAuthInfo(authInfo);
@@ -111,7 +111,7 @@ public class TckPublisherAssertion
 
 	}
 
-	private void deletePublisherAssertion(String authInfo, String pubassertXML) {
+	public void deletePublisherAssertion(String authInfo, String pubassertXML) {
 		try {
 			// Delete the entity and make sure it is removed
 			DeletePublisherAssertions dp = new DeletePublisherAssertions();

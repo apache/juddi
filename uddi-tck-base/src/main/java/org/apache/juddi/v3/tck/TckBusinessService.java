@@ -105,7 +105,7 @@ public class TckBusinessService
 		deleteServices(authInfoSam, SAM_SERVICE_KEY, numberOfCopies);
 	}
 	
-	private void saveServices(String authInfo, String serviceXML, String serviceKey, int numberOfCopies) {
+	public void saveServices(String authInfo, String serviceXML, String serviceKey, int numberOfCopies) {
 		try {
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(serviceXML, "org.uddi.api_v3");
 			String serviceName = bsIn.getName().get(0).getValue();
@@ -130,7 +130,7 @@ public class TckBusinessService
 	}
 	
 	
-	private void saveService(String authInfo, String serviceXML, String serviceKey) {
+	public void saveService(String authInfo, String serviceXML, String serviceKey) {
 		try {
 			// First save the entity
 			SaveService ss = new SaveService();
@@ -161,7 +161,7 @@ public class TckBusinessService
 		
 	}
 	
-	private void saveService2(String authInfo, String serviceKey, String serviceXML2,  String serviceKey2) {
+	public void saveService2(String authInfo, String serviceKey, String serviceXML2,  String serviceKey2) {
 		try {
 			// First save the entity
 			SaveService ss = new SaveService();
@@ -190,7 +190,7 @@ public class TckBusinessService
 		
 	}
 	
-	private void deleteService(String authInfo, String serviceKey) {
+	public void deleteService(String authInfo, String serviceKey) {
 		try {
 			// Delete the entity and make sure it is removed
 			DeleteService ds = new DeleteService();
@@ -205,7 +205,7 @@ public class TckBusinessService
 		}
 	}
 	
-	private void deleteServices(String authInfo, String serviceKey, int numberOfCopies) {
+	public void deleteServices(String authInfo, String serviceKey, int numberOfCopies) {
 		try {
 			for (int i=0; i<numberOfCopies; i++) {
 				// Delete the entity and make sure it is removed

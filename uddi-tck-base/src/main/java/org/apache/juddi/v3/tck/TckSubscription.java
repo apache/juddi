@@ -280,8 +280,7 @@ public class TckSubscription
 		
 	}
 	
-	
-	private void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey) {
+	public void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey) {
 		try {
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(subscriptionXML, "org.uddi.sub_v3");
 			List<Subscription> subscriptionList = new ArrayList<Subscription>();
@@ -313,7 +312,7 @@ public class TckSubscription
 		
 	}
 	
-	private void deleteSubscription(String authInfo, String subscriptionKey) {
+	public void deleteSubscription(String authInfo, String subscriptionKey) {
 		try {
 			// Delete the entity and make sure it is removed
 			DeleteSubscription ds = new DeleteSubscription();
