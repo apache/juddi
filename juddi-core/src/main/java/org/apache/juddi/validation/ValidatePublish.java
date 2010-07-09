@@ -85,7 +85,13 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+			
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
@@ -97,6 +103,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
+			i++;
 		}
 	}
 
@@ -112,7 +119,13 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+			
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
@@ -124,6 +137,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
+			i++;
 		}
 	}
 
@@ -140,7 +154,13 @@ public class ValidatePublish extends ValidateUDDIApi {
 
 		// Checking for duplicates and existence
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+			
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
@@ -152,6 +172,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 
+			i++;
 		}
 	}
 	
@@ -167,7 +188,13 @@ public class ValidatePublish extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+			
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
@@ -179,6 +206,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			if (!publisher.isOwner((UddiEntity)obj))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
+			i++;
 		}
 	}
 
@@ -787,6 +815,12 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		if (fromKey.equalsIgnoreCase(toKey))
 			throw new ValueNotAllowedException(new ErrorMessage("errors.pubassertion.SameBusinessKey"));
+
+		// Per section 4.4: keys must be case-folded
+		fromKey = fromKey.toLowerCase();
+		pubAssertion.setFromKey(fromKey);
+		toKey = toKey.toLowerCase();
+		pubAssertion.setToKey(toKey);
 		
 		Object fromObj = em.find(org.apache.juddi.model.BusinessEntity.class, fromKey);
 		if (fromObj == null)
@@ -798,7 +832,12 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		if (!publisher.isOwner((UddiEntity)fromObj) && !publisher.isOwner((UddiEntity)toObj))
 			throw new UserMismatchException(new ErrorMessage("errors.pubassertion.UserMismatch", fromKey + " & " + toKey));
-			
+		
+		try {
+			validateKeyedReference(pubAssertion.getKeyedReference(), AppConfig.getConfiguration());
+		} catch (ConfigurationException ce){
+			log.error("Could not optain config. " + ce.getMessage(), ce);
+		}
 	}
 	
 	public void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {
@@ -904,8 +943,14 @@ public class ValidatePublish extends ValidateUDDIApi {
 	}
 	
 	public void validateKeyedReference(KeyedReference kr, Configuration config) throws DispositionReportFaultMessage {
-		if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
+		String tmodelKey = kr.getTModelKey();
+
+		if (tmodelKey == null || tmodelKey.length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		
+		// Per section 4.4: keys must be case-folded
+		tmodelKey = tmodelKey.toLowerCase();
+		kr.setTModelKey(tmodelKey);
 			
 		if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));
