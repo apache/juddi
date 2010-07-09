@@ -31,8 +31,6 @@ import org.junit.Test;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
-import org.uddi.api_v3.FindTModel;
-import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.TModelBag;
 import org.uddi.v3_service.UDDIInquiryPortType;
