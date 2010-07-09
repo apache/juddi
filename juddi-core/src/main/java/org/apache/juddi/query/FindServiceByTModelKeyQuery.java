@@ -45,6 +45,7 @@ import org.uddi.api_v3.TModelBag;
  * match (logical OR)."
  *  
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 	
@@ -74,7 +75,8 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
 		appendConditions(dynamicQry, fq, tmodelKeys);
 		if (parentKey != null && parentKey.length() > 0)
-			dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));
+			dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));
+			//dynamicQry.AND().pad().appendGroupedAnd(new DynamicQuery.Parameter(BindingTemplateQuery.ENTITY_ALIAS + "." + BindingTemplateQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS));
 		
 		if (restrictions != null && restrictions.length > 0)
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
