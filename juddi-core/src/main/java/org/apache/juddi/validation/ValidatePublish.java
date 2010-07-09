@@ -940,6 +940,11 @@ public class ValidatePublish extends ValidateUDDIApi {
 		// Keyed reference groups must contain a tModelKey
 		if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		
+		// Per section 4.4: keys must be case-folded
+		String tmodelKey = krg.getTModelKey().toLowerCase();
+		krg.setTModelKey(tmodelKey);
+
 	}
 	
 	public void validateKeyedReference(KeyedReference kr, Configuration config) throws DispositionReportFaultMessage {
