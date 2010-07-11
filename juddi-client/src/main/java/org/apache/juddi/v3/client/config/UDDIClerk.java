@@ -42,11 +42,14 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DispositionReport;
+import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.Result;
+import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
@@ -105,6 +108,31 @@ public class UDDIClerk implements Serializable {
 
 	public void setManagerName(String managerName) {
 		this.managerName = managerName;
+	}
+	/**
+	 * Register a service binding.
+	 * 
+	 */
+	public BindingTemplate register(BindingTemplate binding, Node node) {
+		
+		BindingTemplate bindingTemplate=null;
+		log.info("Registering bindingTemplate with key " + binding.getBindingKey());
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			SaveBinding saveBinding = new SaveBinding();
+			saveBinding.setAuthInfo(authToken);
+			saveBinding.getBindingTemplate().add(binding);
+			BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
+			bindingTemplate = bindingDetail.getBindingTemplate().get(0);
+		} catch (Exception e) {
+			log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
+					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
+					+ " ." + t.getMessage(),t);
+		}
+		log.info("Registering template binding " + binding.getBindingKey() + " completed.");
+		return bindingTemplate;
 	}
 	/**
 	 * Register a service.
@@ -241,6 +269,37 @@ public class UDDIClerk implements Serializable {
 		try {
 			BusinessDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getBusinessDetail(getBusinessDetail);
 			return bd.getBusinessEntity().get(0);
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
+			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
+		}
+		return null;
+	}
+	
+	/**
+	 * Looks up the BusinessEntiry in the registry, will return null if is not found.
+	 * 
+	 * @param businessKey - the key we are looking for
+	 * @param node - the node which is going to be queried
+	 * @return BusinessEntity is found, or null if not found.
+	 * @throws RemoteException
+	 * @throws TransportException
+	 * @throws ConfigurationException
+	 */
+	public RelatedBusinessesList findRelatedBusinesses(String businessKey, Node node) throws RemoteException, 
+			TransportException, ConfigurationException  {
+		FindRelatedBusinesses findRelatedBusinesses = new FindRelatedBusinesses();
+		findRelatedBusinesses.setBusinessKey(businessKey);
+		findRelatedBusinesses.setAuthInfo(node.getSecurityUrl());
+		try {
+			RelatedBusinessesList rbl = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).findRelatedBusinesses(findRelatedBusinesses);
+			return rbl;
 		} catch (DispositionReportFaultMessage dr) {
 			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
 			checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
