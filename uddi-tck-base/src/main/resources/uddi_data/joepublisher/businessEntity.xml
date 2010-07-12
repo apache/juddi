@@ -50,7 +50,7 @@
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="oranges" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:sports" keyName="category" keyValue="football" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
+    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
       <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>

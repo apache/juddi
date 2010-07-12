@@ -29,7 +29,7 @@
       <phtwo useType="office">123-456-7890</phtwo>
       <phtwo useType="mobile">987-654-3210</phtwo>
       <email useType="work">ssyndicator@samco.com</email>
-      <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelKey:address">
+      <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelkey:address">
         <addressLine keyName="street" keyValue="street">1515 Main St</addressLine>
         <addressLine keyName="citystatezip" keyValue="citystatezip">Ann Arbor, MI 41804</addressLine>
         <addressLine keyName="country" keyValue="country">USA</addressLine>
@@ -41,8 +41,8 @@
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="kiwi" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="progressive-rock" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="country" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
+      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
   <identifierBag>

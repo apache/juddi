@@ -44,7 +44,7 @@
       <tModelKey>uddi:garbage.key.5</tModelKey>
       <tModelKey>uddi:uddi.org:findqualifier:sortbynameasc</tModelKey>
       <tModelKey>uddi:uddi.org:findqualifier:sortbynamedesc</tModelKey>
-      <tModelKey>uddi:uddi.org:findqualifier:suppressProjectedServices</tModelKey>
+      <tModelKey>uddi:uddi.org:findqualifier:suppressprojectedservices</tModelKey>
       <tModelKey>uddi:uddi.org:sortorder:binarysort</tModelKey>
       <tModelKey>uddi:uddi.org:sortorder:uts-10</tModelKey>
       <tModelKey>uddi:garbage.key.6</tModelKey>

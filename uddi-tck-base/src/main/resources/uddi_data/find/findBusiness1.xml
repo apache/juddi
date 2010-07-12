@@ -30,8 +30,8 @@
   <categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples%" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues%" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank%" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
+      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank%" />
     </keyedReferenceGroup>
   </categoryBag>
   <discoveryURLs>

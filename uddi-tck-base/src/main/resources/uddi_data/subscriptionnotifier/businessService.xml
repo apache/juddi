@@ -36,8 +36,8 @@
   <categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
     <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
+      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
 </businessService>

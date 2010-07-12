@@ -25,7 +25,7 @@
       <description xml:lang="en">This is the access point for listing service.</description>
       <accessPoint useType="endPoint">http:/samco.com/services/listingservice</accessPoint>
       <tModelInstanceDetails>
-        <tModelInstanceInfo tModelKey="uddi:www.samco.com:listservice-wsdlSpec">
+        <tModelInstanceInfo tModelKey="uddi:www.samco.com:listservice-wsdlspec">
           <description xml:lang="en">The wsdl for this service: Listing Service</description>
           <instanceDetails>
             <overviewDoc>
@@ -44,8 +44,8 @@
   <categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories:beer" keyName="category" keyValue="lager" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:beer" keyName="category" keyValue="pilsner" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelKey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
+      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
 </businessService>
