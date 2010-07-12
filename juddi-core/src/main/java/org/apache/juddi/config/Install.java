@@ -310,6 +310,10 @@ public class Install {
 			businessEntity.setBusinessKey(entityKey);
 		}
 		else {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			businessEntity.setBusinessKey(entityKey);
+			
 			ValidateUDDIKey.validateUDDIv3Key(entityKey);
 			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (!rootPartition.equalsIgnoreCase(keyPartition))
@@ -361,6 +365,10 @@ public class Install {
 			businessService.setServiceKey(entityKey);
 		}
 		else {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			businessService.setServiceKey(entityKey);
+			
 			ValidateUDDIKey.validateUDDIv3Key(entityKey);
 			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (!rootPartition.equalsIgnoreCase(keyPartition))
@@ -408,6 +416,10 @@ public class Install {
 			bindingTemplate.setBindingKey(entityKey);
 		}
 		else {
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			bindingTemplate.setBindingKey(entityKey);
+
 			ValidateUDDIKey.validateUDDIv3Key(entityKey);
 			String keyPartition = entityKey.substring(0, entityKey.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 			if (!rootPartition.equalsIgnoreCase(keyPartition))
@@ -434,6 +446,8 @@ public class Install {
 				}
 				else {
 					org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
+					apiTModel.setTModelKey(apiTModel.getTModelKey().toLowerCase());
+					
 					MappingApiToModel.mapTModel(apiTModel, modelTModel);
 
 					modelTModel.setAuthorizedName(publisher.getAuthorizedName());

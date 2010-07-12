@@ -658,7 +658,7 @@
       <keyedReference keyName="uddi-org:types:findQualifier" keyValue="findQualifier" tModelKey="uddi:uddi.org:categorization:types" />
     </categoryBag>
   </tModel>
-  <tModel tModelKey="uddi:uddi.org:findqualifier:suppressProjectedServices">
+  <tModel tModelKey="uddi:uddi.org:findqualifier:suppressprojectedservices">
     <name>uddi-org:suppressProjectedServices
 		</name>
     <description>UDDI find qualifier used to exclude service
