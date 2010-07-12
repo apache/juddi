@@ -176,7 +176,13 @@ public class ValidateSubscription extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 		
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+			
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
@@ -189,6 +195,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
 			if (!publisher.getAuthorizedName().equals(((org.apache.juddi.model.Subscription)obj).getAuthorizedName()))
 				throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
 			
+			i++;
 		}
 	}
 
@@ -200,6 +207,10 @@ public class ValidateSubscription extends ValidateUDDIApi {
 		String subscriptionKey = body.getSubscriptionKey();
 		if (subscriptionKey == null || subscriptionKey.length() == 0)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey", subscriptionKey));
+		
+		// Per section 4.4: keys must be case-folded
+		subscriptionKey = subscriptionKey.toLowerCase();
+		body.setSubscriptionKey(subscriptionKey);
 		
 		Object obj = em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
 		if (obj == null)

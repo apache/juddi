@@ -882,6 +882,10 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (addressList != null) {
 			for (org.uddi.api_v3.Address address : addressList) {
 				if (address != null) {
+					// Per section 4.4: keys must be case-folded
+					if (address.getTModelKey() != null)
+						address.setTModelKey(address.getTModelKey().toLowerCase());
+
 					if (address.getAddressLine() == null || address.getAddressLine().size() == 0)
 						throw new ValueNotAllowedException(new ErrorMessage("errors.contact.NoAddressLine"));
 				}
@@ -911,11 +915,13 @@ public class ValidatePublish extends ValidateUDDIApi {
 		List<KeyedReferenceGroup> groups = categories.getKeyedReferenceGroup();
 		if (groups.size() == 0 && elems.size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.categorybag.NoInput"));
+
+		for (KeyedReferenceGroup group : groups) {
+			validateKeyedReferenceGroup(group, config);
+		}
 		
-		for (Object elem : elems) {
-			if (elem instanceof org.uddi.api_v3.KeyedReference) {
-				validateKeyedReference((KeyedReference) elem, config);
-			}
+		for (KeyedReference elem : elems) {
+			validateKeyedReference(elem, config);
 		}
 	}
 
@@ -936,7 +942,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 	}
 	
 
-	public void validateKeyedReferenceGroup(KeyedReferenceGroup krg) throws DispositionReportFaultMessage {
+	public void validateKeyedReferenceGroup(KeyedReferenceGroup krg, Configuration config) throws DispositionReportFaultMessage {
 		// Keyed reference groups must contain a tModelKey
 		if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
@@ -944,6 +950,14 @@ public class ValidatePublish extends ValidateUDDIApi {
 		// Per section 4.4: keys must be case-folded
 		String tmodelKey = krg.getTModelKey().toLowerCase();
 		krg.setTModelKey(tmodelKey);
+		
+		List<KeyedReference> keyedRefs = krg.getKeyedReference();
+		// Should being empty raise an error?
+		if (keyedRefs != null && keyedRefs.size() > 0) {
+			for (KeyedReference keyedRef : keyedRefs) {
+				validateKeyedReference(keyedRef, config);
+			}
+		}
 
 	}
 	
@@ -992,6 +1006,9 @@ public class ValidatePublish extends ValidateUDDIApi {
 		// TModel key is required
 		if (tmodelInstInfo.getTModelKey() == null || tmodelInstInfo.getTModelKey().length() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodelinstinfo.NoTModelKey"));
+		
+		// Per section 4.4: keys must be case-folded
+		tmodelInstInfo.setTModelKey((tmodelInstInfo.getTModelKey().toLowerCase()));
 		
 		validateInstanceDetails(tmodelInstInfo.getInstanceDetails());
 		

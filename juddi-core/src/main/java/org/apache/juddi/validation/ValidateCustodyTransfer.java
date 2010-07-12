@@ -68,7 +68,12 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keybag.NoInput"));
 			
 			// Test that publisher owns keys using operational info.
+			int i = 0;
 			for (String key : keyList) {
+				// Per section 4.4: keys must be case-folded
+				key = key.toLowerCase();
+				keyList.set(i, key);
+				
 				UddiEntity uddiEntity = em.find(UddiEntity.class, key);
 				
 				// According to spec, it's ok if a key doesn't match any known entities, it will just be ignored.  However, the publisher must own
@@ -78,6 +83,8 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 						throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", key));
 					
 				}
+			
+				i++;
 			}
 		
 		}
@@ -96,7 +103,12 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 		
 		// Test that publisher owns keys using operational info.
 		Vector<DynamicQuery.Parameter> params = new Vector<DynamicQuery.Parameter>(0);
+		int i = 0;
 		for (String key : keyList) {
+			// Per section 4.4: keys must be case-folded
+			key = key.toLowerCase();
+			keyList.set(i, key);
+
 			UddiEntity uddiEntity = em.find(UddiEntity.class, key);
 			
 			if (uddiEntity == null)
@@ -169,6 +181,10 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 		Collections.sort(modelKeyList);
 		int count = 0;
 		for (String key : apiKeyList) {
+			// Per section 4.4: keys must be case-folded
+			key = key.toLowerCase();
+			apiKeyList.set(count, key);
+
 			if (!key.equalsIgnoreCase(modelKeyList.get(count)))
 				throw new TransferNotAllowedException(new ErrorMessage("errors.transferentities.KeyMismatch", key + " & " + modelKeyList.get(count)));
 			

@@ -68,10 +68,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+
+			i++;
 		}
 	}
 	
@@ -87,10 +95,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+
+			i++;
 		}
 	}
 	
@@ -106,10 +122,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+
+			i++;
 		}
 	}
 	
@@ -125,10 +149,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+
+			i++;
 		}
 	}
 
@@ -144,10 +176,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
 		HashSet<String> dupCheck = new HashSet<String>();
+		int i = 0;
 		for (String entityKey : entityKeyList) {
+
+			// Per section 4.4: keys must be case-folded
+			entityKey = entityKey.toLowerCase();
+			entityKeyList.set(i, entityKey);
+
 			boolean inserted = dupCheck.add(entityKey);
 			if (!inserted)
 				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.DuplicateKey", entityKey));
+
+			i++;
 		}
 	}
 	
@@ -195,7 +235,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 
 		if (body.getCategoryBag() == null && body.getFindTModel() == null && body.getTModelBag() == null)
 			throw new FatalErrorException(new ErrorMessage("errors.findbinding.NoInput"));
-
+		
 		validateFindQualifiers(body.getFindQualifiers());
 		validateTModelBag(body.getTModelBag());
 		validateFindTModel(body.getFindTModel(), true);
@@ -239,17 +279,24 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		boolean fromKeyExists = false;
 		if (body.getBusinessKey() != null && body.getBusinessKey().length() > 0) {
 			businessKeyExists = true;
-
+			
+			// Per section 4.4: keys must be case-folded
+			body.setBusinessKey(body.getBusinessKey().toLowerCase());
 		}
 		if (body.getFromKey() != null && body.getFromKey().length() > 0) {
 			fromKeyExists = true;
 			if (businessKeyExists)
 				throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.MultipleInput"));
-			
+
+			// Per section 4.4: keys must be case-folded
+			body.setFromKey(body.getFromKey().toLowerCase());
 		}
 		if (body.getToKey() != null && body.getToKey().length() > 0) {
 			if (businessKeyExists || fromKeyExists)
 				throw new FatalErrorException(new ErrorMessage("errors.findrelatedbusiness.MultipleInput"));
+
+			// Per section 4.4: keys must be case-folded
+			body.setToKey(body.getToKey().toLowerCase());
 		}
 		
 		KeyedReference keyedRef = body.getKeyedReference();
@@ -258,8 +305,9 @@ public class ValidateInquiry extends ValidateUDDIApi {
 				keyedRef.getKeyName() == null || keyedRef.getKeyName().length() == 0 ||
 				keyedRef.getKeyValue() == null || keyedRef.getKeyValue().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.findrelatedbusiness.BlankKeyedRef"));
+
+			validateKeyedReference(keyedRef);
 		}
-			
 	}
 
 	public void validateNames(List<org.uddi.api_v3.Name> names) throws DispositionReportFaultMessage {
@@ -278,6 +326,15 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		
 		if (tmodelBag.getTModelKey() == null || tmodelBag.getTModelKey().size() == 0)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodelbag.NoInput"));
+		
+		List<String> keyList = tmodelBag.getTModelKey();
+		int i = 0;
+		for (String key : keyList) {
+			// Per section 4.4: keys must be case-folded
+			key = key.toLowerCase();
+			keyList.set(i, key);
+			i++;
+		}
 		
 	}
 	
@@ -330,9 +387,18 @@ public class ValidateInquiry extends ValidateUDDIApi {
 	
 	public void validateKeyedReferenceGroup (KeyedReferenceGroup krg) throws DispositionReportFaultMessage {
 		// Keyed reference groups must contain a tModelKey
-		if (krg instanceof org.uddi.api_v3.KeyedReferenceGroup) {
-			if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
-				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0)
+			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+		
+		// Per section 4.4: keys must be case-folded
+		krg.setTModelKey(krg.getTModelKey().toLowerCase());
+		
+		List<KeyedReference> keyedRefs = krg.getKeyedReference();
+		// Should being empty raise an error?
+		if (keyedRefs != null && keyedRefs.size() > 0) {
+			for (KeyedReference keyedRef : keyedRefs) {
+				validateKeyedReference(keyedRef);
+			}
 		}
 	}
 	
@@ -344,6 +410,9 @@ public class ValidateInquiry extends ValidateUDDIApi {
 		if (kr instanceof org.uddi.api_v3.KeyedReference) {
 			if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
+			
+			// Per section 4.4: keys must be case-folded
+			kr.setTModelKey(kr.getTModelKey().toLowerCase());
 			
 			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));			
