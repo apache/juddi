@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.3-SNAPSHOT</version>
+		<version>3.0.3</version>
 	</parent>
 	<artifactId>juddi-core-openjpa</artifactId>
 	<packaging>bundle</packaging>
@@ -67,8 +67,8 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-							    <property name="persistence" value="${persistence}"/>
-								<property name="juddi.core.dir" value="${basedir}/../juddi-core"/>
+							    <property name="persistence" value="${persistence}" />
+								<property name="juddi.core.dir" value="${basedir}/../juddi-core" />
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
 								<echo>Enhancing juddi-core=${dependency.juddi.core}</echo>
 								<ant antfile="${basedir}/build.xml">

@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-console</artifactId>
-		<version>3.0.3-SNAPSHOT</version>
+		<version>3.0.3</version>
 	</parent>
 	<!--
 		GWT-Maven archetype generated POM 
