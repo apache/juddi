@@ -5,8 +5,10 @@
 
 	<target name="unzip-jar">
 		<mkdir dir="${basedir}/target/classes"/>
-
-		<unzip dest="${basedir}/target/classes" src="${dependency.juddi.core}"/>
+		<echo>unzip: ${dependency.juddi.core}</echo>
+		<unzip dest="${basedir}/target/classes">
+			<fileset file="${dependency.juddi.core}"/>
+		</unzip>
 	</target>
 	
 	<target name="copy-resources" depends="unzip-jar">
