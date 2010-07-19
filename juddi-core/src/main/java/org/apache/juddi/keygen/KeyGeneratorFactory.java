@@ -34,7 +34,7 @@ public abstract class KeyGeneratorFactory {
 	private static Logger log = Logger.getLogger(KeyGeneratorFactory.class);
 
 	// Key Generator default implementation
-	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.KeyGenerator";
+	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.DefaultKeyGenerator";
 
 	// the shared Key Generator instance
 	private static KeyGenerator keyGenerator = null;
