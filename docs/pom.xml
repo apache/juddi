@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.3</version>
+		<version>3.0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddi-docs</artifactId>
 	<name>jUDDI Document Packaging</name>
