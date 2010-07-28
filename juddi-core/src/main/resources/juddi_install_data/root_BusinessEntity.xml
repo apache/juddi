@@ -61,7 +61,7 @@
           <description>UDDI Inquiry API V3</description>
           <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
           in this file.  They all must point to their API's WSDL URL -->
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/inquiry?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/inquiry?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
               <instanceDetails>
@@ -90,7 +90,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publish-ws" serviceKey="uddi:juddi.apache.org:services-publish">
           <description>UDDI Publication API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/publish?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publish?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_publication">
               <instanceDetails>
@@ -117,7 +117,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-security-ws" serviceKey="uddi:juddi.apache.org:services-security">
           <description>UDDI Security API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/security?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/security?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
           </tModelInstanceDetails>
@@ -133,7 +133,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-custodytransfer-ws" serviceKey="uddi:juddi.apache.org:services-custodytransfer">
           <description>UDDI Custody and Ownership Transfer API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/custody-transfer?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/custody-transfer?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_ownership_transfer">
               <instanceDetails>
@@ -161,7 +161,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-subscription-ws" serviceKey="uddi:juddi.apache.org:services-subscription">
           <description>UDDI Subscription API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/subscription?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscription">
               <instanceDetails>
@@ -190,7 +190,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" serviceKey="uddi:juddi.apache.org:services-subscriptionlistener">
           <description>UDDI Subscription Listener API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/subscription-listener?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
           </tModelInstanceDetails>
@@ -206,7 +206,7 @@
       <bindingTemplates>
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publisher-ws" serviceKey="uddi:juddi.apache.org:services-publisher">
           <description>jUDDI Publisher Service API V3</description>
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/juddiv3/services/publisher?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publisher?wsdl</accessPoint>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
