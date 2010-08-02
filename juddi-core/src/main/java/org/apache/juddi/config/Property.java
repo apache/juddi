@@ -40,5 +40,6 @@ public interface Property
 	public final static String DEFAULT_ENCRYPTED_XML_USERSFILE   ="juddi-users-encrypted.xml";
 	public final static String DEFAULT_SECURITY_DOMAIN           ="java:/jaas/other";
 	public final static boolean DEFAULT_LOAD_INSTALL_DATA        =true;
+	public final static String DEFAULT_BASE_URL                  ="http://localhost:8080/juddiv3";
 	
 }

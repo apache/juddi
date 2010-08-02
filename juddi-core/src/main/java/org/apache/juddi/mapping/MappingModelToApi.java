@@ -25,6 +25,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.OverviewDoc;
 import org.apache.juddi.model.UddiEntity;
@@ -368,8 +369,9 @@ public class MappingModelToApi {
 			try {
 				String baseUrl = AppConfig.getConfiguration().getString("juddi.server.baseurl");
 				if (baseUrl==null) {
-					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to 'http://localhost:8080'");
-					baseUrl = "http://localhost:8080";
+					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to '" 
+							+ Property.DEFAULT_BASE_URL + "'");
+					baseUrl = Property.DEFAULT_BASE_URL;
 				}
 				accessPointValue = accessPointValue.replaceAll("\\$\\{juddi.server.baseurl\\}", baseUrl);
 			} catch (ConfigurationException e) {
