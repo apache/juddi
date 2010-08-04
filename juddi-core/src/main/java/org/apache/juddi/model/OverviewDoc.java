@@ -97,7 +97,7 @@ public class OverviewDoc implements java.io.Serializable {
 		this.tmodel = tmodel;
 	}
 
-	@Column(name = "overview_url", nullable = false)
+	@Column(name = "overview_url", nullable = true)
 	public String getOverviewUrl() {
 		return this.overviewUrl;
 	}
