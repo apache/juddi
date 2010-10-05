@@ -41,6 +41,7 @@ import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.GetAuthToken;
@@ -189,6 +190,7 @@ public class UDDIClerk implements Serializable {
 	/**
 	 * Unregisters the BindingTemplates for this service.
 	 * @param service
+	 * @deprecated use {@link UDDIClerk.unRegisterService}
 	 */
 	public void unRegister(BusinessService service, Node node) {
 		log.info("UnRegistering binding for service " + service.getName().get(0).getValue());
@@ -205,6 +207,43 @@ public class UDDIClerk implements Serializable {
 					+ " ." + e.getMessage(),e);
 		}
 	}
+	/**
+	 * Unregisters the service with specified serviceKey.
+	 * @param service
+	 */
+	public void unRegisterService(String serviceKey, Node node) {
+		log.info("UnRegistering the service " + serviceKey);
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl()); 
+			DeleteService deleteService = new DeleteService();
+			deleteService.setAuthInfo(authToken);
+			deleteService.getServiceKey().add(serviceKey);
+			getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteService(deleteService);
+		} catch (Exception e) {
+			log.error("Unable to register service " + serviceKey
+					+ " ." + e.getMessage(),e);
+		}
+	}
+	
+	/**
+	 * Unregisters the BindingTemplate with specified bindingKey. 
+	 * @param bindingTemplate
+	 * @param node
+	 */
+	public void unRegisterBinding(String bindingKey, Node node) {
+		log.info("UnRegistering binding key " + bindingKey);
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			DeleteBinding deleteBinding = new DeleteBinding();
+			deleteBinding.setAuthInfo(authToken);
+			deleteBinding.getBindingKey().add(bindingKey);
+			getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);
+		} catch (Exception e) {
+			log.error("Unable to unregister bindingkey " + bindingKey
+					+ " ." + e.getMessage(),e);
+		}
+	}
+
 	
 	public BusinessService findService(String serviceKey, Node node) throws RemoteException, 
 	TransportException, ConfigurationException  {

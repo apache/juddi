@@ -42,6 +42,7 @@ public class UDDI_050_BindingTemplateIntegrationTest
 	private static TckBusiness tckBusiness                = null;
 	private static TckBusinessService tckBusinessService  = null;
 	private static TckBindingTemplate tckBindingTemplate  = null;
+	private static TckFindEntity tckFindEntity            = null;
 	
 	
 	private static String authInfoJoe                 = null;
@@ -69,6 +70,7 @@ public class UDDI_050_BindingTemplateIntegrationTest
 	        	 tckBusiness = new TckBusiness(publication, inquiry);
 	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
 	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+	        	 tckFindEntity      = new TckFindEntity(inquiry);
 	         } else {
 	        	 Assert.fail();
 	         }
@@ -94,6 +96,33 @@ public class UDDI_050_BindingTemplateIntegrationTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+		} finally {
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test
+	public void findService() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			tckBindingTemplate.deleteBinding(authInfoJoe, "uddi:uddi.joepublisher.com:bindingone");
+			String serviceKey = tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
+			
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			
+			serviceKey = tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
+			
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			
+			tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
 		} finally {
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);

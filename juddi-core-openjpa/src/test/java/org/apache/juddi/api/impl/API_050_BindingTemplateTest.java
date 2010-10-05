@@ -21,6 +21,7 @@ import org.apache.juddi.Registry;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
+import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
@@ -44,7 +45,7 @@ public class API_050_BindingTemplateTest
 	private static TckBusiness tckBusiness                = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusinessService tckBusinessService  = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBindingTemplate tckBindingTemplate  = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	
+	private static TckFindEntity tckFindEntity            = new TckFindEntity(new UDDIInquiryImpl());
 	
 	private static String authInfoJoe                 = null;
 	
@@ -74,6 +75,34 @@ public class API_050_BindingTemplateTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+		} finally {
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test
+	public void testSearchBinding() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			
+			tckFindEntity.findServiceDetail("uddi:uddi.joepublisher.com:serviceone");
+			tckBindingTemplate.deleteBinding(authInfoJoe, "uddi:uddi.joepublisher.com:bindingone");
+			String serviceKey = tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
+			
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			
+			serviceKey = tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
+			
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			
+			tckFindEntity.findService();
+			tckFindEntity.findServiceDetail(serviceKey);
 		} finally {
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);

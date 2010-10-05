@@ -27,7 +27,7 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 		serviceKey="uddi:${keyDomain}:services-hello${department}", 
 		description = "Hello World test service")
 @UDDIServiceBinding(
-		bindingKey="uddi:${keyDomain}:bindings-hello${department}-wsdl",
+		bindingKey="uddi:${keyDomain}:${serverName}-${serverPort}-hello${department}-wsdl",
 	    description="WSDL endpoint for the hello${department} Service. This service is used for "
 				  + "testing the jUDDI annotation functionality",
 	    accessPointType="wsdlDeployment",

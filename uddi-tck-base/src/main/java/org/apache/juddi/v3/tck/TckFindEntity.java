@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfo;
@@ -39,9 +40,11 @@ import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.RelatedBusinessInfo;
 import org.uddi.api_v3.RelatedBusinessInfos;
 import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceInfo;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
@@ -174,7 +177,8 @@ public class TckFindEntity
 		}
 	}
 	
-	public void findService() {
+	public String findService() {
+		String serviceKey = null;
 		try {
 			FindService body = (FindService)EntityCreator.buildFromDoc(FIND_SERVICE_XML, "org.uddi.api_v3");
 			ServiceList result = inquiry.findService(body);
@@ -193,13 +197,50 @@ public class TckFindEntity
 			assertEquals(bsIn.getServiceKey(), siOut.getServiceKey());
 			
 			TckValidator.checkNames(bsIn.getName(), siOut.getName());
+			serviceKey = siOut.getServiceKey();
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+		return serviceKey;
+	}
+
+	public void findServiceDetail(String serviceKey) {
+		try {
+			GetServiceDetail getServiceDetail = new GetServiceDetail();
+			getServiceDetail.getServiceKey().add(serviceKey);
+			
+			
+			ServiceDetail result = inquiry.getServiceDetail(getServiceDetail);
+			
+			if (result == null)
+				Assert.fail("Null result from find service operation");
+			
+			BindingTemplates templates = result.getBusinessService().get(0).getBindingTemplates();
+			if (templates!=null && templates.getBindingTemplate()!=null) {
+				System.out.println(templates.getBindingTemplate().size());
+				System.out.println("key=" + templates.getBindingTemplate().get(0).getBindingKey());
+			}
+//			ServiceInfos sInfos = result.getServiceInfos();
+//			if (sInfos == null)
+//				Assert.fail("No result from find service operation");
+//			List<ServiceInfo> siList = sInfos.getServiceInfo();
+//			if (siList == null || siList.size() == 0)
+//				Assert.fail("No result from find service operation");
+//			ServiceInfo siOut = siList.get(0);
+//			
+//			BusinessService bsIn = (BusinessService)EntityCreator.buildFromDoc(TckBusinessService.JOE_SERVICE_XML, "org.uddi.api_v3");
+//			
+//			assertEquals(bsIn.getServiceKey(), siOut.getServiceKey());
+//			
+//			TckValidator.checkNames(bsIn.getName(), siOut.getName());
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
 		}
 	}
-
 	public void findBinding() {
 		try {
 			FindBinding body = (FindBinding)EntityCreator.buildFromDoc(FIND_BINDING_XML, "org.uddi.api_v3");

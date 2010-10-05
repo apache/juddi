@@ -16,13 +16,17 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
+import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.log4j.Logger;
+import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 
 public class UDDIClerkManager {
@@ -50,7 +54,7 @@ public class UDDIClerkManager {
 	}
 	
 	private void releaseResources() {
-		unRegisterAnnotatedServices();
+		unRegisterBindingsOfAnnotatedServices(true);
 	}
  	/**
 	 * Initializes the UDDI Clerk.
@@ -140,7 +144,9 @@ public class UDDIClerkManager {
 		}
 	}
 	/**
-	 * Removes the bindings of the services of the annotated classes.
+	 * Removes the service and all of its bindingTemplates of the annotated classes.
+	 * @throws TransportException 
+	 * @throws RemoteException 
 	 */
 	public void unRegisterAnnotatedServices() {
 		Map<String,UDDIClerk> clerks = clientConfig.getUDDIClerks();
@@ -150,10 +156,49 @@ public class UDDIClerkManager {
 				Collection<BusinessService> services = ap.readServiceAnnotations(
 						clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
 				for (BusinessService businessService : services) {
-					clerk.unRegister(businessService,clerk.getUDDINode().getApiNode());
+					clerk.unRegisterService(businessService.getServiceKey(),clerk.getUDDINode().getApiNode());
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Removes the bindings of the services in the annotated classes. Multiple nodes may register
+	 * the same service using different BindingTempates. If the last BindingTemplate is removed
+	 * the service can be removed as well.
+	 * 
+	 * @param removeServiceWithNoBindingTemplates - if set to true it will remove the service if there
+	 * are no other BindingTemplates.
+	 */
+	public void unRegisterBindingsOfAnnotatedServices(boolean removeServiceWithNoBindingTemplates) {
+		
+			Map<String,UDDIClerk> clerks = clientConfig.getUDDIClerks();
+			if (clerks.size() > 0) {
+				AnnotationProcessor ap = new AnnotationProcessor();
+				for (UDDIClerk clerk : clerks.values()) {
+					Collection<BusinessService> services = ap.readServiceAnnotations(
+							clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
+					for (BusinessService businessService : services) {
+						if (businessService.getBindingTemplates() != null) {
+							List<BindingTemplate> bindingTemplates = businessService.getBindingTemplates().getBindingTemplate();
+							for (BindingTemplate bindingTemplate : bindingTemplates) {
+								clerk.unRegisterBinding(bindingTemplate.getBindingKey(), clerk.getUDDINode().getApiNode());
+							}
+						}
+						if (removeServiceWithNoBindingTemplates) {
+							try {
+								BusinessService existingService = clerk.findService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());
+								if (existingService.getBindingTemplates()==null || existingService.getBindingTemplates().getBindingTemplate().size()==0) {
+									clerk.unRegisterService(businessService.getServiceKey(),clerk.getUDDINode().getApiNode());
+								}
+							} catch (Exception e) {
+								log.error(e.getMessage(),e);
+							}
+						}
+					}
+				}
+			}
+		
 	}
 	
 	public ClientConfig getClientConfig() {
