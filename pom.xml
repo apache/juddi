@@ -68,17 +68,17 @@
 		</mailingList>
 		<mailingList>
 			<name>jUDDI Developer List</name>
-			<subscribe>juddi-dev-subscribe@ws.apache.org</subscribe>
-			<unsubscribe>juddi-dev-unsubscribe@ws.apache.org</unsubscribe>
-			<post>juddi-dev@ws.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-dev/</archive>
+			<subscribe>dev-subscribe@juddi.apache.org</subscribe>
+			<unsubscribe>dev-unsubscribe@juddi.apache.org</unsubscribe>
+			<post>dev@juddi.apache.org</post>
+			<archive>http://mail-archives.apache.org/mod_mbox/juddi-dev/</archive>
 		</mailingList>
 		<mailingList>
 			<name>jUDDI SVN List</name>
-			<subscribe>juddi-cvs-subscribe@ws.apache.org</subscribe>
-			<unsubscribe>juddi-cvs-unsubscribe@ws.apache.org</unsubscribe>
-			<post>juddi-cvs@ws.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-cvs/</archive>
+			<subscribe>cvs-subscribe@juddi.apache.org</subscribe>
+			<unsubscribe>cvs-unsubscribe@juddi.apache.org</unsubscribe>
+			<post>cvs@juddi.apache.org</post>
+			<archive>http://mail-archives.apache.org/mod_mbox/juddi-cvs/</archive>
 		</mailingList>
 	</mailingLists>
 	<developers>
@@ -130,9 +130,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/juddi/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/juddi/trunk/</developerConnection>
-		<url>http://svn.apache.org/viewcvs.cgi/webservices/juddi/trunk/</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/juddi/trunk/</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/juddi/trunk/</developerConnection>
+		<url>http://svn.apache.org/viewcvs.cgi/juddi/trunk/</url>
 	</scm>
 	    <build>
         <pluginManagement>
@@ -239,7 +239,7 @@
 	<distributionManagement>
 	    <site>
 			<id>website</id>
-			<url>scpexe://people.apache.org/www/ws.apache.org/juddi/</url>
+			<url>scpexe://people.apache.org/www/juddi.apache.org/</url>
 		</site>
 	</distributionManagement>
 	<dependencies />
