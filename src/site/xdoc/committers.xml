@@ -6,32 +6,28 @@
   </properties>
   <body>
     <section name="Updating the jUDDI Web Site">
-      <p>You'll need the appropriate version of <link href="http://xml.apache.org/forrest/">forrest</link> as
-        well as the appropriate version of <link href="http://ant.apache.org/">ant</link>. This document
-        assumes you generally understand how to use these tools.
-      </p>
       <p>
-       The site source is located under our source tree at ws-juddi/site. To build the site, simply invoke
-        forrest in ws-juddi/site. The built sources will be located at ws-juddi/build/site. You should
+       The site source is located under our source tree at juddi/src/site. To build the site, simply invoke
+        mvn site in juddi/site. The built sources will be located at juddi/target/site. You should
         get a clean build, and no broken links. There aren't any known issues with the site.
         </p>
         <p>
-        You must test your builds locally by running forrest on your local box. You can do this by invoking
-        'forrest run' in ws-juddi/site.
+        You must test your builds locally by running mvn site on your local box. You can do this by invoking
+        'mvn site' in the juddi root directory.
         </p>
         <p>
         The commit process is a bit complicated.
-        The live site is hosted under the ws-site source tree, -not- the ws-juddi src tree. The ws-juddi/build/site
+        The live site is hosted under the site source tree, -not- the juddi src tree. The juddi/target/site
         directory hierarchy maps to the ws-site/targets/juddi directory hierarchy.
         Once you've built the site copy the latter hierarchy to the former, and then commit the
         changes. The live site is updated about every 6 hours from cvs.
         </p>
         <p>
-        You must -also- commit the changes you've made under ws-juddi/site to persist the changes for the next
+        You must -also- commit the changes you've made under juddi/src/site to persist the changes for the next
         committer to be able to reproduce your modifications.
         </p>
         <p>
-        To fully clean any site build you've created, you can safely delete everything under ws-juddi/site/build.
+        To fully clean any site build you've created, you can safely delete everything under juddi/target.
         </p>
     </section>
     <section name="Release Process">

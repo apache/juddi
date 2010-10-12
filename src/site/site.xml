@@ -23,7 +23,7 @@
     <bannerLeft>
         <name>Apache jUDDI</name>
         <src>images/project-logo.gif</src>
-        <href>ws.apache.org/juddi/</href>
+        <href>juddi.apache.org</href>
     </bannerLeft>
     <bannerRight>
     <src>images/juddi.gif</src>
@@ -39,7 +39,6 @@
     <body>
         <breadcrumbs>
       		<item name="Apache" href="http://www.apache.org/"/>
-      		<item name="WebServices" href="http://ws.apache.org/"/>
     	</breadcrumbs>
 
         <menu name="Apache jUDDI">
@@ -51,7 +50,7 @@
             <item name="Participation" href="participate.html" description="Participation"/>
             <item name="Documentation">
                 <item name="jUDDI Docs" href="docs.html"/>
-                <item name="Wiki" href="http://wiki.apache.org/ws/jUDDI"/>
+                <item name="Wiki" href="http://wiki.apache.org/juddi"/>
                 <item name="UDDI Library" href="library.html" />
                 <item name="Javadocs v2" href="apidocs2/index.html"/>
                 <item name="Javadocs v3" href="apidocs/index.html"/>
@@ -66,8 +65,8 @@
                 <item name="Project Team" href="team-list.html"/>
                 <item name="Project Summary" href="project-summary.html"/>
             </item>
-            <item name="Related Projects">
-    			<item name="Apache Scout" href="http://ws.apache.org/scout/" description="Apache Scout"/>
+            <item name="Subprojects">
+    			<item name="Apache Scout" href="http://juddi.apache.org/scout/" description="Apache Scout"/>
   			</item>
   			<item name="Misc">
     			<item name="Who We Are" href="who.html" description="Who We Are"/>

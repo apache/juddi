@@ -61,10 +61,10 @@
 	<mailingLists>
 		<mailingList>
 			<name>jUDDI User List</name>
-			<subscribe>juddi-user-subscribe@ws.apache.org</subscribe>
-			<unsubscribe>juddi-user-unsubscribe@ws.apache.org</unsubscribe>
-			<post>juddi-user@ws.apache.org</post>
-			<archive>http://mail-archives.apache.org/mod_mbox/ws-juddi-user/</archive>
+			<subscribe>juddi-user-subscribe@apache.org</subscribe>
+			<unsubscribe>juddi-user-unsubscribe@apache.org</unsubscribe>
+			<post>juddi-user@apache.org</post>
+			<archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
 		</mailingList>
 		<mailingList>
 			<name>jUDDI Developer List</name>
@@ -107,6 +107,20 @@
 			<name>Steve Viens</name>
 			<email>steve AT viens.net</email>
 			<url>http://www.viens.net</url>
+			<organization>ASF</organization>
+		</developer>
+		<developer>
+			<id>anil</id>
+			<name>Anil Saldhana</name>
+			<email>anil AT apache.org</email>
+			<url>http://www.jboss.org</url>
+			<organization>JBoss/Red Hat</organization>
+		</developer>
+		<developer>
+			<id>djencks</id>
+			<name>David Jencks</name>
+			<email>djencks AT apache.org</email>
+			<url>http://www.apache.org</url>
 			<organization>ASF</organization>
 		</developer>
 	</developers>
@@ -213,8 +227,8 @@
 				<version>2.0-beta-2</version>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jxr-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.2</version>
 			</plugin>
 		</plugins>
