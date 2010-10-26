@@ -285,6 +285,11 @@
 			<id>maven2-repository.dev.java.net</id>
 			<url>http://download.java.net/maven/2</url>
 		</pluginRepository>
+		<pluginRepository>
+			<id>nexus.codehaus</id>
+			<url>https://nexus.codehaus.org/content/repositories/releases/</url>
+		</pluginRepository>
+		
 	</pluginRepositories>
 	 <profiles>
         <!-- START SNIPPET: release-profile -->
