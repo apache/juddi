@@ -13,6 +13,7 @@ MySQL5InnoDBDialect
 Oracle9Dialect
 PostgreSQLDialect
 SQLServerDialect
+Sybase11Dialect
 
 
 
