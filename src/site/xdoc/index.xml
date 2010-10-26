@@ -29,7 +29,7 @@ under the License.
 	      <p>jUDDI (pronounced &quot;Judy&quot;) is an open source Java implementation
 	        of the Universal Description, Discovery, and Integration (UDDI v3) specification
 	        for (Web) Services. The jUDDI project includes <a href="/scout/">Scout</a>. <a href="/scout/">Scout</a> is an implementation 
-	        of the JSR 93 - JavaTM API for XML Registries 1.0 (JAXR).
+	        of the JSR 93 - JavaTM API for XML Registries 1.0 (JAXR).</p>
 	  </section>
     
 	 <section name="jUDDI Features">
