@@ -52,7 +52,7 @@
 				<sendOnSuccess>true</sendOnSuccess>
 				<sendOnWarning>true</sendOnWarning>
 				<configuration>
-					<address>juddi-dev@ws.apache.org</address>
+					<address>dev@juddi.apache.org</address>
 				</configuration>
 			</notifier>
 		</notifiers>
@@ -61,9 +61,9 @@
 	<mailingLists>
 		<mailingList>
 			<name>jUDDI User List</name>
-			<subscribe>juddi-user-subscribe@apache.org</subscribe>
-			<unsubscribe>juddi-user-unsubscribe@apache.org</unsubscribe>
-			<post>juddi-user@apache.org</post>
+			<subscribe>user-subscribe@juddi.apache.org</subscribe>
+			<unsubscribe>user-unsubscribe@juddi.apache.org</unsubscribe>
+			<post>user@juddi.apache.org</post>
 			<archive>http://mail-archives.apache.org/mod_mbox/juddi-user/</archive>
 		</mailingList>
 		<mailingList>
