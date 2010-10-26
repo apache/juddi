@@ -197,7 +197,7 @@
 
     create table j3_overview_doc (
         id bigint not null,
-        overview_url varchar(255) not null,
+        overview_url varchar(255) null,
         overview_url_use_type varchar(255),
         entity_key varchar(255),
         tomodel_instance_info_id bigint,

@@ -197,7 +197,7 @@
 
     create table j3_overview_doc (
         id number(19,0) not null,
-        overview_url varchar2(255 char) not null,
+        overview_url varchar2(255 char) null,
         overview_url_use_type varchar2(255 char),
         entity_key varchar2(255 char),
         tomodel_instance_info_id number(19,0),
