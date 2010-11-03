@@ -81,11 +81,13 @@ public class FindServiceImpl extends RemoteServiceServlet implements FindService
 						EntityForLang.getName(businessInfo.getName(),lang).getValue(),
 						EntityForLang.getDescription(businessInfo.getDescription(),lang).getValue());
 				List<Service> services = new ArrayList<Service>();
-				for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
-					Service service = new Service(
-							serviceInfo.getServiceKey(),
-							EntityForLang.getName(serviceInfo.getName(), lang).getValue());
-					services.add(service);
+				if (businessInfo.getServiceInfos()!=null) {
+					for (ServiceInfo serviceInfo : businessInfo.getServiceInfos().getServiceInfo()) {
+						Service service = new Service(
+								serviceInfo.getServiceKey(),
+								EntityForLang.getName(serviceInfo.getName(), lang).getValue());
+						services.add(service);
+					}
 				}
 				business.setServices(services);
 				businesses.add(business);
