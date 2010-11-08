@@ -5,7 +5,7 @@
     <title>jUDDI Releases</title>
   </properties>
   <body>
-    <section name="Releases">    
+    <section name="Offical 3.0.x Releases">    
         
       <table>   
            
@@ -15,22 +15,27 @@
           <td><strong>Description</strong></td>
         </tr>
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0_3/">3.0.3</a></td>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/juddi/3_0_4/">3.0.4</a></td>
+          <td>Nov 6, 2010</td>
+          <td>Stable 3.0.4 Release</td>
+        </tr>
+        <tr>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/3_0_3/">3.0.3</a></td>
           <td>July 22, 2010</td>
           <td>Stable 3.0.3 Release</td>
         </tr>
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0_2/">3.0.2</a></td>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/3_0_2/">3.0.2</a></td>
           <td>May 17, 2010</td>
           <td>Stable 3.0.2 Release</td>
         </tr>
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0_1/">3.0.1</a></td>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/3_0_1/">3.0.1</a></td>
           <td>Feb 1, 2010</td>
           <td>Stable 3.0.1 Release</td>
         </tr>
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0</a></td>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/3_0/">3.0.0</a></td>
           <td>Oct 26, 2009</td>
           <td>Stable 3.0.0 Release</td>
         </tr>
@@ -40,29 +45,37 @@
           <td>Stable Release Candidate 1 for Release Version 3.0.0</td>
         </tr>
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/2_0_1/">2.0.1</a></td>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.beta</a></td>
+          <td>June 5, 2009</td>
+          <td>Stable Release for Version 3.0, with limited console support only.</td>
+        </tr>
+        <tr>
+          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.alpha</a></td>
+          <td>Februari 13, 2009</td>
+          <td>Unstable Preview Release for Version 3.0.</td>
+        </tr> 
+    </table>
+    
+    <table>
+        <tr> 
+          <td><strong>Name</strong></td>
+          <td><strong>Date</strong></td>
+          <td><strong>Description</strong></td>
+        </tr>
+        <tr>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/2_0_1/">2.0.1</a></td>
           <td>Aug 11, 2009</td>
           <td>Stable SP Release Version 2.0.1.</td>
         </tr> 
         <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/2_0/">2.0</a></td>
+          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/2_0/">2.0</a></td>
           <td>Aug 2, 2009</td>
           <td>Stable Release Version 2.0.</td>
-        </tr> 
-        <tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.beta</a></td>
-          <td>June 5, 2009</td>
-          <td>Stable Release for Version 3.0, with limited console support only.</td>
         </tr> 
         <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC7/">2.0rc7</a></td>
           <td>May 31, 2009</td>
           <td>Stable Release Candidate #7 for Version 2.0.</td>
-        </tr> 
-		<tr>
-          <td><a href="http://www.apache.org/dist/ws/juddi/3_0/">3.0.0.alpha</a></td>
-          <td>Februari 13, 2009</td>
-          <td>Unstable Preview Release for Version 3.0.</td>
         </tr> 
         <tr>
           <td><a href="http://www.apache.org/dist/ws/juddi/2_0RC6/">2.0rc6</a></td>
