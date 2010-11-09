@@ -20,6 +20,6 @@
   <subscriptionKey>uddi:www.samco.com:subscriptiontwo</subscriptionKey>
   <coveragePeriod>
     <startPoint>2009-01-01T00:00:00.000Z</startPoint>
-    <endPoint>2100-01-01T00:00:00.000Z</endPoint>
+    <endPoint>2030-01-01T00:00:00.000Z</endPoint>
   </coveragePeriod>
 </get_subscriptionResults>
