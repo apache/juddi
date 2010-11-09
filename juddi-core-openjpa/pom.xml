@@ -180,6 +180,12 @@
 			<version>10.4.2.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.2-504.jdbc3</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<profiles>
