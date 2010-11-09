@@ -3,18 +3,20 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>GWT-Maven-Archetype</display-name>	
-	
+	<display-name>GWT-Maven-Archetype</display-name>
+		
+	<!-- only set if you want to use an existing manager, rather then the one specified in the uddi.xml 
+	<context-param>
+	  <param-name>uddi.client.manager.name</param-name>
+	  <param-value>uddi-portlet-manager</param-value>
+	 </context-param>
+	  -->
 	<!-- use to run the registration clerks, make sure the UDDI registry is up and running before
 	     attempting to run the clerks
 	     -->
 	<servlet>
 		<servlet-name>UDDIClerkServlet</servlet-name>
 		<servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
-		<init-param>
-			<param-name>uddi.client.manager.name</param-name>
-			<param-value>uddi-portlet-manager</param-value>
-		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	 

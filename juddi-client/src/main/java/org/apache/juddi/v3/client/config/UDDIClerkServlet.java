@@ -31,10 +31,7 @@ public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
 	private Logger logger = Logger.getLogger(UDDIClerkServlet.class);
-	UDDIClerkManager manager = null;
-	
-	public static final String UDDI_CLIENT_MANAGER_NAME = "uddi.client.manager.name";
-	public static final String UDDI_CLIENT_CONFIG_FILE  = "uddi.client.config.file";
+	private UDDIClerkManager manager = null;
 	
 	/**
 	 * Starting the UDDIClerkManager
