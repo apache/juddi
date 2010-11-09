@@ -62,8 +62,8 @@ public class SubscriptionNotifier extends TimerTask {
 	private Timer timer = null;
 	private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
+	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
-	private static long ACCEPTABLE_LAG_TIME = 500l; //500 milliseconds
 	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:v3_service";
 	private static String SUBSCRIPTION_LISTENER = "UDDI_SubscriptionListener_Port";
 	
@@ -115,18 +115,20 @@ public class SubscriptionNotifier extends TimerTask {
 	}
 	/**
 	 * Checks to see that the event are fired on time. If they are late this may indicate that the server
-	 * is under load.
+	 * is under load. The acceptableLagTime is configurable using the "juddi.notification.acceptable.lagtime"
+	 * property and is defaulted to 500ms. A negative value means that you do not care about the lag time
+	 * and you simply always want to go do the notification work.
 	 * 
 	 * @param scheduleExecutionTime
 	 * @return true if the server is within the acceptable latency lag.
 	 */
 	private boolean firedOnTime(long scheduleExecutionTime) {
 		long lagTime = System.currentTimeMillis() - scheduleExecutionTime;
-		if (lagTime <= ACCEPTABLE_LAG_TIME) {
+		if (lagTime <= acceptableLagTime || acceptableLagTime < 0) {
 			return true;
 		} else {
 			log.warn("NotificationTimer is lagging " + lagTime + " milli seconds behind. A lag time "
-					+ "which exceeds an acceptable lagtime of " + ACCEPTABLE_LAG_TIME + "ms indicates "
+					+ "which exceeds an acceptable lagtime of " + acceptableLagTime + "ms indicates "
 					+ "that the registry server is under stress. We are therefore skipping this notification "
 					+ "cycle.");
 			return false;
