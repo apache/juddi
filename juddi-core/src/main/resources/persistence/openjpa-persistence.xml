@@ -65,7 +65,7 @@
       
       <!-- derby connection properties -->
       <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-      <property name="openjpa.ConnectionURL" value="jdbc:derby:memory/juddi-derby-test-db;create=true"/>
+      <property name="openjpa.ConnectionURL" value="jdbc:derby:memory:juddi-derby-test-db;create=true"/>
       <property name="openjpa.ConnectionUserName" value=""/>
       <property name="openjpa.ConnectionPassword" value=""/>
       
