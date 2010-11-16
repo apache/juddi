@@ -535,11 +535,13 @@ public class InquiryHelper {
 			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
 			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getBusinessKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
 		}
-		else if (body.getFromKey() != null)
+		else if (body.getFromKey() != null) {
 			InquiryHelper.getRelatedBusinesses(em, Direction.FROM_KEY, body.getFromKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
-		else if (body.getToKey() != null)
+		    result.setBusinessKey(body.getFromKey());
+		} else if (body.getToKey() != null) {
 			InquiryHelper.getRelatedBusinesses(em, Direction.TO_KEY, body.getToKey(), body.getKeyedReference(), relatedBusinessInfos, modifiedAfter, modifiedBefore);
-
+            result.setBusinessKey(body.getToKey());
+		}
 		if (relatedBusinessInfos.getRelatedBusinessInfo().size() > 0) {
 			// TODO: Do proper pagination!
 			listDesc.setActualCount(relatedBusinessInfos.getRelatedBusinessInfo().size());
