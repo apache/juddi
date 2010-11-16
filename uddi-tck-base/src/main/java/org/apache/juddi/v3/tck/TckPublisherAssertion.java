@@ -23,8 +23,12 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeletePublisherAssertions;
+import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.RelatedBusinessInfo;
+import org.uddi.api_v3.RelatedBusinessesList;
+import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>

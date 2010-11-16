@@ -103,6 +103,8 @@ public class API_060_PublisherAssertionTest {
 			tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
 			
 			tckFindEntity.findRelatedBusiness_sortByName(true);
+			tckFindEntity.findRelatedBusinessToKey(true);
+			tckFindEntity.findRelatedBusinessFromKey(true);
 			
 			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
 			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
@@ -134,6 +136,8 @@ public class API_060_PublisherAssertionTest {
 			tckAssertion.saveMaryPublisherPublisherAssertion(authInfoMary);
 			
 			tckFindEntity.findRelatedBusiness_sortByName(false);
+			tckFindEntity.findRelatedBusinessToKey(false);
+			tckFindEntity.findRelatedBusinessFromKey(false);
 			
 			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
 			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);

@@ -122,6 +122,8 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 			tckAssertion.saveJoePublisherPublisherAssertion2(authInfoJoe);
 			
 			tckFindEntity.findRelatedBusiness_sortByName(true);
+			tckFindEntity.findRelatedBusinessToKey(true);
+			tckFindEntity.findRelatedBusinessFromKey(true);
 			
 			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
 			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
@@ -153,6 +155,8 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 			tckAssertion.saveMaryPublisherPublisherAssertion(authInfoMary);
 			
 			tckFindEntity.findRelatedBusiness_sortByName(false);
+			tckFindEntity.findRelatedBusinessToKey(false);
+			tckFindEntity.findRelatedBusinessFromKey(false);
 			
 			tckAssertion.deleteJoePublisherPublisherAssertion(authInfoJoe);
 			tckAssertion.deleteJoePublisherPublisherAssertion2(authInfoJoe);
