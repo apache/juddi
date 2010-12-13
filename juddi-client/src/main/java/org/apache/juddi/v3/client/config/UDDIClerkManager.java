@@ -33,7 +33,12 @@ public class UDDIClerkManager {
 	
 	private static Logger log = Logger.getLogger(UDDIClerkManager.class);
     private ClientConfig clientConfig = null;
+    private String CONFIG_FILE = "META-INF/uddi.xml";
 	
+    public UDDIClerkManager() throws ConfigurationException {
+    	super();
+		clientConfig = new ClientConfig(CONFIG_FILE);
+    }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
 	 * @throws ConfigurationException 

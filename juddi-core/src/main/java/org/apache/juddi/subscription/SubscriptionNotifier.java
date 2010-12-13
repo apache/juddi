@@ -31,8 +31,6 @@ import javax.persistence.Query;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
@@ -43,6 +41,8 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.model.Subscription;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.v3.client.UDDIService;
+import org.apache.juddi.v3.client.UDDIServiceWSDL;
 import org.apache.log4j.Logger;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.GetSubscriptionResults;
@@ -64,8 +64,6 @@ public class SubscriptionNotifier extends TimerTask {
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
-	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:v3_service";
-	private static String SUBSCRIPTION_LISTENER = "UDDI_SubscriptionListener_Port";
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
@@ -237,10 +235,10 @@ public class SubscriptionNotifier extends TimerTask {
 			
 			if (bindingTemplate!=null) {
 				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
-					QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER);
 					try {
-						Service service = Service.create(new URL(bindingTemplate.getAccessPointUrl()), qName);
-						UDDISubscriptionListenerPortType subscriptionListenerPort = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
+						URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION_LISTENER, bindingTemplate.getAccessPointUrl());
+						UDDIService service = new UDDIService(tmpWSDLFile);
+						UDDISubscriptionListenerPortType subscriptionListenerPort =  service.getUDDISubscriptionListenerPort();
 						log.info("Sending out notification to " + bindingTemplate.getAccessPointUrl());
 						subscriptionListenerPort.notifySubscriptionListener(body);
 						//there maybe more chunks we have to send

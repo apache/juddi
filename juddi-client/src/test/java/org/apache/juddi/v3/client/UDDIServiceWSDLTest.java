@@ -1,0 +1,46 @@
+package org.apache.juddi.v3.client;
+
+import java.io.IOException;
+import java.net.URL;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class UDDIServiceWSDLTest {
+	
+	@Test()
+	public void canFindSpecWSDL() throws IOException {
+		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
+		String wsdlContent = uddiServiceWSDL.getServiceWSDLContent();
+		assertNotNull(wsdlContent);
+		//The unaltered WSDL should contain the following string
+		assertTrue(wsdlContent.contains("http://localhost/uddi/inquire/"));
+	}
+	
+	@Test(expected=IOException.class)
+	public void cannotFindSpecWSDL() throws IOException {
+		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
+		uddiServiceWSDL.setUddiV3ServiceWSDL("nonExisting.wsdl");
+		uddiServiceWSDL.getServiceWSDLContent();
+	}
+	
+	@Test()
+	public void getUpdatedWSDL() {
+		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
+		URL wsdlPath;
+		try {
+			wsdlPath = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SECURITY, "securityeurl");
+			assertNotNull(wsdlPath);
+			
+		} catch (IOException e) {
+			String tmpDir = System.getProperty("java.io.tmpdir");
+			Assert.fail("Could not create file in dir " + tmpDir);
+			e.printStackTrace();
+		}
+	}
+	
+}

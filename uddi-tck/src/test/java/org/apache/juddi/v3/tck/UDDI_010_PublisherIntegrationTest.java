@@ -36,8 +36,9 @@ public class UDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		String clazz = manager.getClientConfig().getUDDINode("default").getProxyTransport();
+		UDDIClerkManager manager = new UDDIClerkManager();
+		manager.start();
+		String clazz = manager.getClientConfig().getHomeNode().getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.start();
 		}
@@ -46,7 +47,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		String clazz = manager.getClientConfig().getUDDINode("default").getProxyTransport();
+		String clazz = manager.getClientConfig().getHomeNode().getProxyTransport();
 		if (InVMTransport.class.getName().equals(clazz)) {
 			Registry.stop();
 		}

@@ -16,16 +16,25 @@
  */
 
 
-package org.uddi.v3_service;
+package org.apache.juddi.v3.client;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
 import javax.xml.ws.WebServiceFeature;
+
+import org.apache.log4j.helpers.Loader;
+import org.uddi.v3_service.UDDICustodyTransferPortType;
+import org.uddi.v3_service.UDDIInquiryPortType;
+import org.uddi.v3_service.UDDIPublicationPortType;
+import org.uddi.v3_service.UDDIReplicationPortType;
+import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;
+import org.uddi.v3_service.UDDIValueSetCachingPortType;
+import org.uddi.v3_service.UDDIValueSetValidationPortType;
 
 
 /**
@@ -40,23 +49,18 @@ public class UDDIService
 {
 
     private final static URL UDDISERVICE_WSDL_LOCATION;
-    private final static Logger logger = Logger.getLogger(org.uddi.v3_service.UDDIService.class.getName());
-
+   
     static {
-        URL url = null;
-        try {
-            URL baseUrl;
-            baseUrl = org.uddi.v3_service.UDDIService.class.getResource(".");
-            url = new URL(baseUrl, "classpath:/uddi_v3_service.wsdl");
-        } catch (MalformedURLException e) {
-            logger.warning("Failed to create URL for the wsdl Location: 'classpath:/uddi_v3_service.wsdl', retrying as a local file");
-            logger.warning(e.getMessage());
-        }
+        URL url = Loader.getResource("uddi_v3_service.wsdl");
         UDDISERVICE_WSDL_LOCATION = url;
     }
 
     public UDDIService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
+    }
+    
+    public UDDIService(URL wsdlLocation) {
+    	super(wsdlLocation, new QName("urn:uddi-org:v3_service", "UDDI_Service"));
     }
 
     public UDDIService() {
