@@ -160,9 +160,9 @@ public class TckFindEntity
 			if (isOneSided) {
 				Assert.assertNull(bInfos);
 			} else {
-				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (bInfos == null)
 					Assert.fail("No result from find related business operation");
+				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (biList == null || biList.size() == 0)
 					Assert.fail("No result from find related business operation");
 				Set<String> keys = new HashSet<String>();
@@ -191,9 +191,9 @@ public class TckFindEntity
 			if (isOneSided) {
 				Assert.assertNull(bInfos);
 			} else {
-				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (bInfos == null)
 					Assert.fail("No result from find related business operation");
+				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (biList == null || biList.size() == 0)
 					Assert.fail("No result from find related business operation");
 				Set<String> keys = new HashSet<String>();
@@ -221,9 +221,9 @@ public class TckFindEntity
 			if (isOneSided) {
 				Assert.assertNull(bInfos);
 			} else {
-				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (bInfos == null)
 					Assert.fail("No result from find related business operation");
+				List<RelatedBusinessInfo> biList = bInfos.getRelatedBusinessInfo();
 				if (biList == null || biList.size() == 0)
 					Assert.fail("No result from find related business operation");
 				Set<String> keys = new HashSet<String>();
