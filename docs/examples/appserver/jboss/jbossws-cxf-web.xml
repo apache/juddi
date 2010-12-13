@@ -1,4 +1,4 @@
-<?xml version="2.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <!--
@@ -38,10 +38,6 @@
       <param-value>org.apache.juddi.api.impl.UDDISecurityImpl</param-value>
     </init-param>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDISecurityWS</servlet-name>
-    <url-pattern>/services/security/*</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>UDDIPublishWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -50,10 +46,6 @@
       <param-value>org.apache.juddi.api.impl.UDDIPublicationImpl</param-value>
     </init-param>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDIPublishWS</servlet-name>
-    <url-pattern>/services/publish/*</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>UDDIInquiryWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -62,10 +54,6 @@
       <param-value>org.apache.juddi.api.impl.UDDIInquiryImpl</param-value>
     </init-param>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDIInquiryWS</servlet-name>
-    <url-pattern>/services/inquiry/*</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>UDDISubscriptionWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -74,10 +62,6 @@
       <param-value>org.apache.juddi.api.impl.UDDISubscriptionImpl</param-value>
     </init-param>
   </servlet>
-    <servlet-mapping>
-    <servlet-name>UDDISubscriptionWS</servlet-name>
-    <url-pattern>/services/subscription/*</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>UDDISubscriptionListenerWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -86,10 +70,6 @@
       <param-value>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</param-value>
     </init-param>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDISubscriptionListenerWS</servlet-name>
-    <url-pattern>/services/subscription-listener/*</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>UDDICustodyTransferWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -98,11 +78,7 @@
       <param-value>org.apache.juddi.api.impl.UDDICustodyTransferImpl</param-value>
     </init-param>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>UDDICustodyTransferWS</servlet-name>
-    <url-pattern>/services/custody-transfer/*</url-pattern>
-  </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>JUDDIApiWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
     <init-param>
@@ -110,6 +86,30 @@
       <param-value>org.apache.juddi.api.impl.JUDDIApiImpl</param-value>
     </init-param>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>UDDISecurityWS</servlet-name>
+    <url-pattern>/services/security/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIPublishWS</servlet-name>
+    <url-pattern>/services/publish/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIInquiryWS</servlet-name>
+    <url-pattern>/services/inquiry/*</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>UDDISubscriptionWS</servlet-name>
+    <url-pattern>/services/subscription/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDISubscriptionListenerWS</servlet-name>
+    <url-pattern>/services/subscription-listener/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDICustodyTransferWS</servlet-name>
+    <url-pattern>/services/custody-transfer/*</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>JUDDIApiWS</servlet-name>
     <url-pattern>/services/juddi-api/*</url-pattern>

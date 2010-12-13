@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE jboss-web PUBLIC 
 	"-//JBoss//DTD Web Application 2.3V2//EN"
@@ -7,8 +7,9 @@
 <jboss-web>
 
     <resource-ref>
-        <res-ref-name>jdbc/juddiDB</res-ref-name>
-        <jndi-name>java:/juddiDB</jndi-name>
+        <res-ref-name>jdbc/JuddiDS</res-ref-name>
+        <jndi-name>java:/JuddiDS</jndi-name>
     </resource-ref>
+    <depends>jboss.jdbc:datasource=JuddiDS,service=metadata</depends>
 
 </jboss-web>
