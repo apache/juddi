@@ -21,8 +21,8 @@ package org.apache.juddi.v3.client;
  */
 
 public class ClassUtil {
-    @SuppressWarnings("unchecked")
-	public static Class forName(String name, Class caller)
+    
+	public static Class<?> forName(String name, Class<?> caller)
     	throws ClassNotFoundException
     {
 	    ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();

@@ -113,8 +113,7 @@ public class AnnotationProcessor {
 		return service;
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected BindingTemplate parseServiceBinding(Class classWithAnnotations, String lang, 
+	protected BindingTemplate parseServiceBinding(Class<?> classWithAnnotations, String lang, 
 			WebService webServiceAnnotation, Properties properties) {
 		
 		BindingTemplate bindingTemplate = null;

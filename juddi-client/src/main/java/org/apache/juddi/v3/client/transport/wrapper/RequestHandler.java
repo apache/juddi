@@ -16,6 +16,7 @@
 package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
@@ -170,13 +171,23 @@ public class RequestHandler
     		errorMessage = ite.getTargetException().getMessage() != null ? 
     				ite.getTargetException().getMessage() : "";
     	}
-    	String message = URLEncoder.encode(errorMessage);
+    	String message;
+		try {
+			message = URLEncoder.encode(errorMessage,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			message = e.getMessage();
+		}
     	log.error(message);
     	setException(message);
     }
     catch(Exception ex) // Catch any other exceptions
     {
-    	String message = URLEncoder.encode(ex.getMessage());
+    	String message;
+		try {
+			message = URLEncoder.encode(ex.getMessage(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			message = e.getMessage();
+		}
         log.error(message);
         setException(message);
     }

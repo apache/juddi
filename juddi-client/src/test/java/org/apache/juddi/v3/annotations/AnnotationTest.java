@@ -49,11 +49,10 @@ public class AnnotationTest {
 		 assertEquals("uddi:uddi.org:categorization:types2",keyedReference2.getTModelKey());
 	 }
 	 
-     @SuppressWarnings("unchecked")
 	 @Test
      public void testReadingServiceBindingAnnotation() {
 	     try {
-	    	Class classWithAnnotations = Loader.loadClass(HelloWorldMockup.class.getName());
+	    	Class<?> classWithAnnotations = Loader.loadClass(HelloWorldMockup.class.getName());
 	    	AnnotationProcessor ap = new AnnotationProcessor();
 	    	BindingTemplate bindingTemplate = ap.parseServiceBinding(classWithAnnotations, "en", null, null);
 	    	assertNotNull(bindingTemplate);
