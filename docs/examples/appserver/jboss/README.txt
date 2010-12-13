@@ -4,7 +4,7 @@ To deploy the juddiv3.war to JBoss.
 
 1. Copy the juddiv3-ds.xml datasource to the server/default/deploy directory
 
-2. If you ware using JBossWS-Native then copy the jbossws-native-web.xml to server/default/deploy/juddiv3.war/WEB-INF/web.xml
+2. If you are using JBossWS-Native then copy the jbossws-native-web.xml to server/default/deploy/juddiv3.war/WEB-INF/web.xml
 
 3. Copy the jboss-web.xml to server/default/deploy/juddiv3.war/WEB-INF/web.xml
 
