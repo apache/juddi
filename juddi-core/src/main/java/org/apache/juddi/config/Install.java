@@ -539,17 +539,20 @@ public class Install {
 						en = new JarFile(new File(paths[0])).entries();
 					}
 				}
-			
-				log.debug("Discovering the Publisher XML data files in jar: " + paths[0]);
-				while (en.hasMoreElements()) {
-					String name = en.nextElement().getName();
-					if (name.endsWith(FILE_PUBLISHER)) {
-						log.debug("Found publisher file=" + name);
-						String publisher = name.substring(basePath.length(),name.indexOf(FILE_PUBLISHER));
-				        if (! rootPublisherStr.equalsIgnoreCase(publisher)) {
-				        	publishers.add(publisher);
-				        } 
+				if (paths.length > 0) {
+					log.debug("Discovering the Publisher XML data files in jar: " + paths[0]);
+					while (en.hasMoreElements()) {
+						String name = en.nextElement().getName();
+						if (name.endsWith(FILE_PUBLISHER)) {
+							log.debug("Found publisher file=" + name);
+							String publisher = name.substring(basePath.length(),name.indexOf(FILE_PUBLISHER));
+					        if (! rootPublisherStr.equalsIgnoreCase(publisher)) {
+					        	publishers.add(publisher);
+					        } 
+						}
 					}
+				} else {
+					log.info("No custom configuration files where found in " + path);
 				}
 			} catch (IOException e) {
 				throw new ConfigurationException(e);
