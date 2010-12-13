@@ -197,6 +197,7 @@ public class InquiryHelper {
 		return getBusinessListFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
 													   Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
 				   throws DispositionReportFaultMessage {

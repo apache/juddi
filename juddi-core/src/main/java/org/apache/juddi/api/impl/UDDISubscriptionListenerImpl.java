@@ -60,6 +60,7 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 
 			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 			
+			@SuppressWarnings("rawtypes")
 			NotificationList nl = NotificationList.getInstance();
 			nl.getNotifications().add(sw.toString());
 			
