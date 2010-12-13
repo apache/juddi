@@ -35,7 +35,7 @@ public class EntityCreator {
 
 	private static Logger logger = Logger.getLogger(EntityCreator.class);
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static Object buildFromDoc(String fileName, String thePackage) throws JAXBException, IOException {
 		Object obj = null;
 		URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
@@ -51,7 +51,7 @@ public class EntityCreator {
 		return obj;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static Object buildFromString(String source, String thePackage) throws JAXBException, IOException {
 		Object obj = null;
 		JAXBContext jc = JAXBContext.newInstance(thePackage);

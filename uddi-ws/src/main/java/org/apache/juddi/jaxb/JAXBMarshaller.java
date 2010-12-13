@@ -53,8 +53,7 @@ public class JAXBMarshaller {
 		}
 	}
 	
-	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static Object unmarshallFromInputStream(InputStream inputStream, String thePackage) throws JAXBException {
 		Object obj = null;
 		if (inputStream != null) {
@@ -113,10 +112,10 @@ public class JAXBMarshaller {
 		return element;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static Object unmarshallFromElement(Element element, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContexts.get(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		@SuppressWarnings("rawtypes")
 		Object obj = ((JAXBElement) unmarshaller.unmarshal(element)).getValue();
 		return obj;
 	}
