@@ -25,6 +25,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelInfo;
+import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -82,7 +85,26 @@ public class UDDI_020_TmodelIntegrationTest {
 	@Test
 	public void testJoePublisherTmodel() {
 		tckTModel.saveJoePublisherTmodel(authInfoJoe);
+		
+		//Now if we use a finder it should be found.
+		TModelList tModelList = tckTModel.findJoeTModelDetail();
+		Assert.assertNotNull(tModelList.getTModelInfos());
+		
 		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		
+		//Even if it deleted you should still be able to access it through a getTModelDetail
+		TModelDetail detail = tckTModel.getJoePublisherTmodel(authInfoJoe);
+		Assert.assertNotNull(detail.getTModel());
+		
+		//However if we use a finder it should not be found.
+		TModelList tModelList2 = tckTModel.findJoeTModelDetail();
+		Assert.assertNull(tModelList2.getTModelInfos());
+		
+		//Make sure none of the found key generators is Joe's key generator
+		TModelList tModelList3 = tckTModel.findJoeTModelDetailByCategoryBag();
+		for (TModelInfo tModelInfo : tModelList3.getTModelInfos().getTModelInfo()) {
+			Assert.assertFalse("uddi:uddi.joepublisher.com:keygenerator".equals(tModelInfo.getTModelKey()));
+		}
 	}
 	
 	@Test

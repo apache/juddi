@@ -23,10 +23,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
 import org.junit.Assert;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 /**
@@ -41,6 +43,8 @@ public class TckTModel
     final static String MARY_PUBLISHER_TMODEL_KEY     = "uddi:uddi.marypublisher.com:keygenerator";
     final static String SAM_SYNDICATOR_TMODEL_XML     = "uddi_data/samsyndicator/tModelKeyGen.xml";
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
+    final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
+    final static String FIND_TMODEL_XML_BY_CAT        = "uddi_data/find/findTModelByCategoryBag.xml";
  
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -103,12 +107,69 @@ public class TckTModel
 		}
 	}
 	
+	public TModelDetail getTModelDetail(String authInfo, String tModelXml, String tModelKey) {
+		try {
+			//Try to get the TModel
+			GetTModelDetail tmodelDetail = new GetTModelDetail();
+			tmodelDetail.setAuthInfo(authInfo);
+			tmodelDetail.getTModelKey().add(tModelKey);
+			
+			return inquiry.getTModelDetail(tmodelDetail);
+			
+		} catch(Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+		Assert.fail("We should already have returned");
+		return null;
+	}
+	
+	public TModelList findJoeTModelDetail() {
+		try {
+			
+			FindTModel body = (FindTModel)EntityCreator.buildFromDoc(FIND_TMODEL_XML, "org.uddi.api_v3");
+			TModelList result = inquiry.findTModel(body);
+			
+			return result;
+			
+		} catch(Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+		Assert.fail("We should already have returned");
+		return null;
+	}
+	
+	public TModelList findJoeTModelDetailByCategoryBag() {
+		try {
+			
+			FindTModel body = (FindTModel)EntityCreator.buildFromDoc(FIND_TMODEL_XML_BY_CAT, "org.uddi.api_v3");
+			TModelList result = inquiry.findTModel(body);
+			
+			return result;
+			
+		} catch(Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+		Assert.fail("We should already have returned");
+		return null;
+	}
+	
 	public void saveJoePublisherTmodel(String authInfoJoe) {
 		saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
 	}
 	
 	public void deleteJoePublisherTmodel(String authInfoJoe) {
 		deleteTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public TModelDetail getJoePublisherTmodel(String authInfoJoe) {
+		return getTModelDetail(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public TModelList findJoePublisherTmodel(String authInfoJoe) {
+		return findJoeTModelDetail();
 	}
 	
 	public void saveMaryPublisherTmodel(String authInfoMary) {
