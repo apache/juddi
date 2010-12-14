@@ -128,7 +128,7 @@
 					<webXml>target/web.xml</webXml>
 				</configuration>
 			</plugin>
-		    <!--  configure the GWT-Maven plugin 
+		    <!--  configure the GWT-Maven plugin -->
 			<plugin>
 				<groupId>com.totsp.gwt</groupId>
 				<artifactId>maven-googlewebtoolkit2-plugin</artifactId>
@@ -158,7 +158,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
+			
 			<!--  Use the dependency plugin to unpack gwt-dev-PLATFORM-libs.zip -->
 			<!--
 				(this is a replacement for the old "automatic" mode - useful if you
