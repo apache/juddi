@@ -22,6 +22,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
@@ -29,7 +31,6 @@ import org.apache.juddi.portlets.client.service.FindService;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BusinessInfo;
 import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.FindBusiness;
@@ -47,7 +48,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class FindServiceImpl extends RemoteServiceServlet implements FindService {
 
 	private static final long serialVersionUID = 1939609260067702168L;
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 
 
 	public FindResponse getBusinesses(String nameStr, String[] findQualifyers) 

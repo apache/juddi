@@ -22,9 +22,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.portlets.client.service.NotifyResponse;
 import org.apache.juddi.portlets.client.service.NotifyService;
-import org.apache.log4j.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -36,7 +37,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class NotifyServiceImpl extends RemoteServiceServlet implements NotifyService {
 	
 	private static final long serialVersionUID = 6312615857204115941L;
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 	
 	public NotifyServiceImpl() {

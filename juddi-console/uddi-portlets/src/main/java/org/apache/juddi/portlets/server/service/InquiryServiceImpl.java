@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.portlets.client.model.Business;
 import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.model.ServiceBinding;
@@ -31,7 +33,6 @@ import org.apache.juddi.portlets.client.service.SearchResponse;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.i18n.EntityForLang;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
@@ -53,7 +54,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class InquiryServiceImpl extends RemoteServiceServlet implements InquiryService {
 
 	private static final long serialVersionUID = 8509627428299232161L;
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 	public InquiryServiceImpl() {
 		super();

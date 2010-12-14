@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.config.UDDIClerk;
@@ -33,7 +35,6 @@ import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.GetAuthToken;
@@ -51,21 +52,21 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		SecurityService {
 
 	private static final long serialVersionUID = -154327520485409858L;
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 
 	public SecurityResponse get(String username, String password) {
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
 		
-		log.debug("User " + username + " sending token request..");
+		logger.debug("User " + username + " sending token request..");
 		SecurityResponse response = new SecurityResponse();
 		String token = (String) session.getAttribute("AuthToken");
 		if (username==null) {
 			username = (String) session.getAttribute("UserName");
 		}
 		Principal user = request.getUserPrincipal();
-		log.debug("UserPrincipal " + user);
+		logger.debug("UserPrincipal " + user);
 		if (username==null && user!=null) {
 			username = user.getName();
 			password = "";
@@ -85,12 +86,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 					
 				    setClerkAuthenticationTokensInSession(username);
 				} catch (Exception e) {
-					log.error("Could not obtain token. " + e.getMessage(), e);
+					logger.error("Could not obtain token. " + e.getMessage(), e);
 					response.setSuccess(false);
 					response.setMessage(e.getMessage());
 					response.setErrorCode("101");
 				} catch (Throwable t) {
-					log.error("Could not obtain token. " + t.getMessage(), t);
+					logger.error("Could not obtain token. " + t.getMessage(), t);
 					response.setSuccess(false);
 					response.setMessage(t.getMessage());
 					response.setErrorCode("101");
@@ -102,12 +103,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 				response.setSuccess(true);
 				response.setResponse(token);
 			} catch (Exception e) {
-				log.error("Could not obtain token. " + e.getMessage(), e);
+				logger.error("Could not obtain token. " + e.getMessage(), e);
 				response.setSuccess(false);
 				response.setMessage(e.getMessage());
 				response.setErrorCode("101");
 			} catch (Throwable t) {
-				log.error("Could not obtain token. " + t.getMessage(), t);
+				logger.error("Could not obtain token. " + t.getMessage(), t);
 				response.setSuccess(false);
 				response.setMessage(t.getMessage());
 				response.setErrorCode("101");
@@ -127,7 +128,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		getAuthToken.setUserID(username);
 		getAuthToken.setCred(password);
 		AuthToken authToken = securityService.getAuthToken(getAuthToken);
-		log.info("User " + username + " obtained token from node=" + WebHelper.getUDDIHomeNode(servletContext).getName());
+		logger.info("User " + username + " obtained token from node=" + WebHelper.getUDDIHomeNode(servletContext).getName());
 		return authToken;
 	}
 	
@@ -148,7 +149,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 						session.setAttribute("token-" + clerk.getName(), clerkToken.getAuthInfo());
 					}
 				} catch (Exception e) {
-					log.warn("Could not obtain authToken for clerk=" + clerk.getName());
+					logger.warn("Could not obtain authToken for clerk=" + clerk.getName());
 				} 
 			}
 		}
@@ -164,9 +165,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 			DiscardAuthToken discardAuthToken = new DiscardAuthToken();
 			discardAuthToken.setAuthInfo(token);
 			securityService.discardAuthToken(discardAuthToken);
-			log.info("User " + username + " invalided token");
+			logger.info("User " + username + " invalided token");
 		} catch (Exception e) {
-			log.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 		}
 	}
 }

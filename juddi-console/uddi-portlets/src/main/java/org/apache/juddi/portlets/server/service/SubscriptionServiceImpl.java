@@ -28,6 +28,8 @@ import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
@@ -48,7 +50,6 @@ import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.apache.log4j.Logger;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.GetSubscriptionResults;
@@ -66,7 +67,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements SubscriptionService {
 
 	private static final long serialVersionUID = 6366224282740095468L;
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	private final static String UP = "Up";
 
 

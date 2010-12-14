@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
@@ -36,7 +38,6 @@ import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.apache.log4j.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 /**
@@ -47,7 +48,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIApiService {
 
 	private static final long serialVersionUID = -4079331701560975888L;
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 	
 	public JUDDIApiServiceImpl() {
