@@ -20,11 +20,12 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class TokenResolver {
 	
-	private static Logger log = Logger.getLogger(TokenResolver.class);
+	private static Log log = LogFactory.getLog(TokenResolver.class);
 	
 	public synchronized static String replaceTokens(String string, Properties properties) {
     	

@@ -23,15 +23,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.transport.TransportException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 
 public class UDDIClerkManager {
 	
-	private static Logger log = Logger.getLogger(UDDIClerkManager.class);
+	private static Log log = LogFactory.getLog(UDDIClerkManager.class);
     private ClientConfig clientConfig = null;
     private String CONFIG_FILE = "META-INF/uddi.xml";
 	

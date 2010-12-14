@@ -25,7 +25,6 @@ import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
 import javax.xml.ws.WebServiceFeature;
 
-import org.apache.log4j.helpers.Loader;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -51,7 +50,7 @@ public class UDDIService
     private final static URL UDDISERVICE_WSDL_LOCATION;
    
     static {
-        URL url = Loader.getResource("uddi_v3_service.wsdl");
+        URL url = ClassUtil.getResource("uddi_v3_service.wsdl",UDDIService.class);
         UDDISERVICE_WSDL_LOCATION = url;
     }
 

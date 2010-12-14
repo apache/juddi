@@ -27,6 +27,8 @@ import java.util.Properties;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.Node;
@@ -34,7 +36,6 @@ import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.client.transport.TransportException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessDetail;
@@ -59,7 +60,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public class UDDIClerk implements Serializable {
 
 	private static final long serialVersionUID = -8597375975981358134L;
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	protected String name;
 	protected UDDINode uddiNode;

@@ -23,6 +23,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
@@ -51,7 +53,6 @@ import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -62,7 +63,7 @@ import org.apache.log4j.Logger;
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
 
-	private static Logger log = Logger.getLogger(UDDIInquiryImpl.class);
+	private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
 
 	public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {

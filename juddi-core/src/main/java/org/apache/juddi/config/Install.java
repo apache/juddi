@@ -43,6 +43,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.mapping.MappingApiToModel;
@@ -54,8 +57,6 @@ import org.apache.juddi.v3.error.KeyUnavailableException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidateUDDIKey;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -73,7 +74,7 @@ public class Install {
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
 	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
-	public static Logger log = Logger.getLogger(Install.class);
+	public static Log log = LogFactory.getLog(Install.class);
 
 	protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 				
@@ -494,9 +495,9 @@ public class Install {
 	private static List<String> getPublishers(Configuration config) throws ConfigurationException {
 		List<String> publishers = new ArrayList<String>();
 		String basePath = JUDDI_CUSTOM_INSTALL_DATA_DIR;
-		URL url = Loader.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR);
+		URL url = ClassUtil.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR, Install.class);
 		if (url==null) {
-			url = Loader.getResource(JUDDI_INSTALL_DATA_DIR);
+			url = ClassUtil.getResource(JUDDI_INSTALL_DATA_DIR, Install.class);
 			basePath = JUDDI_INSTALL_DATA_DIR;
 		}
 		
@@ -567,12 +568,12 @@ public class Install {
 		InputStream resourceStream = null;
 		
 		// First try the custom install directory
-		URL url = Loader.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName);
+		URL url = ClassUtil.getResource(JUDDI_CUSTOM_INSTALL_DATA_DIR + fileName, Install.class);
 		if (url != null) resourceStream = url.openStream();
 		
 		// If the custom install directory doesn't exist, then use the standard install directory where the resource is guaranteed to exist.
 		if (resourceStream == null) {
-			url = Loader.getResource(JUDDI_INSTALL_DATA_DIR + fileName);
+			url = ClassUtil.getResource(JUDDI_INSTALL_DATA_DIR + fileName, Install.class);
 			if (url != null) { 
 				resourceStream = url.openStream();
 			}

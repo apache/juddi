@@ -17,14 +17,14 @@
 package org.apache.juddi.v3.client.config;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class BackGroundRegistration implements Runnable {
 
 	private UDDIClerkManager manager = null;
-	private static Logger log = Logger.getLogger(UDDIClerkManager.class);
+	private static Log log = LogFactory.getLog(BackGroundRegistration.class);
 	
-
 	public BackGroundRegistration(UDDIClerkManager manager) {
 		super();
 		this.manager = manager;

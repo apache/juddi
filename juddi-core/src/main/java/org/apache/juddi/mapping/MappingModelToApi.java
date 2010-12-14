@@ -24,6 +24,8 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.JAXBMarshaller;
@@ -32,7 +34,6 @@ import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.subscription.TypeConvertor;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.CompletionStatus;
 import org.uddi.api_v3.OperationalInfo;
 import org.uddi.sub_v3.SubscriptionFilter;
@@ -43,7 +44,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class MappingModelToApi {
-	private static Logger logger = Logger.getLogger(MappingModelToApi.class);
+	private static Log logger = LogFactory.getLog(MappingModelToApi.class);
 
 	
 	public static void mapPublisher(org.apache.juddi.model.Publisher modelPublisher, 

@@ -18,8 +18,9 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
@@ -37,7 +38,7 @@ public class TckBindingTemplate
 	final static String JOE_BINDING_XML               = "uddi_data/joepublisher/bindingTemplate.xml";
     final static String JOE_BINDING_KEY               = "uddi:uddi.joepublisher.com:bindingtwo";
   
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
     private UDDIInquiryPortType inquiry = null;
 	

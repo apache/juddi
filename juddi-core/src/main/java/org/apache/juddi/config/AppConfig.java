@@ -30,13 +30,14 @@ import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.Registry;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 
@@ -49,7 +50,7 @@ import org.uddi.api_v3.KeyedReference;
 public class AppConfig 
 {
 	private final static String JUDDI_PROPERTIES = "juddiv3.properties";
-	private Logger log = Logger.getLogger(AppConfig.class);
+	private Log log = LogFactory.getLog(AppConfig.class);
 	private Configuration config;
 	private static AppConfig instance=null;
 	
@@ -81,7 +82,7 @@ public class AppConfig
 		} else {
 			propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
 		}
-		URL url = Loader.getResource(JUDDI_PROPERTIES); 
+		URL url = ClassUtil.getResource(JUDDI_PROPERTIES, this.getClass()); 
 		log.info("Reading from properties file:  " + url);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);

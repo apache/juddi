@@ -20,6 +20,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetPublisherDetail;
@@ -32,7 +34,6 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -48,7 +49,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class API_010_PublisherTest {
     
-    private static Logger logger = Logger.getLogger(API_010_PublisherTest.class);
+    private static Log logger = LogFactory.getLog(API_010_PublisherTest.class);
     
     private JUDDIApiImpl publisher  = new JUDDIApiImpl();
 	private UDDISecurityPortType security = new UDDISecurityImpl();

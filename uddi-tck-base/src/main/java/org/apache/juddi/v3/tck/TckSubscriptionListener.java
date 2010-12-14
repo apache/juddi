@@ -21,8 +21,9 @@ import java.util.List;
 
 import javax.xml.ws.Holder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.DeleteBinding;
@@ -57,7 +58,7 @@ public class TckSubscriptionListener
 	public final static String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
     public final static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
     
-	private Logger logger = Logger.getLogger(this.getClass());
+    private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
     private UDDISubscriptionPortType subscription = null;
     private SaveService ss = null;

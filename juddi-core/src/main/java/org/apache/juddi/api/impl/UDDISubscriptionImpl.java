@@ -60,6 +60,8 @@ import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -74,15 +76,13 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.validation.ValidateSubscription;
-import org.apache.log4j.Logger;
-
 
 @WebService(serviceName="UDDISubscriptionService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISubscriptionPortType {
 
-	private static Logger logger = Logger.getLogger(UDDISubscriptionImpl.class);
+	private static Log logger = LogFactory.getLog(UDDISubscriptionImpl.class);
 
 	public static final int DEFAULT_SUBSCRIPTIONEXPIRATION_DAYS = 30;
 	public static final int DEFAULT_CHUNKEXPIRATION_MINUTES = 5;

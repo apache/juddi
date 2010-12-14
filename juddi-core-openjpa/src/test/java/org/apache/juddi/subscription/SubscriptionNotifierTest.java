@@ -22,6 +22,8 @@ import java.util.Date;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api.impl.UDDIPublicationImpl;
@@ -29,7 +31,6 @@ import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
 import org.apache.juddi.model.Subscription;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.subscription.SubscriptionNotifier;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -37,7 +38,6 @@ import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckSubscription;
 import org.apache.juddi.v3.tck.TckTModel;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -51,7 +51,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class SubscriptionNotifierTest 
 {
-	private static Logger logger = Logger.getLogger(SubscriptionNotifierTest.class);
+	private static Log logger = LogFactory.getLog(SubscriptionNotifierTest.class);
 	private static API_010_PublisherTest api010 = new API_010_PublisherTest();
 	private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());

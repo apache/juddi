@@ -26,6 +26,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.subscription.NotificationList;
@@ -33,7 +35,6 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateSubscriptionListener;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
 import org.uddi.subr_v3.NotifySubscriptionListener;
@@ -46,7 +47,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class UDDISubscriptionListenerImpl extends AuthenticatedService implements
 		UDDISubscriptionListenerPortType {
 	
-	private static Logger logger = Logger.getLogger(UDDISubscriptionListenerImpl.class);
+	private static Log logger = LogFactory.getLog(UDDISubscriptionListenerImpl.class);
 		
 	@SuppressWarnings("unchecked")
 	public DispositionReport notifySubscriptionListener(

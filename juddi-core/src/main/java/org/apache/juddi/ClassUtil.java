@@ -16,6 +16,8 @@
  */
 package org.apache.juddi;
 
+import java.net.URL;
+
 /**
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
@@ -49,4 +51,21 @@ public class ClassUtil {
 	    
 	    return Class.forName(name, true, ClassLoader.getSystemClassLoader()) ;
     }
+	
+	public static URL getResource(String name, Class<?> caller)
+	{
+		ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+		if (threadClassLoader != null) {
+
+			URL url = threadClassLoader.getResource(name);
+
+			if (url != null)
+				return url;
+
+		}
+
+		ClassLoader callerClassLoader = caller.getClassLoader();
+
+		return callerClassLoader.getResource(name);
+	}
 }

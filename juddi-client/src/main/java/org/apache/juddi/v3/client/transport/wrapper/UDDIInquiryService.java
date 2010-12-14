@@ -26,7 +26,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.helpers.Loader;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
@@ -84,7 +84,7 @@ public class UDDIInquiryService {
 	public Node inquire(Element uddiReq) throws Exception {
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
 		String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
-        Class<?> transportClass = Loader.loadClass(clazz);
+        Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
 		UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
         

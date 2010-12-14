@@ -19,11 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class UDDIClientContainer {
 
-	private static Logger log = Logger.getLogger(UDDIClientContainer.class);
+	private static Log log = LogFactory.getLog(UDDIClientContainer.class);
 	private static Map<String,UDDIClerkManager> managers = new HashMap<String, UDDIClerkManager>();
 	
 	public static UDDIClerkManager getUDDIClerkManager(String managerName) 

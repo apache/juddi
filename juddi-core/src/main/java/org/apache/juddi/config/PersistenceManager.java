@@ -22,10 +22,11 @@ import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class PersistenceManager {
-	private static Logger log = Logger.getLogger(PersistenceManager.class);
+	private static Log log = LogFactory.getLog(PersistenceManager.class);
 	
 	public static final String PERSISTENCE_UNIT_NAME = "juddiDatabase";
 

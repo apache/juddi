@@ -25,6 +25,8 @@ import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
@@ -43,7 +45,6 @@ import org.apache.juddi.v3.error.InvalidProjectionException;
 import org.apache.juddi.v3.error.KeyUnavailableException;
 import org.apache.juddi.v3.error.UserMismatchException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
@@ -67,7 +68,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class ValidatePublish extends ValidateUDDIApi {
 
-	Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	public ValidatePublish(UddiEntityPublisher publisher) {
 		super(publisher);

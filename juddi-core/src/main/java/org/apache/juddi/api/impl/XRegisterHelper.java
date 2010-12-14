@@ -16,10 +16,11 @@
  */
 package org.apache.juddi.api.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.XRegistration;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessDetail;
@@ -37,7 +38,7 @@ import org.uddi.sub_v3.SubscriptionResultsList;
  */
 public class XRegisterHelper {
 
-	private static Logger log = Logger.getLogger(XRegisterHelper.class);
+	private static Log log = LogFactory.getLog(XRegisterHelper.class);
 
 	public static void handle(Clerk fromClerk, Clerk toClerk, SubscriptionResultsList list) {
 

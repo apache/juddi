@@ -28,6 +28,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.model.UddiEntityPublisher;
@@ -35,8 +38,6 @@ import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.UnknownUserException;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 
 /**
  * This is a simple implementation of jUDDI's Authenticator interface. The credential
@@ -59,7 +60,7 @@ import org.apache.log4j.helpers.Loader;
  */
 public class XMLDocAuthenticator implements Authenticator
 {
-	private static Logger log = Logger.getLogger(AuthenticatorFactory.class);
+	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);
 	/** Container for the user credentials */
 	Hashtable<String,User> userTable;
 	
@@ -85,7 +86,7 @@ public class XMLDocAuthenticator implements Authenticator
 		userTable = new Hashtable<String,User>();
 		String usersFileName = getFilename();
 		log.info("Reading jUDDI Users File: " + usersFileName + "...");
-		InputStream stream = Loader.getResource(usersFileName).openStream();
+		InputStream stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
 		JAXBContext jaxbContext=JAXBContext.newInstance(JuddiUsers.class);
 		Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
 		JAXBElement<JuddiUsers> element = unMarshaller.unmarshal(new StreamSource(stream),JuddiUsers.class);

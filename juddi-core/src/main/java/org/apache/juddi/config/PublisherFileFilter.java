@@ -3,7 +3,9 @@ package org.apache.juddi.config;
 import java.io.File;
 import java.io.FileFilter;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * From the 
  * 
@@ -12,7 +14,7 @@ import org.apache.log4j.Logger;
  */
 public class PublisherFileFilter implements FileFilter {
 
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	public boolean accept(File file) {
 		log.debug("file=" + file);

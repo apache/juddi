@@ -19,7 +19,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This servlet is to initialize the UDDIclient on deployment and
@@ -30,7 +31,7 @@ import org.apache.log4j.Logger;
 public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
-	private Logger logger = Logger.getLogger(UDDIClerkServlet.class);
+	private Log logger = LogFactory.getLog(UDDIClerkServlet.class);
 	private UDDIClerkManager manager = null;
 	
 	/**

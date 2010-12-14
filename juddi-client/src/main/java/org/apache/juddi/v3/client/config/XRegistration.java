@@ -16,14 +16,15 @@
  */
 package org.apache.juddi.v3.client.config;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 
 public class XRegistration {
 
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	private UDDIClerk toClerk;
 	private UDDIClerk fromClerk;
 	private String entityKey;

@@ -18,9 +18,11 @@
 package org.apache.juddi.keygen;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.log4j.Logger;
 
 /**
  * Used to create the org.apache.juddi.keygen.KeyGenerator implementation
@@ -31,7 +33,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public abstract class KeyGeneratorFactory {
-	private static Logger log = Logger.getLogger(KeyGeneratorFactory.class);
+	private static Log log = LogFactory.getLog(KeyGeneratorFactory.class);
 
 	// Key Generator default implementation
 	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.DefaultKeyGenerator";
@@ -75,7 +77,7 @@ public abstract class KeyGeneratorFactory {
 		Class<?> keygenClass = null;
 		try {
 			// Use Loader to locate & load the Key Generator implementation
-			keygenClass = org.apache.log4j.helpers.Loader.loadClass(className);
+			keygenClass = ClassUtil.forName(className,KeyGeneratorFactory.class);
 			// try to instantiate the Key Generator implementation
 			keyGenerator = (KeyGenerator)keygenClass.newInstance();
 		} catch(ClassNotFoundException cnfe) {

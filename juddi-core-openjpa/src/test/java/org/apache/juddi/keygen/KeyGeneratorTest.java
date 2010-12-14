@@ -15,8 +15,9 @@
 package org.apache.juddi.keygen;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.Property;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ import org.junit.Test;
  */
 public class KeyGeneratorTest 
 {
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	
 
 	@Test() 

@@ -20,9 +20,10 @@ package org.apache.juddi.query;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.TModelBag;
 
 /**
@@ -49,7 +50,7 @@ import org.uddi.api_v3.TModelBag;
 public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 	
 	@SuppressWarnings("unused")
-	private static Logger log = Logger.getLogger(FindBindingByTModelKeyQuery.class);
+	private static Log log = LogFactory.getLog(FindBindingByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
 

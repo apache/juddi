@@ -18,8 +18,9 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.DeletePublisherAssertions;
@@ -37,7 +38,7 @@ public class TckPublisherAssertion
 	final static String JOE_ASSERT2_XML    = "uddi_data/joepublisher/publisherAssertion2.xml";
 	final static String SAM_ASSERT_XML    = "uddi_data/samsyndicator/publisherAssertion.xml";
 	
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
  
 	public TckPublisherAssertion(UDDIPublicationPortType publication) {

@@ -22,10 +22,11 @@ import java.util.Properties;
 
 import javax.jws.WebService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.TokenResolver;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
@@ -44,7 +45,7 @@ public class AnnotationProcessor {
 	private static final String KEY_VALUE="keyValue=";
 	private static final String TMODEL_KEY="tModelKey=";
 	
-	private Logger log = Logger.getLogger(AnnotationProcessor.class);
+	private Log log = LogFactory.getLog(AnnotationProcessor.class);
 	
 	public Collection<BusinessService> readServiceAnnotations(String[] classesWithAnnotations, Properties properties) {
 		Collection<BusinessService> services = new ArrayList<BusinessService>();
@@ -62,7 +63,7 @@ public class AnnotationProcessor {
 	public BusinessService readServiceAnnotations(String classWithAnnotations, Properties properties) throws ClassNotFoundException {
 		
 		BusinessService service = new BusinessService();
-		Class<?> clazz = Loader.loadClass(classWithAnnotations);
+		Class<?> clazz = ClassUtil.forName(classWithAnnotations, this.getClass());
 		UDDIService uddiService= (UDDIService) clazz.getAnnotation(UDDIService.class);
 		WebService webServiceAnnotation = (WebService) clazz.getAnnotation(WebService.class);
 		

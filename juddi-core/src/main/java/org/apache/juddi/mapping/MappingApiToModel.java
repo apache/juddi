@@ -23,10 +23,11 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.Description;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -38,7 +39,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
 public class MappingApiToModel {
-	private static Logger logger = Logger.getLogger(MappingApiToModel.class);
+	private static Log logger = LogFactory.getLog(MappingApiToModel.class);
 
 	
 	public static void mapPublisher(org.apache.juddi.api_v3.Publisher apiPublisher, 

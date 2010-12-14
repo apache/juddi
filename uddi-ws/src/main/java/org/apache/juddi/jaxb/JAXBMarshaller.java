@@ -30,14 +30,15 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class JAXBMarshaller {
-	private static Logger logger = Logger.getLogger(JAXBMarshaller.class);
+	private static Log logger = LogFactory.getLog(JAXBMarshaller.class);
 	
 	public static final String PACKAGE_UDDIAPI = "org.uddi.api_v3";
 	public static final String PACKAGE_SUBSCRIPTION = "org.uddi.sub_v3";

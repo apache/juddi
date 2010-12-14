@@ -28,6 +28,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.cryptor.Cryptor;
@@ -37,14 +39,13 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.RegistryException;
 import org.apache.juddi.v3.error.UnknownUserException;
-import org.apache.log4j.Logger;
 
 /**
  * @author Anou Manavalan
  */
 public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 	
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	/**
 	 * @throws IOException
 	 * @throws JAXBException

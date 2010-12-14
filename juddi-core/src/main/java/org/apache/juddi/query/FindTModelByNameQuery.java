@@ -18,11 +18,13 @@
 package org.apache.juddi.query;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.log4j.Logger;
 import org.uddi.api_v3.Name;
 
 /**
@@ -47,7 +49,7 @@ import org.uddi.api_v3.Name;
 public class FindTModelByNameQuery extends TModelQuery {
 
 	@SuppressWarnings("unused")
-	private static Logger log = Logger.getLogger(FindTModelByNameQuery.class);
+	private static Log log = LogFactory.getLog(FindTModelByNameQuery.class);
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, Name name, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.

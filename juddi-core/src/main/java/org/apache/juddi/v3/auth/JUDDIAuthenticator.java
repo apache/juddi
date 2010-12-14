@@ -20,13 +20,14 @@ package org.apache.juddi.v3.auth;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.apache.juddi.model.Publisher;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.UnknownUserException;
-import org.apache.log4j.Logger;
 
 /**
  * This is the default implementation of jUDDI's Authenticator interface, which
@@ -39,7 +40,7 @@ import org.apache.log4j.Logger;
  */
 public class JUDDIAuthenticator implements Authenticator {
 	
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	/**
 	 * 
 	 * @return the userId that came in on the request providing the user has a publishing account in jUDDI.

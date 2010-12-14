@@ -24,6 +24,9 @@ import javax.naming.ldap.LdapContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -33,9 +36,6 @@ import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.UnknownUserException;
-import org.apache.log4j.Logger;
-
-import org.apache.commons.configuration.ConfigurationException;
 
 /**
  * This is a implementation of jUDDI's Authenticator interface, that uses the
@@ -64,7 +64,7 @@ import org.apache.commons.configuration.ConfigurationException;
  */
 public class LdapSimpleAuthenticator implements Authenticator {
 
-    private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 
     private LdapContext ctx = null;
     private Hashtable<String, String> env = null;

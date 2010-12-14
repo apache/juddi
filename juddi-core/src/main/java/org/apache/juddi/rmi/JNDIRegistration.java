@@ -19,7 +19,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Kurt Stam (kstam@apache.org)
@@ -43,7 +44,7 @@ public class JNDIRegistration
 	private UDDICustodyTransferService custodyTransferService = null;
 	private JUDDIApiService publisherService = null;
 	
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	InitialContext context = null;
 	private static JNDIRegistration registration = null;
 	

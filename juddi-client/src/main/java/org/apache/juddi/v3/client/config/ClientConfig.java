@@ -28,7 +28,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Handles the client configuration of the uddi-client. By default it first
@@ -40,7 +41,7 @@ public class ClientConfig
 {
 	private final static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
 	public final static String DEFAULT_UDDI_CONFIG = "META-INF/uddi.xml";
-	private Logger log = Logger.getLogger(ClientConfig.class);
+	private Log log = LogFactory.getLog(ClientConfig.class);
 	private Configuration config = null;;
 	private Map<String,UDDINode> uddiNodes = null;
 	private Map<String,UDDIClerk> uddiClerks = null;

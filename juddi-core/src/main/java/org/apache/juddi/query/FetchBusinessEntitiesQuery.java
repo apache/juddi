@@ -21,9 +21,10 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.log4j.Logger;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.api_v3.ListDescription;
 
@@ -40,7 +41,7 @@ import org.uddi.api_v3.ListDescription;
  */
 public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 
-	private static Logger log = Logger.getLogger(FetchBusinessEntitiesQuery.class);
+	private static Log log = LogFactory.getLog(FetchBusinessEntitiesQuery.class);
 
 	protected static String selectSQL;
 

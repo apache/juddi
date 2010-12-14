@@ -21,6 +21,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
@@ -33,7 +35,6 @@ import org.apache.juddi.v3.auth.XMLDocAuthenticator;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.UnknownUserException;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ import org.junit.Test;
  */
 public class AuthenticatorTest 
 {
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	/**
 	 * The DefaultAuthenticator is basically a pass-through.
 	 * @throws ConfigurationException

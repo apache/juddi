@@ -5,13 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.Logger;
 
 public class WebHelper {
 	
-	public static Logger logger = Logger.getLogger(WebHelper.class);
+	public static Log logger = LogFactory.getLog(WebHelper.class);
 	public static final String UDDI_CLIENT_MANAGER_NAME  = "uddi.client.manager.name";
 	public static final String UDDI_CLIENT_CONFIG_FILE    = "uddi.client.config.file";
 	public static final String JUDDI_CLIENT_MANAGER_NAME  = "juddi.client.manager.name";

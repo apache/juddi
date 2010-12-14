@@ -21,8 +21,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.query.util.DynamicQuery;
-import org.apache.log4j.Logger;
 
 /**
  * 
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 public class DeletePublisherAssertionByBusinessQuery extends PublisherAssertionQuery {
 
-	private static Logger log = Logger.getLogger(DeletePublisherAssertionByBusinessQuery.class);
+	private static Log log = LogFactory.getLog(DeletePublisherAssertionByBusinessQuery.class);
 
 	public static int delete(EntityManager em, List<?> businessKeys) {
 		if ((businessKeys == null) || (businessKeys.size() == 0))

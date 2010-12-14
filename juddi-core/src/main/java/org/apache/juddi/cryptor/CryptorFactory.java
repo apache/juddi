@@ -18,9 +18,11 @@
 package org.apache.juddi.cryptor;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.log4j.Logger;
 
 /**
  * Used to create the org.apache.juddi.cryptor.Cryptor implementation
@@ -32,9 +34,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public abstract class CryptorFactory {
-	private static Logger log = Logger.getLogger(CryptorFactory.class);
-
-	
+	private static Log log = LogFactory.getLog(CryptorFactory.class);
 
 	// the shared Cryptor instance
 	private static Cryptor cryptor = null;
@@ -75,7 +75,7 @@ public abstract class CryptorFactory {
 		Class<?> cryptorClass = null;
 		try {
 			// Use Loader to locate & load the Cryptor implementation
-			cryptorClass = org.apache.log4j.helpers.Loader.loadClass(className);
+			cryptorClass = ClassUtil.forName(className, CryptorFactory.class);
 		}
 		catch(ClassNotFoundException e) {
 			log.error("The specified Cryptor class '" + className + "' was not found in classpath.");

@@ -17,11 +17,12 @@ package org.apache.juddi.api.impl;
 import java.rmi.RemoteException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -36,7 +37,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class API_020_TmodelTest {
 	
 	private static TckTModel tckTModel                = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static Logger logger                      = Logger.getLogger(API_020_TmodelTest.class);
+	private static Log logger                         = LogFactory.getLog(API_020_TmodelTest.class);
 	private static API_010_PublisherTest api010       = new API_010_PublisherTest();
 	private static String authInfoJoe                 = null;
 	private static String authInfoSam                 = null;

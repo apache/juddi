@@ -20,8 +20,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
-import org.apache.log4j.Logger;
 
 /**
  * This servlet is ONLY used to initialize the jUDDI webapp on startup and
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
 public class RegistryServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 4653310291840334765L;
-	private static Logger logger = Logger.getLogger(RegistryServlet.class);
+	private static Log logger = LogFactory.getLog(RegistryServlet.class);
 
 	/**
 	 * Create the shared instance of jUDDI's Registry class and call it's

@@ -18,10 +18,10 @@ package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.util.HashMap;
 
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -60,7 +60,7 @@ public class UDDISecurityService {
 	{
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
 		String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
-        Class<?> transportClass = Loader.loadClass(clazz);
+        Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
         Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
 	    UDDISecurityPortType security = transport.getUDDISecurityService();
 		

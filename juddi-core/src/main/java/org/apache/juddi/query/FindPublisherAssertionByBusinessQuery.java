@@ -18,12 +18,14 @@
 package org.apache.juddi.query;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.apache.juddi.query.util.DynamicQuery;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.model.PublisherAssertion;
+import org.apache.juddi.query.util.DynamicQuery;
 import org.uddi.api_v3.CompletionStatus;
 
 /**
@@ -34,7 +36,7 @@ import org.uddi.api_v3.CompletionStatus;
  */
 public class FindPublisherAssertionByBusinessQuery extends PublisherAssertionQuery {
 
-	private static Logger log = Logger.getLogger(FindPublisherAssertionByBusinessQuery.class);
+	private static Log log = LogFactory.getLog(FindPublisherAssertionByBusinessQuery.class);
 
 	@SuppressWarnings("unchecked")
 	public static List<PublisherAssertion> select(EntityManager em, List<?> businessKeys, CompletionStatus completionStatus) {

@@ -22,8 +22,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
@@ -71,7 +72,7 @@ public class TckFindEntity
 	final static String FIND_BINDING_XML              = "uddi_data/find/findBinding1.xml";
 	final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
    
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
 	UDDIInquiryPortType inquiry =null;
 	
 	public TckFindEntity(UDDIInquiryPortType inquiry) {

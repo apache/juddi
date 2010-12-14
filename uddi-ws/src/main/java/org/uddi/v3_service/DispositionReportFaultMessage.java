@@ -26,7 +26,8 @@ import javax.xml.soap.Detail;
 import javax.xml.ws.WebFault;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.DispositionReport;
 
 
@@ -41,7 +42,7 @@ public class DispositionReportFaultMessage
     extends RemoteException
 {
 	private static final long serialVersionUID = -3901821587689888649L;
-	private static transient Logger log = Logger.getLogger(DispositionReportFaultMessage.class);
+	private static transient Log log = LogFactory.getLog(DispositionReportFaultMessage.class);
 	/**
      * Java type that goes as soapenv:Fault detail element.
      * 

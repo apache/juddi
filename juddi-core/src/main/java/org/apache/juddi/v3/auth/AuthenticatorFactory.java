@@ -18,10 +18,11 @@
 package org.apache.juddi.v3.auth;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class AuthenticatorFactory {
-	private static Logger log = Logger.getLogger(AuthenticatorFactory.class);
+	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);
 
 	// Default authenticator implementation
 	private static final String DEFAULT_IMPL = "org.apache.juddi.v3.auth.JUDDIAuthenticator";

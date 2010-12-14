@@ -45,7 +45,7 @@ public class NotifyServlet extends HttpServlet
 		StringBuffer sb = new StringBuffer();
 
 		Buffer nl = NotificationList.getInstance().getNotifications();
-		Iterator it = nl.iterator();
+		Iterator<String> it = nl.iterator();
 		while (it.hasNext()) {
 			String notification = (String) it.next();		
 			sb.append(notification);

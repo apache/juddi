@@ -3,16 +3,17 @@ package org.apache.juddi;
 import javax.naming.NamingException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.rmi.JNDIRegistration;
 import org.apache.juddi.subscription.SubscriptionNotifier;
-import org.apache.log4j.Logger;
 
 public class Registry {
 	
 	private static Registry registry = null;
-	private static Logger log = Logger.getLogger(Registry.class);
+	private static Log log = LogFactory.getLog(Registry.class);
 	private static SubscriptionNotifier subscriptionNotifier = null;
 	/**
 	 * Singleton.

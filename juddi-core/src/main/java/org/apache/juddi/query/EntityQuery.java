@@ -24,17 +24,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.ListDescription;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.query.util.DynamicQuery;
-import org.apache.log4j.Logger;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public abstract class EntityQuery {
-	private static Logger log = Logger.getLogger(EntityQuery.class);
+	private static Log log = LogFactory.getLog(EntityQuery.class);
 
 	public static final String KEY_NAME = "entityKey";
 

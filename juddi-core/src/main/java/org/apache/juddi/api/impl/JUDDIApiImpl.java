@@ -30,6 +30,9 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.ClassUtil;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
@@ -63,8 +66,6 @@ import org.apache.juddi.validation.ValidateClientSubscriptionInfo;
 import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.Loader;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -80,7 +81,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 			targetNamespace = "urn:juddi-apache-org:v3_service")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	/**
 	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
@@ -546,7 +547,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 				Clerk fromClerk = clientSubscriptionInfoMap.get(subscriptionKey).getFromClerk();
 				Clerk toClerk = clientSubscriptionInfoMap.get(subscriptionKey).getToClerk();
 				String clazz = fromClerk.getNode().getProxyTransport();
-				Class<?> transportClass = Loader.loadClass(clazz);
+				Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
 				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(fromClerk.getNode().getName()); 
 				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(fromClerk.getNode().getSubscriptionUrl());
 				SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResult);

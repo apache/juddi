@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.juddi.api_v3.Node;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
-import org.apache.log4j.helpers.Loader;
 
 public class UDDINode implements Serializable {
 
@@ -100,7 +100,7 @@ public class UDDINode implements Serializable {
 		if (transport==null) {
 			try {
 				String clazz = getProxyTransport();
-				Class<?> transportClass = Loader.loadClass(clazz);
+				Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
 				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,name);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(),e);

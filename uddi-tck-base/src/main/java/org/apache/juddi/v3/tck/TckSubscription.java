@@ -19,8 +19,9 @@ import java.util.List;
 
 import javax.xml.ws.Holder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
@@ -63,8 +64,7 @@ public class TckSubscription
     final static String SAM_SUBSCRIPTION3_KEY = "uddi:www.samco.com:subscriptionthree";
 	final static String SAM_SUBSCRIPTIONRESULTS3_XML = "uddi_data/subscription/subscriptionresults4.xml";
 	
-	
-	private Logger logger = Logger.getLogger(this.getClass());
+	private Log logger = LogFactory.getLog(this.getClass());
     UDDISubscriptionPortType subscription = null;
 	UDDISecurityPortType security = null;
 	

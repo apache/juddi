@@ -29,11 +29,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class EntityCreator {
 
-	private static Logger logger = Logger.getLogger(EntityCreator.class);
+	private static Log logger = LogFactory.getLog(EntityCreator.class);
 	
 	@SuppressWarnings("rawtypes")
 	public static Object buildFromDoc(String fileName, String thePackage) throws JAXBException, IOException {

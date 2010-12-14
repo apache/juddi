@@ -10,8 +10,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.helpers.Loader;
-
 public class UDDIServiceWSDL {
 	
 	/** The WSDLEnpoint Types as defined in the UDDI v3 specification. */
@@ -94,14 +92,14 @@ public class UDDIServiceWSDL {
 	 */
 	protected String getServiceWSDLContent() throws IOException 
 	{
-		URL serviceWSDLURL = Loader.getResource(getUddiV3ServiceWSDL());
+		URL serviceWSDLURL = ClassUtil.getResource(getUddiV3ServiceWSDL(), this.getClass());
 		if (serviceWSDLURL==null) throw new IOException("Could not locate resource " + getUddiV3ServiceWSDL());
 	    return read(serviceWSDLURL);
 	}
 	
 	private void copyImportFiles() throws IOException
 	{
-		URL serviceWSDLURL = Loader.getResource(getUddiV3ServiceWSDL());
+		URL serviceWSDLURL = ClassUtil.getResource(getUddiV3ServiceWSDL(),this.getClass());
 		if (serviceWSDLURL==null) throw new IOException("Could not locate resource " + getUddiV3ServiceWSDL());
 		int endIndex = 0;
     	if (getUddiV3ServiceWSDL().contains(File.separator)) {
@@ -110,7 +108,7 @@ public class UDDIServiceWSDL {
 		String srcDir  = getUddiV3ServiceWSDL().substring(0,endIndex);
 		String destDir = System.getProperty("java.io.tmpdir");
 		for (String importFileName : imports) {
-			URL url = Loader.getResource(srcDir + importFileName);
+			URL url = ClassUtil.getResource(srcDir + importFileName, this.getClass());
 			String content = read(url);
 			File importFile = new File(destDir + File.separator + importFileName);
 		    Writer out = new OutputStreamWriter(new FileOutputStream(importFile));

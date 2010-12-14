@@ -16,7 +16,7 @@ package org.apache.juddi.v3.annotations;
 
 import java.util.Properties;
 
-import org.apache.log4j.helpers.Loader;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -52,7 +52,7 @@ public class AnnotationTest {
 	 @Test
      public void testReadingServiceBindingAnnotation() {
 	     try {
-	    	Class<?> classWithAnnotations = Loader.loadClass(HelloWorldMockup.class.getName());
+	    	Class<?> classWithAnnotations = ClassUtil.forName(HelloWorldMockup.class.getName(), this.getClass());
 	    	AnnotationProcessor ap = new AnnotationProcessor();
 	    	BindingTemplate bindingTemplate = ap.parseServiceBinding(classWithAnnotations, "en", null, null);
 	    	assertNotNull(bindingTemplate);

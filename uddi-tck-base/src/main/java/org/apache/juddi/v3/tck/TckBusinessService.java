@@ -18,8 +18,9 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteService;
@@ -45,7 +46,7 @@ public class TckBusinessService
     final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
     final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
    
-	private Logger logger = Logger.getLogger(this.getClass());
+    private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
     private UDDIInquiryPortType inquiry = null;
 	

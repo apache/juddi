@@ -18,8 +18,9 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.GetTModelDetail;
@@ -41,8 +42,7 @@ public class TckTModel
     final static String SAM_SYNDICATOR_TMODEL_XML     = "uddi_data/samsyndicator/tModelKeyGen.xml";
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
  
-    
-	private Logger logger = Logger.getLogger(this.getClass());
+    private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
     private UDDIInquiryPortType inquiry = null;
 	

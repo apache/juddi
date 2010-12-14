@@ -33,6 +33,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
 import org.apache.juddi.api_v3.AccessPointType;
@@ -43,7 +45,6 @@ import org.apache.juddi.model.Subscription;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.UDDIServiceWSDL;
-import org.apache.log4j.Logger;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
@@ -58,7 +59,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  */
 public class SubscriptionNotifier extends TimerTask {
 
-	private Logger log = Logger.getLogger(this.getClass());
+	private Log log = LogFactory.getLog(this.getClass());
 	private Timer timer = null;
 	private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
