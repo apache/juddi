@@ -21,11 +21,11 @@ public class TckPublisher
 {	
 	public final static String JOE_PUBLISHER_XML  = "uddi_data/joepublisher/publisher.xml";
     public final static String JOE_PUBLISHER_ID   = "joepublisher";
-    public final static String JOE_PUBLISHER_CRED = "";
+    public final static String JOE_PUBLISHER_CRED = "joepublisher";
 	public final static String SAM_SYNDICATOR_XML = "uddi_data/samsyndicator/publisher.xml";
     public final static String SAM_SYNDICATOR_ID  = "ssyndicator";
-    public final static String SAM_SYNDICATOR_CRED= "";
+    public final static String SAM_SYNDICATOR_CRED= "ssyndicator";
     public final static String MARY_PUBLISHER_XML  = "uddi_data/marypublisher/publisher.xml";
     public final static String MARY_PUBLISHER_ID   = "marypublisher";
-    public final static String MARY_PUBLISHER_CRED = "";
+    public final static String MARY_PUBLISHER_CRED = "marypublisher";
 }

@@ -55,7 +55,7 @@ public class UDDI_001_UDDIServiceTest {
 	    assertNotNull(port);
 	    GetAuthToken body = new GetAuthToken();
 	    body.setUserID("root");
-	    body.setCred("");
+	    body.setCred("root");
 	    AuthToken token = port.getAuthToken(body);
 	    System.out.println("token=" + token);
 	}

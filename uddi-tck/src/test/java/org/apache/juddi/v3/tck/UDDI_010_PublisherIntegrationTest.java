@@ -64,7 +64,7 @@ public class UDDI_010_PublisherIntegrationTest {
 	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
 	        	 GetAuthToken getAuthToken = new GetAuthToken();
 	        	 getAuthToken.setUserID("root");
-	        	 getAuthToken.setCred("");
+	        	 getAuthToken.setCred("root");
 	        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
 	        	 System.out.println(authToken.getAuthInfo());
 	        	 Assert.assertNotNull(authToken);
