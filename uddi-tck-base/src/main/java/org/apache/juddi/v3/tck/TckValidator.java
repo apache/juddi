@@ -303,7 +303,7 @@ public class TckValidator {
 
 		OverviewURL url1 = (OverviewURL) doc1.getOverviewURL();
 		OverviewURL url2 = (OverviewURL) doc2.getOverviewURL();
-		if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().equals(url2.getValue())) {
+		if (url1.getUseType().equals(url2.getUseType()) && url1.getValue().trim().equals(url2.getValue().trim())) {
 			urlMatch=true;
 		}
 
