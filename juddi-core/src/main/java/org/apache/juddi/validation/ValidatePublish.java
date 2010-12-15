@@ -522,14 +522,20 @@ public class ValidatePublish extends ValidateUDDIApi {
 						businessService.setBusinessKey(parentKey);
 					}
 					
-					// If existing service trying to be saved has a different parent key, then we have a problem
-					// TODO: moving services is allowed according to spec?
-					if (!parentKey.equalsIgnoreCase(bs.getBusinessEntity().getEntityKey()))
-						throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getEntityKey()));
-					
 					// Make sure publisher owns this entity.
 					if (!publisher.isOwner((UddiEntity)obj))
 						throw new UserMismatchException(new ErrorMessage("errors.usermismatch.InvalidOwner", entityKey));
+					
+					// If existing service trying to be saved has a different parent key, then we have a problem
+					if (!parentKey.equalsIgnoreCase(bs.getBusinessEntity().getEntityKey())) {
+						// if both businesses are owned by this publisher then we allow it.
+						// we already check the current business is owned, lets see if the old one is too
+						if (!publisher.isOwner(bs.getBusinessEntity())) {
+							throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.businessservice.ParentMismatch", parentKey + ", " + bs.getBusinessEntity().getEntityKey()));
+						} else {
+							if (log.isDebugEnabled()) log.debug("Services moved from business " + bs.getBusinessEntity() + " to " + businessService.getBusinessKey());
+						}
+					}
 					
 				}
 				else {

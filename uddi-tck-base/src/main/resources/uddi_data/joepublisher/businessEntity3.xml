@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */ -->
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:businessthree.com">
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:uddi.joepublisher.com:businessthree.com">
   <discoveryURLs>
     <discoveryURL useType="home">http://www.businessthree.com</discoveryURL>
     <discoveryURL useType="serviceList">http://www.businessthree.com/services</discoveryURL>
@@ -37,18 +37,4 @@
       </address>
     </contact>
   </contacts>
-  <businessServices>
-  </businessServices>
-  <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="jazz" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues-rock" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
-    </keyedReferenceGroup>
-  </categoryBag>
-  <identifierBag>
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
-  </identifierBag>
 </businessEntity>

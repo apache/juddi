@@ -17,6 +17,7 @@ package org.apache.juddi.v3.tck;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -39,6 +40,9 @@ public class TckBusiness
 {
 	final static String JOE_BUSINESS_XML        = "uddi_data/joepublisher/businessEntity.xml";
     final static String JOE_BUSINESS_KEY        = "uddi:uddi.joepublisher.com:businessone";
+    final static String JOE_BUSINESS3_XML       = "uddi_data/joepublisher/businessEntity3.xml";
+    final static String JOE_BUSINESS3_KEY       = "uddi:uddi.joepublisher.com:businessthree.com";
+    final static String JOE_BUSINESS_MOVE_XML   = "uddi_data/joepublisher/moveBusinessService1to3.xml";
     final static String MARY_BUSINESS_XML       = "uddi_data/marypublisher/businessEntity.xml";
     final static String MARY_BUSINESS_KEY       = "uddi:uddi.marypublisher.com:marybusinessone";
     final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
@@ -80,6 +84,14 @@ public class TckBusiness
 		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
+	public void saveJoePublisherBusiness3(String authInfoJoe) {
+		saveBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
+    }
+	
+	public void saveJoePublisherBusiness1to3(String authInfoJoe) {
+		saveBusiness(authInfoJoe, JOE_BUSINESS_MOVE_XML, JOE_BUSINESS3_KEY);
+    }
+	
 	public void saveMaryPublisherBusiness(String authInfoMary) {
 		saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
     }
@@ -96,6 +108,10 @@ public class TckBusiness
     	deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
     }
 	
+	public void deleteJoePublisherBusiness3(String authInfoJoe) {
+    	deleteBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
+    }
+	
 	public void deleteMaryPublisherBusiness(String authInfoMary) {
     	deleteBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
     }
@@ -103,6 +119,14 @@ public class TckBusiness
 	public void deleteJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
     	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
     }
+	
+	public void checkServicesBusinessOne(int expectedNumberOfServices) {
+		checkNumberOfServices(JOE_BUSINESS_KEY,expectedNumberOfServices);
+	}
+	
+	public void checkServicesBusinessThree(int expectedNumberOfServices) {
+		checkNumberOfServices(JOE_BUSINESS3_KEY,expectedNumberOfServices);
+	}
 	 
 	public void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
 		try {			
@@ -119,6 +143,26 @@ public class TckBusiness
 			}
 			
 		} catch(Throwable e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
+	}
+	
+	public void checkNumberOfServices(String businessKey, int expectedServices) {
+		
+		try {
+			GetBusinessDetail gb = new GetBusinessDetail();
+			gb.getBusinessKey().add(businessKey);
+			BusinessDetail bd;
+			bd = inquiry.getBusinessDetail(gb);
+			List<BusinessEntity> beOutList = bd.getBusinessEntity();
+			BusinessEntity beOut = beOutList.get(0);
+			if (expectedServices > 0) {
+				assertEquals(expectedServices, beOut.getBusinessServices().getBusinessService().size());
+			} else {
+				Assert.assertNull(beOut.getBusinessServices());
+			}
+		} catch (RemoteException e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");
 		}
