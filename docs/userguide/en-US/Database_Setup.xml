@@ -146,6 +146,53 @@
 		</para>
         
     </section>
+    
+     <!-- section: Switch to HSQL -->
+    <section id="sect-switch_to_hsql">
+        <title>Switch to HSQL</title>
+
+		<para>First make sure you have a running hsqlb. For a standalone server startup use:</para>
+		<programlisting>
+		java -cp hsqldb.jar org.hsqldb.server.Server --port 1747 --database.0 file:juddi --dbname.0 juddi
+		</programlisting>
+		<para>Next, connect the client manager to this instance using:</para>
+		<programlisting>
+		java -classpath hsqldb.jar org.hsqldb.util.DatabaseManagerSwing --driver org.hsqldb.jdbcDriver --url jdbc:hsqldb:hsql://localhost:1747/juddi  -user sa
+		</programlisting>
+		<para>and create the juddi user:</para>
+		<programlisting language="SQL" >
+		CREATE USER JUDDI PASSWORD "password"  ADMIN;
+		CREATE SCHEMA JUDDI AUTHORIZATION JUDDI;
+		SET DATABASE DEFAULT INITIAL SCHEMA JUDDI;
+		ALTER USER juddi set initial schema juddi;
+		</programlisting>
+		<para>From now on, one can connect as JUDDI user to that database and the database is now ready to go.</para>
+		
+        <para>
+        To switch over to HSQL you need to add the hsql driver (i.e. The
+        <filename>hsqldb.jar</filename>) to the classpath and you will
+        need to edit the <filename>persistence.xml</filename>
+        </para>
+
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_9.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <para>
+        and the datasource. For tomcat you the <filename>context.xml</filename> should
+        look something like
+        </para>
+    
+        <programlisting language="XML" ><xi:include href="extras/Database_Setup_10.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
+
+        <warning>
+            <para>
+            Tomcat copies the <filename>context.xml</filename> to <filename>conf/CATALINA/localhost/juddiv3.xml</filename>, and if
+            you update the <filename>context.xml</filename> it may not update this copy. You should simply
+            delete the <filename>juddiv3.xml</filename> file after updating the <filename>context.xml</filename>.
+            </para>
+        </warning>
+
+    </section>
+    
     <!-- section: Switch to &lt;other db&gt; -->
     <section id="sect-switch_to_other_DB">
         <title>Switch to &lt;other db&gt;</title>
