@@ -151,7 +151,7 @@
     <section id="sect-switch_to_hsql">
         <title>Switch to HSQL</title>
 
-		<para>First make sure you have a running hsqlb. For a standalone server startup use:</para>
+		<para>First make sure you have a running hsqldb. For a standalone server startup use:</para>
 		<programlisting>
 		java -cp hsqldb.jar org.hsqldb.server.Server --port 1747 --database.0 file:juddi --dbname.0 juddi
 		</programlisting>
