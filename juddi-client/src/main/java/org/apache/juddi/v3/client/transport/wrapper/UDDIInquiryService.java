@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2010 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.juddi.v3.client.ClassUtil;
-import org.apache.juddi.v3.client.transport.Transport;
-
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.FindBinding;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -69,40 +68,43 @@ public class UDDIInquiryService {
 		operations.put("get_operationalInfo", new Handler("getOperationalInfo", GetOperationalInfo.class));
 	}
 
-	
+
 
 	//Verify that the appropriate endpoint was targeted for
 	// this service request.  The validateRequest method will
 	// throw an UnsupportedOperationException if anything's amiss.
 	public void validateRequest(String operation)
-			throws UnsupportedOperationException
+	    throws UnsupportedOperationException
 	{
 	    if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 	}
-	
+
 	public Node inquire(Element uddiReq) throws Exception {
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
-        Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
-        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
-		UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        
+	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+	    String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+            Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
+            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+            UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+
 	    //new RequestHandler on it's own thread
 	    RequestHandler requestHandler = new RequestHandler();
 	    requestHandler.setPortType(inquiry);
-	      
+
 	    String operation = requestHandler.getOperation(uddiReq);
-		Handler opHandler = operations.get(operation);
+	    Handler opHandler = operations.get(operation);
+	    if (opHandler == null) {
+	        throw new IllegalArgumentException("Operation not found: " + operation);
+	    }
 	    requestHandler.setMethodName(opHandler.getMethodName());
-		requestHandler.setOperationClass(opHandler.getParameter());
+	    requestHandler.setOperationClass(opHandler.getParameter());
 
 	    @SuppressWarnings("unused")
-		String version   = requestHandler.getVersion(uddiReq,operation);
+	    String version   = requestHandler.getVersion(uddiReq,operation);
 	    validateRequest(operation);
 	    return requestHandler.invoke(uddiReq);
-	}	
-	
+	}
+
 	public String inquire(UDDIInquiryPortType inquiry, String request) throws Exception {
 	    java.io.InputStream sbis = new ByteArrayInputStream(request.getBytes());
 	    javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
@@ -110,20 +112,24 @@ public class UDDIInquiryService {
 	    dbf.setValidating(false);
 	    DocumentBuilder db = dbf.newDocumentBuilder();
 	    Document doc = db.parse(sbis);
-		Element reqElem = doc.getDocumentElement();
-			
-		RequestHandler requestHandler = new RequestHandler();
-		requestHandler.setPortType(inquiry);
-		
-		String operation = reqElem.getTagName().toString();
-		Handler opHandler = operations.get(operation);
+	    Element reqElem = doc.getDocumentElement();
+
+	    RequestHandler requestHandler = new RequestHandler();
+	    requestHandler.setPortType(inquiry);
+
+	    String operation = reqElem.getTagName().toString();
+	    Handler opHandler = operations.get(operation);
+            if (opHandler == null) {
+                throw new IllegalArgumentException("Operation not found: " + operation);
+            }
+
 	    requestHandler.setMethodName(opHandler.getMethodName());
-		requestHandler.setOperationClass(opHandler.getParameter());
+	    requestHandler.setOperationClass(opHandler.getParameter());
 
 	    Node n = requestHandler.invoke(reqElem);
-	    
+
 	    StringWriter sw = new StringWriter();
-        Transformer t = TransformerFactory.newInstance().newTransformer();
+            Transformer t = TransformerFactory.newInstance().newTransformer();
 	    t.transform(new DOMSource(n), new StreamResult(sw));
 	    return sw.toString();
 	}

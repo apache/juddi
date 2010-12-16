@@ -1,12 +1,12 @@
 /*
  * Copyright 2001-2010 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ public class UDDIPublicationService {
 
 	private HashMap<String, Handler> operations = null;
 
-	
+
 	  public UDDIPublicationService() {
 		super();
 		operations = new HashMap<String, Handler>();
@@ -82,24 +82,28 @@ public class UDDIPublicationService {
 
 	public Node publish(Element uddiReq) throws Exception
 	{
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
-        Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-        Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
-		UDDIPublicationPortType publish = transport.getUDDIPublishService();
+	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
+	    String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+            Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
+            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+            UDDIPublicationPortType publish = transport.getUDDIPublishService();
 
 	    //new RequestHandler on it's own thread
 	    RequestHandler requestHandler = new RequestHandler();
 	    requestHandler.setPortType(publish);
 	    String operation = requestHandler.getOperation(uddiReq);
-		Handler opHandler = operations.get(operation);
+	    Handler opHandler = operations.get(operation);
+	    if (opHandler == null) {
+	        throw new IllegalArgumentException("Operation not found : " + operation);
+	    }
+
 	    requestHandler.setMethodName(opHandler.getMethodName());
-		requestHandler.setOperationClass(opHandler.getParameter());
-		  
-		@SuppressWarnings("unused")
+	    requestHandler.setOperationClass(opHandler.getParameter());
+
+	    @SuppressWarnings("unused")
 	    String version   = requestHandler.getVersion(uddiReq, operation);
 	    validateRequest(operation);
-	    
+
 	    Node temp = requestHandler.invoke(uddiReq);
 	    if (requestHandler.getException()!=null) {
 	    	throw new Exception(requestHandler.getException());
