@@ -785,7 +785,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		// TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
 		
-		if (tModel.getName() == null)
+		if (tModel.getName() == null || tModel.getName().equals(""))
 			throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NoName"));
 		
 		validateCategoryBag(tModel.getCategoryBag(), config);
