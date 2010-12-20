@@ -41,10 +41,10 @@ public class UDDIClientContainer {
 			log.debug("Deprecated, please specify a manager name");
 			return managers.values().iterator().next();
 		} else {
-			log.debug("Deprecated, please specify a manager name");
+			log.info("Deprecated, please specify a manager name");
 			UDDIClerkManager manager = new UDDIClerkManager(null);
-			manager.start();
 			addClerkManager(manager);
+			manager.start();
 			return manager;
 		}
 	}
