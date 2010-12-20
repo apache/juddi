@@ -19,6 +19,10 @@ package org.apache.juddi.query.util;
 
 import java.util.List;
 
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.UnsupportedException;
+import org.uddi.v3_service.DispositionReportFaultMessage;
+
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
@@ -122,7 +126,8 @@ public class FindQualifiers {
 		
 	}
 
-	public void mapApiFindQualifiers(org.uddi.api_v3.FindQualifiers apiFindQualifiers) {
+	public void mapApiFindQualifiers(org.uddi.api_v3.FindQualifiers apiFindQualifiers) 
+			throws DispositionReportFaultMessage {
 		if (apiFindQualifiers == null)
 			return;
 		
@@ -173,6 +178,8 @@ public class FindQualifiers {
 					this.setSuppressProjectedServices(true);
 				else if (fq.equalsIgnoreCase(UTS_10) || fq.equalsIgnoreCase(UTS_10_TMODEL))
 					this.setUts10(true);
+				else 
+					throw new UnsupportedException(new ErrorMessage("errors.Unsupported.findQualifier", fq));
 			}
 		}
 	}
