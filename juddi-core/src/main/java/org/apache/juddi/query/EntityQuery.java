@@ -78,7 +78,14 @@ public abstract class EntityQuery {
 		
 		
 		Query qry = dynamicQry.buildJPAQuery(em);
-		List<?> result = qry.getResultList();
+		List<Object> result = new ArrayList<Object>();
+		//Filter out non-unique results
+		for (Object object : qry.getResultList()) {
+			if (!result.contains(object)) {
+				result.add(object);
+			}
+		}
+		
 		int resultSize = result.size();
 
 		if (listDesc != null) {
