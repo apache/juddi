@@ -64,7 +64,7 @@ public class UDDISubscriptionService extends UnicastRemoteObject implements UDDI
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
 			throws DispositionReportFaultMessage, RemoteException {
-		this.saveSubscription(authInfo, subscription);
+		this.subscription.saveSubscription(authInfo, subscription);
 		
 	}
 
