@@ -35,32 +35,45 @@
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck-base</artifactId>
 			<version>${project.parent.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.juddi</groupId>
-			<artifactId>juddi-core</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
 			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-tomcat</artifactId>
 			<version>${project.parent.version}</version>
 			<type>zip</type>
-			<scope>test</scope>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.juddi</groupId>
+					<artifactId>juddi-core-openjpa</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<!--
-			for RMI <dependency> <groupId>jboss</groupId>
+		<!--  for JAXWS
+		   running into JUDDI-451 for CXF
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		-->
+		<!-- so using the SUN reference implementation for now -->
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		
+		<!--   for RMI -->
+		<dependency> <groupId>jboss</groupId>
 			<artifactId>jbossall-client</artifactId> <version>4.2.2.GA</version>
 			<scope>test</scope> </dependency>
-		-->
+		
 	</dependencies>
 	<build>
 		<plugins>

@@ -27,7 +27,7 @@
 	<name>jUDDI base-war Deployment</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<cxf.version>2.1.9</cxf.version>
+		<cxf.version>2.3.1</cxf.version>
 	</properties>
 	<dependencies>
 		<dependency>

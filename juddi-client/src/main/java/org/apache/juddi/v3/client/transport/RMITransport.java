@@ -65,9 +65,9 @@ public class RMITransport extends Transport {
 	private void initContext() throws NamingException, ConfigurationException {
 		Properties env = new Properties();
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-		String factoryInitial = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_INITIAL);
-		String factoryURLPkgs = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_FACTORY_URL_PKS);
-		String factoryNamingProvider = manager.getClientConfig().getConfiguration().getString(Property.UDDI_PROXY_PROVIDER_URL);
+		String factoryInitial = manager.getClientConfig().getHomeNode().getFactoryInitial();
+		String factoryURLPkgs = manager.getClientConfig().getHomeNode().getFactoryURLPkgs();
+		String factoryNamingProvider = manager.getClientConfig().getHomeNode().getFactoryNamingProvider();
         if (factoryInitial!=null && factoryInitial!="") env.setProperty(Property.UDDI_PROXY_FACTORY_INITIAL, factoryInitial);
         if (factoryURLPkgs!=null && factoryURLPkgs!="") env.setProperty(Property.UDDI_PROXY_FACTORY_URL_PKS, factoryURLPkgs);
         if (factoryNamingProvider!=null && factoryNamingProvider!="") env.setProperty(Property.UDDI_PROXY_PROVIDER_URL, factoryNamingProvider);

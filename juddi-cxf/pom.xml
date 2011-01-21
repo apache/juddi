@@ -23,7 +23,7 @@
 	<packaging>pom</packaging>
 	
 	<properties>
-		<cxf.version>2.1.9</cxf.version>
+		<cxf.version>2.3.1</cxf.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -64,6 +64,7 @@
 			<version>${project.parent.version}</version>
 			<type>war</type>
 		</dependency>
+		
 	</dependencies>
 	<build>
 <!--
