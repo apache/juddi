@@ -168,6 +168,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, entityKey);
 	
 				((org.apache.juddi.model.BindingTemplate)obj).getBusinessService().setModifiedIncludingChildren(new Date());
+				// JUDDI-421:  now the businessEntity parent will have it's modifiedIncludingChildren set
+				((org.apache.juddi.model.BindingTemplate)obj).getBusinessService().getBusinessEntity().setModifiedIncludingChildren(new Date());
 				
 				em.remove(obj);
 			}
@@ -721,6 +723,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			org.apache.juddi.model.BusinessService parent = em.find(org.apache.juddi.model.BusinessService.class, uddiEntity.getBusinessService().getEntityKey());
 			parent.setModifiedIncludingChildren(now);
 			em.persist(parent);
+			
+			// JUDDI-421:  now the businessEntity parent will have it's modifiedIncludingChildren set
+			org.apache.juddi.model.BusinessEntity businessParent = em.find(org.apache.juddi.model.BusinessEntity.class, parent.getBusinessEntity().getEntityKey());
+			businessParent.setModifiedIncludingChildren(now);
+			em.persist(businessParent);
 		}
 
 		String nodeId = "";
