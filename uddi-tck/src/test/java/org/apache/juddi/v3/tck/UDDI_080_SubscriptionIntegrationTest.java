@@ -15,10 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
-import org.apache.juddi.Registry;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -46,50 +43,40 @@ public class UDDI_080_SubscriptionIntegrationTest
 
 	private static String authInfoJoe = null;
 	private static String authInfoSam = null;
+	private static UDDIClerkManager manager;
 
-	@BeforeClass
-	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.start();
-		}
-		logger.debug("Getting subscriber proxy..");
-		try {
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 
-	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-	        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
-	        	 Assert.assertNotNull(authInfoJoe);
-	        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
-	        	 Assert.assertNotNull(authInfoSam);
-	        	 
-	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-	        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-	        	 UDDISubscriptionPortType subscription = transport.getUDDISubscriptionService();
-
-	        	 tckTModel  = new TckTModel(publication, inquiry);
-	        	 tckBusiness = new TckBusiness(publication, inquiry);
-	        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-	        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
-
-	        	 tckSubscription = new TckSubscription(subscription, security);
-	         } else {
-	        	 Assert.fail();
-	         }
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-			 Assert.fail("Could not obtain authInfo token.");
-	     } 
+	@AfterClass
+	public static void stopManager() throws ConfigurationException {
+		manager.stop();
 	}
 	
-	@AfterClass
-	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.stop();
-		}
+	@BeforeClass
+	public static void startManager() throws ConfigurationException {
+		manager  = new UDDIClerkManager();
+		manager.start();
+		
+		logger.debug("Getting auth tokens..");
+		try {
+			 Transport transport = manager.getTransport();
+        	 UDDISecurityPortType security = transport.getUDDISecurityService();
+        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
+        	 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
+        	 Assert.assertNotNull(authInfoJoe);
+        	 UDDISubscriptionPortType subscription = transport.getUDDISubscriptionService();
+        	 
+        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+        	 tckTModel  = new TckTModel(publication, inquiry);
+        	 tckBusiness = new TckBusiness(publication, inquiry);
+        	 tckBusinessService = new TckBusinessService(publication, inquiry);
+        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+
+        	 tckSubscription = new TckSubscription(subscription, security);
+        	  
+	     } catch (Exception e) {
+	    	 logger.error(e.getMessage(), e);
+				Assert.fail("Could not obtain authInfo token.");
+	     } 
 	}
 	
 	@Test

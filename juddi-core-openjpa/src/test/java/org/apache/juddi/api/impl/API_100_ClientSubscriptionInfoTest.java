@@ -58,7 +58,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		try {
 			api010.saveJoePublisher();
 			UDDISecurityPortType security      = new UDDISecurityImpl();
-			authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+			authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
 		} catch (DispositionReportFaultMessage e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");

@@ -25,7 +25,11 @@ import java.util.Set;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
+import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
@@ -56,6 +60,12 @@ public class UDDIClerkManager {
 		log.info("Stopping UDDI Clerks for manager " + clientConfig.getManagerName());
 		releaseResources();
 		UDDIClientContainer.removeClerkManager(getName());
+		
+		//If running in embedded mode
+		if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
+			log.info("Shutting down embedded Server");
+			stopEmbeddedServer();
+		}
 		log.info("UDDI Clerks shutdown completed for manager " + clientConfig.getManagerName());
 	}
 	
@@ -67,10 +77,41 @@ public class UDDIClerkManager {
 	 * @throws ConfigurationException  
 	 */
 	public void start() throws ConfigurationException {
+		
+		//If running in embedded mode
+		if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
+			log.info("Starting embedded Server");
+			startEmbeddedServer();
+		}
+		
 		Runnable runnable = new BackGroundRegistration(this);
 		Thread thread = new Thread(runnable);
 		thread.start();
  	}
+	
+	protected void startEmbeddedServer() throws ConfigurationException {
+		
+		try {
+			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.client.JUDDIRegistry");
+			Class<?> clazz =  ClassUtil.forName(embeddedServerClass, this.getClass());
+			EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
+			embeddedRegistry.start();
+		} catch (Exception e) {
+			throw new ConfigurationException(e.getMessage(),e);
+		}
+	}
+	
+	protected void stopEmbeddedServer() throws ConfigurationException {
+
+		try {
+			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.client.JUDDIRegistry");
+			Class<?> clazz =  ClassUtil.forName(embeddedServerClass, this.getClass());
+			EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
+			embeddedRegistry.stop();
+		} catch (Exception e) {
+			throw new ConfigurationException(e.getMessage(),e);
+		}
+	}
 	
 	public void restart() throws ConfigurationException {
 		stop();
@@ -213,6 +254,35 @@ public class UDDIClerkManager {
 	
 	public String getName() {
 		return clientConfig.getManagerName();
+	}
+	/**
+	 * Returns the "default" jUDDI nodes Transport.
+	 * 
+	 * @return
+	 * @throws ConfigurationException
+	 */
+	public Transport getTransport() throws ConfigurationException {
+		return getTransport("default");
+	}
+	/**
+	 * Returns the transport defined for the node with the given nodeName.
+	 * @param nodeName
+	 * @return
+	 * @throws ConfigurationException
+	 */
+	public Transport getTransport(String nodeName) throws ConfigurationException {
+		try {
+			String clazz = clientConfig.getHomeNode().getProxyTransport();
+			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClerkManager.class);
+			if (transportClass!=null) {
+				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
+				return transport;
+			} else {
+				throw new ConfigurationException ("ProxyTransport was not defined in the " + clientConfig.getConfigurationFile());
+			}
+		} catch (Exception e) {
+			throw new ConfigurationException (e.getMessage(),e);
+		}
 	}
 	
 }

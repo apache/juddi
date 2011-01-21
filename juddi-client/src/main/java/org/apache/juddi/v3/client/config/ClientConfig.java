@@ -48,6 +48,7 @@ public class ClientConfig
 	private Set<XRegistration> xBusinessRegistrations = null;
 	private Set<XRegistration> xServiceBindingRegistrations = null;
 	private String managerName = null;
+	private String configurationFile=null;
 	
 	/**
 	 * Constructor (note Singleton pattern).
@@ -86,6 +87,7 @@ public class ClientConfig
 			}
 		}
 		log.info("Reading UDDI Client properties file " + xmlConfig.getBasePath());
+		this.configurationFile = xmlConfig.getBasePath();
 		long refreshDelay = xmlConfig.getLong(Property.UDDI_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
@@ -249,4 +251,8 @@ public class ClientConfig
     public String getManagerName() {
 		return managerName;
 	}
+    
+    public String getConfigurationFile() {
+    	return configurationFile;
+    }
 }

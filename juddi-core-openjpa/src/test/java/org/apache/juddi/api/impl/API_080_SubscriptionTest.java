@@ -56,10 +56,10 @@ public class API_080_SubscriptionTest
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
-			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
 
 			api010.saveSamSyndicator();
-			authInfoSam = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.SAM_SYNDICATOR_ID,  TckPublisher.SAM_SYNDICATOR_CRED);
+			authInfoSam = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
 
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);

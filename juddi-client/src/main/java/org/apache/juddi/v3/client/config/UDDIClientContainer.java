@@ -38,7 +38,7 @@ public class UDDIClientContainer {
 						" Please check your client uddi.xml files, and make sure this manager was started");
 			}
 		} else if (managers.size()==1 && managerName==null) {
-			log.debug("Deprecated, please specify a manager name");
+			log.info("Deprecated, please specify a manager name");
 			return managers.values().iterator().next();
 		} else {
 			log.info("Deprecated, please specify a manager name");
@@ -65,14 +65,5 @@ public class UDDIClientContainer {
 			throw new ConfigurationException("Could not remove UDDIClerkManager for name " + managerName);
 		}
 	}
-	
-	public static String getDefaultTransportClass() throws ConfigurationException {
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		return manager.getClientConfig().getUDDINode("default").getProxyTransport();
-	}
-	
-	
-	
-	
 	
 }

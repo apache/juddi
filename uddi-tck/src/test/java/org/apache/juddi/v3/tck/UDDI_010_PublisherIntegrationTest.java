@@ -15,11 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
-import org.apache.juddi.Registry;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -34,43 +30,30 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UDDI_010_PublisherIntegrationTest {
 	
+	private static UDDIClerkManager manager;
+
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		UDDIClerkManager manager = new UDDIClerkManager();
+		manager  = new UDDIClerkManager();
 		manager.start();
-		String clazz = manager.getClientConfig().getHomeNode().getProxyTransport();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.start();
-		}
 	}
 	
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-		String clazz = manager.getClientConfig().getHomeNode().getProxyTransport();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.stop();
-		}
+		manager.stop();
 	}
 	
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = UDDIClientContainer.getDefaultTransportClass();
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 
-	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
-	        	 GetAuthToken getAuthToken = new GetAuthToken();
-	        	 getAuthToken.setUserID("root");
-	        	 getAuthToken.setCred("root");
-	        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
-	        	 System.out.println(authToken.getAuthInfo());
-	        	 Assert.assertNotNull(authToken);
-	         } else {
-	        	 Assert.fail();
-	         }
+	    	 Transport transport = manager.getTransport();
+        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
+        	 GetAuthToken getAuthToken = new GetAuthToken();
+        	 getAuthToken.setUserID(TckPublisher.getRootPublisherId());
+        	 getAuthToken.setCred(TckPublisher.getRootPassword());
+        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
+        	 System.out.println(authToken.getAuthInfo());
+        	 Assert.assertNotNull(authToken);
 	     } catch (Exception e) {
 	         e.printStackTrace();
 	         Assert.fail();

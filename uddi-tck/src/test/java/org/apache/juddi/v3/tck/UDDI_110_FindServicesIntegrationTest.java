@@ -18,10 +18,7 @@ package org.apache.juddi.v3.tck;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
-import org.apache.juddi.Registry;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -66,58 +63,49 @@ public class UDDI_110_FindServicesIntegrationTest
 	
 	protected static TckBusiness tckBusiness           = null;
 	
-	protected static String authInfoTom               = null;
+	protected static String authInfoJoe               = null;
 	
 	private static UDDIInquiryPortType inquiry = null;
-	
-	@BeforeClass
-	public static void setup() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.start();
-		}
-		logger.debug("Getting auth tokens..");
-		try {
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 
-	        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-	        	 authInfoTom = TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
-	        	 Assert.assertNotNull(authInfoTom);
-	        	 
-	        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-	        	 inquiry = transport.getUDDIInquiryService();
-	        	 
-	        	 tckTModel  = new TckTModel(publication, inquiry);
-	        	 tckTModel01 = new TckTModel(publication, inquiry);
-	        	 tckTModel02 = new TckTModel(publication, inquiry);
-	        	 tckBusiness = new TckBusiness(publication, inquiry);
-	         } else {
-	        	 Assert.fail();
-	         }
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-			 Assert.fail("Could not obtain authInfo token.");
-	     } 
+	private static UDDIClerkManager manager;
+
+	@AfterClass
+	public static void stopManager() throws ConfigurationException {
+		manager.stop();
 	}
 	
-	@AfterClass
-	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.stop();
-		}
+	@BeforeClass
+	public static void startManager() throws ConfigurationException {
+		manager  = new UDDIClerkManager();
+		manager.start();
+		
+		logger.debug("Getting auth tokens..");
+		try {
+			 Transport transport = manager.getTransport();
+        	 UDDISecurityPortType security = transport.getUDDISecurityService();
+        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
+        	 Assert.assertNotNull(authInfoJoe);
+        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
+        	 inquiry = transport.getUDDIInquiryService();
+        	 
+        	 tckTModel  = new TckTModel(publication, inquiry);
+        	 tckTModel01 = new TckTModel(publication, inquiry);
+        	 tckTModel02 = new TckTModel(publication, inquiry);
+        	 tckBusiness = new TckBusiness(publication, inquiry);
+        	  
+	     } catch (Exception e) {
+	    	 logger.error(e.getMessage(), e);
+				Assert.fail("Could not obtain authInfo token.");
+	     } 
 	}
 	
 	@Test
 	public void tompublisher() {
 		try {
-			tckTModel.saveTModel(authInfoTom, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel01.saveTModel(authInfoTom, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel02.saveTModel(authInfoTom, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+			tckTModel.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+			tckTModel01.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+			tckTModel02.saveTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
 			
-			tckBusiness.saveBusinesses(authInfoTom, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
+			tckBusiness.saveBusinesses(authInfoJoe, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
 			
 			try {
 				int size = 0;
@@ -150,11 +138,11 @@ public class UDDI_110_FindServicesIntegrationTest
 				Assert.fail(e.getMessage());
 			}
 		} finally {
-			tckBusiness.deleteBusinesses(authInfoTom, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
+			tckBusiness.deleteBusinesses(authInfoJoe, TOM_BUSINESS_XML, TOM_BUSINESS_KEY, 1);
 			
-			tckTModel.deleteTModel(authInfoTom, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
-			tckTModel01.deleteTModel(authInfoTom, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
-			tckTModel02.deleteTModel(authInfoTom, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
+			tckTModel.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL_XML, TOM_PUBLISHER_TMODEL_KEY);
+			tckTModel01.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL01_XML, TOM_PUBLISHER_TMODEL01_KEY);
+			tckTModel02.deleteTModel(authInfoJoe, TOM_PUBLISHER_TMODEL02_XML, TOM_PUBLISHER_TMODEL02_KEY);
 
 		}
 	}

@@ -71,7 +71,7 @@ public class API_010_PublisherTest {
 		//If it already there is probably has foreign key relationships.
 		//This test should really only run on an empty database. Seed
 		//data will be added if the root publisher is missing.
-		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
+		if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
 			saveJoePublisher();
 			deleteJoePublisher();
 		}
@@ -80,7 +80,7 @@ public class API_010_PublisherTest {
 	@Test
 	public void testSamSyndicator() {
 		//We can only test this if the publisher is not there already.
-		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
+		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
 			saveSamSyndicator();
 			deleteSamSyndicator();
 		}
@@ -91,8 +91,8 @@ public class API_010_PublisherTest {
 	 * 		   - false in all other cases.
 	 */
 	public boolean saveJoePublisher() {
-		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
-			savePublisher(TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_XML);
+		if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
+			savePublisher(TckPublisher.getJoePublisherId(), TckPublisher.JOE_PUBLISHER_XML);
 			return true;
 		} else {
 			return false;
@@ -104,8 +104,8 @@ public class API_010_PublisherTest {
 	 * 		   - false in all other cases.
 	 */
 	public boolean saveMaryPublisher() {
-		if (!isExistPublisher(TckPublisher.MARY_PUBLISHER_ID)) {
-			savePublisher(TckPublisher.MARY_PUBLISHER_ID, TckPublisher.MARY_PUBLISHER_XML);
+		if (!isExistPublisher(TckPublisher.getMaryPublisherId())) {
+			savePublisher(TckPublisher.getMaryPublisherId(), TckPublisher.MARY_PUBLISHER_XML);
 			return true;
 		} else {
 			return false;
@@ -116,24 +116,24 @@ public class API_010_PublisherTest {
 	 * are child objects attached; think Services etc.
 	 */
 	public void deleteJoePublisher() {
-		deletePublisher(TckPublisher.JOE_PUBLISHER_ID);
+		deletePublisher(TckPublisher.getJoePublisherId());
 	}
 	/**
 	 * Persists Sam Syndicator to the database.
 	 * @return publisherId
 	 */
 	public String saveSamSyndicator() {
-		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
-			savePublisher(TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_XML);
+		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
+			savePublisher(TckPublisher.getSamPublisherId(), TckPublisher.SAM_SYNDICATOR_XML);
 		}
-		return TckPublisher.SAM_SYNDICATOR_ID;
+		return TckPublisher.getSamPublisherId();
 	}
 	/**
 	 * Removes Sam Syndicator from the database, this will fail if there
 	 * are child objects attached; think Services etc.
 	 */
 	public void deleteSamSyndicator() {
-		deletePublisher(TckPublisher.SAM_SYNDICATOR_ID);
+		deletePublisher(TckPublisher.getSamPublisherId());
 	}
 	
 	
@@ -226,11 +226,11 @@ public class API_010_PublisherTest {
 	}
 	
 	protected String authInfoJoe() throws RemoteException, DispositionReportFaultMessage {
-		return TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
+		return TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
 	}
 	
 	protected String authInfoSam() throws RemoteException,  DispositionReportFaultMessage {
-		return TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
+		return TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
 	}
 	
 }

@@ -66,7 +66,7 @@ public class SubscriptionNotifierTest
 		logger.debug("Getting auth token..");
 		try {
 			api010.saveJoePublisher();
-			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.JOE_PUBLISHER_ID,  TckPublisher.JOE_PUBLISHER_CRED);
+			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);

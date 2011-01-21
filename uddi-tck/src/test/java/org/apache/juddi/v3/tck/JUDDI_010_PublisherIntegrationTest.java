@@ -22,21 +22,15 @@ import java.util.List;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
-import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
-import org.apache.juddi.config.AppConfig;
-import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -54,63 +48,52 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class JUDDI_010_PublisherIntegrationTest {
 	
 	private static Logger logger = Logger.getLogger(JUDDI_010_PublisherIntegrationTest.class);
-	
+	private static UDDIClerkManager manager;
 	private static UDDISecurityPortType security =null;
 	private static JUDDIApiPortType publisher = null;
 	private static String authInfo = null;
 	
 	@BeforeClass
-	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.start();
-		}
+	public static void startManager() throws ConfigurationException {
+		
+		manager  = new UDDIClerkManager();
+		manager.start();
+
+
 		logger.debug("Getting auth tokens..");
 		try {
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 security = transport.getUDDISecurityService();
-	        	 GetAuthToken getAuthToken = new GetAuthToken();
-	        	 getAuthToken.setUserID("root");
-	        	 getAuthToken.setCred("");
-	        	 authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
-	        	 publisher = transport.getJUDDIApiService();
-	         } else {
-	        	 Assert.fail();
-	         }
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
+			Transport transport = manager.getTransport();
+			
+			security = transport.getUDDISecurityService();
+			GetAuthToken getAuthToken = new GetAuthToken();
+			getAuthToken.setUserID(TckPublisher.getRootPublisherId());
+			getAuthToken.setCred(TckPublisher.getRootPassword());
+			authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
+			
+			publisher = transport.getJUDDIApiService();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
+		} 
 	}
 	
 	@AfterClass
-	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.stop();
-		}
+	public static void stopManager() throws ConfigurationException {
+		manager.stop();
 	}
 	
      @Test
      public void testAuthToken() {
 	     try {
-	    	 String clazz = UDDIClientContainer.getDefaultTransportClass();
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 
-	        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
-	        	 GetAuthToken getAuthToken = new GetAuthToken();
-	        	 getAuthToken.setUserID("root");
-	        	 getAuthToken.setCred("");
-	        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
-	        	 System.out.println(authToken.getAuthInfo());
-	        	 Assert.assertNotNull(authToken);
-	         } else {
-	        	 Assert.fail();
-	         }
+	    	 Transport transport = manager.getTransport();
+        	 
+        	 UDDISecurityPortType securityService = transport.getUDDISecurityService();
+        	 GetAuthToken getAuthToken = new GetAuthToken();
+        	 getAuthToken.setUserID("root");
+        	 getAuthToken.setCred("");
+        	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
+        	 System.out.println(authToken.getAuthInfo());
+        	 Assert.assertNotNull(authToken);
 	     } catch (Exception e) {
 	         e.printStackTrace();
 	         Assert.fail();
@@ -123,7 +106,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  		//If it already there is probably has foreign key relationships.
  		//This test should really only run on an empty database. Seed
  		//data will be added if the root publisher is missing.
- 		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
+ 		if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
  			saveJoePublisher();
  			deleteJoePublisher();
  		}
@@ -132,7 +115,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	@Test
  	public void testSamSyndicator() {
  		//We can only test this if the publisher is not there already.
- 		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
+ 		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
  			saveSamSyndicator();
  			deleteSamSyndicator();
  		}
@@ -156,8 +139,8 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * 		   - false in all other cases.
  	 */
  	public boolean saveJoePublisher() {
- 		if (!isExistPublisher(TckPublisher.JOE_PUBLISHER_ID)) {
- 			savePublisher(TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_XML);
+ 		if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
+ 			savePublisher(TckPublisher.getJoePublisherId(), TckPublisher.JOE_PUBLISHER_XML);
  			return true;
  		} else {
  			return false;
@@ -168,30 +151,29 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * are child objects attached; think Services etc.
  	 */
  	public void deleteJoePublisher() {
- 		deletePublisher(TckPublisher.JOE_PUBLISHER_ID);
+ 		deletePublisher(TckPublisher.getJoePublisherId());
  	}
  	/**
  	 * Persists Sam Syndicator to the database.
  	 * @return publisherId
  	 */
  	public String saveSamSyndicator() {
- 		if (!isExistPublisher(TckPublisher.SAM_SYNDICATOR_ID)) {
- 			savePublisher(TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_XML);
+ 		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
+ 			savePublisher(TckPublisher.getSamPublisherId(), TckPublisher.SAM_SYNDICATOR_XML);
  		}
- 		return TckPublisher.SAM_SYNDICATOR_ID;
+ 		return TckPublisher.getSamPublisherId();
  	}
  	/**
  	 * Removes Sam Syndicator from the database, this will fail if there
  	 * are child objects attached; think Services etc.
  	 */
  	public void deleteSamSyndicator() {
- 		deletePublisher(TckPublisher.SAM_SYNDICATOR_ID);
+ 		deletePublisher(TckPublisher.getSamPublisherId());
  	}
  	
  	private void savePublisher(String publisherId, String publisherXML) {
 		try {
-			String rootPublisherStr = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PUBLISHER);
-			authInfo = TckSecurity.getAuthToken(security, rootPublisherStr, "");
+			authInfo = TckSecurity.getAuthToken(security, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
 			logger.debug("Saving new publisher: " + publisherXML);
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
@@ -224,7 +206,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 			try {
 				pdBeforeDelete = publisher.getPublisherDetail(gp);
 				Assert.assertNotNull(pdBeforeDelete);
-			} catch (InvalidKeyPassedException e) {
+			} catch (Exception e) {
 				Assert.fail("We expected to find publisher " + publisherXML);
 			}
 			
@@ -236,8 +218,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	private void deletePublisher(String publisherId) {
 		try {
-			String rootPublisherStr = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PUBLISHER);
-			authInfo = TckSecurity.getAuthToken(security, rootPublisherStr, "");
+			authInfo = TckSecurity.getAuthToken(security, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
 			logger.debug("Delete publisher: " + publisherId);
 			//Now deleting this publisher
 			DeletePublisher dp = new DeletePublisher();
@@ -279,11 +260,11 @@ public class JUDDI_010_PublisherIntegrationTest {
 	}
 	
 	protected String authInfoJoe() throws RemoteException, DispositionReportFaultMessage {
-		return TckSecurity.getAuthToken(security, TckPublisher.JOE_PUBLISHER_ID, TckPublisher.JOE_PUBLISHER_CRED);
+		return TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
 	}
 	
 	protected String authInfoSam() throws RemoteException,  DispositionReportFaultMessage {
-		return TckSecurity.getAuthToken(security, TckPublisher.SAM_SYNDICATOR_ID, TckPublisher.SAM_SYNDICATOR_CRED);
+		return TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
 	}
 	
 }

@@ -15,8 +15,6 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.ClassUtil;
-import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
@@ -24,8 +22,7 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.transport.InVMTransport;
+import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.log4j.Logger;
@@ -40,101 +37,97 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class JUDDI_100_ClientSubscriptionInfoTest {
-	
-	private static UDDISecurityPortType security      =null;
+
+	private static UDDISecurityPortType security      = null;
 	private static JUDDIApiPortType publisher         = null;
 	private static Logger logger                      = Logger.getLogger(JUDDI_100_ClientSubscriptionInfoTest.class);
 	private static String authInfo                    = null;
-	
+	private static UDDIClerkManager manager;
+
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.start();
-		}
+
+		manager  = new UDDIClerkManager();
+		manager.start();
+
+
 		logger.debug("Getting auth tokens..");
 		try {
-	         Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-	         if (transportClass!=null) {
-	        	 Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance("default");
-	        	 security = transport.getUDDISecurityService();
-	        	 GetAuthToken getAuthToken = new GetAuthToken();
-	        	 getAuthToken.setUserID("root");
-	        	 getAuthToken.setCred("");
-	        	 authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
-	        	 publisher = transport.getJUDDIApiService();
-	         } else {
-	        	 Assert.fail();
-	         }
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
+			Transport transport = manager.getTransport();
+			
+			security = transport.getUDDISecurityService();
+			GetAuthToken getAuthToken = new GetAuthToken();
+			getAuthToken.setUserID(TckPublisher.getRootPublisherId());
+			getAuthToken.setCred(TckPublisher.getRootPassword());
+			authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
+			
+			publisher = transport.getJUDDIApiService();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("Could not obtain authInfo token.");
+		} 
 	}
-	
+
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
-		String clazz = UDDIClientContainer.getDefaultTransportClass();
-		if (InVMTransport.class.getName().equals(clazz)) {
-			Registry.stop();
-		}
+		manager.stop();
 	}
-	
+
 	@Test
 	public void addClientSubscriptionInfo() {
 		ClientSubscriptionInfo clientSubscriptionInfo = new ClientSubscriptionInfo();
-		
+
 		Node node = new Node();
 		node.setSecurityUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
-		
+
 		Clerk clerk = new Clerk();
 		clerk.setName("default");
 		clerk.setPublisher("root");
 		clerk.setNode(node);
-	
-                Clerk toClerk = new Clerk();
-                toClerk.setName("medroot");
-                toClerk.setPublisher("root");
-                toClerk.setNode(node);
-	
+
+		Clerk toClerk = new Clerk();
+		toClerk.setName("medroot");
+		toClerk.setPublisher("root");
+		toClerk.setNode(node);
+
 		clientSubscriptionInfo.setFromClerk(clerk);
 		clientSubscriptionInfo.setToClerk(toClerk);
-		
+
 		clientSubscriptionInfo.setSubscriptionKey("mykey");
-		
+
 		SaveClientSubscriptionInfo saveClientSubscriptionInfo = new SaveClientSubscriptionInfo();
 		saveClientSubscriptionInfo.setAuthInfo(authInfo);
 		saveClientSubscriptionInfo.getClientSubscriptionInfo().add(clientSubscriptionInfo);
-		
+
 		try {
 			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
-		
+
 			GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
 			getDetail.setAuthInfo(authInfo);
 			getDetail.getClientSubscriptionKey().add("mykey");
-			
+
 			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
-			
+
 			//ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(getDetail);
 			//Assert.assertEquals("mykey", detail2.getClientSubscriptionInfo().get(0).getSubscriptionKey());
-	
+
 			DeleteClientSubscriptionInfo deleteInfo = new DeleteClientSubscriptionInfo();
 			deleteInfo.setAuthInfo(authInfo);
 			deleteInfo.getSubscriptionKey().add("mykey");
 			publisher.deleteClientSubscriptionInfo(deleteInfo);
-			
-//			try {
-//				@SuppressWarnings("unused")
-//				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(getDetail);
-//				Assert.fail("We're expecting an InvalidKeyPassedException");
-//			} catch (Exception e) {
-//				Assert.assertEquals(InvalidKeyPassedException.class, e.getClass());
-//			}
+
+			//			try {
+			//				@SuppressWarnings("unused")
+			//				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(getDetail);
+			//				Assert.fail("We're expecting an InvalidKeyPassedException");
+			//			} catch (Exception e) {
+			//				Assert.assertEquals(InvalidKeyPassedException.class, e.getClass());
+			//			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown");
 		}
 	}
-	
+
 }

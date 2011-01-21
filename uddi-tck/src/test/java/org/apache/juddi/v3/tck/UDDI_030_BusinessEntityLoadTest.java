@@ -27,7 +27,7 @@ public class UDDI_030_BusinessEntityLoadTest extends UDDI_030_BusinessEntityInte
 	
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
-		UDDI_030_BusinessEntityIntegrationTest.setup();
+		UDDI_030_BusinessEntityIntegrationTest.startManager();
 	}
 	
 	@Test @Override
