@@ -69,10 +69,13 @@
 			<version>2.1.4</version>
 		</dependency>
 		
-		<!--   for RMI -->
+		<!--   for RMI 
 		<dependency> <groupId>jboss</groupId>
-			<artifactId>jbossall-client</artifactId> <version>4.2.2.GA</version>
-			<scope>test</scope> </dependency>
+			<artifactId>jbossall-client</artifactId>
+			<version>4.2.2.GA</version>
+			<scope>test</scope>
+		</dependency>
+		-->
 		
 	</dependencies>
 	<build>
