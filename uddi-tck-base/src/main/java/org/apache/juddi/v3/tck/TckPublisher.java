@@ -13,19 +13,61 @@
  * limitations under the License.
  */
 package org.apache.juddi.v3.tck;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class TckPublisher 
 {	
+	private static Properties tckProperties = new Properties();
 	public final static String JOE_PUBLISHER_XML  = "uddi_data/joepublisher/publisher.xml";
-    public final static String JOE_PUBLISHER_ID   = "joepublisher";
-    public final static String JOE_PUBLISHER_CRED = "joepublisher";
 	public final static String SAM_SYNDICATOR_XML = "uddi_data/samsyndicator/publisher.xml";
-    public final static String SAM_SYNDICATOR_ID  = "ssyndicator";
-    public final static String SAM_SYNDICATOR_CRED= "ssyndicator";
-    public final static String MARY_PUBLISHER_XML  = "uddi_data/marypublisher/publisher.xml";
-    public final static String MARY_PUBLISHER_ID   = "marypublisher";
-    public final static String MARY_PUBLISHER_CRED = "marypublisher";
+    public final static String MARY_PUBLISHER_XML = "uddi_data/marypublisher/publisher.xml";
+    
+	static {
+		try {
+			InputStream inputSteam = TckPublisher.class.getResourceAsStream("/tck.properties");
+			tckProperties.load(inputSteam);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
+  
+    public final static String getRootPublisherId() {
+    	return tckProperties.getProperty(Property.ROOT_PUBLISHER);
+    }
+    
+    public final static String getRootPassword() {
+    	return tckProperties.getProperty(Property.ROOT_PASSWORD);
+    }
+    
+    public final static String getJoePublisherId() {
+    	return tckProperties.getProperty(Property.JOE_PUBLISHER);
+    }
+    
+    public final static String getJoePassword() {
+    	return tckProperties.getProperty(Property.JOE_PASSWORD);
+    }
+    
+    public final static String getSamPublisherId() {
+    	return tckProperties.getProperty(Property.SAM_PUBLISHER);
+    }
+    
+    public final static String getSamPassword() {
+    	return tckProperties.getProperty(Property.SAM_PASSWORD);
+    }
+    
+    public final static String getMaryPublisherId() {
+    	return tckProperties.getProperty(Property.MARY_PUBLISHER);
+    }
+    
+    public final static String getMaryPassword() {
+    	return tckProperties.getProperty(Property.MARY_PASSWORD);
+    }
 }
