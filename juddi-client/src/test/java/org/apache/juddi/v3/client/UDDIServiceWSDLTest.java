@@ -34,6 +34,7 @@ public class UDDIServiceWSDLTest {
 		URL wsdlPath;
 		try {
 			wsdlPath = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SECURITY, "securityeurl");
+			System.out.println("WSDL Path=" + wsdlPath);
 			assertNotNull(wsdlPath);
 			
 		} catch (IOException e) {
