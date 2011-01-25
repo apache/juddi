@@ -74,7 +74,16 @@ public class UDDIServiceWSDL {
 	    String specEndPoint = specEndPoints.get(endpointType);
 	    wsdlString = wsdlString.replace(specEndPoint, soapAddressLocation);
 	    String destDir = System.getProperty("java.io.tmpdir");
+	    File tmpDir = new File(destDir);
+	    if (!tmpDir.exists()) {
+	    	System.out.println("tmp dir does not exist:" + destDir);
+	    }
 	    File tmpWSDLFile = new File(destDir + File.separator + "uddi_v3_service.wsdl");
+	    
+	    if (tmpWSDLFile.exists()) {
+	    	tmpWSDLFile.delete();
+	    }
+	    tmpWSDLFile.createNewFile();
 	    Writer out = new OutputStreamWriter(new FileOutputStream(tmpWSDLFile));
 	    try {
 	      out.write(wsdlString);
