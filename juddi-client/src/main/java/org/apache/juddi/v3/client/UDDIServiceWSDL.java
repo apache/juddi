@@ -76,15 +76,9 @@ public class UDDIServiceWSDL {
 	    String destDir = System.getProperty("java.io.tmpdir");
 	    File tmpDir = new File(destDir);
 	    if (!tmpDir.exists()) {
-	    	System.out.println("tmp dir does not exist:" + destDir);
 	    	tmpDir.mkdirs();
 	    }
-	    File tmpWSDLFile = new File(destDir + File.separator + "uddi_v3_service.wsdl");
-	    
-	    if (tmpWSDLFile.exists()) {
-	    	tmpWSDLFile.delete();
-	    }
-	    tmpWSDLFile.createNewFile();
+	    File tmpWSDLFile = File.createTempFile("uddi_v3_service", "wsdl", tmpDir);
 	    Writer out = new OutputStreamWriter(new FileOutputStream(tmpWSDLFile));
 	    try {
 	      out.write(wsdlString);
