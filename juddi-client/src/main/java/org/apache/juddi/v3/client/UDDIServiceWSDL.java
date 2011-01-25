@@ -73,7 +73,8 @@ public class UDDIServiceWSDL {
 		String wsdlString = getServiceWSDLContent();
 	    String specEndPoint = specEndPoints.get(endpointType);
 	    wsdlString = wsdlString.replace(specEndPoint, soapAddressLocation);
-	    File tmpWSDLFile = File.createTempFile("uddi_v3_service", ".wsdl");
+	    String destDir = System.getProperty("java.io.tmpdir");
+	    File tmpWSDLFile = new File(destDir + File.separator + "uddi_v3_service.wsdl");
 	    Writer out = new OutputStreamWriter(new FileOutputStream(tmpWSDLFile));
 	    try {
 	      out.write(wsdlString);
