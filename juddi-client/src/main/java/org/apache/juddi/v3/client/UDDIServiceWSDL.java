@@ -77,6 +77,7 @@ public class UDDIServiceWSDL {
 	    File tmpDir = new File(destDir);
 	    if (!tmpDir.exists()) {
 	    	System.out.println("tmp dir does not exist:" + destDir);
+	    	tmpDir.mkdirs();
 	    }
 	    File tmpWSDLFile = new File(destDir + File.separator + "uddi_v3_service.wsdl");
 	    
