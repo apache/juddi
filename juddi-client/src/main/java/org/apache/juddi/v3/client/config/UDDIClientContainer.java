@@ -38,10 +38,10 @@ public class UDDIClientContainer {
 						" Please check your client uddi.xml files, and make sure this manager was started");
 			}
 		} else if (managers.size()==1 && managerName==null) {
-			log.info("Deprecated, please specify a manager name");
+			log.warn("Deprecated, please specify a manager name");
 			return managers.values().iterator().next();
 		} else {
-			log.info("Deprecated, please specify a manager name");
+			log.warn("Deprecated, please specify a manager name");
 			UDDIClerkManager manager = new UDDIClerkManager(null);
 			addClerkManager(manager);
 			manager.start();

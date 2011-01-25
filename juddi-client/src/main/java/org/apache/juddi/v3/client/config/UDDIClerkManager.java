@@ -78,6 +78,7 @@ public class UDDIClerkManager {
 	 */
 	public void start() throws ConfigurationException {
 		
+		UDDIClientContainer.addClerkManager(this);
 		//If running in embedded mode
 		if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
 			log.info("Starting embedded Server");
@@ -273,9 +274,10 @@ public class UDDIClerkManager {
 	public Transport getTransport(String nodeName) throws ConfigurationException {
 		try {
 			String clazz = clientConfig.getHomeNode().getProxyTransport();
+			String managerName = clientConfig.getManagerName();
 			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClerkManager.class);
 			if (transportClass!=null) {
-				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
+				Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
 				return transport;
 			} else {
 				throw new ConfigurationException ("ProxyTransport was not defined in the " + clientConfig.getConfigurationFile());
