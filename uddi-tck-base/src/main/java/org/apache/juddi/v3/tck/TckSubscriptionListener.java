@@ -50,11 +50,9 @@ public class TckSubscriptionListener
    
 	final static String JOE_SUBSCRIPTION_XML = "uddi_data/subscription/subscription1.xml";
     final static String JOE_SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
-	final static String JOE_SUBSCRIPTIONRESULTS_XML = "uddi_data/subscription/subscriptionresults1.xml";
-
-	public final static String NOTIFIER_BINDING_XML = "uddi_data/subscriptionnotifier/bindingTemplate.xml";
-    public final static String NOTIFIER_BINDING_KEY = "uddi:uddi.joepublisher.com:bindingnotifier";    
+	final static String JOE_SUBSCRIPTIONRESULTS_XML = "uddi_data/subscription/subscriptionresults1.xml";   
     
+	/** note that the subscription1.xml contains the binding template for the UDDI server to call back into */
 	public final static String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
     public final static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
     
@@ -75,7 +73,6 @@ public class TckSubscriptionListener
 		try {
 			SaveBinding sb = new SaveBinding();
 			sb.setAuthInfo(authInfo);
-			
 			BindingTemplate btIn = (BindingTemplate)EntityCreator.buildFromDoc(bindingXML, "org.uddi.api_v3");
 			sb.getBindingTemplate().add(btIn);
 			publication.saveBinding(sb);		

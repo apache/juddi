@@ -14,9 +14,7 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import javax.xml.ws.Endpoint;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
@@ -36,28 +34,37 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UDDI_090_SubscriptionListenerIntegrationTest
 {
+	
+	
 	private static Logger logger = Logger.getLogger(UDDI_090_SubscriptionListenerIntegrationTest.class);
 
 	private static TckTModel tckTModel                    = null;
 	private static TckBusiness tckBusiness                = null;
 	private static TckBusinessService tckBusinessService  = null;
 	private static TckSubscriptionListener tckSubscriptionListener = null;
-
+	private static Endpoint endPoint;
 	private static String authInfoJoe = null;
 	private static UDDIClerkManager manager;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
 		manager.stop();
+		//shutting down the TCK SubscriptionListener
+		endPoint.stop();
 	}
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
+		
+		//bring up the TCK SubscriptionListener
+		endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new TCK_UDDISubscriptionListenerImpl());
+		
 		manager  = new UDDIClerkManager();
 		manager.start();
 		
 		logger.debug("Getting auth tokens..");
 		try {
+			 
 			 Transport transport = manager.getTransport();
         	 UDDISecurityPortType security = transport.getUDDISecurityService();
         	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
@@ -84,28 +91,23 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckSubscriptionListener.saveService(authInfoJoe);
+			
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
 
 			tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
-			
-			String tempdir = System.getProperty("java.io.tmpdir");
-			String file = tempdir + File.separator + "uddiclient.log";
-			System.out.println("Going to read from file: " + file);
 			
             //waiting up to 100 seconds for the listener to notice the change.
 			String test="";
 			for (int i=0; i<200; i++) {
 				Thread.sleep(500);
-				test = readLogAsString(file);
 				System.out.print(".");
-				if (test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
-					System.out.print("Found String");
+				if (TCK_UDDISubscriptionListenerImpl.notificationCount > 0) {
 					break;
 				} else {
 					System.out.print(test);
 				}
 			}
-			if (! test.contains("<name xml:lang=\"en\">Notifier One</name>")) {
+			if (TCK_UDDISubscriptionListenerImpl.notificationCount == 0 || !TCK_UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Notifier One</name>")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
 			
@@ -114,26 +116,12 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 			Assert.fail();
 		} finally {
+			
 			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}	
-	
-    private static String readLogAsString(String filePath)
-    throws java.io.IOException{
-        StringBuffer data = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
-        char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
-            data.append(buf, 0, numRead);
-        }
-        reader.close();
-        String notify = data.toString().replace("Notification received by UDDISubscriptionListenerService : <?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");
-        
-        return notify;
-    }
+    
 }
