@@ -66,7 +66,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 	private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
 
-	@Override
+	
     public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
 
@@ -108,7 +108,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
 
@@ -139,7 +139,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body)
 			throws DispositionReportFaultMessage {
 
@@ -170,7 +170,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
 
@@ -213,7 +213,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
 
@@ -244,7 +244,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public BindingDetail getBindingDetail(GetBindingDetail body)
 			throws DispositionReportFaultMessage {
 
@@ -284,7 +284,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public BusinessDetail getBusinessDetail(GetBusinessDetail body)
 			throws DispositionReportFaultMessage {
 
@@ -324,7 +324,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public OperationalInfos getOperationalInfo(GetOperationalInfo body)
 			throws DispositionReportFaultMessage {
 
@@ -364,7 +364,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
 
@@ -405,7 +405,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 		}
 	}
 
-	@Override
+	
     public TModelDetail getTModelDetail(GetTModelDetail body)
 			throws DispositionReportFaultMessage {
 
