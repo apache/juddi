@@ -42,12 +42,16 @@ public class JAXBMarshaller {
 	
 	public static final String PACKAGE_UDDIAPI = "org.uddi.api_v3";
 	public static final String PACKAGE_SUBSCRIPTION = "org.uddi.sub_v3";
+	public static final String PACKAGE_JUDDIAPI = "org.apache.juddi.api_v3";
+	public static final String PACKAGE_JUDDI = "org.apache.juddi";
 
 	private static final Map<String, JAXBContext> JAXBContexts = new HashMap<String, JAXBContext>();
 	static {
 		try {
 			JAXBContexts.put(PACKAGE_UDDIAPI, JAXBContext.newInstance(PACKAGE_UDDIAPI));
 			JAXBContexts.put(PACKAGE_SUBSCRIPTION, JAXBContext.newInstance(PACKAGE_SUBSCRIPTION));
+			JAXBContexts.put(PACKAGE_JUDDIAPI, JAXBContext.newInstance(PACKAGE_JUDDIAPI));
+			JAXBContexts.put(PACKAGE_JUDDI, JAXBContext.newInstance(PACKAGE_JUDDI));
 		} catch (JAXBException e) {
 			logger.error("Initialization of JAXBMarshaller failed:" + e, e);
 			throw new ExceptionInInitializerError(e);
@@ -98,6 +102,7 @@ public class JAXBMarshaller {
 
 		JAXBContext jc = JAXBContexts.get(thePackage);
 		Marshaller marshaller = jc.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		marshaller.marshal(object, baos);
 		rawObject = baos.toString();

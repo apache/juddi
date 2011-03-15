@@ -47,6 +47,7 @@ public class ObjectFactory {
     private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
     private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
     private final static QName _Publisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisher");
+   
     private final static QName _PublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetail");
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
@@ -84,6 +85,8 @@ public class ObjectFactory {
     public Publisher createPublisher() {
         return new Publisher();
     }
+    
+ 
 
     /**
      * Create an instance of {@link PublisherDetail }
@@ -153,6 +156,15 @@ public class ObjectFactory {
     public JAXBElement<Publisher> createPublisher(Publisher value) {
         return new JAXBElement<Publisher>(_Publisher_QNAME, Publisher.class, null, value);
     }
+    
+//    /**
+//     * Create an instance of {@link JAXBElement }{@code <}{@link RMIInfo }{@code >}}
+//     * 
+//     */
+//    @XmlElementDecl(name = "rmiInfo")
+//    public JAXBElement<RMIInfo> createRMIInfo(RMIInfo value) {
+//        return new JAXBElement<RMIInfo>(_RMIInfo_QNAME, RMIInfo.class, null, value);
+//    }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
