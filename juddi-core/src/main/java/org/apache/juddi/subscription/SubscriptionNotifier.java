@@ -17,7 +17,6 @@
 package org.apache.juddi.subscription;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,14 +42,13 @@ import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.model.Subscription;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.v3.client.UDDIService;
-import org.apache.juddi.v3.client.UDDIServiceWSDL;
+import org.apache.juddi.subscription.notify.Notifier;
+import org.apache.juddi.subscription.notify.NotifierFactory;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 /**
  * 
@@ -65,6 +63,8 @@ public class SubscriptionNotifier extends TimerTask {
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
+	private Boolean registryHasChanges = true;
+	private Boolean alwaysNotify = false;
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
@@ -74,12 +74,13 @@ public class SubscriptionNotifier extends TimerTask {
 
 	public void run() 
 	{
-		if (firedOnTime(scheduledExecutionTime())) {
+		if (alwaysNotify || (registryHasChanges && firedOnTime(scheduledExecutionTime()))) {
 			long startTime = System.currentTimeMillis();
 			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
+				//expireCache after subscription.getExpiresAfter().getTime()
 				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
 					try {
 						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
@@ -96,8 +97,7 @@ public class SubscriptionNotifier extends TimerTask {
 					} catch (Exception e) {
 						log.error("Could not obtain subscriptionResult for subscriptionKey " 
 								+ subscription.getSubscriptionKey() + ". " + e.getMessage(),e);
-					}
-						
+					}	
 				}
 			}
             long endTime   = System.currentTimeMillis();
@@ -137,22 +137,22 @@ public class SubscriptionNotifier extends TimerTask {
 		throws DispositionReportFaultMessage, DatatypeConfigurationException {
 		
 		GetSubscriptionResults getSubscriptionResults = null;
-		Date startPoint = subscription.getLastNotified();
-		if (startPoint==null) startPoint = new Date(0);
-
 		Duration duration = TypeConvertor.convertStringToDuration(subscription.getNotificationInterval());
-		Date nextDesiredNotificationDate = new Date(startPoint.getTime());
+		Date startPoint = subscription.getLastNotified();
+		Date nextDesiredNotificationDate = null;
+		if (startPoint==null) startPoint = subscription.getCreateDate();
+		nextDesiredNotificationDate = new Date(startPoint.getTime());
 		duration.addTo(nextDesiredNotificationDate);
 
 		if (subscription.getLastNotified()==null || nextDesiredNotificationDate.after(startPoint) && nextDesiredNotificationDate.before(endPoint)) {
 			getSubscriptionResults = new GetSubscriptionResults();
-			
 			CoveragePeriod period = new CoveragePeriod();
 			GregorianCalendar calendar = new GregorianCalendar();
 			calendar.setTimeInMillis(startPoint.getTime());
 			period.setStartPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 			calendar.setTimeInMillis(endPoint.getTime());
 			period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+			log.info("Period " + period.getStartPoint() + " " + period.getEndPoint());
 			getSubscriptionResults.setCoveragePeriod(period);
 		}
 		return getSubscriptionResults;
@@ -235,13 +235,12 @@ public class SubscriptionNotifier extends TimerTask {
 			}
 			
 			if (bindingTemplate!=null) {
-				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
+				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType()) ||
+						AccessPointType.WSDL_DEPLOYMENT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 					try {
-						URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION_LISTENER, bindingTemplate.getAccessPointUrl());
-						UDDIService service = new UDDIService(tmpWSDLFile);
-						UDDISubscriptionListenerPortType subscriptionListenerPort =  service.getUDDISubscriptionListenerPort();
+						Notifier notifier = new NotifierFactory().getNotifier(bindingTemplate);
 						log.info("Sending out notification to " + bindingTemplate.getAccessPointUrl());
-						subscriptionListenerPort.notifySubscriptionListener(body);
+						notifier.notifySubscriptionListener(body);
 						//there maybe more chunks we have to send
 						String chunkToken=body.getSubscriptionResultsList().getChunkToken();
 						while(chunkToken!=null) {
@@ -251,7 +250,7 @@ public class SubscriptionNotifier extends TimerTask {
 							getSubscriptionResults.setChunkToken(chunkToken);
 							resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
 							body.setSubscriptionResultsList(resultList);
-							subscriptionListenerPort.notifySubscriptionListener(body);
+							notifier.notifySubscriptionListener(body);
 							chunkToken=body.getSubscriptionResultsList().getChunkToken();
 						}
 						//now log to the db that we completed sending the notification.

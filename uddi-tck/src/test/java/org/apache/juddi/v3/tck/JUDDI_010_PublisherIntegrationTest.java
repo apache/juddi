@@ -22,6 +22,8 @@ import java.util.List;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
@@ -32,7 +34,6 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -47,7 +48,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class JUDDI_010_PublisherIntegrationTest {
 	
-	private static Logger logger = Logger.getLogger(JUDDI_010_PublisherIntegrationTest.class);
+	private static Log logger = LogFactory.getLog(JUDDI_010_PublisherIntegrationTest.class);
 	private static UDDIClerkManager manager;
 	private static UDDISecurityPortType security =null;
 	private static JUDDIApiPortType publisher = null;

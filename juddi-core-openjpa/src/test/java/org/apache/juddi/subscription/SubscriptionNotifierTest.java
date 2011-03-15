@@ -70,7 +70,7 @@ public class SubscriptionNotifierTest
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			//tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
 			//tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
 		} catch (RemoteException e) {
@@ -87,11 +87,14 @@ public class SubscriptionNotifierTest
 		Collection<Subscription> subscriptions = notifier.getAllAsyncSubscriptions();
 		Assert.assertEquals(1, subscriptions.size());
 		Subscription subscription = subscriptions.iterator().next();
-		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription, new Date());
+		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription, new Date(new Date().getTime() + 60000l));
 		getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 		UddiEntityPublisher publisher = new UddiEntityPublisher();
 		publisher.setAuthorizedName(subscription.getAuthorizedName());
 		SubscriptionResultsList resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
+		Assert.assertNull(resultList.getServiceList());
+		tckBusinessService.updateJoePublisherService(authInfoJoe, "updated description");
+		resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
 		//We're expecting a changed service (since it was added in the 
 		Assert.assertNotNull(resultList.getServiceList());
 		//We should detect these changes.
@@ -105,7 +108,7 @@ public class SubscriptionNotifierTest
 	@AfterClass
 	public static void teardown() {
 		tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
-		tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+		//tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 		tckBusinessService.deleteJoePublisherService(authInfoJoe);
 		tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 		tckTModel.deleteJoePublisherTmodel(authInfoJoe);

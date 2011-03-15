@@ -16,13 +16,13 @@
  *
  */ -->
 <businessService xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     businessKey="uddi:uddi.joepublisher.com:businessone" serviceKey="uddi:uddi.joepublisher.com:notifierone">
-  <name xml:lang="en">Notifier One</name>
-  <name xml:lang="es">Notifier Uno</name>
-  <description xml:lang="en">This is the description of notifier one.</description>
-  <description xml:lang="es">Ésta es la descripción del notifier uno.</description>
+     businessKey="uddi:uddi.joepublisher.com:businessone" serviceKey="uddi:uddi.joepublisher.com:listenerone">
+  <name xml:lang="en">Listener One</name>
+  <name xml:lang="es">Listener Uno</name>
+  <description xml:lang="en">This is the description of listener one.</description>
+  <description xml:lang="es">Ésta es la descripción del listener uno.</description>
   <bindingTemplates>
-	<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindingnotifier">
+	<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindinglistener">
 	  <description xml:lang="en">This is the endpoint for the subscription listener</description>
 	  <accessPoint useType="endPoint">http://localhost:12345/tcksubscriptionlistener</accessPoint>
 	  <tModelInstanceDetails>

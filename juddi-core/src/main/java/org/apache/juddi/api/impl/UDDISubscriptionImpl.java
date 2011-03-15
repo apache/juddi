@@ -150,6 +150,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				logger.error("JAXB Exception while unmarshalling subscription filter", e);
 				throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
 			}
+			if (logger.isDebugEnabled()) logger.debug("filter=" + modelSubscription.getSubscriptionFilter());
 			
 			SubscriptionResultsList result = new SubscriptionResultsList();
 			result.setCoveragePeriod(body.getCoveragePeriod());
@@ -186,7 +187,6 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			if (subscriptionFilter.getFindBinding() != null) {
 				//Get the current matching keys
 				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-	
 				// See if there's any missing keys by comparing against the previous matches.  If so, they missing keys are added to the KeyBag and
 				// then added to the result
 				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
@@ -290,7 +290,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			if (subscriptionFilter.getFindService() != null) {
 				//Get the current matching keys
 				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-	
+				logger.info("current matching keys=" + currentMatchingKeys);
 				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
 				if (missingKeys != null && missingKeys.size() > 0) {
 					KeyBag missingKeyBag = new KeyBag();

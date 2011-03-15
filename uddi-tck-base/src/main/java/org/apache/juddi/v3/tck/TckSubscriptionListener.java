@@ -40,21 +40,12 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class TckSubscriptionListener
 {
-	public final static String SUBSCRIBED_SERVICE_XML              = "uddi_data/subscriptionnotifier/businessService.xml";
-    public final static String SUBSCRIBED_SERVICE_KEY              = "uddi:uddi.joepublisher.com:notifierone";
+	public String LISTENER_SERVICE_XML              = "uddi_data/subscriptionnotifier/listenerService.xml";
+    public String LISTENER_SERVICE_KEY              = "uddi:uddi.joepublisher.com:listenerone";
 
-	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
-    final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
-    final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
-    final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
-   
-	final static String JOE_SUBSCRIPTION_XML = "uddi_data/subscription/subscription1.xml";
-    final static String JOE_SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
-	final static String JOE_SUBSCRIPTIONRESULTS_XML = "uddi_data/subscription/subscriptionresults1.xml";   
-    
 	/** note that the subscription1.xml contains the binding template for the UDDI server to call back into */
-	public final static String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
-    public final static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
+	public String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
+    public String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
     
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -105,7 +96,7 @@ public class TckSubscriptionListener
 			ss = new SaveService();
 			ss.setAuthInfo(authInfo);
 			
-			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(SUBSCRIBED_SERVICE_XML, "org.uddi.api_v3");
+			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(LISTENER_SERVICE_XML, "org.uddi.api_v3");
 			ss.getBusinessService().add(bsIn);
 			publication.saveService(ss);
 			
@@ -114,18 +105,6 @@ public class TckSubscriptionListener
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
 		}
-	}
-	
-	public void changeSubscribedObject(String authInfo) {
-		try	{
-			ss.getBusinessService().get(0).getDescription().get(0).setValue("foo");
-			publication.saveService(ss);
-		} catch(Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage(), e);
-			Assert.fail("No exception should be thrown. " + e.getMessage());
-		}
-
 	}
 
 	public void saveNotifierSubscription(String authInfo) {

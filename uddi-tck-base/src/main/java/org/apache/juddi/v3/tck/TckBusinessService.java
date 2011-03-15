@@ -24,9 +24,13 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.junit.Assert;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.FindQualifiers;
+import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.ServiceList;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 /**
@@ -59,6 +63,10 @@ public class TckBusinessService
 
 	public void saveJoePublisherService(String authInfoJoe) {
 		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
+	}
+	
+	public void updateJoePublisherService(String authInfoJoe, String description) {
+		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY, description);
 	}
 	
 	public void saveJoePublisherService2(String authInfoJoe) {
@@ -130,15 +138,20 @@ public class TckBusinessService
 		}
 	}
 	
-	
 	public void saveService(String authInfo, String serviceXML, String serviceKey) {
+		saveService(authInfo, serviceXML, serviceKey, null);
+	}
+	
+	public void saveService(String authInfo, String serviceXML, String serviceKey, String description) {
 		try {
 			// First save the entity
 			SaveService ss = new SaveService();
 			ss.setAuthInfo(authInfo);
 			
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(serviceXML, "org.uddi.api_v3");
-			ss.getBusinessService().add(bsIn);
+			
+			if (description!=null) bsIn.getDescription().get(0).setValue("updated description");
+		    ss.getBusinessService().add(bsIn);
 			publication.saveService(ss);
 			
 			// Now get the entity and check the values
@@ -154,6 +167,7 @@ public class TckBusinessService
 			TckValidator.checkDescriptions(bsIn.getDescription(), bsOut.getDescription());
 			TckValidator.checkBindingTemplates(bsIn.getBindingTemplates(), bsOut.getBindingTemplates());
 			TckValidator.checkCategories(bsIn.getCategoryBag(), bsOut.getCategoryBag());
+			
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);

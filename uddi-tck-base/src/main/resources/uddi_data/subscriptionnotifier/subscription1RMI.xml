@@ -17,7 +17,7 @@
  */
 -->
 <subscription xmlns="urn:uddi-org:sub_v3">
-  <subscriptionKey>uddi:uddi.joepublisher.com:subscriptionone</subscriptionKey>
+  <subscriptionKey>uddi:uddi.joepublisher.com:subscriptiononermi</subscriptionKey>
   <subscriptionFilter>
     <find_service xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
       <findQualifiers>
@@ -26,7 +26,7 @@
       <name xml:lang="en">Service One</name>
     </find_service>
   </subscriptionFilter>
-  <bindingKey xmlns="urn:uddi-org:api_v3">uddi:uddi.joepublisher.com:bindinglistener</bindingKey>
+  <bindingKey xmlns="urn:uddi-org:api_v3">uddi:uddi.joepublisher.com:bindinglistenerrmi</bindingKey>
   <notificationInterval>P5D</notificationInterval>
   <maxEntities>1000</maxEntities>
 </subscription>

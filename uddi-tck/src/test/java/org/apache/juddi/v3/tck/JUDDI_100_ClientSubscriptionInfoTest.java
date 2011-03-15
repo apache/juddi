@@ -15,6 +15,8 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
@@ -25,7 +27,6 @@ import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,7 +41,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 
 	private static UDDISecurityPortType security      = null;
 	private static JUDDIApiPortType publisher         = null;
-	private static Logger logger                      = Logger.getLogger(JUDDI_100_ClientSubscriptionInfoTest.class);
+	private static Log logger = LogFactory.getLog(JUDDI_100_ClientSubscriptionInfoTest.class);
 	private static String authInfo                    = null;
 	private static UDDIClerkManager manager;
 

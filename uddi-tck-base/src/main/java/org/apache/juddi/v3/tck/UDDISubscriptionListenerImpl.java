@@ -18,6 +18,8 @@
 package org.apache.juddi.v3.tck;
 
 import java.io.StringWriter;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,12 +46,21 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
-public class TCK_UDDISubscriptionListenerImpl implements
+public class UDDISubscriptionListenerImpl extends UnicastRemoteObject  implements
 		UDDISubscriptionListenerPortType {
 	
-	private static Log logger = LogFactory.getLog(TCK_UDDISubscriptionListenerImpl.class);
+	private static final long serialVersionUID = -4621713293140278731L;
+	private static Log logger = LogFactory.getLog(UDDISubscriptionListenerImpl.class);
 	public static Integer notificationCount = 0;
 	public static Map<Integer,String> notifcationMap = new HashMap<Integer,String>();
+	
+	public UDDISubscriptionListenerImpl() throws RemoteException  {
+		super();
+	}
+	
+	public UDDISubscriptionListenerImpl(int port) throws RemoteException {
+		super(port);
+	}
 	
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)

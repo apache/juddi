@@ -32,8 +32,17 @@ public interface Property
 	public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME ="juddi.notification.acceptable.lagtime";
 	public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES="juddi.subscription.chunkexpiration.minutes";
 	public final static String JUDDI_JNDI_REGISTRATION           ="juddi.jndi.registration";
-	public final static String JUDDI_SUBSCRIPTION_NOTIFICATION   ="juddi.subscription.notification";
 	public final static String JUDDI_RMI_PORT                    ="juddi.rmi.port";
+	public final static String JUDDI_RMI_REGISTRATION            ="juddi.rmi.registration";
+	public final static String JUDDI_RMI_REGISTRY_PORT           ="juddi.rmi.registry.port";
+	public final static String JUDDI_SUBSCRIPTION_NOTIFICATION   ="juddi.subscription.notification";
+	public final static String JUDDI_EMAIL_HOST                   ="juddi.email.host";
+	public final static String JUDDI_EMAIL_PORT                   ="juddi.email.port";
+	public final static String JUDDI_EMAIL_AUTH                   ="juddi.email.auth";
+	public final static String JUDDI_EMAIL_USER                   ="juddi.email.user";
+	public final static String JUDDI_EMAIL_PASSWORD               ="juddi.email.password";
+	public final static String JUDDI_EMAIL_TRANSPORT              ="juddi.email.transport";
+	public final static String JUDDI_EMAIL_FROM                   ="juddi.email.from";
 	
 	public final static String DEFAULT_CRYPTOR                   ="org.apache.juddi.cryptor.DefaultCryptor";
 	public final static String DEFAULT_USERSFILE                 ="juddi-users.properties";
@@ -42,5 +51,6 @@ public interface Property
 	public final static String DEFAULT_SECURITY_DOMAIN           ="java:/jaas/other";
 	public final static boolean DEFAULT_LOAD_INSTALL_DATA        =true;
 	public final static String DEFAULT_BASE_URL                  ="http://localhost:8080/juddiv3";
+	
 	
 }

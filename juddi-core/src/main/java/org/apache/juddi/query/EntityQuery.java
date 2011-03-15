@@ -123,7 +123,7 @@ public abstract class EntityQuery {
 		// If keysIn is null, then no IN list is applied to the query - we simply need to run the query.  Otherwise, the IN list is chunked based on
 		// the application property.
 		if (keysIn == null) {
-			log.debug(dynamicQry);
+			if (log.isDebugEnabled()) log.debug(dynamicQry);
 			Query qry = dynamicQry.buildJPAQuery(em);
 			result = qry.getResultList();
 		}

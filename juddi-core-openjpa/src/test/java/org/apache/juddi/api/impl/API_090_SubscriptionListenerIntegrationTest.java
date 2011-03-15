@@ -1,4 +1,4 @@
-package org.apache.juddi.v3.tck;
+package org.apache.juddi.api.impl;
 
 /*
  * Copyright 2001-2009 The Apache Software Foundation.
@@ -19,65 +19,61 @@ import javax.xml.ws.Endpoint;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.Registry;
+import org.apache.juddi.v3.tck.TckBusiness;
+import org.apache.juddi.v3.tck.TckBusinessService;
+import org.apache.juddi.v3.tck.TckPublisher;
+import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckSubscriptionListener;
+import org.apache.juddi.v3.tck.TckTModel;
+import org.apache.juddi.v3.tck.UDDISubscriptionListenerImpl;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
-import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
-public class UDDI_090_SubscriptionListenerIntegrationTest
+public class API_090_SubscriptionListenerIntegrationTest
 {
-	
-	
-	private static Log logger = LogFactory.getLog(UDDI_090_SubscriptionListenerIntegrationTest.class);
-
-	private static TckTModel tckTModel                    = null;
-	private static TckBusiness tckBusiness                = null;
-	private static TckBusinessService tckBusinessService  = null;
-	private static TckSubscriptionListener tckSubscriptionListener = null;
+	private static Log logger = LogFactory.getLog(API_090_SubscriptionListenerIntegrationTest.class);
+	private static API_010_PublisherTest api010      = new API_010_PublisherTest();
+	private static TckTModel tckTModel               = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusiness tckBusiness           = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckBusinessService tckBusinessService  = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckSubscriptionListener tckSubscriptionListener = new TckSubscriptionListener(new UDDISubscriptionImpl(), new UDDIPublicationImpl());
 	private static Endpoint endPoint;
 	private static String authInfoJoe = null;
-	private static UDDIClerkManager manager;
+	
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
-		manager.stop();
+		//manager.stop();
 		//shutting down the TCK SubscriptionListener
 		endPoint.stop();
+		
+		Registry.stop();
 	}
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
+		Registry.start();
 		try {
 			//bring up the TCK SubscriptionListener
 			endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
 			
-			manager  = new UDDIClerkManager();
-			manager.start();
+			//manager  = new UDDIClerkManager();
+			//manager.start();
 			
 			logger.debug("Getting auth tokens..");
 		
 			 
-			 Transport transport = manager.getTransport();
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
+			 api010.saveJoePublisher();
+			 UDDISecurityPortType security      = new UDDISecurityImpl();
         	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
         	 Assert.assertNotNull(authInfoJoe);
-        	 UDDISubscriptionPortType subscription = transport.getUDDISubscriptionService();
-        	 
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        	 tckTModel  = new TckTModel(publication, inquiry);
-        	 tckBusiness = new TckBusiness(publication, inquiry);
-        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-        	 tckSubscriptionListener = new TckSubscriptionListener(subscription, publication);	
         	  
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
@@ -95,7 +91,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckSubscriptionListener.saveService(authInfoJoe);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
-            //Changing the service we subscribed to "JoePublisherService"
+			//Changing the service we subscribed to "JoePublisherService"
 			logger.info("Updating Service ********** ");
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			//tckSubscriptionListener.changeSubscribedObject(authInfoJoe);

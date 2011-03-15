@@ -18,9 +18,10 @@ package org.apache.juddi.v3.tck;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -55,7 +56,7 @@ public class UDDI_110_FindServicesIntegrationTest
 	
     final static String TOM_PUBLISHER_SERVICEINFO_NAME = "servicetest01";
     
-    private static Logger logger                     = Logger.getLogger(UDDI_040_BusinessServiceIntegrationTest.class);
+    private static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
 	
 	protected static TckTModel tckTModel               = null;
 	protected static TckTModel tckTModel01             = null;

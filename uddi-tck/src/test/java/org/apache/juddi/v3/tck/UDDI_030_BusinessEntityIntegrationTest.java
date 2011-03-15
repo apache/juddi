@@ -15,9 +15,10 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -32,7 +33,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UDDI_030_BusinessEntityIntegrationTest {
 	
-	private static Logger logger                = Logger.getLogger(UDDI_030_BusinessEntityIntegrationTest.class);
+	private static Log logger = LogFactory.getLog(UDDI_030_BusinessEntityIntegrationTest.class);
 	
 	protected static TckTModel tckTModel          = null;
 	protected static TckBusiness tckBusiness      = null;

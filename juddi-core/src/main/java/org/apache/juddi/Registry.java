@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.rmi.JNDIRegistration;
+import org.apache.juddi.rmi.RMIRegistration;
 import org.apache.juddi.subscription.SubscriptionNotifier;
 
 public class Registry {
@@ -64,6 +65,16 @@ public class Registry {
 					log.error("Unable to Register jUDDI services with JNDI. " + e.getMessage(), e);
 				}
 			}
+			if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_RMI_REGISTRATION, false)) {
+				try {
+					int rmiport = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_REGISTRY_PORT,1099);
+					int port = AppConfig.getConfiguration().getInteger(Property.JUDDI_RMI_PORT,0);
+					RMIRegistration.getInstance(rmiport).register(port);
+				} catch (Exception e) {
+					log.error("Unable to Register jUDDI services with RMI Registry. " + e.getMessage(), e);
+				}
+			}
+			
 			log.info("jUDDI registry started succesfully.");
 		}
  	}

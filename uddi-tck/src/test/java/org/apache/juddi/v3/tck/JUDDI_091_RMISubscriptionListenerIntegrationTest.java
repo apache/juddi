@@ -14,7 +14,9 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import javax.xml.ws.Endpoint;
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -30,41 +32,62 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
+import com.sun.xml.stream.xerces.util.URI;
+
 /**
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
-public class UDDI_090_SubscriptionListenerIntegrationTest
+public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 {
-	
-	
-	private static Log logger = LogFactory.getLog(UDDI_090_SubscriptionListenerIntegrationTest.class);
+	private static Log logger = LogFactory.getLog(JUDDI_091_RMISubscriptionListenerIntegrationTest.class);
 
 	private static TckTModel tckTModel                    = null;
 	private static TckBusiness tckBusiness                = null;
 	private static TckBusinessService tckBusinessService  = null;
-	private static TckSubscriptionListener tckSubscriptionListener = null;
-	private static Endpoint endPoint;
+	private static TckSubscriptionListenerRMI rmiSubscriptionListener = null;
+	
 	private static String authInfoJoe = null;
 	private static UDDIClerkManager manager;
+	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
+	private static Registry registry;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
 		manager.stop();
 		//shutting down the TCK SubscriptionListener
-		endPoint.stop();
+		//re
 	}
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
+			
 		try {
-			//bring up the TCK SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
+			//bring up the RMISubscriptionListener
+			URI rmiEndPoint = new URI("rmi://localhost:9876/tck/rmisubscriptionlistener");
+			registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
+			String path = rmiEndPoint.getPath();
 			
-			manager  = new UDDIClerkManager();
-			manager.start();
+			//starting the service
+			rmiSubscriptionListenerService = new UDDISubscriptionListenerImpl(0);
+			//binding to the RMI Registry
+			registry.bind(path,rmiSubscriptionListenerService);
 			
-			logger.debug("Getting auth tokens..");
+			//double check that the service is bound in the local Registry
+			Registry registry2 = LocateRegistry.getRegistry(rmiEndPoint.getHost(), rmiEndPoint.getPort());
+			registry2.lookup(rmiEndPoint.getPath());
+           
+            
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+			Assert.fail();
+		}
+
+		manager  = new UDDIClerkManager();
+		manager.start();
 		
+		logger.debug("Getting auth tokens..");
+		try {
 			 
 			 Transport transport = manager.getTransport();
         	 UDDISecurityPortType security = transport.getUDDISecurityService();
@@ -77,7 +100,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
         	 tckTModel  = new TckTModel(publication, inquiry);
         	 tckBusiness = new TckBusiness(publication, inquiry);
         	 tckBusinessService = new TckBusinessService(publication, inquiry);
-        	 tckSubscriptionListener = new TckSubscriptionListener(subscription, publication);	
+        	 rmiSubscriptionListener = new TckSubscriptionListenerRMI(subscription, publication);	
         	  
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
@@ -91,14 +114,11 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe);
-			//Saving the Subscription
-			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
-            //Changing the service we subscribed to "JoePublisherService"
-			logger.info("Updating Service ********** ");
+			rmiSubscriptionListener.saveService(authInfoJoe);
+			
+			rmiSubscriptionListener.saveNotifierSubscription(authInfoJoe);
+
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
-			//tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
 			
             //waiting up to 100 seconds for the listener to notice the change.
 			String test="";
@@ -124,7 +144,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			Assert.fail();
 		} finally {
 			
-			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
+			rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
