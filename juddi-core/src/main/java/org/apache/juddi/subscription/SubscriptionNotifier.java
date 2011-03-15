@@ -152,7 +152,7 @@ public class SubscriptionNotifier extends TimerTask {
 			period.setStartPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 			calendar.setTimeInMillis(endPoint.getTime());
 			period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
-			log.info("Period " + period.getStartPoint() + " " + period.getEndPoint());
+			if (log.isDebugEnabled()) log.debug("Period " + period.getStartPoint() + " " + period.getEndPoint());
 			getSubscriptionResults.setCoveragePeriod(period);
 		}
 		return getSubscriptionResults;
