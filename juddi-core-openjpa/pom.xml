@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.5-SNAPSHOT</version>
+		<version>3.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddi-core-openjpa</artifactId>
 	<packaging>bundle</packaging>
@@ -51,7 +51,7 @@
 				<version>1.4.0</version>
 				<configuration>
 				<instructions>
-				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
+				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.subscription.notify, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
 				<Include-Resource>juddi_install_data=target/classes/juddi_install_data, META-INF/persistence.xml=target/classes/META-INF/persistence.xml, target/classes/messages.properties</Include-Resource>
 			
 				</instructions>
@@ -172,6 +172,12 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>8.2-504.jdbc3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
 			<scope>test</scope>
 		</dependency>
 

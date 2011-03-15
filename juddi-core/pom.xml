@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.0.5-SNAPSHOT</version>
+		<version>3.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddi-core</artifactId>
 	<packaging>bundle</packaging>
@@ -51,7 +51,7 @@
 				<version>1.4.0</version>
 				<configuration>
 				<instructions>
-				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
+				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.subscription.notify, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
 				<Include-Resource>juddi_install_data=src/main/resources/juddi_install_data, src/main/resources/messages.properties</Include-Resource>
 			
 				</instructions>
@@ -149,6 +149,12 @@
 			<version>1.6</version>
 		</dependency>
 		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.5.3.0</version>
@@ -178,7 +184,6 @@
 		    <version>2.2</version>
 		    <scope>test</scope>
 		</dependency>
-		
 	</dependencies>
 	<profiles>
 		<profile>
