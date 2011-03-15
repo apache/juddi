@@ -92,10 +92,12 @@ public class SubscriptionNotifierTest
 		UddiEntityPublisher publisher = new UddiEntityPublisher();
 		publisher.setAuthorizedName(subscription.getAuthorizedName());
 		SubscriptionResultsList resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
+		logger.info("Expecting the resultList to be null: " + resultList.getServiceList());
 		Assert.assertNull(resultList.getServiceList());
 		tckBusinessService.updateJoePublisherService(authInfoJoe, "updated description");
 		resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
-		//We're expecting a changed service (since it was added in the 
+		//We're expecting a changed service
+		logger.info("Expecting the resultList to have 1 service: " + resultList.getServiceList().getServiceInfos().getServiceInfo().size());
 		Assert.assertNotNull(resultList.getServiceList());
 		//We should detect these changes.
 		boolean hasChanges = notifier.resultListContainsChanges(resultList);

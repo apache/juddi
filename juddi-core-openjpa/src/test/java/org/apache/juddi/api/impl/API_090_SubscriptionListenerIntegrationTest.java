@@ -92,7 +92,6 @@ public class API_090_SubscriptionListenerIntegrationTest
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
 			//Changing the service we subscribed to "JoePublisherService"
-			logger.info("Updating Service ********** ");
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			//tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
 			

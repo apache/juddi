@@ -290,7 +290,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			if (subscriptionFilter.getFindService() != null) {
 				//Get the current matching keys
 				List<?> currentMatchingKeys = getSubscriptionMatches(subscriptionFilter, em);
-				logger.info("current matching keys=" + currentMatchingKeys);
+				if (logger.isDebugEnabled()) logger.debug("current matching keys=" + currentMatchingKeys);
 				List<String> missingKeys = getMissingKeys(currentMatchingKeys, modelSubscription.getSubscriptionMatches());
 				if (missingKeys != null && missingKeys.size() > 0) {
 					KeyBag missingKeyBag = new KeyBag();
