@@ -339,14 +339,16 @@ public class InquiryHelper {
 			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren());
 			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
+				logger.info("after");
 				continue;
 			}
 			
 			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
+				logger.info("before");
 				continue;
 			}
-			
+			logger.info("keeping");
 			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
 			
 			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
