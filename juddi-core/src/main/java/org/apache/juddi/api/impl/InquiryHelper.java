@@ -329,7 +329,7 @@ public class InquiryHelper {
 			currentIndex = subscriptionStartIndex.value;
 
 		int returnedRowCount = 0;
-		logger.info("Period = " + modifiedAfter + " "+ modifiedAfter.getTime() + " ---- " + modifiedBefore + " " + modifiedBefore.getTime());
+		logger.info("Period = " + modifiedAfter + " ---- " + modifiedBefore);
 		while (currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
@@ -339,12 +339,14 @@ public class InquiryHelper {
 			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren() + " " + modelBusinessService.getModifiedIncludingChildren().getTime() );
 			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
+				logger.info(modifiedAfter.getTime() + " " + modelBusinessService.getModifiedIncludingChildren().getTime());
 				logger.info("after");
 				continue;
 			}
 			
 			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
+				logger.info(modifiedBefore.getTime() + " " + modelBusinessService.getModifiedIncludingChildren().getTime());
 				logger.info("before");
 				continue;
 			}
