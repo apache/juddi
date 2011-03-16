@@ -329,14 +329,14 @@ public class InquiryHelper {
 			currentIndex = subscriptionStartIndex.value;
 
 		int returnedRowCount = 0;
-		logger.info("Period = " + modifiedAfter + " ---- " + modifiedBefore);
+		logger.info("Period = " + modifiedAfter + " "+ modifiedAfter.getTime() + " ---- " + modifiedBefore + " " + modifiedBefore.getTime());
 		while (currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
 			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
 			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
 			
-			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren());
+			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren() + " " + modelBusinessService.getModifiedIncludingChildren().getTime() );
 			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
 				logger.info("after");
