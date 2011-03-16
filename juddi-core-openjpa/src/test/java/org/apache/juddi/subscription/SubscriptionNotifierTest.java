@@ -97,7 +97,7 @@ public class SubscriptionNotifierTest
 		tckBusinessService.updateJoePublisherService(authInfoJoe, "updated description");
 		resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
 		//We're expecting a changed service
-		logger.info("Expecting the resultList to have 1 service: " + resultList.getServiceList().getServiceInfos().getServiceInfo().size());
+		logger.info("Expecting the resultList to have 1 service: " + resultList.getServiceList());
 		Assert.assertNotNull(resultList.getServiceList());
 		//We should detect these changes.
 		boolean hasChanges = notifier.resultListContainsChanges(resultList);

@@ -23,6 +23,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.xml.ws.Holder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.query.FetchBindingTemplatesQuery;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
@@ -70,6 +72,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  */
 public class InquiryHelper {
 
+	private static Log logger = LogFactory.getLog(InquiryHelper.class);
+	
 	public static List<?> findBinding(FindBinding body, FindQualifiers findQualifiers, EntityManager em) throws DispositionReportFaultMessage {
 
 		List<?> keysFound = null;
@@ -325,13 +329,14 @@ public class InquiryHelper {
 			currentIndex = subscriptionStartIndex.value;
 
 		int returnedRowCount = 0;
-		
+		logger.info("Period = " + modifiedAfter + " ---- " + modifiedBefore);
 		while (currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
 			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
 			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
 			
+			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren());
 			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
 				continue;
