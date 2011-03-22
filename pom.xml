@@ -30,7 +30,7 @@
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
 		Integration (UDDI) specification for Web Services.</description>
-	<url>http://ws.apache.org/juddi/</url>
+	<url>http://juddi.apache.org/</url>
 	
 	<properties>
         <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
