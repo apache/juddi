@@ -71,6 +71,12 @@ public class SubscriptionNotifier extends TimerTask {
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(this, startBuffer, interval);
 	}
+	
+	@Override
+	public boolean cancel() {
+		timer.cancel();
+		return super.cancel();
+	}
 
 	public void run() 
 	{
