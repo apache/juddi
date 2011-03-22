@@ -53,7 +53,11 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created", length = 29)
 	public Date getCreated() {
-		return created;
+		if (created!=null) {
+			return new Date(created.getTime());
+		} else {
+			return null;
+		}
 	}
 	public void setCreated(Date created) {
 		this.created = created;
@@ -62,7 +66,11 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modified", nullable = false, length = 29)
 	public Date getModified() {
-		return this.modified;
+		if (modified!=null) {
+			return new Date(modified.getTime());
+		} else {
+			return null;
+		}
 	}
 	public void setModified(Date modified) {
 		this.modified = modified;
@@ -71,7 +79,11 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modified_including_children", length = 29)
 	public Date getModifiedIncludingChildren() {
-		return modifiedIncludingChildren;
+		if (modifiedIncludingChildren!=null) {
+			return new Date(modifiedIncludingChildren.getTime());
+		} else {
+			return null;
+		}
 	}
 	public void setModifiedIncludingChildren(Date modifiedIncludingChildren) {
 		this.modifiedIncludingChildren = modifiedIncludingChildren;

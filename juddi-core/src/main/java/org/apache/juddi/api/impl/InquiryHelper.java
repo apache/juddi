@@ -329,7 +329,7 @@ public class InquiryHelper {
 			currentIndex = subscriptionStartIndex.value;
 
 		int returnedRowCount = 0;
-		logger.info("Period = " + modifiedAfter + " ---- " + modifiedBefore);
+		if (logger.isDebugEnabled()) logger.debug("Period = " + modifiedAfter + " ---- " + modifiedBefore);
 		while (currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
@@ -337,20 +337,15 @@ public class InquiryHelper {
 			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
 			
 			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren() + " " + modelBusinessService.getModifiedIncludingChildren().getTime() );
-			if (modifiedAfter != null && modifiedAfter.getTime() > (modelBusinessService.getModifiedIncludingChildren().getTime())) {
+			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
-				logger.info(modifiedAfter.getTime() + " " + modelBusinessService.getModifiedIncludingChildren().getTime());
-				logger.info("after");
 				continue;
 			}
 			
-			if (modifiedBefore != null && modifiedBefore.getTime() < (modelBusinessService.getModifiedIncludingChildren().getTime())) {
+			if (modifiedBefore != null && modifiedBefore.before(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
-				logger.info(modifiedBefore.getTime() + " " + modelBusinessService.getModifiedIncludingChildren().getTime());
-				logger.info("before");
 				continue;
 			}
-			logger.info("keeping");
 			MappingModelToApi.mapServiceInfo(modelBusinessService, apiServiceInfo);
 			
 			result.getServiceInfos().getServiceInfo().add(apiServiceInfo);
