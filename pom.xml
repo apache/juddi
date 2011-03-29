@@ -237,6 +237,7 @@
 		<module>uddi-ws</module>
 		<module>uddi-tck-base</module>
 		<module>juddi-client</module>
+		<module>juddi-client-service</module>
 		<module>juddi-core</module>
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
