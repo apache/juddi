@@ -46,13 +46,16 @@ import org.w3c.dom.Node;
 public class UDDIPublicationService {
 	private final static String DEFAULT_NODE_NAME = "default";
 
-	  // collection of valid operations
-
+	private String managerName = null;
+	private String nodeName = null;
+	// collection of valid operations
 	private HashMap<String, Handler> operations = null;
 
 
 	  public UDDIPublicationService() {
 		super();
+		managerName = System.getProperty("org.apache.juddi.v3.client.manager.name");
+		nodeName    = System.getProperty("org.apache.juddi.v3.client.node.name",DEFAULT_NODE_NAME);
 		operations = new HashMap<String, Handler>();
 		operations.put("get_registeredInfo", new Handler("getRegisteredInfo", GetRegisteredInfo.class));
 	  	operations.put("save_business", new Handler("saveBusiness", SaveBusiness.class));
@@ -82,10 +85,10 @@ public class UDDIPublicationService {
 
 	public Node publish(Element uddiReq) throws Exception
 	{
-	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-	    String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
             UDDIPublicationPortType publish = transport.getUDDIPublishService();
 
 	    //new RequestHandler on it's own thread

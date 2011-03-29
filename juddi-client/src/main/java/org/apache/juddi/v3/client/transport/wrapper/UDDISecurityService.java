@@ -33,13 +33,18 @@ import org.w3c.dom.Node;
  * @author Kurt Stam (kurt.stam@redhat.com)
  */
 public class UDDISecurityService {
+
 	private final static String DEFAULT_NODE_NAME = "default";
 
+	private String managerName = null;
+	private String nodeName = null;
 	// collection of valid operations
 	private HashMap<String, Handler> operations = null;
 
 	public UDDISecurityService() {
 		super();
+		managerName = System.getProperty("org.apache.juddi.v3.client.manager.name");
+		nodeName    = System.getProperty("org.apache.juddi.v3.client.node.name",DEFAULT_NODE_NAME);
 		operations = new HashMap<String, Handler>();
 		operations.put("get_authToken", new Handler("getAuthToken", GetAuthToken.class));
 		operations.put("discard_authToken", new Handler("discardAuthToken", DiscardAuthToken.class));
@@ -57,10 +62,10 @@ public class UDDISecurityService {
 
 	public Node secure(Element uddiReq) throws Exception
 	{
-	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-	    String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
 	    UDDISecurityPortType security = transport.getUDDISecurityService();
 
 	    //new RequestHandler on it's own thread

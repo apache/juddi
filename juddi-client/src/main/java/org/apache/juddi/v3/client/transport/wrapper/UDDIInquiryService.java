@@ -49,12 +49,17 @@ import org.w3c.dom.Node;
  * @author Tom Cunningham (tcunning@apache.org)
  */
 public class UDDIInquiryService {
+	
 	private final static String DEFAULT_NODE_NAME = "default";
 
+	private String managerName = null;
+	private String nodeName = null;
 	private HashMap<String, Handler> operations = null;
 
 	public UDDIInquiryService() {
 		super();
+		managerName = System.getProperty("org.apache.juddi.v3.client.manager.name");
+		nodeName    = System.getProperty("org.apache.juddi.v3.client.node.name",DEFAULT_NODE_NAME);
 		operations = new HashMap<String, Handler>();
 		operations.put("find_business", new Handler("findBusiness", FindBusiness.class));
 		operations.put("find_service", new Handler("findService", FindService.class));
@@ -81,10 +86,10 @@ public class UDDIInquiryService {
 	}
 
 	public Node inquire(Element uddiReq) throws Exception {
-	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-	    String clazz = manager.getClientConfig().getUDDINode(DEFAULT_NODE_NAME).getProxyTransport();
+	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(DEFAULT_NODE_NAME);
+            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
             UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 
 	    //new RequestHandler on it's own thread
