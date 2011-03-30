@@ -821,4 +821,126 @@
         tModelKey="uddi:uddi.org:categorization:types"/>
      </categoryBag>
   </tModel>
+  <!--  New Canonical tModels (see also JUDDI-461) -->
+  <!--  1. WSDL Entity Type tModel -->
+  <tModel tModelKey="uddi:uddi.org:wsdl:types">
+    <name>uddi-org:wsdl:types</name>
+    <description xml:lang="en">WSDL Type Category System</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#wsdlTypes
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 2. XML Namespace tModel  -->
+  <tModel tModelKey="uddi:uddi.org:xml:namespace">
+    <name>uddi-org:xml:namespace</name>
+    <description xml:lang="en">A category system used to indicate namespaces</description>
+    <overviewDoc>
+        <overviewURL>   
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlNamespace
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 3. XML Local Name tModel  -->
+  <tModel tModelKey="uddi:uddi.org:xml:localname">
+    <name>uddi-org:xml:localName</name>
+    <description xml:lang="en">A category system used to indicate XML local names</description>
+    <overviewDoc>
+        <overviewURL>   
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#xmlLocalName
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!--  4. WSDL portType Reference tModel -->
+  <tModel tModelKey="uddi:uddi.org:wsdl:porttypereference">
+    <name>uddi-org:wsdl:portTypeReference</name>
+    <description xml:lang="en">A category system used to reference a wsdl:portType tModel</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#portTypeReference
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 5. SOAP Protocol tModel  -->
+  <tModel tModelKey="uddi:uddi.org:protocol:soap">
+    <name>uddi-org:protocol:soap</name>
+    <description xml:lang="en">A tModel that represents the SOAP 1.1 protocol</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#soap
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 6. HTTP Protocol tModel -->
+  <tModel tModelKey="uddi:uddi.org:protocol:http">
+    <name>uddi-org:protocol:http</name>
+    <description xml:lang="en">A tModel that represents the HTTP protocol</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#http
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 7. Protocol Categorization -->
+  <tModel tModelKey="uddi:uddi.org:wsdl:categorization:protocol">
+    <name>uddi-org:wsdl:categorization:protocol</name>
+    <description xml:lang="en">Category system used to describe the protocol supported by a wsdl:binding</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#protocol
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 8. Transport Categorization -->
+  <tModel tModelKey="uuid:e5c43936-86e4-37bf-8196-1d04b35c0099">
+    <name>uddi:uddi.org:wsdl:categorization:transport</name>
+    <description xml:lang="en">Category system used to describe the transport supported by a wsdl:binding</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#transport
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
+  <!-- 9. WSDL Address tModel -->
+  <tModel tModelKey="uddi:uddi.org:wsdl:address" >
+     <name>uddi-org:wsdl:address</name>
+     <description xml:lang="en">A tModel used to indicate the WSDL address option</description>
+     <overviewDoc>
+        <overviewURL>
+           http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#Address
+        </overviewURL>
+      </overviewDoc>
+  </tModel>
+  
 </save_tModel>
