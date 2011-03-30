@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -32,7 +34,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -124,7 +128,23 @@ public class XMLDocAuthenticator implements Authenticator
 	}
 	
 	public UddiEntityPublisher identify(String authInfo, String authorizedName) throws AuthenticationException {
-		return new UddiEntityPublisher(authorizedName);
+
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			Publisher publisher = em.find(Publisher.class, authorizedName);
+			if (publisher == null)
+				throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
+			
+			return publisher;
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+		
 	}
 
 }
