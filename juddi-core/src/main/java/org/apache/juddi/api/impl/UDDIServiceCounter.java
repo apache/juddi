@@ -159,7 +159,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
                         + successQueryCounter.size());
             }
         } else if (queryStatus == queryStatus.FAILED) {
-            IntHolder faultQuery = faultQueryCounter.get(query + " " + SUCCESSFUL_QUERIES);
+            IntHolder faultQuery = faultQueryCounter.get(query + " " + FAILED_QUERIES);
             if (faultQuery != null) {
                 faultQuery.value++;
             } else {
