@@ -22,6 +22,10 @@ import java.util.List;
 
 import javax.jws.WebService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.validation.ValidateReplication;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
@@ -36,9 +40,20 @@ import org.uddi.v3_service.UDDIReplicationPortType;
 			endpointInterface="org.uddi.v3_service.UDDIReplicationPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIReplicationImpl extends AuthenticatedService implements UDDIReplicationPortType {
+        private static Log log = LogFactory.getLog(UDDIReplicationImpl.class);
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDIReplicationImpl() {
+            super();
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+        }
 
 
 	public String doPing(DoPing body) throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(ReplicationQuery.DO_PING, QueryStatus.SUCCESS, procTime);
+
 		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
@@ -49,6 +64,11 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 			BigInteger responseLimitCount,
 			HighWaterMarkVectorType responseLimitVector)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(ReplicationQuery.GET_CHANGERECORDS, 
+                        QueryStatus.SUCCESS, procTime);
+
 		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
@@ -56,6 +76,10 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 	public List<ChangeRecordIDType> getHighWaterMarks()
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);
+
 		ValidateReplication.unsupportedAPICall();
 		return null;
 	}
@@ -63,12 +87,22 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 	public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
 			throws DispositionReportFaultMessage {
-		ValidateReplication.unsupportedAPICall();
+            long startTime = System.nanoTime();
+            long procTime = System.nanoTime() - startTime;
+            serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE, 
+                    QueryStatus.SUCCESS, procTime);
+
+	    ValidateReplication.unsupportedAPICall();
 	}
 
 
 	public void transferCustody(TransferCustody body)
 			throws DispositionReportFaultMessage {
-		ValidateReplication.unsupportedAPICall();
+	    long startTime = System.nanoTime();
+            long procTime = System.nanoTime() - startTime;
+            serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY, 
+                    QueryStatus.SUCCESS, procTime);
+
+	    ValidateReplication.unsupportedAPICall();
 	}
 }

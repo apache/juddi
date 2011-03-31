@@ -26,6 +26,9 @@ import javax.persistence.EntityTransaction;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.InquiryQuery;
+import org.apache.juddi.api.util.PublicationQuery;
+import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -59,18 +62,30 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-@WebService(serviceName="UDDIInquiryService",
+@WebService(serviceName="UDDIInquiryService",   
 			endpointInterface="org.uddi.v3_service.UDDIInquiryPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiryPortType {
 
-	private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
 
+    private static Log log = LogFactory.getLog(UDDIInquiryImpl.class);
+    private UDDIServiceCounter serviceCounter;
+        
+    public UDDIInquiryImpl() {
+        super();
+        serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+    }
 	
     public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateFindBinding(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateFindBinding(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -98,6 +113,8 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
 		} finally {
@@ -111,8 +128,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateFindBusiness(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateFindBusiness(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -130,6 +153,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -142,8 +168,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -161,6 +193,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -173,8 +208,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateFindService(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateFindService(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -204,6 +245,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -216,9 +260,15 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateFindTModel(body, false);
-
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateFindTModel(body, false);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
+                    
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -235,6 +285,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -247,8 +300,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BindingDetail getBindingDetail(GetBindingDetail body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetBindingDetail(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateGetBindingDetail(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -275,6 +334,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.GET_BINDINGDETAIL, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -287,8 +349,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BusinessDetail getBusinessDetail(GetBusinessDetail body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetBusinessDetail(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateGetBusinessDetail(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -315,6 +383,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -327,8 +398,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public OperationalInfos getOperationalInfo(GetOperationalInfo body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetOperationalInfo(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateGetOperationalInfo(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -355,6 +432,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {
@@ -367,8 +447,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetServiceDetail(body);
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateGetServiceDetail(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -395,6 +481,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 
 		} finally {
@@ -408,9 +497,15 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public TModelDetail getTModelDetail(GetTModelDetail body)
 			throws DispositionReportFaultMessage {
-
-		new ValidateInquiry(null).validateGetTModelDetail(body);
-
+                long startTime = System.nanoTime();
+                try {
+                    new ValidateInquiry(null).validateGetTModelDetail(body);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.FAILED, procTime);                      
+                    throw drfm;
+                }
+                    
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -437,6 +532,9 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.SUCCESS, procTime);                      
+
 			return result;
 		} finally {
 			if (tx.isActive()) {

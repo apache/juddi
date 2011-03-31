@@ -19,6 +19,11 @@ package org.apache.juddi.api.impl;
 
 import javax.jws.WebService;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.ValueSetCachingQuery;
+import org.apache.juddi.api.util.ValueSetValidationQuery;
 import org.apache.juddi.validation.ValidateValueSetValidation;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -30,8 +35,22 @@ import org.uddi.vs_v3.ValidateValues;
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 		UDDIValueSetValidationPortType {
+        private static Log logger = LogFactory.getLog(UDDIValueSetValidationImpl.class);
+
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDIValueSetValidationImpl() {
+            super();
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+        }
+    
 	public DispositionReport validateValues(ValidateValues body)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES, 
+                        QueryStatus.SUCCESS, procTime);
+
 		ValidateValueSetValidation.unsupportedAPICall();
 		return null;
 	}

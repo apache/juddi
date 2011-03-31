@@ -32,6 +32,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.CustodyTransferQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.ValueSetValidationQuery;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -58,10 +63,20 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
 	public static final String TRANSFER_TOKEN_PREFIX = "transfertoken:";
 	public static final int DEFAULT_TRANSFEREXPIRATION_DAYS = 3;
+	
+        private static Log logger = LogFactory.getLog(UDDICustodyTransferImpl.class);
+    
+	private UDDIServiceCounter serviceCounter;
+
+	public UDDICustodyTransferImpl() {
+	    super();
+	    serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+	}
 
 	@SuppressWarnings("unchecked")
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -107,6 +122,10 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			}
 	
 			tx.commit();
+	                long procTime = System.nanoTime() - startTime;
+	                serviceCounter.update(CustodyTransferQuery.DISCARD_TRANSFERTOKEN, 
+	                        QueryStatus.SUCCESS, procTime);
+
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -118,6 +137,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 	public void getTransferToken(String authInfo, KeyBag keyBag,
 			Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
 			Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -165,6 +185,11 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			em.persist(transferToken);
 			
 			tx.commit();
+			
+	                long procTime = System.nanoTime() - startTime;
+	                serviceCounter.update(CustodyTransferQuery.GET_TRANSFERTOKEN, 
+	                        QueryStatus.SUCCESS, procTime);
+
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -175,6 +200,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
 	public void transferEntities(TransferEntities body)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -213,6 +239,10 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			em.remove(modelTransferToken);
 			
 			tx.commit();
+			long procTime = System.nanoTime() - startTime;
+	                serviceCounter.update(CustodyTransferQuery.TRANSFER_ENTITIES, 
+	                        QueryStatus.SUCCESS, procTime);
+
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

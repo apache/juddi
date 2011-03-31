@@ -22,6 +22,11 @@ import java.util.List;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SubscriptionQuery;
+import org.apache.juddi.api.util.ValueSetCachingQuery;
 import org.apache.juddi.validation.ValidateValueSetCaching;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetCachingPortType;
@@ -31,9 +36,24 @@ import org.uddi.vscache_v3.ValidValue;
 			endpointInterface="org.uddi.v3_service.UDDIValueSetCachingPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDDIValueSetCachingPortType {
-	public void getAllValidValues(String authInfo, String modelKey,
+
+    private static Log logger = LogFactory.getLog(UDDIValueSetCachingImpl.class);
+
+    private UDDIServiceCounter serviceCounter;
+
+    public UDDIValueSetCachingImpl() {
+        super();
+        serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+    }
+    
+    public void getAllValidValues(String authInfo, String modelKey,
 			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
 			throws DispositionReportFaultMessage {
-		ValidateValueSetCaching.unsupportedAPICall();
-	}
+            long startTime = System.nanoTime();
+            long procTime = System.nanoTime() - startTime;
+            serviceCounter.update(ValueSetCachingQuery.GET_ALLVALIDVALUES, 
+                    QueryStatus.SUCCESS, procTime);
+
+            ValidateValueSetCaching.unsupportedAPICall();
+    }
 }

@@ -30,6 +30,10 @@ import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
+import org.apache.juddi.api.util.PublicationQuery;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.ReplicationQuery;
+import org.apache.juddi.api.util.SecurityQuery;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.v3.auth.Authenticator;
@@ -46,10 +50,17 @@ import org.apache.juddi.v3.error.UnknownUserException;
 public class UDDISecurityImpl extends AuthenticatedService implements UDDISecurityPortType {
 
 	public static final String AUTH_TOKEN_PREFIX = "authtoken:";
+        private UDDIServiceCounter serviceCounter;
 
+        public UDDISecurityImpl() {
+            super();
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+        }
+	
 	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
-
+	        long startTime = System.nanoTime();
+	    
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -65,6 +76,14 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			}
 	
 			tx.commit();
+                        long procTime = System.nanoTime() - startTime;
+                        serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
+                                QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
+                            QueryStatus.FAILED, procTime);                      
+                    throw drfm;                                                                                                 
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -76,16 +95,16 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 
 	public AuthToken getAuthToken(GetAuthToken body)
 			throws DispositionReportFaultMessage {
-
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		
 		String publisherId = authenticator.authenticate(body.getUserID(), body.getCred());
-		
+
 		return getAuthToken(publisherId);
 	}
 	
 	public AuthToken getAuthToken(String publisherId)
 	throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 
 		if (publisherId == null || publisherId.length() == 0)
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials", publisherId));
@@ -115,7 +134,16 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
 
 			tx.commit();
+	                long procTime = System.nanoTime() - startTime;
+	                serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
+	                        QueryStatus.SUCCESS, procTime);
+
 			return apiAuthToken;
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
+                            QueryStatus.FAILED, procTime);                      
+                    throw drfm;                                                                                                 
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();

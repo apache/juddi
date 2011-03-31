@@ -62,6 +62,9 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SecurityQuery;
+import org.apache.juddi.api.util.SubscriptionQuery;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -89,8 +92,17 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 
 	public static final String CHUNK_TOKEN_PREFIX = "chunktoken:";
 
+        private UDDIServiceCounter serviceCounter;
+
+        public UDDISubscriptionImpl() {
+            super();
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+        }
+	
 	public void deleteSubscription(DeleteSubscription body)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
+
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
@@ -106,6 +118,14 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	        }
 	
 	        tx.commit();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, 
+                        QueryStatus.SUCCESS, procTime);
+                } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, 
+                            QueryStatus.FAILED, procTime);                      
+                    throw drfm;                                                                                                 
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -130,10 +150,11 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 */
 	@SuppressWarnings("unchecked")
 	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
-
+                long startTime = System.nanoTime();
+            
 		EntityManager em = PersistenceManager.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
+		EntityTransaction tx = em.getTransaction();
+                try {
 	        tx.begin();
 	        
 			if (publisher==null) {
@@ -735,7 +756,16 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 			
 	        tx.commit();
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, 
+                        QueryStatus.SUCCESS, procTime);
+
 	        return result;
+        } catch (DispositionReportFaultMessage drfm) {
+            long procTime = System.nanoTime() - startTime;
+            serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, 
+                    QueryStatus.FAILED, procTime);                      
+            throw drfm;                                                                                                 
         } finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -747,10 +777,11 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	@SuppressWarnings("unchecked")
 	public List<Subscription> getSubscriptions(String authInfo)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 		EntityManager em = PersistenceManager.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-	        tx.begin();
+		EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
 			
@@ -769,7 +800,16 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 	        
 	        tx.commit();
-			return result;
+                long procTime = System.nanoTime() - startTime;
+                serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, 
+                        QueryStatus.SUCCESS, procTime);
+
+		return result;
+        } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, 
+                            QueryStatus.FAILED, procTime);                      
+                    throw drfm;                                                                                                 		
         } finally {
 			if (tx.isActive()) {
 				tx.rollback();
@@ -789,6 +829,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
 			throws DispositionReportFaultMessage {
+	        long startTime = System.nanoTime();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -834,6 +875,14 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 	
 			tx.commit();
+	                long procTime = System.nanoTime() - startTime;
+	                serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, 
+	                        QueryStatus.SUCCESS, procTime);
+	        } catch (DispositionReportFaultMessage drfm) {
+                    long procTime = System.nanoTime() - startTime;
+                    serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, 
+                            QueryStatus.FAILED, procTime);                      
+                    throw drfm;                                                                                                                 
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
