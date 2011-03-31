@@ -23,5 +23,7 @@
   </tModelInstanceDetails>
   <categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types"
+    	keyName="HTTP protocol" keyValue="uddi:uddi.org:protocol:http"/>
   </categoryBag>
 </bindingTemplate>
