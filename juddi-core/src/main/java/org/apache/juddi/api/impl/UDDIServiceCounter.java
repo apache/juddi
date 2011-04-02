@@ -39,12 +39,20 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
 
     private ObjectName listObjectName = null;
     
+    private int totalApiCounter;
+    private int successApiCounter;
+    private int faultApiCounter;
+    
     private static final String PROCESSING_TIME = "processing time";
     private static final String TOTAL_QUERIES = "total queries";
     private static final String SUCCESSFUL_QUERIES = "successful queries";
     private static final String FAILED_QUERIES = "failed queries";
     
-    public static final String RESET_COUNTER = "resetCounter";
+    private static final String TOTAL_API_QUERIES = "Total API Queries";
+    private static final String SUCCESSFUL_API_QUERIES = "Successful API Queries";
+    private static final String FAILED_API_QUERIES = "Failed API Queries";
+    
+    public static final String RESET_COUNTER = "resetCounts";
         
     public void initList(Class klass, List<String> queries) {
         try {
@@ -64,6 +72,11 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
             successQueryCounter.put(query + " " + SUCCESSFUL_QUERIES, new IntHolder());
             faultQueryCounter.put(query + " " + FAILED_QUERIES, new IntHolder());
         }
+        
+        totalApiCounter = 0;
+        successApiCounter = 0;
+        faultApiCounter = 0;
+
     }
     
     protected void registerMBean() {
@@ -125,6 +138,11 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         for (String key : faultQueryCounter.keySet()) {
             faultQueryCounter.put(key, new IntHolder());
         }
+        
+        totalApiCounter = 0;
+        successApiCounter = 0;
+        faultApiCounter = 0;
+
     }
 
     public synchronized void update(UDDIQuery queryObject, QueryStatus queryStatus, 
@@ -135,11 +153,13 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         LongHolder totalProcTime = queryProcessingTime.get(query + " " +  PROCESSING_TIME);
         if (totalProcTime != null) {
             totalProcTime.value += procTime;
+            totalApiCounter++;
         } else {
             throw new RuntimeException("Exception in Update : " + queryObject.getQuery() 
                     + " time " + procTime + " queryprocessingtime.size() + "
                     + queryProcessingTime.size());
         }
+        
         IntHolder queryCounter = totalQueryCounter.get(query + " " + TOTAL_QUERIES);
         if (queryCounter != null) { 
             queryCounter.value++;
@@ -153,6 +173,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
             IntHolder successQuery = successQueryCounter.get(query + " " + SUCCESSFUL_QUERIES);
             if (successQuery != null) {
                 successQuery.value++;
+                successApiCounter++;
             } else {
                 throw new RuntimeException("Exception in Update : " + queryObject.getQuery() 
                         + " time " + procTime + " successQueryCounter.size() "
@@ -162,12 +183,13 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
             IntHolder faultQuery = faultQueryCounter.get(query + " " + FAILED_QUERIES);
             if (faultQuery != null) {
                 faultQuery.value++;
+                faultApiCounter++;
             } else {
                 throw new RuntimeException("Exception in Update : " + queryObject.getQuery() 
                         + " time " + procTime + " faultQueryCounter.size() "
                         + faultQueryCounter.size());
             }            
-        }
+        }        
     }
     
     @Override
@@ -182,6 +204,12 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
             return successQueryCounter.get(attribute);
         } else if (faultQueryCounter.containsKey(attribute)) {
             return faultQueryCounter.get(attribute);
+        } else if (attribute.equals(TOTAL_API_QUERIES)) {
+            return totalApiCounter;
+        } else if (attribute.equals(SUCCESSFUL_API_QUERIES)) {
+            return successApiCounter;
+        } else if (attribute.equals(FAILED_API_QUERIES)) {
+            return faultApiCounter;
         }
         return null;
     }
@@ -197,6 +225,10 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
     @Override
     public AttributeList getAttributes(String[] attributes) {
         AttributeList attributeList = new AttributeList();
+
+        attributeList.add(new Attribute(TOTAL_API_QUERIES, totalApiCounter));
+        attributeList.add(new Attribute(SUCCESSFUL_API_QUERIES, successApiCounter));
+        attributeList.add(new Attribute(FAILED_API_QUERIES, faultApiCounter));
 
         for (String key : queryProcessingTime.keySet()) {
             Attribute at = new Attribute(key, queryProcessingTime.get(key).toString());
@@ -240,12 +272,29 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
 
     @Override
     public MBeanInfo getMBeanInfo() {
+        // the extra 3 added are for totalApiQueries, faultApiQueries, and
+        // successfulApiQueries
         int count = queryProcessingTime.size() + totalQueryCounter.size() +
-            successQueryCounter.size() + faultQueryCounter.size();
+            successQueryCounter.size() + faultQueryCounter.size() + 3;  
 
         MBeanAttributeInfo[] attrs = new MBeanAttributeInfo[count];
         int counter = 0;
 
+        attrs[counter] = new MBeanAttributeInfo(
+                TOTAL_API_QUERIES, "java.lang.Integer", "Property " + TOTAL_API_QUERIES,
+                true, false, false);
+        counter++;
+        
+        attrs[counter] = new MBeanAttributeInfo(
+                SUCCESSFUL_API_QUERIES, "java.lang.Integer", "Property " + SUCCESSFUL_API_QUERIES,
+                true, false, false);
+        counter++;
+        
+        attrs[counter] =  new MBeanAttributeInfo(
+                FAILED_API_QUERIES, "java.lang.Integer", "Property " + FAILED_API_QUERIES,
+                true, false, false);
+        counter++;
+        
         for (String key : queryProcessingTime.keySet()) {
             attrs[counter] = new MBeanAttributeInfo(
                     key, "java.lang.Double", "Property " + key, true, false, false);
@@ -272,7 +321,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         
         MBeanOperationInfo[] opers = {
                 new MBeanOperationInfo(
-                                "resetCounts", "Reset the counter",
+                        RESET_COUNTER, "Reset the counter",
                         null, "void", MBeanOperationInfo.ACTION)
         };        
         
@@ -297,6 +346,4 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
                     return Long.toString(value);
             }
     }
-
-
 }
