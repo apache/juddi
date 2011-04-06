@@ -88,7 +88,7 @@ public class UDDIPublicationService {
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
+            Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(managerName, nodeName);
             UDDIPublicationPortType publish = transport.getUDDIPublishService();
 
 	    //new RequestHandler on it's own thread

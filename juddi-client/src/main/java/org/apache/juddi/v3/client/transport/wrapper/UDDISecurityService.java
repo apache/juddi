@@ -65,7 +65,7 @@ public class UDDISecurityService {
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
+            Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(managerName, nodeName);
 	    UDDISecurityPortType security = transport.getUDDISecurityService();
 
 	    //new RequestHandler on it's own thread

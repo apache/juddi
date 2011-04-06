@@ -89,7 +89,7 @@ public class UDDIInquiryService {
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
-            Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(nodeName);
+            Transport transport = (Transport) transportClass.getConstructor(String.class, String.class).newInstance(managerName, nodeName);
             UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 
 	    //new RequestHandler on it's own thread
