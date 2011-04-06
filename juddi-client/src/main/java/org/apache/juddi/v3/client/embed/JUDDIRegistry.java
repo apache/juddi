@@ -12,9 +12,8 @@ public class JUDDIRegistry implements EmbeddedRegistry {
 	public void start() {
 		try {
 			Class<?> juddiRegistry = ClassUtil.forName("org.apache.juddi.Registry", JUDDIRegistry.class);
-			Object jUDDI =  juddiRegistry.newInstance();
 			Method startMethod = juddiRegistry.getDeclaredMethod("start");
-			startMethod.invoke(jUDDI);
+			startMethod.invoke(juddiRegistry);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
@@ -23,9 +22,8 @@ public class JUDDIRegistry implements EmbeddedRegistry {
 	public void stop() {
 		try {
 			Class<?> juddiRegistry = ClassUtil.forName("org.apache.juddi.Registry", JUDDIRegistry.class);
-			Object jUDDI =  juddiRegistry.newInstance();
-			Method startMethod = juddiRegistry.getDeclaredMethod("stop");
-			startMethod.invoke(jUDDI);
+			Method stopMethod = juddiRegistry.getDeclaredMethod("stop");
+			stopMethod.invoke(juddiRegistry);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
