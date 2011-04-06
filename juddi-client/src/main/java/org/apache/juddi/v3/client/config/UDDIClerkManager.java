@@ -91,9 +91,9 @@ public class UDDIClerkManager {
  	}
 	
 	protected void startEmbeddedServer() throws ConfigurationException {
-		
+
 		try {
-			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.client.JUDDIRegistry");
+			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.v3.client.embed.JUDDIRegistry");
 			Class<?> clazz =  ClassUtil.forName(embeddedServerClass, this.getClass());
 			EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
 			embeddedRegistry.start();
@@ -105,7 +105,7 @@ public class UDDIClerkManager {
 	protected void stopEmbeddedServer() throws ConfigurationException {
 
 		try {
-			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.client.JUDDIRegistry");
+			String embeddedServerClass = getClientConfig().getHomeNode().getProperties().getProperty("embeddedServer","org.apache.juddi.v3.client.embed.JUDDIRegistry");
 			Class<?> clazz =  ClassUtil.forName(embeddedServerClass, this.getClass());
 			EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
 			embeddedRegistry.stop();
