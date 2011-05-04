@@ -71,6 +71,8 @@ public class TckFindEntity
 	final static String FIND_SERVICE_XML              = "uddi_data/find/findService1.xml";
 	final static String FIND_BINDING_XML              = "uddi_data/find/findBinding1.xml";
 	final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
+	final static String COMBINE_CAT_FIND_SERVICES     = "uddi_data/joepublisher/combineCatBagsFindServices.xml";
+	   
    
 	private Log logger = LogFactory.getLog(this.getClass());
 	UDDIInquiryPortType inquiry =null;
@@ -260,6 +262,30 @@ public class TckFindEntity
 			assertEquals(bsIn.getServiceKey(), siOut.getServiceKey());
 			
 			TckValidator.checkNames(bsIn.getName(), siOut.getName());
+			serviceKey = siOut.getServiceKey();
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+		return serviceKey;
+	}
+	
+	public String findService_CombinedCatBag() {
+		String serviceKey = null;
+		try {
+			FindService body = (FindService)EntityCreator.buildFromDoc(COMBINE_CAT_FIND_SERVICES, "org.uddi.api_v3");
+			ServiceList result = inquiry.findService(body);
+			if (result == null)
+				Assert.fail("Null result from find service operation");
+			ServiceInfos sInfos = result.getServiceInfos();
+			if (sInfos == null)
+				Assert.fail("No result from find service operation");
+			List<ServiceInfo> siList = sInfos.getServiceInfo();
+			if (siList == null || siList.size() == 0)
+				Assert.fail("No result from find service operation");
+			ServiceInfo siOut = siList.get(0);
+			
 			serviceKey = siOut.getServiceKey();
 		}
 		catch(Exception e) {

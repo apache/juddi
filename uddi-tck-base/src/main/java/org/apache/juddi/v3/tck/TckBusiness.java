@@ -48,6 +48,8 @@ public class TckBusiness
     final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
     final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
     final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
+    final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
+    final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
     
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -82,6 +84,10 @@ public class TckBusiness
 	
 	public void saveJoePublisherBusiness(String authInfoJoe) {
 		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+    }
+	
+	public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
+		saveBusiness(authInfoJoe, COMBINE_CATBAGS_BIZ_XML, COMBINE_CATBAGS_BIZ_KEY);
     }
 	
 	public void saveJoePublisherBusiness3(String authInfoJoe) {
