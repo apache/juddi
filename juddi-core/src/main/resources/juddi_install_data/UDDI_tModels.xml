@@ -919,8 +919,8 @@
     </categoryBag>
   </tModel>
   <!-- 8. Transport Categorization -->
-  <tModel tModelKey="uuid:e5c43936-86e4-37bf-8196-1d04b35c0099">
-    <name>uddi:uddi.org:wsdl:categorization:transport</name>
+  <tModel tModelKey="uddi:uddi.org:wsdl:categorization:transport">
+    <name>uddi-org:wsdl:categorization:transport</name>
     <description xml:lang="en">Category system used to describe the transport supported by a wsdl:binding</description>
     <overviewDoc>
         <overviewURL>
@@ -942,5 +942,18 @@
         </overviewURL>
       </overviewDoc>
   </tModel>
-  
+  <!-- BPEL Categorization -->
+  <tModel tModelKey="uddi:uddi.org:bpel:types">
+    <name>uddi-org:bpel:types</name>
+    <description xml:lang="en">Category system used indicate BPEL processes</description>
+    <overviewDoc>
+        <overviewURL>
+            http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-bpel-20040725.htm
+        </overviewURL>
+    </overviewDoc>
+    <categoryBag>
+      <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+  </tModel>
 </save_tModel>
