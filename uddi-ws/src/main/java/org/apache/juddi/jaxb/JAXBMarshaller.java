@@ -44,25 +44,26 @@ public class JAXBMarshaller {
 	public static final String PACKAGE_SUBSCRIPTION = "org.uddi.sub_v3";
 	public static final String PACKAGE_JUDDIAPI = "org.apache.juddi.api_v3";
 	public static final String PACKAGE_JUDDI = "org.apache.juddi";
-
 	private static final Map<String, JAXBContext> JAXBContexts = new HashMap<String, JAXBContext>();
-	static {
-		try {
-			JAXBContexts.put(PACKAGE_UDDIAPI, JAXBContext.newInstance(PACKAGE_UDDIAPI));
-			JAXBContexts.put(PACKAGE_SUBSCRIPTION, JAXBContext.newInstance(PACKAGE_SUBSCRIPTION));
-			JAXBContexts.put(PACKAGE_JUDDIAPI, JAXBContext.newInstance(PACKAGE_JUDDIAPI));
-			JAXBContexts.put(PACKAGE_JUDDI, JAXBContext.newInstance(PACKAGE_JUDDI));
-		} catch (JAXBException e) {
-			logger.error("Initialization of JAXBMarshaller failed:" + e, e);
-			throw new ExceptionInInitializerError(e);
+
+	private static JAXBContext getContext(String packageName) {
+		if (!JAXBContexts.containsKey(packageName)) {
+			try {
+				JAXBContexts.put(packageName, JAXBContext.newInstance(packageName));
+			} catch (JAXBException e) {
+				logger.error("Initialization of JAXBMarshaller failed:" + e, e);
+				throw new ExceptionInInitializerError(e);
+			}
 		}
+		
+		return JAXBContexts.get(packageName);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public static Object unmarshallFromInputStream(InputStream inputStream, String thePackage) throws JAXBException {
 		Object obj = null;
 		if (inputStream != null) {
-			JAXBContext jc = JAXBContexts.get(thePackage);
+			JAXBContext jc = getContext(thePackage);
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
 			obj = ((JAXBElement)unmarshaller.unmarshal(inputStream)).getValue();
 		}
@@ -97,29 +98,35 @@ public class JAXBMarshaller {
 		return obj;
 	}
 
-	public static String marshallToString(Object object, String thePackage) throws JAXBException {
+	public static String marshallToString(Object object, String thePackage) {
 		String rawObject = null;
 
-		JAXBContext jc = JAXBContexts.get(thePackage);
-		Marshaller marshaller = jc.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		marshaller.marshal(object, baos);
-		rawObject = baos.toString();
+		try {
+			JAXBContext jc = getContext(thePackage);
+			Marshaller marshaller = jc.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			marshaller.marshal(object, baos);
+			rawObject = baos.toString();
+		} catch (JAXBException e) {
+			logger.error(e.getMessage(),e);
+		}
 		
 		return rawObject;
 	}
 
 	public static Element marshallToElement(Object object, String thePackage, Element element) throws JAXBException {
 		
-		JAXBContext jc = JAXBContexts.get(thePackage);
+		JAXBContext jc = getContext(thePackage);
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.marshal(object, element);	
 		return element;
 	}
 	
 	public static Object unmarshallFromElement(Element element, String thePackage) throws JAXBException {
-		JAXBContext jc = JAXBContexts.get(thePackage);
+		JAXBContext jc = getContext(thePackage);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		@SuppressWarnings("rawtypes")
 		Object obj = ((JAXBElement) unmarshaller.unmarshal(element)).getValue();
