@@ -491,6 +491,7 @@ public class MappingApiToModel {
 
 		modelTModel.setEntityKey(apiTModel.getTModelKey());
 		modelTModel.setName(apiTModel.getName().getValue());
+		modelTModel.setLangCode(apiTModel.getName().getLang());
 		modelTModel.setDeleted(apiTModel.isDeleted());
 
 		mapTModelDescriptions(apiTModel.getDescription(), modelTModel.getTmodelDescrs(), modelTModel);
@@ -583,15 +584,10 @@ public class MappingApiToModel {
 			modelSubscription.setBrief(new Boolean(false));
 		}
 			
-		try {
-			String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(apiSubscription.getSubscriptionFilter()), "org.uddi.sub_v3");
-			logger.debug("marshalled subscription filter:  " + rawFilter);
-			modelSubscription.setSubscriptionFilter(rawFilter);
-
-		} catch (JAXBException e) {
-			logger.error("JAXBException while marshalling subscription filter", e);
-			throw new FatalErrorException(new ErrorMessage("errors.Unspecified"));
-		}
+		
+		String rawFilter = JAXBMarshaller.marshallToString(new ObjectFactory().createSubscriptionFilter(apiSubscription.getSubscriptionFilter()), "org.uddi.sub_v3");
+		logger.debug("marshalled subscription filter:  " + rawFilter);
+		modelSubscription.setSubscriptionFilter(rawFilter);
 		
 	}
 	

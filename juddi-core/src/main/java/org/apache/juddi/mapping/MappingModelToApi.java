@@ -549,6 +549,7 @@ public class MappingModelToApi {
 		apiTModel.setTModelKey(modelTModel.getEntityKey());
 		org.uddi.api_v3.Name apiName = new org.uddi.api_v3.Name();
 		apiName.setValue(modelTModel.getName());
+		apiName.setLang(modelTModel.getLangCode());
 		apiTModel.setName(apiName);
 		apiTModel.setDeleted(modelTModel.getDeleted());
 		
