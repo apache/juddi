@@ -49,6 +49,9 @@ public class TckBusinessService
     final static String JOE_SERVICE_KEY_2              = "uddi:uddi.joepublisher.com:servicetwo";
     final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
     final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
+    
+    public final static String RIFTSAW_PROCESS_XML          = "uddi_data/bpel/riftsaw/WSDLPort.xml";
+    public final static String RIFTSAW_PROCESS_KEY          = "uddi:riftsaw.jboss.org:ticket-service";
    
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -161,7 +164,7 @@ public class TckBusinessService
 			List<BusinessService> bsOutList = sd.getBusinessService();
 			BusinessService bsOut = bsOutList.get(0);
 
-			assertEquals(bsIn.getServiceKey(), bsOut.getServiceKey());
+			assertEquals(bsIn.getServiceKey().toLowerCase(), bsOut.getServiceKey());
 			
 			TckValidator.checkNames(bsIn.getName(), bsOut.getName());
 			TckValidator.checkDescriptions(bsIn.getDescription(), bsOut.getDescription());

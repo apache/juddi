@@ -10,5 +10,7 @@ public class Property {
 	public static String SAM_PASSWORD   = "sam.password";
 	public static String MARY_PUBLISHER = "mary.publisher";
 	public static String MARY_PASSWORD  = "mary.password";
+	public static String RIFTSAW_PUBLISHER = "riftsaw.publisher";
+	public static String RIFTSAW_PASSWORD  = "riftsaw.password";
 	
 }

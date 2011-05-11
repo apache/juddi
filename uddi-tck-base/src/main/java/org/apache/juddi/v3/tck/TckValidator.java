@@ -184,7 +184,7 @@ public class TckValidator {
 			BindingTemplate bt2 = bt2Iter.next();
 			assertEquals(bt1.getAccessPoint().getValue(),bt2.getAccessPoint().getValue());
 			assertEquals(bt1.getAccessPoint().getUseType(),bt2.getAccessPoint().getUseType());
-			assertEquals(bt1.getBindingKey(),bt2.getBindingKey());
+			assertEquals(bt1.getBindingKey().toLowerCase(),bt2.getBindingKey());
 			checkCategories(bt1.getCategoryBag(), bt2.getCategoryBag());
 			checkDescriptions(bt1.getDescription(),bt2.getDescription());
 			checkHostingRedirector(bt1.getHostingRedirector(),bt2.getHostingRedirector());
@@ -209,7 +209,7 @@ public class TckValidator {
 			TModelInstanceInfo tmI2 = tmIter2.next();
 			checkDescriptions(tmI1.getDescription(), tmI2.getDescription());
 			checkInstanceDetails(tmI1.getInstanceDetails(), tmI2.getInstanceDetails());
-			assertEquals(tmI1.getTModelKey(),tmI2.getTModelKey());
+			assertEquals(tmI1.getTModelKey().toLowerCase(),tmI2.getTModelKey());
 		}
 	}
 	

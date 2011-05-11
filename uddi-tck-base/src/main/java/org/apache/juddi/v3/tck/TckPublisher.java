@@ -70,4 +70,12 @@ public class TckPublisher
     public final static String getMaryPassword() {
     	return tckProperties.getProperty(Property.MARY_PASSWORD);
     }
+    
+    public final static String getRiftSawPublisherId() {
+    	return tckProperties.getProperty(Property.RIFTSAW_PUBLISHER);
+    }
+    
+    public final static String getRiftSawPassword() {
+    	return tckProperties.getProperty(Property.RIFTSAW_PASSWORD);
+    }
 }

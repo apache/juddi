@@ -45,6 +45,17 @@ public class TckTModel
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
     final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
     final static String FIND_TMODEL_XML_BY_CAT        = "uddi_data/find/findTModelByCategoryBag.xml";
+    
+    public final static String RIFTSAW_PUBLISHER_TMODEL_XML  = "uddi_data/bpel/riftsaw/tModelKeyGen.xml";
+    public final static String RIFTSAW_PUBLISHER_TMODEL_KEY  = "uddi:riftsaw.jboss.org:keygenerator";
+    public final static String RIFTSAW_CUST_PORTTYPE_TMODEL_XML  = "uddi_data/bpel/riftsaw/tModelCustomerPortType.xml";
+    public final static String RIFTSAW_CUST_PORTTYPE_TMODEL_KEY  = "uddi:riftsaw.jboss.org:CustomerInterface_portType";
+    public final static String RIFTSAW_AGENT_PORTTYPE_TMODEL_XML  = "uddi_data/bpel/riftsaw/tModelAgentPortType.xml";
+    public final static String RIFTSAW_AGENT_PORTTYPE_TMODEL_KEY  = "uddi:riftsaw.jboss.org:TravelAgentInterface_portType";
+    public final static String RIFTSAW_PROCESS_TMODEL_XML  = "uddi_data/bpel/riftsaw/tModelProcess.xml";
+    public final static String RIFTSAW_PROCESS_TMODEL_KEY  = "uddi:riftsaw.jboss.org:ReservationAndBookingTicketsProcess";
+  
+   
  
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -75,7 +86,7 @@ public class TckTModel
 			List<org.uddi.api_v3.TModel> tmOutList = td.getTModel();
 			org.uddi.api_v3.TModel tmOut = tmOutList.get(0);
 
-			assertEquals(tmIn.getTModelKey(), tmOut.getTModelKey());
+			assertEquals(tmIn.getTModelKey().toLowerCase(), tmOut.getTModelKey());
 			assertEquals(tmIn.getName().getLang(), tmOut.getName().getLang());
 			assertEquals(tmIn.getName().getValue(), tmOut.getName().getValue());
 			TckValidator.checkDescriptions(tmIn.getDescription(), tmOut.getDescription());

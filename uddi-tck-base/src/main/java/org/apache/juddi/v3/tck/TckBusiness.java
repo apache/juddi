@@ -50,6 +50,9 @@ public class TckBusiness
     final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
     final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
     final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
+    public final static String RIFTSAW_BUSINESS_KEY    = "uddi:riftsaw.jboss.org:redhat-jboss";
+    public final static String RIFTSAW_BUSINESS_XML    = "uddi_data/bpel/riftsaw/businessEntity.xml";
+
     
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
