@@ -435,7 +435,7 @@ public class WSDL2UDDI {
     	findTModel.setCategoryBag(categoryBag);
     	
     	if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<FindTModel>().print(findTModel, FindTModel.class));
+    		System.out.println(new PrintUDDI<FindTModel>().print(findTModel));
     	}
     	return findTModel;
     }

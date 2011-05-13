@@ -22,10 +22,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
-import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.FindTModel;
-
-
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @param <T>
@@ -46,11 +42,13 @@ public class PrintUDDI<T> {
 		return marshaller;
 	}
 	
-	public String print(T object, Class<T> type) {
+	public String print(T UDDIEntity) {
 		String xml = "";
+		@SuppressWarnings("unchecked")
+		Class<T> type = (Class<T>) UDDIEntity.getClass();
 		try {
 			StringWriter writer = new StringWriter();
-			JAXBElement<T> element = new JAXBElement<T>(new QName("",object.getClass().getName()),type,object);
+			JAXBElement<T> element = new JAXBElement<T>(new QName("",UDDIEntity.getClass().getName()),type,UDDIEntity);
 			getUDDIMarshaller().marshal(element,writer);
 			xml=writer.toString();
 		} catch (JAXBException je) {
