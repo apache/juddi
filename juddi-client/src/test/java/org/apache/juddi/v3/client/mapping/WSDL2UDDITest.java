@@ -43,7 +43,7 @@ public class WSDL2UDDITest {
 	public void testUDDIBindingModel() throws WSDLException, JAXBException {
 
 		// Reading the WSDL
-		Definition wsdlDefinition = rw.readWSDL("uddi_api_v3_portType.wsdl");
+		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
 		String wsdlURL = wsdlDefinition.getDocumentBaseURI();
 		
 		Properties properties = new Properties();
@@ -59,14 +59,14 @@ public class WSDL2UDDITest {
 			System.out.println("UDDI PortType TModel " + tModel.getName().getValue());
 			System.out.println(pTModel.print(tModel));
 		}
-		Assert.assertEquals(3,tModels.size());
+		Assert.assertEquals(1,tModels.size());
 	}
 	
 	@Test
 	public void testWSDLBindingModel() throws WSDLException, JAXBException {
 
 		// Reading the WSDL
-		Definition wsdlDefinition = rw.readWSDL("uddi_api_v3_binding.wsd");
+		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
 		String wsdlURL = wsdlDefinition.getDocumentBaseURI();
 		
 		Properties properties = new Properties();
@@ -82,7 +82,7 @@ public class WSDL2UDDITest {
 			System.out.println("UDDI Binding TModel " + tModel.getName().getValue());
 			System.out.println(pTModel.print(tModel));
 		}
-		Assert.assertEquals(3,tModels.size());
+		Assert.assertEquals(1,tModels.size());
 	}
 	
 }
