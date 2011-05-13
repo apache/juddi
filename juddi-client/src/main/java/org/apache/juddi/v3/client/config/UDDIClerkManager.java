@@ -78,16 +78,17 @@ public class UDDIClerkManager {
 	 */
 	public void start() throws ConfigurationException {
 		
-		UDDIClientContainer.addClerkManager(this);
-		//If running in embedded mode
-		if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
-			log.info("Starting embedded Server");
-			startEmbeddedServer();
+		if (UDDIClientContainer.addClerkManager(this)) {
+			//If running in embedded mode
+			if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
+				log.info("Starting embedded Server");
+				startEmbeddedServer();
+			}
+			
+			Runnable runnable = new BackGroundRegistration(this);
+			Thread thread = new Thread(runnable);
+			thread.start();
 		}
-		
-		Runnable runnable = new BackGroundRegistration(this);
-		Thread thread = new Thread(runnable);
-		thread.start();
  	}
 	
 	protected void startEmbeddedServer() throws ConfigurationException {
@@ -257,6 +258,7 @@ public class UDDIClerkManager {
 		return clientConfig.getManagerName();
 	}
 	/**
+	 * @deprecated, use the getTransport(String nodeName) instead.
 	 * Returns the "default" jUDDI nodes Transport.
 	 * 
 	 * @return

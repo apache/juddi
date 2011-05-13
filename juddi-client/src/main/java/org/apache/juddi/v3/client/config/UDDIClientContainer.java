@@ -49,8 +49,13 @@ public class UDDIClientContainer {
 		}
 	}
 	
-	public static void addClerkManager(UDDIClerkManager manager) {
-		managers.put(manager.getClientConfig().getManagerName(), manager);
+	public static boolean addClerkManager(UDDIClerkManager manager) {
+		if (!managers.containsKey(manager.getClientConfig().getManagerName())) {
+			managers.put(manager.getClientConfig().getManagerName(), manager);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public static void removeClerkManager(String managerName)

@@ -43,18 +43,25 @@ import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteService;
+import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.FindRelatedBusinesses;
+import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
+import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.RelatedBusinessesList;
 import org.uddi.api_v3.Result;
 import org.uddi.api_v3.SaveBinding;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveService;
+import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.ServiceDetail;
+import org.uddi.api_v3.TModel;
+import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIClerk implements Serializable {
@@ -112,7 +119,46 @@ public class UDDIClerk implements Serializable {
 		this.managerName = managerName;
 	}
 	/**
-	 * Register a service binding.
+	 * Register a tModel, using the node of current clerk ('this').
+	 * 
+	 * @param tModel
+	 * @return the TModelDetail of the newly registered TModel
+	 */
+	public TModelDetail register(TModel tModel) {
+		return register(tModel, this.getUDDINode().getApiNode());
+	}
+	/**
+	 * Register a tModel.
+	 */
+	public TModelDetail register(TModel tModel, Node node) {
+		TModelDetail tModelDetail = null;
+		log.info("Registering tModel with key " + tModel.getTModelKey());
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			SaveTModel saveTModel = new SaveTModel();
+			saveTModel.setAuthInfo(authToken);
+			saveTModel.getTModel().add(tModel);
+			tModelDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);
+		} catch (Exception e) {
+			log.error("Unable to register tModel " +  tModel.getTModelKey()
+					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to register tModel " +  tModel.getTModelKey()
+					+ " ." + t.getMessage(),t);
+		}
+		log.info("Registering tModel " +  tModel.getTModelKey() + " completed.");
+		return tModelDetail;
+	}
+	
+	/**
+	 * Register a BindingTemplate, using the node of current clerk ('this').
+	 * 
+	 */
+	public BindingTemplate register(BindingTemplate binding) {
+		return register(binding, this.getUDDINode().getApiNode());
+	}
+	/**
+	 * Register a BindingTemplate.
 	 * 
 	 */
 	public BindingTemplate register(BindingTemplate binding, Node node) {
@@ -135,6 +181,13 @@ public class UDDIClerk implements Serializable {
 		}
 		log.info("Registering template binding " + binding.getBindingKey() + " completed.");
 		return bindingTemplate;
+	}
+	/**
+	 * Register a service, using the node of current clerk ('this').
+	 * 
+	 */
+	public BusinessService register(BusinessService service) {
+		return register(service, this.getUDDINode().getApiNode());
 	}
 	/**
 	 * Register a service.
@@ -162,6 +215,9 @@ public class UDDIClerk implements Serializable {
 		log.info("Registering service " + service.getName().get(0).getValue() + " completed.");
 		return businessService;
 	}
+	public BusinessEntity register(BusinessEntity business) {
+		return register(business, this.getUDDINode().getApiNode());
+	}
 	/**
 	 * Register a service.
 	 * 
@@ -188,25 +244,9 @@ public class UDDIClerk implements Serializable {
 		log.info("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
 		return businessEntity;
 	}
-	/**
-	 * Unregisters the BindingTemplates for this service.
-	 * @param service
-	 * @deprecated use {@link UDDIClerk.unRegisterService}
-	 */
-	public void unRegister(BusinessService service, Node node) {
-		log.info("UnRegistering binding for service " + service.getName().get(0).getValue());
-		try {
-			String authToken = getAuthToken(node.getSecurityUrl());
-			DeleteBinding deleteBinding = new DeleteBinding();
-			deleteBinding.setAuthInfo(authToken);
-			for (BindingTemplate binding : service.getBindingTemplates().getBindingTemplate()) {
-				deleteBinding.getBindingKey().add(binding.getBindingKey());
-			}
-			getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);
-		} catch (Exception e) {
-			log.error("Unable to register service " + service.getName().get(0).getValue()
-					+ " ." + e.getMessage(),e);
-		}
+	
+	public void unRegisterService(String serviceKey) {
+		unRegisterService(serviceKey, this.getUDDINode().getApiNode());
 	}
 	/**
 	 * Unregisters the service with specified serviceKey.
@@ -225,7 +265,9 @@ public class UDDIClerk implements Serializable {
 					+ " ." + e.getMessage(),e);
 		}
 	}
-	
+	public void unRegisterBinding(String bindingKey) {
+		unRegisterBinding(bindingKey, this.getUDDINode().getApiNode());
+	}
 	/**
 	 * Unregisters the BindingTemplate with specified bindingKey. 
 	 * @param bindingTemplate
@@ -244,7 +286,81 @@ public class UDDIClerk implements Serializable {
 					+ " ." + e.getMessage(),e);
 		}
 	}
-
+	
+	public void unRegisterTModel(String tModelKey) {
+		unRegisterTModel(tModelKey, this.getUDDINode().getApiNode());
+	}
+	/**
+	 * Unregisters the BindingTemplate with specified bindingKey. 
+	 * @param bindingTemplate
+	 * @param node
+	 */
+	public void unRegisterTModel(String tModelKey, Node node) {
+		log.info("UnRegistering tModel key " + tModelKey);
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			DeleteTModel deleteTModel = new DeleteTModel();
+			deleteTModel.setAuthInfo(authToken);
+			deleteTModel.getTModelKey().add(tModelKey);
+			getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteTModel(deleteTModel);
+		} catch (Exception e) {
+			log.error("Unable to unregister tModelkey " + tModelKey
+					+ " ." + e.getMessage(),e);
+		}
+	}
+	
+	public TModelList findTModel(FindTModel findTModel) throws RemoteException, ConfigurationException, TransportException {
+		return findTModel(findTModel, this.getUDDINode().getApiNode());
+	}
+			
+	public TModelList findTModel(FindTModel findTModel, Node node) throws RemoteException, 
+	TransportException, ConfigurationException  {
+		
+		findTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));
+		try {
+			TModelList tModelList = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).findTModel(findTModel);
+			return tModelList;
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			checkForErrorInDispositionReport(report, null, null);
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			checkForErrorInDispositionReport(report, null, null);
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
+			checkForErrorInDispositionReport(report, null, null);
+		}
+		return null;
+	}
+	
+	public TModelDetail getTModelDetail(GetTModelDetail getTModelDetail) throws RemoteException, ConfigurationException, TransportException {
+		return getTModelDetail(getTModelDetail, this.getUDDINode().getApiNode());
+	}
+	
+	public TModelDetail getTModelDetail(GetTModelDetail getTModelDetail, Node node) throws RemoteException, 
+	TransportException, ConfigurationException  {
+		
+		getTModelDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
+		try {
+			TModelDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getTModelDetail(getTModelDetail);
+			return tModelDetail;
+		} catch (DispositionReportFaultMessage dr) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+			checkForErrorInDispositionReport(report, null, null);
+		} catch (SOAPFaultException sfe) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+			checkForErrorInDispositionReport(report, null, null);
+		} catch (UndeclaredThrowableException ute) {
+			DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
+			checkForErrorInDispositionReport(report, null, null);
+		}
+		return null;
+	}
+   
+	public BusinessService findService(String serviceKey) throws RemoteException, 
+	TransportException, ConfigurationException  {
+		return findService(serviceKey, this.getUDDINode().getApiNode());
+	}
 	
 	public BusinessService findService(String serviceKey, Node node) throws RemoteException, 
 	TransportException, ConfigurationException  {
@@ -269,6 +385,11 @@ public class UDDIClerk implements Serializable {
 		return null;
 	}
 	
+	public BindingTemplate findServiceBinding(String bindingKey) throws DispositionReportFaultMessage, RemoteException, 
+	TransportException, ConfigurationException  {
+		return findServiceBinding(bindingKey, this.getUDDINode().getApiNode());
+	}
+	
 	public BindingTemplate findServiceBinding(String bindingKey, Node node) throws DispositionReportFaultMessage, RemoteException, 
 			TransportException, ConfigurationException  {
 		GetBindingDetail getBindingDetail = new GetBindingDetail();
@@ -291,6 +412,12 @@ public class UDDIClerk implements Serializable {
 		}
 		return null;
 	}
+	
+	public BusinessEntity findBusiness(String businessKey) throws RemoteException, 
+	TransportException, ConfigurationException  {
+		return findBusiness(businessKey, this.getUDDINode().getApiNode());
+	}
+	
 	/**
 	 * Looks up the BusinessEntiry in the registry, will return null if is not found.
 	 * 
@@ -355,7 +482,7 @@ public class UDDIClerk implements Serializable {
 	
 	private void checkForErrorInDispositionReport(DispositionReport report, String Error, String entityKey) {
 		
-		if (report!=null &&report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
+		if (entityKey!=null && report!=null && report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED)) {
 			log.info("entityKey " + entityKey + " was not found in the registry");
 		} else {
 			if (report == null) {

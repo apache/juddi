@@ -1,0 +1,69 @@
+<process name="ReservationAndBookingTickets"
+   targetNamespace="http://example.com/travelagent"
+   xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+   xmlns:taw="http://example.com/travelagent/wsdl"
+   abstractProcess="yes">
+   <partnerLinks>
+      <partnerLink name="TravelAgency"
+         partnerLinkType="taw:TravelAgencyService"
+         partnerRole="Customer"
+         myRole="TravelAgent"/>
+   </partnerLinks>
+   <correlationSets>
+      <correlationSet name="reservationCorrelation"
+            properties=Ótaw:reservationIDÓ/>
+   </correlationSets>
+   <sequence>
+      <receive partnerLink="TravelAgency"
+         portType="taw:InterfaceOfTravelAgent"
+         operation="OrderTrip"
+         createInstance="yes">
+         <correlations>
+            <correlation set="reservationCorrelation"
+                  initiate="yes"/>
+         </correlations>
+      </receive>
+      <pick>
+         <onAlarm duration="P0Y0M1D">
+            <invoke partnerLink="TravelAgency"
+                  portType="taw:InterfaceOfCustomer"
+                  operation="NotificationOfTimeout">
+              <correlations>
+                 <correlation set="reservationCorrelation"
+                          pattern="out"/>
+              </correlations>
+            </invoke>
+         </onAlarm>
+         <onMessage partnerLink="TravelAgency"
+                  portType="taw:InterfaceOfTravelAgent"
+                  operation="CancelReservation">
+            <correlations>
+               <correlation set="reservationCorrelation"/>
+            </correlations>
+            <invoke partnerLink="TravelAgency"
+                  portType="taw:InterfaceOfCustomer"
+                  operation="NotificationOfCancellation">
+               <correlations>
+                 <correlation set="reservationCorrelation"
+                    pattern="out"/>
+               </correlations>
+            </invoke>
+         </onMessage>
+         <onMessage partnerLink="TravelAgency"
+                  portType="taw:InterfaceOfTravelAgent"
+                  operation="PerformBooking">
+             <correlations>
+                <correlation set="reservationCorrelation"/>
+             </correlations>
+             <invoke partnerLink="TravelAgency"
+                    portType="taw:InterfaceOfCustomer"
+                    operation="ReceiveStatement">
+                 <correlations>
+                     <correlation set="reservationCorrelation"
+                          pattern="out"/>
+                 </correlations>
+            </invoke>
+         </onMessage>
+      </pick>
+   </sequence>
+</process>

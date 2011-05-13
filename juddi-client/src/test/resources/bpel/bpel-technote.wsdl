@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<definitions name="TravelAgent" 
+	targetNamespace="http://example.com/travelagent/wsdl"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+	<!-- data type definitions and message definitions are omitted -->
+	<!-- port type definitions -->
+	<portType name="InterfaceOfTravelAgent">
+		<operation name="OrderTrip">
+			<input message="orderRequest" />
+			<output message="orderAcknowledgement" />
+		</operation>
+		<operation name="CancelReservation">
+			<input message="cancellationRequest" />
+		</operation>
+		<operation name="PerformBooking">
+			<input message="bookingRequest" />
+			<output message="bookingConfirmation" />
+		</operation>
+	</portType>
+	<portType name="InterfaceOfCustomer">
+		<operation name="NotificationOfCancellation">
+			<input message="cancellationResponse" />
+		</operation>
+		<operation name="NotificationOfTimeout">
+			<input message="timeoutMsg" />
+		</operation>
+		<operation name="ReceiveStatement">
+			<input message="statement" />
+		</operation>
+	</portType>
+	<!-- partner link type definitions -->
+	<plnk:partnerLinkType name="TravelAgentService">
+		<plnk:role name="TravelAgent">
+			<plnk:portType name="InterfaceOfTravelAgent" />
+		</plnk:role>
+		<plnk:role name="Customer">
+			<plnk:portTYpe name="InterfaceOfCustomer" />
+		</plnk:role>
+	</plnk:partnerLinkType>
+	<!-- definition of properties -->
+	<bpws:property name="reservationID" type="xsd:string" />
+	<!-- property aliases are omitted -->
+	
+	
+</definitions>
