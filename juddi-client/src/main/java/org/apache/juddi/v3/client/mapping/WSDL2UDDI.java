@@ -214,7 +214,7 @@ public class WSDL2UDDI {
 	    	tModel.setTModelKey(keyDomainURI + localpart);
 	    	// Set the Name
 	    	Name name = new Name();
-	    	name.setLang("en");
+	    	name.setLang(lang);
 	    	name.setValue(localpart);
 	    	tModel.setName(name);
 	    	// Set the OverviewURL
@@ -347,7 +347,7 @@ public class WSDL2UDDI {
 	    	// Set the Name. The uddi:name element of the tModel MUST be the value of
 	    	// the name attribute of the wsdl:portType.
 	    	Name name = new Name();
-	    	name.setLang("en");
+	    	name.setLang(lang);
 	    	name.setValue(localpart);
 	    	tModel.setName(name);
 	    	// Set the OverviewURL. The tModel MUST contain an overviewDoc with an 
