@@ -30,9 +30,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIValueSetValidationPortType;
 import org.uddi.vs_v3.ValidateValues;
 
-@WebService(serviceName="UDDIValueSetValidationService", 
-			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
-			targetNamespace = "urn:uddi-org:v3_service")
+//@WebService(serviceName="UDDIValueSetValidationService", 
+//			endpointInterface="org.uddi.v3_service.UDDIValueSetValidationPortType",
+//			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 		UDDIValueSetValidationPortType {
         private static Log logger = LogFactory.getLog(UDDIValueSetValidationImpl.class);
