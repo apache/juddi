@@ -35,12 +35,14 @@ import org.apache.juddi.query.FindBindingByCategoryQuery;
 import org.apache.juddi.query.FindBindingByTModelKeyQuery;
 import org.apache.juddi.query.FindBusinessByCategoryGroupQuery;
 import org.apache.juddi.query.FindBusinessByCategoryQuery;
+import org.apache.juddi.query.FindBusinessByCombinedCategoryQuery;
 import org.apache.juddi.query.FindBusinessByDiscoveryURLQuery;
 import org.apache.juddi.query.FindBusinessByIdentifierQuery;
 import org.apache.juddi.query.FindBusinessByNameQuery;
 import org.apache.juddi.query.FindBusinessByTModelKeyQuery;
 import org.apache.juddi.query.FindServiceByCategoryGroupQuery;
 import org.apache.juddi.query.FindServiceByCategoryQuery;
+import org.apache.juddi.query.FindServiceByCombinedCategoryQuery;
 import org.apache.juddi.query.FindServiceByNameQuery;
 import org.apache.juddi.query.FindServiceByTModelKeyQuery;
 import org.apache.juddi.query.FindTModelByCategoryGroupQuery;
@@ -65,7 +67,7 @@ import org.uddi.api_v3.TModelBag;
 import org.uddi.api_v3.TModelList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
-/**
+/**Co
  * Used to factor out inquiry functionality as it is used in more than one spot.
  * 
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -190,7 +192,12 @@ public class InquiryHelper {
 		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
 		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
-		keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+                if (findQualifiers.isCombineCategoryBags()) {
+                    keysFound = FindBusinessByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+                } else {
+                    keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+                }
+
 		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 		
@@ -299,7 +306,11 @@ public class InquiryHelper {
 		
 		
 		keysFound = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
-		keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+                if (findQualifiers.isCombineCategoryBags()) {
+		    keysFound = FindServiceByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		} else {
+			keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
+		}
 		keysFound = FindServiceByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
 		keysFound = FindServiceByNameQuery.select(em, findQualifiers, body.getName(), body.getBusinessKey(), keysFound);
 		

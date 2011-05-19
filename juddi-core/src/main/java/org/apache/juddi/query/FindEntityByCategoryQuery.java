@@ -57,13 +57,13 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);
 	private static final String FIELD_CATEGORYBAG = "categoryBag";
 	
-	private String entityName;
-	private String entityAlias;
-	private String keyName;
-	private String entityField;
-	private String entityNameChild;
-	private String entityAliasChild;
-	private String selectSQL;
+	protected String entityName;
+	protected String entityAlias;
+	protected String keyName;
+	protected String entityField;
+	protected String entityNameChild;
+	protected String entityAliasChild;
+	protected String selectSQL;
 
 	public FindEntityByCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
 		this.entityName = entityName;
