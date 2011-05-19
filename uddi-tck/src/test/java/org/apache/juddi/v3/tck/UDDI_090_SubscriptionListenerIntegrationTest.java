@@ -123,11 +123,16 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 
 			Assert.fail();
 		} finally {
-			
-			tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			endPoint.stop();
+			//do a best effort to remove these artifacts
+			try {
+				tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
+				tckBusinessService.deleteJoePublisherService(authInfoJoe);
+				tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+				tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}	
     
