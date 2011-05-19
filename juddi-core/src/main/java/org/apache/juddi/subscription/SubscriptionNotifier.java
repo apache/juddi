@@ -23,9 +23,6 @@ import java.util.GregorianCalendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.MBeanException;
-import javax.management.ReflectionException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
@@ -101,11 +98,11 @@ public class SubscriptionNotifier extends TimerTask {
 		int updateCounter = 0;
 		try {
 			for (String attribute : attributes) {
-				attribute += " successful queries";
-				String counter = serviceCounter.getAttribute(attribute).toString();
-				if (counter!=null) updateCounter += Integer.valueOf(counter);
+				String counter = serviceCounter.getAttribute(attribute + " successful queries").toString();
+				updateCounter += Integer.valueOf(counter);
 			}
-			//if the counts not the same something changed, this accounts for the case where the counters where reset.
+			// if the counts are not the same something has changed, 
+			// this accounts for the case where the counters where reset.
 			if (updateCounter != lastUpdateCounter) {
 				lastUpdateCounter = updateCounter;
 				isUpdated = true;
