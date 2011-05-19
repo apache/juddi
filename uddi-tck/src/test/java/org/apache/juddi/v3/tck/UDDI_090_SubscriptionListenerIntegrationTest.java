@@ -124,6 +124,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			Assert.fail();
 		} finally {
 			endPoint.stop();
+			endPoint = null;
 			//do a best effort to remove these artifacts
 			try {
 				tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
