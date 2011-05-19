@@ -114,7 +114,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }
 
         if (mbserver != null) {
-          System.out.println("Found our MBean server");
+	  log.info("Found MBean server");
         } else {
           mbserver = MBeanServerFactory.createMBeanServer();
         } 
