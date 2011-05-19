@@ -23,6 +23,9 @@ import java.util.GregorianCalendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.MBeanException;
+import javax.management.ReflectionException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
@@ -34,7 +37,10 @@ import javax.xml.datatype.Duration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.impl.ServiceCounterLifecycleResource;
+import org.apache.juddi.api.impl.UDDIPublicationImpl;
 import org.apache.juddi.api.impl.UDDISecurityImpl;
+import org.apache.juddi.api.impl.UDDIServiceCounter;
 import org.apache.juddi.api.impl.UDDISubscriptionImpl;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
@@ -63,8 +69,14 @@ public class SubscriptionNotifier extends TimerTask {
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
 	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
-	private Boolean registryHasChanges = true;
 	private Boolean alwaysNotify = false;
+	private int lastUpdateCounter;
+	private UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
+	private String[] attributes = {
+			  "save_business",  "save_service",  "save_binding",  "save_tmodel",
+			"delete_business","delete_service","delete_binding","delete_tmodel",
+			"add_publisherassertions","set_publisherassertions","delete_publisherassertions"
+	};
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
@@ -77,10 +89,37 @@ public class SubscriptionNotifier extends TimerTask {
 		timer.cancel();
 		return super.cancel();
 	}
+	
+	/**
+	 * If the CRUD methods on the publication API where not called, this registry node does not contain changes. If
+	 * the registry database is shared with other registry nodes and one of those registries pushed in a change, then
+	 * that registry node will take care of sending out notifications.
+	 * @return
+	 */
+	protected boolean registryMayContainUpdates() {
+		boolean isUpdated = false;
+		int updateCounter = 0;
+		try {
+			for (String attribute : attributes) {
+				attribute += " successful queries";
+				String counter = serviceCounter.getAttribute(attribute).toString();
+				if (counter!=null) updateCounter += Integer.valueOf(counter);
+			}
+			//if the counts not the same something changed, this accounts for the case where the counters where reset.
+			if (updateCounter != lastUpdateCounter) {
+				lastUpdateCounter = updateCounter;
+				isUpdated = true;
+			}
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
 
 	public void run() 
 	{
-		if (alwaysNotify || (registryHasChanges && firedOnTime(scheduledExecutionTime()))) {
+		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
 			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
 			
