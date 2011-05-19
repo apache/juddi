@@ -163,15 +163,15 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
                     currentAlias = entityAliasChild2;
                     
                     if (BusinessEntityQuery.ENTITY_NAME.equals(entityName)) {
-                        joinClause = entityAlias + ".id" + " = "
-                        + entityAliasChild + "." + entityField + ".id" + " and "
-                        + entityAliasChild + "." + entityField + ".id" + " = "
-                        + entityAliasChild2 + ".businessService.businessEntity.id";
+                        joinClause = entityAlias + ".entityKey" + " = "
+                        + entityAliasChild + "." + entityField + ".entityKey" + " and "
+                        + entityAliasChild + "." + entityField + ".entityKey" + " = "
+                        + entityAliasChild2 + ".businessService.businessEntity.entityKey";
                     } else {
-                        joinClause = entityAlias + ".id" + " = "
-                            + entityAliasChild + "." + entityField + ".id" + " and "
-                            + entityAliasChild + "." + entityField + ".id" + " = "
-                            + entityAliasChild2 + ".bindingTemplate.businessService.id";
+                        joinClause = entityAlias + ".entityKey" + " = "
+                            + entityAliasChild + "." + entityField + ".entityKey" + " and "
+                            + entityAliasChild + "." + entityField + ".entityKey" + " = "
+                            + entityAliasChild2 + ".bindingTemplate.businessService.entityKey";
                     }
 
                     appendConditions(dynamicQry, fq, keyedRefs);
