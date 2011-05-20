@@ -14,6 +14,8 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.Date;
+
 import javax.xml.ws.Endpoint;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -52,6 +54,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		manager.stop();
 		//shutting down the TCK SubscriptionListener
 		endPoint.stop();
+		endPoint = null;
 	}
 	
 	@BeforeClass
@@ -96,8 +99,9 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
             //Changing the service we subscribed to "JoePublisherService"
+			Thread.sleep(1000);
 			logger.info("Updating Service ********** ");
-			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
+			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo" + new Date());
 			//tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
 			
             //waiting up to 100 seconds for the listener to notice the change.
@@ -106,6 +110,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 				Thread.sleep(500);
 				System.out.print(".");
 				if (UDDISubscriptionListenerImpl.notificationCount > 0) {
+					logger.info("Received Notification");
 					break;
 				} else {
 					System.out.print(test);
@@ -119,21 +124,15 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			}
 			
 		} catch (Exception e) {
+			logger.error("No exceptions please.");
 			e.printStackTrace();
 
 			Assert.fail();
 		} finally {
-			endPoint.stop();
-			endPoint = null;
-			//do a best effort to remove these artifacts
-			try {
 				tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 				tckBusinessService.deleteJoePublisherService(authInfoJoe);
 				tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 				tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}	
     

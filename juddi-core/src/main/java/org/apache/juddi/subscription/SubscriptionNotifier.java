@@ -25,7 +25,6 @@ import java.util.TimerTask;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -118,7 +117,7 @@ public class SubscriptionNotifier extends TimerTask {
 	{
 		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
-			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
+			log.info("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
@@ -170,7 +169,7 @@ public class SubscriptionNotifier extends TimerTask {
 		} else {
 			log.warn("NotificationTimer is lagging " + lagTime + " milli seconds behind. A lag time "
 					+ "which exceeds an acceptable lagtime of " + acceptableLagTime + "ms indicates "
-					+ "that the registry server is under stress. We are therefore skipping this notification "
+					+ "that the registry server is under load or was in sleep mode. We are therefore skipping this notification "
 					+ "cycle.");
 			return false;
 		}
@@ -240,24 +239,34 @@ public class SubscriptionNotifier extends TimerTask {
 	 * @throws MalformedURLException 
 	 * @throws DispositionReportFaultMessage 
 	 */
-	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
+	protected synchronized void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
 	{
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
-			tx.begin();
+			
 			org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
-			log.debug("Taking out a write lock on this subscription, and bail if we can't get it since that would mean" 
-			 + " another jUDDI instance is in the process of sending out the notification.");
-			em.lock(modelSubscription, LockModeType.WRITE);
+			//log.debug("Taking out a write lock on this subscription, and bail if we can't get it since that would mean" 
+			// + " another jUDDI instance is in the process of sending out the notification.");
+			//em.lock(modelSubscription, LockModeType.WRITE);
+			Date notificationDate = new Date();
 			Date startPoint = resultList.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTime();
 			Date endPoint   = resultList.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTime();
+			
+			
 			if (modelSubscription.getLastNotified()!=null 
 					&& startPoint.before(modelSubscription.getLastNotified()) 
 					&& endPoint.after(modelSubscription.getLastNotified())) {
 				 log.info("We already send out a notification within this coverage period, no need to send another one.");
 				 return;
 			}
+			
+			//now log to the db that we completed sending the notification.
+			tx.begin();
+			modelSubscription.setLastNotified(notificationDate);
+			em.persist(modelSubscription);
+			tx.commit();
+			
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
 			if (resultList.getServiceList()!=null && resultList.getServiceList().getServiceInfos()!=null &&
@@ -267,13 +276,16 @@ public class SubscriptionNotifier extends TimerTask {
 			body.setSubscriptionResultsList(resultList);
 			String authorizedName = modelSubscription.getAuthorizedName();
 			UDDISecurityImpl security = new UDDISecurityImpl();
-			try {
-				//obtain a token for this publisher
-				org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);
-				body.setAuthInfo(token.getAuthInfo());
-			} catch (DispositionReportFaultMessage e) {
-				body.setAuthInfo("Failed to generate token, please contact UDDI admin");
-				log.error(e.getMessage(),e);
+			
+			if (authorizedName != null) { // add a security token if needed
+				try {
+					//obtain a token for this publisher
+					org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);
+					body.setAuthInfo(token.getAuthInfo());
+				} catch (DispositionReportFaultMessage e) {
+					body.setAuthInfo("Failed to generate token, please contact UDDI admin");
+					log.error(e.getMessage(),e);
+				}
 			}
 			
 			if (bindingTemplate!=null) {
@@ -295,10 +307,7 @@ public class SubscriptionNotifier extends TimerTask {
 							notifier.notifySubscriptionListener(body);
 							chunkToken=body.getSubscriptionResultsList().getChunkToken();
 						}
-						//now log to the db that we completed sending the notification.
-						Date notificationDate = new Date();
-						modelSubscription.setLastNotified(notificationDate);
-						em.persist(modelSubscription);
+						
 					} catch (Exception e) {
 						log.error(e.getMessage(),e);
 					}
@@ -308,7 +317,7 @@ public class SubscriptionNotifier extends TimerTask {
 			} else {
 				log.error("There is no valid binding template defined for this subscription: " + modelSubscription.getBindingKey());
 			}
-			tx.commit();
+			
 		} finally {
 			if (tx.isActive()) {
 				tx.rollback();
