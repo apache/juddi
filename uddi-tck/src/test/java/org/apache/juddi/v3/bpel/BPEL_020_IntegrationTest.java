@@ -142,7 +142,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 		
 		System.out.println("DONE");
 		
-		bpel2UDDI.unRegister(serviceName, portName);
+		bpel2UDDI.unRegister(serviceName, portName, serviceUrl);
 	}
 	
 }

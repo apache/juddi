@@ -39,7 +39,7 @@
   See below for other fields that you may want to edit...
   -->
 <businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-  businessKey="uddi:riftsaw.jboss.org:redhat-jboss">
+  businessKey="uddi:riftsaw.jboss.org:business_redhat-jboss">
  <name xml:lang="en">Riftsaw Business</name>
   <!-- Change the description field to provided a brief description of your registry -->
   <description xml:lang="en">The business that owns all the services deployed by Riftsaw</description>

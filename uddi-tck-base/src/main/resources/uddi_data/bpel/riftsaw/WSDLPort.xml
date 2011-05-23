@@ -17,7 +17,7 @@
  */ -->  
 <businessService xmlns="urn:uddi-org:api_v3"
 	serviceKey="uddi:riftsaw.jboss.org:ticket-service"
-	businessKey="uddi:riftsaw.jboss.org:redhat-jboss" >
+	businessKey="uddi:riftsaw.jboss.org:business_redhat-jboss" >
 	<name xml:lang="en">Ticket Service</name>
   	<description xml:lang="en">This is the description of the Ticket Service.</description>
 	 
