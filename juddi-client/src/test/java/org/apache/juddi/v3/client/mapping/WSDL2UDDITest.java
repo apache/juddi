@@ -48,7 +48,7 @@ public class WSDL2UDDITest {
 		
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(properties);
+		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerImpl(), properties);
 		Set<TModel> tModels = new HashSet<TModel>();
 	    @SuppressWarnings("unchecked")
 		Map<QName,PortType> portTypes = (Map<QName,PortType>) wsdlDefinition.getAllPortTypes();
@@ -71,7 +71,7 @@ public class WSDL2UDDITest {
 		
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(properties);
+		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerImpl(), properties);
 		Set<TModel> tModels = new HashSet<TModel>();
 	    @SuppressWarnings("unchecked")
 		Map<QName,Binding> bindings= (Map<QName,Binding>) wsdlDefinition.getAllBindings();
