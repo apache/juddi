@@ -19,11 +19,14 @@ package org.apache.juddi.v3.client.config;
 import java.io.Serializable;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -44,6 +47,7 @@ import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.FindRelatedBusinesses;
 import org.uddi.api_v3.FindTModel;
@@ -62,6 +66,8 @@ import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
 import org.uddi.api_v3.TModelList;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 public class UDDIClerk implements Serializable {
@@ -74,6 +80,7 @@ public class UDDIClerk implements Serializable {
 	protected String publisher;
 	protected String password;
 	
+	private Date tokenBirthDate;
 	private String authToken;
 	private String[] classWithAnnotations;
 	private String managerName;
@@ -117,6 +124,35 @@ public class UDDIClerk implements Serializable {
 
 	public void setManagerName(String managerName) {
 		this.managerName = managerName;
+	}
+	
+	public Subscription register(Subscription subscription) {
+		return register(subscription, this.getUDDINode().getApiNode());
+	}
+	/**
+	 * Register a Subscription.
+	 */
+	public Subscription register(Subscription subscription, Node node) {
+		
+		log.info("Registering subscription with key " + subscription.getSubscriptionKey());
+		Holder<List<Subscription>> holder = new Holder<List<Subscription>>();
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			
+			List<Subscription> subscriptions = new ArrayList<Subscription>();
+			subscriptions.add(subscription);
+			holder.value = subscriptions;
+			getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).saveSubscription(authToken, holder);
+		} catch (Exception e) {
+			log.error("Unable to register subscription " +  subscription.getSubscriptionKey()
+					+ " ." + e.getMessage(),e);
+		} catch (Throwable t) {
+			log.error("Unable to register subscriptionl " +  subscription.getSubscriptionKey()
+					+ " ." + t.getMessage(),t);
+		}
+		log.info("Registering subscription " +  subscription.getSubscriptionKey() + " completed.");
+		subscription = holder.value.get(0);
+		return subscription;
 	}
 	/**
 	 * Register a tModel, using the node of current clerk ('this').
@@ -309,6 +345,25 @@ public class UDDIClerk implements Serializable {
 		}
 	}
 	
+	public void unRegisterSubscription(String subscriptionKey) {
+		unRegisterSubscription(subscriptionKey, this.getUDDINode().getApiNode());
+	}
+	
+	public void unRegisterSubscription(String subscriptionKey, Node node) {
+		log.info("UnRegistering subscription with key " + subscriptionKey);
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl());
+			DeleteSubscription deleteSubscription = new DeleteSubscription();
+			deleteSubscription.setAuthInfo(authToken);
+			deleteSubscription.getSubscriptionKey().add(subscriptionKey);
+			getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).deleteSubscription(deleteSubscription);
+		} catch (Exception e) {
+			log.error("Unable to unregister subscription key " + subscriptionKey
+					+ " ." + e.getMessage(),e);
+		}
+	}
+	
+	
 	public TModelList findTModel(FindTModel findTModel) throws RemoteException, ConfigurationException, TransportException {
 		return findTModel(findTModel, this.getUDDINode().getApiNode());
 	}
@@ -331,6 +386,12 @@ public class UDDIClerk implements Serializable {
 			checkForErrorInDispositionReport(report, null, null);
 		}
 		return null;
+	}
+	
+	public TModelDetail getTModelDetail(String tModelKey) throws RemoteException, ConfigurationException, TransportException {
+		GetTModelDetail getTModelDetail = new GetTModelDetail();
+		getTModelDetail.getTModelKey().add(tModelKey);
+		return getTModelDetail(getTModelDetail);
 	}
 	
 	public TModelDetail getTModelDetail(GetTModelDetail getTModelDetail) throws RemoteException, ConfigurationException, TransportException {
@@ -496,7 +557,15 @@ public class UDDIClerk implements Serializable {
 	}
 	
 	private String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
+		//if the token is older then 10 minutes discard it, and create a new one.
+		if (tokenBirthDate !=null && System.currentTimeMillis() > tokenBirthDate.getTime() + 600000 ) {
+			DiscardAuthToken discardAuthToken = new DiscardAuthToken();
+			discardAuthToken.setAuthInfo(authToken);
+			getUDDINode().getTransport().getUDDISecurityService(endpointURL).discardAuthToken(discardAuthToken);
+			authToken=null;
+		}
 		if (authToken==null) {
+			tokenBirthDate = new Date();
 			GetAuthToken getAuthToken = new GetAuthToken();
 			getAuthToken.setUserID(getPublisher());
 			getAuthToken.setCred(getPassword());

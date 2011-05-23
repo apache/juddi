@@ -187,7 +187,7 @@ public class ClientConfig
 	throws ConfigurationException {
 		String[] entityKeys = config.getStringArray("manager.clerks.xregister." + entityType + "[@entityKey]");
 		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
-		log.info("XRegistration " + entityKeys.length + " " + entityType + "Keys");
+		if (entityKeys.length > 0) log.info("XRegistration " + entityKeys.length + " " + entityType + "Keys");
 		for (int i=0; i<entityKeys.length; i++) {
 			XRegistration xRegistration = new XRegistration();
 			xRegistration.setEntityKey(config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@entityKey]"));

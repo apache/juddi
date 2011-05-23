@@ -102,7 +102,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		this.businessKey = Property.getBusinessKey(properties);
 		this.lang = properties.getProperty(Property.LANG,Property.DEFAULT_LANG);
 		
-		this.wsdl2UDDI = new WSDL2UDDI(properties);
+		this.wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 	}
 	
 	public String getKeyDomainURI() {
@@ -155,7 +155,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	 * @throws RemoteException 
 	 */
 	@SuppressWarnings("unchecked")
-	public void register(QName serviceName, String portName, URL serviceUrl, Definition wsdlDefinition) 
+	public BindingTemplate register(QName serviceName, String portName, URL serviceUrl, Definition wsdlDefinition) 
 		throws WSDLException, MalformedURLException, RemoteException, ConfigurationException, TransportException 
 	{
 		String targetNamespace = wsdlDefinition.getTargetNamespace();
@@ -187,15 +187,16 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		//Add the BindingTemplate to this Service
 		BindingTemplate binding = createBPELBinding(serviceName, portName, serviceUrl, wsdlDefinition);
 		// Register BindingTemplate
-		clerk.register(binding); 
+		clerk.register(binding);
+		return binding;
 	}
 	
-	public void unRegister(QName serviceName, String portName) throws RemoteException, ConfigurationException, TransportException {
+	public String unRegister(QName serviceName, String portName, URL serviceUrl) throws RemoteException, ConfigurationException, TransportException {
 		
 		String serviceKey = Property.getServiceKey(properties, serviceName);
 		BusinessService service = lookupService(serviceKey);
 		boolean isRemoveServiceIfNoTemplates = true; 
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName);
+		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
 		//check if this bindingKey is in the service's binding templates
 		for (BindingTemplate bindingTemplate : service.getBindingTemplates().getBindingTemplate()) {
 			if (bindingKey.equals(bindingTemplate.getBindingKey())) {
@@ -247,19 +248,12 @@ public class BPEL2UDDI extends AnnotationProcessor {
  								}
 							}
 						}
-						
-						System.out.println("done");
-						
 					}
-					
-					//also unRegister the related tModels
-					//first obtain the wsdl for this binding/service, so that we can derive the tModelKeys
-					//or know to run a find tModels
 				}
 				break;
 			}
 		}
-			
+		return service.getServiceKey();	
 	}
 	/**
 	 * Perform a lookup by serviceKey, and will return null if not found.
@@ -395,7 +389,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		// Set BusinessService Key
 		bindingTemplate.setServiceKey(Property.getServiceKey(properties, serviceName));
 		// Set Binding Key
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName);
+		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
 		bindingTemplate.setBindingKey(bindingKey);
 		// Set AccessPoint
 		AccessPoint accessPoint = new AccessPoint();
@@ -538,7 +532,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
     /**
      * Find all portTypes used in the given process. This should return the 
      * tModel registration for the process tModel. The tModelKeys for the 
-     * portTypes used in the process can be obtained from the process tModel’s 
+     * portTypes used in the process can be obtained from the process tModels 
      * categoryBag, and passed into the second call.
      * 
      * @param processKey

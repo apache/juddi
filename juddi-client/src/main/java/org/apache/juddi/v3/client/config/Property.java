@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.net.URL;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -37,6 +38,7 @@ public class Property
 	public static final String SERVICE_KEY_FORMAT               = "bpelServiceKeyFormat";
 	public static final String BUSINESS_KEY_FORMAT              = "businessKeyFormat";
 	public static final String BINDING_KEY_FORMAT               = "bindingKeyFormat";
+	public static final String SUBSCRIPTION_KEY_FORMAT          = "subscriptionKeyFormat";
 	public static final String SERVICE_DESCRIPTION              = "serviceDescription";
 	public static final String BINDING_DESCRIPTION              = "bindingDescription";
 	public static final String SERVICE_CATEGORY_BAG             = "serviceCategoryBag";
@@ -44,9 +46,10 @@ public class Property
 	
 	//Default Values
 	public static final String DEFAULT_LANG                     = "en:";
-	public static final String DEFAULT_BUSINESS_KEY_FORMAT      = "uddi:${keyDomain}:${businessName}";
-	public static final String DEFAULT_SERVICE_KEY_FORMAT       = "uddi:${keyDomain}:${serviceName}";
-	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:${nodeName}_${serviceName}_${portName}";
+	public static final String DEFAULT_BUSINESS_KEY_FORMAT      = "uddi:${keyDomain}:business_${businessName}";
+	public static final String DEFAULT_SERVICE_KEY_FORMAT       = "uddi:${keyDomain}:service_${serviceName}";
+	public static final String DEFAULT_SUBSCRIPTION_KEY_FORMAT  = "uddi:${keyDomain}:service_cache_${nodeName}";
+	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${nodeName}_${serviceName}_${portName}_${port}";
 	public static final String DEFAULT_SERVICE_DESCRIPTION      = "Default service description when no <wsdl:document> element is defined inside the <wsdl:service> element.";
 	public static final String DEFAULT_BINDING_DESCRIPTION      = "Default binding description when no <wsdl:document> element is defined inside the <wsdl:binding> element.";
 	/**
@@ -62,6 +65,12 @@ public class Property
 		String businessKey = TokenResolver.replaceTokens(keyFormat, properties).toLowerCase();
 		return businessKey;
 	}
+	
+	public static String getSubscriptionKey(Properties properties) {
+		String keyFormat = properties.getProperty(SUBSCRIPTION_KEY_FORMAT, DEFAULT_SUBSCRIPTION_KEY_FORMAT);
+		String subscriptionKey = TokenResolver.replaceTokens(keyFormat, properties).toLowerCase();
+		return subscriptionKey;
+	}
 	/**
 	 * Constructs the serviceKey based on the serviceKeyFormat specified in the properties. When no
 	 * serviceKeyFormat is specific the default format of uddi:${keyDomain}:${serviceName} is used.
@@ -70,10 +79,10 @@ public class Property
 	 * @param serviceName
 	 * @return the serviceKey
 	 */
-	public static String getServiceKey(Properties properties, QName serviceName) {
+	public static String getServiceKey(Properties properties, QName serviceQName) {
 		Properties tempProperties = new Properties();
 		tempProperties.putAll(properties);
-		tempProperties.put("serviceName", serviceName.getLocalPart());
+		tempProperties.put("serviceName", serviceQName.getLocalPart());
 		//Constructing the serviceKey
 		String keyFormat = tempProperties.getProperty(SERVICE_KEY_FORMAT, DEFAULT_SERVICE_KEY_FORMAT);
 		String serviceKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();
@@ -88,11 +97,20 @@ public class Property
 	 * @param portName
 	 * @return the bindingKey
 	 */
-	public static String getBindingKey(Properties properties, QName serviceName, String portName) {
+	public static String getBindingKey(Properties properties, QName serviceName, String portName, URL bindingUrl) {
 		Properties tempProperties = new Properties();
 		tempProperties.putAll(properties);
 		tempProperties.put("serviceName", serviceName.getLocalPart());
 		tempProperties.put("portName", portName);
+		int port = bindingUrl.getPort();
+		if (port==-1) {
+			if ("http".equals(bindingUrl.getProtocol())) {
+				port = 80;
+			} else if ("https".equals(bindingUrl.getProtocol())) {
+				port = 443;
+			}
+		}
+		tempProperties.put("port", port);
 		//Constructing the binding Key
 		String keyFormat = properties.getProperty(BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
 		String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();
