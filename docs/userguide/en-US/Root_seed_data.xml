@@ -80,12 +80,12 @@
     
     <!-- section: Tokens in the Seed Data -->
     <section id="sect-tokens_in_the_seed_data">
-        <title>Tokens in the Seed Data</title>
+        <title>Token in the Seed Data</title>
         <para>
         You may have noticed the tokens in the <filename>root_BusinessEntity.xml</filename> 
-        file (<literal>${juddi.server.name}</literal> and
-        <literal>${juddi.server.port}</literal> ) . The value of these tokens can set in
-        the <filename>juddiv3.properties</filename> file, and you can add your own tokens.
+        file (<literal>${juddi.server.baseurl}</literal>. The value of this tokens can set in
+        the <filename>juddiv3.properties</filename> file. The value substitution takes place
+        at runtime, so that different nodes can do the substitution  with their own value if needed.
         </para>
     </section>
 
