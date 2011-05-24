@@ -47,10 +47,12 @@
 		<servlet-class>org.apache.juddi.api.impl.UDDIPublicationImpl</servlet-class>
 	</servlet>
 
+<!--  
 	<servlet>
 		<servlet-name>ReplicationService</servlet-name>
 		<servlet-class>org.apache.juddi.api.impl.UDDIReplicationImpl</servlet-class>
 	</servlet>
+-->
 
 	<servlet>
 		<servlet-name>SecurityService</servlet-name>
@@ -91,11 +93,13 @@
 		<url-pattern>/services/publish</url-pattern>
 	</servlet-mapping>
 
+<!-- 
 	<servlet-mapping>
 		<servlet-name>ReplicationService</servlet-name>
 		<url-pattern>/services/replication</url-pattern>
 	</servlet-mapping>
-
+ -->
+ 
 	<servlet-mapping>
 		<servlet-name>SecurityService</servlet-name>
 		<url-pattern>/services/security</url-pattern>
