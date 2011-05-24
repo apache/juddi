@@ -36,7 +36,7 @@
 	-->
 	<import namespace="urn:uddi-org:api_v3" schemaLocation="uddi_v3.xsd"/>
 	<import namespace="urn:uddi-org:custody_v3" schemaLocation="uddi_v3custody.xsd"/>
-	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
 	<!-- Attribute type definitions -->
 	<simpleType name="controlledMessage_type" final="restriction">
 		<restriction base="uddi:validationTypeString255"/>

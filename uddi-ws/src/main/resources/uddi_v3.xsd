@@ -34,8 +34,8 @@
 		followed, or as required to translate it into languages other than
 		English.
 	-->
-	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="www.w3.org/2001/xml.xsd"/>
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
 	<!-- Attribute type definitions -->
 	<xsd:simpleType name="uddiKey" scc14n:caseMapKind="fold">
 		<xsd:restriction base="xsd:anyURI">

@@ -44,7 +44,9 @@ public class UDDIServiceWSDL {
 		"uddi_vs_v3_binding.wsdl",
 		"uddi_vs_v3_portType.wsdl",
 		"uddi_vscache_v3_binding.wsdl",
-		"uddi_vscache_v3_portType.wsdl"
+		"uddi_vscache_v3_portType.wsdl",
+		"www.w3.org/2001/xml.xsd",
+		"www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"
 	};
 	
 	static {
@@ -115,7 +117,10 @@ public class UDDIServiceWSDL {
 		for (String importFileName : imports) {
 			URL url = ClassUtil.getResource(srcDir + importFileName, this.getClass());
 			String content = read(url);
+			
 			File importFile = new File(destDir + File.separator + importFileName);
+			if (!importFile.getParentFile().exists()) 
+				importFile.getParentFile().mkdirs();
 		    Writer out = new OutputStreamWriter(new FileOutputStream(importFile));
 		    try {
 		      out.write(content);
