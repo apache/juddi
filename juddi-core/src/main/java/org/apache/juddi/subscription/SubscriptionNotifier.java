@@ -121,10 +121,13 @@ public class SubscriptionNotifier extends TimerTask {
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
-				//expireCache after subscription.getExpiresAfter().getTime()
+				
 				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
 					try {
-						GetSubscriptionResults getSubscriptionResults = buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
+						//build a query with a coverage period from the lastNotified time to 
+						//now (the scheduled Execution time)
+						GetSubscriptionResults getSubscriptionResults = 
+							buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
 						if (getSubscriptionResults!=null) {
 							getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 							UddiEntityPublisher publisher = new UddiEntityPublisher();
@@ -139,6 +142,11 @@ public class SubscriptionNotifier extends TimerTask {
 						log.error("Could not obtain subscriptionResult for subscriptionKey " 
 								+ subscription.getSubscriptionKey() + ". " + e.getMessage(),e);
 					}	
+				} else {
+					// the subscription expired, we should delete it
+					log.info("Subcription with key " + subscription.getSubscriptionKey() 
+							+ " expired " + subscription.getExpiresAfter());
+					deleteSubscription(subscription);
 				}
 			}
             long endTime   = System.currentTimeMillis();
@@ -152,7 +160,7 @@ public class SubscriptionNotifier extends TimerTask {
 		} else {
 			log.debug("Skipping current notification cycle because lagtime is too great.");
 		}
-	}
+ 	}
 	/**
 	 * Checks to see that the event are fired on time. If they are late this may indicate that the server
 	 * is under load. The acceptableLagTime is configurable using the "juddi.notification.acceptable.lagtime"
@@ -167,7 +175,7 @@ public class SubscriptionNotifier extends TimerTask {
 		if (lagTime <= acceptableLagTime || acceptableLagTime < 0) {
 			return true;
 		} else {
-			log.warn("NotificationTimer is lagging " + lagTime + " milli seconds behind. A lag time "
+			log.debug("NotificationTimer is lagging " + lagTime + " milli seconds behind. A lag time "
 					+ "which exceeds an acceptable lagtime of " + acceptableLagTime + "ms indicates "
 					+ "that the registry server is under load or was in sleep mode. We are therefore skipping this notification "
 					+ "cycle.");
@@ -184,7 +192,9 @@ public class SubscriptionNotifier extends TimerTask {
 		if (startPoint==null) startPoint = subscription.getCreateDate();
 		nextDesiredNotificationDate = new Date(startPoint.getTime());
 		duration.addTo(nextDesiredNotificationDate);
-
+		//nextDesiredNotificationDate = lastTime + the Interval Duration, which should be:
+		//AFTER the lastNotified time and BEFORE the endTime (current time). If it is
+		//after the endTime, then the user does not want a notification yet, so we accumulate.
 		if (subscription.getLastNotified()==null || nextDesiredNotificationDate.after(startPoint) && nextDesiredNotificationDate.before(endPoint)) {
 			getSubscriptionResults = new GetSubscriptionResults();
 			CoveragePeriod period = new CoveragePeriod();
@@ -234,34 +244,39 @@ public class SubscriptionNotifier extends TimerTask {
 	    return subscriptions;
 	}
 	/**
+	 * Deletes the subscription. i.e. when it is expired.
+	 * @param subscription
+	 */
+	protected void deleteSubscription(Subscription subscription) {
+		EntityManager em = PersistenceManager.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			em.remove(subscription);
+		    tx.commit();
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			em.close();
+		}
+	}
+	/**
 	 * Sends out the notifications.
 	 * @param resultList
 	 * @throws MalformedURLException 
 	 * @throws DispositionReportFaultMessage 
 	 */
-	protected synchronized void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
+	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
 	{
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
 			
-			org.apache.juddi.model.Subscription modelSubscription = em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
-			//log.debug("Taking out a write lock on this subscription, and bail if we can't get it since that would mean" 
-			// + " another jUDDI instance is in the process of sending out the notification.");
-			//em.lock(modelSubscription, LockModeType.WRITE);
+			org.apache.juddi.model.Subscription modelSubscription = 
+				em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
 			Date notificationDate = new Date();
-			Date startPoint = resultList.getCoveragePeriod().getStartPoint().toGregorianCalendar().getTime();
-			Date endPoint   = resultList.getCoveragePeriod().getEndPoint().toGregorianCalendar().getTime();
-			
-			
-			if (modelSubscription.getLastNotified()!=null 
-					&& startPoint.before(modelSubscription.getLastNotified()) 
-					&& endPoint.after(modelSubscription.getLastNotified())) {
-				 log.info("We already send out a notification within this coverage period, no need to send another one.");
-				 return;
-			}
-			
-			//now log to the db that we completed sending the notification.
+			//now log to the db that we are sending the notification.
 			tx.begin();
 			modelSubscription.setLastNotified(notificationDate);
 			em.persist(modelSubscription);
@@ -269,10 +284,10 @@ public class SubscriptionNotifier extends TimerTask {
 			
 			org.apache.juddi.model.BindingTemplate bindingTemplate= em.find(org.apache.juddi.model.BindingTemplate.class, modelSubscription.getBindingKey());
 			NotifySubscriptionListener body = new NotifySubscriptionListener();
-			if (resultList.getServiceList()!=null && resultList.getServiceList().getServiceInfos()!=null &&
-					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
-				resultList.getServiceList().setServiceInfos(null);
-			}
+//			if (resultList.getServiceList()!=null && resultList.getServiceList().getServiceInfos()!=null &&
+//					resultList.getServiceList().getServiceInfos().getServiceInfo().size() == 0) {
+//				resultList.getServiceList().setServiceInfos(null);
+//			}
 			body.setSubscriptionResultsList(resultList);
 			String authorizedName = modelSubscription.getAuthorizedName();
 			UDDISecurityImpl security = new UDDISecurityImpl();

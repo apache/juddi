@@ -21,7 +21,7 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 public class HTTPNotifier implements Notifier {
 	
 	private static String SUBR_V3_NAMESPACE = "urn:uddi-org:v3_service";
-	private static String SUBSCRIPTION_LISTENER_SERVICE = "UDDI_SubscriptionListener_Port";
+	private static String SUBSCRIPTION_LISTENER_SERVICE = "UDDISubscriptionListenerImplPort";
 	
 	Log log = LogFactory.getLog(this.getClass());
 	UDDISubscriptionListenerPortType subscriptionListenerPort = null;
@@ -34,7 +34,7 @@ public class HTTPNotifier implements Notifier {
 					" should start with 'http' or 'https'");
 		}
 		if (AccessPointType.WSDL_DEPLOYMENT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
-			//WSDL deployment types
+			//WSDL deployment type
 			//TODO, let user override the SUBSCRIPTION_LISTENER_SERVICE setting
 			QName qName = new QName(SUBR_V3_NAMESPACE, SUBSCRIPTION_LISTENER_SERVICE);
 			Service service = Service.create(new URL(bindingTemplate.getAccessPointUrl()), qName);

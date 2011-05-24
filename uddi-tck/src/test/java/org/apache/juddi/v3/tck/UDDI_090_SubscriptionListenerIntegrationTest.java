@@ -89,7 +89,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	}
 	
 	@Test
-	public void joePublisher() {
+	public void joePublisherUpdateService() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -101,8 +101,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
             //Changing the service we subscribed to "JoePublisherService"
 			Thread.sleep(1000);
 			logger.info("Updating Service ********** ");
-			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo" + new Date());
-			//tckSubscriptionListener.changeSubscribedObject(authInfoJoe);
+			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			
             //waiting up to 100 seconds for the listener to notice the change.
 			String test="";
@@ -132,6 +131,51 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 				tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 				tckBusinessService.deleteJoePublisherService(authInfoJoe);
 				tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+				tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test
+	public void joePublisherUpdateBusiness() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			//Saving the Listener Service
+			tckSubscriptionListener.saveService(authInfoJoe);
+			//Saving the Subscription
+			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
+            //Changing the service we subscribed to "JoePublisherService"
+			Thread.sleep(1000);
+			logger.info("Deleting Business ********** ");
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			
+            //waiting up to 100 seconds for the listener to notice the change.
+			String test="";
+			for (int i=0; i<200; i++) {
+				Thread.sleep(500);
+				System.out.print(".");
+				if (UDDISubscriptionListenerImpl.notificationCount > 0) {
+					logger.info("Received Notification");
+					break;
+				} else {
+					System.out.print(test);
+				}
+			}
+			if (UDDISubscriptionListenerImpl.notificationCount == 0) {
+				Assert.fail("No Notification was sent");
+			}
+			if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+				Assert.fail("Notification does not contain the correct service");
+			}
+			
+		} catch (Exception e) {
+			logger.error("No exceptions please.");
+			e.printStackTrace();
+
+			Assert.fail();
+		} finally {
+				tckSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
 				tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}	
