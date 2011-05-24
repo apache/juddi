@@ -192,7 +192,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }        
     }
     
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public Object getAttribute(String attribute)
             throws AttributeNotFoundException, MBeanException,
             ReflectionException {
@@ -214,7 +214,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         return null;
     }
 
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public void setAttribute(Attribute attribute)
             throws AttributeNotFoundException, InvalidAttributeValueException,
             MBeanException, ReflectionException {
@@ -222,7 +222,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         
     }
 
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public AttributeList getAttributes(String[] attributes) {
         AttributeList attributeList = new AttributeList();
 
@@ -253,13 +253,13 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         return attributeList;
     }
 
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public AttributeList setAttributes(AttributeList attributes) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public Object invoke(String actionName, Object[] params, String[] signature)
             throws MBeanException, ReflectionException {
         if (actionName.equalsIgnoreCase(RESET_COUNTER)) {
@@ -270,7 +270,7 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }
     }
 
-    @Override
+    //@Override, this is jdk1.6 style, please uncomment when we go 1.6
     public MBeanInfo getMBeanInfo() {
         // the extra 3 added are for totalApiQueries, faultApiQueries, and
         // successfulApiQueries
