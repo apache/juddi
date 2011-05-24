@@ -86,8 +86,10 @@ public class Install {
 		try {
 			tx.begin();
 			boolean seedAlways = config.getBoolean("juddi.seed.always", false);
-			if (!seedAlways && alreadyInstalled(config))
+			boolean alreadyInstalled = alreadyInstalled(config);
+			if (!seedAlways && alreadyInstalled)
 				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
+			
 			
 			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
 			String fileRootTModelKeygen = rootPublisherStr + FILE_TMODELKEYGEN;
@@ -99,13 +101,16 @@ public class Install {
 			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			
 			String fileRootPublisher = rootPublisherStr + FILE_PUBLISHER;
-			log.info("Loading the root Publisher from file " + fileRootPublisher);
-			rootPublisher = installPublisher(em, fileRootPublisher, config);
+			if (!alreadyInstalled) {
+				log.info("Loading the root Publisher from file " + fileRootPublisher);
 			
-			installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
-
-			rootBusinessEntity.setBusinessKey(nodeId);
-			installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
+				rootPublisher = installPublisher(em, fileRootPublisher, config);
+				installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
+				rootBusinessEntity.setBusinessKey(nodeId);
+				installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
+			} else {
+				log.debug("juddi.seed.always reapplies all seed files except for the root data.");
+			}
 			
 			List<String> juddiPublishers = getPublishers(config);
 			for (String publisherStr : juddiPublishers) {
