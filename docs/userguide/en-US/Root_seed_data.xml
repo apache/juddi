@@ -73,7 +73,10 @@
 
         <para>
         Note that the seeding process only kicks off if no publishers exist in the
-        database. So this will only work with a clean database.
+        database. So this will only work with a clean database, unless you set
+        <literal>juddi.seed.always</literal> to true. Then it will re-apply all files with
+        the exception of the root data files. Note that this can lead to losing data that
+        was added to entities that are re-seeded, since data is not merged.
         </para>
     
     </section>

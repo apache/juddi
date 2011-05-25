@@ -49,7 +49,9 @@
 		
 		<programlisting><xi:include href="extras/jUDDI_configuration_seed_always.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
         <para>
-		Forces seeding of the jUDDI data.
+		Forces seeding of the jUDDI data. This will re-apply all files with
+        the exception of the root data files. Note that this can lead to losing data that
+        was added to the entities that are re-seeded, since data is not merged.
 		</para>
 
 		<programlisting><xi:include href="extras/jUDDI_configuration_load_install_data.properties" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
