@@ -57,7 +57,7 @@
 	    <!--  the JAXWS specification -->
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxws_2.2_spec</artifactId>
+			<artifactId>geronimo-jaxws_2.1_spec</artifactId>
 			<version>1.0</version>
 			<type>jar</type>
 		</dependency>
