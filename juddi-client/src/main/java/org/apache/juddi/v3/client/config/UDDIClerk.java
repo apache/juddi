@@ -150,7 +150,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register subscriptionl " +  subscription.getSubscriptionKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering subscription " +  subscription.getSubscriptionKey() + " completed.");
+		log.debug("Registering subscription " +  subscription.getSubscriptionKey() + " completed.");
 		subscription = holder.value.get(0);
 		return subscription;
 	}
@@ -182,7 +182,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register tModel " +  tModel.getTModelKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering tModel " +  tModel.getTModelKey() + " completed.");
+		log.debug("Registering tModel " +  tModel.getTModelKey() + " completed.");
 		return tModelDetail;
 	}
 	
@@ -215,7 +215,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering template binding " + binding.getBindingKey() + " completed.");
+		log.debug("Registering template binding " + binding.getBindingKey() + " completed.");
 		return bindingTemplate;
 	}
 	/**
@@ -248,7 +248,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering service " + service.getName().get(0).getValue() + " completed.");
+		log.debug("Registering service " + service.getName().get(0).getValue() + " completed.");
 		return businessService;
 	}
 	public BusinessEntity register(BusinessEntity business) {
@@ -277,7 +277,7 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register business " + business.getName().get(0).getValue()
 					+ " ." + t.getMessage(),t);
 		}
-		log.info("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
+		log.debug("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
 		return businessEntity;
 	}
 	
