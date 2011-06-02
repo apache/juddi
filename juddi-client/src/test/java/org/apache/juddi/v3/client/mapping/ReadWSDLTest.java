@@ -14,34 +14,33 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
-import java.net.URL;
+import java.net.URISyntaxException;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLLocator;
-import javax.wsdl.xml.WSDLReader;
 
-import org.apache.juddi.v3.client.ClassUtil;
-
-import com.ibm.wsdl.factory.WSDLFactoryImpl;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class ReadWSDL {
-	
-	public Definition readWSDL(String fileName) throws WSDLException {
-	
-		WSDLFactory factory = WSDLFactoryImpl.newInstance();
-		WSDLReader reader = factory.newWSDLReader();
-		URL url = ClassUtil.getResource(fileName, this.getClass());
-		WSDLLocator locator = new WSDLLocatorImpl(url);
-		Definition wsdlDefinition = reader.readWSDL(locator);
-		return wsdlDefinition;
+public class ReadWSDLTest {
+
+	@Test
+	public void readFromFile() throws WSDLException, URISyntaxException {
+		
+		ReadWSDL readWSDL = new ReadWSDL();
+		Definition definition = readWSDL.readWSDL("wsdl/HelloWorld.wsdl");
+		Assert.assertNotNull(definition);
 	}
 	
-	
-	
+	@Test
+	public void readFromJar() throws WSDLException, URISyntaxException {
+		
+		ReadWSDL readWSDL = new ReadWSDL();
+		Definition definition = readWSDL.readWSDL("uddi_v3_service.wsdl");
+		Assert.assertNotNull(definition);
+	}
 	
 }
