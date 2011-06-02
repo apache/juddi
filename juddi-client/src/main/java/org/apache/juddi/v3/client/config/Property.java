@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -52,6 +54,14 @@ public class Property
 	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${nodeName}_${serviceName}_${portName}_${port}";
 	public static final String DEFAULT_SERVICE_DESCRIPTION      = "Default service description when no <wsdl:document> element is defined inside the <wsdl:service> element.";
 	public static final String DEFAULT_BINDING_DESCRIPTION      = "Default binding description when no <wsdl:document> element is defined inside the <wsdl:binding> element.";
+	
+	public static String getTempDir() {
+		String tmpDir = System.getProperty("jboss.server.temp.dir");
+		if (tmpDir == null) {
+			tmpDir = System.getProperty("java.io.tmpdir");
+		}
+		return tmpDir;
+	}
 	/**
 	 * Constructs the serviceKey based on the bindingKeyFormat specified in the properties. When no
 	 * businessKeyFormat is specific the default format of uddi:${keyDomain}:${businessName} is used. The businessName
@@ -88,6 +98,19 @@ public class Property
 		String serviceKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();
 		return serviceKey;
 	}
+	
+	public static String getBindingKey(Properties properties, QName serviceName, String portName, URL bindingUrl) {
+		
+		String bindingKey = null;
+		try {
+			URI bindingURI = bindingUrl.toURI();
+			bindingKey =  getBindingKey(properties, serviceName, portName, bindingURI);
+		} catch (URISyntaxException e) {
+			
+		}
+		return bindingKey;
+		
+	}
 	/**
 	 * Constructs the bindingKey based on the bindingKeyFormat specified in the properties. When no
 	 * bindingKeyFormat is specific the default format of uddi:${keyDomain}:${nodeName}-${serviceName}-{portName} is used.
@@ -97,20 +120,20 @@ public class Property
 	 * @param portName
 	 * @return the bindingKey
 	 */
-	public static String getBindingKey(Properties properties, QName serviceName, String portName, URL bindingUrl) {
+	public static String getBindingKey(Properties properties, QName serviceName, String portName, URI bindingUrl) {
 		Properties tempProperties = new Properties();
 		tempProperties.putAll(properties);
 		tempProperties.put("serviceName", serviceName.getLocalPart());
 		tempProperties.put("portName", portName);
 		int port = bindingUrl.getPort();
 		if (port==-1) {
-			if ("http".equals(bindingUrl.getProtocol())) {
+			if ("http".equals(bindingUrl.getScheme())) {
 				port = 80;
-			} else if ("https".equals(bindingUrl.getProtocol())) {
+			} else if ("https".equals(bindingUrl.getScheme())) {
 				port = 443;
 			}
 		}
-		tempProperties.put("port", port);
+		tempProperties.put("port", String.valueOf(port));
 		//Constructing the binding Key
 		String keyFormat = properties.getProperty(BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
 		String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();

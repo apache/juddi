@@ -6,9 +6,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.juddi.v3.client.config.Property;
 
 public class UDDIServiceWSDL {
 	
@@ -61,6 +69,17 @@ public class UDDIServiceWSDL {
 		specEndPoints.put(WSDLEndPointType.VALUESETCACHING      , "http://localhost/uddi/valuesetcaching/");
 	}
 	
+	public List<Source> getWSDLFilePaths(String destDir) throws IOException {
+		File tmpDir = new File(destDir);
+		if (!tmpDir.exists()) copyImportFiles(destDir);
+		List<Source> metadata = new ArrayList<Source>();
+		for (String importFileName : imports) {
+			File file = new File(destDir + File.separator + importFileName);
+			Source source = new StreamSource(file);
+			metadata.add(source);
+		}
+	    return metadata;
+	}
 	/**
 	 * Returns the path to a temporary uddi_v3_service.wsdl file, where the soap:address location
 	 * of the given endPointType has been updated with the value specified in the soapAddressLocation.
@@ -69,26 +88,30 @@ public class UDDIServiceWSDL {
 	 * @param soapAddressLocation
 	 * @return WSDL File Path
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public URL getWSDLFilePath(WSDLEndPointType endpointType, String soapAddressLocation) throws IOException 
+	public URL getWSDLFilePath(WSDLEndPointType endpointType, String soapAddressLocation) throws IOException
 	{
 		String wsdlString = getServiceWSDLContent();
 	    String specEndPoint = specEndPoints.get(endpointType);
-	    wsdlString = wsdlString.replace(specEndPoint, soapAddressLocation);
-	    String destDir = System.getProperty("java.io.tmpdir");
+	    if (soapAddressLocation!=null) {
+	    	wsdlString = wsdlString.replace(specEndPoint, soapAddressLocation);
+	    }
+	    String destDir = Property.getTempDir();
 	    File tmpDir = new File(destDir);
 	    if (!tmpDir.exists()) {
 	    	tmpDir.mkdirs();
 	    }
-	    File tmpWSDLFile = File.createTempFile("uddi_v3_service", "wsdl", tmpDir);
+	    copyImportFiles(destDir);
+	    
+	    File tmpWSDLFile = File.createTempFile( "uddi_v3_service.wsdl", ".wsdl", tmpDir);
 	    Writer out = new OutputStreamWriter(new FileOutputStream(tmpWSDLFile));
 	    try {
 	      out.write(wsdlString);
 	    } finally {
 	      out.close();
 	    }
-	    copyImportFiles();
-	    URL url = new URL("file:" + tmpWSDLFile.getAbsolutePath());
+	    URL url = tmpWSDLFile.toURI().toURL();
 	    return url;
 	}
 	
@@ -104,7 +127,7 @@ public class UDDIServiceWSDL {
 	    return read(serviceWSDLURL);
 	}
 	
-	private void copyImportFiles() throws IOException
+	private void copyImportFiles(String destDir) throws IOException
 	{
 		URL serviceWSDLURL = ClassUtil.getResource(getUddiV3ServiceWSDL(),this.getClass());
 		if (serviceWSDLURL==null) throw new IOException("Could not locate resource " + getUddiV3ServiceWSDL());
@@ -113,7 +136,6 @@ public class UDDIServiceWSDL {
     		endIndex = getUddiV3ServiceWSDL().lastIndexOf(File.separator);
     	}
 		String srcDir  = getUddiV3ServiceWSDL().substring(0,endIndex);
-		String destDir = System.getProperty("java.io.tmpdir");
 		for (String importFileName : imports) {
 			URL url = ClassUtil.getResource(srcDir + importFileName, this.getClass());
 			String content = read(url);
