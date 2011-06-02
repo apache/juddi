@@ -18,6 +18,8 @@
 package org.apache.juddi.v3.client.mapping;
 
 import java.io.StringWriter;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jws.WebService;
 import javax.xml.bind.JAXBContext;
@@ -44,15 +46,26 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListenerPortType {
 	
+	
+
 	private static final long serialVersionUID = 100157393329807903L;
 	private static Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);
-	private UDDIServiceCache serviceCache;
+	private static Map<String,UDDIServiceCache> serviceCacheMap = new ConcurrentHashMap<String,UDDIServiceCache>();
 	
-	public UDDIClientSubscriptionListenerImpl(UDDIServiceCache serviceCache) {
+	public UDDIClientSubscriptionListenerImpl(String bindingKey, UDDIServiceCache serviceCache) {
 		super();
-		this.serviceCache = serviceCache;
+		serviceCacheMap.put(bindingKey, serviceCache);
 	}
 	
+	public UDDIClientSubscriptionListenerImpl() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public static Map<String, UDDIServiceCache> getServiceCacheMap() {
+		return serviceCacheMap;
+	}
+
 	public DispositionReport notifySubscriptionListener(
 			NotifySubscriptionListener body)
 			throws DispositionReportFaultMessage 
@@ -63,12 +76,13 @@ public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListe
 			StringWriter sw = new StringWriter();
 			marshaller.marshal(body, sw);
 			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
-			
-			//Update the current subscription
-			serviceCache.registerSubscription();
-			//reset the cache
-			serviceCache.removeAll();
-			
+			String bindingKey = body.getSubscriptionResultsList().getSubscription().getBindingKey();
+			if (serviceCacheMap.containsKey(bindingKey)) {
+				UDDIServiceCache serviceCache = serviceCacheMap.get(bindingKey);
+				// reset the cache, big hammer for now, we could figure out changed from the
+				// subscriptionResults, and be more selective.
+				serviceCache.removeAll();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

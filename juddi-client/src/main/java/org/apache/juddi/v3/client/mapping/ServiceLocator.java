@@ -18,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.wsdl.WSDLException;
@@ -93,7 +92,7 @@ public class ServiceLocator {
 		if (topology==null) {
 			topology = lookupEndpointInUDDI(serviceKey);
 		}
-	    if (topology.getEprs().size() > 0) {
+	    if (topology!=null && topology.getEprs().size() > 0) {
 	    	epr = selectionPolicy.select(topology);
 	    }
 		return epr;

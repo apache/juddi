@@ -17,7 +17,6 @@ package org.apache.juddi.v3.client.mapping;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,24 +70,24 @@ public class UDDIServiceCache {
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
-		this.port = Integer.valueOf(properties.getProperty("serverPort", "8080")) + 7;
-		this.serverName = properties.getProperty("serverName","localhost");
 		this.subscriptionKey = Property.getSubscriptionKey(properties);
 		
 		init();
 	}
 
 	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException {
-		//TODO make the URL more configurable (https)
-		serviceUrl = new URL("http://localhost:" + port + "/uddiclientsubscriptionlistener");
-		endpoint = Endpoint.publish(serviceUrl.toExternalForm(), new UDDIClientSubscriptionListenerImpl(this));
 		
 		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDISubscriptionListenerService");
 		String portName = "UDDISubscriptionListenerImplPort";
+		String url = urlLocalizer.rewrite(new URL("http://localhost:8080/subscriptionlistener_" + clerk.getManagerName()));
+		serviceUrl = new URL(url);
 		
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 		Definition wsdlDefinition = new ReadWSDL().readWSDL("uddi_v3_service.wsdl");
 		bindingKey = wsdl2UDDI.register(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
+		
+		endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
+		endpoint.publish(serviceUrl.toExternalForm());
 		
 		registerSubscription();
 	}
@@ -100,6 +99,7 @@ public class UDDIServiceCache {
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 		wsdl2UDDI.unRegister(serviceQName, portName, serviceUrl);
 		endpoint.stop();
+		UDDIClientSubscriptionListenerImpl.getServiceCacheMap().remove(bindingKey);
 	}
 	
 	public void removeAll() {
@@ -127,17 +127,18 @@ public class UDDIServiceCache {
 	public void registerSubscription() throws DatatypeConfigurationException {
 		
 		//Create a subscription for changes in any Service in the Registry
-		FindQualifiers qualifiers = new FindQualifiers();
-		qualifiers.getFindQualifier().add("approxateMatch");
-		
 		FindService findAllServices = new FindService();
+		FindQualifiers qualifiers = new FindQualifiers();
+		qualifiers.getFindQualifier().add("approximateMatch");
+		
+		findAllServices.setFindQualifiers(qualifiers);
+		
 		Name name = new Name();
 		name.setValue("%");
 		findAllServices.getName().add(name);
 		
 		SubscriptionFilter filter = new SubscriptionFilter();
-		filter.getFindService().setFindQualifiers(qualifiers);
-		filter.getFindService().getName().add(name);
+		filter.setFindService(findAllServices);
 		
 		Subscription subscription = new Subscription();
 		subscription.setSubscriptionFilter(filter);
@@ -145,7 +146,7 @@ public class UDDIServiceCache {
 		subscription.setBrief(true);
 		Duration oneMinute = DatatypeFactory.newInstance().newDuration("PT1M");
 		subscription.setNotificationInterval(oneMinute);
-		subscription.setSubscriptionKey("create the key");
+		subscription.setSubscriptionKey(subscriptionKey);
 		clerk.register(subscription);
 	}
 	
