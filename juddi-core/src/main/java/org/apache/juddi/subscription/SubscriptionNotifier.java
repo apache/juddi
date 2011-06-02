@@ -66,6 +66,7 @@ public class SubscriptionNotifier extends TimerTask {
 	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private Boolean alwaysNotify = false;
+	private Date desiredDate = null;
 	private int lastUpdateCounter;
 	private UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
 	private String[] attributes = {
@@ -95,6 +96,12 @@ public class SubscriptionNotifier extends TimerTask {
 	protected boolean registryMayContainUpdates() {
 		boolean isUpdated = false;
 		int updateCounter = 0;
+		//if the desiredDate is set it means that we've declined sending out a notification befor
+		//because the a client did not want a notification yet. However if this desided
+		//notification time has come we should try sending out the notification now.
+		if (desiredDate!=null && new Date().getTime() > desiredDate.getTime()) {
+			return true;
+		}
 		try {
 			for (String attribute : attributes) {
 				String counter = serviceCounter.getAttribute(attribute + " successful queries").toString();
@@ -117,6 +124,7 @@ public class SubscriptionNotifier extends TimerTask {
 	{
 		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
+			desiredDate = null;
 			log.info("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
@@ -136,6 +144,8 @@ public class SubscriptionNotifier extends TimerTask {
 							if (resultListContainsChanges(resultList)) {
 								log.info("We have a change and need to notify..");
 								notify(getSubscriptionResults,resultList);
+							} else {
+								log.info("No changes where recorded, no need to notify.");
 							}
 						}
 					} catch (Exception e) {
@@ -152,8 +162,9 @@ public class SubscriptionNotifier extends TimerTask {
             long endTime   = System.currentTimeMillis();
             
             if ((endTime-startTime) > interval) {
-            	log.warn("Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL of " + interval);
-            	log.warn("Notification background task took " + (endTime - startTime) + " milliseconds.");
+            	log.debug("Notification background task duration exceeds the JUDDI_NOTIFICATION_INTERVAL" +
+            			" of " + interval + ". Notification background task took " 
+            			+ (endTime - startTime) + " milliseconds.");
             } else {
             	log.debug("Notification background task took " + (endTime - startTime) + " milliseconds.");
             }
@@ -205,6 +216,12 @@ public class SubscriptionNotifier extends TimerTask {
 			period.setEndPoint(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 			if (log.isDebugEnabled()) log.debug("Period " + period.getStartPoint() + " " + period.getEndPoint());
 			getSubscriptionResults.setCoveragePeriod(period);
+		} else {
+			log.info("Client does not yet want a notification. The next desidered notification Date " + nextDesiredNotificationDate + ". The current interval [" 
+				+ startPoint + " , " + endPoint + "] therefore skipping this notification cycle.");
+			if (desiredDate==null || nextDesiredNotificationDate.getTime() < desiredDate.getTime()) {
+				desiredDate = nextDesiredNotificationDate;
+			}
 		}
 		return getSubscriptionResults;
 		
@@ -219,6 +236,9 @@ public class SubscriptionNotifier extends TimerTask {
 	     || resultList.getTModelList()    !=null || resultList.getRelatedBusinessesList() !=null) {
 			return true;
 		}
+		//When the response is 'brief', or when there are deleted only keyBags are used.
+		if (resultList.getKeyBag()!=null && resultList.getKeyBag().size() > 0) return true;
+		//there are no changes to what was subscribed to
 		return false;
 	}
 	/**

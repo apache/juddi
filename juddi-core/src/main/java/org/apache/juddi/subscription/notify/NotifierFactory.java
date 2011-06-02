@@ -35,11 +35,12 @@ public class NotifierFactory {
 			}
 		}
 		if (notifierClassName == null) {
-			log.error("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport." +
-				" Therefore no notification can be sent out. The user needs to fix the subscription data.");
-		} else {
-			if (log.isDebugEnabled()) log.debug("Going find and instantiate notifier class: " + notifierClassName);
+			log.info("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport. Defaulting " 
+				  +	"to http.");
+			notifierClassName = "org.apache.juddi.subscription.notify.HTTPNotifier";
 		}
+		if (log.isDebugEnabled()) log.debug("Going find and instantiate notifier class: " + notifierClassName);
+		
 		@SuppressWarnings("unchecked")
 		Class<Notifier> notifierClass = (Class<Notifier>) ClassUtil.forName(notifierClassName,this.getClass());
 		Notifier notifier = notifierClass.getConstructor(BindingTemplate.class).newInstance(bindingTemplate);
