@@ -6,6 +6,7 @@ import java.net.URL;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.juddi.v3.client.config.Property;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class UDDIServiceWSDLTest {
 			assertNotNull(wsdlPath);
 			
 		} catch (IOException e) {
-			String tmpDir = System.getProperty("java.io.tmpdir");
+			String tmpDir = Property.getTempDir();
 			Assert.fail("Could not create file in dir " + tmpDir);
 			e.printStackTrace();
 		}
