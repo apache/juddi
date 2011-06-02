@@ -134,8 +134,9 @@ public class SubscriptionNotifier extends TimerTask {
 					try {
 						//build a query with a coverage period from the lastNotified time to 
 						//now (the scheduled Execution time)
+						Date notificationDate = new Date(scheduledExecutionTime());
 						GetSubscriptionResults getSubscriptionResults = 
-							buildGetSubscriptionResults(subscription, new Date(scheduledExecutionTime()));
+							buildGetSubscriptionResults(subscription, notificationDate);
 						if (getSubscriptionResults!=null) {
 							getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 							UddiEntityPublisher publisher = new UddiEntityPublisher();
@@ -143,7 +144,7 @@ public class SubscriptionNotifier extends TimerTask {
 							SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
 							if (resultListContainsChanges(resultList)) {
 								log.info("We have a change and need to notify..");
-								notify(getSubscriptionResults,resultList);
+								notify(getSubscriptionResults,resultList, notificationDate);
 							} else {
 								log.info("No changes where recorded, no need to notify.");
 							}
@@ -287,7 +288,7 @@ public class SubscriptionNotifier extends TimerTask {
 	 * @throws MalformedURLException 
 	 * @throws DispositionReportFaultMessage 
 	 */
-	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList) 
+	protected void notify(GetSubscriptionResults getSubscriptionResults, SubscriptionResultsList resultList, Date notificationDate) 
 	{
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -295,7 +296,6 @@ public class SubscriptionNotifier extends TimerTask {
 			
 			org.apache.juddi.model.Subscription modelSubscription = 
 				em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
-			Date notificationDate = new Date();
 			//now log to the db that we are sending the notification.
 			tx.begin();
 			modelSubscription.setLastNotified(notificationDate);

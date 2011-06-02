@@ -103,7 +103,7 @@ public class SubscriptionNotifierTest
 		boolean hasChanges = notifier.resultListContainsChanges(resultList);
 		Assert.assertTrue(hasChanges);
 		System.out.print(resultList);
-		notifier.notify(getSubscriptionResults,resultList);
+		notifier.notify(getSubscriptionResults,resultList,new Date());
 	}
 	
 	
