@@ -56,7 +56,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "instanceDetails", propOrder = {
-    "instanceParms", "description", "overviewDoc"
+    "description", "overviewDoc", "instanceParms"
 })
 public class InstanceDetails implements Serializable {
 	@XmlTransient

@@ -55,7 +55,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "overviewDoc", propOrder = {
-    "overviewURL", "description"
+        "description", "overviewURL"
 })
 public class OverviewDoc implements Serializable {
 	@XmlTransient
