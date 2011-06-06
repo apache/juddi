@@ -72,9 +72,9 @@
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
-      <build>
-        <finalName>uddi-ws-jaxws21-${version}</finalName>
-      </build>
+      <properties>
+        <envClassifier>jaxws21</envClassifier>
+      </properties>
       <dependencies>
         <!-- the JAXWS 2.1 specification -->
         <dependency>
