@@ -49,7 +49,6 @@ import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.FindTModel;
-import org.uddi.api_v3.GetTModelDetail;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
@@ -57,10 +56,8 @@ import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
-import org.uddi.api_v3.TModelInfo;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
-import org.uddi.api_v3.TModelList;
 import org.w3c.dom.Element;
 
 
@@ -579,9 +576,11 @@ public class WSDL2UDDI {
 		// Description
 		String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
 		// Override with the service description from the WSDL if present
-		Element docElement = wsdlDefinition.getService(serviceQName).getDocumentationElement();
-		if (docElement!=null && docElement.getTextContent()!=null) {
-			serviceDescription = docElement.getTextContent();
+		if (wsdlDefinition.getService(serviceQName) !=null) {
+			Element docElement = wsdlDefinition.getService(serviceQName).getDocumentationElement();
+			if (docElement!=null && docElement.getTextContent()!=null) {
+				serviceDescription = docElement.getTextContent();
+			}
 		}
 		Description description = new Description();
 		description.setLang(lang);
