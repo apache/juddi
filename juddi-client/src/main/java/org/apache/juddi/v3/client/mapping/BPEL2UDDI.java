@@ -286,10 +286,12 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		service.setServiceKey(Property.getServiceKey(properties, serviceName));
 		// Description
 		String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
-		// Override with the service description from the WSDL if present
-		Element docElement = wsdlDefinition.getService(serviceName).getDocumentationElement();
-		if (docElement!=null && docElement.getTextContent()!=null) {
-			serviceDescription = docElement.getTextContent();
+		if (wsdlDefinition.getService(serviceName) !=null) {
+			// Override with the service description from the WSDL if present
+			Element docElement = wsdlDefinition.getService(serviceName).getDocumentationElement();
+			if (docElement!=null && docElement.getTextContent()!=null) {
+				serviceDescription = docElement.getTextContent();
+			}
 		}
 		Description description = new Description();
 		description.setLang(lang);
