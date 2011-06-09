@@ -558,13 +558,13 @@ public class UDDIClerk implements Serializable {
 	
 	private String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
 		//if the token is older then 10 minutes discard it, and create a new one.
-		if (tokenBirthDate !=null && System.currentTimeMillis() > tokenBirthDate.getTime() + 600000 ) {
+		if ((authToken!=null && !"".equals(authToken)) && (tokenBirthDate !=null && System.currentTimeMillis() > tokenBirthDate.getTime() + 600000 )) {
 			DiscardAuthToken discardAuthToken = new DiscardAuthToken();
 			discardAuthToken.setAuthInfo(authToken);
 			getUDDINode().getTransport().getUDDISecurityService(endpointURL).discardAuthToken(discardAuthToken);
 			authToken=null;
 		}
-		if (authToken==null) {
+		if (authToken==null || "".equals(authToken)) {
 			tokenBirthDate = new Date();
 			GetAuthToken getAuthToken = new GetAuthToken();
 			getAuthToken.setUserID(getPublisher());
