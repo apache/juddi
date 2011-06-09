@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -39,10 +40,12 @@ public class UDDIClerkManager {
 	private static Log log = LogFactory.getLog(UDDIClerkManager.class);
     private ClientConfig clientConfig = null;
     private String CONFIG_FILE = "META-INF/uddi.xml";
+    private Properties properties = null;
 	
     public UDDIClerkManager() throws ConfigurationException {
     	super();
-		clientConfig = new ClientConfig(CONFIG_FILE);
+		clientConfig = new ClientConfig(CONFIG_FILE, properties);
+		
     }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
@@ -51,6 +54,14 @@ public class UDDIClerkManager {
 	public UDDIClerkManager(String configurationFile) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile);
+	}
+	/**
+	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
+	 * @throws ConfigurationException 
+	 */
+	public UDDIClerkManager(String configurationFile, Properties properties) throws ConfigurationException {
+		super();
+		clientConfig = new ClientConfig(configurationFile, properties);
 	}
 	/**
 	 * Stops the clerks.

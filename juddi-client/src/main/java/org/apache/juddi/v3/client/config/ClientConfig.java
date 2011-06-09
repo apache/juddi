@@ -56,10 +56,18 @@ public class ClientConfig
 	 */
 	public ClientConfig(String configurationFile) throws ConfigurationException 
 	{
-		loadConfiguration(configurationFile);
+		loadConfiguration(configurationFile, null);
 	}
-	protected void loadManager() throws ConfigurationException {
-		uddiNodes = readNodeConfig(config);
+	/**
+	 * Constructor (note Singleton pattern).
+	 * @throws ConfigurationException
+	 */
+	public ClientConfig(String configurationFile, Properties properties) throws ConfigurationException 
+	{
+		loadConfiguration(configurationFile, properties);
+	}
+	protected void loadManager(Properties properties) throws ConfigurationException {
+		uddiNodes = readNodeConfig(config, properties);
 		uddiClerks = readClerkConfig(config, uddiNodes);
 		xServiceBindingRegistrations = readXServiceBindingRegConfig(config,uddiClerks);
 		xBusinessRegistrations = readXBusinessRegConfig(config, uddiClerks);
@@ -70,7 +78,7 @@ public class ClientConfig
 	 * file is updated the file will be reloaded. By default the reloadDelay is
 	 * set to 1 second to prevent excessive date stamp checking.
 	 */
-	private void loadConfiguration(String configurationFile) throws ConfigurationException {
+	private void loadConfiguration(String configurationFile, Properties properties) throws ConfigurationException {
 		//Properties from system properties
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
@@ -96,7 +104,7 @@ public class ClientConfig
 		compositeConfig.addConfiguration(xmlConfig);
 		//Making the new configuration globally accessible.
 		config = compositeConfig;
-		loadManager();
+		loadManager(properties);
 	}
 
 	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> uddiNodes) 
@@ -133,7 +141,7 @@ public class ClientConfig
 		return isRegisterOnStartup;
 	}
 
-	private Map<String,UDDINode> readNodeConfig(Configuration config) 
+	private Map<String,UDDINode> readNodeConfig(Configuration config, Properties properties) 
 	throws ConfigurationException {
 		String[] names = config.getStringArray("manager.nodes.node.name");
 		Map<String,UDDINode> nodes = new HashMap<String,UDDINode>();
@@ -142,9 +150,9 @@ public class ClientConfig
 			UDDINode uddiNode = new UDDINode();
 			String nodeName = config.getString("manager.nodes.node(" + i +").name");
 			String[] propertyKeys = config.getStringArray("manager.nodes.node(" + i +").properties.property[@name]");
-			Properties properties = null;
+			
 			if (propertyKeys!=null && propertyKeys.length>0) {
-				properties = new Properties();
+				if (properties==null) properties = new Properties();
 				for (int p=0; p<propertyKeys.length; p++) {
 					String name=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@name]");
 					String value=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@value]");

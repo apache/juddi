@@ -82,12 +82,13 @@ public class UDDIServiceCache {
 		String url = urlLocalizer.rewrite(new URL("http://localhost:8080/subscriptionlistener_" + clerk.getManagerName()));
 		serviceUrl = new URL(url);
 		
+		bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
+		endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
+		endpoint.publish(serviceUrl.toExternalForm());
+		
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 		Definition wsdlDefinition = new ReadWSDL().readWSDL("uddi_v3_service.wsdl");
 		bindingKey = wsdl2UDDI.register(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
-		
-		endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
-		endpoint.publish(serviceUrl.toExternalForm());
 		
 		registerSubscription();
 	}

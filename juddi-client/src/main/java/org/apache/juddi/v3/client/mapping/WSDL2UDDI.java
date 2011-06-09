@@ -614,13 +614,13 @@ public class WSDL2UDDI {
 		return service;
 	}
 	
-	public BindingTemplate createWSDLBinding(QName serviceName, String portName, URL serviceUrl, Definition wsdlDefinition) {
+	public BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) {
 			
     	BindingTemplate bindingTemplate = new BindingTemplate();
 		// Set BusinessService Key
-		bindingTemplate.setServiceKey(Property.getServiceKey(properties, serviceName));
+		bindingTemplate.setServiceKey(Property.getServiceKey(properties, serviceQName));
 		// Set Binding Key
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
+		String bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
 		bindingTemplate.setBindingKey(bindingKey);
 		// Set AccessPoint
 		AccessPoint accessPoint = new AccessPoint();
@@ -628,7 +628,7 @@ public class WSDL2UDDI {
 		accessPoint.setValue(urlLocalizer.rewrite(serviceUrl));
 		bindingTemplate.setAccessPoint(accessPoint);
 		
-		Service service =  wsdlDefinition.getService(serviceName);
+		Service service =  wsdlDefinition.getService(serviceQName);
 		if (service!=null) {
 			TModelInstanceDetails tModelInstanceDetails = new TModelInstanceDetails();
 			
@@ -680,7 +680,7 @@ public class WSDL2UDDI {
 				log.error("Could not find Port with portName: " + portName);
 			}
 		} else {
-			log.error("Could not find Service with serviceName: " + serviceName.getLocalPart());
+			log.error("Could not find Service with serviceName: " + serviceQName.getLocalPart());
 		}
 		
 		return bindingTemplate;

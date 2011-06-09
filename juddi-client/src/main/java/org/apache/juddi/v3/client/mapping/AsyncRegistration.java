@@ -45,20 +45,23 @@ public class AsyncRegistration implements Runnable {
 	}
 
 	public void run() {
+		
 		try {
-			if (RegistrationType.WSDL.equals(registrationInfo.getRegistrationType())) {
-				WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-				BindingTemplate binding = wsdl2UDDI.register(registrationInfo.getServiceQName(), 
-								   registrationInfo.getPortName(),
-								   registrationInfo.getServiceUrl(),
-								   registrationInfo.getWsdlDefinition());
-				ServiceLocator serviceLocator = null;
+			ServiceLocator serviceLocator = null;
+			synchronized (serviceLocators) {
 				if (!serviceLocators.containsKey(clerk.getName())) {
 					serviceLocator = new ServiceLocator(clerk, urlLocalizer, properties);
 					serviceLocators.put(clerk.getName(), serviceLocator);
 				} else {
 					serviceLocator = serviceLocators.get(clerk.getName());
 				}
+			}
+			if (RegistrationType.WSDL.equals(registrationInfo.getRegistrationType())) {
+				WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
+				BindingTemplate binding = wsdl2UDDI.register(registrationInfo.getServiceQName(), 
+								   registrationInfo.getPortName(),
+								   registrationInfo.getServiceUrl(),
+								   registrationInfo.getWsdlDefinition());
 				serviceLocator.addService(binding.getServiceKey());
 				
 			} else if (RegistrationType.BPEL.equals(registrationInfo.getRegistrationType())) {
@@ -67,13 +70,6 @@ public class AsyncRegistration implements Runnable {
 								   registrationInfo.getPortName(),
 								   registrationInfo.getServiceUrl(),
 								   registrationInfo.getWsdlDefinition());
-				ServiceLocator serviceLocator = null;
-				if (!serviceLocators.containsKey(clerk.getName())) {
-					serviceLocator = new ServiceLocator(clerk, urlLocalizer, properties);
-					serviceLocators.put(clerk.getName(), serviceLocator);
-				} else {
-					serviceLocator = serviceLocators.get(clerk.getName());
-				}
 				serviceLocator.addService(binding.getServiceKey());
 			} else {
 				log.error("Registration error, due to unsupported registration type of " + registrationInfo.getRegistrationType());
