@@ -94,7 +94,7 @@ public class DispositionReportFaultMessage
     	} else if (e instanceof SOAPFaultException) {
     		SOAPFaultException soapFault = (SOAPFaultException) e;
     		Detail detail = soapFault.getFault().getDetail();
-    		if (detail.getFirstChild()!=null) {
+    		if (detail != null && detail.getFirstChild()!=null) {
     			try {
     				report =  new DispositionReport(detail.getFirstChild());
     			} catch (JAXBException je) {
