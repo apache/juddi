@@ -322,7 +322,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 		if (config==null) {
 			try {
 				config = AppConfig.getConfiguration();
-				log.info("Configuration:" + config);
 			} catch (ConfigurationException ce){
 				log.error("Could not optain config. " + ce.getMessage(), ce);
 			}

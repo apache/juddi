@@ -125,7 +125,7 @@ public class SubscriptionNotifier extends TimerTask {
 		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
 			desiredDate = null;
-			log.info("Start Notification background task; checking if subscription notifications need to be send out..");
+			log.debug("Start Notification background task; checking if subscription notifications need to be send out..");
 			
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
@@ -143,10 +143,10 @@ public class SubscriptionNotifier extends TimerTask {
 							publisher.setAuthorizedName(subscription.getAuthorizedName());
 							SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
 							if (resultListContainsChanges(resultList)) {
-								log.info("We have a change and need to notify..");
+								log.debug("We have a change and need to notify " + subscription.getSubscriptionKey());
 								notify(getSubscriptionResults,resultList, notificationDate);
 							} else {
-								log.info("No changes where recorded, no need to notify.");
+								log.debug("No changes where recorded, no need to notify.");
 							}
 						}
 					} catch (Exception e) {
@@ -218,7 +218,7 @@ public class SubscriptionNotifier extends TimerTask {
 			if (log.isDebugEnabled()) log.debug("Period " + period.getStartPoint() + " " + period.getEndPoint());
 			getSubscriptionResults.setCoveragePeriod(period);
 		} else {
-			log.info("Client does not yet want a notification. The next desidered notification Date " + nextDesiredNotificationDate + ". The current interval [" 
+			log.debug("Client does not yet want a notification. The next desidered notification Date " + nextDesiredNotificationDate + ". The current interval [" 
 				+ startPoint + " , " + endPoint + "] therefore skipping this notification cycle.");
 			if (desiredDate==null || nextDesiredNotificationDate.getTime() < desiredDate.getTime()) {
 				desiredDate = nextDesiredNotificationDate;
