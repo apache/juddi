@@ -471,12 +471,6 @@ public class WSDL2UDDI {
     	return typesReference;
 	}
 	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
-	
 	/** Builds a finder to find the binding tModels for a portType.
      * 
      * @param processName
@@ -502,8 +496,8 @@ public class WSDL2UDDI {
     	
     	findTModel.setCategoryBag(categoryBag);
     	
-    	if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<FindTModel>().print(findTModel));
+    	if (log.isDebugEnabled()) {
+    		log.debug(new PrintUDDI<FindTModel>().print(findTModel));
     	}
     	return findTModel;
     }
@@ -537,8 +531,8 @@ public class WSDL2UDDI {
     	
     	findTModel.setCategoryBag(categoryBag);
     	
-    	if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<FindTModel>().print(findTModel));
+    	if (log.isDebugEnabled()) {
+    		log.debug(new PrintUDDI<FindTModel>().print(findTModel));
     	}
     	return findTModel;
     }

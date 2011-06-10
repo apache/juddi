@@ -547,7 +547,7 @@ public class UDDIClerk implements Serializable {
 			log.info("entityKey " + entityKey + " was not found in the registry");
 		} else {
 			if (report == null) {
-				log.error("Missing DispositionReport");
+				log.info("Missing DispositionReport");
 			} else {
 				for (Result result : report.getResult()) {
 					log.error(result.getErrInfo().getErrCode() + " " + result.getErrInfo().getValue());
@@ -595,7 +595,7 @@ public class UDDIClerk implements Serializable {
 	public ClerkDetail saveClerk(UDDIClerk senderClerk)  {
 		ClerkDetail clerkDetail = null;
 		try {
-			log.info("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
+			log.debug("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
 			SaveClerk saveClerk = new SaveClerk();
 			saveClerk.setAuthInfo(getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
 			saveClerk.getClerk().add(getApiClerk());

@@ -33,11 +33,11 @@ public class BackGroundRegistration implements Runnable {
 	public void run() {
 		try {
 			if (UDDIClientContainer.getUDDIClerkManager(manager.getName())!=null && manager.getClientConfig().isRegisterOnStartup()) {
-				log.info("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
+				log.debug("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
 				manager.saveClerkAndNodeInfo();
 				manager.registerAnnotatedServices();
 				manager.xRegister();
-				log.info("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
+				log.debug("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
 			} else {
 				log.debug(manager.getName() + " already registered to the UDDIClientContainer.");
 			}

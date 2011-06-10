@@ -306,7 +306,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		//customization to add KeyedReferences into the categoryBag of the service
 		if (properties.containsKey(Property.SERVICE_CATEGORY_BAG)) {
 			String serviceCategoryBag = properties.getProperty(Property.SERVICE_CATEGORY_BAG);
-			log.info("Adding KeyedReferences '" +  serviceCategoryBag + "' to service " + serviceName.getLocalPart());
+			log.debug("Adding KeyedReferences '" +  serviceCategoryBag + "' to service " + serviceName.getLocalPart());
 			CategoryBag categoryBag = parseCategoryBag(serviceCategoryBag);
 	        service.setCategoryBag(categoryBag);
 		}
@@ -378,8 +378,8 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	
     	tModel.setCategoryBag(categoryBag);
     	
-    	if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<TModel>().print(tModel));
+    	if (log.isDebugEnabled()) {
+    		log.debug(new PrintUDDI<TModel>().print(tModel));
     	}
     	
     	return tModel;
@@ -471,8 +471,8 @@ public class BPEL2UDDI extends AnnotationProcessor {
 			log.error("Could not find Service with serviceName: " + serviceName.getLocalPart());
 		}
 		
-		if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<BindingTemplate>().print(bindingTemplate));
+		if (log.isDebugEnabled()) {
+    		log.debug(new PrintUDDI<BindingTemplate>().print(bindingTemplate));
     	}
 		
 		return bindingTemplate;
@@ -504,8 +504,8 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	categoryBag.getKeyedReference().add(typesReference);
     	findTModel.setCategoryBag(categoryBag);
     	
-    	if (log.isInfoEnabled()) {
-    		System.out.println(new PrintUDDI<FindTModel>().print(findTModel));
+    	if (log.isDebugEnabled()) {
+    		log.debug(new PrintUDDI<FindTModel>().print(findTModel));
     	}
     	return findTModel;
     }

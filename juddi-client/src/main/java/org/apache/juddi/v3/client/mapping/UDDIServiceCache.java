@@ -51,8 +51,6 @@ public class UDDIServiceCache {
 	private Log log = LogFactory.getLog(this.getClass());
 	private UDDIClerk clerk = null;
 	private URLLocalizer urlLocalizer = null;
-	private Integer port = null;
-	private String serverName = "localhost";
 	private Properties properties = null;
 	URL serviceUrl = null;
 	private ConcurrentHashMap<String, Topology> serviceLocationMap = new ConcurrentHashMap<String, Topology>();
@@ -77,11 +75,14 @@ public class UDDIServiceCache {
 
 	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException {
 		
-		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDISubscriptionListenerService");
-		String portName = "UDDISubscriptionListenerImplPort";
+		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
+		String portName = "UDDIClientSubscriptionListenerImplPort";
+		//Overriding the baseUrl with info obtained from the URLLocalizer.
 		String url = urlLocalizer.rewrite(new URL("http://localhost:8080/subscriptionlistener_" + clerk.getManagerName()));
-		serviceUrl = new URL(url);
 		
+		serviceUrl = new URL(url);
+		log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
+				+ " with endpoint " + url);
 		bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
 		endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
 		endpoint.publish(serviceUrl.toExternalForm());
@@ -95,8 +96,8 @@ public class UDDIServiceCache {
 	
 	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
 		unRegisterSubscription();
-		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDISubscriptionListenerService");
-		String portName = "UDDISubscriptionListenerImplPort";
+		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
+		String portName = "UDDIClientSubscriptionListenerImplPort";
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 		wsdl2UDDI.unRegister(serviceQName, portName, serviceUrl);
 		endpoint.stop();
@@ -104,6 +105,7 @@ public class UDDIServiceCache {
 	}
 	
 	public void removeAll() {
+		log.info("Flushing the UDDIServiceCache.");
 		for (String key : serviceLocationMap.keySet()) {
 			serviceLocationMap.remove(key);
 		}

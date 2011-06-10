@@ -163,7 +163,7 @@ public class UDDIClerkManager {
 					log.error("The client config needs to have one homeJUDDI node and found " + numberOfHomeJUDDIs);
 				}
 			} else {
-				log.info("No home clerk found.");
+				log.debug("No home clerk found.");
 			}
 		}	
 	}
@@ -172,7 +172,7 @@ public class UDDIClerkManager {
 	 * X-Register services listed in the uddi.xml
 	 */
 	public void xRegister() {
-		log.info("Starting cross registration...");
+		log.debug("Starting cross registration...");
 		//XRegistration of listed businesses
 		Set<XRegistration> xBusinessRegistrations = clientConfig.getXBusinessRegistrations();
 		for (XRegistration xRegistration : xBusinessRegistrations) {
@@ -183,7 +183,7 @@ public class UDDIClerkManager {
 		for (XRegistration xRegistration : xServiceBindingRegistrations) {
 			xRegistration.xRegisterServiceBinding();
 		}
-		log.info("Cross registration completed");
+		log.debug("Cross registration completed");
 	}
 	/**
 	 * Registers services to UDDI using a clerk, and the uddi.xml

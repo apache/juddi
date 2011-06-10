@@ -116,7 +116,7 @@ public class ServiceLocator {
 							  + " with serviceKey '" + serviceKey + "'" 
 							  + " but no EPRs");
 				} else {
-					log.info("Found service " + service.getName().get(0).getValue()
+					log.debug("Found service " + service.getName().get(0).getValue()
 							  + " with serviceKey '" + serviceKey + "'" 
 							  + " and " + bindingTemplates.getBindingTemplate().size() + " EPRs");
 					//Loop over all bindingTemplates found and get the endpoints.
@@ -124,7 +124,7 @@ public class ServiceLocator {
 						AccessPoint accessPoint = bindingTemplate.getAccessPoint();
 						if (AccessPointType.END_POINT.toString().equals(accessPoint.getUseType())) {
 							String url = accessPoint.getValue();
-							log.info("epr= " + url);
+							log.debug("epr= " + url);
 							eprs.add(url);
 						}
 					}

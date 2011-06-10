@@ -209,7 +209,7 @@ public class ClientConfig
 			if (!clerks.containsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
 			UDDIClerk toClerk = clerks.get(toClerkRef);
 			xRegistration.setToClerk(toClerk);
-			log.info(xRegistration);
+			log.debug(xRegistration);
 			
 			xRegistrations.add(xRegistration);
 		}

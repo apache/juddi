@@ -51,7 +51,7 @@ public class Property
 	public static final String DEFAULT_BUSINESS_KEY_FORMAT      = "uddi:${keyDomain}:business_${businessName}";
 	public static final String DEFAULT_SERVICE_KEY_FORMAT       = "uddi:${keyDomain}:service_${serviceName}";
 	public static final String DEFAULT_SUBSCRIPTION_KEY_FORMAT  = "uddi:${keyDomain}:service_cache_${nodeName}";
-	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${nodeName}_${serviceName}_${portName}_${port}";
+	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${nodeName}_${serviceName}_${portName}";
 	public static final String DEFAULT_SERVICE_DESCRIPTION      = "Default service description when no <wsdl:document> element is defined inside the <wsdl:service> element.";
 	public static final String DEFAULT_BINDING_DESCRIPTION      = "Default binding description when no <wsdl:document> element is defined inside the <wsdl:binding> element.";
 	

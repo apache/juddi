@@ -59,7 +59,6 @@ public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListe
 	
 	public UDDIClientSubscriptionListenerImpl() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static Map<String, UDDIServiceCache> getServiceCacheMap() {
@@ -75,7 +74,7 @@ public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListe
 			Marshaller marshaller = context.createMarshaller();
 			StringWriter sw = new StringWriter();
 			marshaller.marshal(body, sw);
-			logger.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+			logger.debug("Notification received by UDDISubscriptionListenerService : " + sw.toString());
 			String bindingKey = body.getSubscriptionResultsList().getSubscription().getBindingKey();
 			if (serviceCacheMap.containsKey(bindingKey)) {
 				UDDIServiceCache serviceCache = serviceCacheMap.get(bindingKey);
