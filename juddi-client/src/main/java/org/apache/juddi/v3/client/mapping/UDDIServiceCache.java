@@ -17,6 +17,8 @@ package org.apache.juddi.v3.client.mapping;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,6 +56,7 @@ public class UDDIServiceCache {
 	private Properties properties = null;
 	URL serviceUrl = null;
 	private ConcurrentHashMap<String, Topology> serviceLocationMap = new ConcurrentHashMap<String, Topology>();
+	private static List<String> endpoints = new ArrayList<String>();
 	
 	public UDDIClerk getClerk() {
 		return clerk;
@@ -80,18 +83,21 @@ public class UDDIServiceCache {
 		//Overriding the baseUrl with info obtained from the URLLocalizer.
 		String url = urlLocalizer.rewrite(new URL("http://localhost:8080/subscriptionlistener_" + clerk.getManagerName()));
 		
-		serviceUrl = new URL(url);
-		log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
-				+ " with endpoint " + url);
-		bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
-		endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
-		endpoint.publish(serviceUrl.toExternalForm());
-		
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-		Definition wsdlDefinition = new ReadWSDL().readWSDL("uddi_v3_service.wsdl");
-		bindingKey = wsdl2UDDI.register(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
-		
-		registerSubscription();
+		if (!endpoints.contains(url)) {
+			endpoints.add(url);
+			serviceUrl = new URL(url);
+			log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
+					+ " with endpoint " + url);
+			bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
+			endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
+			endpoint.publish(serviceUrl.toExternalForm());
+			
+			WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
+			Definition wsdlDefinition = new ReadWSDL().readWSDL("juddi_client_subscriptionlistener.wsdl");
+			bindingKey = wsdl2UDDI.register(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
+			
+			registerSubscription();
+		}
 	}
 	
 	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
@@ -101,13 +107,14 @@ public class UDDIServiceCache {
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 		wsdl2UDDI.unRegister(serviceQName, portName, serviceUrl);
 		endpoint.stop();
+		endpoints.remove(serviceUrl.toExternalForm());
 		UDDIClientSubscriptionListenerImpl.getServiceCacheMap().remove(bindingKey);
 	}
 	
 	public void removeAll() {
-		log.info("Flushing the UDDIServiceCache.");
+		log.info("Flushing the client side " + clerk.getManagerName() + " UDDIServiceCache ");
 		for (String key : serviceLocationMap.keySet()) {
-			serviceLocationMap.remove(key);
+			serviceLocationMap.get(key);
 		}
 	}
 	/**
