@@ -1,4 +1,173 @@
 
+ <h1>Release Notes - jUDDI - Version 3.1.0</h1>
+                
+<h2>Bug</h2>
+
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-252'>JUDDI-252</a>] -         RMI broken for Subscription API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-365'>JUDDI-365</a>] -         jUDDI root_BusinessEntity.xml does not contain all exposed services.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-374'>JUDDI-374</a>] -         openjpa + postgresql has problems with timestamps
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-381'>JUDDI-381</a>] -         registry could not be started: URI is not absolute
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-413'>JUDDI-413</a>] -         Unable to start registry when juddi war is deployed in OSGi container
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-414'>JUDDI-414</a>] -         When performing a find_relatedBusinesses query using a &lt;fromKey&gt; or &lt;toKey&gt; a SOAP fault is returned with a validation exception.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-421'>JUDDI-421</a>] -         Subscription with find_business filter does not display changes for updates to contained bindingTemplates
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-423'>JUDDI-423</a>] -         Asynchronous subscription notification intervals
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-425'>JUDDI-425</a>] -         The juddiv3.war can not be accessed in concurrent way
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-427'>JUDDI-427</a>] -         FindQualifiers using tModel name instead of tModelKey
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-428'>JUDDI-428</a>] -         The metadata value of the SOAP service are not same with the ones actually used by juddi client 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-430'>JUDDI-430</a>] -         The init-params for the UDDIClerkServlet are not working
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-432'>JUDDI-432</a>] -         find_service/find_binding queries constrained by business/service keys do not return SOAP faults
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-433'>JUDDI-433</a>] -         remove dependency of  org.apache.log4j.helpers.Loader to allow use of SLF4J with LogBack instead of Log4J
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-435'>JUDDI-435</a>] -         Service moves do not appear to be supported
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-436'>JUDDI-436</a>] -         Avoid to depend on  log4j internal helper class.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-437'>JUDDI-437</a>] -         To avoid possible  Array Index Out Of Bounds Exception and NPE when paths.length=0 in config.Install class.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-438'>JUDDI-438</a>] -         find_tModel by CategoryBag only returns deleted tModel
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-444'>JUDDI-444</a>] -         tModel with empty name should not be saved
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-445'>JUDDI-445</a>] -         find_business returns one businessInfo couple of times when businessEntity has more names
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-446'>JUDDI-446</a>] -         Providing invalid findQualifier should throw E_unsupported
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-447'>JUDDI-447</a>] -         Find with general_keywords KeyedReference not taking into consideration keyName
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-448'>JUDDI-448</a>] -         Fix simple-publish example so that it runs without problems
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-449'>JUDDI-449</a>] -         Race condition in UDDIClientContainer.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-452'>JUDDI-452</a>] -         buildbot failure - can&#39;t find the update wsdl
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-456'>JUDDI-456</a>] -         combineCategoryBags findQualifier not performing correctly.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-462'>JUDDI-462</a>] -         Throwing exception when we are saving keyedreference while giving a reference to a tModel key which does not exist.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-463'>JUDDI-463</a>] -         Sporadic failure of Subscription Unit tests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-464'>JUDDI-464</a>] -         Cancel should shutdown the Timer too.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-466'>JUDDI-466</a>] -         ClassCast exception in ValidatePublish
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-469'>JUDDI-469</a>] -         JUDDIRegistry has moved location
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-471'>JUDDI-471</a>] -         the langCode is not set on FindTModels (in the map from and to)
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-481'>JUDDI-481</a>] -         Bug? One of the last &quot;2&quot; businesses deleted, recreated the business and received juddi.rootPartition error!
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-483'>JUDDI-483</a>] -         ERROR 40XL1: A lock could not be obtained within the time requested
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-484'>JUDDI-484</a>] -         The only token modified for seed values is juddi.server.baseurl
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-485'>JUDDI-485</a>] -         Invoking UDDI endpoint from the juddi-client can be slow
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-486'>JUDDI-486</a>] -         Notifier can miss changes due to issue with setting the lastNotification time
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-487'>JUDDI-487</a>] -         The notification code use a wrong time to update the last notification time
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-489'>JUDDI-489</a>] -         Creating Files in the tmp directory doesn&#39;t work on JBoss and OSX
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-490'>JUDDI-490</a>] -         OverviewDoc property order incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-491'>JUDDI-491</a>] -         The links to the wsdl endpoint in the console do not resolve
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-492'>JUDDI-492</a>] -         WSTransport needs asynchronous registration to prevent locking at server boot time
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-493'>JUDDI-493</a>] -         It is possible for the authToken to get set to an empty string.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-494'>JUDDI-494</a>] -         NPE when trying to option the DispositionReport using the JBossWS stack
+</li>
+</ul>
+            
+<h2>Improvement</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-304'>JUDDI-304</a>] -         uddi_090_SubscriptionListenerIntegrationTest fails easily
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-342'>JUDDI-342</a>] -         Need a simple way of demonstrating subscriptions and subscription notifications
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-377'>JUDDI-377</a>] -         add wsdl registration to juddi-client
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-426'>JUDDI-426</a>] -         Could disable the check for the lag time of the notification
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-434'>JUDDI-434</a>] -         make replace NullPointerException with &quot;&lt;operation&gt; not found exception&quot; in service wrappers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-454'>JUDDI-454</a>] -         Add management beans to JUDDI
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-461'>JUDDI-461</a>] -         Support for new canonical tModels
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-465'>JUDDI-465</a>] -         Update the transport.wrapper classes so a managerName and nodeName can be set
+</li>
+</ul>
+    
+<h2>New Feature</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-243'>JUDDI-243</a>] -         Add support for RMI transport for subscription notifications
+</li>
+</ul>
+                        
+<h2>Task</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-411'>JUDDI-411</a>] -         Change Derby to run in memory for the unittests
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-429'>JUDDI-429</a>] -         Upgrade to apache parent pom version 7
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-439'>JUDDI-439</a>] -         juddi-client should be using the UDDI_Service.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-440'>JUDDI-440</a>] -         Cleanup of compile time warnings in the code
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-442'>JUDDI-442</a>] -         Documentation on using HSQL DB
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-443'>JUDDI-443</a>] -         Test TCK module agaist other UDDIv3 products
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-450'>JUDDI-450</a>] -         remove the dependency on juddi-core, the uddi-client should be independent of it.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-453'>JUDDI-453</a>] -         No longer calling transport with out a managerName - don&#39;t use deprecated API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-457'>JUDDI-457</a>] -         Add support to store RMI endpoints.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-458'>JUDDI-458</a>] -         Move pom&#39;s to version 3.1.0-SNAPSHOT
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-459'>JUDDI-459</a>] -         Add support for JNDI-RMI transport for subscription notifications
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-460'>JUDDI-460</a>] -         Add Support for Email Subscription Notifications
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-467'>JUDDI-467</a>] -         Deprecate using ManagerName of null.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-472'>JUDDI-472</a>] -         Lazy load the JAXBContext in the JAXBMarshaller
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-475'>JUDDI-475</a>] -         Add support to register BPEL processes according to BPEL4WS technote
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-476'>JUDDI-476</a>] -         Add a way to serialize UDDI fragments to XML for logging purposes.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-477'>JUDDI-477</a>] -         Add support to specify templates for formatting keys.
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-478'>JUDDI-478</a>] -         Let&#39;s no longer deploy the (clientside) ValueSet APIs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-479'>JUDDI-479</a>] -         Create a ServiceLocator
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-482'>JUDDI-482</a>] -         Use the ServiceCounters to optimize how often the SubscriptionNotification needs to run
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-488'>JUDDI-488</a>] -         Add profile to support builds for JAXWS-2.1 and 2.2
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-495'>JUDDI-495</a>] -         Tone down INFO level logging
+</li>
+</ul>
+                
 <h1>Release Notes - jUDDI - Version 3.0.4</h1>
     
 <h2>Sub-task</h2>
