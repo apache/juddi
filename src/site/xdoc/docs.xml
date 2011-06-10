@@ -17,21 +17,21 @@
         <tr>
           <td>3.0 User Guide</td>
           <td>Feb 1, 2010</td>
-          <td><a href="docs/3.0/userguide/html/index.html">HTML</a>,
-              <a href="docs/3.0/userguide/html_single/index.html">HTML-SINGLE</a>,
-              <a href="docs/3.0/userguide/pdf/userguide.pdf">PDF</a>
+          <td><a href="docs/3.x/userguide/html/index.html">HTML</a>,
+              <a href="docs/3.x/userguide/html_single/index.html">HTML-SINGLE</a>,
+              <a href="docs/3.x/userguide/pdf/userguide.pdf">PDF</a>
           </td>
         </tr>
         <tr>
           <td>3.0 Developer Guide</td>
           <td>Feb 1, 2010</td>
-          <td><a href="docs/3.0/devguide/html/index.html">HTML</a>,
-              <a href="docs/3.0/devguide/html_single/index.html">HTML-SINGLE</a>,
-              <a href="docs/3.0/devguide/pdf/devguide.pdf">PDF</a>
+          <td><a href="docs/3.x/devguide/html/index.html">HTML</a>,
+              <a href="docs/3.x/devguide/html_single/index.html">HTML-SINGLE</a>,
+              <a href="docs/3.x/devguide/pdf/devguide.pdf">PDF</a>
           </td>
         </tr>
         <tr>
-          <td>2.0 User Guide</td>
+          <td>2.x User Guide</td>
           <td>Jun 1, 2005</td>
           <td><a href="usersguide.html">HTML</a></td>
         </tr>
