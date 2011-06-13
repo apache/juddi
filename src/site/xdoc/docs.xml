@@ -15,16 +15,16 @@
           <td><strong>Description</strong></td>
         </tr>
         <tr>
-          <td>3.0 User Guide</td>
-          <td>Feb 1, 2010</td>
+          <td>3.x User Guide</td>
+          <td>Jul 10, 2011</td>
           <td><a href="docs/3.x/userguide/html/index.html">HTML</a>,
               <a href="docs/3.x/userguide/html_single/index.html">HTML-SINGLE</a>,
               <a href="docs/3.x/userguide/pdf/userguide.pdf">PDF</a>
           </td>
         </tr>
         <tr>
-          <td>3.0 Developer Guide</td>
-          <td>Feb 1, 2010</td>
+          <td>3.x Developer Guide</td>
+          <td>Jul 10, 2011</td>
           <td><a href="docs/3.x/devguide/html/index.html">HTML</a>,
               <a href="docs/3.x/devguide/html_single/index.html">HTML-SINGLE</a>,
               <a href="docs/3.x/devguide/pdf/devguide.pdf">PDF</a>
