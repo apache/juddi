@@ -38,7 +38,7 @@ public class PublisherAssertionQuery extends EntityQuery {
 
 	static {
 		StringBuffer sql = new StringBuffer(200);
-		sql.append("delete " + ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
+		sql.append("delete from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		deleteSQL = sql.toString();
 	}
 	
