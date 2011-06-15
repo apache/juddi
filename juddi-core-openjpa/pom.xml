@@ -28,7 +28,7 @@
 		<persistence>openjpa</persistence>
 	</properties>
 	
-	<name>jUDDI Core</name>
+	<name>jUDDI Core - OpenJPA</name>
 	<build>
 		<plugins>	
 			<plugin>

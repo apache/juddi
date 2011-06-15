@@ -32,6 +32,11 @@
 		Integration (UDDI) specification for Web Services.</description>
 	<url>http://juddi.apache.org/</url>
 	
+	<prerequisites>
+      <maven>3.0.3</maven>
+    </prerequisites>
+	
+	
 	<properties>
         <sourceReleaseAssemblyDescriptor>source-release</sourceReleaseAssemblyDescriptor>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
