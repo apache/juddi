@@ -43,8 +43,7 @@ public class NotifierTest
 		
 		Assert.assertEquals(HTTPNotifier.class, notifier.getClass());
 	}
-	//Expected error because we don't have a javax.mail implementation on the classpath
-	@Test(expected=java.lang.ClassFormatError.class)
+	@Test
 	public void testSMTPNotifier() throws IllegalArgumentException, SecurityException, URISyntaxException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
 		BindingTemplate bindingTemplate = new BindingTemplate();
 		bindingTemplate.setEntityKey("uddi:uddi.joepublisher.com:bindingnotifier");
