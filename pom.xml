@@ -32,9 +32,11 @@
 		Integration (UDDI) specification for Web Services.</description>
 	<url>http://juddi.apache.org/</url>
 	
+	<!-- backing out till we can upgrade buildbot 
 	<prerequisites>
       <maven>3.0.3</maven>
     </prerequisites>
+    -->
 	
 	
 	<properties>
