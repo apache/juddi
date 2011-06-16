@@ -17,16 +17,36 @@
     <docname>userguide</docname>
     <bookname>jUDDI User Guide</bookname>
   </properties> 
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
   <pluginRepositories>
-    <pluginRepository>
-      <id>repository.jboss.org</id>
-      <name>JBoss Repository</name>
-      <layout>default</layout>
-      <url>http://repository.jboss.org/maven2/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
+        <pluginRepository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+
     <pluginRepository>
 		<id>snapshots</id>
 		<name>Apache SnapShot Repository</name>
@@ -53,6 +73,14 @@
     				<artifactId>maven-jdocbook-plugin</artifactId>
     				<version>2.2.0</version>
     				<extensions>true</extensions>
+                                <dependencies>
+                                <!-- Overwrite jboss-highlight -->
+                                <dependency>
+                                    <groupId>org.richfaces.docs</groupId>
+                                    <artifactId>highlight</artifactId>
+                                    <version>3.3.3.Final</version>
+                                </dependency>
+			        </dependencies>
     				<configuration>
     				  <formats>
         				<format>
@@ -71,6 +99,11 @@
         				  <finalName>index.html</finalName>
         				</format>
     					</formats>
+                                        <options>
+                                           <xincludeSupported>true</xincludeSupported>
+                                           <xmlTransformerType>saxon</xmlTransformerType>
+                                           <docbookVersion>1.72.0</docbookVersion>
+                                        </options>
   					</configuration>
   				</plugin>
 				</plugins>
