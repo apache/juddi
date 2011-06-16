@@ -149,6 +149,13 @@
 			<artifactId>mockejb</artifactId>
 			<version>0.6-beta2</version>
 			<scope>test</scope>
+			<exclusions>  
+  			   <exclusion>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-full</artifactId>	
+                           </exclusion>
+                        </exclusions>
+
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
