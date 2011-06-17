@@ -52,45 +52,13 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-      <id>jaxws22</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <!-- the JAXWS 2.2 specification -->
-        <dependency>
+    </profiles>
+	<dependencies>
+		 <dependency>
           <groupId>org.apache.geronimo.specs</groupId>
           <artifactId>geronimo-jaxws_2.2_spec</artifactId>
           <version>1.0</version>
           <type>jar</type>
         </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>jaxws21</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <envClassifier>jaxws21</envClassifier>
-      </properties>
-      <dependencies>
-        <!-- the JAXWS 2.1 specification -->
-        <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-jaxws_2.1_spec</artifactId>
-          <version>1.0</version>
-          <type>jar</type>
-        </dependency>
-      </dependencies>
-    </profile>
-    </profiles>
-	<dependencies>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.2.2</version>
-		</dependency>
 	</dependencies>
 </project>
