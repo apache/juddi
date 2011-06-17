@@ -57,8 +57,6 @@ import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
-import org.apache.juddi.v3.error.RegistryException;
-import org.apache.juddi.v3.error.UDDIErrorHelper;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.query.FetchBusinessEntitiesQuery;
 import org.apache.juddi.query.FetchTModelsQuery;
@@ -68,7 +66,6 @@ import org.apache.juddi.query.FindPublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.DeletePublisherAssertionByBusinessQuery;
 import org.apache.juddi.query.TModelQuery;
 import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.api.util.InquiryQuery;
 import org.apache.juddi.api.util.PublicationQuery;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.config.AppConfig;
@@ -93,7 +90,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
             serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
         }
 	
-	public DispositionReport addPublisherAssertions(AddPublisherAssertions body)
+	public void addPublisherAssertions(AddPublisherAssertions body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -168,10 +165,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public DispositionReport deleteBinding(DeleteBinding body)
+	public void deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -209,10 +205,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public DispositionReport deleteBusiness(DeleteBusiness body)
+	public void deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -244,10 +239,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public DispositionReport deletePublisherAssertions(DeletePublisherAssertions body)
+	public void deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -281,10 +275,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
-	public DispositionReport deleteService(DeleteService body)
+	public void deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -320,11 +313,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
 
-	public DispositionReport deleteTModel(DeleteTModel body)
+	public void deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.nanoTime();
 
@@ -358,7 +350,6 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			em.close();
 		}
-		return UDDIErrorHelper.buildDispositionReport(UDDIErrorHelper.E_SUCCESS);
 	}
 
 
