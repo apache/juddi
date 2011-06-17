@@ -1,5 +1,5 @@
 Apache jUDDI
-Copyright 2004-2009 The Apache Software Foundation
+Copyright 2004-2011 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -29,7 +29,5 @@ This product includes schemas and specification developed by Oasis:
 		defined in the OASIS Intellectual Property Rights document must be
 		followed, or as required to translate it into languages other than
 		English.
-
-This product uses JUnit, which is offered up under the BSD license.
 
 
