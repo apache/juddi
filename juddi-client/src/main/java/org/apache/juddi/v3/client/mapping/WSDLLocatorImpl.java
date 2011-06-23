@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ *
  */
 package org.apache.juddi.v3.client.mapping;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import javax.wsdl.xml.WSDLLocator;
@@ -27,123 +28,112 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
 
-
+/**
+ * Implementation of the interface {@link WSDLLocatorImpl}. 
+ *  
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ *
+ */
 public class WSDLLocatorImpl implements WSDLLocator {
-	
-	  private final Log log = LogFactory.getLog(this.getClass());
-      private URL wsdlURL;
-      private String latestImportURI;
-      private InputStream is = null;
 
-      public WSDLLocatorImpl(URL wsdlFile)
-      {
-         if (wsdlFile == null)
-            throw new IllegalArgumentException("WSDL file argument cannot be null");
+	private final Log log = LogFactory.getLog(this.getClass());
+	private InputStream inputStream = null;
+	private URI baseURI;
+	private String latestImportURI;
+	/**
+	 * Constructor taking the URI to the WSDL. This class implements the {@link WSDLLocatorImpl}
+	 * Interface.
+	 * 
+	 * @param baseURI - URI of the WSDL
+	 */
+	public WSDLLocatorImpl(URI baseURI) {
+		this.baseURI = baseURI;
+	}
+	/**
+	 * @see WSDLLocatorImpl.getBaseInputSource
+	 */
+	public InputSource getBaseInputSource() {
+		InputSource inputSource = null;
+		try {
+			inputStream = baseURI.toURL().openStream();
+			inputSource =new InputSource(inputStream);
+		} catch (IOException e) {
+			log.error(e.getMessage(),e);
+		}
+		return inputSource;
+	}
+	/**
+	 * Internal method to normalize the importUrl. The importLocation can be relative to
+	 * the parentLocation. 
+	 * 
+	 * @param parentLocation
+	 * @param importLocation
+	 * @return
+	 */
+	protected URL constructImportUrl(String parentLocation, String importLocation) {
+		URL importUrl = null;
+		try {
+			URI importLocationURI = new URI(importLocation);
+			if (importLocationURI.getScheme()!=null || parentLocation==null) {
+				importUrl = importLocationURI.toURL();
+			} else {
+				String parentDir = parentLocation.substring(0, parentLocation.lastIndexOf("/"));
+				URI uri = new URI(parentDir + "/" + importLocation);
+				importUrl = uri.normalize().toURL();
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+		}
+		log.debug("importUrl: " + importUrl.toExternalForm());
+		return importUrl;
+	}
 
-         this.wsdlURL = wsdlFile;
-      }
-
-      public InputSource getBaseInputSource()
-      {
-         log.debug("getBaseInputSource [wsdlUrl=" + wsdlURL + "]");
-         try
-         {
-            is = wsdlURL.openStream();
-            if (is == null)
-               throw new IllegalArgumentException("Cannot obtain wsdl from [" + wsdlURL + "]");
-
-            return new InputSource(is);
-         }
-         catch (IOException e)
-         {
-            throw new RuntimeException("Cannot access wsdl from [" + wsdlURL + "], " + e.getMessage());
-         }
-      }
-
-      public String getBaseURI()
-      {
-         return wsdlURL.toExternalForm();
-      }
-
-      public InputSource getImportInputSource(String parent, String resource)
-      {
-         log.debug("getImportInputSource [parent=" + parent + ",resource=" + resource + "]");
-
-         URL parentURL = null;
-         try
-         {
-            parentURL = new URL(parent);
-         }
-         catch (MalformedURLException e)
-         {
-            log.error("Not a valid URL: " + parent);
-            return null;
-         }
-
-         String wsdlImport = null;
-         String external = parentURL.toExternalForm();
-
-         // An external URL
-         if (resource.startsWith("http://") || resource.startsWith("https://"))
-         {
-            wsdlImport = resource;
-         }
-
-         // Absolute path
-         else if (resource.startsWith("/"))
-         {
-            String beforePath = external.substring(0, external.indexOf(parentURL.getPath()));
-            wsdlImport = beforePath + resource;
-         }
-
-         // A relative path
-         else
-         {
-            String parentDir = external.substring(0, external.lastIndexOf("/"));
-
-            // remove references to current dir
-            while (resource.startsWith("./"))
-               resource = resource.substring(2);
-
-            // remove references to parentdir
-            while (resource.startsWith("../"))
-            {
-               parentDir = parentDir.substring(0, parentDir.lastIndexOf("/"));
-               resource = resource.substring(3);
-            }
-
-            wsdlImport = parentDir + "/" + resource;
-         }
-
-         try
-         {
-            log.debug("Resolved to: " + wsdlImport);
-            InputStream is = new URL(wsdlImport).openStream();
-            if (is == null)
-               throw new IllegalArgumentException("Cannot import wsdl from [" + wsdlImport + "]");
-
-            latestImportURI = wsdlImport;
-            return new InputSource(is);
-         }
-         catch (IOException e)
-         {
-            throw new RuntimeException("Cannot access imported wsdl [" + wsdlImport + "], " + e.getMessage());
-         }
-      }
-
-      public String getLatestImportURI()
-      {
-         return latestImportURI;
-      }
-
+	/**
+	 * @see WSDLLocatorImpl.getImportInputSource
+	 */
+	public InputSource getImportInputSource(String parentLocation, String importLocation)
+	{
+		InputSource inputSource = null;
+		try {
+			URL importUrl = constructImportUrl(parentLocation, importLocation);
+			InputStream inputStream = importUrl.openStream();
+			inputSource = new InputSource(inputStream);
+			latestImportURI = importUrl.toExternalForm();
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+		}
+		return inputSource;
+	}
+	/**
+	 * @see WSDLLocatorImpl.getBaseURI
+	 */
+	public String getBaseURI() {
+		String baseURIStr = null;
+		try {
+			baseURIStr = baseURI.toURL().toExternalForm();
+		} catch (IOException e) {
+			log.error(e.getMessage(),e);
+		}
+		return baseURIStr;
+	}
+	/**
+	 * @see WSDLLocatorImpl.getLatestImportURI
+	 */
+	public String getLatestImportURI() {
+		return latestImportURI;
+	}
+	/**
+	 * @see WSDLLocatorImpl.close
+	 */
 	public void close() {
-		if (is!=null)
+		if (inputStream!=null) {
 			try {
-				is.close();
+				inputStream.close();
 			} catch (IOException e) {
 				log.error(e.getMessage(),e);
 			}
-		
+		}
 	}
-   }
+
+}
 

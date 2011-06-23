@@ -21,6 +21,9 @@
 	<artifactId>juddi-console</artifactId>
 	<name>jUDDI Console</name>
 	<packaging>pom</packaging>
+	 <prerequisites>
+      <maven>3.0.3</maven>
+    </prerequisites>
 	<modules>
 		<module>uddi-portlets</module>
 		<module>juddi-portal</module>

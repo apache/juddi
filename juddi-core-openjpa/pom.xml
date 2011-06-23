@@ -28,7 +28,7 @@
 		<persistence>openjpa</persistence>
 	</properties>
 	
-	<name>jUDDI Core</name>
+	<name>jUDDI Core - OpenJPA</name>
 	<build>
 		<plugins>	
 			<plugin>
@@ -149,6 +149,13 @@
 			<artifactId>mockejb</artifactId>
 			<version>0.6-beta2</version>
 			<scope>test</scope>
+			<exclusions>  
+  			   <exclusion>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-full</artifactId>	
+                           </exclusion>
+                        </exclusions>
+
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -165,7 +172,7 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.5.3.0</version>
+			<version>10.5.3.0_1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -174,12 +181,18 @@
 			<version>8.2-504.jdbc3</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>6.0</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.javamail</groupId>
+            <artifactId>geronimo-javamail_1.4_mail</artifactId>
+            <version>1.8.2</version>
+            <scope>provided</scope>
+        </dependency>
 
 	</dependencies>
 	<profiles>

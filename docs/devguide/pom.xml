@@ -1,84 +1,116 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-    <parent>
-		<groupId>org.apache.juddi</groupId>
-		<artifactId>juddi-parent</artifactId>
-		<version>3.1.0</version>
-		<relativePath>../../pom.xml</relativePath>
+        <parent>
+	    <groupId>org.apache.juddi</groupId>
+	    <artifactId>juddi-parent</artifactId>
+	    <version>3.1.0</version>
+	    <relativePath>../../pom.xml</relativePath>
 	</parent>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>devguide</artifactId>
 	<packaging>jdocbook</packaging>
 	<name>jUDDI Dev Guide -(en-US)</name>
 	<properties>
-		<translation>en-US</translation>
-		<docname>devguide</docname>
-		<bookname>jUDDI Dev Guide</bookname>
+	    <translation>en-US</translation>
+	    <docname>devguide</docname>
+	    <bookname>jUDDI Dev Guide</bookname>
 	</properties>
+        <repositories>
+            <repository>
+                <id>jboss-public-repository-group</id>
+                <name>JBoss Public Repository Group</name>
+                <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+                <layout>default</layout>
+                <releases>
+                    <enabled>true</enabled>
+                    <updatePolicy>never</updatePolicy>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>never</updatePolicy>
+                </snapshots>
+            </repository>
+        </repositories>
+
 	<pluginRepositories>
-		<pluginRepository>
-			<id>repository.jboss.org</id>
-			<name>JBoss Repository</name>
-			<layout>default</layout>
-			<url>http://repository.jboss.org/maven2/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>snapshots</id>
-			<name>Apache SnapShot Repository</name>
-			<layout>default</layout>
-			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
+            <pluginRepository>
+                <id>jboss-public-repository-group</id>
+                <name>JBoss Public Repository Group</name>
+                <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </pluginRepository>
+	    <pluginRepository>
+	        <id>snapshots</id>
+		<name>Apache SnapShot Repository</name>
+		<layout>default</layout>
+		<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+		<snapshots>
+		    <enabled>true</enabled>
+		</snapshots>
+	    </pluginRepository>
 	</pluginRepositories>
 	<profiles>
-    <!-- mvn compile -->
-		<profile>
-			<id>all</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jboss.maven.plugins</groupId>
-						<artifactId>maven-jdocbook-plugin</artifactId>
-						<version>2.2.0</version>
-						<extensions>true</extensions>
-						<configuration>
-							<formats>
-								<format>
-									<formatName>pdf</formatName>
-									<stylesheetResource>classpath:/xslt/org/apache/juddi/pdf.xsl</stylesheetResource>
-									<finalName>${docname}.pdf</finalName>
-								</format>
-								<format>
-									<formatName>html</formatName>
-									<stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml.xsl</stylesheetResource>
-									<finalName>index.html</finalName>
-								</format>
-								<format>
-									<formatName>html_single</formatName>
-									<stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml-single.xsl</stylesheetResource>
-									<finalName>index.html</finalName>
-								</format>
-							</formats>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+	<!-- mvn compile -->
+	    <profile>
+		<id>all</id>
+		<activation>
+		    <activeByDefault>true</activeByDefault>
+		</activation>
+		<build>
+		<plugins>
+		    <plugin>
+			<groupId>org.jboss.maven.plugins</groupId>
+			<artifactId>maven-jdocbook-plugin</artifactId>
+			<version>2.2.0</version>
+			<extensions>true</extensions>
+                        <dependencies>
+                        <!-- Overwrite jboss highlight-->
+                            <dependency>
+                                <groupId>org.richfaces.docs</groupId>
+                                <artifactId>highlight</artifactId>
+                                <version>3.3.3.Final</version>
+                            </dependency>
+                        </dependencies>
 
-    <!-- mvn compile -Phtml -->
-		<profile>
-			<id>html</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
+			<configuration>
+			    <formats>
+			        <format>
+				    <formatName>pdf</formatName>
+				    <stylesheetResource>classpath:/xslt/org/apache/juddi/pdf.xsl</stylesheetResource>
+				    <finalName>${docname}.pdf</finalName>
+				</format>
+				<format>
+				    <formatName>html</formatName>
+				    <stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml.xsl</stylesheetResource>
+				    <finalName>index.html</finalName>
+				</format>
+				<format>
+				    <formatName>html_single</formatName>
+				    <stylesheetResource>classpath:/xslt/org/apache/juddi/xhtml-single.xsl</stylesheetResource>
+				    <finalName>index.html</finalName>
+				</format>
+		           </formats>
+                           <options>
+                               <xincludeSupported>true</xincludeSupported>
+                               <xmlTransformerType>saxon</xmlTransformerType>
+                               <docbookVersion>1.72.0</docbookVersion>
+                           </options>
+			</configuration>
+		    </plugin>
+	        </plugins>
+            </build>
+        </profile>
+    	<!-- mvn compile -Phtml -->
+	<profile>
+	    <id>html</id>
+	    <activation>
+	        <activeByDefault>false</activeByDefault>
+	    </activation>
 			<build>
 				<plugins>
 					<plugin>
@@ -188,15 +220,7 @@
 					<options>
 						<xincludeSupported>true</xincludeSupported>
 						<xmlTransformerType>saxon</xmlTransformerType>
-						<!--
-							needed for uri-resolvers; can be ommitted if using 'current' uri
-							scheme
-						-->
-						<!--
-							could also locate the docbook dependency and inspect its
-							version...
-						-->
-						<docbookVersion>1.72.0</docbookVersion>
+						<docbookVersion>1.74.0</docbookVersion>
 						<transformerParameters>
 							<property>
 								<name>javax.xml.parsers.DocumentBuilderFactory</name>

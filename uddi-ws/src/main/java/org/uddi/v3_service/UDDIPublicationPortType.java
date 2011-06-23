@@ -40,7 +40,6 @@ import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
-import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.RegisteredInfo;
@@ -82,9 +81,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "add_publisherAssertions", action = "add_publisherAssertions")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport addPublisherAssertions(
+    public void addPublisherAssertions(
         @WebParam(name = "add_publisherAssertions", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         AddPublisherAssertions body)
         throws DispositionReportFaultMessage, RemoteException
@@ -96,9 +94,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_binding", action = "delete_binding")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport deleteBinding(
+    public void deleteBinding(
         @WebParam(name = "delete_binding", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteBinding body)
         throws DispositionReportFaultMessage, RemoteException
@@ -110,9 +107,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_business", action = "delete_business")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport deleteBusiness(
+    public void deleteBusiness(
         @WebParam(name = "delete_business", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteBusiness body)
         throws DispositionReportFaultMessage, RemoteException
@@ -124,9 +120,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_publisherAssertions", action = "delete_publisherAssertions")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport deletePublisherAssertions(
+    public void deletePublisherAssertions(
         @WebParam(name = "delete_publisherAssertions", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeletePublisherAssertions body)
         throws DispositionReportFaultMessage, RemoteException
@@ -138,9 +133,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_service", action = "delete_service")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport deleteService(
+    public void deleteService(
         @WebParam(name = "delete_service", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteService body)
         throws DispositionReportFaultMessage, RemoteException
@@ -152,9 +146,8 @@ public interface UDDIPublicationPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_tModel", action = "delete_tModel")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
-    public DispositionReport deleteTModel(
+    public void deleteTModel(
         @WebParam(name = "delete_tModel", targetNamespace = "urn:uddi-org:api_v3", partName = "body")
         DeleteTModel body)
         throws DispositionReportFaultMessage, RemoteException

@@ -14,6 +14,8 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.wsdl.Definition;
@@ -22,6 +24,8 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 
 import com.ibm.wsdl.factory.WSDLFactoryImpl;
@@ -31,13 +35,21 @@ import com.ibm.wsdl.factory.WSDLFactoryImpl;
  */
 public class ReadWSDL {
 	
+	private final Log log = LogFactory.getLog(this.getClass());
+	
 	public Definition readWSDL(String fileName) throws WSDLException {
 	
+		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
 		URL url = ClassUtil.getResource(fileName, this.getClass());
-		WSDLLocator locator = new WSDLLocatorImpl(url);
-		Definition wsdlDefinition = reader.readWSDL(locator);
+		try {
+			URI uri = url.toURI();
+			WSDLLocator locator = new WSDLLocatorImpl(uri);
+			wsdlDefinition = reader.readWSDL(locator);
+		} catch (URISyntaxException e) {
+			log.error(e.getMessage(),e);
+		}
 		return wsdlDefinition;
 	}
 	
