@@ -66,11 +66,11 @@ public class UDDIPublicationService {
 	  	operations.put("delete_service", new Handler("deleteService", DeleteService.class));
 	  	operations.put("delete_binding", new Handler("deleteBinding", DeleteBinding.class));
 	  	operations.put("delete_tmodel", new Handler("deleteTModel", DeleteTModel.class));
-	  	operations.put("add_publisherassertions", new Handler("addPublisherAssertions", AddPublisherAssertions.class));
-	  	operations.put("set_publisherassertions", new Handler("setPublisherAssertions", SetPublisherAssertions.class));
-	  	operations.put("get_publisherassertions", new Handler("getPublisherAssertions", GetPublisherAssertions.class));
-	  	operations.put("delete_publisherassertions", new Handler("deletePublisherAssertions", DeletePublisherAssertions.class));
-	  	operations.put("get_assertionstatusreport", new Handler("getAssertionStatusReport", GetAssertionStatusReport.class));
+	  	operations.put("add_publisherAssertions", new Handler("addPublisherAssertions", AddPublisherAssertions.class));
+	  	operations.put("set_publisherAssertions", new Handler("setPublisherAssertions", SetPublisherAssertions.class));
+	  	operations.put("get_publisherAssertions", new Handler("getPublisherAssertions", GetPublisherAssertions.class));
+	  	operations.put("delete_publisherAssertions", new Handler("deletePublisherAssertions", DeletePublisherAssertions.class));
+	  	operations.put("get_assertionStatusReport", new Handler("getAssertionStatusReport", GetAssertionStatusReport.class));
 	}
 
 	//Verify that the appropriate endpoint was targeted for
