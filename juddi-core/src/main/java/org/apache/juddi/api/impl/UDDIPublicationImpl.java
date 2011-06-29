@@ -459,28 +459,32 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			// Sort and retrieve the final results
 			List<?> queryResults = FetchBusinessEntitiesQuery.select(em, new FindQualifiers(), businessKeysFound, null, null, null);
-			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
-			
-			for (Object item : queryResults) {
-				org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
-				org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+			if (queryResults.size() > 0) {
+				result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
 				
-				MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
-				
-				result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+				for (Object item : queryResults) {
+					org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
+					org.uddi.api_v3.BusinessInfo apiBusinessInfo = new org.uddi.api_v3.BusinessInfo();
+					
+					MappingModelToApi.mapBusinessInfo(modelBusinessEntity, apiBusinessInfo);
+					
+					result.getBusinessInfos().getBusinessInfo().add(apiBusinessInfo);
+				}
 			}
 	
 			// Sort and retrieve the final results
 			queryResults = FetchTModelsQuery.select(em, new FindQualifiers(), tmodelKeysFound, null, null, null);
-			result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
-			
-			for (Object item : queryResults) {
-				org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
-				org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
+			if (queryResults.size() > 0) {
+				result.setTModelInfos(new org.uddi.api_v3.TModelInfos());
 				
-				MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
-				
-				result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+				for (Object item : queryResults) {
+					org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
+					org.uddi.api_v3.TModelInfo apiTModelInfo = new org.uddi.api_v3.TModelInfo();
+					
+					MappingModelToApi.mapTModelInfo(modelTModel, apiTModelInfo);
+					
+					result.getTModelInfos().getTModelInfo().add(apiTModelInfo);
+				}
 			}
 			
 			tx.commit();	
