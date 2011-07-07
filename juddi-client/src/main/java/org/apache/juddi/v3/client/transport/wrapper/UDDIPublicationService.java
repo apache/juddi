@@ -61,11 +61,11 @@ public class UDDIPublicationService {
 	  	operations.put("save_business", new Handler("saveBusiness", SaveBusiness.class));
 	  	operations.put("save_service", new Handler("saveService", SaveService.class));
 	  	operations.put("save_binding", new Handler("saveBinding", SaveBinding.class));
-	  	operations.put("save_tmodel", new Handler("saveTModel", SaveTModel.class));
+	  	operations.put("save_tModel", new Handler("saveTModel", SaveTModel.class));
 	  	operations.put("delete_business", new Handler("deleteBusiness", DeleteBusiness.class));
 	  	operations.put("delete_service", new Handler("deleteService", DeleteService.class));
 	  	operations.put("delete_binding", new Handler("deleteBinding", DeleteBinding.class));
-	  	operations.put("delete_tmodel", new Handler("deleteTModel", DeleteTModel.class));
+	  	operations.put("delete_tModel", new Handler("deleteTModel", DeleteTModel.class));
 	  	operations.put("add_publisherAssertions", new Handler("addPublisherAssertions", AddPublisherAssertions.class));
 	  	operations.put("set_publisherAssertions", new Handler("setPublisherAssertions", SetPublisherAssertions.class));
 	  	operations.put("get_publisherAssertions", new Handler("getPublisherAssertions", GetPublisherAssertions.class));
