@@ -552,6 +552,7 @@ String serviceKey = bpel2UDDI.unRegister(serviceName, portName, serviceURL);
             <programlisting language="Java" >
 ServiceLocator serviceLocator = new ServiceLocator(clerk, urlLocalizer, properties);
 String endPointURL = lookupEndpoint(serviceQName, String portName);
+            </programlisting>
             </para>
         </sect2>
         
