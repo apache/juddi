@@ -1,0 +1,18 @@
+<!-- required -->
+<context-param>
+    <param-name>uddi.client.manager.name</param-name>
+    <param-value>example-manager</param-value>
+ </context-param>
+ 
+<!-- optional override -->
+<context-param>
+    <param-name>uddi.client.xml</param-name>
+    <param-value>META-INF/myuddi.xml</param-value>
+</context-param>
+
+<servlet>
+    <servlet-name>UDDIClerkServlet</servlet-name>
+    <display-name>Clerk Servlet</display-name>
+    <servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>

@@ -33,8 +33,7 @@
 	<xi:include href="Root_seed_data.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="jUDDI_configuration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Using_jUDDI-Client.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="UDDI_Annotations.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-  
+	
     <xi:include href="SimplePublish.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 
