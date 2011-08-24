@@ -107,7 +107,7 @@ group (the left column) displays portlets with odd IDs, while the second group
         
         <!-- Logout link -->
         <div id="logout" style="float:right;">
-            <a href="<c:url value='/Logout'/>">Logout</a>
+            <a href="/uddi-portlets/logout.jsp">Logout</a>
             <SELECT onChange="changeTheme(this.options[this.selectedIndex].value);">
            	 <OPTION value="#">-- Select Theme --</OPTION>
            	 <OPTION value="midnightblue">Deep Atlantic</OPTION>
