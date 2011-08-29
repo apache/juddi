@@ -40,8 +40,11 @@
        DiscardAuthToken discardAuthToken = new DiscardAuthToken();
        discardAuthToken.setAuthInfo(token);
        securityService.discardAuthToken(discardAuthToken);
+       session.invalidate();
     }
-    response.sendRedirect("/pluto/Logout");
+    String redirectURL = (String) request.getParameter("urlredirect");
+    if (redirectURL==null) redirectURL = "/pluto/Logout";
+    response.sendRedirect(redirectURL);
     %>
   </body>
   
