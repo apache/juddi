@@ -155,7 +155,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 	
-	public void logout(String username) throws ConfigurationException {
+	public SecurityResponse logout() {
+		SecurityResponse response = new SecurityResponse();
 		try {
 			HttpServletRequest request = getThreadLocalRequest();
 			HttpSession session = request.getSession();
@@ -165,9 +166,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 			DiscardAuthToken discardAuthToken = new DiscardAuthToken();
 			discardAuthToken.setAuthInfo(token);
 			securityService.discardAuthToken(discardAuthToken);
-			logger.info("User " + username + " invalided token");
+			logger.info("Invalided token " + token);
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
+		return response;
 	}
 }

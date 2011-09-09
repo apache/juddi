@@ -40,6 +40,9 @@ public class UDDISubscriptionNotificationPortlet extends GenericPortlet
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
 		  + renderRequest.getContextPath() 
 		  + "/org.apache.juddi.portlets.UDDISubscriptionNotification/org.apache.juddi.portlets.UDDISubscriptionNotification.nocache.js'></script>");
+	  writer.println("<link rel=\"stylesheet\" href=\""
+			  + renderRequest.getContextPath() 
+			  + "/uddiportlets.css\">");
 	  writer.println("<div id=\"notification\"></div>");
 	  writer.close();
 	}

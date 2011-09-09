@@ -38,6 +38,9 @@ public class UDDISubscriptionPortlet extends GenericPortlet
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
 			  + renderRequest.getContextPath() 
 			  + "/org.apache.juddi.portlets.UDDISubscription/org.apache.juddi.portlets.UDDISubscription.nocache.js'></script>");
+	  writer.println("<link rel=\"stylesheet\" href=\""
+			  + renderRequest.getContextPath() 
+			  + "/uddiportlets.css\">");
 	  writer.println("<div id=\"token\"></div>");
 	  writer.println("<div id=\"subscription\"></div>");
 	  writer.close();

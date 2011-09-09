@@ -35,6 +35,9 @@ public class JUDDIPublisherPortlet extends GenericPortlet
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
 			  + renderRequest.getContextPath() 
 			  + "/org.apache.juddi.portlets.JUDDIPublisher/org.apache.juddi.portlets.JUDDIPublisher.nocache.js'></script>");
+	  writer.println("<link rel=\"stylesheet\" href=\""
+			  + renderRequest.getContextPath() 
+			  + "/uddiportlets.css\">");
 	  writer.println("<div id=\"publisher\"></div>");
 	  writer.close();
 	}

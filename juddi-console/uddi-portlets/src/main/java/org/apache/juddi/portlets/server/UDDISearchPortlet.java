@@ -36,6 +36,9 @@ public class UDDISearchPortlet extends GenericPortlet
 	  writer.println("<script type='text/javascript' language='javascript' src='" 
 			  + renderRequest.getContextPath() 
 			  + "/org.apache.juddi.portlets.UDDISearch/org.apache.juddi.portlets.UDDISearch.nocache.js'></script>");
+	  writer.println("<link rel=\"stylesheet\" href=\""
+			  + renderRequest.getContextPath() 
+			  + "/uddiportlets.css\">");
 	  writer.println("<div id=\"search\"></div>");
 	  writer.close();
 	}
