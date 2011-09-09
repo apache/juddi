@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
+import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.WebHelper;
@@ -70,6 +71,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		if (username==null && user!=null) {
 			username = user.getName();
 			password = "";
+			try {
+				//if we can find this class we get obtain the password from the Tomcat User.
+				ClassUtil.forName("org.apache.catalina.User", this.getClass());
+				password = new CatalinaUser().getPassword(user);
+			} catch ( ClassNotFoundException cnfe) {
+				logger.warn("The class org.apache.cataline.User was not found. You may" +
+						" need a SSO solution take care of authentication, or fall back" +
+						" to JUDDIAuthentication.");
+			}
 		} 
 		if (token==null) {
 			if (username==null) {
