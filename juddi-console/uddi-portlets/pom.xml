@@ -29,6 +29,14 @@
 	<packaging>war</packaging>
 	<name>UDDI Portlets</name>
 	
+  <properties>
+    <!-- Convenience property to set the GWT version -->
+    <gwtVersion>2.3.0</gwtVersion>
+    <!-- GWT needs at least java 1.5 -->
+    <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
 	<!--  include pluginRepository and repository for GWT-Maven -->
 	<pluginRepositories>
 		<pluginRepository>
@@ -47,58 +55,36 @@
 		</repository>
 	</repositories>
     
-	<!--  convenience to define GWT version in one place -->
-	<properties>
-		<gwtVersion>1.5.3</gwtVersion>
-	</properties>
 	<dependencies>
 	    <!--  GWT deps (from central repo) -->
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<version>${gwtVersion}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<version>${gwtVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>${gwtVersion}</version>
-			<classifier>${platform}-libs</classifier>
-			<type>zip</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>${gwtVersion}</version>
-			<classifier>${platform}</classifier>
-			<scope>provided</scope>
-		</dependency>
+		    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+		
+		
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>${project.parent.version}</version>
+			<version>3.1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.1</version>
+			<version>3.1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.portlet</groupId>
@@ -107,10 +93,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-rt</artifactId>
-			<version>2.1.4</version>
-		</dependency>
+            <groupId>org.apache.pluto</groupId>
+            <artifactId>pluto-container</artifactId>
+            <version>1.1.7</version>
+            <scope>provided</scope>
+        </dependency>
 		<!--  test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -118,139 +105,95 @@
 			<version>4.5</version>
 			<scope>test</scope>
 		</dependency>
+		
+		
+		
 	</dependencies>
 	<build>
+	 <!-- Generate compiled stuff in the folder used for developing mode -->
+        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webXml>target/web.xml</webXml>
-				</configuration>
-			</plugin>
-		    <!--  configure the GWT-Maven plugin -->
-			<plugin>
-				<groupId>com.totsp.gwt</groupId>
-				<artifactId>maven-googlewebtoolkit2-plugin</artifactId>
-				<version>2.0-RC1</version>
-				<configuration>
-					<compileTargets>
-						<value>org.apache.juddi.portlets.UDDISubscriptionNotification</value>
-						<value>org.apache.juddi.portlets.UDDIBrowser</value>
-						<value>org.apache.juddi.portlets.UDDISubscription</value>
-						<value>org.apache.juddi.portlets.UDDISearch</value>
-						<value>org.apache.juddi.portlets.JUDDIPublisher</value>
-					</compileTargets>
-					<runTarget>org.apache.juddi.portlets.UDDIBrowser/UDDIBrowser.html</runTarget>
-					<logLevel>INFO</logLevel>
-					<style>DETAILED</style>
-					<noServer>false</noServer>
-					<extraJvmArgs>-Xmx512m</extraJvmArgs>
-					<gwtVersion>${gwtVersion}</gwtVersion>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>mergewebxml</goal>
-							<goal>compile</goal>
-							<goal>test</goal> 
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<!--  Use the dependency plugin to unpack gwt-dev-PLATFORM-libs.zip -->
-			<!--
-				(this is a replacement for the old "automatic" mode - useful if you
-				don't have GWT installed already, or you just want a maven way to
-				handle gwt deps)
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>com.google.gwt</groupId>
-									<artifactId>gwt-dev</artifactId>
-									<version>${gwtVersion}</version>
-									<classifier>${platform}-libs</classifier>
-									<type>zip</type>
-									<overWrite>false</overWrite>
-									<outputDirectory>${settings.localRepository}/com/google/gwt/gwt-dev/${gwtVersion}</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!--
-				If you want to use the target/web.xml file mergewebxml produces,
-				tell the war plugin to use it. Also, exclude what you want from the
-				final artifact here.
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-                    <!-- <webXml>target/web.xml</webXml>-->
-					<warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
-				</configuration>
-			</plugin>
-			<!--  tell the compiler we can use 1.5 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	
-	<!--  profiles (with activation per platform) -->
-	<profiles>
-		<profile>
-			<id>gwt-dev-windows</id>
-			<properties>
-				<platform>windows</platform>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<os>
-					<family>Windows</family>
-				</os>
-			</activation>
-		</profile>
-		<profile>
-			<id>gwt-dev-mac</id>
-			<properties>
-				<platform>mac</platform>
-			</properties>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-		</profile>
-		<profile>
-			<id>gwt-dev-linux</id>
-			<properties>
-				<platform>linux</platform>
-			</properties>
-			<activation>
-				<os>
-					<name>Linux</name>
-				</os>
-			</activation>
-		</profile>
-	</profiles>
+			<!-- GWT Maven Plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>2.3.0-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <!--  <goal>mergewebxml</goal> -->
+              <goal>test</goal>
+              <goal>generateAsync</goal>
+            </goals>
+          </execution>
+        </executions>
+        <!-- Plugin configuration. There are many available options, see 
+          gwt-maven-plugin documentation at codehaus.org -->
+        <configuration>
+          <runTarget>UDDIBrowser.html</runTarget>
+          <hostedWebapp>${webappDirectory}</hostedWebapp>
+        </configuration>
+      </plugin>
+
+      <!-- Copy static web files before executing gwt:run -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>exploded</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <warSourceDirectory>war</warSourceDirectory>
+          <warSourceExcludes>WEB-INF/deploy/**/*,WEB-INF/classes/org/apache/juddi/portlets/client/*.*,WEB-INF/lib/*.jar</warSourceExcludes>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+          <!--  
+          <webResources>src/main/resources</webResources>
+          -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-eclipse-plugin</artifactId>
+			<version>2.7</version>
+			<configuration>
+				<buildOutputDirectory>war/WEB-INF/classes/</buildOutputDirectory>
+				<downloadSources>true</downloadSources>
+				<downloadJavadocs>true</downloadJavadocs>
+				<additionalBuildcommands>
+					<buildCommand>
+						<name>com.google.gdt.eclipse.core.webAppProjectValidator</name>
+					</buildCommand>
+					<buildCommand>
+						<name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+					</buildCommand>
+				</additionalBuildcommands>
+				<additionalProjectnatures>
+					<projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+				</additionalProjectnatures>
+				<classpathContainers>
+					<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+					<classpathContainer>com.google.gwt.eclipse.core.GWT_CONTAINER</classpathContainer>
+					<classpathContainer>org.eclipse.jdt.junit.JUNIT_CONTAINER/4</classpathContainer>
+					<!-- <classpathContainer>com.instantiations.j2ee.J2EE5_CONTAINER</classpathContainer> -->
+				</classpathContainers>
+			</configuration>
+		</plugin>
+    </plugins>
+  </build>
 </project>
