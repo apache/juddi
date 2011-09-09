@@ -74,6 +74,10 @@ public class UDDISubscription implements EntryPoint, Login {
 		}
 	}
 	
+	public void logout() {
+		
+	}
+	
 	public void displaySubscription(Subscription subscription) {
 		if (detailPanel!=null ) dockPanel.remove(detailPanel);
 		detailPanel = new SubscriptionPanel(subscription, subscription.getNode());

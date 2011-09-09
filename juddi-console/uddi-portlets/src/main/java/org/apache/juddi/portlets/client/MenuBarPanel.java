@@ -61,15 +61,25 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			syncButton.setHTML(images.sync().getHTML());
 			syncButton.setStyleName(("portlet-form-button"));
 			syncButton.addClickListener(this);
+			syncButton.setTitle("Refresh subscriptions");
 			pushPanel.add(syncButton);
+			newButton.setTitle("Create New Subscription");
+			deleteButton.setTitle("Delete Subscription");
+			saveButton.setTitle("Save Subscription");
 		}
 		
 		if (PUBLISHER.equals(context)) {
 			managerButton.setHTML(images.manager().getHTML());
 			managerButton.setStyleName(("portlet-form-button"));
 			managerButton.addClickListener(this);
+			managerButton.setTitle("Restart ClerkManager");
 			pushPanel.add(managerButton);
+			newButton.setTitle("Create New Publisher");
+			deleteButton.setTitle("Delete Publisher");
+			saveButton.setTitle("Save Publisher");
+			
 		}
+		
 		add(pushPanel);
 		
 	}

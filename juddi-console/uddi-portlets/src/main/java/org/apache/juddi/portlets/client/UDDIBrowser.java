@@ -80,6 +80,11 @@ public class UDDIBrowser implements EntryPoint, Login {
 	protected DetailPanel getDetailPanel() {
 		return detailPanel;
 	}
+	
+	public void logout() {
+		loginPanel.setVisible(true);
+		applicationPanel.setVisible(false);
+	}
 
 	
 }

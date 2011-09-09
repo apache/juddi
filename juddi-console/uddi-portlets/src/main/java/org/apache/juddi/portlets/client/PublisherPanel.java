@@ -56,14 +56,14 @@ public class PublisherPanel extends FlowPanel {
 		FlexTable flexTable = new FlexTable();
 		add(flexTable);
 
-		Label id = new Label ("Id:");
+		Label id = new Label ("Username:");
 		id.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(0, 0, id);
 		idBox.setText(this.publisher.getAuthorizedName());
 		idBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(0, 1, idBox);
 		
-		Label name = new Label ("Name:");
+		Label name = new Label ("Full Name:");
 		name.setStyleName("portlet-form-field-label-right");
 		flexTable.setWidget(1, 0, name);
 		nameBox.setText(this.publisher.getPublisherName());
@@ -119,6 +119,18 @@ public class PublisherPanel extends FlowPanel {
 		maxTModelBox.setStyleName("portlet-form-input-field");
 		flexTable.setWidget(8, 1,maxTModelBox);
 		
+	}
+	
+	public void setUserIsAdmin(boolean isAdmin) {
+		idBox.setEnabled(isAdmin);
+		nameBox.setEnabled(isAdmin);
+		emailAddressBox.setEnabled(isAdmin);
+		isAdminBox.setEnabled(isAdmin);
+		isEnabledBox.setEnabled(isAdmin);
+		maxBindingsPerServiceBox.setEnabled(isAdmin);
+		maxBusinessesBox.setEnabled(isAdmin);
+		maxServicesPerBusinessBox.setEnabled(isAdmin);
+		maxTModelBox.setEnabled(isAdmin);
 	}
 	
 	protected void deletePublisher(String token){

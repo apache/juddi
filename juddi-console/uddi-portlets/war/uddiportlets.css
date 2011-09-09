@@ -86,3 +86,12 @@ img {
   margin-right:10px
   padding:10px 5px 5px 5px;
 }
+
+.menu {
+  float: left;
+  height: 20px;
+}
+
+.status {
+  float: right;
+}

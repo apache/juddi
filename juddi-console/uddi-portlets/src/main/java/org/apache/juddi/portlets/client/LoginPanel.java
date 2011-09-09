@@ -21,17 +21,17 @@ import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.portlets.client.service.SecurityServiceAsync;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 
-public class LoginPanel extends FlowPanel implements ClickListener {
+public class LoginPanel extends FlowPanel {
 	
 	//UI Widgets
 	private Button tokenButton = new Button("Login");
@@ -61,18 +61,15 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 		passwordBox.setStyleName("portlet-form-input-field");
 		add(passwordBox);
 		
-		tokenButton.addClickListener(this);
+		tokenButton.addClickHandler(new ClickHandler() {
+	          public void onClick(ClickEvent event) {
+	        	  getToken(usernameBox.getText(), passwordBox.getText());
+	          }
+	      });
 		tokenButton.setStyleName(("portlet-form-button"));
 		add(tokenButton); 
 	}
 	
-	public void onClick(Widget sender) {
-		if (sender == tokenButton) {
-			getToken(usernameBox.getText(), passwordBox.getText());
-		} else {
-			System.err.println("undefined");
-		}
-	}
 	/**
 	 * Obtains an authenticationToken
 	 * @param user
@@ -91,14 +88,39 @@ public class LoginPanel extends FlowPanel implements ClickListener {
 					publisherId = response.getUsername();
 					application.login();
 				} else {
-					Window.alert("error: " + response.getMessage());
+					application.login();
+					//Window.alert("error: " + response.getMessage());
 				}
+			}
+		}); 
+	}
+	
+	/**
+	 * Obtains an authenticationToken
+	 * @param user
+	 * @param password
+	 */
+	protected void destroyToken(String user, String password) {
+		securityService.logout(new AsyncCallback<SecurityResponse>() 
+		{
+			public void onFailure(Throwable caught) {
+				Window.alert("Error: " + caught.getMessage());
+			}
+
+			public void onSuccess(SecurityResponse response) {
+				token = null;
+				publisherId = null;
+				application.logout();
 			}
 		}); 
 	}
 	
 	public String getToken() {
 		return token;
+	}
+	
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	public String getPublisherId() {

@@ -26,6 +26,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -37,13 +38,16 @@ public class JUDDIPublisher implements EntryPoint, Login {
 
 	private static JUDDIPublisher singleton;
 	
+	private FlowPanel flowPanel = new FlowPanel();
 	private MenuBarPanel menuBar = new MenuBarPanel(MenuBarPanel.PUBLISHER);
+	private StatusBarPanel statusBar = new StatusBarPanel(this);
 	private DockPanel dockPanel = new DockPanel();
 	private LoginPanel loginPanel = new LoginPanel(this);
 	private PublisherListPanel publisherListPanel = new PublisherListPanel();
 	private PublisherPanel publisherPanel = null;
 	private JUDDIApiServiceAsync juddiApiService = (JUDDIApiServiceAsync) GWT.create(JUDDIApiService.class);
-
+	private boolean isAdmin = false;
+	
 	public static JUDDIPublisher getInstance() {
 		return singleton;
 	}
@@ -55,9 +59,19 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		
 		dockPanel.setWidth("100%");
 		dockPanel.setSpacing(8);
+		
 		menuBar.setVisible(false);
-		menuBar.setHeight("20px");
-		dockPanel.add(menuBar,DockPanel.NORTH);
+		menuBar.setStyleName("menu");
+		
+		flowPanel.setWidth("100%");
+		flowPanel.add(menuBar);
+		
+		statusBar.setVisible(false);
+		statusBar.setStyleName("status");
+		
+		flowPanel.add(statusBar);
+		
+		dockPanel.add(flowPanel,DockPanel.NORTH);
 		
 		loginPanel.setVisible(false);
 		dockPanel.add(loginPanel,DockPanel.WEST);
@@ -75,13 +89,27 @@ public class JUDDIPublisher implements EntryPoint, Login {
 			loginPanel.setVisible(true);
 			publisherListPanel.setVisible(false);
 			menuBar.setVisible(false);
+			statusBar.setUser("");
+			statusBar.setVisible(false);
 		} else {
 			loginPanel.setVisible(false);
 			menuBar.setVisible(true);
+			if (getIsAdmin()) menuBar.setVisible(true);
+			statusBar.setVisible(true);
+			statusBar.setUser(getPublisherId());
 			publisherListPanel.setVisible(true);
-			String publisherId = loginPanel.getPublisherId();
-			publisherListPanel.listPublishers(token, publisherId);
+			publisherListPanel.listPublishers(this);
 		}
+	}
+	
+	public void logout() {
+		loginPanel.setToken(null);
+		loginPanel.setVisible(true);
+		publisherListPanel.setVisible(false);
+		menuBar.setVisible(false);
+		statusBar.setUser("");
+		statusBar.setVisible(false);
+		if (publisherPanel!=null) publisherPanel.setVisible(false);
 	}
 	
 	public void displayPublisher(Publisher publisher) {
@@ -90,9 +118,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 		publisherPanel.setWidth("100%");
 		publisherPanel.setStyleName("detail-panel");
 		dockPanel.add(publisherPanel,DockPanel.EAST);
-		String token = loginPanel.getToken();
-		String publisherId = loginPanel.getPublisherId();
-		publisherListPanel.listPublishers(token, publisherId);
+		publisherListPanel.listPublishers(this);
 	}
 	
 	public void setSelectedPublisher(String selectedPublisherId) {
@@ -101,22 +127,25 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	
 	public void hidePublisher() {
 		publisherPanel.setVisible(false);
-		String token = loginPanel.getToken();
-		String publisherId = loginPanel.getPublisherId();
 		publisherListPanel.selectRow(0);
 		if (publisherPanel!=null ) dockPanel.remove(publisherPanel);
 		publisherPanel=null;
-		publisherListPanel.listPublishers(token, publisherId);
+		publisherListPanel.listPublishers(this);
 	}
 
 	public String getToken() {
 		return loginPanel.getToken();
 	}
 	
+	public String getPublisherId() {
+		return loginPanel.getPublisherId();
+	}
+	
 	public void savePublisher() {
 		if (publisherPanel!=null) {
 			publisherPanel.savePublisher(getToken());
 		}
+		publisherListPanel.listPublishers(this);
 	}
 	
 	public void newPublisher() {
@@ -151,6 +180,18 @@ public class JUDDIPublisher implements EntryPoint, Login {
 			}
 		});
 	}
-
+	
+	public boolean getIsAdmin() {
+		return isAdmin;
+	}
+	
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+		
+		menuBar.setVisible(isAdmin);
+		if (publisherPanel!=null) {
+			publisherPanel.setUserIsAdmin(isAdmin);
+		}
+	}
 	
 }

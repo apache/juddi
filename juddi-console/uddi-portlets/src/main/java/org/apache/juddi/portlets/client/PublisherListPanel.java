@@ -76,11 +76,14 @@ public class PublisherListPanel extends Composite implements TableListener {
 	}
 
 	/**
-	 * Obtains an authenticationToken
+	 * Obtains a list of all publishers
 	 * @param user
 	 * @param password
 	 */
-	protected List<Publisher> listPublishers(String token, String publisherId) {
+	protected void listPublishers(final JUDDIPublisher juddiPublisher) {
+		final String token = juddiPublisher.getToken();
+		final String publisherId = juddiPublisher.getPublisherId();
+		juddiPublisher.setIsAdmin(false);
 		juddiApiService.getPublishers(token, publisherId,  new AsyncCallback<JUDDIApiResponse>() 
 				{
 			public void onFailure(Throwable caught) {
@@ -99,13 +102,16 @@ public class PublisherListPanel extends Composite implements TableListener {
 						if (selectedRow==i+1 || selectedPublisher.equals(publishers.get(i).getAuthorizedName())) {
 							selectRow(i+1);
 						}
+						if ( (publishers.get(i).getAuthorizedName().equals(publisherId) ) && 
+								("true".equalsIgnoreCase(publishers.get(i).getIsAdmin())) ) {
+							juddiPublisher.setIsAdmin(true);
+						}
 					}
 				} else {
 					Window.alert("error: " + response.getMessage());
 				}
 			}
 				});
-		return publishers;
 	}
 
 	public void onCellClicked(SourcesTableEvents sender, int row, int cell) {

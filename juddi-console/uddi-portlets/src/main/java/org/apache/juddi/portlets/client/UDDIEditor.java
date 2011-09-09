@@ -71,6 +71,10 @@ public class UDDIEditor implements EntryPoint, Login {
 		}
 	}
 	
+	public void logout() {
+	
+	}
+	
 	public String getToken() {
 		return loginPanel.getToken();
 	}
