@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<!--
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * 
+ -->
+<web-app>
+  <display-name>GWT-Maven-Archetype</display-name>
+  <!-- only set if you want to use an existing manager, rather then the one specified in the uddi.xml 
+    <context-param>
+      <param-name>uddi.client.manager.name</param-name>
+      <param-value>uddi-portlet-manager</param-value>
+     </context-param>
+      -->
+  <!-- use to run the registration clerks, make sure the UDDI registry is up and running before
+         attempting to run the clerks
+         -->
+  <servlet>
+    <servlet-name>UDDIClerkServlet</servlet-name>
+    <servlet-class>org.apache.juddi.v3.client.config.UDDIClerkServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDIBrowserPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>UDDIBrowserPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDISearchPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>UDDISearchPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDISubscriptionPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>UDDISubscriptionPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>UDDISubscriptionNotificationPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>UDDISubscriptionNotificationPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>JUDDIPublisherPortlet</servlet-name>
+    <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+    <init-param>
+      <param-name>portlet-name</param-name>
+      <param-value>JUDDIPublisherPortlet</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <!--inserted by gwt-maven-plugin-->
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.JUDDIApiServiceImplorg.apache.juddi.portlets.JUDDIPublisher/juddi-api</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.JUDDIApiServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.JUDDIPublisher/security</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.SecurityServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.NotifyServiceImplorg.apache.juddi.portlets.UDDISubscriptionNotification/notify</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.NotifyServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDISearch/security</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.SecurityServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.PublicationServiceImplorg.apache.juddi.portlets.UDDISearch/publication</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.PublicationServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.InquiryServiceImplorg.apache.juddi.portlets.UDDISearch/inquiry</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.InquiryServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.NotifyServiceImplorg.apache.juddi.portlets.UDDIBrowser/notify</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.NotifyServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.FindServiceImplorg.apache.juddi.portlets.UDDIBrowser/find</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.FindServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.InquiryServiceImplorg.apache.juddi.portlets.UDDIBrowser/inquiry</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.InquiryServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDIBrowser/security</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.SecurityServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.PublicationServiceImplorg.apache.juddi.portlets.UDDIBrowser/publication</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.PublicationServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDISubscription/security</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.SecurityServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>org.apache.juddi.portlets.server.service.SubscriptionServiceImplorg.apache.juddi.portlets.UDDISubscription/subscription</servlet-name>
+    <servlet-class>org.apache.juddi.portlets.server.service.SubscriptionServiceImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UDDISubscriptionPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/UDDISubscriptionPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIBrowserPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/UDDIBrowserPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDISearchPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/UDDISearchPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDISubscriptionNotificationPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/UDDISubscriptionNotificationPortlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>JUDDIPublisherPortlet</servlet-name>
+    <url-pattern>/PlutoInvoker/JUDDIPublisherPortlet</url-pattern>
+  </servlet-mapping>
+  <!--inserted by gwt-maven-plugin-->
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.JUDDIApiServiceImplorg.apache.juddi.portlets.JUDDIPublisher/juddi-api</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.JUDDIPublisher/juddi-api</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.JUDDIPublisher/security</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.JUDDIPublisher/security</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.NotifyServiceImplorg.apache.juddi.portlets.UDDISubscriptionNotification/notify</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISubscriptionNotification/notify</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDISearch/security</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISearch/security</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.PublicationServiceImplorg.apache.juddi.portlets.UDDISearch/publication</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISearch/publication</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.InquiryServiceImplorg.apache.juddi.portlets.UDDISearch/inquiry</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISearch/inquiry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.NotifyServiceImplorg.apache.juddi.portlets.UDDIBrowser/notify</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDIBrowser/notify</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.FindServiceImplorg.apache.juddi.portlets.UDDIBrowser/find</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDIBrowser/find</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.InquiryServiceImplorg.apache.juddi.portlets.UDDIBrowser/inquiry</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDIBrowser/inquiry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDIBrowser/security</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDIBrowser/security</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.PublicationServiceImplorg.apache.juddi.portlets.UDDIBrowser/publication</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDIBrowser/publication</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.SecurityServiceImplorg.apache.juddi.portlets.UDDISubscription/security</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISubscription/security</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>org.apache.juddi.portlets.server.service.SubscriptionServiceImplorg.apache.juddi.portlets.UDDISubscription/subscription</servlet-name>
+    <url-pattern>/org.apache.juddi.portlets.UDDISubscription/subscription</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+</web-app>
