@@ -135,20 +135,22 @@ public class PublisherPanel extends FlowPanel {
 	
 	protected void deletePublisher(String token){
 		if (publisher!=null) {
-			juddiApiService.deletePublisher(token, publisher.getAuthorizedName(), new AsyncCallback<JUDDIApiResponse>() 
-			{
-				public void onFailure(Throwable caught) {
-					Window.alert("Error: " + caught.getMessage());
-				}
-	
-				public void onSuccess(JUDDIApiResponse response) {
-					if (response.isSuccess()) {
-						JUDDIPublisher.getInstance().hidePublisher();
-					} else {
-						Window.alert("error: " + response.getMessage());
+			if (Window.confirm("Are you sure you want to delete Publisher '" + publisher.getAuthorizedName() + "'?")) {
+				juddiApiService.deletePublisher(token, publisher.getAuthorizedName(), new AsyncCallback<JUDDIApiResponse>() 
+				{
+					public void onFailure(Throwable caught) {
+						Window.alert("Error: " + caught.getMessage());
 					}
-				}
-			});
+		
+					public void onSuccess(JUDDIApiResponse response) {
+						if (response.isSuccess()) {
+							JUDDIPublisher.getInstance().hidePublisher();
+						} else {
+							Window.alert("error: " + response.getMessage());
+						}
+					}
+				});
+			}
 		}
 	}
 	

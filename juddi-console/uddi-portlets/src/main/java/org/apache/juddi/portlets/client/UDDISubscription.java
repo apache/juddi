@@ -19,6 +19,7 @@ package org.apache.juddi.portlets.client;
 import org.apache.juddi.portlets.client.model.Subscription;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -117,7 +118,11 @@ public class UDDISubscription implements EntryPoint, Login {
 	
 	public void deleteSubscription() {
 		if (detailPanel!=null) {
-			detailPanel.deleteSubscription(getToken());
+			if (Window.confirm("Are you sure you want to delete Subscription?")) {
+				detailPanel.deleteSubscription(getToken());
+			}
+		} else {
+			Window.alert("Please select a subscription first.");
 		}
 	}
 	

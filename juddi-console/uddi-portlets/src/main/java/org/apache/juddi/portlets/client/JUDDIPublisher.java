@@ -160,6 +160,8 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	public void deletePublisher() {
 		if (publisherPanel!=null) {
 			publisherPanel.deletePublisher(getToken());
+		} else {
+			Window.alert("Please select a publisher first.");
 		}
 	}
 	

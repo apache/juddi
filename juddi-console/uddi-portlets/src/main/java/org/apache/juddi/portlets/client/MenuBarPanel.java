@@ -17,6 +17,7 @@
 package org.apache.juddi.portlets.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -64,7 +65,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			syncButton.setTitle("Refresh subscriptions");
 			pushPanel.add(syncButton);
 			newButton.setTitle("Create New Subscription");
-			deleteButton.setTitle("Delete Subscription");
+			deleteButton.setTitle("Delete Selected Subscription");
 			saveButton.setTitle("Save Subscription");
 		}
 		
@@ -75,7 +76,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			managerButton.setTitle("Restart ClerkManager");
 			pushPanel.add(managerButton);
 			newButton.setTitle("Create New Publisher");
-			deleteButton.setTitle("Delete Publisher");
+			deleteButton.setTitle("Delete Selected Publisher");
 			saveButton.setTitle("Save Publisher");
 			
 		}
