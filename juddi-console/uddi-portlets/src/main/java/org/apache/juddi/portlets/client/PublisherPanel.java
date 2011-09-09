@@ -170,9 +170,9 @@ public class PublisherPanel extends FlowPanel {
 			publisher.setEmailAddress(emailAddressBox.getText());
 			publisher.setIsAdmin(isAdminBox.isChecked()?"true":"false");
 			publisher.setIsEnabled(isEnabledBox.isChecked()?"true":"false");
-			publisher.setMaxBindingsPerService(("".equals(maxServicesPerBusinessBox))?null:Integer.valueOf(maxBindingsPerServiceBox.getText()));
+			publisher.setMaxBindingsPerService(("".equals(maxBindingsPerServiceBox))?null:Integer.valueOf(maxBindingsPerServiceBox.getText()));
 			publisher.setMaxBusinesses(("".equals(maxBusinessesBox.getText()))?null:Integer.valueOf(maxBusinessesBox.getText()));
-			publisher.setMaxServicePerBusiness(("".equals(maxBindingsPerServiceBox.getText()))?null:Integer.valueOf(maxBindingsPerServiceBox.getText()));
+			publisher.setMaxServicePerBusiness(("".equals(maxServicesPerBusinessBox.getText()))?null:Integer.valueOf(maxServicesPerBusinessBox.getText()));
 			publisher.setMaxTModels(("".equals(maxTModelBox.getText()))?null:Integer.valueOf(maxTModelBox.getText()));
 			
 			juddiApiService.savePublisher(token, publisher, new AsyncCallback<JUDDIApiResponse>() 
