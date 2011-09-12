@@ -14,7 +14,6 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -47,7 +46,7 @@ public class WSDLLocatorTest {
 		URL wsdlFile = ClassUtil.getResource("wsdl/HelloWorld.wsdl", this.getClass());
 		if (wsdlFile==null) Assert.fail("Can not find HelloWorld.wsdl file");
 		String wsdlFileStr = wsdlFile.toExternalForm();
-		String wsdlDir = wsdlFileStr.substring(0,wsdlFileStr.lastIndexOf(File.separator));
+		String wsdlDir = wsdlFileStr.substring(0,wsdlFileStr.lastIndexOf("/"));
 		URL url = wsdlLocatorImpl.constructImportUrl(wsdlFileStr, "child.wsdl");
 		Assert.assertEquals(wsdlDir + "/child.wsdl", url.toExternalForm());
 	}
@@ -58,7 +57,7 @@ public class WSDLLocatorTest {
 		URL wsdlFile = ClassUtil.getResource("wsdl/HelloWorld.wsdl", this.getClass());
 		if (wsdlFile==null) Assert.fail("Can not find HelloWorld.wsdl file");
 		String wsdlFileStr = wsdlFile.toExternalForm();
-		String wsdlDir = wsdlFileStr.substring(0,wsdlFileStr.lastIndexOf(File.separator));
+		String wsdlDir = wsdlFileStr.substring(0,wsdlFileStr.lastIndexOf("/"));
 		URL url = wsdlLocatorImpl.constructImportUrl(wsdlFileStr, "./child.wsdl");
 		Assert.assertEquals(wsdlDir + "/child.wsdl", url.toExternalForm());
 	}
