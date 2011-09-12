@@ -48,53 +48,52 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		initWidget(publisherTree);
 	}
 	
-	public void loadBusinesses() {
-		getBusinesses("all");
-	}
-	
-	public void findAllBusiness() {
-		findAllBusinesses();
-	}
-	
-	protected void getBusinesses(String infoSelection) {
-
-		publicationService.getBusinesses(UDDIBrowser.getInstance().getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
-		{
-			public void onFailure(Throwable caught) {
-				Window.alert("Error:" + caught.getMessage());
-			}
-
-			public void onSuccess(PublicationResponse response) {
-				if (response.isSuccess()) {
-					List<Business> businesses= response.getBusinesses();
-					System.out.println("Businesses=" + businesses);
-					
-					for (Business business : businesses) {
-					
-						TreeItem businessTree = new TreeItem(UDDIBrowser.images.business().getHTML() + " " + business.getName());
-						businessTree.setStyleName("portlet-form-field-label");
-						businessTree.setState(true);
-						businessTree.setUserObject(business);
-						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + SERVICES_LABEL);
-						serviceTree.setUserObject(business);
-						for (Service service : business.getServices()) {
-							TreeItem serviceItem = new TreeItem(UDDIBrowser.images.service().getHTML() + " " + service.getName());
-							serviceItem.setStyleName("portlet-form-field-label");
-							serviceItem.setUserObject(service);
-							serviceTree.addItem(serviceItem);
-							serviceTree.setTitle("Service:" +  service.getKey());
-						}
-						businessTree.addItem(serviceTree);
-
-						publisherTree.addItem(businessTree);
-					}
-					
-				} else {
-					Window.alert("error: " + response.getMessage());
-				}
-			}
-		});
-	}
+//	public void loadBusinesses() {
+//		getBusinesses("all");
+//	}
+//	
+//	protected void getBusinesses(String infoSelection) {
+//
+//		publicationService.getBusinesses(UDDIBrowser.getInstance().getToken(), infoSelection, new AsyncCallback<PublicationResponse>() 
+//		{
+//			public void onFailure(Throwable caught) {
+//				Window.alert("Error:" + caught.getMessage());
+//			}
+//
+//			public void onSuccess(PublicationResponse response) {
+//				if (response.isSuccess()) {
+//					publisherTree.clear();
+//					List<Business> businesses= response.getBusinesses();
+//					System.out.println("Businesses=" + businesses);
+//					
+//					for (Business business : businesses) {
+//					
+//						TreeItem businessTree = new TreeItem(UDDIBrowser.images.business().getHTML() + " " + business.getName());
+//						businessTree.setStyleName("portlet-form-field-label");
+//						businessTree.setState(true);
+//						businessTree.setUserObject(business);
+//						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + SERVICES_LABEL);
+//						serviceTree.setUserObject(business);
+//						serviceTree.setState(true);
+//						for (Service service : business.getServices()) {
+//							TreeItem serviceItem = new TreeItem(UDDIBrowser.images.service().getHTML() + " " + service.getName());
+//							serviceItem.setStyleName("portlet-form-field-label");
+//							serviceItem.setUserObject(service);
+//							serviceItem.setState(true);
+//							serviceTree.addItem(serviceItem);
+//							serviceTree.setTitle("Service:" +  service.getKey());
+//						}
+//						businessTree.addItem(serviceTree);
+//
+//						publisherTree.addItem(businessTree);
+//					}
+//					
+//				} else {
+//					Window.alert("error: " + response.getMessage());
+//				}
+//			}
+//		});
+//	}
 	
 	protected void findAllBusinesses() {
 
@@ -114,25 +113,32 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 				if (response.isSuccess()) {
 					List<Business> businesses= response.getBusinesses();
 					System.out.println("Businesses=" + businesses);
-					
+					publisherTree.clear();
 					for (Business business : businesses) {
 					
 						TreeItem businessTree = new TreeItem(UDDIBrowser.images.business().getHTML() + " " + business.getName());
 						businessTree.setStyleName("portlet-form-field-label");
-						businessTree.setState(true);
+						
 						businessTree.setUserObject(business);
 						TreeItem serviceTree = new TreeItem(UDDIBrowser.images.services().getHTML() + SERVICES_LABEL);
 						serviceTree.setUserObject(business);
+						
 						for (Service service : business.getServices()) {
 							TreeItem serviceItem = new TreeItem(UDDIBrowser.images.service().getHTML() + " " + service.getName());
 							serviceItem.setStyleName("portlet-form-field-label");
 							serviceItem.setUserObject(service);
+							serviceItem.setState(true);
+							serviceItem.setTitle("Service:" +  service.getKey());
 							serviceTree.addItem(serviceItem);
-							serviceTree.setTitle("Service:" +  service.getKey());
+							
 						}
+						serviceTree.setState(true);
+						
 						businessTree.addItem(serviceTree);
+						businessTree.setState(true);
 
 						publisherTree.addItem(businessTree);
+						
 					}
 					
 				} else {
@@ -150,6 +156,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 			UDDIBrowser.getInstance().getDetailPanel().setVisible(true);
 			UDDIBrowser.getInstance().getDetailPanel().displayService(service.getKey());
 		} else if (treeItem.getUserObject()!=null && Business.class.equals(treeItem.getUserObject().getClass())) {
+			findAllBusinesses();
 			Business business = (Business) treeItem.getUserObject();
 			UDDIBrowser.getInstance().getDetailPanel().setVisible(true);
 			if (SERVICES_LABEL.equals(treeItem.getText())) {

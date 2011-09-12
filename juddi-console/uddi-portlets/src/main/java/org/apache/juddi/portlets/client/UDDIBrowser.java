@@ -69,7 +69,7 @@ public class UDDIBrowser implements EntryPoint, Login {
 		} else {
 			loginPanel.setVisible(false);
 			applicationPanel.setVisible(true);
-			applicationPanel.findAllBusiness();
+			applicationPanel.findAllBusinesses();
 		}
 	}
 	

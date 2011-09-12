@@ -67,7 +67,8 @@ public class UDDIEditor implements EntryPoint, Login {
 		} else {
 			loginPanel.setVisible(false);
 			applicationPanel.setVisible(true);
-			applicationPanel.loadBusinesses();
+			applicationPanel.findAllBusinesses(); //we prob want to change this to only
+			//select the business that are owned by the current publisher.
 		}
 	}
 	
