@@ -15,6 +15,10 @@
  *
  */
 /** Add css rules here for your application. */
+a:hover {
+    font-weight: normal;
+}
+
 button {
   display: block;
   font-size: 16pt
