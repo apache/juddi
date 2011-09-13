@@ -87,7 +87,7 @@ public class PublisherListPanel extends Composite implements TableListener {
 		juddiApiService.getPublishers(token, publisherId,  new AsyncCallback<JUDDIApiResponse>() 
 				{
 			public void onFailure(Throwable caught) {
-				Window.alert("Error: " + caught.getMessage());
+				Window.Location.reload();
 			}
 
 			public void onSuccess(JUDDIApiResponse response) {

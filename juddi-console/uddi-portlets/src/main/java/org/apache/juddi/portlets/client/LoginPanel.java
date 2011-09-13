@@ -79,7 +79,7 @@ public class LoginPanel extends FlowPanel {
 		securityService.get(user, password, new AsyncCallback<SecurityResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Error: " + caught.getMessage());
+				Window.Location.reload();
 			}
 
 			public void onSuccess(SecurityResponse response) {

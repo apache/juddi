@@ -53,7 +53,7 @@ public class SubscriptionTreePanel extends Composite implements TreeListener {
 		subscriptionService.getSubscriptions(new AsyncCallback<SubscriptionResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Error:" + caught.getMessage());
+				Window.Location.reload();
 			}
 
 			public void onSuccess(SubscriptionResponse response) {

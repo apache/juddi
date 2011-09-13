@@ -174,7 +174,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscriptionServiceAsync.invokeSyncSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 					{
 				public void onFailure(Throwable caught) {
-					Window.alert("error:" + caught.getMessage());
+					Window.Location.reload();
 				}
 	
 				public void onSuccess(SubscriptionResponse response) {
@@ -197,7 +197,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscriptionServiceAsync.deleteSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 					{
 						public void onFailure(Throwable caught) {
-							Window.alert("Error: " + caught.getMessage());
+							Window.Location.reload();
 						}
 			
 						public void onSuccess(SubscriptionResponse response) {
@@ -250,7 +250,7 @@ public class SubscriptionPanel extends FlowPanel {
 			subscriptionServiceAsync.saveSubscription(authToken, subscription, new AsyncCallback<SubscriptionResponse>()
 			{
 				public void onFailure(Throwable caught) {
-					Window.alert("Error: " + caught.getMessage());
+					Window.Location.reload();
 				}
 	
 				public void onSuccess(SubscriptionResponse response) {

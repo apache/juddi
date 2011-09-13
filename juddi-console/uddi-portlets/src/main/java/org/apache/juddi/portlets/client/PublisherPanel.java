@@ -27,7 +27,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 public class PublisherPanel extends FlowPanel {
@@ -139,7 +141,8 @@ public class PublisherPanel extends FlowPanel {
 				juddiApiService.deletePublisher(token, publisher.getAuthorizedName(), new AsyncCallback<JUDDIApiResponse>() 
 				{
 					public void onFailure(Throwable caught) {
-						Window.alert("Error: " + caught.getMessage());
+						RootPanel.get("publisher").clear();
+						RootPanel.get("publisher").add(new HTML(caught.getMessage()));
 					}
 		
 					public void onSuccess(JUDDIApiResponse response) {
@@ -178,7 +181,7 @@ public class PublisherPanel extends FlowPanel {
 			juddiApiService.savePublisher(token, publisher, new AsyncCallback<JUDDIApiResponse>() 
 			{
 				public void onFailure(Throwable caught) {
-					Window.alert("Error:  " + caught.getMessage());
+					Window.Location.reload();
 				}
 	
 				public void onSuccess(JUDDIApiResponse response) {

@@ -23,7 +23,6 @@ import org.apache.juddi.portlets.client.model.Service;
 import org.apache.juddi.portlets.client.service.FindResponse;
 import org.apache.juddi.portlets.client.service.FindService;
 import org.apache.juddi.portlets.client.service.FindServiceAsync;
-import org.apache.juddi.portlets.client.service.PublicationResponse;
 import org.apache.juddi.portlets.client.service.PublicationService;
 import org.apache.juddi.portlets.client.service.PublicationServiceAsync;
 
@@ -106,7 +105,7 @@ public class BusinessTreePanel extends Composite implements TreeListener {
 		findService.getBusinesses(name, findQualifyers, new AsyncCallback<FindResponse>() 
 		{
 			public void onFailure(Throwable caught) {
-				Window.alert("Error:" + caught.getMessage());
+				Window.Location.reload();
 			}
 
 			public void onSuccess(FindResponse response) {
