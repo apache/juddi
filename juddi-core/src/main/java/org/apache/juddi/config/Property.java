@@ -52,5 +52,10 @@ public interface Property
 	public final static boolean DEFAULT_LOAD_INSTALL_DATA        =true;
 	public final static String DEFAULT_BASE_URL                  ="http://localhost:8080/juddiv3";
 	
-	
+	/* Allowing the the user to override jpa persistence properties in the juddi.properties file */
+	public final static String PERSISTENCE_PROVIDER               ="persistenceProvider";
+    public final static String DATASOURCE                         ="hibernate.connection.datasource";
+    public final static String HBM_DDL_AUTO                       ="hibernate.hbm2ddl.auto";
+    public final static String DEFAULT_SCHEMA                     ="hibernate.default_schema";
+    public final static String HIBERNATE_DIALECT                  ="hibernate.dialect"; 
 }

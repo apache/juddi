@@ -91,8 +91,21 @@ public class AppConfig
 		propConfig.setReloadingStrategy(fileChangedReloadingStrategy);
 		compositeConfig.addConfiguration(propConfig);
 		
-		// Properties from the persistence layer (must first initialize the entityManagerFactory). 
-		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME));
+		
+		Properties properties = new Properties();
+		if ("Hibernate".equals(propConfig.getString(Property.PERSISTENCE_PROVIDER))) {
+			if (propConfig.containsKey(Property.DATASOURCE)) 
+				properties.put("hibernate.connection.datasource",propConfig.getString(Property.DATASOURCE));
+			if (propConfig.containsKey(Property.HBM_DDL_AUTO))
+				properties.put("hibernate.hbm2ddl.auto",propConfig.getString(Property.HBM_DDL_AUTO));
+			if (propConfig.containsKey(Property.DEFAULT_SCHEMA))
+				properties.put("hibernate.default_schema",propConfig.getString(Property.DEFAULT_SCHEMA));
+			if (propConfig.containsKey(Property.HIBERNATE_DIALECT))
+				properties.put("hibernate.dialect",propConfig.getString(Property.HIBERNATE_DIALECT));
+		}
+		// initialize the entityManagerFactory.
+		PersistenceManager.initializeEntityManagerFactory(propConfig.getString(Property.JUDDI_PERSISTENCEUNIT_NAME), properties);
+		// Properties from the persistence layer 
 		MapConfiguration persistentConfig = new MapConfiguration(getPersistentConfiguration(compositeConfig));
 		
 		compositeConfig.addConfiguration(persistentConfig);
