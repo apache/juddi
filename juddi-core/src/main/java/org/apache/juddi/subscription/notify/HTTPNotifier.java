@@ -3,8 +3,10 @@ package org.apache.juddi.subscription.notify;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
 import org.apache.commons.logging.Log;
@@ -12,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.v3.client.UDDIService;
-import org.apache.juddi.v3.client.UDDIServiceWSDL;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -41,9 +42,11 @@ public class HTTPNotifier implements Notifier {
 			subscriptionListenerPort = (UDDISubscriptionListenerPortType) service.getPort(UDDISubscriptionListenerPortType.class);
 		} else if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 			//endpoint deployment type
-			URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION_LISTENER, accessPointUrl);
-			UDDIService uddiService = new UDDIService(tmpWSDLFile);
+			UDDIService uddiService = new UDDIService();
 			subscriptionListenerPort =  uddiService.getUDDISubscriptionListenerPort();
+			Map<String, Object> requestContext = ((BindingProvider) subscriptionListenerPort).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, accessPointUrl);
+			
 		}
 	}
 

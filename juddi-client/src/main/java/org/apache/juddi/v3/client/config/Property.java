@@ -45,6 +45,8 @@ public class Property
 	public static final String BINDING_DESCRIPTION              = "bindingDescription";
 	public static final String SERVICE_CATEGORY_BAG             = "serviceCategoryBag";
 	public static final String BINDING_CATEGORY_BAG             = "bindingCategoryBag";
+	public static final String BASIC_AUTH_USERNAME              = "basicAuthUsername";
+	public static final String BASIC_AUTH_PASSWORD              = "basicAuthPassword";
 	
 	//Default Values
 	public static final String DEFAULT_LANG                     = "en:";

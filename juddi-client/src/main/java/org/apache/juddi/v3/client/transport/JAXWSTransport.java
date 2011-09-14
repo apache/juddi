@@ -16,13 +16,15 @@
  */
 package org.apache.juddi.v3.client.transport;
 
-import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
+import javax.xml.ws.BindingProvider;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.juddi.v3.client.JUDDIApiService;
 import org.apache.juddi.v3.client.UDDIService;
-import org.apache.juddi.v3.client.UDDIServiceWSDL;
+import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -35,9 +37,6 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
 public class JAXWSTransport extends Transport {
-
-	public final static String JUDDI_V3_SERVICE_NAMESPACE    = "urn:juddi-apache-org:v3_service";
-	public final static String PUBLISHER_SERVICE             = "JUDDIApiService";
 	
 	String nodeName = null;
 	String managerName = null;
@@ -73,9 +72,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.INQUIRY, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				inquiryService = service.getUDDIInquiryPort();
+				Map<String, Object> requestContext = ((BindingProvider) inquiryService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -91,9 +92,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SECURITY, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				securityService = service.getUDDISecurityPort();
+				Map<String, Object> requestContext = ((BindingProvider) securityService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -109,9 +112,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.PUBLISH, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				publishService = service.getUDDIPublicationPort();
+				Map<String, Object> requestContext = ((BindingProvider) publishService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -127,9 +132,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				subscriptionService = service.getUDDISubscriptionPort();
+				Map<String, Object> requestContext = ((BindingProvider) subscriptionService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -144,9 +151,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION_LISTENER, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				subscriptionListenerService = service.getUDDISubscriptionListenerPort();
+				Map<String, Object> requestContext = ((BindingProvider) subscriptionListenerService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -161,9 +170,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
 				}
-				URL tmpWSDLFile = new UDDIServiceWSDL().getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.CUSTODY_TRANSFER, endpointURL);
-				UDDIService service = new UDDIService(tmpWSDLFile);
+				UDDIService service = new UDDIService();
 				custodyTransferService = service.getUDDICustodyPort();
+				Map<String, Object> requestContext = ((BindingProvider) custodyTransferService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -181,9 +192,11 @@ public class JAXWSTransport extends Transport {
 					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
 				}
-				QName qName = new QName(JUDDI_V3_SERVICE_NAMESPACE, PUBLISHER_SERVICE);
-				Service service = Service.create(new URL(endpointURL), qName);
+				JUDDIApiService service = new JUDDIApiService();
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);
+				Map<String, Object> requestContext = ((BindingProvider) publisherService).getRequestContext();
+				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+				setCredentials(requestContext);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(), e);
 			}
@@ -199,6 +212,29 @@ public class JAXWSTransport extends Transport {
 		this.nodeName = nodeName;
 	}
 	
-	
+	/**
+	 * Sets the credentials on the RequestContext if the services are protected
+	 * by Basic Authentication. The username and password are obtained from the 
+	 * uddi.xml.
+	 * 
+	 * @param requestContext
+	 * @throws ConfigurationException
+	 */
+	private void setCredentials(Map<String, Object> requestContext) throws ConfigurationException {
+		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
+		Properties properties = manager.getClientConfig().getUDDINode(nodeName).getProperties();
+		String username = null;
+		String password = null;
+		if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {
+			username = properties.getProperty(Property.BASIC_AUTH_USERNAME);
+		}
+		if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {
+			password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);
+		}
+		if (username!=null && password!=null) {
+			requestContext.put(BindingProvider.USERNAME_PROPERTY, username);
+			requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+		}
+	}
 
 }

@@ -7,7 +7,6 @@ import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.UDDIService;
-import org.apache.juddi.v3.client.UDDIServiceWSDL;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.junit.AfterClass;
@@ -46,11 +45,7 @@ public class UDDI_001_UDDIServiceTest {
 	
 	@Test
 	public void findSecurityPort() throws IOException {
-		String url = uddiServer.getSecurityUrl();
-		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-		URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SECURITY, url);
-		System.out.println("WSDL File: " + tmpWSDLFile);
-		UDDIService uddiService = new UDDIService(tmpWSDLFile);
+		UDDIService uddiService = new UDDIService();
 		UDDISecurityPortType port = uddiService.getUDDISecurityPort();
 	    assertNotNull(port);
 	    GetAuthToken body = new GetAuthToken();
@@ -62,30 +57,21 @@ public class UDDI_001_UDDIServiceTest {
 	
 	@Test
 	public void findInquiryPort() throws IOException {
-		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-		String url = uddiServer.getSecurityUrl();
-		URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.INQUIRY, url);
-		UDDIService uddiService = new UDDIService(tmpWSDLFile);
+		UDDIService uddiService = new UDDIService();
 		UDDIInquiryPortType port = uddiService.getUDDIInquiryPort();
 	    assertNotNull(port);
 	}
 	
 	@Test
 	public void findPublicationPort() throws IOException {
-		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-		String url = uddiServer.getSecurityUrl();
-		URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.PUBLISH, url);
-		UDDIService uddiService = new UDDIService(tmpWSDLFile);
+		UDDIService uddiService = new UDDIService();
 		UDDIPublicationPortType port = uddiService.getUDDIPublicationPort();
 	    assertNotNull(port);
 	}
 	
 	@Test
 	public void findSubscriptionPort() throws IOException {
-		UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-		String url = uddiServer.getSecurityUrl();
-		URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION, url);
-		UDDIService uddiService = new UDDIService(tmpWSDLFile);
+		UDDIService uddiService = new UDDIService();
 		UDDISubscriptionPortType port = uddiService.getUDDISubscriptionPort();
 	    assertNotNull(port);
 	}
@@ -94,9 +80,7 @@ public class UDDI_001_UDDIServiceTest {
 	public void findReplicationPort() throws IOException {
 		String url = uddiServer.getSecurityUrl();
 		if (url!=null) { //Replication is option, but if it is configured in the uddi.xml then we assume it is implemented
-			UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-			URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.REPLICATION,url);
-			UDDIService uddiService = new UDDIService(tmpWSDLFile);
+			UDDIService uddiService = new UDDIService();
 			UDDIReplicationPortType port = uddiService.getUDDIReplicationPort();
 		    assertNotNull(port);
 		}
@@ -106,9 +90,7 @@ public class UDDI_001_UDDIServiceTest {
 	public void findSubscriptionListenerPort() throws IOException {
 		String url = uddiServer.getSecurityUrl();
 		if (url!=null) { //Subscription Listener is client side, but if it is configured in the uddi.xml then we assume it is implemented
-			UDDIServiceWSDL uddiServiceWSDL = new UDDIServiceWSDL();
-			URL tmpWSDLFile = uddiServiceWSDL.getWSDLFilePath(UDDIServiceWSDL.WSDLEndPointType.SUBSCRIPTION_LISTENER, url);
-			UDDIService uddiService = new UDDIService(tmpWSDLFile);
+			UDDIService uddiService = new UDDIService();
 			UDDISubscriptionListenerPortType port = uddiService.getUDDISubscriptionListenerPort();
 		    assertNotNull(port);
 		}
