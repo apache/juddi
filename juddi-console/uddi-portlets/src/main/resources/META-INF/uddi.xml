@@ -36,7 +36,7 @@
 		        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
 				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
 				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
-				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
 				<!-- In VM Transport Settings 
 				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
 				<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
