@@ -518,7 +518,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveBinding(em, body, null);
+			ValidatePublish validator = new ValidatePublish(publisher);
+			validator.validateSaveBinding(em, body, null);
 	
 			BindingDetail result = new BindingDetail();
 			
@@ -536,6 +537,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				em.persist(modelBindingTemplate);
 				
 				result.getBindingTemplate().add(apiBindingTemplate);
+				
+				validator.validateSaveBindingMax(em, modelBindingTemplate.getBusinessService().getEntityKey());
 			}
 	
 			tx.commit();
@@ -569,7 +572,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveBusiness(em, body, null);
+			ValidatePublish validator = new ValidatePublish(publisher);
+			validator.validateSaveBusiness(em, body, null);
 	
 			BusinessDetail result = new BusinessDetail();
 			
@@ -586,6 +590,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 				result.getBusinessEntity().add(apiBusinessEntity);
 			}
+			
+			//check how many business this publisher owns.
+			validator.validateSaveBusinessMax(em);
 	
 			tx.commit();
                         long procTime = System.nanoTime() - startTime;
@@ -618,7 +625,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 			
-			new ValidatePublish(publisher).validateSaveService(em, body, null);
+			ValidatePublish validator = new ValidatePublish(publisher);
+			validator.validateSaveService(em, body, null);
 			
 			ServiceDetail result = new ServiceDetail();
 	
@@ -636,8 +644,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				em.persist(modelBusinessService);
 				
 				result.getBusinessService().add(apiBusinessService);
+				
+				validator.validateSaveServiceMax(em, modelBusinessService.getBusinessEntity().getEntityKey());
 			}
-	
+			
+			
 			tx.commit();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_SERVICE, 

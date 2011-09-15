@@ -37,12 +37,15 @@ import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.model.Publisher;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FindBusinessByPublisherQuery;
+import org.apache.juddi.query.FindTModelByPublisherQuery;
 import org.apache.juddi.v3.error.AssertionNotFoundException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.error.InvalidProjectionException;
 import org.apache.juddi.v3.error.KeyUnavailableException;
+import org.apache.juddi.v3.error.MaxEntitiesExceededException;
 import org.apache.juddi.v3.error.UserMismatchException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.api_v3.AddPublisherAssertions;
@@ -270,6 +273,32 @@ public class ValidatePublish extends ValidateUDDIApi {
 		}
 	}
 	
+    public void validateSaveBusinessMax(EntityManager em) throws DispositionReportFaultMessage {
+		
+		//Obtain the maxSettings for this publisher or get the defaults
+		Publisher publisher = em.find(Publisher.class, getPublisher().getAuthorizedName());
+		Integer maxBusinesses = publisher.getMaxBusinesses();
+		try {
+			if (maxBusinesses==null) {
+				if (AppConfig.getConfiguration().containsKey(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER)) {
+					maxBusinesses = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);
+				} else {
+					maxBusinesses = -1;
+				}
+			}
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+		//if we have the maxBusinesses set for this publisher then we need to make sure we did not exceed it.
+		if (maxBusinesses > 0) {
+			//get the businesses owned by this publisher
+			List<?> businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, null);
+			if (businessKeysFound!=null && businessKeysFound.size() > maxBusinesses) 
+				throw new MaxEntitiesExceededException(new ErrorMessage("errors.save.maxBusinessesExceeded"));
+		}
+		
+	}
+	
 	public void validateSaveService(EntityManager em, SaveService body, Configuration config) throws DispositionReportFaultMessage {
 
 		if (config==null) {
@@ -291,6 +320,31 @@ public class ValidatePublish extends ValidateUDDIApi {
 		for (org.uddi.api_v3.BusinessService entity : entityList) {
 			// Entity specific data validation
 			validateBusinessService(em, entity, null, config);
+		}
+	}
+	
+	public void validateSaveServiceMax(EntityManager em, String businessKey) throws DispositionReportFaultMessage {
+		
+		//Obtain the maxSettings for this publisher or get the defaults
+		Publisher publisher = em.find(Publisher.class, getPublisher().getAuthorizedName());
+		Integer maxServices = publisher.getMaxBusinesses();
+		try {
+			if (maxServices==null) {
+				if (AppConfig.getConfiguration().containsKey(Property.JUDDI_MAX_SERVICES_PER_BUSINESS)) {
+					maxServices = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);
+				} else {
+					maxServices = -1;
+				}
+			}
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+		//if we have the maxServices set for a business then we need to make sure we did not exceed it.
+		if (maxServices > 0) {
+			//get the businesses owned by this publisher
+			org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
+			if (modelBusinessEntity.getBusinessServices()!=null && modelBusinessEntity.getBusinessServices().size() > maxServices) 
+				throw new MaxEntitiesExceededException(new ErrorMessage("errors.save.maxServicesExceeded"));
 		}
 	}
 	
@@ -316,6 +370,31 @@ public class ValidatePublish extends ValidateUDDIApi {
 			validateBindingTemplate(em, entity, null, config);
 		}
 	}
+	
+	public void validateSaveBindingMax(EntityManager em, String serviceKey) throws DispositionReportFaultMessage {
+		
+		//Obtain the maxSettings for this publisher or get the defaults
+		Publisher publisher = em.find(Publisher.class, getPublisher().getAuthorizedName());
+		Integer maxBindings = publisher.getMaxBindingsPerService();
+		try {
+			if (maxBindings==null) {
+				if (AppConfig.getConfiguration().containsKey(Property.JUDDI_MAX_BINDINGS_PER_SERVICE)) {
+					maxBindings = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);
+				} else {
+					maxBindings = -1;
+				}
+			}
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+		//if we have the maxBindings set for a service then we need to make sure we did not exceed it.
+		if (maxBindings > 0) {
+			//get the bindings owned by this service
+			org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+			if (modelBusinessService.getBindingTemplates()!=null && modelBusinessService.getBindingTemplates().size() > maxBindings) 
+				throw new MaxEntitiesExceededException(new ErrorMessage("errors.save.maxBindingsExceeded"));
+		}
+	}
 
 	public void validateSaveTModel(EntityManager em, SaveTModel body, Configuration config) throws DispositionReportFaultMessage {
 
@@ -337,6 +416,31 @@ public class ValidatePublish extends ValidateUDDIApi {
 		
 		for (org.uddi.api_v3.TModel entity : entityList) {
 			validateTModel(em, entity, config);
+		}
+	}
+	
+	public void validateSaveTModelMax(EntityManager em) throws DispositionReportFaultMessage {
+		
+		//Obtain the maxSettings for this publisher or get the defaults
+		Publisher publisher = em.find(Publisher.class, getPublisher().getAuthorizedName());
+		Integer maxTModels = publisher.getMaxTmodels();
+		try {
+			if (maxTModels==null) {
+				if (AppConfig.getConfiguration().containsKey(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER)) {
+					maxTModels = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);
+				} else {
+					maxTModels = -1;
+				}
+			}
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+		//if we have the TModels set for a publisher then we need to make sure we did not exceed it.
+		if (maxTModels > 0) {
+			//get the tmodels owned by this publisher
+			List<?> tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, null);
+			if (tmodelKeysFound!=null && tmodelKeysFound.size() > maxTModels) 
+				throw new MaxEntitiesExceededException(new ErrorMessage("errors.save.maxTModelsExceeded"));
 		}
 	}
 
