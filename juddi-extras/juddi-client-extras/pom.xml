@@ -22,14 +22,19 @@
     <artifactId>juddi-parent</artifactId>
     <version>3.1.2-SNAPSHOT</version>
   </parent> 
-  <artifactId>juddi-client</artifactId>
+  <artifactId>juddi-client-extras</artifactId>
   <packaging>bundle</packaging>
-  <name>jUDDI Client side Code</name>
+  <name>jUDDI Client side extras</name>
   <properties>
     <cxf.version>2.3.6</cxf.version>
   </properties>
 
   <dependencies>
+    <dependency>
+	<groupId>org.apache.juddi</groupId>
+        <artifactId>juddi-client</artifactId>
+        <version>${project.parent.version}</version>
+    </dependency>
     <dependency>
         <groupId>org.apache.juddi</groupId>
         <artifactId>uddi-ws</artifactId>
@@ -50,6 +55,25 @@
     	<groupId>wsdl4j</groupId>
     	<artifactId>wsdl4j</artifactId>
     	<version>1.6.2</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>${cxf.version}</version>
+	<scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-transports-http</artifactId>
+        <version>${cxf.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+            </exclusion>
+       </exclusions>
+       <scope>compile</scope>
     </dependency>
   </dependencies> 
 </project>
