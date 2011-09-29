@@ -1,1 +1,1 @@
-juddi.auth = org.apache.juddi.auth.JUDDIAuthentication
+juddi.authenticator = org.apache.juddi.auth.JUDDIAuthentication

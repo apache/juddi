@@ -27,6 +27,7 @@ import javax.persistence.EntityTransaction;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
@@ -36,6 +37,8 @@ import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.UnknownUserException;
+
+import org.apache.commons.configuration.ConfigurationException;
 
 /**
  * This is a implementation of jUDDI's Authenticator interface, that uses the
@@ -63,8 +66,7 @@ import org.apache.juddi.v3.error.UnknownUserException;
  * @author <a href="mailto:gunnlaugursig@gmail.com">Gunnlaugur Sigurðsson</a>
  */
 public class LdapSimpleAuthenticator implements Authenticator {
-
-	private Log log = LogFactory.getLog(this.getClass());
+    private Log logger = LogFactory.getLog(this.getClass());
 
     private LdapContext ctx = null;
     private Hashtable<String, String> env = null;
@@ -77,7 +79,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
     	try {
     		authURL = AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_URL, DEFAULT_URL);
     	} catch (ConfigurationException ce) {
-    		log.error("Configuration exception occurred retrieving: " + Property.JUDDI_AUTHENTICATOR_URL);
+    		logger.error("Configuration exception occurred retrieving: " + Property.JUDDI_AUTHENTICATOR_URL);
     	}
     	init(authURL);
     }
@@ -97,7 +99,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
         try {
             ctx = new InitialLdapContext(env, null);
         } catch (NamingException e) {
-            log.error("Naming exception " + e);
+            logger.error("Naming exception " + e);
             throw e;
         }
     }
@@ -117,17 +119,17 @@ public class LdapSimpleAuthenticator implements Authenticator {
             env.put(Context.SECURITY_PRINCIPAL, authorizedName);
         	env.put(Context.SECURITY_CREDENTIALS, cred);
             ctx = new InitialLdapContext(env, null);
-            
-            log.info(authorizedName + " is authenticated");
+            isLdapUser = true;
+            logger.info(authorizedName + " is authenticated");
            
         } catch (NamingException e) {
-            log.error(authorizedName + " is not authenticated");
+            logger.error(authorizedName + " is not authenticated");
             throw new UnknownUserException(new ErrorMessage("errors.auth.NoPublisher", authorizedName));
         } finally {
             try {
                 ctx.close();
             } catch (NamingException e) {
-                log.error("Context close failure " + e);
+                logger.error("Context close failure " + e);
             }
         }
 
@@ -138,7 +140,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
                 tx.begin();
                 Publisher publisher = em.find(Publisher.class, authorizedName);
                 if (publisher == null) {
-                    log.warn("Publisher was not found, adding the publisher in on the fly.");
+                    logger.warn("Publisher was not found, adding the publisher in on the fly.");
                     publisher = new Publisher();
                     publisher.setAuthorizedName(authorizedName);
                     publisher.setIsAdmin("false");

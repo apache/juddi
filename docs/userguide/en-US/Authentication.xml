@@ -46,7 +46,7 @@
        <programlisting language="Java"><xi:include href="extras/Authentication_1.java" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
 
         <para>
-        The property <property>juddi.auth</property> in the
+        The property <property>juddi.authenticator</property> in the
         <filename>juddi.properties</filename> configuration file can be used to configure
         how jUDDI is going to check the credentials passed in on the
         <classname>GetAuthToken</classname> request. By default jUDDI uses the
@@ -54,7 +54,7 @@
         authentication implementation or use any of the ones mention below. The
         implementation needs to implement the
         <interfacename>org.apache.juddi.auth.Authenticator</interfacename> interface, and
-        <property>juddi.auth</property> property should refer to the implementation class.
+        <property>juddi.authenticator</property> property should refer to the implementation class.
         </para>
 
         <para>
@@ -219,7 +219,7 @@
         <programlisting language="XML"><xi:include href="extras/Authentication_5.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
 
         <para>
-	The <classname>juddi.auth.url</classname> property configures the
+	The <classname>juddi.authenticator.url</classname> property configures the
         <classname>LdapSimpleAuthenticator</classname> class so that it knows where the LDAP
 	server resides.     Future work is planned in this area to use the LDAP uid rather than
 	the LDAP principal as the default publisher id.
@@ -250,7 +250,7 @@
         <programlisting language="XML"><xi:include href="extras/Authentication_3.xmlt" parse="text" xmlns:xi="http://www.w3.org/2001/XInclude" /></programlisting>
 
         <para>
-        The <property>juddi.auth</property> property plugs the
+        The <property>juddi.authenticator</property> property plugs the
         <classname>JbossAuthenticator</classname> class into the jUDDI the Authenticator
         framework. The <classname>juddi.sercuity.domain</classname>, configures the
         <classname>JBossAuthenticator</classname> class where it can lookup the
