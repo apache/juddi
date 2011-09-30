@@ -219,5 +219,26 @@
         </para>
     </section>
     
+    <!-- section: set persistence props in juddiv3.properties -->
+    <section id="sect-persistence_props">
+        <title>Override persistence properties in the juddiv3.properties</title>
+        <para>
+        The juddiv3.properties file can be externalized; if you give the path of juddiv3.properties 
+        in the JVM args, the juddiv3.properties will not be picked up from the WAR. To use this set the 
+        <filename>juddi.propertiesFile</filename> to a location of your configuration file.
+        This allows the user to change the juddi properties without having to open up the juddiv3.war file.
+        For this usecase it makes sense that also persistence properties can be overriden as well
+        in the juddiv3.properties file. The following properties can be set:
+        </para>
+        <table title="persistence properties">
+        <tr><th>property name</th><th>description</th><th>example value</th></tr>
+        <tr><td>persistenceProvider</td><td>JPA Implementation</td><td>Hibernate</td></tr>
+        <tr><td>hibernate.connection.datasource</td><td>datasource name</td><td>java:/jdbc/JuddiDS</td></tr>
+        <tr><td>hibernate.hbm2ddl.auto</td><td>hibernate to ddl setting </td><td>update</td></tr>
+        <tr><td>hibernate.default_schema</td><td>Schema name</td><td>JuddiSchema</td></tr>
+        <tr><td>hibernate.dialect</td><td>DataBase vendor name</td><td>org.hibernate.dialect.DB2Dialect</td></tr>
+        </table>
+    </section>
+    
     
 </chapter>
