@@ -161,6 +161,7 @@ public class DetailPanel  extends FlowPanel  implements TableListener{
 					}
 				} else {
 					Window.alert("error: " + response.getMessage());
+					Window.Location.reload();
 				}
 			}
 		});
