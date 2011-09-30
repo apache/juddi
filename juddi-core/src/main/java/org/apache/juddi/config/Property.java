@@ -30,6 +30,8 @@ public interface Property
 	public final static String JUDDI_NOTIFICATION_START_BUFFER       ="juddi.notification.start.buffer";
 	public final static String JUDDI_NOTIFICATION_INTERVAL           ="juddi.notification.interval";
 	public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME ="juddi.notification.acceptable.lagtime";
+	public final static String JUDDI_NOTIFICATION_MAX_TRIES      ="juddi.notification.max.tries";
+	public final static String JUDDI_NOTIFICATION_LIST_RESET_INTERVAL  ="juddi.notification.list.reset.interval";
 	public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES="juddi.subscription.chunkexpiration.minutes";
 	public final static String JUDDI_JNDI_REGISTRATION           ="juddi.jndi.registration";
 	public final static String JUDDI_RMI_PORT                    ="juddi.rmi.port";

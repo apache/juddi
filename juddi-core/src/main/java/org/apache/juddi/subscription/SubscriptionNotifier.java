@@ -16,12 +16,15 @@
  */
 package org.apache.juddi.subscription;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -29,6 +32,7 @@ import javax.persistence.Query;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -63,7 +67,9 @@ public class SubscriptionNotifier extends TimerTask {
 	private Timer timer = null;
 	private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
 	private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
-	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 500l); //500 milliseconds
+	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
+	private int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);
+	private long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private Boolean alwaysNotify = false;
 	private Date desiredDate = null;
@@ -74,6 +80,8 @@ public class SubscriptionNotifier extends TimerTask {
 			"delete_business","delete_service","delete_binding","delete_tmodel",
 			"add_publisherassertions","set_publisherassertions","delete_publisherassertions"
 	};
+	private static Map<String,Integer> badNotifications= new ConcurrentHashMap<String,Integer>();
+	private static Date lastBadNotificationReset = new Date();
 	
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
@@ -96,8 +104,8 @@ public class SubscriptionNotifier extends TimerTask {
 	protected boolean registryMayContainUpdates() {
 		boolean isUpdated = false;
 		int updateCounter = 0;
-		//if the desiredDate is set it means that we've declined sending out a notification befor
-		//because the a client did not want a notification yet. However if this desided
+		//if the desiredDate is set it means that we've declined sending out a notification before
+		//because the a client did not want a notification yet. However if this desired
 		//notification time has come we should try sending out the notification now.
 		if (desiredDate!=null && new Date().getTime() > desiredDate.getTime()) {
 			return true;
@@ -114,14 +122,18 @@ public class SubscriptionNotifier extends TimerTask {
 				isUpdated = true;
 			}
 		} catch (Exception e) {
-		
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 		return isUpdated;
 	}
 
-	public void run() 
+	public synchronized void run() 
 	{
+		if (badListResetInterval > 0 && new Date().getTime() > lastBadNotificationReset.getTime() + badListResetInterval) {
+			badNotifications = new ConcurrentHashMap<String,Integer>();
+			lastBadNotificationReset = new Date();
+			log.debug("badNotificationList was reset");
+		}
 		if ((firedOnTime(scheduledExecutionTime()) || alwaysNotify) && registryMayContainUpdates()) {
 			long startTime = System.currentTimeMillis();
 			desiredDate = null;
@@ -130,7 +142,9 @@ public class SubscriptionNotifier extends TimerTask {
 			Collection<Subscription> subscriptions = getAllAsyncSubscriptions();
 			for (Subscription subscription : subscriptions) {
 				
-				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime) {
+				
+				if (subscription.getExpiresAfter()==null || subscription.getExpiresAfter().getTime() > startTime ||
+						!isTemporarilyDisabled(subscription.getSubscriptionKey())) {
 					try {
 						//build a query with a coverage period from the lastNotified time to 
 						//now (the scheduled Execution time)
@@ -293,9 +307,10 @@ public class SubscriptionNotifier extends TimerTask {
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
-			
+			String subscriptionKey = resultList.getSubscription().getSubscriptionKey();
 			org.apache.juddi.model.Subscription modelSubscription = 
-				em.find(org.apache.juddi.model.Subscription.class, resultList.getSubscription().getSubscriptionKey());
+				em.find(org.apache.juddi.model.Subscription.class, subscriptionKey);
+			Date lastNotifiedDate = modelSubscription.getLastNotified();
 			//now log to the db that we are sending the notification.
 			tx.begin();
 			modelSubscription.setLastNotified(notificationDate);
@@ -342,15 +357,34 @@ public class SubscriptionNotifier extends TimerTask {
 							notifier.notifySubscriptionListener(body);
 							chunkToken=body.getSubscriptionResultsList().getChunkToken();
 						}
+						//successful notification so remove from the badNotificationList
+						if (badNotifications.containsKey(resultList.getSubscription().getSubscriptionKey()))
+							badNotifications.remove(resultList.getSubscription().getSubscriptionKey());
+					} catch (WebServiceException e) {
+						if (e.getCause() instanceof IOException) {
+							addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointUrl());
+							//we could not notify so compensate the transaction above
+							modelSubscription.setLastNotified(lastNotifiedDate);
+							tx.begin();
+							em.persist(modelSubscription);
+							tx.commit();
+						} else {
+							log.warn("Unexpected WebServiceException " + e.getMessage() + e.getCause());
+						}
 						
 					} catch (Exception e) {
-						log.error(e.getMessage(),e);
+						log.warn("Unexpected notification exception:" + e.getMessage() + e.getCause());
 					}
 				} else {
-					log.error("Unsupported binding type.");
+					log.info("Binding " + bindingTemplate.getEntityKey() + " has an unsupported binding type of " 
+							+ bindingTemplate.getAccessPointType() + ". Only " 
+							+ AccessPointType.END_POINT.toString() + " and "
+							+ AccessPointType.WSDL_DEPLOYMENT.toString() + " are supported.");
+					addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointType() + " not supported");
 				}
 			} else {
-				log.error("There is no valid binding template defined for this subscription: " + modelSubscription.getBindingKey());
+				log.info("There is no valid binding template defined for this subscription: " + modelSubscription.getBindingKey());
+				addBadNotificationToList(subscriptionKey, modelSubscription.getBindingKey() + " not found");
 			}
 			
 		} finally {
@@ -363,6 +397,25 @@ public class SubscriptionNotifier extends TimerTask {
 
 	protected UDDISubscriptionImpl getSubscriptionImpl() {
 		return subscriptionImpl;
+	}
+	
+	private boolean isTemporarilyDisabled(String subscriptionKey) {
+		if (maxTries > 0 && badNotifications.containsKey(subscriptionKey) && badNotifications.get(subscriptionKey) > maxTries ) {
+			log.debug("Subscription " + subscriptionKey + " is temperarily disabled. The notification endpoint" +
+					" could not be reached more then " + maxTries + " times");
+			return true;
+		}
+		return false;
+	}
+	
+	private int addBadNotificationToList(String subscriptionKey, String endPoint) {
+		Integer numberOfBadNotifications = 0;
+		if (badNotifications.containsKey(subscriptionKey))
+			numberOfBadNotifications = badNotifications.get(subscriptionKey);
+		badNotifications.put(subscriptionKey, ++numberOfBadNotifications);
+		log.debug("bad notification number " + numberOfBadNotifications + " for subscription " 
+				+  subscriptionKey + " " + endPoint);
+		return numberOfBadNotifications;
 	}
 
 }
