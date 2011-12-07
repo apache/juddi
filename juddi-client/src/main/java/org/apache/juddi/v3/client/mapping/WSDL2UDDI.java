@@ -320,7 +320,7 @@ public class WSDL2UDDI {
 	    	//  A keyedReference with a tModelKey of the UDDI Types category system and a keyValue of 
 	    	// "wsdlSpec" for backward compatibility.
 	    	KeyedReference typesReferenceBackwardsCompatible = newKeyedReference(
-	    			"uddi:uddi-org:types", "uddi-org:types", "wsdlSpec");
+	    			"uddi:uddi.org:categorization:types", "uddi-org:types", "wsdlSpec");
 	    	categoryBag.getKeyedReference().add(typesReferenceBackwardsCompatible);
 	    	
 	    	// One or two keyedReferences as required to capture the protocol
