@@ -36,6 +36,7 @@ import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.api.util.SecurityQuery;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.Publisher;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.AuthenticatorFactory;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -98,7 +99,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		
 		String publisherId = authenticator.authenticate(body.getUserID(), body.getCred());
-
+		
 		return getAuthToken(publisherId);
 	}
 	
@@ -113,7 +114,10 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-
+			//Check if this publisher exists 
+			Publisher publisher = em.find(Publisher.class, publisherId);
+			if (publisher == null)
+				throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials", publisherId));
 
 			// Generate auth token and store it!
 			String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
