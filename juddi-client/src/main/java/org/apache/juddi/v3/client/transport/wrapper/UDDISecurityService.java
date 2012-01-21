@@ -59,8 +59,12 @@ public class UDDISecurityService {
 	    if ((operation == null) || (operation.trim().length() == 0))
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 	  }
+	
+	public Node secure(Element uddiReq) throws Exception {
+	    return secure(uddiReq, nodeName, managerName);
+	}
 
-	public Node secure(Element uddiReq) throws Exception
+	public Node secure(Element uddiReq, String nodeName, String managerName) throws Exception
 	{
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();

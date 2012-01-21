@@ -83,7 +83,11 @@ public class UDDIPublicationService {
 	    	throw new UnsupportedOperationException("operation " + operation + " not supported");
 	}
 
-	public Node publish(Element uddiReq) throws Exception
+	public Node publish(Element uddiReq) throws Exception {
+	    return publish(uddiReq, nodeName, managerName);
+	}
+	
+	public Node publish(Element uddiReq, String nodeName, String managerName) throws Exception
 	{
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();

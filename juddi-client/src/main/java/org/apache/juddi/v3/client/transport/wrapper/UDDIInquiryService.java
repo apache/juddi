@@ -86,6 +86,10 @@ public class UDDIInquiryService {
 	}
 
 	public Node inquire(Element uddiReq) throws Exception {
+	    return inquire(uddiReq, nodeName, managerName);
+	}
+	
+	public Node inquire(Element uddiReq, String nodeName, String managerName) throws Exception {
 	    UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 	    String clazz = manager.getClientConfig().getUDDINode(nodeName).getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
