@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.rmi.Remote;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,10 +31,20 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.ws.Holder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.uddi.api_v3.AssertionStatusItem;
+import org.uddi.api_v3.AssertionStatusReport;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.GetPublisherAssertions;
+import org.uddi.api_v3.PublisherAssertion;
+import org.uddi.api_v3.PublisherAssertions;
+import org.uddi.api_v3.PublisherAssertionsResponse;
+import org.uddi.api_v3.SetPublisherAssertions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -127,8 +138,40 @@ public class RequestHandler
       //String reqString = getText(uddiReq);
       //Object uddiReqObj = JAXBMarshaller.unmarshallFromString(reqString, "org.uddi.api_v3");
       Object uddiReqObj = JAXBMarshaller.unmarshallFromElement(uddiReq, "org.uddi.api_v3");
-      Method method = portType.getClass().getMethod(methodName, operationClass);
-      Object result = method.invoke(portType, (Object) uddiReqObj);
+      Object result = null;
+      if (operationClass.equals(GetAssertionStatusReport.class)) {
+          GetAssertionStatusReport getAssertionStatusReport = (GetAssertionStatusReport) uddiReqObj;
+          Method method = portType.getClass().getMethod(methodName, String.class, CompletionStatus.class);
+          result = method.invoke(portType, getAssertionStatusReport.getAuthInfo(), getAssertionStatusReport.getCompletionStatus());
+          AssertionStatusReport assertionStatusReport = new AssertionStatusReport();
+          assertionStatusReport.getAssertionStatusItem().addAll((List<AssertionStatusItem>)result);
+          result = assertionStatusReport;
+      } else if (operationClass.equals(SetPublisherAssertions.class)) {
+          SetPublisherAssertions setPublisherAssertions = (SetPublisherAssertions) uddiReqObj;
+          Method method = portType.getClass().getMethod(methodName, String.class, Holder.class);
+          Holder holder = new Holder(setPublisherAssertions.getPublisherAssertion());
+          result = method.invoke(portType, setPublisherAssertions.getAuthInfo(), holder);
+          List<PublisherAssertion> publisherAssertionList = (List<PublisherAssertion>) holder.value;
+          PublisherAssertions assertions = new PublisherAssertions();
+          if (publisherAssertionList!=null) {
+              assertions.getPublisherAssertion().addAll(publisherAssertionList);
+          }
+          result = assertions;
+      } else if (operationClass.equals(GetPublisherAssertions.class)) {
+          GetPublisherAssertions getPublisherAssertions = (GetPublisherAssertions) uddiReqObj;
+          Method method = portType.getClass().getMethod(methodName, String.class);
+          result = method.invoke(portType, getPublisherAssertions.getAuthInfo());
+          List<PublisherAssertion> assertionList = (List<PublisherAssertion>) result;
+          PublisherAssertionsResponse response = new PublisherAssertionsResponse();
+          if (assertionList!=null) {
+              response.getPublisherAssertion().addAll(assertionList);
+          }
+          result = response;
+      } else {
+          Method method = portType.getClass().getMethod(methodName, operationClass);
+          result = method.invoke(portType, (Object) uddiReqObj);
+      }
+      
       // Lookup the appropriate response handler which will
       // be used to marshal the UDDI object into the appropriate 
       // xml format.
@@ -150,13 +193,15 @@ public class RequestHandler
       // the juddi object into the appropriate xml format (we 
       // only support UDDI v2.0 at this time).  Attach the
       // results to the body of the SOAP response.
-      JAXBMarshaller.marshallToElement(result, "org.uddi.api_v3", element);
+      if (result!=null) {
+          JAXBMarshaller.marshallToElement(result, "org.uddi.api_v3", element);
+       // Grab a reference to the 'temp' element's
+          // only child here (this has the effect of
+          // discarding the temp element) and append 
+          // this child to the soap response body
+          document.appendChild(element.getFirstChild());
+      }
       
-      // Grab a reference to the 'temp' element's
-      // only child here (this has the effect of
-      // discarding the temp element) and append 
-      // this child to the soap response body
-      document.appendChild(element.getFirstChild());
       setResponse(document);
     } catch (InvocationTargetException ite) {
     	Throwable t = ite.getTargetException();
@@ -188,7 +233,7 @@ public class RequestHandler
 		} catch (UnsupportedEncodingException e) {
 			message = e.getMessage();
 		}
-        log.error(message);
+        log.error(ex.getMessage(),ex);
         setException(message);
     }
     return response;

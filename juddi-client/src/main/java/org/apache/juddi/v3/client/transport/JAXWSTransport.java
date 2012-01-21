@@ -223,17 +223,19 @@ public class JAXWSTransport extends Transport {
 	private void setCredentials(Map<String, Object> requestContext) throws ConfigurationException {
 		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
 		Properties properties = manager.getClientConfig().getUDDINode(nodeName).getProperties();
-		String username = null;
-		String password = null;
-		if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {
-			username = properties.getProperty(Property.BASIC_AUTH_USERNAME);
-		}
-		if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {
-			password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);
-		}
-		if (username!=null && password!=null) {
-			requestContext.put(BindingProvider.USERNAME_PROPERTY, username);
-			requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+		if (properties!=null) {
+    		String username = null;
+    		String password = null;
+    		if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {
+    			username = properties.getProperty(Property.BASIC_AUTH_USERNAME);
+    		}
+    		if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {
+    			password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);
+    		}
+    		if (username!=null && password!=null) {
+    			requestContext.put(BindingProvider.USERNAME_PROPERTY, username);
+    			requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+    		}
 		}
 	}
 
