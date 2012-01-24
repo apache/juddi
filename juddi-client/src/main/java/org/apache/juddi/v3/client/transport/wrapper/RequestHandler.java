@@ -16,10 +16,7 @@
 package org.apache.juddi.v3.client.transport.wrapper;
 
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.rmi.Remote;
 import java.util.List;
 
@@ -39,12 +36,14 @@ import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.AssertionStatusReport;
 import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetAssertionStatusReport;
 import org.uddi.api_v3.GetPublisherAssertions;
 import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.PublisherAssertions;
 import org.uddi.api_v3.PublisherAssertionsResponse;
 import org.uddi.api_v3.SetPublisherAssertions;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,15 +55,14 @@ import org.w3c.dom.Node;
 public class RequestHandler
 {
   // private reference to the webapp's logger.
-  private static Log log = LogFactory.getLog(RequestHandler.class);
+  //private static Log log = LogFactory.getLog(RequestHandler.class);
   
   // XML Document Builder
   private static DocumentBuilder docBuilder = null;
   
   private volatile String version;
   private volatile String operation;
-  private volatile Node response;
-  private volatile String exception;
+
   private volatile Remote portType; 
   private volatile String methodName;
   private volatile Class<?> operationClass;
@@ -129,8 +127,15 @@ public class RequestHandler
   }
 
   
-  public Node invoke(Element uddiReq)
+  @SuppressWarnings("unchecked")
+public Node invoke(Element uddiReq) throws Exception
   {
+    Node response = null;
+    // Create a new 'temp' XML element to use as a container 
+    // in which to marshal the UDDI response data into.
+    DocumentBuilder docBuilder = getDocumentBuilder();
+    Document document = docBuilder.newDocument();
+    Element element = document.createElement("temp");
     try 
     { 
       // Lookup the appropriate XML handler.  Throw an 
@@ -149,12 +154,11 @@ public class RequestHandler
       } else if (operationClass.equals(SetPublisherAssertions.class)) {
           SetPublisherAssertions setPublisherAssertions = (SetPublisherAssertions) uddiReqObj;
           Method method = portType.getClass().getMethod(methodName, String.class, Holder.class);
-          Holder holder = new Holder(setPublisherAssertions.getPublisherAssertion());
+          Holder<List<PublisherAssertion>> holder = new Holder<List<PublisherAssertion>>(setPublisherAssertions.getPublisherAssertion());
           result = method.invoke(portType, setPublisherAssertions.getAuthInfo(), holder);
-          List<PublisherAssertion> publisherAssertionList = (List<PublisherAssertion>) holder.value;
           PublisherAssertions assertions = new PublisherAssertions();
-          if (publisherAssertionList!=null) {
-              assertions.getPublisherAssertion().addAll(publisherAssertionList);
+          if (holder.value!=null) {
+              assertions.getPublisherAssertion().addAll(holder.value);
           }
           result = assertions;
       } else if (operationClass.equals(GetPublisherAssertions.class)) {
@@ -162,11 +166,11 @@ public class RequestHandler
           Method method = portType.getClass().getMethod(methodName, String.class);
           result = method.invoke(portType, getPublisherAssertions.getAuthInfo());
           List<PublisherAssertion> assertionList = (List<PublisherAssertion>) result;
-          PublisherAssertionsResponse response = new PublisherAssertionsResponse();
+          PublisherAssertionsResponse publisherAssertionsResponse = new PublisherAssertionsResponse();
           if (assertionList!=null) {
-              response.getPublisherAssertion().addAll(assertionList);
+              publisherAssertionsResponse.getPublisherAssertion().addAll(assertionList);
           }
-          result = response;
+          result = publisherAssertionsResponse;
       } else {
           Method method = portType.getClass().getMethod(methodName, operationClass);
           result = method.invoke(portType, (Object) uddiReqObj);
@@ -183,12 +187,6 @@ public class RequestHandler
           "type is unknown: " +uddiResObj.getClass().getName());
       */
       
-      // Create a new 'temp' XML element to use as a container 
-      // in which to marshal the UDDI response data into.
-     
-      DocumentBuilder docBuilder = getDocumentBuilder();
-      Document document = docBuilder.newDocument();
-      Element element = document.createElement("temp");
       // Lookup the appropriate response handler and marshal 
       // the juddi object into the appropriate xml format (we 
       // only support UDDI v2.0 at this time).  Attach the
@@ -201,40 +199,17 @@ public class RequestHandler
           // this child to the soap response body
           document.appendChild(element.getFirstChild());
       }
-      
-      setResponse(document);
-    } catch (InvocationTargetException ite) {
-    	Throwable t = ite.getTargetException();
-    	String errorMessage = "";
-    	if (t.getCause() != null) {
-    		while (t.getCause() != null) {
-    			t = t.getCause();
-    		}
-    		errorMessage = t.getMessage() != null ?
-    				t.getMessage() : "";
+      response = document;
+    } catch (Exception e) {
+    	DispositionReport dr = DispositionReportFaultMessage.getDispositionReport(e);
+    	if (dr != null) {
+    	    JAXBMarshaller.marshallToElement(dr, "org.uddi.api_v3", element);
+    	    document.appendChild(element.getFirstChild());
+    	    response = document;
     	} else {
-    		errorMessage = ite.getTargetException().getMessage() != null ? 
-    				ite.getTargetException().getMessage() : "";
+    	    throw e;
     	}
-    	String message;
-		try {
-			message = URLEncoder.encode(errorMessage,"UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			message = e.getMessage();
-		}
-    	log.error(message);
-    	setException(message);
-    }
-    catch(Exception ex) // Catch any other exceptions
-    {
-    	String message;
-		try {
-			message = URLEncoder.encode(ex.getMessage(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			message = e.getMessage();
-		}
-        log.error(ex.getMessage(),ex);
-        setException(message);
+    	//log.error(e.getMessage(),e);
     }
     return response;
   }
@@ -276,12 +251,7 @@ public String getOperation() {
 public void setOperation(String operation) {
     this.operation = operation;
 }
-public Node getResponse() {
-    return response;
-}
-public void setResponse(Node response) {
-    this.response = response;
-}
+
 public Remote getPortType() {
 	return portType;
 }
@@ -306,10 +276,5 @@ public String getVersion() {
 public void setVersion(String version) {
     this.version = version;
 }
-public String getException() {
-    return exception;
-}
-public void setException(String exception) {
-    this.exception = exception;
-}
+
 }

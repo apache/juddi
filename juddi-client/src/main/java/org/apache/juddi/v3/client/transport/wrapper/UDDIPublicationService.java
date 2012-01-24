@@ -112,9 +112,6 @@ public class UDDIPublicationService {
 	    validateRequest(operation);
 
 	    Node temp = requestHandler.invoke(uddiReq);
-	    if (requestHandler.getException()!=null) {
-	    	throw new Exception(requestHandler.getException());
-	    }
 
 	    return temp;
 	}
