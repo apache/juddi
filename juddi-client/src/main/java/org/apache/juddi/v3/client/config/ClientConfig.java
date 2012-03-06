@@ -162,10 +162,10 @@ public class ClientConfig
 				uddiNode.setProperties(properties);
 			}
 			uddiNode.setHomeJUDDI(              config.getBoolean("manager.nodes.node(" + i +")[@isHomeJUDDI]",false));
-			uddiNode.setName(                   config.getString("manager.nodes.node(" + i +").name"));
-			uddiNode.setManagerName(            config.getString("manager[@name]"));
-			uddiNode.setDescription(            config.getString("manager.nodes.node(" + i +").description"));
-			uddiNode.setProxyTransport(         config.getString("manager.nodes.node(" + i +").proxyTransport"));
+			uddiNode.setName(                   TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").name"),properties));
+			uddiNode.setManagerName(            TokenResolver.replaceTokens(config.getString("manager[@name]"),properties));
+			uddiNode.setDescription(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").description"),properties));
+			uddiNode.setProxyTransport(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").proxyTransport"),properties));
 			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").inquiryUrl"),properties));
 			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").publishUrl"),properties));
 			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").custodyTransferUrl"),properties));
@@ -173,8 +173,8 @@ public class ClientConfig
 			uddiNode.setSubscriptionUrl(        TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionUrl"),properties));
 			uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionListenerUrl"),properties));
 			uddiNode.setJuddiApiUrl(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").juddiApiUrl"),properties));
-			uddiNode.setFactoryInitial(         config.getString("manager.nodes.node(" + i +").javaNamingFactoryInitial"));
-			uddiNode.setFactoryURLPkgs(         config.getString("manager.nodes.node(" + i +").javaNamingFactoryUrlPkgs"));
+			uddiNode.setFactoryInitial(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingFactoryInitial"),properties));
+			uddiNode.setFactoryURLPkgs(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingFactoryUrlPkgs"),properties));
 			uddiNode.setFactoryNamingProvider(  TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingProviderUrl"),properties));
 			nodes.put(nodeName,uddiNode);
 		}
