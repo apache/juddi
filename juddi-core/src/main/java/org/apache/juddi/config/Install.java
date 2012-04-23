@@ -507,14 +507,10 @@ public class Install {
 		}
 		
 		String path = null;
-		if ("vfsfile".equals(url.getProtocol())) {
-			try {
-				path = url.toURI().getPath() ;
-			} catch (URISyntaxException e) {
-				throw new ConfigurationException(e);
-			}
-		} else {
-			path = url.getPath();
+		try {
+			path = url.toURI().getPath();
+		} catch (URISyntaxException e) {
+			throw new ConfigurationException(e);
 		}
 		
 		File dir = new File(path);
