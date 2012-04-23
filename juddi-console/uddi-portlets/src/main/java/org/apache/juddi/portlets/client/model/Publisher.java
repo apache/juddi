@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 public class Publisher implements Serializable{
 	private static final long serialVersionUID = 2384133177092719820L;
 	@NotNull
-    @Size(min=1,max=10)
+    @Size(min=1,max=50)
 	protected String publisherName;
     protected String emailAddress;
     protected String isAdmin;
@@ -42,6 +42,8 @@ public class Publisher implements Serializable{
     protected Integer maxBusinesses;
     protected Integer maxServicePerBusiness;
     protected Integer maxTModels;
+    @NotNull
+    @Size(min=1,max=20)
     protected String authorizedName;
 
     /**
