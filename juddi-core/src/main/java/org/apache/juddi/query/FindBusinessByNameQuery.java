@@ -34,7 +34,7 @@ import org.uddi.api_v3.Name;
  * findQualifier is used together with an appropriate wildcard character in the name, then any businessEntity matching this name with 
  * wildcards and the other criteria will be referenced in the results.  For more on wildcard matching, see Section 5.1.6 About Wildcards.   
  * The businessList returned contains businessInfo structures for businesses whose name matches the value(s) passed 
- * (lexical-order match – i.e., leftmost in left-to-right languages).  If multiple name values are passed, the match occurs on a 
+ * (lexical-order match i.e., leftmost in left-to-right languages).  If multiple name values are passed, the match occurs on a 
  * logical OR basis. Each name MAY be marked with an xml:lang adornment.  If a language markup is specified, the search results report a 
  * match only on those entries that match both the name value and language criteria. The match on language is a leftmost case-insensitive 
  * comparison of the characters supplied. This allows one to find all businesses whose name begins with an "A" and are expressed in any 
