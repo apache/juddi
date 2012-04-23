@@ -507,11 +507,13 @@ public class Install {
 		}
 		
 		String path = null;
+		
 		try {
-			path = url.toURI().getPath();
+			path = url.toURI().getSchemeSpecificPart();
 		} catch (URISyntaxException e) {
 			throw new ConfigurationException(e);
 		}
+		
 		
 		File dir = new File(path);
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);

@@ -14,6 +14,10 @@
  */
 package org.apache.juddi.config;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,6 +52,27 @@ public class ApplicationConfigurationTest
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+	
+	@Test
+	public void testURLFormats() throws MalformedURLException, URISyntaxException {
+		
+		URI file = new URI("file:/tmp/");
+		String path = file.getSchemeSpecificPart();
+		Assert.assertEquals("/tmp/", path);
+		
+		URI fileInJar = new URI("jar:file:/tmp/my.jar!/");
+		String path1 = fileInJar.getSchemeSpecificPart();
+		Assert.assertEquals("file:/tmp/my.jar!/", path1);
+				
+		URI fileInZip = new URI("zip:D:/bea/tmp/_WL_user/JuddiEAR/nk4cwv/war/WEB-INF/lib/juddi-core-3.0.1.jar!");
+		String path2 = fileInZip.getSchemeSpecificPart();
+		Assert.assertEquals("D:/bea/tmp/_WL_user/JuddiEAR/nk4cwv/war/WEB-INF/lib/juddi-core-3.0.1.jar!", path2);
+		
+		URI fileInVfszip = new URI("vfsfile:/tmp/SOA%20Platform/jbossesb-registry.sar/juddi_custom_install_data/root_Publisher.xml");
+		String path3 = fileInVfszip.getSchemeSpecificPart();
+		Assert.assertEquals("/tmp/SOA Platform/jbossesb-registry.sar/juddi_custom_install_data/root_Publisher.xml", path3);
+		
 	}
 	
 }
