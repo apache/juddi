@@ -20,6 +20,9 @@ package org.apache.juddi.portlets.client.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 
 /**
  * <p>Java class for Publisher type.  Specific to juddi.
@@ -29,6 +32,8 @@ import java.io.Serializable;
  */
 public class Publisher implements Serializable{
 	private static final long serialVersionUID = 2384133177092719820L;
+	@NotNull
+    @Size(min=1,max=10)
 	protected String publisherName;
     protected String emailAddress;
     protected String isAdmin;
