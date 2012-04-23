@@ -17,7 +17,8 @@
  */ -->        
 
       <!-- Inherit the core Web Toolkit stuff.                        -->
-      <inherits name="com.google.gwt.user.User"/>   	
+      <inherits name="com.google.gwt.user.User"/>
+      <inherits name='com.em.validation.Validation' />	
     
       <!-- Specify the app entry point class.                         -->
       <entry-point class="org.apache.juddi.portlets.client.UDDISubscriptionNotification"/>
