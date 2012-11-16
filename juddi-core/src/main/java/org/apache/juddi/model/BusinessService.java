@@ -43,7 +43,8 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	private List<ServiceDescr> serviceDescrs = new ArrayList<ServiceDescr>(0);
 	private List<BindingTemplate> bindingTemplates = new ArrayList<BindingTemplate>(0);
 	private ServiceCategoryBag categoryBag;
-    private List<ServiceProjection> projectingBusinesses = new ArrayList<ServiceProjection>(0);
+        private List<ServiceProjection> projectingBusinesses = new ArrayList<ServiceProjection>(0);
+        private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public BusinessService() {
 	}
@@ -117,4 +118,14 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	public void setProjectingBusinesses(List<ServiceProjection> projectingBusinesses) {
 		this.projectingBusinesses = projectingBusinesses;
 	}
+        
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "businessService")
+	@OrderBy
+        public List<Signature> getSignatures() {
+                return signatures;
+        }
+
+        public void setSignatures(List<Signature> signatures) {
+                this.signatures = signatures;
+        }
 }

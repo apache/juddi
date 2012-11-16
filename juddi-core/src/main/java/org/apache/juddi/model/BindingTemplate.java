@@ -47,6 +47,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	private String hostingRedirector;
 	private BindingCategoryBag categoryBag;
 	private List<TmodelInstanceInfo> tmodelInstanceInfos = new ArrayList<TmodelInstanceInfo>(0);
+        private List<Signature> signatures = new ArrayList<Signature>(0);
 	
 	public BindingTemplate() {
 	}
@@ -131,4 +132,14 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	public void setBindingDescrs(List<BindingDescr> bindingDescrs) {
 		this.bindingDescrs = bindingDescrs;
 	}
+        
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bindingTemplate")
+	@OrderBy
+        public List<Signature> getSignatures() {
+                return signatures;
+        }
+
+        public void setSignatures(List<Signature> signatures) {
+                this.signatures = signatures;
+        }
 }

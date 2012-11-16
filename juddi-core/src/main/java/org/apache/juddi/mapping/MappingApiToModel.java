@@ -17,20 +17,54 @@
 
 package org.apache.juddi.mapping;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBElement;
+import javax.xml.transform.dom.DOMResult;
 
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
-import org.apache.juddi.v3.error.ErrorMessage;
-import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.model.BindingTemplate;
+import org.apache.juddi.model.BusinessService;
+import org.apache.juddi.model.CanonicalizationMethod;
+import org.apache.juddi.model.KeyInfo;
+import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.Reference;
+import org.apache.juddi.model.Signature;
+import org.apache.juddi.model.SignatureMethod;
+import org.apache.juddi.model.SignatureTransform;
+import org.apache.juddi.model.SignatureValue;
+import org.apache.juddi.model.SignedInfo;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.model.KeyDataValue;
+import org.apache.juddi.model.SignatureTransformDataValue;
 import org.uddi.api_v3.Description;
 import org.uddi.sub_v3.ObjectFactory;
 import org.uddi.v3_service.DispositionReportFaultMessage;
+import org.w3._2000._09.xmldsig_.DSAKeyValueType;
+import org.w3._2000._09.xmldsig_.KeyValueType;
+import org.w3._2000._09.xmldsig_.PGPDataType;
+import org.w3._2000._09.xmldsig_.RSAKeyValueType;
+import org.w3._2000._09.xmldsig_.ReferenceType;
+import org.w3._2000._09.xmldsig_.RetrievalMethodType;
+import org.w3._2000._09.xmldsig_.SPKIDataType;
+import org.w3._2000._09.xmldsig_.TransformType;
+import org.w3._2000._09.xmldsig_.TransformsType;
+import org.w3._2000._09.xmldsig_.X509DataType;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSException;
+import org.w3c.dom.ls.LSSerializer;
 
 
 /**
@@ -55,6 +89,7 @@ public class MappingApiToModel {
 		modelPublisher.setMaxBusinesses(apiPublisher.getMaxBusinesses());
 		modelPublisher.setMaxServicesPerBusiness(apiPublisher.getMaxServicePerBusiness());
 		modelPublisher.setMaxTmodels(apiPublisher.getMaxTModels());
+                mapPublisherSignatures(apiPublisher.getSignature(), modelPublisher);
 	}
 	
 	public static void mapBusinessEntity(org.uddi.api_v3.BusinessEntity apiBusinessEntity, 
@@ -77,8 +112,145 @@ public class MappingApiToModel {
 							modelBusinessEntity.getBusinessServices(), 
 							modelBusinessEntity.getServiceProjections(), 
 							modelBusinessEntity);
+                
+                mapBusinessSignature(apiBusinessEntity.getSignature(), modelBusinessEntity);
 	}
-	
+        
+        private static List<Signature> mapApiSignaturesToModelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures) 
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = new ArrayList<Signature>();
+            modelSignatures.clear();
+            for (org.w3._2000._09.xmldsig_.SignatureType signatureType : apiSignatures) {
+                Signature modelSignature = new Signature();
+                
+                org.w3._2000._09.xmldsig_.SignedInfoType apiSignedInfo = signatureType.getSignedInfo();
+                SignedInfo modelSignedInfo = new SignedInfo();
+                modelSignature.setSignedInfo(modelSignedInfo);
+                
+                String canonicalizationAlgMethod = apiSignedInfo.getCanonicalizationMethod().getAlgorithm();
+                CanonicalizationMethod modelCanonMethod = new CanonicalizationMethod();
+                modelSignedInfo.setCanonicalizationMethod(modelCanonMethod);
+                modelCanonMethod.setAlgorithm(canonicalizationAlgMethod);
+                
+                SignatureMethod modelSigMethod = new SignatureMethod();
+                modelSignedInfo.setSignatureMethod(modelSigMethod);
+                String sigMethod = apiSignedInfo.getSignatureMethod().getAlgorithm();
+                modelSigMethod.setAlgorithm(sigMethod);
+                
+                List<org.w3._2000._09.xmldsig_.ReferenceType> apiReferenceList = apiSignedInfo.getReference();
+                for (org.w3._2000._09.xmldsig_.ReferenceType apiReference : apiReferenceList) {
+                    Reference ref = mapReference(modelSignedInfo, apiReference);
+                    modelSignedInfo.getReference().add(ref);
+                }
+                
+                modelSignedInfo.setCanonicalizationMethod(modelCanonMethod);
+                
+                org.w3._2000._09.xmldsig_.SignatureValueType apiSignatureValue = signatureType.getSignatureValue();
+                SignatureValue modelSignatureValue = new SignatureValue();
+                byte[] signatureValueBytes = apiSignatureValue.getValue();
+                String signatureValueXmlID = apiSignatureValue.getId();
+                modelSignatureValue.setValue(signatureValueBytes);
+                modelSignatureValue.setXmlID(signatureValueXmlID);
+                modelSignature.setSignatureValue(modelSignatureValue);
+                
+                org.w3._2000._09.xmldsig_.KeyInfoType apiKeyInfo = signatureType.getKeyInfo();
+                String apiKeyInfoXmlID = apiKeyInfo.getId();
+                KeyInfo modelKeyInfo = new KeyInfo();
+                modelSignature.setKeyInfo(modelKeyInfo);
+                modelKeyInfo.setXmlID(apiKeyInfoXmlID);
+                
+                List<Object> apiKeyInfoContentList = apiKeyInfo.getContent();
+                List<KeyDataValue> keyInfoDataValues = modelKeyInfo.getKeyDataValue();
+                for (Object apiKeyInfoContentObj : apiKeyInfoContentList) {
+                    if (apiKeyInfoContentObj instanceof JAXBElement) {
+                        JAXBElement apiKeyInfoContentJAXB = (JAXBElement)apiKeyInfoContentObj;
+                        String apiKeyInfoContentTagName = apiKeyInfoContentJAXB.getName().getLocalPart();
+                        if (apiKeyInfoContentJAXB.getValue() instanceof X509DataType) {
+                            KeyDataValue modelX509KeyData = mapX509DataType(apiKeyInfoContentJAXB, modelKeyInfo);
+                            keyInfoDataValues.add(modelX509KeyData);
+                        } else if (apiKeyInfoContentTagName.equals("KeyName")) {
+                            KeyDataValue modelKeyNameKDV = mapKeyName(apiKeyInfoContentJAXB);
+                            modelKeyNameKDV.setKeyInfo(modelKeyInfo);
+                            keyInfoDataValues.add(modelKeyNameKDV);
+                        } else if (apiKeyInfoContentTagName.equals("KeyValue")) {
+                            KeyDataValue modelKeyValueKDV = mapKeyValue(apiKeyInfoContentJAXB, keyInfoDataValues);
+                            modelKeyValueKDV.setKeyInfo(modelKeyInfo);
+                            keyInfoDataValues.add(modelKeyValueKDV);
+                        } else if (apiKeyInfoContentTagName.equals("MgmtData")) {
+                            KeyDataValue modelKeyValueKDV = new KeyDataValue();
+                            modelKeyValueKDV.setKeyDataName(apiKeyInfoContentTagName);
+                            modelKeyValueKDV.setKeyDataType("String");
+                            modelKeyValueKDV.setKeyDataValueString((String)apiKeyInfoContentJAXB.getValue());
+                            modelKeyValueKDV.setKeyInfo(modelKeyInfo);
+                            keyInfoDataValues.add(modelKeyValueKDV);
+                        } else if (apiKeyInfoContentTagName.equals("RetrievalMethod")) {
+                            RetrievalMethodType retrievalMethodType = (RetrievalMethodType)apiKeyInfoContentJAXB.getValue();
+                            KeyDataValue retrievalMethodTypeKDV = mapRetrievalMethod(apiKeyInfoContentTagName, modelKeyInfo, retrievalMethodType);
+                            keyInfoDataValues.add(retrievalMethodTypeKDV);
+                        } else if (apiKeyInfoContentTagName.equals("PGPData")) {
+                            PGPDataType pgpDataType = (PGPDataType)apiKeyInfoContentJAXB.getValue();
+                            KeyDataValue pgpDataTypeKDV = mapPGPDataType(apiKeyInfoContentTagName, modelKeyInfo, pgpDataType);
+                            keyInfoDataValues.add(pgpDataTypeKDV);
+                        } else if (apiKeyInfoContentTagName.equals("SPKIData")) {
+                            SPKIDataType spkiDataType = (SPKIDataType)apiKeyInfoContentJAXB.getValue();
+                            KeyDataValue spkiDataTypeKDV = mapSPKIDataType(apiKeyInfoContentTagName, modelKeyInfo, spkiDataType);
+                            keyInfoDataValues.add(spkiDataTypeKDV);
+                        } else {
+                            throw new RuntimeException("Unrecognized tag: " + apiKeyInfoContentTagName + " type: " + apiKeyInfoContentJAXB.getValue().getClass().getCanonicalName());
+                        }
+                    }
+                }
+                
+                modelSignatures.add(modelSignature);
+            }
+            return modelSignatures;
+        }
+        
+        public static void mapBusinessServiceSignature (List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, BusinessService modelBusinessService)
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
+            for (Signature modelSignature : modelSignatures) {
+                modelSignature.setBusinessService(modelBusinessService);
+            }
+            modelBusinessService.setSignatures(modelSignatures);
+        }
+        
+        public static void mapTmodelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, Tmodel modelTmodel)
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
+            for (Signature modelSignature : modelSignatures) {
+                modelSignature.setTmodel(modelTmodel);
+            }
+            modelTmodel.setSignatures(modelSignatures);
+        }
+        
+        public static void mapBindingTemplateSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, BindingTemplate modelBindingTemplate)
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
+            for (Signature modelSignature : modelSignatures) {
+                modelSignature.setBindingTemplate(modelBindingTemplate);
+            }
+            modelBindingTemplate.setSignatures(modelSignatures);
+        }
+        
+        public static void mapPublisherSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, Publisher modelPublisher)
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
+            for (Signature modelSignature : modelSignatures) {
+                modelSignature.setPublisher(modelPublisher);
+            }
+            modelPublisher.setSignatures(modelSignatures);
+        }
+        
+        public static void mapBusinessSignature(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures, 
+										 org.apache.juddi.model.BusinessEntity modelBusinessEntity)
+				   throws DispositionReportFaultMessage {
+            List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
+            for (Signature modelSignature : modelSignatures) {
+                modelSignature.setBusinessEntity(modelBusinessEntity);
+            }
+            modelBusinessEntity.setSignatures(modelSignatures);
+        }	
 
 	public static void mapBusinessNames(List<org.uddi.api_v3.Name> apiNameList, 
 										List<org.apache.juddi.model.BusinessName> modelNameList,
@@ -278,10 +450,8 @@ public class MappingApiToModel {
 		}
 		
 		mapBindingTemplates(apiBusinessService.getBindingTemplates(), modelBusinessService.getBindingTemplates(), modelBusinessService);
-
+                mapBusinessServiceSignature(apiBusinessService.getSignature(), modelBusinessService);
 	}
-
-	
 	
 	public static void mapServiceNames(List<org.uddi.api_v3.Name> apiNameList, 
 									   List<org.apache.juddi.model.ServiceName> modelNameList,
@@ -342,6 +512,7 @@ public class MappingApiToModel {
 			mapCategoryBag(apiBindingTemplate.getCategoryBag(), modelBindingTemplate.getCategoryBag());
 		}
 		mapTModelInstanceDetails(apiBindingTemplate.getTModelInstanceDetails(), modelBindingTemplate.getTmodelInstanceInfos(), modelBindingTemplate);
+                mapBindingTemplateSignatures(apiBindingTemplate.getSignature(), modelBindingTemplate);
 	}
 	
 	public static void mapBindingDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
@@ -501,6 +672,7 @@ public class MappingApiToModel {
 			mapCategoryBag(apiTModel.getCategoryBag(), modelTModel.getCategoryBag());
 		}
 		mapTModelOverviewDocs(apiTModel.getOverviewDoc(), modelTModel.getOverviewDocs(), modelTModel);
+                mapTmodelSignatures(apiTModel.getSignature(), modelTModel);
 	}
 
 	public static void mapTModelDescriptions(List<org.uddi.api_v3.Description> apiDescList, 
@@ -641,6 +813,275 @@ public class MappingApiToModel {
 			modelNode.setFactoryURLPkgs(apiNode.getFactoryURLPkgs());
 		}
 	}
-	
+
+        private static Reference mapReference(SignedInfo modelSignedInfo, ReferenceType apiReference) {
+            Reference ref = new Reference();
+            ref.setSignedInfo(modelSignedInfo);
+            String refUri = apiReference.getURI();
+            if (refUri == null) {
+                refUri = "";
+            }
+            ref.setUri(refUri);
+            List<org.w3._2000._09.xmldsig_.TransformType> apiTransformList = apiReference.getTransforms().getTransform();
+            for (org.w3._2000._09.xmldsig_.TransformType apiTransform : apiTransformList) {
+                SignatureTransform modelTransform = new SignatureTransform();
+                modelTransform.setReference(ref);
+                modelTransform.setTransform(apiTransform.getAlgorithm());
+
+                for (Object xform : apiTransform.getContent()) {
+                    SignatureTransformDataValue sdv = mapSignatureTransformDataValue(xform);
+                    sdv.setSignatureTransform(modelTransform);
+                    modelTransform.getSignatureTransformDataValue().add(sdv);
+                }
+
+                ref.getTransforms().add(modelTransform);
+            }
+            String digestMethodStr = apiReference.getDigestMethod().getAlgorithm();
+            byte[] digestValueBytes = apiReference.getDigestValue();
+            ref.setDigestMethod(digestMethodStr);
+            ref.setDigestValue(digestValueBytes);
+            return ref;
+        }
+
+    private static KeyDataValue mapX509DataType(JAXBElement apiKeyInfoContentJAXB, KeyInfo modelKeyInfo) throws RuntimeException {
+        X509DataType apiKeyInfoContent = (X509DataType)apiKeyInfoContentJAXB.getValue();
+        KeyDataValue modelX509KeyData = new KeyDataValue();
+        modelX509KeyData.setKeyDataType(X509DataType.class.getSimpleName());
+        modelX509KeyData.setKeyDataName(apiKeyInfoContentJAXB.getName().getLocalPart());
+        modelX509KeyData.setKeyInfo(modelKeyInfo);
+        List<Object> x509IssuerSerialOrX509SKIOrX509SubjectNameList = apiKeyInfoContent.getX509IssuerSerialOrX509SKIOrX509SubjectName();
+        for (Object x509IssuerSerialOrX509SKIOrX509SubjectNameObj : x509IssuerSerialOrX509SKIOrX509SubjectNameList) {
+            JAXBElement x509IssuerSerialOrX509SKIOrX509SubjectNameJAXB = (JAXBElement)x509IssuerSerialOrX509SKIOrX509SubjectNameObj;
+            String tagName = x509IssuerSerialOrX509SKIOrX509SubjectNameJAXB.getName().getLocalPart();
+            Object x509IssuerSerialOrX509SKIOrX509SubjectName = x509IssuerSerialOrX509SKIOrX509SubjectNameJAXB.getValue();
+            
+            KeyDataValue modelKeyInfoValue = new KeyDataValue();
+            modelKeyInfoValue.setKeyDataName(tagName);
+            if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof byte[]) {
+                modelKeyInfoValue.setKeyDataValueBytes((byte[])x509IssuerSerialOrX509SKIOrX509SubjectName);
+            } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof String) {
+                modelKeyInfoValue.setKeyDataValueString((String)x509IssuerSerialOrX509SKIOrX509SubjectName);
+            } else if (x509IssuerSerialOrX509SKIOrX509SubjectName != null) {
+                throw new RuntimeException("Unrecognized Value for Element: " + tagName + ": " + x509IssuerSerialOrX509SKIOrX509SubjectName.getClass().getCanonicalName());
+            }
+            modelKeyInfoValue.setKeyDataValue(modelX509KeyData);
+            modelX509KeyData.getKeyDataValueList().add(modelKeyInfoValue);
+        }
+        return modelX509KeyData;
+    }
+
+    private static KeyDataValue mapKeyName(JAXBElement apiKeyInfoContentJAXB) {
+        KeyDataValue modelKeyNameKDV = new KeyDataValue();
+        modelKeyNameKDV.setKeyDataType(String.class.getSimpleName());
+        modelKeyNameKDV.setKeyDataName(apiKeyInfoContentJAXB.getName().getLocalPart());
+        modelKeyNameKDV.setKeyDataValueString((String)apiKeyInfoContentJAXB.getValue());
+        return modelKeyNameKDV;
+    }
+
+    private static KeyDataValue mapKeyValue(JAXBElement apiKeyInfoContentJAXB, List<KeyDataValue> keyInfoDataValues) {
+        KeyValueType kvt = (KeyValueType)apiKeyInfoContentJAXB.getValue();
+        KeyDataValue modelKeyValueKDV = new KeyDataValue();
+        modelKeyValueKDV.setKeyDataType(KeyValueType.class.getSimpleName());
+        modelKeyValueKDV.setKeyDataName(apiKeyInfoContentJAXB.getName().getLocalPart());
+        keyInfoDataValues.add(modelKeyValueKDV);
+        List<Object> kvObjList = kvt.getContent();
+        for (Object kvObj : kvObjList) {
+            if (kvObj instanceof JAXBElement) {
+                JAXBElement kvJAXB = (JAXBElement)kvObj;
+                Object childVal = kvJAXB.getValue();
+
+                KeyDataValue childKDV = new KeyDataValue();
+                childKDV.setKeyDataValue(modelKeyValueKDV);
+                childKDV.setKeyDataName(kvJAXB.getName().getLocalPart());
+                childKDV.setKeyDataType(childVal.getClass().getSimpleName());
+                modelKeyValueKDV.getKeyDataValueList().add(childKDV);
+
+                if (childVal instanceof DSAKeyValueType) {
+                    DSAKeyValueType dsaKeyVal = (DSAKeyValueType)childVal;
+                    String dsaKeyValueTagName = kvJAXB.getName().getLocalPart();
+                    KeyDataValue dsaKeyValKDV = new KeyDataValue(null, DSAKeyValueType.class.getSimpleName(), dsaKeyValueTagName, null, null, childKDV);
+                    childKDV.getKeyDataValueList().add(dsaKeyValKDV);
+
+                    KeyDataValue gValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "G", dsaKeyVal.getG(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(gValKDV);
+
+                    KeyDataValue jValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "J", dsaKeyVal.getJ(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(jValKDV);
+
+                    KeyDataValue pValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "P", dsaKeyVal.getP(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(pValKDV);
+
+                    KeyDataValue pGenCounterValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "PgenCounter", dsaKeyVal.getPgenCounter(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(pGenCounterValKDV);
+
+                    KeyDataValue qValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "Q", dsaKeyVal.getQ(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(qValKDV);
+
+                    KeyDataValue seedValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "Seed", dsaKeyVal.getSeed(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(seedValKDV);
+
+                    KeyDataValue yValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "Y", dsaKeyVal.getY(), null, dsaKeyValKDV);
+                    dsaKeyValKDV.getKeyDataValueList().add(yValKDV);
+                } else if (childVal instanceof RSAKeyValueType) {
+                    RSAKeyValueType rsaKeyVal = (RSAKeyValueType)childVal;
+                    String rsaKeyValueTagName = kvJAXB.getName().getLocalPart();
+                    KeyDataValue rsaKeyValKDV = new KeyDataValue(null, RSAKeyValueType.class.getSimpleName(), rsaKeyValueTagName, null, null, childKDV);
+                    childKDV.getKeyDataValueList().add(rsaKeyValKDV);
+
+                    KeyDataValue exponentValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "Exponent", rsaKeyVal.getExponent(), null, rsaKeyValKDV);
+                    rsaKeyValKDV.getKeyDataValueList().add(exponentValKDV);
+                    
+                    KeyDataValue modulusValKDV = new KeyDataValue(null, byte[].class.getSimpleName(), "Modulus", rsaKeyVal.getModulus(), null, rsaKeyValKDV);
+                    rsaKeyValKDV.getKeyDataValueList().add(modulusValKDV);
+                }
+            }
+        }
+        return modelKeyValueKDV;
+    }
+
+    private static KeyDataValue mapRetrievalMethod(String apiKeyInfoContentTagName, KeyInfo modelKeyInfo, RetrievalMethodType retrievalMethodType) {
+        KeyDataValue retrievalMethodTypeKDV = new KeyDataValue();
+        retrievalMethodTypeKDV.setKeyDataName(apiKeyInfoContentTagName);
+        retrievalMethodTypeKDV.setKeyDataType(RetrievalMethodType.class.getSimpleName());
+        retrievalMethodTypeKDV.setKeyInfo(modelKeyInfo);
+        KeyDataValue uriKDV = new KeyDataValue();
+        uriKDV.setKeyDataName("URI");
+        uriKDV.setKeyDataType(String.class.getSimpleName());
+        uriKDV.setKeyDataValue(retrievalMethodTypeKDV);
+        uriKDV.setKeyDataValueString(retrievalMethodType.getURI());
+        retrievalMethodTypeKDV.getKeyDataValueList().add(uriKDV);
+        KeyDataValue typeKDV = new KeyDataValue();
+        typeKDV.setKeyDataName("Type");
+        typeKDV.setKeyDataType(String.class.getSimpleName());
+        typeKDV.setKeyDataValue(retrievalMethodTypeKDV);
+        typeKDV.setKeyDataValueString(retrievalMethodType.getType());
+        retrievalMethodTypeKDV.getKeyDataValueList().add(typeKDV);
+        TransformsType transformsType = retrievalMethodType.getTransforms();
+        if (transformsType != null) {
+            List<TransformType> tTypeList = transformsType.getTransform();
+            for (TransformType tType : tTypeList) {
+                KeyDataValue transformKDV = new KeyDataValue();
+                transformKDV.setKeyDataName("Transform");
+                transformKDV.setKeyDataType(String.class.getSimpleName());
+                transformKDV.setKeyDataValue(retrievalMethodTypeKDV);
+                transformKDV.setKeyDataValueString(tType.getAlgorithm());
+                
+                for (Object xform : tType.getContent()) {
+                    SignatureTransformDataValue stdv = mapSignatureTransformDataValue(xform);
+                    KeyDataValue transformContentKDV = new KeyDataValue();
+                    transformContentKDV.setKeyDataType(stdv.getContentType());
+                    transformContentKDV.setKeyDataValueBytes(stdv.getContentBytes());
+                    transformContentKDV.setKeyDataValue(transformKDV);
+                    transformKDV.getKeyDataValueList().add(transformContentKDV);
+                }
+                
+                retrievalMethodTypeKDV.getKeyDataValueList().add(transformKDV);
+            }
+        }
+        return retrievalMethodTypeKDV;
+    }
+
+    private static KeyDataValue mapPGPDataType(String apiKeyInfoContentTagName, KeyInfo modelKeyInfo, PGPDataType pgpDataType) {
+        KeyDataValue pgpDataTypeKDV = new KeyDataValue();
+        pgpDataTypeKDV.setKeyDataName(apiKeyInfoContentTagName);
+        pgpDataTypeKDV.setKeyDataType(PGPDataType.class.getSimpleName());
+        pgpDataTypeKDV.setKeyInfo(modelKeyInfo);
+        
+        List<Object> pgpDataValues = pgpDataType.getContent();
+        for (Object pgpDataValue : pgpDataValues) {
+            if (pgpDataValue instanceof JAXBElement) {
+                JAXBElement pgpDataJAXB = (JAXBElement)pgpDataValue;
+                String tagName = pgpDataJAXB.getName().getLocalPart();
+                
+                KeyDataValue keyIDKDV = new KeyDataValue();
+                keyIDKDV.setKeyDataName(tagName);
+                keyIDKDV.setKeyDataValue(pgpDataTypeKDV);
+                if (pgpDataJAXB.getValue() instanceof String) {
+                    keyIDKDV.setKeyDataValueString((String)pgpDataJAXB.getValue());
+                } else {
+                    keyIDKDV.setKeyDataValueBytes((byte[])pgpDataJAXB.getValue());
+                }
+                pgpDataTypeKDV.getKeyDataValueList().add(keyIDKDV);
+            }
+        }
+        return pgpDataTypeKDV;
+    }
+    
+    private static KeyDataValue mapSPKIDataType(String apiKeyInfoContentTagName, KeyInfo modelKeyInfo, SPKIDataType spkiDataType) {
+        KeyDataValue spkiDataTypeKDV = new KeyDataValue();
+        spkiDataTypeKDV.setKeyDataName(apiKeyInfoContentTagName);
+        spkiDataTypeKDV.setKeyDataType(SPKIDataType.class.getSimpleName());
+        spkiDataTypeKDV.setKeyInfo(modelKeyInfo);
+        
+        List<Object> spkiDataValues = spkiDataType.getSPKISexpAndAny();
+        for (Object spkiDataValue : spkiDataValues) {
+            if (spkiDataValue instanceof JAXBElement) {
+                JAXBElement spkiDataJAXB = (JAXBElement)spkiDataValue;
+                String tagName = spkiDataJAXB.getName().getLocalPart();
+                
+                KeyDataValue keyIDKDV = new KeyDataValue();
+                keyIDKDV.setKeyDataName(tagName);
+                keyIDKDV.setKeyDataValue(spkiDataTypeKDV);
+                if (spkiDataJAXB.getValue() instanceof String) {
+                    keyIDKDV.setKeyDataValueString((String)spkiDataJAXB.getValue());
+                } else {
+                    keyIDKDV.setKeyDataValueBytes((byte[])spkiDataJAXB.getValue());
+                }
+                spkiDataTypeKDV.getKeyDataValueList().add(keyIDKDV);
+            } else {
+                throw new RuntimeException("Unrecognized type: " + spkiDataValue.getClass().getCanonicalName());
+            }
+        }
+        return spkiDataTypeKDV;
+    }
+
+    private static SignatureTransformDataValue mapSignatureTransformDataValue(Object xform) {
+        SignatureTransformDataValue sdv = new SignatureTransformDataValue();
+        if (xform instanceof String) {
+            sdv.setContentType(String.class.getSimpleName());
+            String xformStr = xform.toString();
+            byte[] xformBytes = xformStr.getBytes();
+            sdv.setContentBytes(xformBytes);
+        } else if (xform instanceof Element) {
+            sdv.setContentType(Element.class.getCanonicalName());
+            Element xformEl = (Element)xform;
+            String str = serializeTransformElement(xformEl);
+            try {
+                sdv.setContentBytes(str.getBytes("UTF-8"));
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to encode string due to: " + e.getMessage(), e);
+            }
+        } else if (xform instanceof byte[]) {
+            sdv.setContentType(byte[].class.getSimpleName());
+            sdv.setContentBytes((byte[])xform);
+        } else if (xform instanceof JAXBElement) {
+            sdv.setContentType(Element.class.getCanonicalName());
+            JAXBElement xformJAXB = (JAXBElement)xform;
+            DOMResult domResult = new DOMResult();
+            JAXB.marshal(xformJAXB, domResult);
+            Element xformEl = ((Document)domResult.getNode()).getDocumentElement();
+            String str = serializeTransformElement(xformEl);
+            try {
+                sdv.setContentBytes(str.getBytes("UTF-8"));
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to encode string due to: " + e.getMessage(), e);
+            }
+        } else {
+            throw new RuntimeException("Unrecognized type: " + xform.getClass().getCanonicalName());
+        }
+        return sdv;
+    }
+
+    private static String serializeTransformElement(Element xformEl) throws DOMException, LSException {
+        Document document = xformEl.getOwnerDocument();
+        DOMImplementationLS domImplLS = (DOMImplementationLS)document.getImplementation();
+        LSSerializer serializer = domImplLS.createLSSerializer();
+//        serializer.getDomConfig().setParameter("namespaces", true);
+//        serializer.getDomConfig().setParameter("namespace-declarations", true);
+        serializer.getDomConfig().setParameter("canonical-form", false);
+        serializer.getDomConfig().setParameter("xml-declaration", false);
+        String str = serializer.writeToString(xformEl);
+        return str;
+    }
 }
 	

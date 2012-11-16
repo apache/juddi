@@ -15,8 +15,14 @@ package org.apache.juddi.model;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -38,6 +44,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	private Integer maxServicesPerBusiness;
 	private Integer maxBindingsPerService;
 	private Integer maxTmodels;
+        private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public Publisher() {
 		super(null);
@@ -150,4 +157,13 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 		this.maxTmodels = maxTmodels;
 	}
 
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "publisher")
+	@OrderBy
+        public List<Signature> getSignatures() {
+                return signatures;
+        }
+
+        public void setSignatures(List<Signature> signatures) {
+                this.signatures = signatures;
+        }
 }

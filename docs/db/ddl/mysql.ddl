@@ -1,4 +1,19 @@
-
+<*
+ * Copyright 2001-2009 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
     create table j3_address (
         id bigint not null auto_increment,
         sort_code varchar(10),
@@ -94,6 +109,12 @@
         primary key (entity_key)
     );
 
+    create table j3_canonicalization_method (
+        id bigint not null auto_increment,
+        algorithm varchar(255),
+        primary key (id)
+    );
+
     create table j3_category_bag (
         id bigint not null auto_increment,
         primary key (id)
@@ -162,6 +183,23 @@
         primary key (id)
     );
 
+    create table j3_key_data_value (
+        id bigint not null auto_increment,
+        key_data_name varchar(255),
+        key_data_type varchar(255),
+        key_data_value longblob,
+        key_data_value_string longtext,
+        key_data_value_key bigint,
+        key_info_key bigint,
+        primary key (id)
+    );
+
+    create table j3_key_info (
+        id bigint not null auto_increment,
+        xml_id varchar(255),
+        primary key (id)
+    );
+
     create table j3_keyed_reference (
         id bigint not null auto_increment,
         key_name varchar(255),
@@ -195,9 +233,25 @@
         primary key (name)
     );
 
+    create table j3_object_type (
+        id bigint not null auto_increment,
+        encoding varchar(255),
+        mime_type varchar(255),
+        xml_id varchar(255),
+        signature_key bigint not null,
+        primary key (id)
+    );
+
+    create table j3_object_type_content (
+        id bigint not null auto_increment,
+        content longblob,
+        object_type_key bigint not null,
+        primary key (id)
+    );
+
     create table j3_overview_doc (
         id bigint not null auto_increment,
-        overview_url varchar(255) null,
+        overview_url varchar(255),
         overview_url_use_type varchar(255),
         entity_key varchar(255),
         tomodel_instance_info_id bigint,
@@ -252,6 +306,17 @@
         primary key (from_key, to_key)
     );
 
+    create table j3_reference (
+        id bigint not null auto_increment,
+        digest_method varchar(255),
+        digest_value longblob,
+        type varchar(255),
+        uri varchar(255),
+        xml_id varchar(255),
+        signed_info_key bigint not null,
+        primary key (id)
+    );
+
     create table j3_service_category_bag (
         id bigint not null,
         entity_key varchar(255) not null,
@@ -279,6 +344,56 @@
         business_key varchar(255) not null,
         service_key varchar(255) not null,
         primary key (business_key, service_key)
+    );
+
+    create table j3_signature (
+        id bigint not null auto_increment,
+        xml_id varchar(255),
+        binding_template_key varchar(255),
+        business_key varchar(255),
+        business_service_key varchar(255),
+        key_info bigint not null,
+        publisher_key varchar(255),
+        signature_value bigint not null,
+        signed_info bigint not null,
+        tmodel_key varchar(255),
+        primary key (id)
+    );
+
+    create table j3_signature_method (
+        id bigint not null auto_increment,
+        algorithm varchar(255),
+        primary key (id)
+    );
+
+    create table j3_signature_transform (
+        id bigint not null auto_increment,
+        transform varchar(255),
+        reference_key bigint not null,
+        primary key (id)
+    );
+
+    create table j3_signature_transform_data_value (
+        id bigint not null auto_increment,
+        content_bytes longblob,
+        content_type varchar(255),
+        signature_transform_key bigint not null,
+        primary key (id)
+    );
+
+    create table j3_signature_value (
+        id bigint not null auto_increment,
+        value_bytes longblob,
+        xml_id varchar(255),
+        primary key (id)
+    );
+
+    create table j3_signed_info (
+        id bigint not null auto_increment,
+        xml_id varchar(255),
+        canonicalization_method bigint not null,
+        signature_method bigint not null,
+        primary key (id)
     );
 
     create table j3_subscription (
@@ -527,6 +642,18 @@
         foreign key (tmodel_instance_info_id) 
         references j3_tmodel_instance_info (id);
 
+    alter table j3_key_data_value 
+        add index FK74B7E072843143EF (key_data_value_key), 
+        add constraint FK74B7E072843143EF 
+        foreign key (key_data_value_key) 
+        references j3_key_data_value (id);
+
+    alter table j3_key_data_value 
+        add index FK74B7E07238C90470 (key_info_key), 
+        add constraint FK74B7E07238C90470 
+        foreign key (key_info_key) 
+        references j3_key_info (id);
+
     alter table j3_keyed_reference 
         add index FK350C8454E075C8D7 (keyed_reference_group_id), 
         add constraint FK350C8454E075C8D7 
@@ -544,6 +671,18 @@
         add constraint FKF6224ED41DB72652 
         foreign key (category_bag_id) 
         references j3_category_bag (id);
+
+    alter table j3_object_type 
+        add index FK98BBFA04BC6AD65 (signature_key), 
+        add constraint FK98BBFA04BC6AD65 
+        foreign key (signature_key) 
+        references j3_signature (id);
+
+    alter table j3_object_type_content 
+        add index FK987A913E71FA643E (object_type_key), 
+        add constraint FK987A913E71FA643E 
+        foreign key (object_type_key) 
+        references j3_object_type (id);
 
     alter table j3_overview_doc 
         add index FK5CD8D0E8C5BF8903 (entity_key), 
@@ -587,6 +726,12 @@
         foreign key (from_key) 
         references j3_business_entity (entity_key);
 
+    alter table j3_reference 
+        add index FK493A4F951E480746 (signed_info_key), 
+        add constraint FK493A4F951E480746 
+        foreign key (signed_info_key) 
+        references j3_signed_info (id);
+
     alter table j3_service_category_bag 
         add index FK185A68076A68D45A (id), 
         add constraint FK185A68076A68D45A 
@@ -622,6 +767,78 @@
         add constraint FK629F290FEF04CFEE 
         foreign key (business_key) 
         references j3_business_entity (entity_key);
+
+    alter table j3_signature 
+        add index FKC05CA90256E87DED (publisher_key), 
+        add constraint FKC05CA90256E87DED 
+        foreign key (publisher_key) 
+        references j3_publisher (authorized_name);
+
+    alter table j3_signature 
+        add index FKC05CA90271CD8948 (binding_template_key), 
+        add constraint FKC05CA90271CD8948 
+        foreign key (binding_template_key) 
+        references j3_binding_template (entity_key);
+
+    alter table j3_signature 
+        add index FKC05CA90212F40D40 (business_service_key), 
+        add constraint FKC05CA90212F40D40 
+        foreign key (business_service_key) 
+        references j3_business_service (entity_key);
+
+    alter table j3_signature 
+        add index FKC05CA9028ACE9A26 (signed_info), 
+        add constraint FKC05CA9028ACE9A26 
+        foreign key (signed_info) 
+        references j3_signed_info (id);
+
+    alter table j3_signature 
+        add index FKC05CA9027CE6418E (signature_value), 
+        add constraint FKC05CA9027CE6418E 
+        foreign key (signature_value) 
+        references j3_signature_value (id);
+
+    alter table j3_signature 
+        add index FKC05CA9025793CF55 (tmodel_key), 
+        add constraint FKC05CA9025793CF55 
+        foreign key (tmodel_key) 
+        references j3_tmodel (entity_key);
+
+    alter table j3_signature 
+        add index FKC05CA902DA6C2DD0 (key_info), 
+        add constraint FKC05CA902DA6C2DD0 
+        foreign key (key_info) 
+        references j3_key_info (id);
+
+    alter table j3_signature 
+        add index FKC05CA902EF04CFEE (business_key), 
+        add constraint FKC05CA902EF04CFEE 
+        foreign key (business_key) 
+        references j3_business_entity (entity_key);
+
+    alter table j3_signature_transform 
+        add index FK726346F9256790B (reference_key), 
+        add constraint FK726346F9256790B 
+        foreign key (reference_key) 
+        references j3_reference (id);
+
+    alter table j3_signature_transform_data_value 
+        add index FK3242526C7B88B2A4 (signature_transform_key), 
+        add constraint FK3242526C7B88B2A4 
+        foreign key (signature_transform_key) 
+        references j3_signature_transform (id);
+
+    alter table j3_signed_info 
+        add index FKD2E7E5BB877110CC (canonicalization_method), 
+        add constraint FKD2E7E5BB877110CC 
+        foreign key (canonicalization_method) 
+        references j3_canonicalization_method (id);
+
+    alter table j3_signed_info 
+        add index FKD2E7E5BB1A25896 (signature_method), 
+        add constraint FKD2E7E5BB1A25896 
+        foreign key (signature_method) 
+        references j3_signature_method (id);
 
     alter table j3_subscription_match 
         add index FK5B9C2F19BEEE42E5 (subscription_key), 

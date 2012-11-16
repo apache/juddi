@@ -15,7 +15,14 @@
  * limitations under the License.
  *
  */ -->
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:uddi.joepublisher.com:businessone">
+<businessEntity 
+    xmlns="urn:uddi-org:api_v3" 
+    xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+    businessKey="uddi:uddi.joepublisher.com:businessone" 
+    xmlns:ns2="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2000/09/xmldsig# http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"
+>
   <discoveryURLs>
     <discoveryURL useType="home">http://www.businessone.com</discoveryURL>
     <discoveryURL useType="serviceList">http://www.businessone.com/services</discoveryURL>
@@ -57,4 +64,65 @@
   <identifierBag>
     <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
   </identifierBag>
+  <ns2:Signature>
+        <ns2:SignedInfo>
+          <ns2:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+          <ns2:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/>
+          <ns2:Reference URI="">
+              <ns2:Transforms>
+                  <ns2:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                    <ns2:XPath>
+                        not(ancestor-or-self::Signature)
+                    </ns2:XPath>
+                    <a xmlns="http://mycustomernamespace/" xmlns:myotherothersigprefix="http://www.other2.com/">
+                    </a>
+                   </ns2:Transform>
+              </ns2:Transforms>
+              <ns2:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+              <ns2:DigestValue>LfYUewvRm4ezL9t4X2d8Kxdzrj8=</ns2:DigestValue>
+          </ns2:Reference>
+      </ns2:SignedInfo>
+      <ns2:SignatureValue>UJYI43pA5O7gGfz3bXp8JOL4/YNE7nyDh3HoTAIYYkSn3xfbIf/MZg==</ns2:SignatureValue>
+      <ns2:KeyInfo>
+          <ns2:KeyName>Test Key Name</ns2:KeyName>
+          <ns2:KeyValue>
+              <ns2:DSAKeyValue>
+                  <ns2:P>TstP</ns2:P>
+                  <ns2:Q>TstQ</ns2:Q>
+                  <ns2:G>TstG</ns2:G>
+                  <ns2:Y>TstY</ns2:Y>
+                  <ns2:J>TstJ</ns2:J>
+                  <ns2:Seed>TestSeed</ns2:Seed>
+                  <ns2:PgenCounter>TestPGenCounter</ns2:PgenCounter>
+              </ns2:DSAKeyValue>
+              <ns2:RSAKeyValue>
+                  <ns2:Modulus>xA7SEU+e0yQH5rm9kbCDN9o3aPIo7HbP7tX6WOocLZAtNfyxSZDU16ksL6W
+      jubafOqNEpcwR3RdFsT7bCqnXPBe5ELh5u4VEy19MzxkXRgrMvavzyBpVRgBUwUlV
+      5foK5hhmbktQhyNdy/6LpQRhDUDsTvK+g9Ucj47es9AQJ3U=</ns2:Modulus>
+                  <ns2:Exponent>AQAB</ns2:Exponent>
+              </ns2:RSAKeyValue>
+          </ns2:KeyValue>
+          <ns2:MgmtData>Test Mgmt Data</ns2:MgmtData>
+          <ns2:RetrievalMethod Type="TestType" URI="TestURI">
+              <ns2:Transforms>
+                  <ns2:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                    <ns2:XPath xmlns:mydsigprefix="http://www.w3.org/2000/09/xmldsig#">
+                        not(ancestor-or-self::mydsigprefix:RetrievalMethod)
+                    </ns2:XPath>
+                   </ns2:Transform>
+              </ns2:Transforms>
+          </ns2:RetrievalMethod>
+          <ns2:PGPData>
+              <ns2:PGPKeyID>TstKeyID</ns2:PGPKeyID>
+              <ns2:PGPKeyPacket>TestPGPKeyPacket</ns2:PGPKeyPacket>
+          </ns2:PGPData>
+          <ns2:SPKIData>
+              <ns2:SPKISexp>TestSPKISexp</ns2:SPKISexp>
+          </ns2:SPKIData>
+          <ns2:X509Data xmlns="urn:uddi-org:api_v3">
+              <ns2:X509Certificate>MIIC9TCCArOgAwIBAgIET/GwbTALBgcqhkjOOAQDBQAwXjELMAkGA1UEBhMCQ0MxCzAJBgNVBAgTAlNUMQ0wCwYDVQQHEwRDaXR5MQwwCgYDVQQKEwNPcmcxEDAOBgNVBAsTB09yZ1VuaXQxEzARBgNVBAMTCkZpcnN0IExhc3QwHhcNMTIwNzAyMTQzMDA1WhcNMTIwOTMwMTQzMDA1WjBeMQswCQYDVQQGEwJDQzELMAkGA1UECBMCU1QxDTALBgNVBAcTBENpdHkxDDAKBgNVBAoTA09yZzEQMA4GA1UECxMHT3JnVW5pdDETMBEGA1UEAxMKRmlyc3QgTGFzdDCCAbcwggEsBgcqhkjOOAQBMIIBHwKBgQD9f1OBHXUSKVLfSpwu7OTn9hG3UjzvRADDHj+AtlEmaUVdQCJR+1k9jVj6v8X1ujD2y5tVbNeBO4AdNG/yZmC3a5lQpaSfn+gEexAiwk+7qdf+t8Yb+DtX58aophUPBPuD9tPFHsMCNVQTWhaRMvZ1864rYdcq7/IiAxmd0UgBxwIVAJdgUI8VIwvMspK5gqLrhAvwWBz1AoGBAPfhoIXWmz3ey7yrXDa4V7l5lK+7+jrqgvlXTAs9B4JnUVlXjrrUWU/mcQcQgYC0SRZxI+hMKBYTt88JMozIpuE8FnqLVHyNKOCjrh4rs6Z1kW6jfwv6ITVi8ftiegEkO8yk8b6oUZCJqIPf4VrlnwaSi2ZegHtVJWQBTDv+z0kqA4GEAAKBgGt63jF7cdAX8c43zp3IclOIp2nF5GOnqtRMXSjgNzk23gD7YwclqOkXz5rWnpLUsVVWZ1QYg6Bb0cOeh90rNrD6u5TqMQ9piJgoT9FENfdJs3B/YcpMfrBdsTk4Z7ESpS0HUTFnAymf8gQNSw9nQa0kPkAKBpJeV3Lh0X2FeU9DMAsGByqGSM44BAMFAAMvADAsAhQ4pPzahHdxHjey/WxXZgMW+1Y8uwIUI+G1wC6N1+zUcn1rJqp/2IbuXO4=</ns2:X509Certificate>
+              <ns2:X509SubjectName>CN=First Last,OU=OrgUnit,O=Org,L=City,ST=ST,C=CC</ns2:X509SubjectName>
+          </ns2:X509Data>
+      </ns2:KeyInfo>
+  </ns2:Signature>
 </businessEntity>

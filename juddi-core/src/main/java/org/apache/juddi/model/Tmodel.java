@@ -45,6 +45,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 	private List<TmodelDescr> tmodelDescrs = new ArrayList<TmodelDescr>(0);
 	private List<TmodelIdentifier> tmodelIdentifiers = new ArrayList<TmodelIdentifier>(0);
 	private TmodelCategoryBag categoryBag;
+        private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public Tmodel() {
 	}
@@ -132,4 +133,13 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.categoryBag = categoryBag;
 	}
 
+        @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tmodel")
+	@OrderBy
+        public List<Signature> getSignatures() {
+                return signatures;
+        }
+
+        public void setSignatures(List<Signature> signatures) {
+                this.signatures = signatures;
+        }
 }

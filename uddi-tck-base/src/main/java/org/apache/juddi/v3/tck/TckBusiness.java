@@ -14,11 +14,23 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 import java.rmi.RemoteException;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.Arrays;
 import java.util.List;
+import javax.xml.bind.JAXB;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +44,8 @@ import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -53,6 +67,10 @@ public class TckBusiness
     public final static String RIFTSAW_BUSINESS_KEY    = "uddi:riftsaw.jboss.org:business_redhat-jboss";
     public final static String RIFTSAW_BUSINESS_XML    = "uddi_data/bpel/riftsaw/businessEntity.xml";
 
+    final static String SIGNATURE_KEYSTORE = "uddi_data/signature/signature.jks";
+    final static String SIGNATURE_KEYSTORE_TYPE = "JKS";
+    final static String SIGNATURE_KEYSTORE_PASSWORD = "changeit";
+    final static String SIGNATURE_KEYSTORE_ALIAS = "mykey";
     
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
@@ -85,8 +103,14 @@ public class TckBusiness
 		deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
 	}
 	
+        public void saveJoePublisherBusinessX509Signature(String authInfoJoe) {
+            saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+            signBusiness(authInfoJoe, JOE_BUSINESS_KEY);
+            verifyBusinessSignature(authInfoJoe, JOE_BUSINESS_KEY);
+        }
+        
 	public void saveJoePublisherBusiness(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, true);
     }
 	
 	public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
@@ -176,8 +200,91 @@ public class TckBusiness
 			Assert.fail("No exception should be thrown");
 		}
 	}
-		
-	public void saveBusiness(String authInfo, String businessXML, String businessKey) {
+	
+        public void signBusiness(String authInfo, String businessKey) {
+            try {
+                GetBusinessDetail gb = new GetBusinessDetail();
+                gb.getBusinessKey().add(businessKey);
+                BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                BusinessEntity bizEntity = beOutList.get(0);
+                bizEntity.getSignature().clear();
+                BusinessEntity bizEntitySigned = signJAXBObject(bizEntity);
+                        
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfo);
+                sb.getBusinessEntity().add(bizEntitySigned);
+                publication.saveBusiness(sb);
+            } catch(Throwable e) {
+                logger.error(e.getMessage(),e);
+                Assert.fail("No exception should be thrown");
+            }
+        }
+        
+        public void verifyBusinessSignature(String authInfo, String businessKey) {
+            try {
+                GetBusinessDetail gb = new GetBusinessDetail();
+                gb.getBusinessKey().add(businessKey);
+                BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                BusinessEntity bizEntity = beOutList.get(0);
+                        
+                boolean sigOk = verifySignedJAXBObject(bizEntity);
+                assertTrue("Signature invalid!", sigOk);
+            } catch(Throwable e) {
+                logger.error(e.getMessage(),e);
+                Assert.fail("No exception should be thrown");
+            }
+        }
+        
+        private <T> T signJAXBObject(T jaxbObj) {
+            DOMResult domResult = new DOMResult();
+            JAXB.marshal(jaxbObj, domResult);
+            Document doc = ((Document)domResult.getNode());
+            Element docElement = doc.getDocumentElement();
+
+            try {            
+                KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
+                URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
+                ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
+                KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
+                PrivateKey privateKey = keyEntry.getPrivateKey();
+                Certificate origCert = keyEntry.getCertificate();
+                PublicKey validatingKey = origCert.getPublicKey();
+                TckSigningUtil.signDOM(docElement, privateKey, origCert);
+
+                DOMSource domSource = new DOMSource(doc);
+                T result = (T)JAXB.unmarshal(domSource, jaxbObj.getClass());
+                return result;
+            } catch (Exception e) {
+                throw new RuntimeException("Signature failure due to: " + e.getMessage(), e);
+            }
+        }
+        
+        private boolean verifySignedJAXBObject(Object obj) {
+            try {
+                DOMResult domResult = new DOMResult();
+                JAXB.marshal(obj, domResult);
+                Document doc = ((Document)domResult.getNode());
+                Element docElement = doc.getDocumentElement();
+
+                KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
+                URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
+                ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
+                KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
+                PrivateKey privateKey = keyEntry.getPrivateKey();
+                Certificate origCert = keyEntry.getCertificate();
+                PublicKey validatingKey = origCert.getPublicKey();
+                return TckSigningUtil.verifySignature(docElement, validatingKey);
+            } catch (Exception e) {
+                throw new RuntimeException (e);
+            }
+        }
+        
+        public void saveBusiness(String authInfo, String businessXML, String businessKey) {
+            saveBusiness(authInfo, businessXML, businessKey, false);
+        }
+	public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
 		try {
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
@@ -194,6 +301,10 @@ public class TckBusiness
 			List<BusinessEntity> beOutList = bd.getBusinessEntity();
 			BusinessEntity beOut = beOutList.get(0);
 
+            if (serialize) {
+                JAXB.marshal(beOut, new File("target/aftersave.xml"));
+            }
+            
 			assertEquals(beIn.getBusinessKey(), beOut.getBusinessKey());
 			
 			TckValidator.checkNames(beIn.getName(), beOut.getName());
@@ -201,7 +312,7 @@ public class TckBusiness
 			TckValidator.checkDiscoveryUrls(beIn.getDiscoveryURLs(), beOut.getDiscoveryURLs());
 			TckValidator.checkContacts(beIn.getContacts(), beOut.getContacts());
 			TckValidator.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
-			
+			TckValidator.checkSignatures(beIn.getSignature(), beOut.getSignature());
 		} catch(Throwable e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("No exception should be thrown");

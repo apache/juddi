@@ -73,7 +73,17 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	     } 
 	}
 	
-	
+	@Test
+	public void testJoePublisherBusinessEntitySignature() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
+			tckFindEntity.findAllBusiness();
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+		} finally {
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
 	
 	@Test
 	public void testJoePublisherBusinessEntity() {

@@ -19,12 +19,19 @@ package org.apache.juddi.v3.tck;
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
+import java.util.Arrays;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBElement;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLUnit;
 
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
@@ -43,6 +50,20 @@ import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
+import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
+import org.w3._2000._09.xmldsig_.DigestMethodType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.ObjectType;
+import org.w3._2000._09.xmldsig_.ReferenceType;
+import org.w3._2000._09.xmldsig_.SignatureMethodType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureValueType;
+import org.w3._2000._09.xmldsig_.SignedInfoType;
+import org.w3._2000._09.xmldsig_.TransformType;
+import org.w3._2000._09.xmldsig_.TransformsType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class TckValidator {
 
@@ -104,6 +125,198 @@ public class TckValidator {
 		}
 	}
 	
+        public static void checkSignatures(List<SignatureType> sigs1, List<SignatureType> sigs2) {
+            if (sigs1 == null || sigs2 == null) {
+			assertEquals(sigs1, sigs2);
+			return;
+            }
+            assertEquals(sigs1.size(), sigs2.size());
+            Iterator<SignatureType> sigsList1Itr = sigs1.iterator();
+            Iterator<SignatureType> sigsList2Itr = sigs2.iterator();
+            while (sigsList1Itr.hasNext()) {
+                    SignatureType sig1 = sigsList1Itr.next();
+                    SignatureType sig2 = sigsList2Itr.next();
+                    
+                    assertEquals(sig1.getId(), sig2.getId());
+                    checkKeyInfo(sig1.getKeyInfo(), sig2.getKeyInfo());
+                    checkObjectType(sig1.getObject(), sig2.getObject());
+                    checkSignatureValue(sig1.getSignatureValue(), sig2.getSignatureValue());
+                    checkSignedInfo(sig1.getSignedInfo(), sig2.getSignedInfo());
+            }
+        }
+        
+        public static void checkKeyInfo(KeyInfoType kit1, KeyInfoType kit2) {
+            if (kit1 == null || kit2 == null) {
+                    assertEquals(kit1, kit2);
+                    return;
+            }
+            assertEquals(kit1.getId(), kit2.getId());
+
+            DOMResult domResult1 = new DOMResult();
+            DOMResult domResult2 = new DOMResult();
+            JAXB.marshal(kit1, domResult1);
+            JAXB.marshal(kit2, domResult2);
+            
+            Document doc1 = (Document)domResult1.getNode();
+            DOMSource domSource1 = new DOMSource(doc1.getDocumentElement());
+            Document doc2 = (Document)domResult2.getNode();
+            DOMSource domSource2 = new DOMSource(doc2.getDocumentElement());
+            XMLUnit.setIgnoreAttributeOrder(true);
+            XMLUnit.setIgnoreComments(true);
+            XMLUnit.setIgnoreWhitespace(true);
+            Diff diff = new Diff(domSource1, domSource2);
+            assertTrue("Key info elements should match", diff.similar());
+        }
+        
+        public static void checkObjectType(List<ObjectType> obj1List, List<ObjectType> obj2List) {
+            if (obj1List == null || obj2List == null) {
+                assertEquals(obj1List, obj2List);
+                return;
+            }
+            assertEquals(obj1List.size(), obj2List.size());
+            Iterator<ObjectType> objList1Itr = obj1List.iterator();
+            Iterator<ObjectType> objList2Itr = obj2List.iterator();
+            while (objList1Itr.hasNext()) {
+                    ObjectType obj1 = objList1Itr.next();
+                    ObjectType obj2 = objList2Itr.next();
+                    assertEquals(obj1.getEncoding(), obj2.getEncoding());
+                    assertEquals(obj1.getId(), obj2.getId());
+                    assertEquals(obj1.getMimeType(), obj2.getMimeType());
+            }
+        }
+        
+        public static void checkSignatureValue(SignatureValueType sv1, SignatureValueType sv2) {
+            if (sv1 == null || sv2 == null) {
+                assertEquals(sv1, sv2);
+                return;
+            }
+            assertEquals(sv1.getId(), sv2.getId());
+            assertTrue(Arrays.equals(sv1.getValue(), sv2.getValue()));
+        }
+        
+        public static void checkSignedInfo(SignedInfoType si1, SignedInfoType si2) {
+            if (si1 == null || si2 == null) {
+                assertEquals(si1, si2);
+                return;
+            }
+            assertEquals(si1.getId(), si2.getId());
+            checkCanonicalizationMethod(si1.getCanonicalizationMethod(), si2.getCanonicalizationMethod());
+            checkReference(si1.getReference(), si2.getReference());
+            checkSignatureMethod(si1.getSignatureMethod(), si2.getSignatureMethod());
+        }
+        
+        public static void checkCanonicalizationMethod(CanonicalizationMethodType cm1, CanonicalizationMethodType cm2) {
+            if (cm1 ==  null || cm2 == null) {
+                assertEquals(cm1, cm2);
+                return;
+            }
+            assertEquals(cm1.getAlgorithm(), cm2.getAlgorithm());
+        }
+        
+        public static void checkReference(List<ReferenceType> r1List, List<ReferenceType> r2List) {
+            if (r1List == null || r2List == null) {
+                assertEquals(r1List, r2List);
+                return;
+            }
+            assertEquals(r1List.size(), r2List.size());
+            
+            Iterator<ReferenceType> rList1Itr = r1List.iterator();
+            Iterator<ReferenceType> rList2Itr = r2List.iterator();
+            while (rList1Itr.hasNext()) {
+                    ReferenceType r1 = rList1Itr.next();
+                    ReferenceType r2 = rList2Itr.next();
+                    checkReference(r1, r2);
+            }
+        }
+        
+        public static void checkReference(ReferenceType r1, ReferenceType r2) {
+            assertTrue(Arrays.equals(r1.getDigestValue(), r2.getDigestValue()));
+            assertEquals(r1.getId(), r2.getId());
+            assertEquals(r1.getType(), r2.getType());
+            assertEquals(r1.getURI(), r2.getURI());
+            
+            checkDigestMethod(r1.getDigestMethod(), r2.getDigestMethod());
+            checkTransforms(r1.getTransforms(), r2.getTransforms());
+        }
+        
+        public static void checkDigestMethod(DigestMethodType dm1, DigestMethodType dm2) {
+            if (dm1 == null || dm2 == null) {
+                assertEquals(dm1, dm2);
+                return;
+            }
+            assertEquals(dm1.getAlgorithm(), dm2.getAlgorithm());
+        }
+        
+        public static void checkTransforms(TransformsType tTypes1, TransformsType tTypes2) {
+            if (tTypes1 == null || tTypes2 == null) {
+                assertEquals(tTypes1, tTypes2);
+                return;
+            }
+            List<TransformType> tt1List = tTypes1.getTransform();
+            List<TransformType> tt2List = tTypes2.getTransform();
+            if (tt1List == null || tt2List == null) {
+                assertEquals(tt1List, tt2List);
+                return;
+            }
+            assertEquals(tt1List.size(), tt2List.size());
+            
+            Iterator<TransformType> ttList1Itr = tt1List.iterator();
+            Iterator<TransformType> ttList2Itr = tt2List.iterator();
+            while (ttList1Itr.hasNext()) {
+                    TransformType tx1 = ttList1Itr.next();
+                    TransformType tx2 = ttList2Itr.next();
+                    
+                    assertEquals(tx1.getAlgorithm(), tx2.getAlgorithm());
+                    checkTransformContentList(tx1.getContent(), tx2.getContent());
+            }
+        }
+        
+        public static void checkTransformContentList(List<Object> list1, List<Object> list2) {
+            if (list1 == null || list2 == null) {
+                assertEquals(list1, list2);
+                return;
+            }
+            assertEquals(list1.size(), list2.size());
+            
+            Iterator<Object> list1Itr = list1.iterator();
+            Iterator<Object> list2Itr = list2.iterator();
+            while (list1Itr.hasNext()) {
+                Object obj1 = list1Itr.next();
+                Object obj2 = list2Itr.next();
+
+                if (obj1 instanceof String) {
+                    assertEquals((String)obj1, obj2);
+                } else if (obj1 instanceof Element || obj1 instanceof JAXBElement) {
+                    if (obj1 instanceof JAXBElement) {
+                        DOMResult domResult = new DOMResult();
+                        JAXB.marshal(obj1, domResult);
+                        obj1 = ((Document)domResult.getNode()).getDocumentElement();
+                    }
+                    if (obj2 instanceof JAXBElement) {
+                        DOMResult domResult = new DOMResult();
+                        JAXB.marshal(obj2, domResult);
+                        obj2 = ((Document)domResult.getNode()).getDocumentElement();
+                    }
+                    XMLUnit.setIgnoreAttributeOrder(true);
+                    XMLUnit.setIgnoreComments(true);
+                    DOMSource domSrc1 = new DOMSource((Element)obj1);
+                    DOMSource domSrc2 = new DOMSource((Element)obj2);
+                    Diff diff = new Diff(domSrc1, domSrc2);
+                    assertTrue("Element should be the same", diff.similar());
+                } else {
+                    throw new RuntimeException("Unrecognized type: " + obj1.getClass());
+                }
+            }
+        }
+        
+        public static void checkSignatureMethod(SignatureMethodType smt1, SignatureMethodType smt2) {
+            if (smt1 == null || smt2 == null) {
+                assertEquals(smt1, smt2);
+                return;
+            }
+            assertEquals(smt1.getAlgorithm(), smt2.getAlgorithm());
+        }
+        
 	public static void checkContacts(Contacts contacts1, Contacts contacts2) {
 		if (contacts1 == null || contacts2 == null) {
 			assertEquals(contacts1, contacts2);
