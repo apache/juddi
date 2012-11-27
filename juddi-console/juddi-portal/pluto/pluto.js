@@ -16,7 +16,7 @@
  */
 toggleNavigation = function() {
     if (document.getElementById) {
-        navigationRoot = document.getElementById("navigation");
+        navigationRoot = document.getElementById("nav");
         if (navigationRoot) {
             navigationList = navigationRoot.getElementsByTagName("ul")[0];
             if (navigationList) {
