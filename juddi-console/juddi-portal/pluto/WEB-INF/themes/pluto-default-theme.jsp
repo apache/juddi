@@ -39,7 +39,7 @@ group (the left column) displays portlets with odd IDs, while the second group
         @import "<c:out value="${pageContext.request.contextPath}"/>/pluto.css";
         @import "<c:out value="${pageContext.request.contextPath}"/>/portlet-spec-1.0.css";
     </style>
-    <script type="text/javascript" src="<c:out value="${pagecontext.request.contextpath}"/>/pluto.js"></script>
+    <script type="text/javascript" src="<c:out value="${pageContext.request.contextPath}"/>/pluto.js"></script>
      <script type="text/javascript" >
 	 	// writeCookie("myCookie", "my name", 24);
 		// Stores the string "my name" in the cookie "myCookie" which expires after 24 hours.
