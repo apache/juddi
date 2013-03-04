@@ -25,7 +25,9 @@
 	 <prerequisites>
       <maven>3.0.3</maven>
     </prerequisites>
-	<modules>
-		<module>uddi-annotations</module>
-	</modules>
+    <modules>
+       <module>hello-world</module>
+       <module>simple-publish</module>
+       <module>uddi-annotations</module>
+    </modules>
 </project>
