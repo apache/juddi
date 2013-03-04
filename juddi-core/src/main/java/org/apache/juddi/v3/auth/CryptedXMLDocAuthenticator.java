@@ -112,7 +112,7 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 		// a userID must be specified.
 		if (userID == null) {
 			throw new UnknownUserException(new ErrorMessage(
-					"errors.auth.InvalidUserId", userID));
+					"errors.auth.InvalidUserId"));
 		}
 		// credential (password) must be specified.
 		if (credential == null) {

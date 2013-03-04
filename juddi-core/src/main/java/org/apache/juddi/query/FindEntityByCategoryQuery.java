@@ -243,7 +243,7 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 	 */
 	public void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<KeyedReference> keyedRefs) {
 		
-		if (keyedRefs != null & keyedRefs.size() > 0) {
+		if (keyedRefs != null && keyedRefs.size() > 0) {
 			// Sorting the collection by tModel Key
 			Collections.sort(keyedRefs, new KeyedRefTModelComparator());
 

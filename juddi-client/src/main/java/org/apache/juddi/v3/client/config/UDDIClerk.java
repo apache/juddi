@@ -143,6 +143,7 @@ public class UDDIClerk implements Serializable {
 			subscriptions.add(subscription);
 			holder.value = subscriptions;
 			getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).saveSubscription(authToken, holder);
+			if (log.isDebugEnabled()) log.debug("Registering subscription " +  subscription.getSubscriptionKey() + " completed.");
 		} catch (Exception e) {
 			log.error("Unable to register subscription " +  subscription.getSubscriptionKey()
 					+ " ." + e.getMessage(),e);
@@ -150,7 +151,6 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register subscriptionl " +  subscription.getSubscriptionKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.debug("Registering subscription " +  subscription.getSubscriptionKey() + " completed.");
 		subscription = holder.value.get(0);
 		return subscription;
 	}
@@ -175,6 +175,7 @@ public class UDDIClerk implements Serializable {
 			saveTModel.setAuthInfo(authToken);
 			saveTModel.getTModel().add(tModel);
 			tModelDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);
+			if (log.isDebugEnabled()) log.debug("Registering tModel " +  tModel.getTModelKey() + " completed.");
 		} catch (Exception e) {
 			log.error("Unable to register tModel " +  tModel.getTModelKey()
 					+ " ." + e.getMessage(),e);
@@ -182,7 +183,6 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register tModel " +  tModel.getTModelKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.debug("Registering tModel " +  tModel.getTModelKey() + " completed.");
 		return tModelDetail;
 	}
 	
@@ -208,6 +208,7 @@ public class UDDIClerk implements Serializable {
 			saveBinding.getBindingTemplate().add(binding);
 			BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
 			bindingTemplate = bindingDetail.getBindingTemplate().get(0);
+			if (log.isDebugEnabled()) log.debug("Registering template binding " + binding.getBindingKey() + " completed.");
 		} catch (Exception e) {
 			log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
 					+ " ." + e.getMessage(),e);
@@ -215,7 +216,6 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
 					+ " ." + t.getMessage(),t);
 		}
-		log.debug("Registering template binding " + binding.getBindingKey() + " completed.");
 		return bindingTemplate;
 	}
 	/**
@@ -241,6 +241,7 @@ public class UDDIClerk implements Serializable {
 			saveService.getBusinessService().add(service);
 			ServiceDetail serviceDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveService(saveService);
 			businessService = serviceDetail.getBusinessService().get(0);
+			if (log.isDebugEnabled()) log.debug("Registering service " + service.getName().get(0).getValue() + " completed.");
 		} catch (Exception e) {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + e.getMessage(),e);
@@ -248,7 +249,6 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register service " + service.getName().get(0).getValue()
 					+ " ." + t.getMessage(),t);
 		}
-		log.debug("Registering service " + service.getName().get(0).getValue() + " completed.");
 		return businessService;
 	}
 	public BusinessEntity register(BusinessEntity business) {
@@ -256,7 +256,7 @@ public class UDDIClerk implements Serializable {
 	}
 	/**
 	 * Register a service.
-	 * 
+	 * returns null if not successful 
 	 */
 	public BusinessEntity register(BusinessEntity business, Node node) {
 		
@@ -270,6 +270,7 @@ public class UDDIClerk implements Serializable {
 			saveBusiness.getBusinessEntity().add(business);
 			BusinessDetail businessDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBusiness(saveBusiness);
 			businessEntity = businessDetail.getBusinessEntity().get(0);
+			if (log.isDebugEnabled()) log.debug("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
 		} catch (Exception e) {
 			log.error("Unable to register business " + business.getName().get(0).getValue()
 					+ " ." + e.getMessage(),e);
@@ -277,7 +278,6 @@ public class UDDIClerk implements Serializable {
 			log.error("Unable to register business " + business.getName().get(0).getValue()
 					+ " ." + t.getMessage(),t);
 		}
-		log.debug("Registering businessEntity " + businessEntity.getName().get(0).getValue() + " completed.");
 		return businessEntity;
 	}
 	

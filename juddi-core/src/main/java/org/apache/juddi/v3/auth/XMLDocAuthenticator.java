@@ -109,7 +109,7 @@ public class XMLDocAuthenticator implements Authenticator
 	{
 		// a userID must be specified.
 		if (userID == null)
-			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId", userID));
+			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidUserId"));
 
 		// credential (password) must be specified.
 		if (credential == null)

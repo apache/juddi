@@ -121,7 +121,7 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<String> tmodelKeys) {
 		
 
-		if (tmodelKeys != null & tmodelKeys.size() > 0) {
+		if (tmodelKeys != null && tmodelKeys.size() > 0) {
 			qry.comma().pad().append(BusinessServiceQuery.ENTITY_NAME + " " + BusinessServiceQuery.ENTITY_ALIAS).pad();
 			qry.comma().pad().append(BindingTemplateQuery.ENTITY_NAME + " " + BindingTemplateQuery.ENTITY_ALIAS).pad();
 			

@@ -126,7 +126,7 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<String> tmodelKeys) {
 		
 
-		if (tmodelKeys != null & tmodelKeys.size() > 0) {
+		if (tmodelKeys != null && tmodelKeys.size() > 0) {
 			qry.comma().pad().append(BindingTemplateQuery.ENTITY_NAME + " " + BindingTemplateQuery.ENTITY_ALIAS).pad();
 			
 			StringBuffer thetaJoins = new StringBuffer(200);

@@ -82,8 +82,12 @@ public class AuthenticatorFactory {
 		}
 	
 		try {
-			// try to instantiate the Authenticator implementation
-			auth = (Authenticator)authClass.newInstance();
+			if (authClass!=null) {
+				// try to instantiate the Authenticator implementation
+				auth = (Authenticator)authClass.newInstance();
+			} else {
+				log.error("Could not load " + className + " authClass is null");
+			}
 		}
 		catch(Exception e) {
 			log.error("Exception while attempting to instantiate the implementation of Authenticator: " + authClass.getName() + "\n" + e.getMessage());

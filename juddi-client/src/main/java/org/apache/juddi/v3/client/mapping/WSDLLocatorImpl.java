@@ -84,7 +84,10 @@ public class WSDLLocatorImpl implements WSDLLocator {
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 		}
-		log.debug("importUrl: " + importUrl.toExternalForm());
+		if (importUrl != null)
+			log.debug("importUrl: " + importUrl.toExternalForm());
+		else
+			log.error("importUrl is null!");
 		return importUrl;
 	}
 

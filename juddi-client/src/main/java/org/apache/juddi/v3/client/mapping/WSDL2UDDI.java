@@ -480,8 +480,8 @@ public class WSDL2UDDI {
     	
     	FindTModel findTModel = new FindTModel();
     	CategoryBag categoryBag = new CategoryBag();
-    	
-    	if (namespace!=null && namespace!="") {
+    
+    	if (namespace!=null && namespace.length()!=0) {
     		KeyedReference namespaceReference = newKeyedReference(
     			"uddi:uddi.org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
@@ -516,7 +516,7 @@ public class WSDL2UDDI {
     	findTModel.setName(name);
     	
     	CategoryBag categoryBag = new CategoryBag();
-    	if (namespace!=null && namespace!="") {
+    	if (namespace!=null && namespace.length()!=0) {
     		KeyedReference namespaceReference = newKeyedReference(
     			"uddi:uddi.org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);

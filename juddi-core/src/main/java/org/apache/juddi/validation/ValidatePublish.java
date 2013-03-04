@@ -288,6 +288,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
+			maxBusinesses =-1; //in case the configuration is not available
 		}
 		//if we have the maxBusinesses set for this publisher then we need to make sure we did not exceed it.
 		if (maxBusinesses > 0) {
@@ -338,6 +339,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
+			maxServices = -1; //incase the configuration isn't available
 		}
 		//if we have the maxServices set for a business then we need to make sure we did not exceed it.
 		if (maxServices > 0) {
@@ -386,6 +388,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
+			maxBindings = -1; //incase the config isn't available
 		}
 		//if we have the maxBindings set for a service then we need to make sure we did not exceed it.
 		if (maxBindings > 0) {
@@ -434,6 +437,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
+			maxTModels = -1; //incase the config isn't available
 		}
 		//if we have the TModels set for a publisher then we need to make sure we did not exceed it.
 		if (maxTModels > 0) {

@@ -80,6 +80,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
     		authURL = AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_URL, DEFAULT_URL);
     	} catch (ConfigurationException ce) {
     		logger.error("Configuration exception occurred retrieving: " + Property.JUDDI_AUTHENTICATOR_URL);
+    		throw new NamingException(Property.JUDDI_AUTHENTICATOR_URL + " missing from config or config is not available.");
     	}
     	init(authURL);
     }

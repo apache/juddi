@@ -122,7 +122,7 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 	 */
 	public static void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<String> tmodelKeys) {
 		
-		if (tmodelKeys != null & tmodelKeys.size() > 0) {
+		if (tmodelKeys != null && tmodelKeys.size() > 0) {
 
 			StringBuffer thetaJoins = new StringBuffer(200);
 			int tblCount = 0;
