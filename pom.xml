@@ -248,7 +248,7 @@
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
 		<module>juddi-cxf</module>
-		<module>juddiv3-samples</module>
+		<module>juddi-examples</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
 		<module>docs</module>
