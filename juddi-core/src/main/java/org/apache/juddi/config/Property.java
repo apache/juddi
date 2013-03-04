@@ -26,6 +26,8 @@ public interface Property
 	public final static String JUDDI_NODE_ID                     ="juddi.nodeId";
 	public final static String JUDDI_TRANSFER_EXPIRATION_DAYS    ="juddi.transfer.expiration.days";
 	public final static String JUDDI_AUTHENTICATE_INQUIRY        ="juddi.authenticate.Inquiry";
+	public final static String JUDDI_AUTH_TOKEN_EXPIRATION		 ="juddi.auth.token.Expiration";
+	public final static String JUDDI_AUTH_TOKEN_TIMEOUT		     ="juddi.auth.token.Timeout";
 	public final static String JUDDI_SUBSCRIPTION_EXPIRATION_DAYS="juddi.subscription.expiration.days";
 	public final static String JUDDI_NOTIFICATION_START_BUFFER       ="juddi.notification.start.buffer";
 	public final static String JUDDI_NOTIFICATION_INTERVAL           ="juddi.notification.interval";

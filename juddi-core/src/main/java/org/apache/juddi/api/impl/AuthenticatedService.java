@@ -21,6 +21,11 @@ import java.util.Date;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.AuthenticatorFactory;
@@ -28,12 +33,15 @@ import org.apache.juddi.v3.error.AuthTokenRequiredException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
-/**
+/**Although this class is abstract, it provides token validation
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * 
+ * @author Alex O'Ree - modified to include token expiration validation
  */
 public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
+	Log logger = LogFactory.getLog(this.getClass());
 	
 	public UddiEntityPublisher getEntityPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {
 		
@@ -43,7 +51,35 @@ public abstract class AuthenticatedService {
 		org.apache.juddi.model.AuthToken modelAuthToken = em.find(org.apache.juddi.model.AuthToken.class, authInfo);
 		if (modelAuthToken == null)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
-		
+	
+		int allowedMinutesOfInactivity = 0;
+		try {
+			allowedMinutesOfInactivity = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_TIMEOUT, 0);
+		} catch (ConfigurationException ce) {
+			logger.error("Error reading property " + Property.JUDDI_AUTH_TOKEN_EXPIRATION + " from "
+					+ "the application's configuration. No automatic timeout token invalidation will occur. "
+					+ ce.getMessage(), ce);
+		}
+		int maxMinutesOfAge = 0;
+		try {
+			maxMinutesOfAge = AppConfig.getConfiguration().getInt(Property.JUDDI_AUTH_TOKEN_EXPIRATION, 0);
+		} catch (ConfigurationException ce) {
+			logger.error("Error reading property " + Property.JUDDI_AUTH_TOKEN_EXPIRATION + " from "
+					+ "the application's configuration. No automatic timeout token invalidation will occur. "
+					+ ce.getMessage(), ce);
+		}
+		// 0 or negative means token does not expire
+		if (allowedMinutesOfInactivity > 0 || maxMinutesOfAge > 0) {
+			// expire tokens after # minutes of inactivity or when a max age is reached
+			Date now = new Date();
+			//compare the time in milli-seconds
+			if ((now.getTime() > modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000) ||
+			    (now.getTime() > modelAuthToken.getCreated().getTime()  + maxMinutesOfAge * 60000)) {
+				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to inactivity or old age");
+				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+			}
+		}
+
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
