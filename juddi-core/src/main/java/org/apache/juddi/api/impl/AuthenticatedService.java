@@ -68,14 +68,21 @@ public abstract class AuthenticatedService {
 					+ "the application's configuration. No automatic timeout token invalidation will occur. "
 					+ ce.getMessage(), ce);
 		}
+		Date now = new Date();
 		// 0 or negative means token does not expire
-		if (allowedMinutesOfInactivity > 0 || maxMinutesOfAge > 0) {
-			// expire tokens after # minutes of inactivity or when a max age is reached
-			Date now = new Date();
-			//compare the time in milli-seconds
-			if ((now.getTime() > modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000) ||
-			    (now.getTime() > modelAuthToken.getCreated().getTime()  + maxMinutesOfAge * 60000)) {
-				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to inactivity or old age");
+		if (allowedMinutesOfInactivity > 0) {
+			// expire tokens after # minutes of inactivity
+			// compare the time in milli-seconds
+			if (now.getTime() > modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000l) {
+				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to inactivity");
+				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+			}
+		}
+		if (maxMinutesOfAge > 0) {
+			// expire tokens when max age is reached
+			// compare the time in milli-seconds
+			if (now.getTime() > modelAuthToken.getCreated().getTime()  + maxMinutesOfAge * 60000l) {
+				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to old age");
 				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
 			}
 		}
