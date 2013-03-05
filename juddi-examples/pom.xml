@@ -19,6 +19,7 @@
 		<version>3.1.5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	<groupId>org.apache.juddi.example</groupId>
 	<artifactId>juddi-examples</artifactId>
 	<name>jUDDI Examples</name>
 	<packaging>pom</packaging>

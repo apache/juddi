@@ -1,11 +1,10 @@
-This example contains one class: the SimplePublish.java. When
-executed it will obtain an AuthToken and use it to publish
-a Publisher, a Business and a Service. 
+This example is a command line demonstration of how to interact with JUDDI.
 
-The easiest way to run execute the main of this class in from
-your IDE. If your IDE has maven integration it should set up
-the project class path for you, and you can simple run it from 
-there.
+1. Start the jUDDI-server (juddi-tomcat or juddi-bundle)
+
+2. Check the settings of the META-INF/uddi.xml, to make sure the serverName and serverPort are set correctly.
+
+3. mvn package
 
 You should see the following output being written to the console:
 
