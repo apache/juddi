@@ -160,7 +160,7 @@ public class SimpleCreateTmodelPartition {
             System.out.println("Binding Key: " + bindingTemplates.getBindingTemplate().get(i).getBindingKey());
             //TODO The UDDI spec is kind of strange at this point.
             //An access point could be a URL, a reference to another UDDI binding key, a hosting redirector (which is 
-            //esscentially a pointer to another UDDI registry) or a WSDL Deployment
+            //essentially a pointer to another UDDI registry) or a WSDL Deployment
             //From an end client's perspective, all you really want is the endpoint.
 
             //So if you have a wsdlDeployment useType, fetch the wsdl and parse for the invocation URL

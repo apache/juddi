@@ -16,49 +16,33 @@
  */ -->
 
 <assembly>
-	<id></id>
+	<id>docs</id>
 	<formats>
 		<format>tar.gz</format>
 		<format>zip</format>
 	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<
 	<fileSets>
-	        <fileSet>
-                        <directory>${basedir}/devguide/target/docbook/publish/en-US/pdf</directory>
-                        <includes>
-                                <include>*.pdf</include>
-                        </includes>
-			<outputDirectory></outputDirectory>
+        <fileSet>
+             <directory>${basedir}/devguide/target/docbook/publish/en-US</directory>
+		     <outputDirectory>devguide</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>${basedir}/userguide/target/docbook/publish/en-US/pdf</directory>
-			<includes>
-				<include>*.pdf</include>
-			</includes>
-			<outputDirectory></outputDirectory>
+			<directory>${basedir}/userguide/target/docbook/publish/en-US</directory>
+			<outputDirectory>userguide</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>${basedir}</directory>
-			<includes>
-				<include>*.java</include>
-			</includes>
-			<outputDirectory></outputDirectory>
+			<directory>${basedir}/db</directory>
+			<outputDirectory>db</outputDirectory>
 		</fileSet>
-                <fileSet>
-                        <directory>${basedir}/examples/auth</directory>
-                        <includes>
-                                <include>*.pdf</include>
-                                <include>*.java</include>
-                        </includes>
-                        <outputDirectory>examples/auth</outputDirectory>
-                </fileSet>
-                <fileSet>
-                        <directory>${basedir}/uddi3-specification</directory>
-                        <includes>
-                                <include>*.pdf</include>
-				<include>*.txt</include>
-                                <include>*.java</include>
-                        </includes>
-                        <outputDirectory>uddi3-specification</outputDirectory>
-                </fileSet>
+        <fileSet>
+            <directory>${basedir}/uddi3-specification</directory>
+            <includes>
+                    <include>*.pdf</include>
+                    <include>*.txt</include>
+            </includes>
+            <outputDirectory>uddi3-specification</outputDirectory>
+          </fileSet>
 	</fileSets>
 </assembly>

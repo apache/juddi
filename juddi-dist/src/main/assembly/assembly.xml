@@ -1,0 +1,161 @@
+<!-- * Copyright 2001-2009 The Apache Software Foundation. * * Licensed under 
+	the Apache License, Version 2.0 (the "License"); * you may not use this file 
+	except in compliance with the License. * You may obtain a copy of the License 
+	at * * http://www.apache.org/licenses/LICENSE-2.0 * * Unless required by 
+	applicable law or agreed to in writing, software * distributed under the 
+	License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. * See the License for the specific 
+	language governing permissions and * limitations under the License. * */ -->
+<assembly>
+	<id>distro</id>
+	<formats>
+	    <format>zip</format>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<moduleSets>
+        <moduleSet>
+        <!-- Enable access to all projects in the current multi-module build -->
+        <useAllReactorProjects>true</useAllReactorProjects>
+    </moduleSet>
+    </moduleSets>
+	<dependencySets>
+		<!-- binary artifacts -->
+		<dependencySet>
+		    
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-client:jar</include>
+                <include>org.apache.juddi:juddi-core:jar</include>
+                <include>org.apache.juddi:uddi-tck-base:jar</include>
+                <include>org.apache.juddi:uddi-ws:jar</include>
+            </includes>
+            <excludes>
+                <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+                <exclude>org.apache.juddi:juddi-core:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+                <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:juddi-core:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+            </excludes>
+            
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+        
+        <!--  wars -->
+        <dependencySet>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddiv3-war:war</include>
+            </includes>
+            <outputFileNameMapping>juddiv3.war</outputFileNameMapping>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+       
+		<!-- The source archives JARs -->
+		<dependencySet>
+			<outputDirectory>src</outputDirectory>
+			<includes>
+				<include>org.apache.juddi:juddi-client:jar:sources</include>
+				<include>org.apache.juddi:juddi-core:jar:sources</include>
+				<include>org.apache.juddi:juddiv3-war:jar:sources</include>
+				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
+				<include>org.apache.juddi:uddi-ws:jar:sources</include>
+			</includes>
+			<useProjectArtifact>false</useProjectArtifact>
+			<useProjectAttachments>false</useProjectAttachments>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<useTransitiveFiltering>false</useTransitiveFiltering>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0755</fileMode>
+		</dependencySet>
+		
+		<dependencySet>
+            <outputDirectory>docs</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-docs:zip</include>
+            </includes>
+            <unpack>true</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+        
+        <dependencySet>
+            <outputDirectory>javadoc</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-client:jar:javadoc</include>
+                <include>org.apache.juddi:juddi-core:jar:javadoc</include>
+                <include>org.apache.juddi:juddiv3-war:jar:javadoc</include>
+                <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
+                <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+        
+        <!-- tomcat -->
+        <dependencySet>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-tomcat:zip</include>
+            </includes>
+            <unpack>true</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+        
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+            <directory>${basedir}</directory>
+            <outputDirectory></outputDirectory>
+            <filtered>true</filtered>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+			<includes>
+				<include>LICENSE</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+            <directory>../juddi-examples</directory>
+            <outputDirectory>examples</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <excludes>
+                <exclude>**/.settings/**</exclude>
+                <exclude>**/.classpath</exclude>
+                <exclude>**/.project</exclude>
+                <exclude>**/.gitignore</exclude>
+                <exclude>**/.svn/**</exclude>
+                <exclude>**/.svnignore</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </fileSet>
+	</fileSets>
+
+</assembly>

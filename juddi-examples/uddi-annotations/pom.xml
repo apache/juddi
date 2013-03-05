@@ -80,11 +80,11 @@
 		</dependency>
 	</dependencies>
 	<build>
+	   <finalName>uddi-annotations</finalName>
 		<plugins>
 		    <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1</version>
 				<configuration>
 					<excludes>
 						<exclude>*.xml</exclude>
@@ -101,7 +101,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4</version>
 				<configuration>
 					<skip>false</skip>
 					<includes>
@@ -113,7 +112,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.3</version>
 				<executions>
 					<execution>
 						<id>foo</id>
@@ -147,6 +145,48 @@
 						WEB-INF/classes/RENAME4MARKETING_juddi_custom_install_data/*</dependentWarExcludes>
 				</configuration>
 			</plugin>
+			<!-- examples are not very useful from a maven repo, so don't put it there -->
+		    <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <configuration>
+		            <skip>true</skip>
+		        </configuration>
+		    </plugin>
 		</plugins>
-	</build>
+	</build>  
+	
+	
+    <profiles>
+        <profile>
+        <id>demo</id>
+        <build>
+            <plugins>
+                <plugin>
+	                <groupId>org.codehaus.cargo</groupId>
+	                <artifactId>cargo-maven2-plugin</artifactId>
+	                <version>1.3.3</version>
+	                <configuration>
+	                    <container>
+	                        <containerId>tomcat6x</containerId>
+	                    </container>
+	                    <configuration>
+	                        <type>existing</type>
+	                        <home>${basedir}/../../juddi-tomcat-${project.parent.version}</home>
+	                    </configuration>
+	                    <deployables>
+	                        <deployable>
+	                            <groupId>org.apache.juddi.example</groupId>
+	                            <artifactId>uddi-annotations</artifactId>
+	                            <type>war</type>
+	                            
+	                        </deployable>
+	                     </deployables>
+	                 </configuration>
+	            </plugin>
+	        </plugins>
+        </build>  
+        </profile>
+    </profiles>
+	
 </project>

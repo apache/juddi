@@ -34,8 +34,8 @@
   </context-param>
   
    <context-param>
-	<param-name>uddi.client.manager.name</param-name>
-	<param-value>example-manager</param-value>
+	<param-name>uddi.client.config.file</param-name>
+	<param-value>/META-INF/uddi-annotations.xml</param-value>
   </context-param>
   
 

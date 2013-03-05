@@ -94,7 +94,8 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
         }
         
         try {
-            mbeanServer.registerMBean(this, listObjectName);
+        	if (! mbeanServer.isRegistered(listObjectName))
+        		mbeanServer.registerMBean(this, listObjectName);
         } catch (InstanceAlreadyExistsException e) {
             log.warn("", e);
         } catch (MBeanRegistrationException e) {
