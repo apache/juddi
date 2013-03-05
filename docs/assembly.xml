@@ -22,7 +22,6 @@
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
-	<
 	<fileSets>
         <fileSet>
              <directory>${basedir}/devguide/target/docbook/publish/en-US</directory>
