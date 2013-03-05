@@ -4,7 +4,7 @@ This example is a command line demonstration of how to interact with JUDDI.
 
 2. Check the settings of the META-INF/uddi.xml, to make sure the serverName and serverPort are set correctly.
 
-3. mvn package
+3. mvn -Pdemo test
 
 You should see the following output being written to the console:
 
