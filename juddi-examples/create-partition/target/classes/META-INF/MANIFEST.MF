@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Built-By: kstam
+Build-Jdk: 1.6.0_41
+Specification-Title: jUDDI Example Create Partition
+Specification-Version: 3.1.5-SNAPSHOT
+Specification-Vendor: The Apache Software Foundation
+Implementation-Title: jUDDI Example Create Partition
+Implementation-Version: 3.1.5-SNAPSHOT
+Implementation-Vendor-Id: org.apache.juddi.example
+Implementation-Vendor: The Apache Software Foundation
+Created-By: Maven Integration for Eclipse
+
