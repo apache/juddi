@@ -28,6 +28,7 @@
     </prerequisites>
     <modules>
        <module>hello-world</module>
+       <module>simple-browse</module>
        <module>simple-publish</module>
        <module>uddi-annotations</module>
     </modules>

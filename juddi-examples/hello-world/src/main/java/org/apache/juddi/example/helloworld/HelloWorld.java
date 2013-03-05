@@ -17,7 +17,6 @@
 package org.apache.juddi.example.helloworld;
 
 import org.uddi.api_v3.*;
-import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
