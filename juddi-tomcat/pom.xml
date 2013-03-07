@@ -44,12 +44,6 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<artifactId>juddi-core-openjpa</artifactId>
-			<groupId>org.apache.juddi</groupId>
-			<version>${project.parent.version}</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.4.2.0</version>
@@ -94,8 +88,6 @@
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
 								<property name="dependency.juddiv3.war" value="${basedir}/../juddi-cxf/target/juddi-cxf-${project.parent.version}.war" />
-								<echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
-								<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="package-tomcat" />
