@@ -15,6 +15,7 @@
  */
 package org.apache.juddi.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -58,6 +59,7 @@ public class ObjectTypeContent implements java.io.Serializable {
     }
     
     @Lob
+    @Column(length = 65636)
     public byte[] getContent() {
         return content;
     }

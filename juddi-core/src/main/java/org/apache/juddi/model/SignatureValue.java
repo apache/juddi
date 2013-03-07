@@ -45,7 +45,7 @@ public class SignatureValue implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name="value_bytes")
+    @Column(name="value_bytes", length = 65636)
     @Lob
     public byte[] getValue() {
         return value;

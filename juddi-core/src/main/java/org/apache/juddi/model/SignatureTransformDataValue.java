@@ -69,7 +69,7 @@ public class SignatureTransformDataValue implements java.io.Serializable {
     }
 
     @Lob
-    @Column(name="content_bytes")
+    @Column(name="content_bytes", length = 65636)
     public byte[] getContentBytes() {
         return contentBytes;
     }

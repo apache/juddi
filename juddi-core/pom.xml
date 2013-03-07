@@ -24,9 +24,6 @@
 	</parent>
 	<artifactId>juddi-core</artifactId>
 	<packaging>bundle</packaging>
-	<properties>
-		<persistence>hibernate</persistence>
-	</properties>
 	
 	<name>jUDDI Core</name>
 	<build>
@@ -57,6 +54,7 @@
 				</instructions>
 				</configuration>
 			</plugin>
+			<!--  
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -113,6 +111,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 	<dependencies>
@@ -193,13 +192,12 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>hibernate</id>
+		    <id>hibernate</id>
+		    <properties>
+                <persistence>hibernate</persistence>
+            </properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>persistence</name>
-					<value>hibernate</value>
-				</property>
 			</activation>
 			<dependencies>
 				<dependency>
@@ -308,12 +306,11 @@
 		</profile>
 		<profile>
 			<id>openjpa</id>
+			<properties>
+                <persistence>openjpa</persistence>
+            </properties>
 			<activation>
 			    <activeByDefault>false</activeByDefault>
-				<property>
-					<name>persistence</name>
-					<value>openjpa</value>
-				</property>
 			</activation>
 			<dependencies>
 				<dependency>

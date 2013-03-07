@@ -121,7 +121,7 @@ public class KeyDataValue implements java.io.Serializable {
     }
 
     @Lob
-    @Column(name="key_data_value")
+    @Column(name="key_data_value", length = 65636)
     public byte[] getKeyDataValueBytes() {
         return keyDataValueBytes;
     }
@@ -131,7 +131,7 @@ public class KeyDataValue implements java.io.Serializable {
     }
 
     @Lob
-    @Column(name="key_data_value_string")
+    @Column(name="key_data_value_string", length = 65636)
     public String getKeyDataValueString() {
         return keyDataValueString;
     }

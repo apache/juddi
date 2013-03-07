@@ -24,9 +24,6 @@
 	</parent>
 	<artifactId>juddi-core-openjpa</artifactId>
 	<packaging>bundle</packaging>
-	<properties>
-		<persistence>openjpa</persistence>
-	</properties>
 	
 	<name>jUDDI Core - OpenJPA</name>
 	<build>
@@ -67,6 +64,7 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
+							    <echo>PERSISTENCE***** ${persistence}</echo>
 							    <property name="persistence" value="${persistence}" />
 								<property name="juddi.core.dir" value="${basedir}/../juddi-core" />
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
@@ -198,12 +196,11 @@
 	<profiles>
 		<profile>
 			<id>hibernate</id>
+			<properties>
+                <persistence>hibernate</persistence>
+            </properties>
 			<activation>
 				<activeByDefault>false</activeByDefault>
-				<property>
-					<name>persistence</name>
-					<value>hibernate</value>
-				</property>
 			</activation>
 			<dependencies>
 				<dependency>
@@ -237,12 +234,11 @@
 		</profile>
 		<profile>
 			<id>openjpa</id>
+			<properties>
+                <persistence>openjpa</persistence>
+            </properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>persistence</name>
-					<value>openjpa</value>
-				</property>
 			</activation>
 			<dependencies>
 				<dependency>

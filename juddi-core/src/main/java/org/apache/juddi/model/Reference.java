@@ -88,7 +88,7 @@ public class Reference {
     }
 
     @Lob
-    @Column(name="digest_value")
+    @Column(name="digest_value", length = 65636)
     public byte[] getDigestValue() {
         return digestValue;
     }

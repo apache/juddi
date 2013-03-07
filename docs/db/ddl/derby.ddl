@@ -187,8 +187,8 @@
         id bigint not null,
         key_data_name varchar(255),
         key_data_type varchar(255),
-        key_data_value blob(255),
-        key_data_value_string clob(255),
+        key_data_value blob(65636),
+        key_data_value_string clob(65636),
         key_data_value_key bigint,
         key_info_key bigint,
         primary key (id)
@@ -244,7 +244,7 @@
 
     create table j3_object_type_content (
         id bigint not null,
-        content blob(255),
+        content blob(65636),
         object_type_key bigint not null,
         primary key (id)
     );
@@ -309,7 +309,7 @@
     create table j3_reference (
         id bigint not null,
         digest_method varchar(255),
-        digest_value blob(255),
+        digest_value blob(65636),
         type varchar(255),
         uri varchar(255),
         xml_id varchar(255),
@@ -375,7 +375,7 @@
 
     create table j3_signature_transform_data_value (
         id bigint not null,
-        content_bytes blob(255),
+        content_bytes blob(65636),
         content_type varchar(255),
         signature_transform_key bigint not null,
         primary key (id)
@@ -383,7 +383,7 @@
 
     create table j3_signature_value (
         id bigint not null,
-        value_bytes blob(255),
+        value_bytes blob(65636),
         xml_id varchar(255),
         primary key (id)
     );
