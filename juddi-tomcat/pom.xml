@@ -44,12 +44,6 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<artifactId>juddiv3-samples</artifactId>
-			<groupId>org.apache.juddi</groupId>
-			<version>${project.parent.version}</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
 			<artifactId>juddi-core-openjpa</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>${project.parent.version}</version>
@@ -101,7 +95,6 @@
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
 								<property name="dependency.juddiv3.war" value="${basedir}/../juddi-cxf/target/juddi-cxf-${project.parent.version}.war" />
 								<echo>JUDDIV3.WAR=${dependency.juddiv3.war}</echo>
-								<property name="dependency.juddiv3-samples.war" value="${basedir}/../juddiv3-samples/target/juddiv3-samples-${project.parent.version}.war" />
 								<property name="dependency.juddi.jar" value="${maven.dependency.org.apache.juddi.juddi.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
