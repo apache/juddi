@@ -102,7 +102,16 @@ public class SimplePublish {
 			Name myServName = new Name();
 			myServName.setValue("My Service");
 			myService.getName().add(myServName);
+			
 			// Add binding templates, etc...
+			BindingTemplate myBindingTemplate = new BindingTemplate();
+			AccessPoint accessPoint = new AccessPoint();
+			accessPoint.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());
+			accessPoint.setValue("http://example.org/services/myservice?wsdl");
+			myBindingTemplate.setAccessPoint(accessPoint);
+			BindingTemplates myBindingTemplates = new BindingTemplates();
+			myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
+			myService.setBindingTemplates(myBindingTemplates);
 			
 			// Adding the service to the "save" structure, using our publisher's authentication info and saving away.
 			SaveService ss = new SaveService();
@@ -112,7 +121,9 @@ public class SimplePublish {
 			String myServKey = sd.getBusinessService().get(0).getServiceKey();
 			System.out.println("myService key:  " + myServKey);
 			
-			// Now you have a publisher saved who in turn published a business and service via the jUDDI API!
+			// Now you have a publisher saved who in turn published a business and service via 
+			// the jUDDI API!
+			
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
