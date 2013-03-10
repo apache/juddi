@@ -500,8 +500,11 @@ public class MappingApiToModel {
 
 		modelBindingTemplate.setBusinessService(modelBusinessService);
 		modelBindingTemplate.setEntityKey(apiBindingTemplate.getBindingKey());
-		modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
-		modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
+        if (apiBindingTemplate.getAccessPoint()!=null)
+        {
+        	modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
+        	modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());
+        }
 		if (apiBindingTemplate.getHostingRedirector() != null) {
 			modelBindingTemplate.setHostingRedirector(apiBindingTemplate.getHostingRedirector().getBindingKey());
 		}
