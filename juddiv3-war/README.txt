@@ -1,28 +1,28 @@
 To support our users with different platform configurations we have the following profiles:
 
 
-1. Target platform Tomcat using OpenJPA and CXF.
+1. Target platform Tomcat and Derby using OpenJPA and CXF.
 
 Both OpenJPA and CXF are packaged up in the juddiv3.war.
 
 mvn clean package -P openjpa
 
 
-2. Target platform Tomcat using Hibernate and CXF
+2. Target platform Tomcat and Derby using Hibernate and CXF
 
 Both Hibernate and CXF are packaged up in the juddiv3.war.
 
 mvn clean package -P hibernate
 
 
-3. Target platform JBoss-6.x using Hibernate and JBossWS-native
+3. Target platform JBoss-6.x and HSQL using Hibernate and JBossWS-native
 
 The juddiv3.war relies on Hibernate and JBossWS-native in the appserver.
 
 mvn clean package -P hibernate-jbossws-native
 
 
-4. Target platform JBoss-6.x using Hibernate and JBossWS-cxf
+4. Target platform JBoss-6.x and HSQL using Hibernate and JBossWS-cxf
 
 The juddiv3.war relies on Hibernate and JBossWS-cxf in the appserver.
 
