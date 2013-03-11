@@ -38,7 +38,7 @@
 			<type>zip</type>
 		</dependency>
 		<dependency>
-			<artifactId>juddi-cxf</artifactId>
+			<artifactId>juddiv3-war</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>${project.parent.version}</version>
 			<type>war</type>

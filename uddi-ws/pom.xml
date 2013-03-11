@@ -59,6 +59,7 @@
           <artifactId>geronimo-jaxws_2.2_spec</artifactId>
           <version>1.0</version>
           <type>jar</type>
+          <scope>provided</scope>
         </dependency>
 	</dependencies>
 </project>

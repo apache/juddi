@@ -29,8 +29,9 @@ import org.apache.juddi.subscription.NotificationList;
 
 
 /**
- * This servlet is used to initialize the jUDDI webapp on
- * startup and cleanup the jUDDI webapp on shutdown.
+ * This servlet is used print out notifications received
+ * from subscriptions in the subscription portal. This servlet is
+ * used for this demo only and has no other purpose.
  * 
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */

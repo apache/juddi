@@ -31,7 +31,7 @@
 	<td>
 	<ul>
 	    <li><a href="/pluto/portal/jUDDI">jUDDI Portal (if installed)</a></li>
-	    <li><a href="services">View</a> service listing</li>
+	    <li><a href="/jbossws/services">View</a> service listing</li>
 	    <li><a href="http://juddi.apache.org/">Visit</a> the Apache-jUDDI Home Page</li>
 	    <li><a href="http://issues.apache.org/jira/browse/JUDDI">Report</a> a bug</li>
 	    <li><a href="http://juddi.apache.org/participate.html">Participate! We love you..</a></li>

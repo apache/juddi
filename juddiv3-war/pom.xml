@@ -24,8 +24,8 @@
 	</parent>
 	<artifactId>juddiv3-war</artifactId>
 	<packaging>war</packaging>
-	<name>jUDDI base-war Deployment</name>
-	<url>http://maven.apache.org</url>
+	<name>jUDDI war construction</name>
+	<url>http://juddi.apache.org</url>
 	<properties>
 		<cxf.version>2.3.1</cxf.version>
 	</properties>
@@ -34,23 +34,7 @@
 			<artifactId>uddi-ws</artifactId>
 			<groupId>org.apache.juddi</groupId>
 			<version>3.1.5-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jaxb-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.xml.ws</groupId>
-					<artifactId>jaxws-rt</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
-		
-		
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
@@ -68,67 +52,35 @@
 			<artifactId>commons-configuration</artifactId>
 			<version>1.6</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>${cxf.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxf.version}</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>cglib</groupId>
-					<artifactId>cglib</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-			<version>2.1_3</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 	<build>
-		<finalName>juddi</finalName>
+		<finalName>juddiv3</finalName>
 	</build>
 	<profiles>
+	    <!-- the hibernate-jbossws-native profile builds a war for jboss, where hibernate
+	    and jbossws are provided by the appserver -->
 		<profile>
-			<id>hibernate</id>
+			<id>hibernate-jbossws-native</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-			<properties>
-				<persistence>hibernate</persistence>
-			</properties>
 			<build>
-				<plugins>
-                        	<plugin>
-                               	<groupId>org.apache.maven.plugins</groupId>
-                               	<artifactId>maven-antrun-plugin</artifactId>
-                                <version>1.3</version>
-                                <executions>
-                                        <execution>
-                                                <id>foo</id>
-                                                <phase>process-classes</phase>
-                                                <configuration>
-                                                        <tasks>
-								<echo>persistence=${persistence}</echo>
-								<copy file="${basedir}/persistence/${persistence}-persistence.xml" tofile="${basedir}/target/classes/META-INF/persistence.xml" overwrite="true" />
-                                                                <copy file="${basedir}/persistence/juddi-orm.xml" tofile="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml" overwrite="true" />
-                                                        </tasks>
-                                                </configuration>
-                                                <goals>
-                                                        <goal>run</goal>
-                                                </goals>
-                                        </execution>
-                                </executions>
-                        	</plugin>
-				</plugins>
+		    <plugins>
+		      <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-war-plugin</artifactId>
+		        <configuration>
+		          <webResources>
+		            <resource>
+		              <directory>JPA/Hibernate-JBoss</directory>
+		            </resource>
+		            <resource>
+                      <directory>JAX-WS/JBossWS-Native</directory>
+                    </resource>
+		          </webResources>
+		        </configuration>
+		      </plugin>
+		    </plugins>
 			</build>
 			<dependencies>
 			 <dependency>
@@ -136,53 +88,179 @@
 	            <groupId>org.apache.juddi</groupId>
 	            <version>3.1.5-SNAPSHOT</version>
 	         </dependency>
+	         <dependency>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>persistence-api</artifactId>
+                    <version>1.0</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate</artifactId>
+                    <version>3.2.5.ga</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>3.3.1.ga</version>
+                    <scope>provided</scope>
+                </dependency>
+             
 			</dependencies>
 		</profile>
+		      <profile>
+            <id>hibernate-jbossws-cxf</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+            <plugins>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                  <webResources>
+                    <resource>
+                      <directory>JPA/Hibernate-JBoss</directory>
+                    </resource>
+                    <resource>
+                      <directory>JAX-WS/JBossWS-CXF</directory>
+                    </resource>
+                  </webResources>
+                </configuration>
+              </plugin>
+            </plugins>
+            </build>
+            <dependencies>
+             <dependency>
+                <artifactId>juddi-core</artifactId>
+                <groupId>org.apache.juddi</groupId>
+                <version>3.1.5-SNAPSHOT</version>
+             </dependency>
+             <dependency>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>persistence-api</artifactId>
+                    <version>1.0</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate</artifactId>
+                    <version>3.2.5.ga</version>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>3.3.1.ga</version>
+                    <scope>provided</scope>
+                </dependency>
+             
+            </dependencies>
+        </profile>
 		<profile>
+		    <!-- the hibernate profile builds a war for tomcat, with hibernate and cxf in
+		         the war -->
+            <id>hibernate</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+            <plugins>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                  <webResources>
+                    <resource>
+                      <directory>JPA/Hibernate</directory>
+                    </resource>
+                    <resource>
+                      <directory>JAX-WS/CXF</directory>
+                    </resource>
+                  </webResources>
+                </configuration>
+              </plugin>
+            </plugins>
+            </build>
+            <dependencies>
+             <dependency>
+                <artifactId>juddi-core</artifactId>
+                <groupId>org.apache.juddi</groupId>
+                <version>3.1.5-SNAPSHOT</version>
+             </dependency>
+             <dependency>
+                <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-transports-http</artifactId>
+                    <version>${cxf.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>cglib</groupId>
+                            <artifactId>cglib</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>   
+            </dependencies>
+        </profile>
+		<profile>
+		  <!-- the openjpa profile builds a war for tomcat, with openjpa and cxf in
+                 the war -->
 			<id>openjpa</id>
 			<activation>
 			    <activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<persistence>openjpa</persistence>
-			</properties>
 			<build>
-			<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.3</version>
-				<executions>
-					<execution>
-						<id>foo</id>
-						<phase>compile</phase>
-						<configuration>
-							<tasks>
-								<echo>persistence=${persistence}</echo>
-								<copy file="${basedir}/persistence/${persistence}-persistence.xml" tofile="${basedir}/target/classes/META-INF/persistence.xml" overwrite="true" />
-								<delete file="${basedir}/src/main/webapp/WEB-INF/classes/orm.xml" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			</plugins>
-			</build>
+            <plugins>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                  <webResources>
+                    <resource>
+                      <directory>JPA/OpenJPA</directory>
+                    </resource>
+                    <resource>
+                      <directory>JAX-WS/CXF</directory>
+                    </resource>
+                  </webResources>
+                </configuration>
+              </plugin>
+            </plugins>
+            </build>
 			<dependencies>
-			<dependency>
-            <artifactId>juddi-core-openjpa</artifactId>
-            <groupId>org.apache.juddi</groupId>
-            <version>3.1.5-SNAPSHOT</version> 
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+				<dependency>
+	            <artifactId>juddi-core-openjpa</artifactId>
+	            <groupId>org.apache.juddi</groupId>
+	            <version>3.1.5-SNAPSHOT</version> 
+	            <exclusions>
+	                <exclusion>
+	                    <groupId>junit</groupId>
+	                    <artifactId>junit</artifactId>
+	                </exclusion>
+	            </exclusions>
+	            </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                    <version>${cxf.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-transports-http</artifactId>
+                    <version>${cxf.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>cglib</groupId>
+                            <artifactId>cglib</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>	            
 			</dependencies>
 		</profile>
 	</profiles>
