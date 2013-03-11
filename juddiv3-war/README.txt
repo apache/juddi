@@ -29,7 +29,18 @@ The juddiv3.war relies on Hibernate and JBossWS-cxf in the appserver.
 mvn clean package -P hibernate-jbossws-cxf
 
 
-JBoss-5.x KNOWN ISSUE
+KNOWN ISSUES
+
+I. 15:14:37,275 SEVERE [RegistryServlet] jUDDI registry could not be started.
+org.apache.commons.configuration.ConfigurationException: java.util.zip.ZipException: 
+error in opening zip file: org.apache.commons.configuration.ConfigurationException: 
+org.apache.commons.configuration.ConfigurationException: java.util.zip.ZipException: 
+error in opening zip file
+
+Workaround: deploy juddiv3.war as a directory (not a zip file). 
+
+
+II. JBoss-5.x 
 Note that configuration 3 and 4 will also run on JBoss-5.x, but you may run into the following:
 ERROR [org.jboss.ws.metadata.wsdl.xmlschema.JBossXSErrorHandler] (main) 
 [domain:http://www.w3.org/TR/xml-schema-1]::[key=src-resolve]::Message=src-resolve: 
