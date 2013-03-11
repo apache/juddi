@@ -156,6 +156,22 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>../juddiv3-war</directory>
+            <outputDirectory>juddiv3-war</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <excludes>
+                <exclude>**/.settings/**</exclude>
+                <exclude>**/.classpath</exclude>
+                <exclude>**/.project</exclude>
+                <exclude>**/.gitignore</exclude>
+                <exclude>**/.svn/**</exclude>
+                <exclude>**/.svnignore</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </fileSet>
 	</fileSets>
 
 </assembly>
