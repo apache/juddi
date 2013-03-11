@@ -8,6 +8,16 @@
 		</unzip>
 	</target>
 	
+	<target name="copy-src">
+	        <mkdir dir="${basedir}/src/main/java"/>
+	        <echo>copy: ${juddi.core.dir}/src/test/java</echo>
+	        <copy todir="${basedir}/src/main/java">
+	            <fileset dir="${juddi.core.dir}/src/main/java">
+	               <include name="**/*.java"/>
+	            </fileset>
+	        </copy>
+	    </target>
+	
 	<target name="copy-tests">
         <mkdir dir="${basedir}/src/test/java"/>
         <echo>copy: ${juddi.core.dir}/src/test/java</echo>
@@ -18,6 +28,6 @@
         </copy>
     </target>
 	
-	<target name="package-jar" depends="unzip-jar,copy-tests"/>
+	<target name="package-jar" depends="copy-src,copy-tests,unzip-jar"/>
 
 </project>
