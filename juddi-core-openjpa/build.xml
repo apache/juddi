@@ -1,7 +1,4 @@
 <project name="juddi-core-jpa" default="package-jar" basedir=".">
-	<property file="package.properties"/>
-	<property name="lib.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/lib"/>
-	<property name="webapps.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps"/>
 
 	<target name="unzip-jar">
 		<mkdir dir="${basedir}/target/classes"/>
@@ -11,12 +8,16 @@
 		</unzip>
 	</target>
 	
-	<target name="copy-resources" depends="unzip-jar">
-		<copy file="${juddi.core.dir}/src/main/resources/persistence/${persistence}-persistence.xml"
-			tofile="${basedir}/target/classes/META-INF/persistence.xml"
-			overwrite="true"/>
-	</target>
+	<target name="copy-tests">
+        <mkdir dir="${basedir}/src/test/java"/>
+        <echo>copy: ${juddi.core.dir}/src/test/java</echo>
+        <copy todir="${basedir}/src/test/java">
+        	<fileset dir="${juddi.core.dir}/src/test/java">
+        	   <include name="**/*.java"/>
+        	</fileset>
+        </copy>
+    </target>
 	
-	<target name="package-jar" depends="copy-resources"/>
+	<target name="package-jar" depends="unzip-jar,copy-tests"/>
 
 </project>

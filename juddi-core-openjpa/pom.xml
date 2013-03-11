@@ -26,22 +26,9 @@
 	<packaging>bundle</packaging>
 	
 	<name>jUDDI Core - OpenJPA</name>
+	<description>This module enhances the JPA Entity classes from the juddi-core and reruns the same tests using OpenJPA.</description>
 	<build>
-		<plugins>	
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<excludes>
-						<exclude>**/persistence</exclude>
-						<exclude>**/persistence.xml</exclude>
-						<exclude>**/hibernate-persistence.xml</exclude>
-						<exclude>**/openjpa-persistence.xml</exclude>
-						<exclude>**/juddi-orm.xml</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
@@ -49,7 +36,7 @@
 				<configuration>
 				<instructions>
 				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.api.util, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.subscription.notify, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
-				<Include-Resource>juddi_install_data=target/classes/juddi_install_data, META-INF/persistence.xml=target/classes/META-INF/persistence.xml, target/classes/messages.properties</Include-Resource>
+				<Include-Resource>juddi_install_data=target/classes/juddi_install_data, target/classes/messages.properties</Include-Resource>
 			
 				</instructions>
 				</configuration>
@@ -60,14 +47,12 @@
 				<version>1.3</version>
 				<executions>
 					<execution>
-						<id>foo</id>
+						<id>unzip</id>
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-							    <echo>PERSISTENCE***** ${persistence}</echo>
-							    <property name="persistence" value="${persistence}" />
-								<property name="juddi.core.dir" value="${basedir}/../juddi-core" />
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
+								<property name="juddi.core.dir" value="${basedir}/../juddi-core" />
 								<echo>Enhancing juddi-core=${dependency.juddi.core}</echo>
 								<ant antfile="${basedir}/build.xml">
 									<target name="package-jar" />
@@ -80,27 +65,36 @@
 					</execution>
 				</executions>
 				</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-3</version>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>${basedir}/assembly.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
+				<plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>openjpa-maven-plugin</artifactId>
+                  <version>1.2</version>
+                  <executions>
+                      <execution>
+                              <id>enhancer</id>
+                                  <phase>process-classes</phase>
+                                  <configuration>
+                                      <classes>
+                            ${project.build.outputDirectory}/org/apache/juddi/model/
+                                                        </classes>
+                            <addDefaultConstructor>true</addDefaultConstructor>
+                            <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+                            <persistenceXmlFile>src/test/resources/META-INF/persistence.xml</persistenceXmlFile>
+                            </configuration>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.openjpa</groupId>
+                        <artifactId>openjpa</artifactId>
+                        <version>1.2.2</version>
+                    </dependency>
+                            </dependencies>
+                </plugin>
+		
 		</plugins>
 	</build>
 	<dependencies>
@@ -110,11 +104,20 @@
                         <version>${project.parent.version}</version>
                 </dependency>
                 <dependency>
+                        <groupId>commons-configuration</groupId>
+                        <artifactId>commons-configuration</artifactId>
+                        <version>1.6</version>
+                </dependency>
+                <dependency>
                         <groupId>org.apache.juddi</groupId>
                         <artifactId>juddi-client</artifactId>
                         <version>${project.parent.version}</version>
                 </dependency>
-
+                <dependency>
+                    <groupId>org.apache.openjpa</groupId>
+                    <artifactId>openjpa</artifactId>
+                    <version>1.2.2</version>
+                </dependency>
                 <dependency>
                         <groupId>javax.persistence</groupId>
                         <artifactId>persistence-api</artifactId>
@@ -125,11 +128,7 @@
                         <artifactId>commons-codec</artifactId>
                         <version>1.3</version>
                 </dependency>
-                <dependency>
-                        <groupId>commons-configuration</groupId>
-                        <artifactId>commons-configuration</artifactId>
-                        <version>1.6</version>
-                </dependency>
+                
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-core</artifactId>
@@ -193,100 +192,5 @@
         </dependency>
 
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>hibernate</id>
-			<properties>
-                <persistence>hibernate</persistence>
-            </properties>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.hibernate</groupId>
-					<artifactId>hibernate</artifactId>
-					<version>3.2.5.ga</version>
-					<exclusions>
-						<exclusion>
-							<groupId>cglib</groupId>
-							<artifactId>cglib</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-				<dependency>
-					<groupId>org.hibernate</groupId>
-					<artifactId>hibernate-entitymanager</artifactId>
-					<version>3.3.1.ga</version>
-					<exclusions>
-						<exclusion>
-							<groupId>cglib</groupId>
-							<artifactId>cglib</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-				<dependency>
-					<groupId>cglib</groupId>
-					<artifactId>cglib-nodep</artifactId>
-					<version>2.1_3</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>openjpa</id>
-			<properties>
-                <persistence>openjpa</persistence>
-            </properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.apache.openjpa</groupId>
-					<artifactId>openjpa</artifactId>
-					<version>1.2.2</version>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-				<plugin>
-                        	<groupId>org.codehaus.mojo</groupId>
-                                <artifactId>openjpa-maven-plugin</artifactId>
-                                <version>1.0</version>
-                                <executions>
-                                	<execution>
-                                        	<id>enhancer</id>
-                                                <phase>process-classes</phase>
-                                                <configuration>
-                                                	<classes>
-							${project.build.outputDirectory}/org/apache/juddi/model/
-                                                        </classes>
-							<toolProperties>
-                                                        	<property>
-                                                                	<name>addDefaultConstructor</name>
-                                                                        <value>true</value>
-								</property>
-								<property>
-									<name>enforcePropertyRestrictions</name>
-									<value>true</value>
-								</property>
-							</toolProperties>
-							</configuration>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.openjpa</groupId>
-						<artifactId>openjpa</artifactId>
-						<version>1.2.2</version>
-					</dependency>
-                        	</dependencies>
-				</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	
 </project>
