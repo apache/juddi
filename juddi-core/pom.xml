@@ -25,6 +25,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3</version>
+				<!-- 
 				<configuration>
 					<excludes>
 						<exclude>**/persistence</exclude>
@@ -34,6 +35,7 @@
 						<exclude>**/juddi-orm.xml</exclude>
 					</excludes>
 				</configuration>
+				 -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -63,45 +65,9 @@
 				<version>1.3</version>
 				<executions>
 					<execution>
-						<id>initialize-meta-inf</id>
-						<phase>initialize</phase>
-						<configuration>
-							<tasks>
-								<echo>PERSISTENCE=${persistence}</echo>
-								<delete dir="src/main/java/META-INF" />
-								<delete dir="src/main/resources/META-INF" />
-								<mkdir dir="src/main/java/META-INF" />
-								<copy
-									file="src/main/resources/persistence/${persistence}-persistence.xml"
-									tofile="src/main/java/META-INF/persistence.xml" overwrite="true" />
-								<mkdir dir="src/main/resources/META-INF" />
-								<copy
-									file="src/main/resources/persistence/${persistence}-persistence.xml"
-									tofile="src/main/resources/META-INF/persistence.xml" overwrite="true" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>remove-meta-inf</id>
-						<phase>deploy</phase>
-						<configuration>
-							<tasks>
-								<delete dir="src/main/java/META-INF" />
-								<delete dir="src/main/resources/META-INF" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
 						<phase>generate-resources</phase>
 						<configuration>
 							<tasks>
-								<echo>PERSISTENCE = ${persistence}</echo>
 								<copy file="src/main/resources/version/Release.java.template"
 									tofile="src/main/java/org/apache/juddi/config/Release.java"
 									overwrite="true">
@@ -110,7 +76,6 @@
 									</filterset>
 								</copy>
 								<delete dir="juddi-derby-test-db" />
-								<mkdir dir="src/main/java/META-INF" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -253,27 +218,6 @@
 								<format>true</format>
 							</componentProperties>
 						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.3</version>
-						<executions>
-							<execution>
-								<id>init-orm</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<tasks>
-										<mkdir dir="src/main/resources/META-INF" />
-										<copy file="src/main/resources/juddi-orm.xml" tofile="src/main/resources/META-INF/orm.xml"
-											overwrite="true" />
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 				<pluginManagement>

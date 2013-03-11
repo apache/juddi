@@ -4,7 +4,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
              version="1.0">
   <persistence-unit name="juddiDatabase" transaction-type="RESOURCE_LOCAL">
-    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
     
     <!-- entity classes -->
     <class>org.apache.juddi.model.Address</class>
@@ -70,31 +70,30 @@
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
     
     <properties>
-      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='dropDB,add')"/>
-      <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
-      <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
-      <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
-      
+      <property name="hibernate.archive.autodetection" value="class"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.show_sql" value="false"/>
+
       <!-- derby connection properties -->
-      <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-      <property name="openjpa.ConnectionURL" value="jdbc:derby:memory:juddi-derby-test-db;create=true"/>
-      <property name="openjpa.ConnectionUserName" value=""/>
-      <property name="openjpa.ConnectionPassword" value=""/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+      <property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+      <property name="hibernate.connection.url" value="jdbc:derby:memory:juddi-derby-test-db;create=true"/>
+      <property name="hibernate.connection.username" value=""/>
+      <property name="hibernate.connection.password" value=""/>
+
+ 	  <!--  mysql connection properties 
+
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+      <property name="hibernate.connection.username" value="juddiv3" />
+      <property name="hibernate.connection.password" value="" />
+      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/juddiv3" />
+-->
       
-      
-      <!--  mysql connection properties
-      <property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/juddi"/>
-      <property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-      <property name="openjpa.ConnectionUserName" value="juddiv3"/>
-      <property name="openjpa.ConnectionPassword" value=""/>
-      -->
-      
-      <!--  pgsql connection properties 
-      <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost/juddi"/>
-      <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver"/>
-      <property name="openjpa.ConnectionUserName" value="juddi"/>
-      <property name="openjpa.ConnectionPassword" value="juddi"/>
-      -->
+      <!-- connection pool properties -->
+      <property name="hibernate.dbcp.maxActive" value="100"/>
+      <property name="hibernate.dbcp.maxIdle" value="30"/>
+      <property name="hibernate.dbcp.maxWait" value="10000"/>
       
     </properties>
   </persistence-unit>
