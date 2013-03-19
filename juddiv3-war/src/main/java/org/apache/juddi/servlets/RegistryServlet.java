@@ -47,6 +47,7 @@ public class RegistryServlet extends HttpServlet {
 		} catch (ConfigurationException e) {
 			logger.error("jUDDI registry could not be started."
 					+ e.getMessage(), e);
+			throw new ServletException(e.getMessage(),e);
 		}
 	}
 	
