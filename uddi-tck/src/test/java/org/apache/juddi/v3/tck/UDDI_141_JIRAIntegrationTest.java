@@ -67,12 +67,12 @@ public class UDDI_141_JIRAIntegrationTest {
     static final String MISSING_RESOURCE = "Can't find resource for bundle";
 
     @AfterClass
-    public void stopManager() throws ConfigurationException {
+    public static void stopManager() throws ConfigurationException {
         manager.stop();
     }
 
     @BeforeClass
-    public void startManager() throws ConfigurationException {
+    public static void startManager() throws ConfigurationException {
         manager = new UDDIClerkManager();
         manager.start();
 
