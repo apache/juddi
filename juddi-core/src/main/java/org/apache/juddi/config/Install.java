@@ -330,7 +330,7 @@ public class Install {
 		
 		validatePublish.validateNames(businessEntity.getName());
 		validatePublish.validateDiscoveryUrls(businessEntity.getDiscoveryURLs());
-		validatePublish.validateContacts(businessEntity.getContacts());
+		validatePublish.validateContacts(businessEntity.getContacts(),config);
 		validatePublish.validateCategoryBag(businessEntity.getCategoryBag(),config);
 		validatePublish.validateIdentifierBag(businessEntity.getIdentifierBag(),config);
 
@@ -435,7 +435,7 @@ public class Install {
 		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
 		
 		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag(), config);
-		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails());
+		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails(),config);
 
 	}
 	

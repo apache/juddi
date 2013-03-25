@@ -16,14 +16,12 @@ package org.apache.juddi.model;
  */
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 /**
  * @author <a href="mailto:kurt@apache.org">Kurt T Stam</a>
  */
@@ -38,6 +36,7 @@ public class AuthToken implements java.io.Serializable {
 	private Date lastUsed;
 	private int numberOfUses;
 	private int tokenState;
+	
 
 	public AuthToken() {
 	}
@@ -78,7 +77,7 @@ public class AuthToken implements java.io.Serializable {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_used", nullable = false, length = 29)
 	public Date getLastUsed() {

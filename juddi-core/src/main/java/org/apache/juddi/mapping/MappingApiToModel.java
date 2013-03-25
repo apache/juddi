@@ -17,7 +17,6 @@
 
 package org.apache.juddi.mapping;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -60,8 +59,6 @@ import org.w3._2000._09.xmldsig_.X509DataType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSException;
 import org.w3c.dom.ls.LSSerializer;
@@ -500,7 +497,7 @@ public class MappingApiToModel {
 
 		modelBindingTemplate.setBusinessService(modelBusinessService);
 		modelBindingTemplate.setEntityKey(apiBindingTemplate.getBindingKey());
-        if (apiBindingTemplate.getAccessPoint()!=null)
+       if (apiBindingTemplate.getAccessPoint()!=null)
         {
         	modelBindingTemplate.setAccessPointType(apiBindingTemplate.getAccessPoint().getUseType());
         	modelBindingTemplate.setAccessPointUrl(apiBindingTemplate.getAccessPoint().getValue());

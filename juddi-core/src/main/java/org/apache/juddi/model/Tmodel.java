@@ -73,7 +73,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.categoryBag = categoryBag;
 	}
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, length = 255)
 	public String getName() {
 		return this.name;
 	}
@@ -81,7 +81,7 @@ public class Tmodel extends UddiEntity implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}

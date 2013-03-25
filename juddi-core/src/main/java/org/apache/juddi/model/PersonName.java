@@ -70,7 +70,7 @@ public class PersonName implements java.io.Serializable {
 		this.contact = contact;
 	}
 
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}

@@ -70,7 +70,7 @@ public class TmodelInstanceInfoDescr implements java.io.Serializable {
 		this.tmodelInstanceInfo = tmodelInstanceInfo;
 	}
 
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}
@@ -78,7 +78,7 @@ public class TmodelInstanceInfoDescr implements java.io.Serializable {
 		this.langCode = langCode;
 	}
 
-	@Column(name = "descr", nullable = false, length = 1024)
+	@Column(name = "descr", nullable = false, length = 255)
 	public String getDescr() {
 		return this.descr;
 	}

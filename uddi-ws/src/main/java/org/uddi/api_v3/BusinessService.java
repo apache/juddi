@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import org.w3._2000._09.xmldsig_.SignatureType;
@@ -63,6 +64,7 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "categoryBag",
     "signature"
 })
+@XmlRootElement()
 public class BusinessService implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = 37125899295218502L;

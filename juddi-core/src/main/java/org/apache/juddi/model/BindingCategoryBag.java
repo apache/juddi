@@ -28,25 +28,25 @@ import javax.persistence.Table;
 @Table(name = "j3_binding_category_bag")
 public class BindingCategoryBag extends CategoryBag {
 
-	private static final long serialVersionUID = 328415084782176174L;
-	private BindingTemplate bindingTemplate;
+    private static final long serialVersionUID = 328415084782176174L;
+    private BindingTemplate bindingTemplate;
 
-	public BindingCategoryBag() {
-		super();
-	}
-	
-	public BindingCategoryBag(BindingTemplate bindingTemplate) {
-		super();
-		this.bindingTemplate = bindingTemplate;
-	} 
-	
-	@OneToOne(optional=false, fetch = FetchType.LAZY)
+    public BindingCategoryBag() {
+        super();
+    }
+
+    public BindingCategoryBag(BindingTemplate bindingTemplate) {
+        super();
+        this.bindingTemplate = bindingTemplate;
+    }
+
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "entity_key")
-	public BindingTemplate getBindingTemplate() {
-		return bindingTemplate;
-	}
+    public BindingTemplate getBindingTemplate() {
+        return bindingTemplate;
+    }
 
-	public void setBindingTemplate(BindingTemplate bindingTemplate) {
-		this.bindingTemplate = bindingTemplate;
-	}
+    public void setBindingTemplate(BindingTemplate bindingTemplate) {
+        this.bindingTemplate = bindingTemplate;
+    }
 }

@@ -71,7 +71,7 @@ public class ServiceName implements java.io.Serializable {
 		this.businessService = businessService;
 	}
 
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}

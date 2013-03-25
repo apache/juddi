@@ -72,7 +72,7 @@ public class BusinessName implements java.io.Serializable {
 		this.businessEntity = businessEntity;
 	}
 
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}
@@ -80,7 +80,7 @@ public class BusinessName implements java.io.Serializable {
 		this.langCode = langCode;
 	}
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, length=255)
 	public String getName() {
 		return this.name;
 	}

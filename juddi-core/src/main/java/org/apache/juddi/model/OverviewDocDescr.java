@@ -73,7 +73,7 @@ public class OverviewDocDescr implements java.io.Serializable {
 		this.overviewDoc = overviewDoc;
 	}
 	
-	@Column(name = "lang_code", length = 5)
+	@Column(name = "lang_code", length = 26)
 	public String getLangCode() {
 		return this.langCode;
 	}

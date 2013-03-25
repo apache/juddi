@@ -95,7 +95,7 @@ public class TmodelInstanceInfo implements java.io.Serializable {
 		this.tmodelKey = tmodelKey;
 	}
 
-	@Column(name = "instance_parms", length = 512)
+	@Column(name = "instance_parms", length = 8192)
 	public String getInstanceParms() {
 		return this.instanceParms;
 	}

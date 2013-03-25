@@ -18,7 +18,6 @@ package org.apache.juddi.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -90,7 +89,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 		this.accessPointType = accessPointType;
 	}
 
-	@Column(name = "access_point_url", length = 4000)
+	@Column(name = "access_point_url", length = 4096)
 	public String getAccessPointUrl() {
 		return this.accessPointUrl;
 	}

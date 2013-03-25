@@ -315,6 +315,7 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			for (Name n : names) {
 				if (n.getValue() == null || n.getValue().length() == 0)
 					throw new ValueNotAllowedException(new ErrorMessage("errors.names.NoValue"));
+				ValidatePublish.validateLang(n.getLang());
 			}
 		}
 	}

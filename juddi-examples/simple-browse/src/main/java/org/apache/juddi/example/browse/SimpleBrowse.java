@@ -19,6 +19,7 @@ package org.apache.juddi.example.browse;
 
 import java.util.List;
 import java.util.Properties;
+import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
@@ -235,13 +236,32 @@ public class SimpleBrowse {
             //An access point could be a URL, a reference to another UDDI binding key, a hosting redirector (which is 
             //esscentially a pointer to another UDDI registry) or a WSDL Deployment
             //From an end client's perspective, all you really want is the endpoint.
-
+            //http://uddi.org/pubs/uddi_v3.htm#_Ref8977716
             //So if you have a wsdlDeployment useType, fetch the wsdl and parse for the invocation URL
             //If its hosting director, you'll have to fetch that data from uddi recursively until the leaf node is found
             //Consult the UDDI specification for more information
 
             if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
                 System.out.println("Access Point: " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue() + " type " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType());
+                if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType()!=null)
+                {
+                    if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType().equalsIgnoreCase(AccessPointType.END_POINT.toString()))
+                    {
+                        System.out.println("Use this access point value as an invocation endpoint.");
+                    }
+                    if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType().equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString()))
+                    {
+                        System.out.println("Use this access point value as a reference to another binding template.");
+                    }
+                    if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType().equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString()))
+                    {
+                        System.out.println("Use this access point value as a URL to a WSDL document, which presumably will have a real access point defined.");
+                    }
+                    if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType().equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString()))
+                    {
+                        System.out.println("Use this access point value as an Inquiry URL of another UDDI registry, look up the same binding template there (usage varies).");
+                    }
+                }
             }
 
         }
@@ -311,7 +331,7 @@ public class SimpleBrowse {
                 System.out.println("Business Key: " + businessInfos.getBusinessInfo().get(i).getBusinessKey());
                 System.out.println("Name: " + ListToString(businessInfos.getBusinessInfo().get(i).getName()));
 
-                System.out.println("Name: " + ListToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
+                System.out.println("Description: " + ListToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
                 System.out.println("Services:");
                 PrintServiceInfo(businessInfos.getBusinessInfo().get(i).getServiceInfos());
             }
