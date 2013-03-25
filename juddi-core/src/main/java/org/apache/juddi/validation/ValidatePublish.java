@@ -97,7 +97,7 @@ public class ValidatePublish extends ValidateUDDIApi {
      * This flag will add additional output to stdout for debugging purposes,
      * set this to true if
      */
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private Log log = LogFactory.getLog(this.getClass());
     Set<String> buildInTmodels = null;
 
