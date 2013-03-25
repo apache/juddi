@@ -103,37 +103,6 @@ public class ValidatePublish extends ValidateUDDIApi {
 
     public ValidatePublish(UddiEntityPublisher publisher) {
         super(publisher);
-        buildInTmodels = new HashSet<String>();
-        buildInTmodels.add("uddi:uddi.org:keygenerator");
-        buildInTmodels.add("uddi:uddi.org:categorization:types");
-        buildInTmodels.add("uddi:uddi.org:categorization:keygenerator");
-        buildInTmodels.add("uddi:uddi.org:sortorder:keygenerator");
-        buildInTmodels.add("uddi:uddi.org:transport:keygenerator");
-        buildInTmodels.add("uddi:uddi.org:v3_inquiry");
-        buildInTmodels.add("uddi:uddi.org:v3_publication");
-        buildInTmodels.add("uddi:uddi.org:v3_security");
-        buildInTmodels.add("uddi:uddi.org:categorization:general_keywords");
-        buildInTmodels.add("uddi:uddi.org:categorization:nodes");
-        buildInTmodels.add("uddi:uddi.org:relationships");
-        buildInTmodels.add("uddi:uddi.org:categorization:owningbusiness");
-        buildInTmodels.add("uddi:uddi.org:categorization:entitykeyvalues");
-        buildInTmodels.add("uddi:uddi.org:identifier:isreplacedby");
-        buildInTmodels.add("uddi:uddi.org:categorization:validatedby");
-        buildInTmodels.add("uddi:uddi.org:categorization:derivedfrom");
-        buildInTmodels.add("uddi:uddi.org:categorization:entitykeyvalues");
-        buildInTmodels.add("uddi:uddi.org:protocol:serverauthenticatedssl3");
-        buildInTmodels.add("uddi:uddi.org:protocol:mutualauthenticatedssl3");
-        buildInTmodels.add("uddi:uddi.org:transport:http");
-        buildInTmodels.add("uddi:uddi.org:transport:smtp");
-        buildInTmodels.add("uddi:uddi.org:transport:ftp");
-        buildInTmodels.add("uddi:uddi.org:transport:fax");
-        buildInTmodels.add("uddi:uddi.org:transport:telephone");
-        buildInTmodels.add("uddi:uddi.org:transport:rmi");
-        buildInTmodels.add("uddi:uddi.org:transport:jndi-rmi");
-        buildInTmodels.add("uddi:uddi.org:findqualifier:approximatematch");
-        //note save tmodel/catbag/kr can reference itself!
-
-
     }
 
     public void validateDeleteBusiness(EntityManager em, DeleteBusiness body) throws DispositionReportFaultMessage {
