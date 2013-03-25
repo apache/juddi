@@ -14,18 +14,21 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.Address;
@@ -46,8 +49,6 @@ import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DiscoveryURL;
 import org.uddi.api_v3.DiscoveryURLs;
 import org.uddi.api_v3.Email;
-import org.uddi.api_v3.GetBusinessDetail;
-import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.HostingRedirector;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
@@ -55,10 +56,10 @@ import org.uddi.api_v3.PersonName;
 import org.uddi.api_v3.Phone;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.api_v3.SaveTModel;
-import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -75,9 +76,9 @@ import org.uddi.v3_service.UDDISecurityPortType;
  *
  * @author Alex O'Ree
  */
-public class UDDI_131_NegativePublicationIntegrationTest {
+public class UDDI_140_NegativePublicationIntegrationTest {
 
-    private static Log logger = LogFactory.getLog(UDDI_131_NegativePublicationIntegrationTest.class);
+    private static Log logger = LogFactory.getLog(UDDI_140_NegativePublicationIntegrationTest.class);
     static UDDISecurityPortType security = null;
     static UDDIInquiryPortType inquiry = null;
     static UDDIPublicationPortType publication = null;
@@ -101,13 +102,13 @@ public class UDDI_131_NegativePublicationIntegrationTest {
     static final String str50 = "11111111111111111111111111111111111111111111111111";
     static final String MISSING_RESOURCE = "Can't find resource for bundle";
 
-    @After
-    public void stopManager() throws ConfigurationException {
+    @AfterClass
+    public static  void stopManager() throws ConfigurationException {
         manager.stop();
     }
 
-    @Before
-    public void startManager() throws ConfigurationException {
+    @BeforeClass
+    public static void startManager() throws ConfigurationException {
         manager = new UDDIClerkManager();
         manager.start();
 
@@ -131,8 +132,10 @@ public class UDDI_131_NegativePublicationIntegrationTest {
     }
 
     static void HandleException(Exception ex) {
-        System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
-        ex.printStackTrace();
+    	if (logger.isDebugEnabled()) {
+	        System.err.println("Error caught of type " + ex.getClass().getCanonicalName());
+	        ex.printStackTrace();
+    	}
         Assert.assertFalse(ex.getMessage().contains(TRANS));
         Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
         if (ex instanceof SOAPFault) {
@@ -149,8 +152,8 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         System.out.println("BusinessNameSanityTest");
     }
 
-    @Test
-    public void BusinessKeyTooLongTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessKeyTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessKeyTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -167,13 +170,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
     }
 
-    @Test
-    public void BusinessNameTooShortTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessNameTooShortTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameTooShortTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -189,13 +193,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
     }
 
     @Test
-    public void BusinessNameMinLengthTest() {
+    public void BusinessNameMinLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameMinLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -204,22 +209,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         n.setValue("1");
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BusinessNameTooLongTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -236,15 +234,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
 
     }
 
     @Test
-    public void BusinessNameMaxLengthTest() {
+    public void BusinessNameMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -254,23 +252,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         n.setValue(str255);
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
-
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BusinessNameLangTooLongTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -289,15 +279,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
 
     }
 
     @Test
-    public void BusinessNameLangMaxLengthTest() {
+    public void BusinessNameLangMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameLangMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -309,25 +299,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
 
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
-
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="business description tests">
-    @Test
-    public void BusinessDescriptionLangTooLongTest() {
+    
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -349,15 +329,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
 
     }
 
     @Test
-    public void BusinessDescriptionLangMaxLengthTest() {
+    public void BusinessDescriptionLangMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionLangMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -372,23 +352,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getDescription().add(d);
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
-
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     @Test
-    public void BusinessDescriptionMaxLengthTest() {
+    public void BusinessDescriptionMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -401,23 +373,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getDescription().add(d);
         be.getName().add(n);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
-
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BusinessDescriptionTooLongLengthTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessDescriptionTooLongLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionTooLongLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -437,18 +402,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
 
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="discovery url tests">
-    @Test
-    public void BusinessDiscoveryURLTooLongTest() {
+    
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessDiscoveryURLTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -469,16 +431,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
 
     }
 
     @Test
-    public void BusinessDiscoveryURLMaxLengthTest() {
+    public void BusinessDiscoveryURLMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -492,22 +453,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         d.setValue(str4096);
         be.getDiscoveryURLs().getDiscoveryURL().add(d);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+     
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     @Test
-    public void BusinessDiscoveryURLMaxLengthMaxUseTypeTest() {
+    public void BusinessDiscoveryURLMaxLengthMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLMaxLengthMaxUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -522,22 +477,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         d.setUseType(str255);
         be.getDiscoveryURLs().getDiscoveryURL().add(d);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+   
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BusinessDiscoveryURLMaxLengthToolongUseTypeTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void BusinessDiscoveryURLMaxLengthToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLMaxLengthToolongUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -559,17 +508,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Business Contacts tests">
+    
     @Test
-    public void ContactMaxEmailMaxUseTypeTest() {
+    public void ContactMaxEmailMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxEmailMaxUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -577,24 +523,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         Name n = new Name();
         n.setValue("A Test business");
         be.getName().add(n);
-
-
         be.setContacts(ContactMaxEmailMaxUseType());
-
-
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     private Contacts ContactMaxEmailMaxUseType() {
@@ -803,8 +739,8 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         return cc;
     }
 
-    @Test
-    public void ContactTooLongEmailMaxUseTypeTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void ContactTooLongEmailMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactTooLongEmailMaxUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -822,14 +758,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxEmailToolongUseTypeTest() {
+    @Test(expected = SOAPFaultException.class)
+    public void ContactMaxEmailToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxEmailToolongUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -850,14 +786,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ContactDescriptionMaxLangMaxtest() {
+    public void ContactDescriptionMaxLangMaxtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactDescriptionMaxLangMaxtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -867,22 +803,17 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setContacts(ContactMaxDescription());
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+     
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
+        
     }
 
-    @Test
-    public void ContactDescriptionTooLongtest() {
+    @Test (expected = SOAPFaultException.class)
+    public void ContactDescriptionTooLongtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactDescriptionTooLongtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -900,14 +831,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactDescriptionLangTooLongTest() {
+    @Test (expected = SOAPFaultException.class)
+    public void ContactDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactDescriptionLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -925,14 +856,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ContactPhoneMaxLentest() {
+    public void ContactPhoneMaxLentest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactPhoneMaxLentest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -942,22 +873,17 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setContacts(ContactPhoneMaxLength());
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
 
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
     }
 
-    @Test
-    public void ContactPhoneTooLongtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactPhoneTooLongtest() throws DispositionReportFaultMessage, RemoteException  {
         System.out.println("ContactPhoneTooLongtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -974,15 +900,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ContactPhoneMaxLongtest() {
+    public void ContactPhoneMaxLongtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactPhoneMaxLongtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -992,22 +917,15 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setContacts(ContactPhoneMaxLength());
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     @Test
-    public void ContactPhoneMaxLongMaxUseTypetest() {
+    public void ContactPhoneMaxLongMaxUseTypetest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactPhoneMaxLongMaxUseTypetest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1017,22 +935,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setContacts(ContactPhoneUseTypeMaxLen());
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void ContactPhoneUseTypeTooLongtest() {
+    @Test(expected = SOAPFaultException.class)
+    public void ContactPhoneUseTypeTooLongtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactPhoneUseTypeTooLongtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1049,15 +961,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ContactMaxAddressFFFFFFFtest() {
+    public void ContactMaxAddressFFFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFFFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1067,22 +978,17 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setContacts(ContactAddressAllMax(false, false, false, false, false, false, false));
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
 
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
     }
 
-    @Test
-    public void ContactMaxAddressTFFFFFFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressTFFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressTFFFFFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1100,14 +1006,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFTFFFFFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFTFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFTFFFFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1125,14 +1031,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFFTFFFFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFFTFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFTFFFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1150,14 +1056,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFFFTFFFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFFFTFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFTFFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1174,15 +1080,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFFFFTFFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFFFFTFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFTFFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1200,14 +1105,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFFFFFTFtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFFFFFTFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFFTFtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1225,14 +1130,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ContactMaxAddressFFFFFFTtest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ContactMaxAddressFFFFFFTtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFFFTtest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1250,16 +1155,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Business key reference tests">
     @Test
-    public void KeyReferenceMax() {
+    public void KeyReferenceMax() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceMax");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1274,22 +1177,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         kr.setTModelKey(str255);
         be.getCategoryBag().getKeyedReference().add(kr);
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void KeyReferenceKeyTooLong() {
+    @Test(expected=SOAPFaultException.class)
+    public void KeyReferenceKeyTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceKeyTooLong");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1312,14 +1209,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void KeyReferenceNameTooLong() {
+    @Test(expected=SOAPFaultException.class)
+    public void KeyReferenceNameTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceNameTooLong");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1342,14 +1239,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void KeyReferenceValueTooLong() {
+    @Test(expected=SOAPFaultException.class)
+    public void KeyReferenceValueTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceValueTooLong");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1372,16 +1269,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="basic Service tests">
-    @Test
-    public void ServiceNameTooLongTest() {
+    
+    @Test(expected=SOAPFaultException.class)
+    public void ServiceNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1405,14 +1300,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ServiceNameMaxLenTest() {
+    public void ServiceNameMaxLenTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameMaxLenTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1428,22 +1323,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     @Test
-    public void ServiceNameMaxLangLenTest() {
+    public void ServiceNameMaxLangLenTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameMaxLangLenTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1460,22 +1349,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void ServiceNameTooLongLangTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ServiceNameTooLongLangTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameTooLongLangTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1500,14 +1383,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ServiceDescTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ServiceDescTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1534,14 +1417,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void ServiceDescLangTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ServiceDescLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1569,14 +1452,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void ServiceDescMaxLangTest() {
+    public void ServiceDescMaxLangTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescMaxLangTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1596,22 +1479,17 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
+        
     }
 
     @Test
-    public void ServiceMaxCatBagTest() {
+    public void ServiceMaxCatBagTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescMaxLangTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1637,22 +1515,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void ServiceMaxCatBagTooBigTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void ServiceMaxCatBagTooBigTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceMaxCatBagTooBigTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1686,16 +1558,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Binding Template tests">
-    @Test
-    public void BindingTemplateNoAccessPointTest() {
+   
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateNoAccessPointTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateNoAccessPointTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1705,7 +1575,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1725,14 +1594,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void BindingTemplateAccessPointMaxUseTypeTest() {
+    public void BindingTemplateAccessPointMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointMaxUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1742,7 +1611,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1758,22 +1626,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //    Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+       
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BindingTemplateAccessPointUseTypeTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateAccessPointUseTypeTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointUseTypeTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1783,7 +1645,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1807,14 +1668,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void BindingTemplateAccessPointValueTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateAccessPointValueTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointValueTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1824,7 +1685,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1848,14 +1708,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void BindingTemplateAccessPointMaxValueTest() {
+    public void BindingTemplateAccessPointMaxValueTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointMaxValueTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1865,7 +1725,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1881,22 +1740,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+     
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BindingTemplateNoAccessPointNoRedirectorTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateNoAccessPointNoRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateNoAccessPointNoRedirectorTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1927,14 +1780,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void BindingTemplateAccessPointAndRedirectorTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateAccessPointAndRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointAndRedirectorTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -1944,7 +1797,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -1970,14 +1822,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void BindingTemplateHostRedirectorReferencalIntegritytest() {
+    public void BindingTemplateHostRedirectorReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateHostRedirectorReferencalIntegritytest");
         //TODO create a binding template, get the key, use the key as the specific redirector
         String url = "http://juddi.apache.org";
@@ -1990,7 +1842,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
 
-
         n = new Name();
         n.setValue("A first business service");
         bs.getName().add(n);
@@ -2006,47 +1857,41 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            System.out.println("Saving the business with the first service");
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+       
+        System.out.println("Saving the business with the first service");
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
 
-            PrintBusinessDetails(saveBusiness.getBusinessEntity());
+        PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
-            //setup the next one
-            bs = new BusinessService();
-            n = new Name();
-            n.setValue("A a redirected business service");
-            bt = new BindingTemplate();
-            bt.setHostingRedirector(new HostingRedirector());
-            bt.getHostingRedirector().setBindingKey(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
-            bs.getName().add(n);
-            bs.setBindingTemplates(new BindingTemplates());
-            bs.getBindingTemplates().getBindingTemplate().add(bt);
-            saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().add(bs);
+        //setup the next one
+        bs = new BusinessService();
+        n = new Name();
+        n.setValue("A a redirected business service");
+        bt = new BindingTemplate();
+        bt.setHostingRedirector(new HostingRedirector());
+        bt.getHostingRedirector().setBindingKey(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+        bs.getName().add(n);
+        bs.setBindingTemplates(new BindingTemplates());
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().add(bs);
 
-            sb = new SaveBusiness();
-            sb.setAuthInfo(authInfoJoe);
-            sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
 
-            //This SHOULD be allowed
-            System.out.println("Saving the business with the first and second service as a host redirect");
-            saveBusiness = publication.saveBusiness(sb);
-            PrintBusinessDetails(saveBusiness.getBusinessEntity());
+        //This SHOULD be allowed
+        System.out.println("Saving the business with the first and second service as a host redirect");
+        saveBusiness = publication.saveBusiness(sb);
+        PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //    Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
     @Test
-    public void BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest() {
+    public void BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest");
         //create a binding template, get the key, use the key as the specific redirector
         String url = "http://juddi.apache.org";
@@ -2059,7 +1904,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
 
-
         n = new Name();
         n.setValue("A first business service");
         bs.getName().add(n);
@@ -2075,51 +1919,43 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            System.out.println("Saving the business with the first service");
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        System.out.println("Saving the business with the first service");
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
 
-            PrintBusinessDetails(saveBusiness.getBusinessEntity());
+        PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
-            //setup the next one
-            bs = new BusinessService();
-            n = new Name();
-            n.setValue("A a redirected business service");
-            bt = new BindingTemplate();
-            bt.setAccessPoint(new AccessPoint());
-            bt.getAccessPoint().setUseType(AccessPointType.BINDING_TEMPLATE.toString());
-            bt.getAccessPoint().setValue(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
-            bs.getName().add(n);
-            bs.setBindingTemplates(new BindingTemplates());
-            bs.getBindingTemplates().getBindingTemplate().add(bt);
-            saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().add(bs);
+        //setup the next one
+        bs = new BusinessService();
+        n = new Name();
+        n.setValue("A a redirected business service");
+        bt = new BindingTemplate();
+        bt.setAccessPoint(new AccessPoint());
+        bt.getAccessPoint().setUseType(AccessPointType.BINDING_TEMPLATE.toString());
+        bt.getAccessPoint().setValue(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+        bs.getName().add(n);
+        bs.setBindingTemplates(new BindingTemplates());
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().add(bs);
 
-            sb = new SaveBusiness();
-            sb.setAuthInfo(authInfoJoe);
-            sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        sb.getBusinessEntity().add(saveBusiness.getBusinessEntity().get(0));
 
-            //This SHOULD be allowed
-            System.out.println("Saving the business with the first and second service as a host redirect");
-            saveBusiness = publication.saveBusiness(sb);
-            PrintBusinessDetails(saveBusiness.getBusinessEntity());
+        //This SHOULD be allowed
+        System.out.println("Saving the business with the first and second service as a host redirect");
+        saveBusiness = publication.saveBusiness(sb);
+        PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //    Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest");
         //create a binding template, get the key, use the key as the specific redirector
-        String url = "http://juddi.apache.org";
         SaveBusiness sb;
         try {
 
@@ -2152,14 +1988,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
-    @Test
-    public void BindingTemplateHostRedirectorTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateHostRedirectorTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateHostRedirectorTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -2169,7 +2005,6 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getName().add(n);
         be.setBusinessServices(new BusinessServices());
         BusinessService bs = new BusinessService();
-
 
         n = new Name();
         n.setValue(str255);
@@ -2192,14 +2027,14 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
 
     @Test
-    public void BindingTemplateAccessPointMaxLengthTest() {
+    public void BindingTemplateAccessPointMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointMaxLengthTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -2223,22 +2058,16 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         be.getBusinessServices().getBusinessService().add(bs);
 
         sb.getBusinessEntity().add(be);
-        try {
-            BusinessDetail saveBusiness = publication.saveBusiness(sb);
-            DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
-            db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-            publication.deleteBusiness(db);
-            //Assert.fail("request should have been rejected");
-
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        DeleteBusiness db = new DeleteBusiness();
+        db.setAuthInfo(authInfoJoe);
+        db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+        publication.deleteBusiness(db);
     }
 
-    @Test
-    public void BindingTemplateAccessPointTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void BindingTemplateAccessPointTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointTooLongTest");
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
@@ -2271,9 +2100,9 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-            //Assert.fail();
+            throw ex;
         }
     }
     //</editor-fold>
@@ -2282,7 +2111,7 @@ public class UDDI_131_NegativePublicationIntegrationTest {
 
     //create a basic key gen
     @Test
-    public void CreateKeyGenMaxLengthTest() {
+    public void CreateKeyGenMaxLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenMaxLengthTest");
 
         SaveTModel st = new SaveTModel();
@@ -2299,22 +2128,19 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.getCategoryBag().getKeyedReference().add(kr);
         tm.setTModelKey(validTmodelKeyGenMax);
         st.getTModel().add(tm);
-        try {
-            TModelDetail saveTModel = publication.saveTModel(st);
-            DeleteTModel dm = new DeleteTModel();
-            dm.setAuthInfo(authInfoJoe);
-            dm.getTModelKey().add(validTmodelKeyGenMax);
-            publication.deleteTModel(dm);
-        } catch (Exception ex) {
-            HandleException(ex);
-            Assert.fail();
-        }
+        
+        @SuppressWarnings("unused")
+		TModelDetail saveTModel = publication.saveTModel(st);
+        DeleteTModel dm = new DeleteTModel();
+        dm.setAuthInfo(authInfoJoe);
+        dm.getTModelKey().add(validTmodelKeyGenMax);
+        publication.deleteTModel(dm);
 
     }
 
     //create a oversized tmodel keygen fail
-    @Test
-    public void CreateKeyGenTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void CreateKeyGenTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenTooLongTest");
 
         SaveTModel st = new SaveTModel();
@@ -2332,18 +2158,19 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.setTModelKey(validTmodelKeyGenTooLong);
         st.getTModel().add(tm);
         try {
-            TModelDetail saveTModel = publication.saveTModel(st);
+            @SuppressWarnings("unused")
+			TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
-
+            throw ex;
         }
 
     }
 
     //create a tmodel with a key gen defined valid, with oversized Name
-    @Test
-    public void CreateKeyGenKeyDescriptionTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void CreateKeyGenKeyDescriptionTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
 
         SaveTModel st = new SaveTModel();
@@ -2365,15 +2192,17 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.setTModelKey("uddi:" + UUID.randomUUID().toString() + ":customkey");
         st.getTModel().add(tm);
         try {
+        	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
     }
 
-    @Test
-    public void CreateKeyGenKeyDescriptionLangTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void CreateKeyGenKeyDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
 
         SaveTModel st = new SaveTModel();
@@ -2396,17 +2225,19 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.setTModelKey(key);
         st.getTModel().add(tm);
         try {
+        	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         } finally {
             //TODO delete the key
         }
     }
 
-    @Test
-    public void CreateKeyGenNameLangTooLongTest() {
+    @Test(expected=SOAPFaultException.class)
+    public void CreateKeyGenNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenNameLangTooLongTest");
 
         SaveTModel st = new SaveTModel();
@@ -2424,18 +2255,20 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.setTModelKey(validTmodelKeyGenTooLong);
         st.getTModel().add(tm);
         try {
+        	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
     }
 
     //create a tmodel with a key gen defined valid, regular tmodel,
     //then a business, service, binding template, tmodel instance infos, attach tmodel with some data, success
     //create a tmodel without a key gen defined- fail
-    @Test
-    public void CreateTmodelnoKeyGen() {
+    @Test(expected=SOAPFaultException.class)
+    public void CreateTmodelnoKeyGen() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateTmodelnoKeyGen");
 
         SaveTModel st = new SaveTModel();
@@ -2448,10 +2281,12 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         tm.setTModelKey("uddi:" + UUID.randomUUID().toString() + ":customkey");
         st.getTModel().add(tm);
         try {
+        	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (Exception ex) {
+        } catch (SOAPFaultException ex) {
             HandleException(ex);
+            throw ex;
         }
 
     }
@@ -2600,7 +2435,7 @@ public class UDDI_131_NegativePublicationIntegrationTest {
         }
     }
 
-    public static void PrintBusinessDetails(List<BusinessEntity> businessDetail) throws Exception {
+    public static void PrintBusinessDetails(List<BusinessEntity> businessDetail) {
 
 
         for (int i = 0; i < businessDetail.size(); i++) {
@@ -2610,5 +2445,5 @@ public class UDDI_131_NegativePublicationIntegrationTest {
             PrintContacts(businessDetail.get(i).getContacts());
         }
     }
-    //</editor-fold>
+   
 }
