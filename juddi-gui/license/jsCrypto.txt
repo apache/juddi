@@ -1,0 +1,3 @@
+jsCrypto is used the the juddi-gui for digitally signing and verifing signed UDDI entries using Javascript. It uses the BSD 3 Clause license
+
+Available at https://code.google.com/p/crypto-js/

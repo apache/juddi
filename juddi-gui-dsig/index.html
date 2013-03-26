@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <applet code="org.apache.juddi.gui.dsig.NewApplet" archive="dist/juddi-gui-dsig.jar"></applet> 
+		        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+				 <script type="text/javascript">
+				 function getXml()
+				{
+					return $("#data").val();
+				}
+				 
+				 
+				function writeXml(data)
+				{
+					$("#data").val(data);
+				}
+				
+				function getBrowserName()
+				{
+					return navigator.appName;
+				}
+				function getOsName()
+				{
+					var OSName="unknown OS";
+					if (navigator.appVersion.indexOf("Win")!=-1) OSName="Windows";
+					if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MacOS";
+					if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX";
+					if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
+					return OSName;
+				}
+				</script>
+			<textarea rows="15" cols="80" id="data">hello world</textarea>
+    </body>
+</html>

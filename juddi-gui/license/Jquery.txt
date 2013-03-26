@@ -1,0 +1,6 @@
+jQuery and jQueryUI are licensed under the MIT License
+
+Source
+
+http://jquery.com/
+http://jqueryui.com/
