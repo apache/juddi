@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +17,7 @@
 
         <!-- Le styles -->
         <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="shortcut icon" href="favicon.ico" />
         <style type="text/css">
             body {
                 padding-top: 60px;
@@ -59,7 +61,7 @@
                         <a class="brand" href="index.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li class="active"><a href="index.jsp">Home</a></li>
+                                <li ><a href="index.jsp">Home</a></li>
                                 <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town">Discover<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessBrowse.jsp" title="Browse for businesses">Businesses</a></li>
@@ -86,13 +88,18 @@
                                 </li>
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town">Subscriptions<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="businessBrowse.jsp" title="Create a businesses">View</a></li>
-                                        <li><a href="serviceBrowse.jsp" title="Create a Services">Create</a></li>
-                                        <li><a href="tmodelBrowse.jsp" title="Create a tModel">Something</a></li>
-                                        <li><a href="tmodelBrowse.jsp" title="Create a publisher">Something else</a></li>
+                                        <li><a href="viewSubscriptions.jsp" title="View my subscriptions">View</a></li>
+                                        <li><a href="serviceBrowse.jsp" title="Create a subscription">Create</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="settings.jsp">Settings</a></li>
+                                
+                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town">Settings<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="settings.jsp" title="Configure this UDDI Browser">Configure</a></li>
+                                        <li><a href="nodeinfo.jsp" title="Information about the UDDI Node that's being accessed">UDDI Node Information</a></li>
+                                    </ul>
+                                </li>
+                                
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town">Help<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html" title="User Guide">User Guide</a></li>

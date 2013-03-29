@@ -5,5 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 
+<%@include  file="../csrf.jsp" %>
+<%
+    if (request.getMethod().equalsIgnoreCase("POST")) {
+        UddiHub x = UddiHub.getInstance(application, session);
+        out.write(x.deleteService(request.getParameter("id")));
+    }
+
+%>

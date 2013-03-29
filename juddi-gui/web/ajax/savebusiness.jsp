@@ -4,7 +4,7 @@
    Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="java.util.Enumeration"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>

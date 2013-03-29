@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.apache.juddi.webconsole;
+package org.apache.juddi.webconsole.hub;
 
 /**
  * This simple class enables use to pass rendered html data and paging

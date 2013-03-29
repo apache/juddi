@@ -8,7 +8,7 @@
 <%@page import="java.io.InputStream"%>
 <%@page import="java.net.URL"%>
 <%@page import="org.apache.juddi.webconsole.AES"%>
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include  file="../csrf.jsp" %>

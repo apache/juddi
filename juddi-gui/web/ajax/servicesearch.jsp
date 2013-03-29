@@ -6,8 +6,8 @@
 
 
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
-<%@page import="org.apache.juddi.webconsole.PagableContainer"%>
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.PagableContainer"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <!DOCTYPE html>

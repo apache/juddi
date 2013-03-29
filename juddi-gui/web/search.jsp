@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="org.apache.juddi.query.util.FindQualifiers"%>
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>

@@ -4,7 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.model.UddiEntity"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

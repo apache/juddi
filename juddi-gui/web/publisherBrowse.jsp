@@ -5,34 +5,7 @@
 --%>
 
 
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
-<%@page import="org.apache.juddi.v3.client.transport.Transport"%>
-
-<%@page import="org.apache.juddi.ClassUtil"%>
-<%@page import="org.apache.juddi.query.util.FindQualifiers"%>
-<%@page import="org.apache.juddi.v3.client.config.UDDIClientContainer"%>
-<%@page import="org.apache.juddi.v3.client.transport.Transport"%>
-<%@page import="org.apache.juddi.v3_service.JUDDIApiPortType"%>
-<%@page import="org.uddi.api_v3.AuthToken"%>
-<%@page import="org.uddi.api_v3.BindingTemplates"%>
-<%@page import="org.uddi.api_v3.BusinessDetail"%>
-<%@page import="org.uddi.api_v3.BusinessInfos"%>
-<%@page import="org.uddi.api_v3.BusinessList"%>
-<%@page import="org.uddi.api_v3.BusinessService"%>
-<%@page import="org.uddi.api_v3.CategoryBag"%>
-<%@page import="org.uddi.api_v3.Contacts"%>
-<%@page import="org.uddi.api_v3.Description"%>
-<%@page import="org.uddi.api_v3.FindBusiness"%>
-<%@page import="org.uddi.api_v3.GetAuthToken"%>
-<%@page import="org.uddi.api_v3.GetBusinessDetail"%>
-<%@page import="org.uddi.api_v3.GetServiceDetail"%>
-<%@page import="org.uddi.api_v3.KeyedReference"%>
-<%@page import="org.uddi.api_v3.Name"%>
-<%@page import="org.uddi.api_v3.ServiceDetail"%>
-<%@page import="org.uddi.api_v3.ServiceInfos"%>
-<%@page import="org.uddi.v3_service.UDDIInquiryPortType"%>
-<%@page import="org.uddi.v3_service.UDDISecurityPortType"%>
-
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
 <div class="container">

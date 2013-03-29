@@ -4,15 +4,10 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.uddi.api_v3.BindingTemplates"%>
-<%@page import="org.uddi.api_v3.BusinessService"%>
-<%@page import="org.uddi.api_v3.IdentifierBag"%>
-<%@page import="org.uddi.api_v3.CategoryBag"%>
-<%@page import="org.uddi.api_v3.Contacts"%>
-<%@page import="org.uddi.api_v3.BusinessEntity"%>
+<%@page import="java.net.URLEncoder"%>
+<%@page import="org.uddi.api_v3.*"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
-
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
@@ -58,14 +53,14 @@
                             bd.setBusinessKey(be.getBusinessKey());
                         }
                     }
-                    
+
                     if (bd == null) {
                         response.sendError(501);
                     }
                     int totalBTDescriptions = 0;
                 %>
 
-                <i class="icon-lock"></i>Business Key -
+                <i class="icon-lock"></i><b>Business Key </b>-
                 The Business Key is the unique identifier for the business that this service belongs to. It cannot be modified.<br>
                 <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
@@ -81,7 +76,7 @@
                             out.write("<i class=\"icon-lock\"></i>");
                         }
                     %>
-                Service Key -
+                <b>Service Key </b>-
                 The Business Key is the unique identifier for the business that this service belongs to. If you specify a service key, it must be prefixed with
                 an existing partition (key generator).
                 <div style="border-width: 2px; border-style: solid;" <%
@@ -102,18 +97,31 @@
                         if (bd.getBindingTemplates() == null) {
                             bd.setBindingTemplates(new BindingTemplates());
                         }
+                        int currentcatkeyrefBT = 0;
+                        int currentcatkeyrefgrpBT = 0;
+                        int currentbindingtemplatesInstance = 0;
+                        for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
+                            if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() != null) {
+                                currentcatkeyrefBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size();
+                                currentcatkeyrefgrpBT += bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size();
+                            }
+                            if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
+                                currentbindingtemplatesInstance = bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size();
+                            }
+                        }
+
 
                     %></div><br>
 
                 <script type="text/javascript">
                     var currentNameEntries=<%= bd.getName().size() - 1%>;
-                    
+                    var currentbindingtemplatesInstance =<%=currentbindingtemplatesInstance%>;
                     var currentDescriptionEntries=<%= bd.getDescription().size() - 1%>;
-                    
+                    var currentcatkeyrefBT=<%=currentcatkeyrefBT%>;
                     var currentcatkeyref=<%=bd.getCategoryBag().getKeyedReference().size()%>;
+                    var currentcatkeyrefgrpBT=<%=currentcatkeyrefgrpBT%>;
                     var currentcatkeyrefgrp=<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
                     var currentbindingtemplates = <%=bd.getBindingTemplates().getBindingTemplate().size()%>;
-                    
                 </script> 
 
                 <ul class="nav nav-tabs" id="myTab">
@@ -124,6 +132,8 @@
                     <li><a href="#bindingtemplates" >Binding Templates</a></li>
 
                     <li><a href="#signatures" >Signatures</a></li>
+
+                    <li><a href="#opinfo" >Operational Info</a></li>
                 </ul>
                 <script>
                     $(function () {
@@ -145,6 +155,10 @@
                         e.preventDefault();
                         $(this).tab('show');
                     });
+                    $('#myTab a[href=#opinfo]').click(function (e) {
+                        e.preventDefault();
+                        $(this).tab('show');
+                    });
                     
                 </script>
                 <div class="tab-content">
@@ -153,7 +167,7 @@
 
 
 
-                        <a href="javascript:AddName();"><i class="icon-plus-sign"></i></a> Name - 
+                        <a href="javascript:AddName();"><i class="icon-plus-sign"></i></a> <b>Name </b>- 
                         Services are identified by one or more name. Multiple names are useful for different languages, legal names, or abbreviations.
                         <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -169,7 +183,7 @@
                                 }
                             %></div>
                         <Br>
-                        <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign"></i></a> Description - businesses can have more than one description, such as in a different language.
+                        <a href="javascript:AddDescription('Description');"><i class="icon-plus-sign"></i></a> <b>Description </b>- businesses can have more than one description, such as in a different language.
                         <div id="Description" style="border-width: 2px; border-style: solid;" >
                             <%
                                 for (int i = 0; i < bd.getDescription().size(); i++) {
@@ -187,7 +201,7 @@
                     </div>
                     <div class="tab-pane" id="categories">
 
-                        Categories - UDDI uses a taxonomy system to categorize businesses and their services. These categories are defined as UDDI tModels and
+                        <b>Categories </b>- UDDI uses a taxonomy system to categorize businesses and their services. These categories are defined as UDDI tModels and
                         are defined by the administrator(s) of this UDDI node. These categories are appended to business registrations either by adding one or more "Key References"
                         or by adding one or more "Key Reference Groups", which in turn can be a zero or more of Key References as part of it.<br><br>
                         Service Keyed Reference Categories:<Br>
@@ -215,7 +229,7 @@
                             %>
                         </div>
                         <br>
-                        Service Keyed Reference Groups<br>
+                        <b>Service Keyed Reference Groups</b><br>
                         <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
 
                             <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign"></i></a> Add Key Reference Group Category<br>
@@ -263,16 +277,16 @@
                             %>
                         </div>
                     </div>
-                        
+
                     <div class="tab-pane" id="bindingtemplates">
-                        Binding Templates - A service in UDDI really defines a specific type of service, not necessarily an implementation of a service. Binding templates
+                        <b>Binding Templates </b>- A service in UDDI really defines a specific type of service, not necessarily an implementation of a service. Binding templates
                         define specifically an implementation of a service and normally includes an access point describing how to use the service. Each service may have 0 or more
                         binding templates. Some registries impose limits on the number of binding templates per service.<br>
                         <a href="javascript:AddBindingTemplate();"><i class="icon-plus-sign"></i></a> Add a Binding Template<Br>
-                        <div id="bindingTemplatesContainer" style="border-width: 2px; border-style: solid;">
+                        <div id="bindingTemplatesContainer" style="border-width: 2px; border-style: solid">
                             <%
                                 for (int i = 0; i < bd.getBindingTemplates().getBindingTemplate().size(); i++) {
-                                    out.write("<div id=\"bindingTemplate" + i + "\"  style=\"border-width: 1px; border-style: dashed;\" >");
+                                    out.write("<div id=\"bindingTemplate" + i + "\"  style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\" >");
                                     out.write("<div style=\"float:left\">"
                                             + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + "');\"><i class=\"icon-remove-sign\"></i></a>"
                                             + "Binding Template Key: &nbsp;</div>"
@@ -280,9 +294,15 @@
                                     if (!newitem) {
                                         out.write("no");
                                     }
-                                    out.write("edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()) + "</div>");
+                                    out.write("edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.VALUE + "\">");
+                                    if (!newitem) {
+                                        out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
+                                    }
+                                    // out.write("</div>");
                             %>          
-                            <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a> Description - binding templates can have more than one description, such as in a different language.
+                            <br>
+                            <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a>Add a Binding Template Description - binding templates can have more than one description, such as in a different language.<Br>
+
                             <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: dotted;" >
                                 <%
                                     for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().size(); k++) {
@@ -301,108 +321,264 @@
                                     }
                                 %>
                             </div>
+                            <b>Access Point</b> - UDDI allows for a choice of either a Hosting Redirector OR an Access Point. Access Point is recommend. The access point is usually a URL for the service endpoint.<br>
                             <%
 
 
-                                out.write("<Br>UDDI allows for a choice of either a Hosting Redirector OR an Access Point. Access Point is recommend.<br>");
-                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + "\" style=\"border-width:1px; border-style:solid\" >");
+
+                                //out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + "\" style=\"border-width:1px; border-style:solid\" >");
                                 //need an html select in here
                                 if (bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector() != null) {
-                                    out.write("<div style=\"float:left\">Hosting Redirector&nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + "hostingRedirector" + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector().getBindingKey()) + "</div>");
+                                    out.write("<div style=\"float:left\">Hosting Redirector: &nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.HOSTINGREDIRECTOR + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getHostingRedirector().getBindingKey()) + "</div>");
                                 }
                                 if (bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint() != null) {
 
                                     out.write("<div style=\"float:left\">Access Point Type: &nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + "accessPointType" + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getUseType()) + "</div>");
-                                    out.write("<div style=\"float:left\">Access Point Type: &nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + "accessPointValue" + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getValue()) + "</div>");
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getUseType()) + "</div>");
+                                    out.write("<div style=\"float:left\">Access Point Value: &nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.ACCESSPOINT_VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getAccessPoint().getValue()) + "</div>");
                                     out.write("</div>");
                                 }
                             %>
 
-                            <a href="javascript:AddTmodelInstance('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>');"><i class="icon-plus-sign"></i></a> tModel Instance Information - a binding template can have one or more instances of tModels. This can be used to attach any data you wish to a binding template, provided the tModel has been defined.
+                            <br>
+                            <b>tModel Instance Information</b> - a binding template can have additional information attached to it using the tModel Instance.<br>
+                            <a href="javascript:AddTmodelInstance('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>');"><i class="icon-plus-sign"></i></a> Add a tModel Instance<br>
                             <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE%>" style="border-width: 1px; border-style: solid; border-color: red" >        
                                 <%
                                     if (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails() != null) {
                                         for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
-                                            out.write("<div style=\"float:left\">tModel Key: &nbsp;</div>"
-                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
-                                            out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
-                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
                                 %>
-                                <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a> Description - tModel instance infos can have more than one description, such as in a different language.
-                                <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
+                                <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k%>" style="border-width: 2px; border-style: dashed; border-color: red" >        
                                     <%
-                                        for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().size(); k++) {
-                                            out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION + j + "\" style=\"border-width:1px; border-style:solid\">");
-                                            out.write("<div style=\"float:left;height:100%\">"
-                                                    + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION + j + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                            out.write("<div style=\"float:left\">Value:&nbsp;</div>"
-                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION + j + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getValue()) + "</div>");
-                                            out.write("<div style=\"float:left\">Language:&nbsp;</div>"
-                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.DESCRIPTION + j + PostBackConstants.LANG + "\">"
-                                                    + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang()))
-                                                    + "</div>");
+                                        out.write("<div style=\"float:left;height:100%\">"
+                                                + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+
+                                        out.write("<div style=\"float:left\"><b>tModel Key: </b>&nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
+                                        //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
+                                        //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
+                                    %>
+                                    <br>
+                                    <%
+
+                                        out.write("<div style=\"float:left\"><b>tModel Instance Parameters:</b> &nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) + "</div>");
+                                    %>
+                                    <br>
+
+                                    <b>tModel Instance Description</b> - tModel instance infos can have more than one description, such as in a different language.<br>
+                                    <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a> Add a tModel Instance Description<br>
+                                    <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
+                                        <%
+                                            for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().size(); j++) {
+                                                out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "\" style=\"border-width:1px; border-style:solid\">");
+                                                out.write("<div style=\"float:left;height:100%\">"
+                                                        + "<a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                                out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getValue()) + "</div>");
+                                                out.write("<div style=\"float:left\">Language:&nbsp;</div>"
+                                                        + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION + j + PostBackConstants.LANG + "\">"
+                                                        + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getDescription().get(j).getLang()))
+                                                        + "</div>");
+                                                out.write("</div>");
+                                            }
+
+                                        %>
+                                    </div>
+
+                                    <div><br>
+                                        <b>Overview Documents</b> - These are typically URLs to web pages that describe this tModel's details and usage scenarios.<br>
+                                        <a href="javascript:AddOverviewDocumentSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW%>');"><i class="icon-plus-sign"></i></a> Add an Overview Document<br>
+                                        <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.OVERVIEW%>" style="border-width: 1px; border-style: groove;" >
+                                            <%
+                                                //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
+                                                for (int j = 0; j < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().size(); j++) {
+                                                    out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "\" style=\"border-width:1px; border-style:solid\">");
+                                                    out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                                    out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getValue()) + "</div>");
+                                                    out.write("<div style=\"float:left\">Use type:&nbsp;</div>"
+                                                            + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getOverviewURL().getUseType()) + "</div>");
+                                            %>
+                                            <br><b>Overview Document Descriptions</b><br>
+                                            <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a>Add an Overview Document Description
+                                            <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION%>" style="border-width: 1px; border-style: groove;" >
+                                                <%
+                                                    //  out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
+                                                    for (int h = 0; h < bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().size(); h++) {
+                                                        out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "\" style=\"border-width:1px; border-style:solid\">");
+                                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                                        out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getValue()) + "</div>");
+                                                        out.write("<div style=\"float:left\">Language:&nbsp;</div>"
+                                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.INSTANCE + PostBackConstants.OVERVIEW + j + PostBackConstants.DESCRIPTION + h + PostBackConstants.LANG + "\">"
+                                                                + (bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang() == null ? "" : StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getOverviewDoc().get(j).getDescription().get(h).getLang())) + "</div>");
+                                                        out.write("</div>");
+                                                    }
+                                                %>
+                                            </div>
+                                            <%
+                                                    out.write("</div>");
+                                                }
+                                            %>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <%    } //end of instance details
+                                %>
+                            </div>                                        
+                            <%
+                                }
+                            %><Br>
+                            <b>Binding Template Keyed Reference Categories:</b><Br>
+
+                            <a href="javascript:AddCategoryKeyReferenceSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
+                            <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>" style="border-width: 1px; border-style: dotted;" >
+                                <%
+                                    if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() == null) {
+                                        bd.getBindingTemplates().getBindingTemplate().get(i).setCategoryBag(new CategoryBag());
+                                    }
+                                    for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size(); k++) {
+                                        out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "\" style=\"border-width:2px; border-style:solid\">");
+                                        out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                        out.write("<div style=\"float:left\">Key: &nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "Value\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                        out.write("<div style=\"float:left\">Name: &nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                        out.write("<div style=\"float:left\">Value: &nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                        out.write("</div>");
+                                    }
+
+                                %>
+                            </div>
+                            <br>    
+                            <b>Binding Template Keyed Reference Groups</b><br>
+                            <a href="javascript:AddCategoryKeyReferenceGroupSpecificBT('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>');"><i class="icon-plus-sign"></i></a> Add Key Reference Group Category<br>
+                            <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP%>" style="border-width: 1px; border-style: dotted;" >
+
+                                <%
+                                    for (int z = 0; z < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().size(); z++) {
+
+                                        out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "\" style=\"border-width:2px; border-style:solid\">"
+                                                + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "');\"><i class=\"icon-remove-sign\"></i></a></div>"
+                                                + "<div style=\"float:left\">Key: &nbsp;</div>"
+                                                + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "Value\"></div>"
+                                                + "<div id=\"catbaggrpkeyref" + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
+                                                + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceSpecific('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
+                                                + "Add Key Reference"
+                                                + "</div>");
+                                        for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().size(); k++) {
+
+                                            out.write("<div id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">");
+                                            out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                            out.write("<div style=\"float:left\">Key: &nbsp;</div>"
+                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "Value\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getTModelKey()) + "</div>");
+                                            out.write("<div style=\"float:left\">Name: &nbsp;</div>"
+                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyName()) + "</div>");
+                                            out.write("<div style=\"float:left\">Value: &nbsp;</div>"
+                                                    + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + "keyref" + k + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyValue()) + "</div>");
                                             out.write("</div>");
                                         }
-                                    %>
-                                </div>
-                                <%    }
+                                        out.write("</div>");
                                     }
-                                    //TODO bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag()
-%>
-                                Binding Template Keyed Reference Categories:<Br>
-
-                                <a href="javascript:AddCategoryKeyReferenceSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>');"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
-                                <div id="<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF%>" style="border-width: 1px; border-style: dotted;" >
-                                    <%
-                                        if (bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag() != null) {
-                                            for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().size(); k++) {
-                                            }
-                                        }
-
-                                    %>
-                                </div>
+                                %>
                             </div>
-                            <%
-                                    /*
-                                     out.write("<div>Add a description</div>");
-                                     for (int k = 0; k < bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().size(); k++) {
-                                     out.write("lang : " + bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getLang());
-                                     out.write("value: " + bd.getBindingTemplates().getBindingTemplate().get(i).getDescription().get(k).getValue());
-                                     }
-                                     //                            bd.getBindingTemplates().getBindingTemplate().get(i).getServiceKey()*/
-                                    //    out.write("</div>");
-                                }
-                            %>
                         </div>
+                        <%
+
+                            } //end of binding templates loop
+                        %>
+
+
+                        <%//end of tmodel instance%>
 
                     </div>
-
+                    <%//end of binding tempaltes container%>
 
                 </div>
+
+
+
                 <div class="tab-pane" id="signatures">
+                    <br>
                     <%
-                        out.write("This service is " + (bd.getSignature().isEmpty() ? "not" : "") + " signed.");
-
-
+                        if (bd.getSignature().isEmpty()) {
+                            out.write("This item is not digitally signed.");
+                        } else {
+                            out.write("This item is digitally signed " + bd.getSignature().size());
                     %>
+                    <table class="table">
+
+
+                        <%
+                                for (int k = 0; k < bd.getSignature().size(); k++) {
+                                    out.write("<tr><td>");
+                                    out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                    out.write("</td><td>");
+                                    out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
+                                    out.write("</td></tr>");
+                                }
+                            }
+
+                        %>
+                    </table>
                 </div>
 
+                <div class="tab-pane" id="opinfo">
+                    <script type="text/javascript">
+                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())   %>", function(data){
+                            $("#opinfodiv").html(data);
+                        } )
+                    </script>
+                    <div id="opinfodiv"></div>
+
+                </div>
             </div>
-            <script type="text/javascript">
-                var currentDescriptionSpecific=<%=totalBTDescriptions%>;
-            </script>
-            <Br><br>
-            <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
-            <a class="btn btn-danger " href="javascript:deleteService();">Delete</a> |
-            <a class="btn btn-success " href="#"">Digitally Sign</a>
-            <script type="text/javascript" src="js/businessEditor.js"></script>
-            <script type="text/javascript" src="js/serviceEditor.js"></script>
         </div>
+        <script type="text/javascript">
+            var currentDescriptionSpecific=<%=totalBTDescriptions%>;
+        </script>
+        <Br><br>
+        <%
+            if (bd.getSignature().isEmpty()) {
+        %>
+        <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
+        <%  } else {
+        %>
+        <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal">Save</a> |
 
+        <%        }
+            //        <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
+%>
+
+
+        <a class="btn btn-danger " href="javascript:deleteService();">Delete</a> |
+        <a class="btn btn-success " href="#"">Digitally Sign</a> |
+        <a class="btn btn-info " href="#" title="Alert me when this entity changes">Subscribe</a> |
+        <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node">Transfer</a>
     </div>
-
+    <script type="text/javascript" src="js/businessEditor.js"></script>
+    <script type="text/javascript" src="js/serviceEditor.js"></script>
+    <div class="modal hide fade" id="confirmDialog">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Digital Signature Warning</h3>
+        </div>
+        <div class="modal-body">
+            <p>This item is digitally signed. This means that when saving your changes, all existing signatures will become invalid and 
+                will automatically be excluded from the save process. </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn">Close</a>
+            <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">Save changes</a>
+        </div>
+    </div>
     <!-- container div is in header bottom-->
     <%@include file="header-bottom.jsp" %>

@@ -4,8 +4,8 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.UddiHub.FindType"%>
-<%@page import="org.apache.juddi.webconsole.UddiHub.CriteriaType"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub.FindType"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub.CriteriaType"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="../csrf.jsp" %>

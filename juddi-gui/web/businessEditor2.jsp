@@ -4,13 +4,14 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="java.net.URLEncoder"%>
 <%@page import="org.uddi.api_v3.IdentifierBag"%>
 <%@page import="org.uddi.api_v3.CategoryBag"%>
 <%@page import="org.uddi.api_v3.Contacts"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
 
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
@@ -96,6 +97,8 @@
                     <li><a href="#identifiers" >Identifiers</a></li>
                     <li><a href="#services" >Services</a></li>
                     <li><a href="#signatures" >Signatures</a></li>
+                    
+                    <li><a href="#opinfo" >Operational Info</a></li>
                 </ul>
                 <script>
                     $(function () {
@@ -129,11 +132,15 @@
                         e.preventDefault();
                         $(this).tab('show');
                     });
+                      $('#myTab a[href=#opinfo]').click(function (e) {
+                        e.preventDefault();
+                        $(this).tab('show');
+                    });
                     
                 </script>
                 <div class="tab-content">
                     <div class="tab-pane active" id="general">
-                        <a href="javascript:AddName();"><i class="icon-plus-sign"></i></a> Name - 
+                        <a href="javascript:AddName();"><i class="icon-plus-sign"></i></a> <b>Name</b> - 
                         Businesses are identified by one or more name. Multiple names are useful for different languages, legal names, or abbreviations.
                         <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -150,7 +157,7 @@
                             %>
                         </div>
                         <Br>
-                        <a href="javascript:AddDescription();"><i class="icon-plus-sign"></i></a> Description - businesses can have more than one description, such as in a different language.
+                        <a href="javascript:AddDescription();"><i class="icon-plus-sign"></i></a> <b>Description </b>- businesses can have more than one description, such as in a different language.
                         <div id="Description" style="border-width: 2px; border-style: solid;" >
                             <%
                                 for (int i = 0; i < bd.getDescription().size(); i++) {
@@ -169,7 +176,7 @@
                     <div class="tab-pane " id="discovery">
                         <Br>
                         <a href="javascript:AddDisco();"><i class="icon-plus-sign"></i></a>
-                        Discovery URLs are typically a link to a simple web page with additional information on it, such as a listing a services.
+                        <b>Discovery URLs </b>- are typically a link to a simple web page with additional information on it, such as a listing a services.
                         Two reserved values are specified in the specification, 'homepage' and 'businessEntity'.
                         <div id="discoContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -201,7 +208,7 @@
                     </div>
                     <div class="tab-pane " id="contacts">
                         <a href="javascript:AddContact();"><i class="icon-plus-sign"></i></a>
-                        Contacts - Each business typically has several points of contact 
+                        <b>Contacts </b>- Each business typically has several points of contact 
                         for a person or a job role within the
                         business so that someone who finds the information can make human contact for any
                         purpose. Examples for Type: "technical questions", "technical contact", "establish account", "sales
@@ -352,10 +359,10 @@
                                     }
                                 }
 
-                                bd.getIdentifierBag();
-                                if (bd.getSignature() != null && !bd.getSignature().isEmpty()) {
-                                    out.write("WARNING: This business entity is digitally signed. After editing it, it will no longer be signed");
-                                }
+                                /* bd.getIdentifierBag();
+                                 if (bd.getSignature() != null && !bd.getSignature().isEmpty()) {
+                                 out.write("WARNING: This business entity is digitally signed. After editing it, it will no longer be signed");
+                                 }*/
                                 //if using savebusiness, can you attach services that are not owned by the business
 
                             %>
@@ -363,7 +370,7 @@
                     </div>
                     <div class="tab-pane " id="categories">
 
-                        Categories - UDDI uses a taxonomy system to categorize businesses and their services. These categories are defined as UDDI tModels and
+                        <b>Categories </b>- UDDI uses a taxonomy system to categorize businesses and their services. These categories are defined as UDDI tModels and
                         are defined by the administrator(s) of this UDDI node. These categories are appended to business registrations either by adding one or more "Key References"
                         or by adding one or more "Key Reference Groups", which in turn can be a zero or more of Key References as part of it.<br><br>
                         Keyed Reference Categories:<Br>
@@ -392,7 +399,7 @@
                             %>
                         </div>
                         <br>
-                        Keyed Reference Groups<br>
+                        <b>Keyed Reference Groups</b><br>
                         <a href="javascript:AddCategoryKeyReferenceGroup();"><i class="icon-plus-sign"></i></a> Add Key Reference Group Category<br>
                         <div id="catContainerGrp" style="border-width: 2px; border-style: solid;" >
 
@@ -408,15 +415,6 @@
                                             + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
                                             + "Add Key Reference"
                                             + "</div>");
-                                    //+ "</div>");
-                                    /*
-                                     out.write("<div id=\"catbaggrpkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                     out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                     out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>");
-                                     out.write("Add Key Reference");
-                                     out.write("<div style=\"float:left\">Key: &nbsp;</div>"
-                                     + "<div class=\"edit\" id=\"catbagkeyrefgrp" + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey()) + "</div>");
-                                     * */
                                     for (int k = 0; k < bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
 
                                         out.write("<div id=\"catbaggrpkeyref" + i + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">");
@@ -429,10 +427,6 @@
                                                 + "<div class=\"edit\" id=\"catbaggrpkeyref" + i + "keyref" + k + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().get(k).getKeyValue()) + "</div>");
                                         out.write("</div>");
                                     }
-                                    //out.write("<div style=\"float:left\">Name&nbsp;</div>"
-                                    //+ "<div class=\"edit\" id=\"discoType" + i + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).()) + "</div>");
-                                    //out.write("<div style=\"float:left\">Value&nbsp;</div>"
-                                    //+ "<div class=\"edit\" id=\"discoType" + i + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyValue()) + "</div>");
 
                                     out.write("</div>");
                                 }
@@ -442,7 +436,7 @@
                         </div>
                     </div>
                     <div class="tab-pane " id="identifiers">
-                        Identifiers - optionally, you can attach identifiers that uniquely identify this business from other systems, such as a tax ID or a <a href="http://www.whitehouse.gov/sites/default/files/omb/grants/duns_num_guide.pdf">DUNS Number</a>.<Br>
+                        <b>Identifiers </b>- optionally, you can attach identifiers that uniquely identify this business from other systems, such as a tax ID or a <a href="http://www.whitehouse.gov/sites/default/files/omb/grants/duns_num_guide.pdf">DUNS Number</a>.<Br>
                         <a href="javascript:AddIdentKeyReference();"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
                         <div id="identContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -461,14 +455,16 @@
                         </div>
                     </div>
                     <div class="tab-pane " id="services">
-                        Business Services - 
+                        <b>Business Services </b>- 
                         <%
                             if (bd.getBusinessServices() != null) {
                                 out.write(Integer.toString(bd.getBusinessServices().getBusinessService().size()));
                             } else {
                                 out.write("0");
                             }
-                        %> are defined for this business.<br>
+                        %> are defined for this business. 
+                        <a href="serviceEditor.jsp?bizid=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF8")  %>" class="btn btn-primary">+</a>
+                        <br>
                         <table class="table table-hover"><tr><th>Key</th><th>Name</th><th>BTs</th></tr>
                             <%
                                 if (bd.getBusinessServices() != null) {
@@ -501,7 +497,7 @@
                         </table>
 
                     </div>
-                    <div class="tab-pane" id="signatures">Digital Signatures
+                    <div class="tab-pane" id="signatures"><b>Digital Signatures</b>
                         <br>
                         <%
                             if (bd.getSignature().isEmpty()) {
@@ -516,6 +512,8 @@
                                     for (int k = 0; k < bd.getSignature().size(); k++) {
                                         out.write("<tr><td>");
                                         out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                        out.write("</td><td>");
+                                        out.write("<a href=\"ajax/getCert.jsp?type=business&id=" + URLEncoder.encode(bd.getBusinessKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
                                         out.write("</td></tr>");
                                     }
                                 }
@@ -523,21 +521,56 @@
                             %>
                         </table>
                     </div>
+                        
+                <div class="tab-pane" id="opinfo">
+                    <script type="text/javascript">
+                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())   %>", function(data){
+                            $("#opinfodiv").html(data);
+                        } )
+                    </script>
+                    <div id="opinfodiv"></div>
+
+                </div>
                 </div>
             </div>
             <div><br>
+                <%
+                    if (bd.getSignature().isEmpty()) {
+                %>
                 <a class="btn btn-primary " href="javascript:saveBusiness();">Save</a> | 
-                <a class="btn btn-danger " href="javascript:deleteBusiness();">Delete</a> |
-                <a class="btn btn-success " href="signer.jsp?id=<%=bizid%>&type=business">Digitally Sign</a></div>
-            <script type="text/javascript" src="js/businessEditor.js"></script>
-            <script type="text/javascript">
-                Reedit();
-            </script>
-        </div>
+                <%  } else {
+                %>
+                <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal">Save</a> |
 
+                <%        }
+                %>
+
+                <a class="btn btn-danger " href="javascript:deleteBusiness();">Delete</a> |
+                <a class="btn btn-success " href="signer.jsp?id=<%=bizid%>&type=business">Digitally Sign</a> |
+                <a class="btn btn-info " href="#" title="Alert me when this entity changes">Subscribe</a> |
+                <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node">Transfer</a>
+                <script type="text/javascript" src="js/businessEditor.js"></script>
+                <script type="text/javascript">
+                    Reedit();
+                </script>
+            </div>
+        </div>
     </div>
 
-
+    <div class="modal hide fade" id="confirmDialog">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Digital Signature Warning</h3>
+        </div>
+        <div class="modal-body">
+            <p>This item is digitally signed. This means that when saving your changes, all existing signatures will become invalid and 
+                will automatically be excluded from the save process. </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn">Close</a>
+            <a href="javascript:saveBusiness();$('#confirmDialog').modal('hide');" class="btn btn-primary">Save changes</a>
+        </div>
+    </div>
 
     <!-- container div is in header bottom-->
     <%@include file="header-bottom.jsp" %>

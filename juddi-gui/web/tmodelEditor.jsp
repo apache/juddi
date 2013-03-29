@@ -6,13 +6,10 @@
 
 
 
-<%@page import="org.uddi.api_v3.Description"%>
-<%@page import="org.uddi.api_v3.Name"%>
-<%@page import="org.uddi.api_v3.CategoryBag"%>
-<%@page import="org.uddi.api_v3.IdentifierBag"%>
+<%@page import="java.net.URLEncoder"%>
+<%@page import="org.uddi.api_v3.*"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
-<%@page import="org.uddi.api_v3.TModel"%>
-<%@page import="org.uddi.api_v3.TModelDetail"%>
+<%@page import="org.apache.juddi.webconsole.hub.*"%>
 <%@page import="org.apache.juddi.query.FindBusinessByNameQuery"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
@@ -27,7 +24,7 @@
     <div class="row">
         <div class="span12">
             <p>
-                <%                    
+                <%
                     UddiHub x = UddiHub.getInstance(application, session);
                     TModel bd = hub.getTmodelDetails(request.getParameter("id"));
                     boolean newitem = false;
@@ -76,12 +73,12 @@
                     
                 var currentDescriptionEntries=<%=bd.getDescription().size()%>;
                 var currentOverviewDocs=<%=bd.getOverviewDoc().size()%>;
-                <%                    
+                <%
                     int currentDescriptionSpecific = 0;
                     for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
                         currentDescriptionSpecific += bd.getOverviewDoc().get(i).getDescription().size();
                     }
-                    
+
                     int currentcatkeyref = 0;
                     if (bd.getCategoryBag() != null) {
                         currentcatkeyref = bd.getCategoryBag().getKeyedReference().size();
@@ -97,30 +94,30 @@
             </script>
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
-                    <%                        
+                    <%
                         if (!newitem) {
                             out.write("<i class=\"icon-lock\"></i>");
                         }
                     %>
                     The tModel Key is the unique identifier. If you specify a tModel, it must be prefixed with
                     an existing partition (key generator), other one is generated for you.
-                    
-                    <div style="border-width: 2px; border-style: solid;" <%                        
+
+                    <div style="border-width: 2px; border-style: solid;" <%
                         if (!newitem) {
                             out.write("class=\"noedit\"");
                         } else {
                             out.write("class=\"edit\"");
                         }
                          %>
-                         id="<%=PostBackConstants.SERVICEKEY%>"><%                            
-                            out.write(StringEscapeUtils.escapeHtml(bd.getTModelKey()));
+                         id="<%=PostBackConstants.SERVICEKEY%>"><%
+                             out.write(StringEscapeUtils.escapeHtml(bd.getTModelKey()));
                         %></div><br>
 
 
                     Name - The name describes this tModel. It is a required field.
 
-                    <%                        
-                        
+                    <%
+
                         if (bd.getName() == null) {
                             bd.setName(new Name());
                         }
@@ -132,15 +129,15 @@
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.LANG + "\">"
                                 + ((bd.getName().getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getLang())))
                                 + "</div>");
-                        
+
                         out.write("</div>");
-                        
+
                     %>
 
                     <Br>
                     <a href="javascript:AddDescription();"><i class="icon-plus-sign"></i></a> Description - businesses can have more than one description, such as in a different language.
                     <div id="Description" style="border-width: 2px; border-style: solid;" >
-                        <%                            
+                        <%
                             if (bd.getDescription() != null) //bd.(new Description());
                             {
                                 for (int i = 0; i < bd.getDescription().size(); i++) {
@@ -153,7 +150,7 @@
                                             + (bd.getDescription().get(i).getLang() != null
                                             ? StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()) : "")
                                             + "</div>");
-                                    
+
                                     out.write("</div>");
                                 }
                             }
@@ -163,7 +160,7 @@
 
                 <div class="tab-pane " id="discovery">
                     <a href="javascript:AddOverviewDocument();"><i class="icon-plus-sign"></i></a>Overview Documents - These are typically URLs to web pages that describe this tModel's details and usage scenarios.
-                    <%                        
+                    <%
                         out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
                         for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + "\" style=\"border-width:1px; border-style:solid\">");
@@ -172,11 +169,11 @@
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
                             out.write("<div style=\"float:left\">Use type:&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getUseType()) + "</div>");
-                            
+
                     %>
 
                     <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION%> ');"><i class="icon-plus-sign"></i></a> Add a description
-                    <%                            
+                    <%
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + "\" style=\"border-width:1px; border-style:dotted\">");
                             for (int k = 0; k < bd.getOverviewDoc().get(i).getDescription().size(); k++) {
                                 out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
@@ -191,7 +188,7 @@
                             out.write("</div>");//end this block
                         }
                         out.write("</div>");//end of overview
-                        %>
+%>
 
                 </div>
 
@@ -200,13 +197,13 @@
 
                     <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
                     <div id="catContainer" style="border-width: 2px; border-style: solid;" >
-                        <%                            
+                        <%
                             if (bd.getCategoryBag() == null) {
                                 bd.setCategoryBag(new CategoryBag());
                             }
                             //                        out.write("Keyed Reference Categories:");
                             for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
-                                
+
                                 out.write("<div id=\"catbagkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">");
                                 out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
                                 out.write("<div style=\"float:left\">Key: &nbsp;</div>"
@@ -225,7 +222,7 @@
                     Identifiers - optionally, you can attach identifiers that uniquely identify this business from other systems, such as a tax ID or a <a href="http://www.whitehouse.gov/sites/default/files/omb/grants/duns_num_guide.pdf">DUNS Number</a>.<Br>
                     <a href="javascript:AddIdentKeyReference();"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
                     <div id="identContainer" style="border-width: 2px; border-style: solid;" >
-                        <%                            
+                        <%
                             if (bd.getIdentifierBag() == null) {
                                 bd.setIdentifierBag(new IdentifierBag());
                             }
@@ -245,19 +242,34 @@
                 </div>
                 <div class="tab-pane " id="signatures">
 
-                    <%                        
-                        if (bd.getSignature().isEmpty()) {
-                            out.write("This item is not signed");
-                        } else {
-                            out.write("This item is signed by " + bd.getSignature().size());
-                        }
-                        
-                    %>
+                   <%
+                            if (bd.getSignature().isEmpty()) {
+                                out.write("This item is not digitally signed.");
+                            } else {
+                                out.write("This item is digitally signed " + bd.getSignature().size());
+                        %>
+                        <table class="table">
+
+
+                            <%
+                                    for (int k = 0; k < bd.getSignature().size(); k++) {
+                                        out.write("<tr><td>");
+                                        out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                        out.write("</td><td>");
+                                        out.write("<a href=\"ajax/getCert.jsp?type=tmodel&id=" + URLEncoder.encode(bd.getTModelKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
+                                        out.write("</td></tr>");
+                                    }
+                                }
+
+                            %>
+                        </table>
                 </div>
                 <div><br>
                     <a class="btn btn-primary " href="javascript:savetModel();">Save</a> | 
                     <a class="btn btn-danger " href="javascript:deletetModel();">Delete</a> |
-                    <a class="btn btn-success " href="#"">Digitally Sign</a>
+                    <a class="btn btn-success " href="#"">Digitally Sign</a> |
+                    <a class="btn btn-info " href="#" title="Alert me when this entity changes">Subscribe</a> |
+                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node">Transfer</a>
                 </div>
             </div>
             <script src="js/tmodeledit.js"></script>

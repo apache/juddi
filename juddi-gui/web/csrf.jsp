@@ -4,7 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.log4j.Logger"%>
 <%@page import="org.apache.log4j.Level"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -50,7 +50,10 @@
     } else {
         //HTTP GET or otherwise message
         if ((current == null) || current.isEmpty()) {
-            current = java.util.UUID.randomUUID().toString();
+            current = (String)session.getAttribute("nonce");
+            if (current == null) {
+                current = java.util.UUID.randomUUID().toString();
+            }
             session.setAttribute("nonce", current);
         }
 

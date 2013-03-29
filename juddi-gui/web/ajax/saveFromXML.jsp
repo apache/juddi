@@ -8,7 +8,7 @@
 <%@page import="org.uddi.api_v3.BusinessService"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
 <%@page import="org.apache.juddi.jaxb.EntityCreator"%>
-<%@page import="org.apache.juddi.webconsole.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><%
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><%
 
     UddiHub x = UddiHub.getInstance(application, session);
     if (request.getMethod().equalsIgnoreCase("POST")) {
