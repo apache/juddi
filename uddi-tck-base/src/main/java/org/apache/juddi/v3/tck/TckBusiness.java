@@ -38,9 +38,12 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.junit.Assert;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -292,6 +295,18 @@ public class TckBusiness
 			
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
+			CategoryBag categoryBag = new CategoryBag();
+			KeyedReferenceGroup keyedReferenceGroup = new KeyedReferenceGroup();
+			keyedReferenceGroup.setTModelKey("somekey");
+			KeyedReference keyedReference = new KeyedReference();
+			keyedReference.setKeyName("myKeyName");
+			keyedReference.setKeyValue("myKeyValue");
+			keyedReference.setTModelKey("myTModelKey");
+			keyedReferenceGroup.getKeyedReference().add(keyedReference);
+			
+			categoryBag.getKeyedReferenceGroup().add(keyedReferenceGroup);
+			beIn.setCategoryBag(categoryBag);
+			
 			publication.saveBusiness(sb);
 	
 			// Now get the entity and check the values
