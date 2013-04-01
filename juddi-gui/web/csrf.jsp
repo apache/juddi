@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.CrossSiteRequestForgeryException"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.log4j.Logger"%>
 <%@page import="org.apache.log4j.Level"%>
@@ -18,7 +19,7 @@
             session.removeAttribute("nonce");
             response.sendRedirect("index.jsp");
             UddiHub.log.log(Level.WARN, "CSRF Test failed, no nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
-            throw new SecurityException("Cross Site Request Forgery");
+            throw new CrossSiteRequestForgeryException();
         } else {
 
             String noncestr = (String) session.getAttribute("nonce");
@@ -26,7 +27,7 @@
                 //no session variable to test against, reject it
                 UddiHub.log.log(Level.WARN, "CSRF Test failed, no session guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
-                throw new SecurityException("Cross Site Request Forgery");
+                throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
             }
             String postedstr = request.getParameter("nonce");
 
@@ -44,7 +45,7 @@
                 //mismatch, reject it
                 UddiHub.log.log(Level.WARN, "CSRF Test failed, session did not match nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
-                throw new SecurityException("Cross Site Request Forgery");
+                throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
             }
         }
     } else {

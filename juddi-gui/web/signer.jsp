@@ -10,13 +10,16 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well">
-        <h1>Digital Signature</h1>
+        <h1>
+            <%=ResourceLoader.GetResource(session, "items.dsigs")%>
+            </h1>
     </div>
 
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-            This page will enable you to digitally sign a UDDI entity using a Java Applet and an X509 Digital Certificate. Windows and MacOS are supported.
+            <%=ResourceLoader.GetResource(session, "items.dsigs.description")%>
+            
             <applet code="org.apache.juddi.gui.dsig.XmlSignatureApplet" archive="applets/juddi-gui-dsig.jar"></applet> 
             <script type="text/javascript">
                 <%

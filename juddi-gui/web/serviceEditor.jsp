@@ -15,7 +15,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well" >
-        <h1>Service Editor</h1>
+        <h1><%=ResourceLoader.GetResource(session, "pages.serviceeditor.title")%></h1>
     </div>
 
     <!-- Example row of columns -->
@@ -60,7 +60,7 @@
                     int totalBTDescriptions = 0;
                 %>
 
-                <i class="icon-lock"></i><b>Business Key </b>-
+                <i class="icon-lock"></i><b> Business Key </b>-
                 The Business Key is the unique identifier for the business that this service belongs to. It cannot be modified.<br>
                 <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
@@ -299,7 +299,7 @@
                                         out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
                                     }
                                     // out.write("</div>");
-                            %>          
+%>          
                             <br>
                             <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign"></i></a>Add a Binding Template Description - binding templates can have more than one description, such as in a different language.<Br>
 
@@ -359,7 +359,7 @@
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
                                         //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
                                         //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
-                                    %>
+%>
                                     <br>
                                     <%
 
@@ -431,7 +431,7 @@
                                 </div>
 
                                 <%    } //end of instance details
-                                %>
+%>
                             </div>                                        
                             <%
                                 }
@@ -494,7 +494,7 @@
                         <%
 
                             } //end of binding templates loop
-                        %>
+%>
 
 
                         <%//end of tmodel instance%>
@@ -533,7 +533,7 @@
 
                 <div class="tab-pane" id="opinfo">
                     <script type="text/javascript">
-                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())   %>", function(data){
+                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
                             $("#opinfodiv").html(data);
                         } )
                     </script>
@@ -552,32 +552,33 @@
         <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
         <%  } else {
         %>
-        <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal">Save</a> |
+        <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><%=ResourceLoader.GetResource(session, "actions.save")%></a> |
 
         <%        }
             //        <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
-%>
+        %>
 
 
-        <a class="btn btn-danger " href="javascript:deleteService();">Delete</a> |
-        <a class="btn btn-success " href="#"">Digitally Sign</a> |
-        <a class="btn btn-info " href="#" title="Alert me when this entity changes">Subscribe</a> |
-        <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node">Transfer</a>
+        <a class="btn btn-danger " href="javascript:deleteService();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
+        <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>&type=service"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
+        <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+        <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a>
     </div>
     <script type="text/javascript" src="js/businessEditor.js"></script>
     <script type="text/javascript" src="js/serviceEditor.js"></script>
+
     <div class="modal hide fade" id="confirmDialog">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Digital Signature Warning</h3>
+            <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
         </div>
         <div class="modal-body">
-            <p>This item is digitally signed. This means that when saving your changes, all existing signatures will become invalid and 
-                will automatically be excluded from the save process. </p>
+            <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn">Close</a>
-            <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">Save changes</a>
+            <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+            <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
+                <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
         </div>
     </div>
     <!-- container div is in header bottom-->

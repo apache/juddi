@@ -12,7 +12,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well" >
-        <h1>tModel Partitions</h1>
+        <h1><%=ResourceLoader.GetResource(session, "pages.tmodelpart.title")%></h1>
     </div>
 
     <!-- Example row of columns -->
@@ -20,19 +20,17 @@
         <div class="span12" >
             
             <div id="container">
-                TModel Key Generators are a special kind of tModel that enables you to define new tModels with any arbitrary tModel prefix that you want.
-                For example, if you wanted a tModel defined as "uddi:www.mycompany.com:ServiceAuthenticationMethod", you would first have to create a tModel
-                key generator with the value of "uddi:www.mycompany.com:keyGenerator". This is part of the UDDI specification and acts as a governance mechanism.
+                <%=ResourceLoader.GetResource(session, "pages.tmodelpart.content")%>
                 <br>
-                <i class="icon-info-sign"></i>For jUDDI implementations of UDDI, the "root" account cannot be used to create a keyGenerator.
+                <i class="icon-info-sign"></i><%=ResourceLoader.GetResource(session, "pages.tmodelpart.juddinote")%>
                 <br><Br>
                 <table class="table">
-                    <tr><td>The UDDI tModel key</td><td><input type="text" value="uddi:www.mycompany.com:keyGenerator" id="keyGeneratorKey"  style="width:100%"></td></tr>
-                    <tr><td>A name describing the key</td><td><input type="text" value="My business's key generator" id="keyGeneratorName" style="width:100%"></td></tr>
-                    <tr><td>Language</td><td><input type="text" value="en" id="keyGeneratorLang" style="width:100%"></td></tr>
+                    <tr><td><%=ResourceLoader.GetResource(session, "pages.tmodelpart.key")%></td><td><input type="text" value="uddi:www.mycompany.com:keyGenerator" id="keyGeneratorKey"  style="width:100%"></td></tr>
+                    <tr><td><%=ResourceLoader.GetResource(session, "pages.thmodepart.name")%></td><td><input type="text" value="My business's key generator" id="keyGeneratorName" style="width:100%"></td></tr>
+                    <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" value="<%=ResourceLoader.GetResource(session, "language")%>" id="keyGeneratorLang" style="width:100%"></td></tr>
                 </table>
                                 
-                <a class="btn btn-primary" title="Save" id="savekeygen" onclick="javascript:savekeygen();">Save</a>
+                <a class="btn btn-primary" title="Save" id="savekeygen" onclick="javascript:savekeygen();"><%=ResourceLoader.GetResource(session, "actions.save")%></a>
             </div>
             <div id="results"></div>
             <script type="text/javascript">

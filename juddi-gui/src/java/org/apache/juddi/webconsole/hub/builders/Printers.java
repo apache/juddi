@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.apache.juddi.webconsole.hub.builders;
 
 import java.util.List;
@@ -29,24 +28,24 @@ public class Printers {
      * @param categoryBag
      * @return
      */
-    public static String CatBagToString(CategoryBag categoryBag) {
+    public static String CatBagToString(CategoryBag categoryBag, String locale) {
         StringBuilder sb = new StringBuilder();
         if (categoryBag == null) {
             return "no data";
         }
         for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
-            sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i)));
+            sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i),locale));
         }
         for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
             sb.append("Key Ref Grp: TModelKey=");
             for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k)));
+                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k),locale));
             }
         }
         return sb.toString();
     }
 
-    public static String KeyedReferenceToString(KeyedReference item) {
+    public static String KeyedReferenceToString(KeyedReference item, String locale) {
         StringBuilder sb = new StringBuilder();
         sb.append("Key Ref: Name=").append(item.getKeyName()).append(" Value=").append(item.getKeyValue()).append(" tModel=").append(item.getTModelKey()).append(System.getProperty("line.separator"));
         return sb.toString();
@@ -58,7 +57,7 @@ public class Printers {
      *
      * @param bindingTemplates
      */
-    public  static String PrintBindingTemplates(BindingTemplates bindingTemplates) {
+    public static String PrintBindingTemplates(BindingTemplates bindingTemplates, String locale) {
         if (bindingTemplates == null) {
             return "No binding templates";
         }
@@ -66,7 +65,7 @@ public class Printers {
         for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
             sb.append("Binding Key: ").append(bindingTemplates.getBindingTemplate().get(i).getBindingKey()).append("<Br>");
             sb.append("Description: ").append(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription())).append("<Br>");
-            sb.append("CatBag: ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag())).append("<Br>");
+            sb.append("CatBag: ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(),locale)).append("<Br>");
             sb.append("tModels: ").append(Printers.TModelInfoToString(bindingTemplates.getBindingTemplate().get(i).getTModelInstanceDetails())).append("<Br>");
             if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
                 sb.append("Access Point: ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue()).append(" type ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType()).append("<Br>");
@@ -78,7 +77,7 @@ public class Printers {
         return sb.toString();
     }
 
-    public  static String ListToDescString(List<Description> name) {
+    public static String ListToDescString(List<Description> name) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < name.size(); i++) {
             sb.append(name.get(i).getValue()).append(" ");
@@ -86,7 +85,7 @@ public class Printers {
         return sb.toString();
     }
 
-    public  static String ListNamesToString(List<Name> name) {
+    public static String ListNamesToString(List<Name> name) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < name.size(); i++) {
             sb.append(name.get(i).getValue()).append(" ");
@@ -94,7 +93,7 @@ public class Printers {
         return sb.toString();
     }
 
-    public  static String ListDiscoToString(DiscoveryURLs info) {
+    public static String ListDiscoToString(DiscoveryURLs info) {
         StringBuilder sb = new StringBuilder();
         if (info == null) {
             return "";
@@ -108,7 +107,7 @@ public class Printers {
     /**
      * converts contacts to a simple string output
      */
-    public  static String PrintContacts(Contacts contacts) {
+    public static String PrintContacts(Contacts contacts,String locale) {
         if (contacts == null) {
             return "";
         }
@@ -141,15 +140,37 @@ public class Printers {
         return sb.toString();
     }
 
-    public  static String ListIdentBagToString(IdentifierBag info) {
+    public static String ListIdentBagToString(IdentifierBag info,String locale) {
         StringBuilder sb = new StringBuilder();
         if (info == null) {
             return "";
         }
         for (int i = 0; i < info.getKeyedReference().size(); i++) {
-            sb.append(KeyedReferenceToString(info.getKeyedReference().get(i)));
+            sb.append(KeyedReferenceToString(info.getKeyedReference().get(i),locale));
         }
         return sb.toString();
     }
 
+    public static String PublisherAssertionsToHtml(List<PublisherAssertion> list, String locale) {
+        if (list == null || list.isEmpty()) {
+            return "No input";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table class=\"table\">");
+        for (int i = 0; i < list.size(); i++) {
+            sb.append("<tr><td>");
+            sb.append(StringEscapeUtils.escapeHtml(list.get(i).getToKey()));
+            sb.append("</td><td>");
+            sb.append(StringEscapeUtils.escapeHtml(list.get(i).getFromKey()));
+            sb.append("</td><td>");
+            sb.append(list.get(i).getSignature().isEmpty());
+            sb.append("</td><td>");
+            sb.append(StringEscapeUtils.escapeHtml(Printers.KeyedReferenceToString(list.get(i).getKeyedReference(),locale)));
+            sb.append("</td></tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+  
 }

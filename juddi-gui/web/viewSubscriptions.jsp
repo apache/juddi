@@ -12,7 +12,6 @@
 <%@page import="org.uddi.api_v3.*"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
 <%@page import="org.apache.juddi.webconsole.hub.*"%>
-<%@page import="org.apache.juddi.query.FindBusinessByNameQuery"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
 <div class="container">
@@ -25,9 +24,14 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
+            <p>
+               <%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.content")%>
+                
+            </p>
+            <h2>UDDI Subscriptions (Subscription API by polling)</h2>
             <%
                 UddiHub x = UddiHub.getInstance(application, session);
-
+//TODO more internationalization
                 List<Subscription> list = x.GetSubscriptions();
                 if (list == null) {
                     out.write("Either an error occured or you're not signed in.");
@@ -44,11 +48,22 @@
                             out.write(StringEscapeUtils.escapeHtml(list.get(i).getExpiresAfter().toString()));
                             out.write("</td></tr>");
                         }
-                        if (list.isEmpty())
+                        if (list.isEmpty()) {
                             out.write("No subscriptions are currently defined.");
+                        }
                     }
                 %>
             </table>
+            
+            <h2>jUDDI Callback Subscriptions</h2>
+            <%
+            if (!x.IsJuddiRegistry())
+                out.write("You're not connected to a jUDDI registry. Contact the administrator or check the configuration file.");
+            else
+                               {
+                   // x.getJUDDISubscriptions
+            }
+            %>
         </div>
     </div>
     <%@include file="header-bottom.jsp" %>

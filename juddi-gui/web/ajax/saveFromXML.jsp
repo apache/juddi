@@ -2,7 +2,8 @@
     Document   : fromXML
     Created on : Mar 24, 2013, 9:31:37 AM
     Author     : Alex O'Ree
---%><%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%>
+--%><%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%>
 <%@page import="org.uddi.api_v3.TModel"%>
 <%@page import="org.uddi.api_v3.BindingTemplate"%>
 <%@page import="org.uddi.api_v3.BusinessService"%>
@@ -42,7 +43,7 @@
                     TModel be = (TModel) j;
                     out.write(x.SaveTModel(be));
                 } else {
-                    out.write("Unrecongized entity type");
+                    out.write(ResourceLoader.GetResource(session, "errors.unknownentity") );
                 }
             }
         }

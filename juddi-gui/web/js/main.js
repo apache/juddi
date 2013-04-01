@@ -65,6 +65,7 @@ function Login()
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
+        //TODO handle expired nonce values?
         RefreshLoginPage();
         $("#loginbutton").text("Login");
     });

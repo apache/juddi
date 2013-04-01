@@ -188,7 +188,7 @@
                             out.write("</div>");//end this block
                         }
                         out.write("</div>");//end of overview
-%>
+                    %>
 
                 </div>
 
@@ -242,34 +242,48 @@
                 </div>
                 <div class="tab-pane " id="signatures">
 
-                   <%
-                            if (bd.getSignature().isEmpty()) {
-                                out.write("This item is not digitally signed.");
-                            } else {
-                                out.write("This item is digitally signed " + bd.getSignature().size());
-                        %>
-                        <table class="table">
+                    <%
+                        if (bd.getSignature().isEmpty()) {
+                            out.write("This item is not digitally signed.");
+                        } else {
+                            out.write("This item is digitally signed " + bd.getSignature().size());
+                    %>
+                    <table class="table">
 
 
-                            <%
-                                    for (int k = 0; k < bd.getSignature().size(); k++) {
-                                        out.write("<tr><td>");
-                                        out.write(x.SignatureToReadable(bd.getSignature().get(k)));
-                                        out.write("</td><td>");
-                                        out.write("<a href=\"ajax/getCert.jsp?type=tmodel&id=" + URLEncoder.encode(bd.getTModelKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
-                                        out.write("</td></tr>");
-                                    }
+                        <%
+                                for (int k = 0; k < bd.getSignature().size(); k++) {
+                                    out.write("<tr><td>");
+                                    out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                    out.write("</td><td>");
+                                    out.write("<a href=\"ajax/getCert.jsp?type=tmodel&id=" + URLEncoder.encode(bd.getTModelKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
+                                    out.write("</td></tr>");
                                 }
+                            }
 
-                            %>
-                        </table>
+                        %>
+                    </table>
                 </div>
                 <div><br>
-                    <a class="btn btn-primary " href="javascript:savetModel();">Save</a> | 
-                    <a class="btn btn-danger " href="javascript:deletetModel();">Delete</a> |
-                    <a class="btn btn-success " href="#"">Digitally Sign</a> |
-                    <a class="btn btn-info " href="#" title="Alert me when this entity changes">Subscribe</a> |
-                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node">Transfer</a>
+                    <%
+                        if (bd.getSignature().isEmpty()) {
+                    %>
+                    <a class="btn btn-primary " href="javascript:savetModel();"><%=ResourceLoader.GetResource(session, "actions.save")%></a> | 
+                    <%  } else {
+                    %>
+                    <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><%=ResourceLoader.GetResource(session, "actions.save")%></a> |
+
+                    <%        }
+                    %>
+
+                    <a class="btn btn-danger " href="javascript:deletetModel();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
+                    <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
+                    <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a>
+
+
+
+
                 </div>
             </div>
             <script src="js/tmodeledit.js"></script>
@@ -279,6 +293,21 @@
             </script>
 
             </p>
+        </div>
+
+        <div class="modal hide fade" id="confirmDialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
+            </div>
+            <div class="modal-body">
+                <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+                <a href="javascript:savetModel();$('#confirmDialog').modal('hide');" class="btn btn-primary">
+                    <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
+            </div>
         </div>
     </div>
     <%@include file="header-bottom.jsp" %>

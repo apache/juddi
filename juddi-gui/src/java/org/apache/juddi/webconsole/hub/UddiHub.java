@@ -14,20 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBElement;
 import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Holder;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.juddi.ClassUtil;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
-import org.apache.juddi.query.util.FindQualifiers;
+import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -35,9 +33,9 @@ import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
 import org.apache.juddi.webconsole.hub.builders.Builders;
 import org.apache.juddi.webconsole.hub.builders.Printers;
+import org.apache.juddi.webconsole.resources.ResourceLoader;
 import org.apache.log4j.Level;
 import org.uddi.api_v3.*;
-import org.uddi.custody_v3.TransferEntities;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -82,12 +80,8 @@ public class UddiHub {
         da.setAuthInfo(token);
         try {
             security.discardAuthToken(da);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
 
         token = null;
@@ -106,8 +100,10 @@ public class UddiHub {
             _session.setAttribute("hub", hub);
             return hub;
         }
+
         return (UddiHub) j;
     }
+    String locale = "en";
 
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
@@ -164,8 +160,8 @@ public class UddiHub {
                 context = bp.getRequestContext();
                 context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("juddipapi"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            HandleException(ex);
         }
     }
     private HttpSession session;
@@ -200,6 +196,12 @@ public class UddiHub {
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
+            bp = (BindingProvider) subscription;
+            context = bp.getRequestContext();
+            context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
+            context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+
+            
             bp = (BindingProvider) juddi;
             context = bp.getRequestContext();
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
@@ -217,12 +219,8 @@ public class UddiHub {
                 try {
                     AuthToken authToken = security.getAuthToken(req);
                     token = authToken.getAuthInfo();
-                } catch (DispositionReportFaultMessage ex) {
-                    log.log(Level.ERROR, null, ex);
-                } catch (RemoteException ex) {
-                    log.log(Level.ERROR, null, ex);
                 } catch (Exception ex) {
-                    log.log(Level.ERROR, null, ex);
+                    return HandleException(ex);
                 }
             }
         }
@@ -253,7 +251,7 @@ public class UddiHub {
             fb.setListHead(offset);
             fb.setAuthInfo(GetToken());
             org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
-            fq.getFindQualifier().add(FindQualifiers.APPROXIMATE_MATCH);
+            fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
 
             fb.setFindQualifiers(fq);
             Name searchname = new Name();
@@ -262,12 +260,12 @@ public class UddiHub {
             fb.getName().add(searchname);
             BusinessList findBusiness = inquiry.findBusiness(fb);
             if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
-                sb.append("No data returned");
+                sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
             } else {
                 ret.displaycount = findBusiness.getListDescription().getIncludeCount();
                 ret.offset = findBusiness.getListDescription().getListHead();
                 ret.totalrecords = findBusiness.getListDescription().getActualCount();
-                sb.append("<table class=\"table\"<tr><th>Name</th><th>Details</th><th>Services</th></tr>");
+                sb.append("<table class=\"table\"<tr><th>" + ResourceLoader.GetResource(session, "items.name") + "</th><th>Details</th><th>Services</th></tr>");
                 for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
                     sb.append("<tr><td><span title=\"").append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
                             append("\">").append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
@@ -293,7 +291,7 @@ public class UddiHub {
             }
 
         } catch (Exception ex) {
-            sb.append("error caught! : ").append(ex.getMessage());
+            sb.append(HandleException(ex));
         }
         ret.renderedHtml = sb.toString();
         return ret;
@@ -311,20 +309,20 @@ public class UddiHub {
             ServiceDetail get = inquiry.getServiceDetail(gbd);
             for (int i = 0; i < get.getBusinessService().size(); i++) {
                 session.setAttribute(get.getBusinessService().get(i).getServiceKey(), get.getBusinessService().get(i));
-                sb.append("<b>Name:</b><div class=\"editable\" id=\"ServiceName\">").append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(get.getBusinessService().get(i).getName()))).append("</div><Br>");
-                sb.append("<b>Desc:</b><div class=\"editable\" id=\"ServiceDescription\">").append(StringEscapeUtils.escapeHtml((Printers.ListToDescString(get.getBusinessService().get(i).getDescription())))).append("</div><Br>");
-                sb.append("<b>Key:</b><div class=\"editable\" id=\"ServiceKey\">").append(StringEscapeUtils.escapeHtml((get.getBusinessService().get(i).getServiceKey()))).append("</div><Br>");
-                sb.append("<b>Category Bag:</b> ").append(Printers.CatBagToString(get.getBusinessService().get(i).getCategoryBag())).append("<Br>");
+                sb.append("<b>").append(ResourceLoader.GetResource(session, "items.name")).append(":</b><div class=\"editable\" id=\"ServiceName\">").append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(get.getBusinessService().get(i).getName()))).append("</div><Br>");
+                sb.append("<b>").append(ResourceLoader.GetResource(session, "items.description")).append(":</b><div class=\"editable\" id=\"ServiceDescription\">").append(StringEscapeUtils.escapeHtml((Printers.ListToDescString(get.getBusinessService().get(i).getDescription())))).append("</div><Br>");
+                sb.append("<b>").append(ResourceLoader.GetResource(session, "items.key")).append(":</b><div class=\"editable\" id=\"ServiceKey\">").append(StringEscapeUtils.escapeHtml((get.getBusinessService().get(i).getServiceKey()))).append("</div><Br>");
+                sb.append("<b>").append(ResourceLoader.GetResource(session, "items.keyrefcat")).append(":</b> ").append(Printers.CatBagToString(get.getBusinessService().get(i).getCategoryBag(), (String) session.getAttribute("locale"))).append("<Br>");
                 if (!get.getBusinessService().get(i).getSignature().isEmpty()) {
-                    sb.append("Item is digitally signed").append("<Br>");
+                    sb.append(ResourceLoader.GetResource(session, "items.signed")).append("<Br>");
                 } else {
-                    sb.append("Item is not digitally signed").append("<Br>");
+                    sb.append(ResourceLoader.GetResource(session, "items.signed.not")).append("<Br>");
                 }
 
-                sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates())).append("<Br>");
+                sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), (String) session.getAttribute("locale"))).append("<Br>");
             }
         } catch (Exception ex) {
-            sb.append("error ").append(StringEscapeUtils.escapeHtml((ex.getMessage())));
+            sb.append(HandleException(ex));
         }
         return sb.toString();
     }
@@ -338,7 +336,7 @@ public class UddiHub {
      */
     public String GetServiceList(String bizid) {
         if (bizid == null || bizid.isEmpty()) {
-            return "No business id specified";
+            return ResourceLoader.GetResource(session, "errors.nobusinessid");
         }
         StringBuilder sb = new StringBuilder();
         try {
@@ -348,15 +346,17 @@ public class UddiHub {
             BusinessDetail businessDetail = inquiry.getBusinessDetail(gbd);
             for (int i = 0; i < businessDetail.getBusinessEntity().size(); i++) {
                 if (businessDetail.getBusinessEntity().get(i).getBusinessServices() == null) {
-                    sb.append("No services are defined.");
+                    sb.append(ResourceLoader.GetResource(session, "errors.noservicesdefined"));
                 } else {
                     for (int k = 0; k < businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().size(); k++) {
-                        sb.append("<div><a href=\"serviceEditor.jsp?id=").append(StringEscapeUtils.escapeHtml(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getServiceKey())).append("\">").append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getName()))).append("</a></div>");
+                        sb.append("<div><a href=\"serviceEditor.jsp?id=").
+                                append(StringEscapeUtils.escapeHtml(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getServiceKey())).append("\">").
+                                append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getBusinessServices().getBusinessService().get(k).getName()))).append("</a></div>");
                     }
                 }
             }
         } catch (Exception ex) {
-            sb.append("error ").append(ex.getMessage());
+            sb.append(ResourceLoader.GetResource(session, "errors.generic")).append(ex.getMessage());
         }
         return sb.toString();
     }
@@ -377,7 +377,7 @@ public class UddiHub {
             return get.getBusinessService().get(0);
 
         } catch (Exception ex) {
-            log.log(Level.WARN, null, ex);
+            HandleException(ex);
         }
         return null;
     }
@@ -389,34 +389,27 @@ public class UddiHub {
             sb.getBusinessService().add(be);
             publish.saveService(sb);
             return "Saved!";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return "UDDI Disposition Fault Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Remote Exception Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Unexpected Error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
+    /**
+     * don't think this is used yet
+     *
+     * @param be
+     * @return
+     */
+    @Deprecated
     public String SaveBindingTemplate(BindingTemplate be) {
         try {
             SaveBinding sb = new SaveBinding();
             sb.setAuthInfo(GetToken());
             sb.getBindingTemplate().add(be);
             publish.saveBinding(sb);
-            return "Saved!";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return "UDDI Disposition Fault Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Remote Exception Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
+            return ResourceLoader.GetResource(session, "actions.save.bindingtemplate");
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Unexpected Error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -430,7 +423,7 @@ public class UddiHub {
             be.setServiceKey(null);
         }
         if (be.getBusinessKey() == null || be.getBusinessKey().length() == 0) {
-            return "No input was provided for the business key";
+            return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
 
         be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME));
@@ -459,16 +452,9 @@ public class UddiHub {
             sb.setAuthInfo(GetToken());
             sb.getBusinessService().add(be);
             publish.saveService(sb);
-            return "Saved!";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return "UDDI Disposition Fault Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Remote Exception Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
+            return ResourceLoader.GetResource(session, "actions.save.service");
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Unexpected Error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -479,15 +465,8 @@ public class UddiHub {
             sb.getBusinessEntity().add(be);
             BusinessDetail saveBusiness = publish.saveBusiness(sb);
             return "Saved!";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return "UDDI Disposition Fault Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Remote Exception Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Unexpected Error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -534,7 +513,7 @@ public class UddiHub {
 
     public String GetBusinessDetailsAsHtml(String bizid) throws Exception {
         if (bizid == null || bizid.isEmpty()) {
-            return "No business id specified";
+            return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
         StringBuilder sb = new StringBuilder();
         try {
@@ -546,15 +525,20 @@ public class UddiHub {
             BusinessDetail businessDetail = inquiry.getBusinessDetail(gbd);
             for (int i = 0; i < businessDetail.getBusinessEntity().size(); i++) {
                 sb.append("Business Detail - key: ").append(businessDetail.getBusinessEntity().get(i).getBusinessKey()).append("<br>");
-                sb.append("Name: ").append(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getName())).append("<br>");
-                sb.append("Description: ").append(Printers.ListToDescString(businessDetail.getBusinessEntity().get(i).getDescription())).append("<br>");
-                sb.append("Discovery URLs: ").append(Printers.ListDiscoToString(businessDetail.getBusinessEntity().get(i).getDiscoveryURLs())).append("<br>");
-                sb.append("Identifiers: ").append(Printers.ListIdentBagToString(businessDetail.getBusinessEntity().get(i).getIdentifierBag())).append("<br>");
-                sb.append("CategoryBag: ").append(Printers.CatBagToString(businessDetail.getBusinessEntity().get(i).getCategoryBag())).append("<br>");
-                Printers.PrintContacts(businessDetail.getBusinessEntity().get(i).getContacts());
+                sb.append(ResourceLoader.GetResource(session, "items.name"));
+                sb.append(": ").append(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getName())).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.description"));
+                sb.append(": ").append(Printers.ListToDescString(businessDetail.getBusinessEntity().get(i).getDescription())).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.discoveryurl"));
+                sb.append(": ").append(Printers.ListDiscoToString(businessDetail.getBusinessEntity().get(i).getDiscoveryURLs())).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.identifiers"));
+                sb.append(": ").append(Printers.ListIdentBagToString(businessDetail.getBusinessEntity().get(i).getIdentifierBag(), (String) session.getAttribute("locale"))).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.keyrefcats"));
+                sb.append(": ").append(Printers.CatBagToString(businessDetail.getBusinessEntity().get(i).getCategoryBag(), (String) session.getAttribute("locale"))).append("<br>");
+                Printers.PrintContacts(businessDetail.getBusinessEntity().get(i).getContacts(), (String) session.getAttribute("locale"));
             }
         } catch (Exception ex) {
-            sb.append("error ").append(ex.getMessage());
+            sb.append(ResourceLoader.GetResource(session, "errors.generic")).append(ex.getMessage());
         }
         return sb.toString();
     }
@@ -582,7 +566,7 @@ public class UddiHub {
                 return businessDetail.getBusinessEntity().get(0);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            HandleException(ex);
         }
         return null;
 
@@ -617,16 +601,22 @@ public class UddiHub {
             n.setValue(keyword);
             fs.getName().add(n);
             fs.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
-            fs.getFindQualifiers().getFindQualifier().add(FindQualifiers.APPROXIMATE_MATCH);
+            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
             ServiceList findService = inquiry.findService(fs);
             if (findService.getServiceInfos() == null) {
-                ret.renderedHtml = "No services returned";
+                ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
             }
             ret.displaycount = findService.getListDescription().getIncludeCount();
             ret.totalrecords = findService.getListDescription().getActualCount();
             StringBuilder sb = new StringBuilder();
-            sb.append("<table class=\"table\"><tr><th>Name</th><th>Key</th><th>Business</th></tr>");
+            sb.append("<table class=\"table\"><tr><th>").
+                    append(ResourceLoader.GetResource(session, "items.name")).
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.key")).
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.business")).
+                    append("</th></tr>");
             for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
                 sb.append("<tr><td><a href=\"serviceEditor.jsp?id=").
                         append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
@@ -641,38 +631,33 @@ public class UddiHub {
             sb.append("</table>");
             ret.renderedHtml = sb.toString();
             return ret;
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = "error " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = "error " + ex.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = "error " + ex.getMessage();
+            ret.renderedHtml = HandleException(ex);
         }
         return ret;
 
     }
 
+    /**
+     * not used yet?
+     *
+     * @param request
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public String AddPublisher(HttpServletRequest request) {
         try {
             SavePublisher sp = new SavePublisher();
             sp.setAuthInfo(GetToken());
             Publisher p = new Publisher();
-            //           p.s
+            //TODO code
             sp.getPublisher().add(p);
             PublisherDetail savePublisher = juddi.savePublisher(sp);
             return "Success";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
+            //TODO resource this
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
 
 
@@ -684,7 +669,7 @@ public class UddiHub {
      * @return
      */
     public String GetPublisherListAsHtml() {
-        if (this.IsJuddiRegistry()) {
+        if (!this.IsJuddiRegistry()) {
             return "This function is only available on Juddi registries";
         }
         try {
@@ -693,26 +678,23 @@ public class UddiHub {
             PublisherDetail allPublisherDetail = juddi.getAllPublisherDetail(gpd);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < allPublisherDetail.getPublisher().size(); i++) {
-                sb.append("Authorized Name = ").append(allPublisherDetail.getPublisher().get(i).getAuthorizedName()).append("<br>");
-                sb.append("Email = ").append(allPublisherDetail.getPublisher().get(i).getEmailAddress()).append("<br>");
-                sb.append("Is Administrator ? = ").append(allPublisherDetail.getPublisher().get(i).getIsAdmin()).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.pubisher.name"))
+                        .append(" = ").append(allPublisherDetail.getPublisher().get(i).getPublisherName()).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.pubisher.authname")).append(" = ").append(allPublisherDetail.getPublisher().get(i).getAuthorizedName()).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.email"));
+                sb.append(" = ").append(allPublisherDetail.getPublisher().get(i).getEmailAddress()).append("<br>");
+                sb.append(ResourceLoader.GetResource(session, "items.publisher.admin"))
+                        .append(" = ").append(allPublisherDetail.getPublisher().get(i).getIsAdmin()).append("<br>");
                 sb.append("Is Enabled? = ").append(allPublisherDetail.getPublisher().get(i).getIsEnabled()).append("<br>");
                 sb.append("Max bindings per service = ").append(allPublisherDetail.getPublisher().get(i).getMaxBindingsPerService()).append("<br>");
                 sb.append("Max businesses = ").append(allPublisherDetail.getPublisher().get(i).getMaxBusinesses()).append("<br>");
                 sb.append("Max Services per Business = ").append(allPublisherDetail.getPublisher().get(i).getMaxServicePerBusiness()).append("<br>");
-                sb.append("Max tModels = ").append(allPublisherDetail.getPublisher().get(i).getMaxTModels()).append("<br>");
-                sb.append("Publisher Name = ").append(allPublisherDetail.getPublisher().get(i).getPublisherName()).append("<br><br>");
+                sb.append("Max tModels = ").append(allPublisherDetail.getPublisher().get(i).getMaxTModels()).append("<br><br>");
+
             }
             return sb.toString();
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -730,10 +712,11 @@ public class UddiHub {
     public String AddTmodelKenGenerator(String partitionName, String name, String lang) {
         try {
             if (!partitionName.startsWith("uddi:")) {
-                return "A tModel partition key generator must have a name that starts with uddi:";
+                return ResourceLoader.GetResource(session, "errors.tmodel.prefix");
+
             }
             if (!partitionName.endsWith(":keyGenerator")) {
-                return "A tModel partition key generator must have a name that ends with :keyGenerator";
+                return ResourceLoader.GetResource(session, "errors.tmodel.postfix");
             }
 
 
@@ -756,17 +739,26 @@ public class UddiHub {
             tm.setTModelKey(partitionName.toLowerCase());
             st.getTModel().add(tm);
             publish.saveTModel(st);
-            return "Success";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
+            return ResourceLoader.GetResource(session, "messages.success");
+            // "Success";
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
+    }
+
+    String HandleException(Exception ex) {
+        if (ex instanceof DispositionReportFaultMessage) {
+            DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+            log.log(Level.ERROR, null, ex);
+            return ResourceLoader.GetResource(session, "errors.uddi") + ex.getMessage() + " " + f.detail.getMessage();
+        }
+        if (ex instanceof RemoteException) {
+            RemoteException f = (RemoteException) ex;
+            log.log(Level.ERROR, null, ex);
+            return ResourceLoader.GetResource(session, "errors.generic") + ex.getMessage() + " " + f.detail.getMessage();
+        }
+        log.log(Level.ERROR, null, ex);
+        return ResourceLoader.GetResource(session, "errors.generic") + ex.getMessage();
     }
 
     /**
@@ -793,14 +785,14 @@ public class UddiHub {
             }
             fm.getName().setValue(keyword);
             fm.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
-            fm.getFindQualifiers().getFindQualifier().add(FindQualifiers.APPROXIMATE_MATCH);
+            fm.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
             TModelList findTModel = inquiry.findTModel(fm);
 
             ret.offset = offset;
             ret.displaycount = findTModel.getListDescription().getIncludeCount();
             ret.totalrecords = findTModel.getListDescription().getActualCount();
             if (findTModel == null || findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
-                ret.renderedHtml = "No tModels are defined";
+                ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");//"No tModels are defined";
             } else {
                 StringBuilder sb = new StringBuilder();
 
@@ -812,10 +804,10 @@ public class UddiHub {
                     sb.append("tModel Key = ").append(
                             StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
                             .append("<br>");
-                    sb.append("Description = ").append(
+                    sb.append(ResourceLoader.GetResource(session, "items.description")).append(" = ").append(
                             StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
                             .append("<br>");
-                    sb.append("Name = ").append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()))
+                    sb.append(ResourceLoader.GetResource(session, "items.name")).append(" = ").append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()))
                             .append(", ")
                             .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
                     sb.append("</td></tr>");
@@ -823,15 +815,8 @@ public class UddiHub {
                 sb.append("</table>");
                 ret.renderedHtml = sb.toString();
             }
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            ret.renderedHtml = ex.getMessage();
+            ret.renderedHtml = HandleException(ex);
         }
         return ret;
     }
@@ -858,12 +843,8 @@ public class UddiHub {
 
             }
 
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
         return null;
     }
@@ -883,14 +864,8 @@ public class UddiHub {
             r.getBindingKey().add(key);
             BindingDetail bindingDetail = inquiry.getBindingDetail(r);
             return bindingDetail.getBindingTemplate().get(0);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
         return null;
     }
@@ -902,14 +877,8 @@ public class UddiHub {
             r.getTModelKey().add(key);
             TModelDetail tModelDetail = inquiry.getTModelDetail(r);
             return tModelDetail.getTModel().get(0);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
         return null;
     }
@@ -999,11 +968,10 @@ public class UddiHub {
                 sb.append("</table>");
                 return sb.toString();
             } else {
-                return "no result returned.";
+                return ResourceLoader.GetResource(session, "errors.norecordsfound");
             }
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -1071,16 +1039,56 @@ public class UddiHub {
                 sb.append("</table>");
                 return sb.toString();
             } else {
-                return "no result returned.";
+                return  ResourceLoader.GetResource(session, "errors.norecordsfound");
             }
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
     private String FindRelatedBusiness(CriteriaType criteria, String parameters, String lang, String[] fq) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        try {
+            FindRelatedBusinesses fb = new FindRelatedBusinesses();
+            fb.setAuthInfo(GetToken());
+            fb.setBusinessKey(parameters);
+            RelatedBusinessesList findBusiness = null;
+            switch (criteria) {
+                case Category:
+                    break;
+                case Name:
+                    break;
+                case tmodel:
+                    break;
+                case uid:
+                    break;
+            }
+
+            findBusiness = inquiry.findRelatedBusinesses(fb);
+
+            if (findBusiness.getRelatedBusinessInfos() != null) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("<table class=\"table\">");
+                for (int i = 0; i < findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().size(); i++) {
+                    sb.append("<tr><td>");
+                    sb.append("<a href=\"businessEditor2.jsp?id=").
+                            append(StringEscapeUtils.escapeHtml(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey())).
+                            append("\">");
+                    if (findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName().isEmpty()) {
+                        sb.append(StringEscapeUtils.escapeHtml(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getBusinessKey()));
+                    } else {
+                        sb.append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getRelatedBusinessInfos().getRelatedBusinessInfo().get(i).getName())));
+                    }
+                    sb.append("</a>");
+                    sb.append("</td></tr>");
+                }
+                sb.append("</table>");
+                return sb.toString();
+            } else {
+                return  ResourceLoader.GetResource(session, "errors.norecordsfound");
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
     }
 
     private String FindPublishers(CriteriaType criteria, String parameters, String lang, String[] fq) {
@@ -1152,11 +1160,10 @@ public class UddiHub {
                 sb.append("</table>");
                 return sb.toString();
             } else {
-                return "no result returned.";
+                return  ResourceLoader.GetResource(session, "errors.norecordsfound");
             }
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -1223,11 +1230,10 @@ public class UddiHub {
                 sb.append("</table>");
                 return sb.toString();
             } else {
-                return "no result returned.";
+                return  ResourceLoader.GetResource(session, "errors.norecordsfound");
             }
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -1239,7 +1245,7 @@ public class UddiHub {
      */
     public String deleteBusiness(String bizid) {
         if (bizid == null || bizid.length() == 0) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         List<String> x = new ArrayList<String>();
         x.add(bizid.trim());
@@ -1248,7 +1254,7 @@ public class UddiHub {
 
     public String deleteService(String serviceId) {
         if (serviceId == null || serviceId.length() == 0) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         List<String> x = new ArrayList<String>();
         x.add(serviceId.trim());
@@ -1257,24 +1263,17 @@ public class UddiHub {
 
     public String deleteService(List<String> serviceId) {
         if (serviceId == null || serviceId.isEmpty()) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         DeleteService db = new DeleteService();
         db.setAuthInfo(GetToken());
         db.getServiceKey().addAll(serviceId);
         try {
             publish.deleteService(db);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
-        return "Success";
+        return ResourceLoader.GetResource(session, "actions.delete.service");
     }
 
     /**
@@ -1285,29 +1284,22 @@ public class UddiHub {
      */
     public String deleteBusiness(List<String> bizid) {
         if (bizid == null || bizid.isEmpty()) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         DeleteBusiness db = new DeleteBusiness();
         db.setAuthInfo(GetToken());
         db.getBusinessKey().addAll(bizid);
         try {
             publish.deleteBusiness(db);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
-        return "Success";
+        return ResourceLoader.GetResource(session, "actions.delete.business");
     }
 
     public String deleteTmodel(String bizid) {
         if (bizid == null || bizid.length() == 0) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         List<String> x = new ArrayList<String>();
         x.add(bizid);
@@ -1322,24 +1314,17 @@ public class UddiHub {
      */
     public String deleteTmodel(List<String> bizid) {
         if (bizid == null || bizid.isEmpty()) {
-            return "No input";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         DeleteTModel db = new DeleteTModel();
         db.setAuthInfo(GetToken());
         db.getTModelKey().addAll(bizid);
         try {
             publish.deleteTModel(db);
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage() + " " + ex.detail.getMessage();
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return ex.getMessage();
+            return HandleException(ex);
         }
-        return "Success";
+        return ResourceLoader.GetResource(session, "actions.delete.tmodel");
     }
 
     public String SaveTModel(TModel be) {
@@ -1349,16 +1334,9 @@ public class UddiHub {
 
             sb.getTModel().add(be);
             TModelDetail saveTModel = publish.saveTModel(sb);
-            return "Saved!";
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-            return "UDDI Disposition Fault Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Remote Exception Error caught! " + ex.getMessage() + " " + ex.detail.getMessage();
+            return ResourceLoader.GetResource(session, "tModel guardado correctamente!");
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
-            return "Unexpected Error caught! " + ex.getMessage();
+            return HandleException(ex);
         }
     }
 
@@ -1431,7 +1409,14 @@ public class UddiHub {
         return sb.toString();
     }
 
-    public static String SignatureToBase64(SignatureType sig) {
+    /**
+     * converts a UDDI Signature Type element into a base64 string containing
+     * the raw data for the signing certificate, if present
+     *
+     * @param sig
+     * @return
+     */
+    public String SignatureToBase64(SignatureType sig) {
         if (sig == null) {
             return "Error, the signature was nullavailable";
         }
@@ -1446,20 +1431,15 @@ public class UddiHub {
                         if (element.getValue() instanceof byte[]) {
                             try {
                                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                                // return org.apache.commons.codec.binary. encode((byte[])element.getValue());
                                 InputStream is = new ByteArrayInputStream((byte[]) element.getValue());
                                 X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
                                 is.close();
-                                //(byte[])element.getValue()
+                                //this is the most supportable way to do this
                                 BASE64Encoder encoder = new BASE64Encoder();
                                 return encoder.encodeBuffer(cert.getEncoded());
-                                // byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(cert.getEncoded());
-                                //byte[] value = (byte[])element.getValue();
-                                //return new String(decoded, "UTF8");
 
                             } catch (Exception ex) {
-                                log.log(Level.WARN, null, ex);
-                                return "Error! " + ex.getMessage();
+                                return HandleException(ex);
                             }
                         } else if (element.getValue() instanceof String) {
                         }
@@ -1467,7 +1447,7 @@ public class UddiHub {
                 }
             }
         }
-        return "Error, Not available";
+        return ResourceLoader.GetResource(session, "errors.nocertavaiable");
     }
 
     /**
@@ -1509,7 +1489,7 @@ public class UddiHub {
                 break;
 
         }
-        return "Error, unsupported entity type";
+        return ResourceLoader.GetResource(session, "errors.unknownentity");
     }
 
     /**
@@ -1519,12 +1499,8 @@ public class UddiHub {
     public List<Subscription> GetSubscriptions() {
         try {
             return subscription.getSubscriptions(GetToken());
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
         return null;
     }
@@ -1543,18 +1519,15 @@ public class UddiHub {
         try {
             operationalInfo = inquiry.getOperationalInfo(goi);
             return operationalInfo.getOperationalInfo();
-        } catch (DispositionReportFaultMessage ex) {
-            log.log(Level.ERROR, null, ex);
-        } catch (RemoteException ex) {
-            log.log(Level.ERROR, null, ex);
         } catch (Exception ex) {
-            log.log(Level.ERROR, null, ex);
+            HandleException(ex);
         }
         return null;
     }
 
     /**
-     *GetOperationalInfo
+     * GetOperationalInfo
+     *
      * @param info
      * @return
      */
@@ -1564,7 +1537,19 @@ public class UddiHub {
         if (info != null) {
             sb.append("<table class=\"table\">");
             for (int i = 0; i < info.size(); i++) {
-                sb.append("<tr><th>Node Id</th><th>Authorized Name</th><th>Key</th><th>Created</th><th>Modified</th><th>Modified+</th></tr>");
+                sb.append("<tr><th>").
+                        append(ResourceLoader.GetResource(session, "items.nodeid")).
+                        append("</th><th>").
+                        append(ResourceLoader.GetResource(session, "items.authorizedname")).
+                        append("</th><th>").
+                        append(ResourceLoader.GetResource(session, "items.key")).
+                        append("</th><th>").
+                        append(ResourceLoader.GetResource(session, "items.created")).
+                        append("</th><th>").
+                        append(ResourceLoader.GetResource(session, "items.modified")).
+                        append("</th><th>").
+                        append(ResourceLoader.GetResource(session, "items.modifiedwithchildren")).
+                        append("</th></tr>");
                 sb.append("<tr><td>");
                 sb.append(StringEscapeUtils.escapeHtml(info.get(i).getNodeID()))
                         .append("</td><td>")
@@ -1583,7 +1568,33 @@ public class UddiHub {
         }
         return sb.toString();
     }
-    
-    
-    
+
+    //TODO this fucntion is pointless, it just returns a list of businesses
+    public RegisteredInfo GetNodeInformation() {
+        try {
+            GetRegisteredInfo r = new GetRegisteredInfo();
+            r.setAuthInfo(GetToken());
+            r.setInfoSelection(InfoSelection.ALL);
+            RegisteredInfo registeredInfo = publish.getRegisteredInfo(r);
+            return registeredInfo;
+        } catch (Exception ex) {
+            HandleException(ex);
+        }
+        return null;
+    }
+
+    public List<PublisherAssertion> GetPublisherAssertions() {
+        try {
+            List<PublisherAssertion> publisherAssertions = publish.getPublisherAssertions(GetToken());
+            return publisherAssertions;
+        } catch (Exception ex) {
+            HandleException(ex);
+        }
+        return null;
+    }
+    //publisher assertion, relationship between two business entities
+
+    public String GetJUDDISubscriptions() {
+        return null;
+    }
 }

@@ -41,7 +41,7 @@
         if (selection.equalsIgnoreCase("tmodel")) {
             criteria = CriteriaType.tmodel;
         }
-        
+
         if (criteria == null) {
             ok = false;
         }
@@ -63,6 +63,9 @@
         }
         if (searchfor.equalsIgnoreCase("Publisher")) {
             type = FindType.Publisher;
+        }
+        if (searchfor.equalsIgnoreCase("RelatedBusiness")) {
+            type = FindType.RelatedBusiness;
         }
         if (type == null) {
             ok = false;

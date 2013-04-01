@@ -1,36 +1,98 @@
 <%-- 
     Document   : index
-    Created on : Feb 23, 2013, 2:05:35 PM
+    Created on : Mar 30, 2013, 10:05:37 PM
     Author     : Alex O'Ree
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@include file="header-top.jsp" %>
-        <div class="container">
+<!DOCTYPE html>
+<%
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null && cookies.length > 0) {
+        for (int i = 0; i < cookies.length; i++) {
+            if (cookies[i] != null && cookies[i].getName() != null && cookies[i].getName().equalsIgnoreCase("locale")) {
+                if (cookies[i].getValue() != null) {
+                    session.setAttribute("locale", cookies[i].getValue());
+                    response.sendRedirect("home.jsp");
+                }
+            }
+        }
+    }
+    if (request.getMethod().equalsIgnoreCase("post")) {
+        String lang = request.getParameter("language");
+        String checked=request.getParameter("setcookie");
+        if (lang != null) {
+            session.setAttribute("locale", lang);
+            if (checked != null && checked.equalsIgnoreCase("on")) {
+                Cookie cookie = new Cookie("locale", lang);
+                //TODO this is for debugging purposes 
+                cookie.setMaxAge(356);
+                //cookie.setDomain("/UDDIBrowser");
+                cookie.setPath("/UDDIBrowser");
+                response.addCookie(cookie);
+            }
+            response.sendRedirect("home.jsp");
+        }
+    }
+%>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Welcome to jUDDI</title>
+        <meta charset="utf-8">
+        <title>Welcome to Apache jUDDI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Apache jUDDI">
+        <meta name="author" content="Apache Software Foundation">
 
-            <!-- Main hero unit for a primary marketing message or call to action -->
-            <div class="hero-unit">
-                <h1>jUDDI</h1>
-                <p>jUDDI (pronounced "Judy") is an open source Java implementation of the Universal Description, Discovery, and Integration (UDDI v3) specification for (Web) Services. Think of UDDI as the yellow pages of the phone book for web services.</p>
-                <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-            </div>
+        <!-- Le styles -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
-            <!-- Example row of columns -->
-            <div class="row">
-                <div class="span4">
-                    <h2>Browse</h2>
-                    <p>Flip through the pages of UDDI. Whether you're just curious or you're looking for something specific and don't know what to search for, the browse feature is a good place to start.</p>
-                    <p><a class="btn" href="businessBrowse.jsp">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Search</h2>
-                    <p>An advanced search capability that allows you to ask for specific criteria.</p>
-                    <p><a class="btn" href="search.jsp">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Manage</h2>
-                    <p></p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+        <![endif]-->
+
+        <!-- Fav and touch icons -->
+
+        <link rel="shortcut icon" href="ico/favicon.png">
+        <style type="text/css">
+            body {
+                padding: 0px 0px 0px 0px;
+                margin: 0px 0px 0px 0px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div style="width:100%; height: 100%; position:absolute; text-align: center; vertical-align: middle; padding: 0px; margin: 0px; 
+             background-image: url('img/bluemarble2.jpg'); background-repeat: no-repeat; background-position-x: center;
+             background-position-y: center; background-size: cover">
+            <div style="color: black; background-color: whitesmoke; 
+                 background: rgb(235, 235, 235); /* Fall-back for browsers that don't
+                                    support rgba */
+                 background: rgba(235, 235, 235, .7);width:60%; position: relative; left:20%; top:25%; height:50%; vertical-align: middle">
+                <br><br>
+                <h1>Welcome to jUDDI</h1>
+                <form method="POST">
+
+                    <select id="language" name="language" >
+                        <option value="en" selected>English</option>
+                        <option value="es" >Español</option>
+                    </select>
+                    <br>
+                    <input type="checkbox" name="setcookie" checked> Remember my decision<br>
+                    <button type="submit" value="Go" class="btn btn-primary">Go</button>
+
+                </form><br>
+                <b>We welcome help internationalizing jUDDI!</b><br>
+                <script type="text/javascript">
+                
+                </script>
+                <noscript>Your browser does not support JavaScript! Functionality will be so severely reduced, that you might as well give up, sorry!</noscript>
             </div>
-<%@include file="header-bottom.jsp" %>
+        </div>
+    </body>
+</html>
