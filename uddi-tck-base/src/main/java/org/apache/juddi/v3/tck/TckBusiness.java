@@ -295,17 +295,6 @@ public class TckBusiness
 			
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
-			CategoryBag categoryBag = new CategoryBag();
-			KeyedReferenceGroup keyedReferenceGroup = new KeyedReferenceGroup();
-			keyedReferenceGroup.setTModelKey("somekey");
-			KeyedReference keyedReference = new KeyedReference();
-			keyedReference.setKeyName("myKeyName");
-			keyedReference.setKeyValue("myKeyValue");
-			keyedReference.setTModelKey("myTModelKey");
-			keyedReferenceGroup.getKeyedReference().add(keyedReference);
-			
-			categoryBag.getKeyedReferenceGroup().add(keyedReferenceGroup);
-			beIn.setCategoryBag(categoryBag);
 			
 			publication.saveBusiness(sb);
 	
