@@ -18,6 +18,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -33,6 +34,7 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.TempKey;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
@@ -113,7 +115,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			    }
 			}
 			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      
 
@@ -153,7 +155,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
 
@@ -193,7 +195,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
 
@@ -245,7 +247,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
 
@@ -285,7 +287,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
 

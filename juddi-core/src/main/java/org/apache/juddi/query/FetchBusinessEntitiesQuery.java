@@ -19,10 +19,15 @@ package org.apache.juddi.query;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 import org.uddi.v3_service.DispositionReportFaultMessage;
@@ -51,23 +56,49 @@ public class FetchBusinessEntitiesQuery extends BusinessEntityQuery {
 		selectSQL = sql.toString();
 	}
 	
-	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRows, Integer listHead, ListDescription listDesc, DynamicQuery.Parameter... restrictions) throws DispositionReportFaultMessage {
+	public static List<?> select(EntityManager em, FindQualifiers fq, List<?> keysIn, Integer maxRowsUser, Integer listHead, ListDescription listDesc, DynamicQuery.Parameter... restrictions) throws DispositionReportFaultMessage {
 		
 		// If keysIn is null or empty, then nothing to fetch.
 		if ((keysIn == null) || (keysIn.size() == 0))
-			return Collections.emptyList();
-
+		return Collections.emptyList();
+		
+		int maxRows = DEFAULT_MAXROWS;
+		try {
+			maxRows = AppConfig.getConfiguration().getInteger(Property.JUDDI_MAX_ROWS, DEFAULT_MAXROWS);
+		}
+		catch(ConfigurationException ce) {
+			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_MAX_ROWS);
+		}
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
-		appendSortTables(dynamicQry);
-		dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		if (keysIn.size() > maxRows) {
+			UUID uuid = UUID.randomUUID();
+			storeIntermediateKeySetResults(em, uuid.toString(), keysIn);
+			appendTempTable(dynamicQry);
+			appendSortTables(dynamicQry);
+			appendTempJoin(dynamicQry, uuid.toString());
+		}
+		else {
+			appendSortTables(dynamicQry);
+			dynamicQry.appendInListWithAnd(ENTITY_ALIAS + "." + KEY_NAME, keysIn);
+		}
 		if (restrictions != null && restrictions.length > 0)
 			dynamicQry.AND().pad().appendGroupedAnd(restrictions);
 
 		appendSortCriteria(dynamicQry, fq);
 
 		log.debug(dynamicQry);
-		
-		return getPagedResult(em, dynamicQry, maxRows, listHead, listDesc);
+		return getPagedResult(em, dynamicQry, maxRowsUser, listHead, listDesc);
+	}
+	
+	private static void appendTempTable(DynamicQuery qry) {
+		qry.comma().append(TEMP_ENTITY_NAME + " " +  TEMP_ENTITY_ALIAS );
+	}
+	
+	private static void appendTempJoin(DynamicQuery qry, String uuid) {
+		qry.pad().AND().pad().append(TEMP_ENTITY_PK_KEY_NAME).append(DynamicQuery.PREDICATE_EQUALS);
+		qry.pad().append(ENTITY_ALIAS + "." + KEY_NAME);
+		qry.pad().AND().pad().append(TEMP_ENTITY_PK_TXID_NAME).append(DynamicQuery.PREDICATE_EQUALS);
+		qry.append("'" + uuid + "'").pad();
 	}
 	
 	private static void appendSortTables(DynamicQuery qry) {
