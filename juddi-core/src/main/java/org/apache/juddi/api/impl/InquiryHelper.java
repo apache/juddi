@@ -201,6 +201,9 @@ public class InquiryHelper {
 		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
 		
+		// If there no keys in the bag then remove the empty TModelBag
+		if (body.getTModelBag().getTModelKey().size()==0) body.setTModelBag(null);
+				
 		return keysFound;
 	}
 
@@ -208,7 +211,6 @@ public class InquiryHelper {
 		return getBusinessListFromKeys(body, findQualifiers, em, keysFound, null, null, null, null);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static BusinessList getBusinessListFromKeys(FindBusiness body, FindQualifiers findQualifiers, EntityManager em, List<?> keysFound,
 													   Date modifiedAfter, Date modifiedBefore, Holder<Integer> subscriptionStartIndex, Integer subscriptionMaxRows)
 				   throws DispositionReportFaultMessage {
@@ -218,28 +220,8 @@ public class InquiryHelper {
 		result.setListDescription(listDesc);
 
 		// Sort and retrieve the final results taking paging into account
-		List<?> queryResults = FetchBusinessEntitiesQuery.select(em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
-		List<?> serviceResults = null;
-		for (int i = 0; i<queryResults.size(); i++) {
-			org.apache.juddi.model.BusinessEntity be = (org.apache.juddi.model.BusinessEntity) queryResults.get(i);
-			
-			List<Object> keysIn = new ArrayList<Object>();
-			List<org.apache.juddi.model.BusinessService> services = be.getBusinessServices();
-			for (int j = 0; j<services.size(); j++) {
-				keysIn.add(services.get(j).getEntityKey());
-			}
-
-			serviceResults = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), null, keysIn);
-			if (serviceResults == null) {
-				be.setBusinessServices(null);
-			} else { 
-				ListDescription ldesc = new ListDescription();
-				result.setListDescription(listDesc);
-				List<?> srvcs = FetchBusinessServicesQuery.select(em, findQualifiers, serviceResults, body.getMaxRows(), 
-						body.getListHead(), ldesc);
-				be.setBusinessServices((List<org.apache.juddi.model.BusinessService>)srvcs);
-			}
-		}
+		List<?> queryResults = FetchBusinessEntitiesQuery.select(
+				em, findQualifiers, keysFound, body.getMaxRows(), body.getListHead(), listDesc);
 			
 		if (queryResults != null && queryResults.size() > 0)
 			result.setBusinessInfos(new org.uddi.api_v3.BusinessInfos());
@@ -304,7 +286,6 @@ public class InquiryHelper {
 			body.setTModelBag(new TModelBag());
 		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
 		
-		
 		keysFound = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
                 if (findQualifiers.isCombineCategoryBags()) {
 		    keysFound = FindServiceByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
@@ -347,7 +328,7 @@ public class InquiryHelper {
 			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
 			org.uddi.api_v3.ServiceInfo apiServiceInfo = new org.uddi.api_v3.ServiceInfo();
 			
-			logger.info(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren() + " " + modelBusinessService.getModifiedIncludingChildren().getTime() );
+			logger.debug(modelBusinessService.getEntityKey() + " is modified " + modelBusinessService.getModifiedIncludingChildren() + " " + modelBusinessService.getModifiedIncludingChildren().getTime() );
 			if (modifiedAfter != null && modifiedAfter.after(modelBusinessService.getModifiedIncludingChildren())) {
 				currentIndex++;
 				continue;

@@ -33,6 +33,7 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateInquiry;
@@ -232,12 +233,12 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		        if (keysFound.size() == 0) {
 		            if (body.getBusinessKey() != null) {
-		                // Check that we were passed a valid serviceKey per
+		                // Check that we were passed a valid businessKey per
         	                // 5.1.12.4 of the UDDI v3 spec
         	                String businessKey = body.getBusinessKey();
         	                org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
         	                if (modelBusinessEntity == null) {
-        	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", businessKey));
+        	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", businessKey));
         	                }
 		            }
 		        }

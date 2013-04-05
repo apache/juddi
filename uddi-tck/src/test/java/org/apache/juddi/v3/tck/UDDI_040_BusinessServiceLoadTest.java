@@ -27,11 +27,11 @@ public class UDDI_040_BusinessServiceLoadTest extends UDDI_040_BusinessServiceIn
 		tckTModel.saveJoePublisherTmodel(authInfoJoe);
 		tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 		long startSave = System.currentTimeMillis();
-		tckBusinessService.saveJoePublisherServices(authInfoJoe, numberOfServices);
+		tckBusinessService.saveJoePublisherServices(authInfoJoe, 0, numberOfServices);
 		long saveDuration = System.currentTimeMillis() - startSave;
 		System.out.println("Save " + numberOfServices + " Joes Services Duration=" + saveDuration);
 		long startDelete = System.currentTimeMillis();
-		tckBusinessService.deleteJoePublisherServices(authInfoJoe, numberOfServices);
+		tckBusinessService.deleteJoePublisherServices(authInfoJoe, 0, numberOfServices);
 		long deleteDuration = System.currentTimeMillis() - startDelete;
 		System.out.println("Delete " + numberOfServices + " Joes Services Duration= " + deleteDuration);
 		tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
@@ -43,11 +43,11 @@ public class UDDI_040_BusinessServiceLoadTest extends UDDI_040_BusinessServiceIn
 		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
 		tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
 		long startSave = System.currentTimeMillis();
-		tckBusinessService.saveSamSyndicatorServices(authInfoSam, numberOfServices);
+		tckBusinessService.saveSamSyndicatorServices(authInfoSam, 0, numberOfServices);
 		long saveDuration = System.currentTimeMillis() - startSave;
 		System.out.println("Save " + numberOfServices + " Sams Services Duration=" + saveDuration);
 		long startDelete = System.currentTimeMillis();
-		tckBusinessService.deleteSamSyndicatorServices(authInfoSam, numberOfServices);
+		tckBusinessService.deleteSamSyndicatorServices(authInfoSam, 0, numberOfServices);
 		long deleteDuration = System.currentTimeMillis() - startDelete;
 		System.out.println("Delete " + numberOfServices + " Sams Services Duration= " + deleteDuration);
 		tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
