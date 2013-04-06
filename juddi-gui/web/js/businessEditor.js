@@ -1,9 +1,19 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-
-var clicktoedit="Click to edit";
 
 function AddName()
 {
@@ -12,9 +22,9 @@ function AddName()
     $("<div id=\"Name" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Name" + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"Name" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"Name" + i + "Lang\"></div>"
         +"</div>").prependTo("#nameContainer");
     Reedit();
@@ -29,9 +39,9 @@ function AddDescriptionSpecific(div)
     $("<div id=\""+ div + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + i + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + i + "Lang\"></div>"
         +"</div>").prependTo("#" + div);
     Reedit();
@@ -45,9 +55,9 @@ function AddDescription()
     $("<div id=\"Description" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"Description" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"Description" + i + "Lang\"></div>"
         +"</div>").prependTo("#Description");
     Reedit();
@@ -62,9 +72,9 @@ function AddDisco()
     $("<div id=\"disco" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('disco" + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"disco" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Type: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"disco" + i + "Type\"></div>"
         +"</div>").prependTo("#discoContainer");
     
@@ -82,13 +92,13 @@ function AddContact()
     $("<div id=\"contact" + i + "\" style=\"border-width:2px; border-style:solid; border-color:red\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Contact Type: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"contact" + i + "Type\">(Job Title, Role)</div>"
-        +"<a href=\"javascript:AddContactName('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>Name &nbsp"
-        +"<a href=\"javascript:AddContactEmail('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>Email &nbsp"
-        +"<a href=\"javascript:AddContactDescription('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>Description &nbsp"
-        +"<a href=\"javascript:AddContactPhone('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>Phone &nbsp"
-        +"<a href=\"javascript:AddContactAddress('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>Address &nbsp"
+        +"<div style=\"float:left\">" + i18n_contactType+ ": &nbsp;</div>"
+        +"<div class=\"edit\" id=\"contact" + i + "Type\">" + i18n_contactTypeDefault + "</div>"
+        +"<a href=\"javascript:AddContactName('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>" + i18n_name + " &nbsp"
+        +"<a href=\"javascript:AddContactEmail('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>" + i18n_email + " &nbsp"
+        +"<a href=\"javascript:AddContactDescription('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>"+i18n_description+" &nbsp"
+        +"<a href=\"javascript:AddContactPhone('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>" + i18n_phone + " &nbsp"
+        +"<a href=\"javascript:AddContactAddress('" + i + "');\"><i class=\"icon-plus-sign\"></i></a>" + i18n_address + " &nbsp"
      
         +"</div>").prependTo("#contactsContainer");
     
@@ -101,9 +111,9 @@ function AddContactName(contactid)
     $("<div id=\"contact" + contactid + "Name" + contactname + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Name" + contactname
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Name: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Name" + contactname + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Name" + contactname + "Lang\"></div>"
         +"</div>").insertAfter("#contact" + contactid);
     Reedit();
@@ -116,9 +126,9 @@ function AddContactEmail(contactid)
     $("<div id=\"contact" + contactid + "Email" + contactemail + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Email" + contactemail
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Type: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"contact" + contactid + "Email" + contactemail + "Type\">e-mail</div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
+        +"<div class=\"edit\" id=\"contact" + contactid + "Email" + contactemail + "Type\">" + i18n_email+ "</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Email" + contactemail + "Value\"></div>"
         +"</div>").insertAfter("#contact" + contactid);
     Reedit();
@@ -131,9 +141,9 @@ function AddContactDescription(contactid)
     $("<div id=\"contact" + contactid + "Description" + contactdescription + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Description" + contactdescription
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Description: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"contact" + contactid + "Description" + contactdescription + "Value\">Primary Contact</div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_description + ": &nbsp;</div>"
+        +"<div class=\"edit\" id=\"contact" + contactid + "Description" + contactdescription + "Value\">"+i18n_contactPrimary+"</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Description" + contactdescription + "Lang\"></div>"
         +"</div>").insertAfter("#contact" + contactid);
     Reedit();
@@ -145,10 +155,10 @@ function AddContactPhone(contactid)
     $("<div id=\"contact" + contactid + "Phone" + contactphone + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Phone" + contactphone
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Phone: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_phone + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Phone" + contactphone + "Value\"></div>"
-        +"<div style=\"float:left\">Type: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"contact" + contactid + "Phone" + contactphone + "Type\">(Extension, Domestic, International, DSN)</div>"
+        +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
+        +"<div class=\"edit\" id=\"contact" + contactid + "Phone" + contactphone + "Type\">" + i18n_phoneType + "</div>"
         +"</div>").insertAfter("#contact" + contactid);
     Reedit();
     contactphone++;
@@ -160,15 +170,16 @@ function AddContactAddress(contactid)
     $("<div id=\"contact" + contactid + "Address" + contactaddress + "\" style=\"border-width:1px; border-style:solid\" >" 
         
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "Address" + contactaddress
-        +"');\"><i class=\"icon-remove-sign\"></i></a>Address</div><br>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"');\"><i class=\"icon-remove-sign\"></i></a>" + i18n_address + "</div><br>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "Lang\"></div>"
-        +"<div style=\"float:left\">Sort Code: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_addressSortCode + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "Sortcode\">" + contactaddress +"</div>"
-        +"<div style=\"float:left\">Type: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "Type\">(headquarters. sales office, billing)</div>"
+        +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
+        +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "Type\">" + i18n_addressDefaultType + "</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "Address" + contactaddress + "KeyName\"></div>"
-        +"<div><a href=\"javascript:AddContactAddressLine('" + contactid+ "Address" + contactaddress+"');\"><i class=\"icon-plus-sign\"></i></a> Add an addline (at least one is required)</div>"
+        +"<div><a href=\"javascript:AddContactAddressLine('" + contactid+ "Address" + 
+        contactaddress+"');\"><i class=\"icon-plus-sign\"></i></a> " + i18n_addressLineAdd + "</div>"
         +"</div>").insertAfter("#contact" + contactid);
     Reedit();
     contactaddress++;
@@ -182,11 +193,11 @@ function AddContactAddressLine(contactid)
         
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('contact" + contactid + "addressLine" +contactaddresslines 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Address Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_addressValue + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "addressLine" + contactaddresslines + "Value\"></div>"
-        +"<div style=\"float:left\">Key Name (optional): &nbsp;</div>"
+        +"<div style=\"float:left\">" +i18n_keyname_optional + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "addressLine" + contactaddresslines + "KeyName\"></div>"
-        +"<div style=\"float:left\">Key Value (optional): &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_keyvalue_optional + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"contact" + contactid + "addressLine" + contactaddresslines + "KeyValue\"></div>"
     
         +"</div>").insertAfter("#contact" + contactid);
@@ -202,11 +213,11 @@ function AddCategoryKeyReference()
     
     $("<div id=\"catbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left\">" + i18n_key +": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbagkeyref" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Name: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyName\"></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyValue\"></div>"
         +"</div>").appendTo("#catContainer");
     Reedit();
@@ -219,12 +230,13 @@ function AddCategoryKeyReferenceGroup()
     
     $("<div id=\"catbaggrpkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left\">" + i18n_key + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbaggrpkeyref" + i + "Value\"></div>"
         
         + "<div id=\"catbaggrpkeyref" + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
         + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('catbaggrpkeyref" + i + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
-        +"Add Key Reference"
+    
+        +i18n_addrefcat
         + "</div>"
     
         +"</div>").appendTo("#catContainerGrp");
@@ -233,17 +245,18 @@ function AddCategoryKeyReferenceGroup()
 var currentcatkeyrefgrpitems=0;
 function AddCategoryKeyReferenceGroupKeyRef(div)
 {
-     var i=currentcatkeyrefgrp;
+    var i=currentcatkeyrefgrp;
     currentcatkeyrefgrpitems++;
     var k=currentcatkeyrefgrpitems;
     
     $("<div id=\"catbaggrpkeyref" + i + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">"+
-        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "keyref" + k+  "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbaggrpkeyref" + i + "keyref" + k+  
+        "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
+        "<div style=\"float:left\">" + i18n_key + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbaggrpkeyref" + i +"keyref" + k+ "Value\"></div>"
-        +"<div style=\"float:left\">Name: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbaggrpkeyref" + i +"keyref" + k+ "KeyName\"></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"catbaggrpkeyref" + i +"keyref" + k+ "KeyValue\"></div>"
         +"</div>").appendTo("#" + div);
     Reedit();
@@ -255,11 +268,11 @@ function AddIdentKeyReference()
     
     $("<div id=\"identbagkeyref" + i + "\" style=\"border-width:1px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('identbagkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left\">" + i18n_key + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"identbagkeyref" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Name: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyName\"></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyValue\"></div>"
         +"</div>").insertAfter("#identContainer");
     Reedit();
@@ -293,7 +306,7 @@ function deleteBusiness()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata
@@ -349,7 +362,7 @@ function saveBusiness()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata

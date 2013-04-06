@@ -1,6 +1,18 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 
@@ -14,11 +26,11 @@ function AddCategoryKeyReferenceSpecific (div)
     
     $("<div id=\""+div + i + "\" style=\"border-width:1px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left\">" + i18n_key + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\""+div + i + "Value\"></div>"
-        +"<div style=\"float:left\">Name: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\""+div + i + "KeyName\"></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"" +div+ i + "KeyValue\"></div>"
         +"</div>").appendTo("#"+div);
     Reedit();
@@ -32,12 +44,13 @@ function AddCategoryKeyReferenceGroupSpecificBT(div)
     
     $("<div id=\""+div + i + "\" style=\"border-width:2px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"+
-        "<div style=\"float:left\">Key: &nbsp;</div>"
+        "<div style=\"float:left\">" + i18n_key + ": &nbsp;</div>"
         + "<div class=\"edit\" id=\"" +div+ i + "Value\"></div>"
         
         + "<div id=\""+div + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
-        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('"+div + i + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
-        +"Add Key Reference"
+        + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('"+div + i
+        + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
+        +i18n_addrefcat
         + "</div>"
     
         +"</div>").appendTo("#"+div);
@@ -51,13 +64,13 @@ function AddOverviewDocumentSpecific(div)
     $("<div id=\"" + div + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" +div+ i + "Value\"></div>"
-        +"<div style=\"float:left\">Use Type: &nbsp;</div>"
+        +"<div style=\"float:left\">Use " + i18n_type + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + i + "Type\"></div>"
         //descriptions
         +"<a href=\"javascript:AddDescriptionSpecific('" + div + i + "Description');\">"
-        +"<i class=\"icon-plus-sign\"></i></a> Add a description"
+        +"<i class=\"icon-plus-sign\"></i></a> " + i18n_descriptionAdd
         + ("<div id=\"" + div + i + "Description\" style=\"border-width:1px; border-style:dotted\"></div>")
     
         +"</div>").prependTo("#" + div);
@@ -70,41 +83,27 @@ function AddBindingTemplate()
 
     currentbindingtemplates++;
     var i =  currentbindingtemplates;         
-    /*  $("<div id=\"bindingTemplate" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
-        +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('bindingTemplate" + i 
-        +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div class=\"editrableSelectAccessPoint\"></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"Name" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
-        +"<div class=\"edit\" id=\"Name" + i + "Lang\"></div>"
-        +"</div>").appendTo("#bindingTemplatesContainer");
-*/    
-    $("<br><div id=\"bindingTemplate" + i + "\" style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\"><div style=\"float:left\"><a href=\"javascript:Remove('bindingTemplate"+i+"');\"><i class=\"icon-remove-sign\"></i></a>Binding Template Key: &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"Value\">"
-        +"</div><br><a href=\"javascript:AddDescriptionSpecific('bindingTemplate"+i+"Description');\"><i class=\"icon-plus-sign\"></i></a>Add a Binding Template Description - binding templates can have more than one description, such as in a different language.<br>"
+      
+    $("<br><div id=\"bindingTemplate" + i + "\" style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\"><div style=\"float:left\"><a href=\"javascript:Remove('bindingTemplate"+i+"');\"><i class=\"icon-remove-sign\"></i></a>" + i18n_bindingTemplateKey + ": &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"Value\">"
+        +"</div><br><a href=\"javascript:AddDescriptionSpecific('bindingTemplate"+i+"Description');\"><i class=\"icon-plus-sign\"></i></a>"
+        +i18n_bindingTemplateDescriptionAdd
+        +"<br>"
         +"<div id=\"bindingTemplate"+i+"Description\" style=\"border-width: 1px; border-style: dotted;\"></div>"
-        +"<b>Access Point</b> - UDDI allows for a choice of either a Hosting Redirector OR an Access Point. Access Point is recommend. The access point is usually a URL for the service endpoint.<br>"
-        +"<div style=\"float:left\">Access Point Type: &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"accessPointType\"></div><div style=\"float:left\">Access Point Value: &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"accessPointValue\"></div></div>"
-        +"<br><b>tModel Instance Information</b> - a binding template can have additional information attached to it using the tModel Instance.<br>"
-        +"<a href=\"javascript:AddTmodelInstance('bindingTemplate"+i+"tmodelInstance');\"><i class=\"icon-plus-sign\"></i></a> Add a tModel Instance<br>"
+        +"<b>" + i18n_accesspoint + "</b> - " + i18n_accesspointDescription +"<br>"
+        +"<div style=\"float:left\">" + i18n_accesspointType + ": &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"accessPointType\"></div><div style=\"float:left\">" + i18n_accesspointValue + ": &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"accessPointValue\"></div></div>"
+        +"<br><b>" + i18n_tmodelinstanceinfo + "</b> - " + i18n_tmodelinstanceinfoDescription + "<br>"
+        +"<a href=\"javascript:AddTmodelInstance('bindingTemplate"+i+"tmodelInstance');\"><i class=\"icon-plus-sign\"></i></a> " + i18n_tmodelinstanceinfoAdd 
+        + "<br>"
         +"<div id=\"bindingTemplate"+i+"tmodelInstance\" style=\"border-width: 1px; border-style: solid; border-color: red\"></div><br>"
-        +"<b>Binding Template Keyed Reference Categories:</b><br><a href=\"javascript:AddCategoryKeyReferenceSpecific('bindingTemplate"+i+"catbagkeyref');\"><i class=\"icon-plus-sign\"></i></a> Add Key Reference Category <br>"
-        +"<div id=\"bindingTemplate"+i+"catbagkeyref\" style=\"border-width: 1px; border-style: dotted;\"></div><br><b>Binding Template Keyed Reference Groups</b><br>"
-        +"<a href=\"javascript:AddCategoryKeyReferenceGroupSpecificBT('bindingTemplate"+i+"catbaggrpkeyref');\"><i class=\"icon-plus-sign\"></i></a> Add Key Reference Group Category<br>"
+        +"<b>" + i18n_bindingTemplateKeyRefCat + ":</b><br><a href=\"javascript:AddCategoryKeyReferenceSpecific('bindingTemplate"+i+"catbagkeyref');\"><i class=\"icon-plus-sign\"></i></a> " + i18n_addrefcat + "<br>"
+        +"<div id=\"bindingTemplate"+i+"catbagkeyref\" style=\"border-width: 1px; border-style: dotted;\"></div><br>"
+        +"<b>" + i18n_bindingTemplateKeyRefCatGrp + "</b><br>"
+        +"<a href=\"javascript:AddCategoryKeyReferenceGroupSpecificBT('bindingTemplate"+i+"catbaggrpkeyref');\"><i class=\"icon-plus-sign\"></i></a> " + i18n_keyRefGrpAdd + "<br>"
         +"<div id=\"bindingTemplate"+i+"catbaggrpkeyref\" style=\"border-width: 1px; border-style: dotted;\"></div></div>").appendTo("#bindingTemplatesContainer");
 
     Reedit();
-//reselect();
-
 }
 
-function reselect()
-{
-    $('.editableSelectAccessPoint').editable(null, { 
-        data   : " {'accessPoint':'accessPoint','HostingRedirector':'HostingRedirector', 'selected':'accessPoint'}",
-        type   : 'select'
-    });
-}
 
 function AddTmodelInstance(div)
 {
@@ -112,15 +111,18 @@ function AddTmodelInstance(div)
     var i =  currentbindingtemplatesInstance;         
     
     $("<div id=\"" + div + i + "\" style=\"border-width: 2px; border-style: dashed; border-color: red\">"        
-        +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i + "');\"><i class=\"icon-remove-sign\"></i></a></div><div style=\"float:left\"><b>tModel Key: </b>&nbsp;</div><div class=\"edit\" id=\"" + div + i + "KeyName\"></div>"
-        +"<br><div style=\"float:left\"><b>tModel Instance Parameters:</b> &nbsp;</div><div class=\"edit\" id=\"" + div + i + "instanceValue\"></div>"
-        +"<br><b>tModel Instance Description</b> - tModel instance infos can have more than one description, such as in a different language.<br>"
-        +"<a href=\"javascript:AddDescriptionSpecific('" + div + i + "instanceDescription');\"><i class=\"icon-plus-sign\"></i></a> Add a tModel Instance Description<br>"
+        +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i + "');\"><i class=\"icon-remove-sign\"></i></a></div><div style=\"float:left\">"
+        +"<b>" + i18n_tmodelkey + ": </b>&nbsp;</div><div class=\"edit\" id=\"" + div + i + "KeyName\"></div>"
+        +"<br><div style=\"float:left\"><b>" + i18n_tmodelInstanceParams + ":</b> &nbsp;</div><div class=\"edit\" id=\"" + div + i + "instanceValue\"></div>"
+        +"<br><b>" + i18n_tmodelInstanceDescription + "</b> - " + i18n_tmodelInstanceDescription2 + "<br>"
+        +"<a href=\"javascript:AddDescriptionSpecific('" + div + i + "instanceDescription');\"><i class=\"icon-plus-sign\"></i></a> "
+        +i18n_tmodelInstanceDescriptionAdd+"<br>"
         +"<div id=\"" + div + i + "instanceDescription\" style=\"border-width: 1px; border-style: groove;\">"
         //issue
 
-        +"<div><br><b>Overview Documents</b> - These are typically URLs to web pages that describe this tModel's details and usage scenarios.<br>"
-        +"<a href=\"javascript:AddOverviewDocumentSpecific('" + div + i + "instanceoverviewDoc');\"><i class=\"icon-plus-sign\"></i></a> Add an Overview Document<br>"
+        +"<div><br><b>" + i18n_overviewdoc + "</b> - " + i18n_overviewdocDescription + "<br>"
+        +"<a href=\"javascript:AddOverviewDocumentSpecific('" + div + i + 
+        "instanceoverviewDoc');\"><i class=\"icon-plus-sign\"></i></a> "+ i18n_overviewdocadd + "<br>"
         +"<div id=\"" + div + i + "overviewDoc\" style=\"border-width: 1px; border-style: groove;\"></div></div></div></div></div>").appendTo("#"+div);
     Reedit();
 }
@@ -158,7 +160,7 @@ function saveService()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata
@@ -193,7 +195,7 @@ function deleteService()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata

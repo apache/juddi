@@ -1,4 +1,6 @@
 /*
+ * MODIFIED by Juddi to support i18n
+ * 
  * Jeditable - jQuery in place edit plugin
  *
  * Copyright (c) 2006-2009 Mika Tuupola, Dylan Verheul
@@ -533,8 +535,8 @@
         event      : 'click.editable',
         onblur     : 'cancel',
         loadtype   : 'GET',
-        loadtext   : 'Loading...',
-        placeholder: 'Click to edit',
+        loadtext   : i18n_loading,
+        placeholder: i18n_clicktoedit,
         loaddata   : {},
         submitdata : {},
         ajaxoptions: {}

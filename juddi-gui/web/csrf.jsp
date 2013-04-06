@@ -10,6 +10,24 @@
 <%@page import="org.apache.log4j.Level"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    //this is to catch someone that bookmarked a page after selecting a language
+    Cookie[] cookies3 = request.getCookies();
+    if (cookies3 != null && cookies3.length > 0) {
+        for (int i = 0; i < cookies3.length; i++) {
+            if (cookies3[i] != null && cookies3[i].getName() != null && cookies3[i].getName().equalsIgnoreCase("locale")) {
+                if (cookies3[i].getValue() != null) {
+                    session.setAttribute("locale", cookies3[i].getValue());
+                }
+            }
+        }
+    }
+    if (session.getAttribute("locale")==null){
+        //last change, default to english
+        session.setAttribute("locale", "en");
+    }
+%>
+<%
+
     String current = null;
 
     if (request.getMethod().equalsIgnoreCase("post")) {

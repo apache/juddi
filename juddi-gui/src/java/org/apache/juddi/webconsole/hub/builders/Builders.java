@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package org.apache.juddi.webconsole.hub.builders;
 
@@ -54,7 +66,7 @@ public class Builders {
      * @param prefix
      * @return
      */
-    public static List<PersonName> BuildContactPersonNames(Map map, String prefix) {
+    public static List<PersonName> BuildContactPersonNames(Map map, String prefix, String cte) {
         List<PersonName> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -67,7 +79,7 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     PersonName pn = new PersonName();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.LANG);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setLang(null);
                     } else {
                         pn.setLang(t[0]);
@@ -84,7 +96,7 @@ public class Builders {
         return ret;
     }
 
-    public static List<OverviewDoc> BuildOverviewDocs(Map map, String prefix) {
+    public static List<OverviewDoc> BuildOverviewDocs(Map map, String prefix, String cte) {
         List<OverviewDoc> ret = new ArrayList<OverviewDoc>();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -101,7 +113,7 @@ public class Builders {
                     pn.getOverviewURL().setValue(t[0]);
                     t = (String[]) map.get(prefix + index + PostBackConstants.TYPE);
                     pn.getOverviewURL().setUseType(t[0]);
-                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION));
+                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte));
                     ret.add(pn);
                     processedIndexes.add(index);
                 }
@@ -138,19 +150,19 @@ public class Builders {
         return ret;
     }
 
-    public static Contact BuildSingleContact(Map m, String prefix) {
+    public static Contact BuildSingleContact(Map m, String prefix,String cte) {
         Contact c = new Contact();
         String[] t = (String[]) m.get(prefix + PostBackConstants.TYPE);
         c.setUseType(t[0]);
-        c.getPersonName().addAll(BuildContactPersonNames(MapFilter(m, prefix + PostBackConstants.NAME), prefix + PostBackConstants.NAME));
-        c.getDescription().addAll(BuildDescription(MapFilter(m, prefix + PostBackConstants.DESCRIPTION), prefix + PostBackConstants.DESCRIPTION));
+        c.getPersonName().addAll(BuildContactPersonNames(MapFilter(m, prefix + PostBackConstants.NAME), prefix + PostBackConstants.NAME, cte));
+        c.getDescription().addAll(BuildDescription(MapFilter(m, prefix + PostBackConstants.DESCRIPTION), prefix + PostBackConstants.DESCRIPTION, cte));
         c.getEmail().addAll(BuildEmail(MapFilter(m, prefix + PostBackConstants.EMAIL), prefix + PostBackConstants.EMAIL));
         c.getPhone().addAll(BuildPhone(MapFilter(m, prefix + PostBackConstants.PHONE), prefix + PostBackConstants.PHONE));
-        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS));
+        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS,cte));
         return c;
     }
 
-    public static List<Name> BuildNames(Map map, String prefix) {
+    public static List<Name> BuildNames(Map map, String prefix, String cte) {
         List<Name> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -163,7 +175,7 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     Name pn = new Name();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.LANG);
-                    if (t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0].equalsIgnoreCase(cte)) {
                         pn.setLang(null);
                     } else {
                         pn.setLang(t[0]);
@@ -246,7 +258,7 @@ public class Builders {
         return list;
     }
 
-    public static List<Address> BuildAddress(Map map, String prefix) {
+    public static List<Address> BuildAddress(Map map, String prefix, String cte) {
         List<Address> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -259,25 +271,25 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     Address pn = new Address();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.LANG);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setLang(null);
                     } else {
                         pn.setLang(t[0]);
                     }
                     t = (String[]) map.get(prefix + index + PostBackConstants.TYPE);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setUseType(null);
                     } else {
                         pn.setUseType(t[0]);
                     }
                     t = (String[]) map.get(prefix + index + PostBackConstants.SORTCODE);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setSortCode(null);
                     } else {
                         pn.setSortCode(t[0]);
                     }
                     t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setTModelKey(null);
                     } else {
                         pn.setTModelKey(t[0]);
@@ -324,7 +336,7 @@ public class Builders {
      * @param map
      * @return
      */
-    public static Contacts BuildContacts(Map map) {
+    public static Contacts BuildContacts(Map map, String cte) {
         Contacts cb = new Contacts();
         Map contactdata = MapFilter(map, PostBackConstants.CONTACT_PREFIX);
         Iterator it = contactdata.keySet().iterator();
@@ -336,7 +348,7 @@ public class Builders {
             if (match.find()) {
                 String index = key.substring(0, match.start());
                 if (!processedIndexes.contains(index)) {
-                    cb.getContact().add(BuildSingleContact(MapFilter(contactdata, PostBackConstants.CONTACT_PREFIX + index), PostBackConstants.CONTACT_PREFIX + index));
+                    cb.getContact().add(BuildSingleContact(MapFilter(contactdata, PostBackConstants.CONTACT_PREFIX + index), PostBackConstants.CONTACT_PREFIX + index, cte));
                     processedIndexes.add(index);
                 }
             } else {
@@ -375,7 +387,7 @@ public class Builders {
         return list;
     }
 
-    public static List<Description> BuildDescription(Map map, String prefix) {
+    public static List<Description> BuildDescription(Map map, String prefix, String cte) {
         List<Description> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -388,7 +400,7 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     Description pn = new Description();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.LANG);
-                    if (t[0] == null || t[0].equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+                    if (t[0] == null || t[0].equalsIgnoreCase(cte)) {
                         pn.setLang(null);
                     } else {
                         pn.setLang(t[0]);
@@ -461,7 +473,7 @@ public class Builders {
         return ret;
     }
 
-    public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix) {
+    public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix, String cte) {
         List<BindingTemplate> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -496,7 +508,7 @@ public class Builders {
                     if (ap.getValue() != null) {
                         pn.setAccessPoint(ap);
                     }
-                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION));
+                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte));
                     CategoryBag cb = new CategoryBag();
                     cb.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF), prefix + index + PostBackConstants.CATBAG_KEY_REF));
                     cb.getKeyedReferenceGroup().addAll(BuildKeyedReferenceGroup(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP), prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP));
@@ -505,7 +517,7 @@ public class Builders {
                     }
 
                     pn.setCategoryBag(cb);
-                    pn.setTModelInstanceDetails(BuildTmodelInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.TMODELINSTANCE), prefix + index + PostBackConstants.TMODELINSTANCE));
+                    pn.setTModelInstanceDetails(BuildTmodelInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.TMODELINSTANCE), prefix + index + PostBackConstants.TMODELINSTANCE, cte));
 
                     ret.add(pn);
                     processedIndexes.add(index);
@@ -517,7 +529,7 @@ public class Builders {
         return ret;
     }
 
-    private static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix) {
+    private static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix, String cte) {
         TModelInstanceDetails ret = new TModelInstanceDetails();
 
         Iterator it = map.keySet().iterator();
@@ -533,9 +545,9 @@ public class Builders {
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
                     tmi.setTModelKey(t[0]);
 
-                    tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE));
+                    tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte));
 
-                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION));
+                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION, cte));
 
                     ret.getTModelInstanceInfo().add(tmi);
                     processedIndexes.add(index);
@@ -550,7 +562,7 @@ public class Builders {
         return ret;
     }
 
-    private static InstanceDetails BuildInstanceDetails(Map map, String prefix) {
+    private static InstanceDetails BuildInstanceDetails(Map map, String prefix, String cte) {
         InstanceDetails ret = new InstanceDetails();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -566,8 +578,8 @@ public class Builders {
                     //pn.setValue(t[0]);
                     ret.setInstanceParms(t[0]);
 
-                    ret.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION));
-                    ret.getOverviewDoc().addAll(BuildOverviewDocs(MapFilter(map, prefix + index + PostBackConstants.OVERVIEW), prefix + index + PostBackConstants.OVERVIEW));
+                    ret.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte));
+                    ret.getOverviewDoc().addAll(BuildOverviewDocs(MapFilter(map, prefix + index + PostBackConstants.OVERVIEW), prefix + index + PostBackConstants.OVERVIEW, cte));
                     processedIndexes.add(index);
                 }
             } else {

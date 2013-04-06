@@ -28,13 +28,13 @@
                <%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.content")%>
                 
             </p>
-            <h2>UDDI Subscriptions (Subscription API by polling)</h2>
+            <h2><%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.listingheader")%></h2>
             <%
                 UddiHub x = UddiHub.getInstance(application, session);
 //TODO more internationalization
                 List<Subscription> list = x.GetSubscriptions();
                 if (list == null) {
-                    out.write("Either an error occured or you're not signed in.");
+                    out.write(ResourceLoader.GetResource(session, "errors.notsignedin"));
                 }
 
             %>
@@ -49,7 +49,7 @@
                             out.write("</td></tr>");
                         }
                         if (list.isEmpty()) {
-                            out.write("No subscriptions are currently defined.");
+                            out.write(ResourceLoader.GetResource(session, "pages.viewsubscriptions.nosubs"));
                         }
                     }
                 %>
@@ -58,7 +58,7 @@
             <h2>jUDDI Callback Subscriptions</h2>
             <%
             if (!x.IsJuddiRegistry())
-                out.write("You're not connected to a jUDDI registry. Contact the administrator or check the configuration file.");
+                out.write(ResourceLoader.GetResource(session, "errors.juddiapi.without.juddi"));
             else
                                {
                    // x.getJUDDISubscriptions

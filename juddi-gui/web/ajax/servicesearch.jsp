@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
 <%@page import="org.apache.juddi.webconsole.hub.PagableContainer"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
@@ -20,7 +21,7 @@
     if (lang == null || lang.length() == 0) {
         lang = null;
     }
-    if (lang != null && lang.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+    if (lang != null && lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
         lang = null;
     }
     String keyword = request.getParameter("keyword");

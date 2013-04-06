@@ -158,7 +158,11 @@
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) + "</div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + "&nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getName().get(i).getLang()) + "</div>");
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">");
+                                    if (bd.getName().get(i).getLang() != null) {
+                                        out.write(StringEscapeUtils.escapeHtml(bd.getName().get(i).getLang()));
+                                    }
+                                    out.write("</div>");
 
                                     out.write("</div>");
                                 }
@@ -226,7 +230,7 @@
                                         out.write("<div id=\"" + PostBackConstants.CONTACT_PREFIX + i + "\" style=\"border-width:2px; border-style:solid; border-color:red\" >"
                                                 + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CONTACT_PREFIX + i
                                                 + "');\"><i class=\"icon-remove-sign\"></i></a></div>"
-                                                + "<div style=\"float:left\">Contact Type: &nbsp;</div>"
+                                                + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.contact.type") + ": &nbsp;</div>"
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + i + PostBackConstants.TYPE + "\">"
                                                 + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getUseType())
                                                 + "</div>"
@@ -313,12 +317,12 @@
                                             int contactaddress = k;
                                             out.write("<div id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + "\" style=\"border-width:1px; border-style:solid\" >"
                                                     + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress
-                                                    + "');\"><i class=\"icon-remove-sign\"></i></a>Address</div><br>"
+                                                    + "');\"><i class=\"icon-remove-sign\"></i></a>" + ResourceLoader.GetResource(session, "items.address") + "</div><br>"
                                                     + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ": &nbsp;</div>"
                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + PostBackConstants.LANG + "\">"
                                                     + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getLang())
                                                     + "</div>"
-                                                    + "<div style=\"float:left\">Sort Code: &nbsp;</div>"
+                                                    + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.sortcode") + ": &nbsp;</div>"
                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.CONTACT_PREFIX + contactid + PostBackConstants.ADDRESS + contactaddress + "Sortcode\">"
                                                     + StringEscapeUtils.escapeHtml(bd.getContacts().getContact().get(i).getAddress().get(k).getSortCode())
                                                     + "</div>"
@@ -366,7 +370,7 @@
                         <b><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%> </b>- 
                         <%=ResourceLoader.GetResource(session, "items.categories.description")%>
                         <br><br>
-                        <%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:<Br>
+                        <b><%=ResourceLoader.GetResource(session, "items.keyrefcats")%>:</b><br>
                         <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
                         <div id="catContainer" style="border-width: 2px; border-style: solid;" >
 
@@ -403,10 +407,12 @@
                                     out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "\" style=\"border-width:2px; border-style:solid\">"
                                             + "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>"
                                             + "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ":  &nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "\"></div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + PostBackConstants.VALUE + "\">"
+                                            + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReferenceGroup().get(i).getTModelKey())
+                                            + "</div>"
                                             + "<div id=\"" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "keyref\" style=\"border-width:1px; border-style:solid\">"
                                             + "<div style=\"float:left;height:100%\"><a href=\"javascript:AddCategoryKeyReferenceGroupKeyRef('" + PostBackConstants.CATBAG_KEY_REF_GRP + i + "keyref');\"><i class=\"icon-plus-sign\"></i></a></div>"
-                                            + "Add Key Reference"
+                                            + ResourceLoader.GetResource(session, "items.keyrefcat.add")
                                             + "</div>");
                                     for (int k = 0; k < bd.getCategoryBag().getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
 
@@ -499,7 +505,7 @@
                         </table>
 
                     </div>
-                    <div class="tab-pane" id="signatures"><b>Digital Signatures</b>
+                    <div class="tab-pane" id="signatures"><b><%=ResourceLoader.GetResource(session, "items.dsigs")%></b>
                         <br>
                         <%
                             if (bd.getSignature().isEmpty()) {

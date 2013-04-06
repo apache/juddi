@@ -19,10 +19,7 @@
         UddiHub hub = UddiHub.getInstance(application, session);
         
         out.write(hub.SaveBusinessDetails(request));
-        /*
- * first loop through to validate the data
- * second loop identify counts of each item, we may have to extend the class structure to make it countable
- */
+     
     }
 
 %>

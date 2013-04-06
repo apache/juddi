@@ -1,4 +1,20 @@
 <%-- 
+/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
     Document   : tmodelEditor
     Created on : Feb 27, 2013, 9:31:19 PM
     Author     : Alex O'Ree
@@ -10,14 +26,13 @@
 <%@page import="org.uddi.api_v3.*"%>
 <%@page import="org.apache.juddi.webconsole.PostBackConstants"%>
 <%@page import="org.apache.juddi.webconsole.hub.*"%>
-<%@page import="org.apache.juddi.query.FindBusinessByNameQuery"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="header-top.jsp" %>
 <div class="container">
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well">
-        <h1>tModel Editor</h1>
+        <h1><%=ResourceLoader.GetResource(session, "pages.tmodeleditor.title")%></h1>
     </div>
 
     <!-- Example row of columns -->
@@ -35,14 +50,15 @@
                 %>
 
             <ul class="nav nav-tabs" id="myTab">
-                <li class="active"><a  href="#general">General</a></li>
+                <li class="active"><a  href="#general"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.general")%></a></li>
 
-                <li><a href="#discovery" >Overview Documents</a></li>
+                <li><a href="#discovery" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.overview")%></a></li>
 
-                <li><a href="#categories" >Categories</a></li>
+                <li><a href="#categories" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%></a></li>
 
-                <li><a href="#identifiers" >Identifiers</a></li>
-                <li><a href="#signatures" >Signatures</a></li>
+                <li><a href="#identifiers" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.identifiers")%></a></li>
+                  
+                <li><a href="#signatures" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
             </ul>
             <script type="text/javascript">
                 $(function () {
@@ -99,8 +115,7 @@
                             out.write("<i class=\"icon-lock\"></i>");
                         }
                     %>
-                    The tModel Key is the unique identifier. If you specify a tModel, it must be prefixed with
-                    an existing partition (key generator), other one is generated for you.
+                    <%= ResourceLoader.GetResource(session, "items.tmodel.key.description")%>
 
                     <div style="border-width: 2px; border-style: solid;" <%
                         if (!newitem) {
@@ -114,7 +129,7 @@
                         %></div><br>
 
 
-                    Name - The name describes this tModel. It is a required field.
+                        <%=ResourceLoader.GetResource(session, "items.tmodel.name")%>
 
                     <%
 
@@ -123,9 +138,9 @@
                         }
                         out.write("<div id=\"" + PostBackConstants.NAME + "\" style=\"border-width:2px; border-style:solid\" >");
                         out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                        out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.VALUE + "\">" + (bd.getName().getValue() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getValue())) + "</div>");
-                        out.write("<div style=\"float:left\">Language:&nbsp;</div>"
+                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.LANG + "\">"
                                 + ((bd.getName().getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getLang())))
                                 + "</div>");
@@ -135,7 +150,7 @@
                     %>
 
                     <Br>
-                    <a href="javascript:AddDescription();"><i class="icon-plus-sign"></i></a> Description - businesses can have more than one description, such as in a different language.
+                    <a href="javascript:AddDescription();"><i class="icon-plus-sign"></i></a><b><%=ResourceLoader.GetResource(session, "items.description")%> </b> - <%=ResourceLoader.GetResource(session, "items.tmodel.description")%>
                     <div id="Description" style="border-width: 2px; border-style: solid;" >
                         <%
                             if (bd.getDescription() != null) //bd.(new Description());
@@ -143,9 +158,9 @@
                                 for (int i = 0; i < bd.getDescription().size(); i++) {
                                     out.write("<div id=\"" + PostBackConstants.DESCRIPTION + i + "\" style=\"border-width:1px; border-style:solid\">");
                                     out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                    out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
-                                    out.write("<div style=\"float:left\">Language:&nbsp;</div>"
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">"
                                             + (bd.getDescription().get(i).getLang() != null
                                             ? StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()) : "")
@@ -159,28 +174,28 @@
                 </div>
 
                 <div class="tab-pane " id="discovery">
-                    <a href="javascript:AddOverviewDocument();"><i class="icon-plus-sign"></i></a>Overview Documents - These are typically URLs to web pages that describe this tModel's details and usage scenarios.
+                    <a href="javascript:AddOverviewDocument();"><i class="icon-plus-sign"></i></a><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.overview")%> - <%=ResourceLoader.GetResource(session, "pages.editor.tabnav.overview.description")%>
                     <%
                         out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
                         for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + "\" style=\"border-width:1px; border-style:solid\">");
                             out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                            out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
-                            out.write("<div style=\"float:left\">Use type:&nbsp;</div>"
+                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") +":&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getUseType()) + "</div>");
 
                     %>
 
-                    <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION%> ');"><i class="icon-plus-sign"></i></a> Add a description
+                    <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION%> ');"><i class="icon-plus-sign"></i></a> <%=ResourceLoader.GetResource(session, "items.description.add")%>
                     <%
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + "\" style=\"border-width:1px; border-style:dotted\">");
                             for (int k = 0; k < bd.getOverviewDoc().get(i).getDescription().size(); k++) {
                                 out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
                                 out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                out.write("<div style=\"float:left\">Value:&nbsp;</div>"
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getValue()) + "</div>");
-                                out.write("<div style=\"float:left\">Language:&nbsp;</div>"
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getLang()) + "</div>");
                                 out.write("</div>"); //end of this instance of overview doc description
                             }
@@ -195,7 +210,7 @@
                 <div class="tab-pane " id="categories">
 
 
-                    <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
+                    <a href="javascript:AddCategoryKeyReference();"><i class="icon-plus-sign"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%> <Br>
                     <div id="catContainer" style="border-width: 2px; border-style: solid;" >
                         <%
                             if (bd.getCategoryBag() == null) {
@@ -204,14 +219,14 @@
                             //                        out.write("Keyed Reference Categories:");
                             for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
 
-                                out.write("<div id=\"catbagkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('catbagkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                out.write("<div style=\"float:left\">Key: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"catbagkeyref" + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
-                                out.write("<div style=\"float:left\">Name: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
-                                out.write("<div style=\"float:left\">Value: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"catbagkeyref" + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+ PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
                                 out.write("</div>");
                             }
                         %>
@@ -219,22 +234,22 @@
 
                 </div>
                 <div class="tab-pane " id="identifiers">
-                    Identifiers - optionally, you can attach identifiers that uniquely identify this business from other systems, such as a tax ID or a <a href="http://www.whitehouse.gov/sites/default/files/omb/grants/duns_num_guide.pdf">DUNS Number</a>.<Br>
-                    <a href="javascript:AddIdentKeyReference();"><i class="icon-plus-sign"></i></a> Add Key Reference Category <Br>
+                    <b><%=ResourceLoader.GetResource(session, "items.identifiers")%></b> - <%=ResourceLoader.GetResource(session, "items.identifiers.description")%><Br>
+                    <a href="javascript:AddIdentKeyReference();"><i class="icon-plus-sign"></i></a> <%=ResourceLoader.GetResource(session, "items.keyrefcat.add")%><Br>
                     <div id="identContainer" style="border-width: 2px; border-style: solid;" >
                         <%
                             if (bd.getIdentifierBag() == null) {
                                 bd.setIdentifierBag(new IdentifierBag());
                             }
                             for (int i = 0; i < bd.getIdentifierBag().getKeyedReference().size(); i++) {
-                                out.write("<div id=\"identbagkeyref" + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('identbagkeyref" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
-                                out.write("<div style=\"float:left\">Key: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"identbagkeyref" + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
-                                out.write("<div style=\"float:left\">Name: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyName()) + "</div>");
-                                out.write("<div style=\"float:left\">Value: &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"identbagkeyref" + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                out.write("<div id=\"" + PostBackConstants.IDENT_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.IDENT_KEY_REF + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
                                 out.write("</div>");
                             }
                         %>

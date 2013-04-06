@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package org.apache.juddi.webconsole.hub;
 
@@ -419,21 +431,21 @@ public class UddiHub {
         be.setBusinessKey(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
         be.setServiceKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
 
-        if (be.getServiceKey().equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+        if (be.getServiceKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
             be.setServiceKey(null);
         }
         if (be.getBusinessKey() == null || be.getBusinessKey().length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
 
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME,ResourceLoader.GetResource(session, "items.clicktoedit")));
         BindingTemplates bt = new BindingTemplates();
-        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE));
+        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE,ResourceLoader.GetResource(session, "items.clicktoedit")));
         if (!bt.getBindingTemplate().isEmpty()) {
             be.setBindingTemplates(bt);
         }
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION,ResourceLoader.GetResource(session, "items.clicktoedit")));
 
         CategoryBag cb = new CategoryBag();
         cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
@@ -486,19 +498,19 @@ public class UddiHub {
 
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
-        if (be.getBusinessKey().equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+        if (be.getBusinessKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
             be.setBusinessKey(null);
         }
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME,ResourceLoader.GetResource(session, "items.clicktoedit")));
         if (GetBusinessDetails == null) //this is a new business
         {
         } else {
             be.setBusinessServices(GetBusinessDetails.getBusinessServices());
         }
         //TODO signature
-        be.setContacts(Builders.BuildContacts(request.getParameterMap()));
+        be.setContacts(Builders.BuildContacts(request.getParameterMap(),ResourceLoader.GetResource(session, "items.clicktoedit")));
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION,ResourceLoader.GetResource(session, "items.clicktoedit")));
         be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL));
         CategoryBag cb = new CategoryBag();
         cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
@@ -593,7 +605,7 @@ public class UddiHub {
             fs.setMaxRows(maxrecords);
             fs.setListHead(offset);
             Name n = new Name();
-            if (lang == null || lang.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+            if (lang == null || lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
                 n.setLang(null);
             } else {
                 n.setLang(lang);
@@ -725,7 +737,7 @@ public class UddiHub {
             TModel tm = new TModel();
             tm.setName(new Name());
             tm.getName().setValue(name);
-            if (lang == null || lang.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+            if (lang == null || lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
                 tm.getName().setLang(null);
             } else {
                 tm.getName().setLang(lang);
@@ -778,7 +790,7 @@ public class UddiHub {
             fm.setMaxRows(maxrecords);
             fm.setListHead(offset);
             fm.setName(new Name());
-            if (lang == null || lang.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT)) {
+            if (lang == null || lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
                 fm.getName().setLang(null);
             } else {
                 fm.getName().setLang(lang);
@@ -1344,24 +1356,24 @@ public class UddiHub {
 
         TModel be = new TModel();
         be.setTModelKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
-        if (be.getTModelKey() != null && (be.getTModelKey().equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT))
+        if (be.getTModelKey() != null && (be.getTModelKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
                 || be.getTModelKey().length() == 0) {
             be.setTModelKey(null);
         }
         be.setName(new Name());
         String t = request.getParameter(PostBackConstants.NAME + PostBackConstants.VALUE);
-        if (t != null && !t.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT) && t.length() > 0) {
+        if (t != null && !t.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")) && t.length() > 0) {
             be.getName().setValue(t);
         }
         t = request.getParameter(PostBackConstants.NAME + PostBackConstants.LANG);
-        if (t != null && !t.equalsIgnoreCase(PostBackConstants.CLICK_TO_EDIT) && t.length() > 0) {
+        if (t != null && !t.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")) && t.length() > 0) {
             be.getName().setLang(t);
         }
 
         //TODO signature
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION));
-        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION,ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW,ResourceLoader.GetResource(session, "items.clicktoedit")));
 
 //            be.setDiscoveryURLs(BuildDisco(MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL));
         CategoryBag cb = new CategoryBag();

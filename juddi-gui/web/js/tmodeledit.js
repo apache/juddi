@@ -1,6 +1,18 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 
 
@@ -11,13 +23,13 @@ function AddOverviewDocument()
     $("<div id=\"overviewDoc" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('overviewDoc" + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"overviewDoc" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Use Type: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"overviewDoc" + i + "Type\"></div>"
         //descriptions
         +"<a href=\"javascript:AddDescriptionSpecific('overviewDoc" + i + "Description');\">"
-        +"<i class=\"icon-plus-sign\"></i></a> Add a description"
+        +"<i class=\"icon-plus-sign\"></i></a> " + i18n_descriptionAdd
         + ("<div id=\"overviewDoc" + i + "Description\" style=\"border-width:1px; border-style:dotted\"></div>")
     
         +"</div>").prependTo("#overviewDoc");
@@ -33,9 +45,9 @@ function AddDescriptionOverviewSpecific(div)
     $("<div id=\""+ div + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i 
         +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
-        +"<div style=\"float:left\">Value: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + "Description" + i + "Value\"></div>"
-        +"<div style=\"float:left\">Language: &nbsp;</div>"
+        +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + "Description" + i + "Lang\"></div>"
         +"</div>").appendTo("#" + div);
     Reedit();
@@ -74,7 +86,7 @@ function savetModel()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata
@@ -111,7 +123,7 @@ function deletetModel()
     var request=   $.ajax({
         url: url,
         type:"POST",
-        //  dataType: "html", 
+        //  data" + i18n_type + ": "html", 
         cache: false, 
         //  processData: false,f
         data: postbackdata
