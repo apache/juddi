@@ -124,7 +124,7 @@
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
-                                        <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
+                                        <li><a href="createSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
                                     </ul>
                                 </li>
 

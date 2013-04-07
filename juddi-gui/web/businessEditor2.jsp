@@ -4,7 +4,6 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.derby.impl.store.access.RAMAccessManager"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.uddi.api_v3.IdentifierBag"%>
 <%@page import="org.uddi.api_v3.CategoryBag"%>
@@ -584,12 +583,23 @@
                 <a class="btn btn-danger " href="javascript:deleteBusiness();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                 <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                 <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a>
+                <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+                <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
                 <%}%>
                 <script type="text/javascript" src="js/businessEditor.js"></script>
                 <script type="text/javascript">
                     Reedit();
+                    function ViewAsXML()
+                    {
+                        $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data){
+                            window.console && console.log('asXml success');                
+                            $("#viewAsXmlContent").html(safe_tags_replace(data));
+                            $( "#viewAsXml" ).modal('show');
+                        });
+                       
+                    }
                 </script>
+
             </div>
         </div>
     </div>

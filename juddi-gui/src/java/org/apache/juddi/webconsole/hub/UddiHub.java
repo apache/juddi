@@ -18,11 +18,13 @@ package org.apache.juddi.webconsole.hub;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -117,6 +119,17 @@ public class UddiHub {
     }
     String locale = "en";
 
+    public String GetRawConfigurationPath() throws URISyntaxException
+    {
+        return propertiesurl.toString();
+    }
+    
+    public Properties GetRawConfiguration()
+    {
+        return properties;
+    }
+    
+    
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
         if (prop == null) {
@@ -1104,6 +1117,7 @@ public class UddiHub {
     }
 
     private String FindPublishers(CriteriaType criteria, String parameters, String lang, String[] fq) {
+        //TODO implement
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -1114,9 +1128,7 @@ public class UddiHub {
             if (fq != null) {
                 fb.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
                 if (fq != null) {
-                    for (int i = 0; i < fq.length; i++) {
-                        fb.getFindQualifiers().getFindQualifier().add(fq[i]);
-                    }
+                    fb.getFindQualifiers().getFindQualifier().addAll(Arrays.asList(fq));
                 }
             }
             ServiceList findBusiness = null;
@@ -1206,6 +1218,7 @@ public class UddiHub {
                     fb.setName(n);
                     break;
                 case tmodel:
+                    
                     //TODO
                     break;
                 case uid:

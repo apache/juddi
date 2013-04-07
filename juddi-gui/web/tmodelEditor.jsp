@@ -57,7 +57,7 @@
                 <li><a href="#categories" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.categories")%></a></li>
 
                 <li><a href="#identifiers" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.identifiers")%></a></li>
-                  
+
                 <li><a href="#signatures" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
             </ul>
             <script type="text/javascript">
@@ -129,7 +129,7 @@
                         %></div><br>
 
 
-                        <%=ResourceLoader.GetResource(session, "items.tmodel.name")%>
+                    <%=ResourceLoader.GetResource(session, "items.tmodel.name")%>
 
                     <%
 
@@ -140,7 +140,7 @@
                         out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-remove-sign\"></i></a></div>");
                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.VALUE + "\">" + (bd.getName().getValue() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getValue())) + "</div>");
-                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
+                        out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.LANG + "\">"
                                 + ((bd.getName().getLang() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getLang())))
                                 + "</div>");
@@ -160,7 +160,7 @@
                                     out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
-                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">"
                                             + (bd.getDescription().get(i).getLang() != null
                                             ? StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()) : "")
@@ -182,7 +182,7 @@
                             out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
                             out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
-                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") +":&nbsp;</div>"
+                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ":&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getUseType()) + "</div>");
 
                     %>
@@ -195,7 +195,7 @@
                                 out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getValue()) + "</div>");
-                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") +":&nbsp;</div>"
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getLang()) + "</div>");
                                 out.write("</div>"); //end of this instance of overview doc description
                             }
@@ -220,13 +220,13 @@
                             for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
 
                                 out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+ PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\""+ PostBackConstants.CATBAG_KEY_REF + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
                                 out.write("</div>");
                             }
                         %>
@@ -291,12 +291,18 @@
                     <%        }
                     %>
 
-                    <a class="btn btn-danger " href="javascript:deletetModel();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
+
+                    <a class="btn btn-danger " href="javascript:deletetModel();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a>
+                    <%
+                        if (!newitem) {
+                    %>|
                     <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                     <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a>
-
-
+                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+                    <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
+                    <%
+                        }
+                    %>
 
 
                 </div>
@@ -305,6 +311,15 @@
             <script src="js/businessEditor.js"></script>
             <script type="text/javascript">
                 Reedit();
+                function ViewAsXML()
+                {
+                    $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=business", function(data){
+                        window.console && console.log('asXml success');                
+                        $("#viewAsXmlContent").html(safe_tags_replace(data));
+                        $( "#viewAsXml" ).modal('show');
+                    });
+                       
+                }
             </script>
 
             </p>

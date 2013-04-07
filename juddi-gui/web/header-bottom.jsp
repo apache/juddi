@@ -10,12 +10,24 @@
 <hr>
 
 <footer>
-    <p><%=ResourceLoader.GetResource(session,"footer.apachecopyright")%></p>
+    <p><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></p>
 </footer>
- 
 
 
-<div class="modal hide fade" id="viewAsXml"></div>
+
+<div class="modal hide fade" id="viewAsXml">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>As XML</h3>
+    </div>
+    <div class="modal-body" id="viewAsXmlContent">
+        
+        
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+    </div>
+</div>
 </div> <!-- /container -->
 </form>
 </body>
