@@ -102,7 +102,8 @@
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.businesses.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.businesses")%></a></li>
                                         <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
                                         <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.tmodels.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.tmodels")%></a></li>
-                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publishers")%></a></li>
+                                        <%//                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")">ResourceLoader.GetResource(session, "navbar.publishers")</a></li>
+                                        %>
                                         <li class="divider"></li>
                                         <li><a href="search.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.search.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.search")%></a></li>
                                     </ul>
@@ -116,7 +117,9 @@
                                         <%
                                           //  if (hub.IsJuddiRegistry()) {
                                         
-                                        //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")%></a></li>
+                                        //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")
+
+//"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")</a></li>
                                         
                                         
                                             //                                      }
