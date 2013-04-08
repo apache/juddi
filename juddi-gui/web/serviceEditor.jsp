@@ -90,12 +90,14 @@
                             bd.setCategoryBag(new CategoryBag());
                         }
 
-                    %></div><br>
-                    <%
-                        if (!newitem) {
-                            out.write("<i class=\"icon-lock\"></i>");
-                        }
                     %>
+                </div>
+                <br>
+                <%
+                    if (!newitem) {
+                        out.write("<i class=\"icon-lock\"></i>");
+                    }
+                %>
                 <b><%=ResourceLoader.GetResource(session, "items.service.key")%> </b>-
                 <%=ResourceLoader.GetResource(session, "items.service.key.description")%><br>
                 <div style="border-width: 2px; border-style: solid;" <%
@@ -106,8 +108,10 @@
                     }
                      %>
                      id="<%=PostBackConstants.SERVICEKEY%>">
-                    <%                        out.write(StringEscapeUtils.escapeHtml(bd.getServiceKey()));
-
+                    <%
+                        if (!newitem) {
+                            out.write(StringEscapeUtils.escapeHtml(bd.getServiceKey()));
+                        }
 
                         if (bd.getCategoryBag() == null) {
                             bd.setCategoryBag(new CategoryBag());
@@ -130,7 +134,9 @@
                         }
 
 
-                    %></div><br>
+                    %>
+                </div>
+                <br>
 
                 <script type="text/javascript">
                     var currentNameEntries=<%= bd.getName().size() - 1%>;
@@ -187,7 +193,7 @@
 
 
                         <b><%=ResourceLoader.GetResource(session, "items.name")%> </b>- 
-                        <%=ResourceLoader.GetResource(session, "items.name.descriptions")%><br>
+                        <%=ResourceLoader.GetResource(session, "items.name.description")%><br>
                         <a href="javascript:AddName();"><i class="icon-plus-sign"></i></a><%=ResourceLoader.GetResource(session, "items.name.add")%>
                         <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -313,7 +319,7 @@
                                         out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
                                     }
                                     // out.write("</div>");
-%>          
+                            %>          
                             <br>
                             <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');">
                                 <i class="icon-plus-sign"></i></a><%=ResourceLoader.GetResource(session, "items.bindingtemplate.description.add")%> <Br>
@@ -374,7 +380,7 @@
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
                                         //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
                                         //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
-%>
+                                    %>
                                     <br>
                                     <%
 
@@ -448,7 +454,7 @@
                                 </div>
 
                                 <%    } //end of instance details
-%>
+                                %>
                             </div>                                        
                             <%
                                 }
@@ -470,7 +476,7 @@
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "KeyName\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
                                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF + k + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
-                                        out.write("</div>");
+                                        out.write("</div>");    //end key ref
                                     }
 
                                 %>
@@ -505,7 +511,7 @@
                                                     + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.CATBAG_KEY_REF_GRP + z + PostBackConstants.KEY_REF + k + "KeyValue\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getCategoryBag().getKeyedReferenceGroup().get(z).getKeyedReference().get(k).getKeyValue()) + "</div>");
                                             out.write("</div>");
                                         }
-                                        out.write("</div>");
+                                        out.write("</div>");    //end key refer group
                                     }
                                 %>
                             </div>
@@ -513,7 +519,7 @@
                         <%
 
                             } //end of binding templates loop
-                        %>
+%>
 
 
                         <%//end of tmodel instance%>
@@ -551,16 +557,23 @@
                 </div>
 
                 <div class="tab-pane" id="opinfo">
+                    <%
+                        if (!newitem) {
+
+                    %>
                     <script type="text/javascript">
                         $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
                             $("#opinfodiv").html(data);
                         } )
                     </script>
                     <div id="opinfodiv"></div>
-
-                </div>
+                    <%
+                        }
+                    %>
+                </div><!-- end opinfo-->
             </div>
         </div>
+
         <script type="text/javascript">
             var currentDescriptionSpecific=<%=totalBTDescriptions%>;
         </script>
@@ -568,49 +581,57 @@
         <%
             if (bd.getSignature().isEmpty()) {
         %>
-        <a class="btn btn-primary " href="javascript:saveService();"><%=ResourceLoader.GetResource(session, "actions.save")%></a> | 
+        <a class="btn btn-primary " href="javascript:saveService();"><%=ResourceLoader.GetResource(session, "actions.save")%></a>
+
+
         <%  } else {
         %>
         <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><%=ResourceLoader.GetResource(session, "actions.save")%></a> |
 
         <%        }
-            //        <a class="btn btn-primary " href="javascript:saveService();">Save</a> | 
+            if (!newitem) {
         %>
 
-
+        |
         <a class="btn btn-danger " href="javascript:deleteService();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
         <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>&type=service"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
         <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
         <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
         <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
-    </div>
-    <script type="text/javascript" src="js/businessEditor.js"></script>
-    <script type="text/javascript" src="js/serviceEditor.js"></script>
-
-    <script type="text/javascript">
-        function ViewAsXML()
-        {
-            $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=business", function(data){
-                window.console && console.log('asXml success');                
-                $("#viewAsXmlContent").html(safe_tags_replace(data));
-                $( "#viewAsXml" ).modal('show');
-            });
+        <script type="text/javascript">
+            function ViewAsXML()
+            {
+                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=business", function(data){
+                    window.console && console.log('asXml success');                
+                    $("#viewAsXmlContent").html(safe_tags_replace(data));
+                    $( "#viewAsXml" ).modal('show');
+                });
                        
-        }
-    </script>
-    <div class="modal hide fade" id="confirmDialog">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
-        </div>
-        <div class="modal-body">
-            <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
-            <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
-                <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
-        </div>
+            }
+        </script>
+        <%
+            }
+        %>
     </div>
-    <!-- container div is in header bottom-->
-    <%@include file="header-bottom.jsp" %>
+</div>
+<script type="text/javascript" src="js/businessEditor.js"></script>
+<script type="text/javascript" src="js/serviceEditor.js"></script>
+
+
+<div class="modal hide fade" id="confirmDialog">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
+    </div>
+    <div class="modal-body">
+        <p><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.body")%></p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        <a href="javascript:saveService();$('#confirmDialog').modal('hide');" class="btn btn-primary">
+            <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
+    </div>
+</div>
+
+<!-- container div is in header bottom-->
+<%@include file="header-bottom.jsp" %>

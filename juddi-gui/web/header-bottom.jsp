@@ -37,7 +37,10 @@
 </div>
 </div> <!-- /container -->
 </form>
-<div style="padding: 0px 0px 0px 0px; bottom: 0px; margin: 0px 0px 0px 0px; width:100%; text-align: center; position: fixed"><center>BETA - v<%
+<div style="
+     padding: 0px 0px 0px 0px; bottom: 0px; margin: 0px 0px 0px 0px; width:100%; text-align: center; position: fixed; 
+     background-color: white; 
+     border-width: 4px; border-color: red; border-style: dashed"><center>BETA - v<%
 
     Enumeration resEnum;
     try {
