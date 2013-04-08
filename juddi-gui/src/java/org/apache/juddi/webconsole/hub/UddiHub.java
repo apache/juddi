@@ -103,7 +103,7 @@ public class UddiHub {
         publish = null;
         custody = null;
         security = null;
-        juddi = null;
+        //juddi = null;
         subscription = null;
     }
 
@@ -157,7 +157,7 @@ public class UddiHub {
                 subscription = transport.getUDDISubscriptionService();
                 publish = transport.getUDDIPublishService();
                 custody = transport.getUDDICustodyTransferService();
-                juddi = transport.getJUDDIApiService();
+              //  juddi = transport.getJUDDIApiService();
 
                 BindingProvider bp = null;
                 Map<String, Object> context = null;
@@ -181,16 +181,16 @@ public class UddiHub {
                 context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("subscriptionurl"));
 
 
-                bp = (BindingProvider) juddi;
+                /*bp = (BindingProvider) juddi;
                 context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("juddipapi"));
+                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("juddipapi"));*/
             }
         } catch (Exception ex) {
             HandleException(ex);
         }
     }
     private HttpSession session;
-
+/*
     public boolean IsJuddiRegistry() {
         String type = properties.getProperty("registryType");
         if (type == null) {
@@ -200,7 +200,7 @@ public class UddiHub {
             return true;
         }
         return false;
-    }
+    }*/
 
     private String GetToken() {
         if (style != AuthStyle.UDDI_AUTH) {
@@ -226,11 +226,11 @@ public class UddiHub {
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
-            
+            /*
             bp = (BindingProvider) juddi;
             context = bp.getRequestContext();
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
-            context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
+            context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));*/
             return null;
         } else {
             if (token != null) {
@@ -260,7 +260,7 @@ public class UddiHub {
     private UDDIInquiryPortType inquiry = null;
     private UDDIPublicationPortType publish = null;
     private UDDICustodyTransferPortType custody = null;
-    private JUDDIApiPortType juddi = null;
+    //private JUDDIApiPortType juddi = null;
     private String token = null;
 
     public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang) {
@@ -669,7 +669,7 @@ public class UddiHub {
      * @param request
      * @return
      * @deprecated
-     */
+     
     @Deprecated
     public String AddPublisher(HttpServletRequest request) {
         try {
@@ -687,12 +687,12 @@ public class UddiHub {
 
 
     }
-
+*/
     /**
      * returns an html listing of Juddi authorized publishers
      *
      * @return
-     */
+     
     public String GetPublisherListAsHtml() {
         if (!this.IsJuddiRegistry()) {
             return "This function is only available on Juddi registries";
@@ -722,7 +722,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-
+*/
     /**
      * Adds a special tModel key generator keyGenerator: Marking a tModel with
      * this categorization designates it as one whose tModelKey identifies a key
@@ -910,7 +910,7 @@ public class UddiHub {
 
     public enum FindType {
 
-        Business, RelatedBusiness, Service, tModel, Publisher, BindingTemplate
+        Business, RelatedBusiness, Service, tModel, BindingTemplate
     }
 
     public enum CriteriaType {
@@ -926,8 +926,7 @@ public class UddiHub {
                 return FindBusiness(criteria, parameters, lang, findqualifier);
             case RelatedBusiness:
                 return FindRelatedBusiness(criteria, parameters, lang, findqualifier);
-            case Publisher:
-                return FindPublishers(criteria, parameters, lang, findqualifier);
+     
             case Service:
                 return FindService(criteria, parameters, lang, findqualifier);
             case tModel:
@@ -1116,10 +1115,6 @@ public class UddiHub {
         }
     }
 
-    private String FindPublishers(CriteriaType criteria, String parameters, String lang, String[] fq) {
-        //TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
     private String FindService(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {

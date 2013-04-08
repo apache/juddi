@@ -37,7 +37,7 @@
         }
     }
     if (session.getAttribute("locale")==null){
-        //last change, default to english
+        //last chance, default to english
         session.setAttribute("locale", "en");
     }
     %>
@@ -114,10 +114,12 @@
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
                                         <%
-                                            if (hub.IsJuddiRegistry()) {
-                                        %>
-                                        <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")%></a></li>
-                                        <%                                            }
+                                          //  if (hub.IsJuddiRegistry()) {
+                                        
+                                        //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")%></a></li>
+                                        
+                                        
+                                            //                                      }
                                         %>
                                     </ul>
                                 </li>

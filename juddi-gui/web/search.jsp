@@ -41,10 +41,12 @@
                                 <button type="button" class="btn " value="service"><%= ResourceLoader.GetResource(session, "items.service")%></button>
                                 <button type="button" class="btn " value="bindingTemplate"><%= ResourceLoader.GetResource(session, "items.bindingtemplate")%></button>
                                 <button type="button" class="btn " value="tModel"><%= ResourceLoader.GetResource(session, "items.tmodel")%></button>
-                                <% if (x.IsJuddiRegistry()) {
-                                %>
-                                <button type="button" class="btn " ><%= ResourceLoader.GetResource(session, "items.publisher")%></button>
-                                <% }
+                                <% 
+                                //if (x.IsJuddiRegistry()) {
+                              
+                                //<button type="button" class="btn " ><%= ResourceLoader.GetResource(session, "items.publisher")%></button>
+
+                                //}
                                 %>
                             </div><br><Br>
                             <%= ResourceLoader.GetResource(session, "search.criteria")%><br>

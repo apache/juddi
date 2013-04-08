@@ -61,9 +61,7 @@
         if (searchfor.equalsIgnoreCase("tModel")) {
             type = FindType.tModel;
         }
-        if (searchfor.equalsIgnoreCase("Publisher")) {
-            type = FindType.Publisher;
-        }
+       
         if (searchfor.equalsIgnoreCase("RelatedBusiness")) {
             type = FindType.RelatedBusiness;
         }

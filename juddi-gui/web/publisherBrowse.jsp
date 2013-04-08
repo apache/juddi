@@ -22,7 +22,7 @@
                 <%
                     UddiHub x = UddiHub.getInstance(application, request.getSession());
 
-                    out.write(x.GetPublisherListAsHtml());
+                    //out.write(x.GetPublisherListAsHtml());
                 %>
             </div>
             <script type="text/javascript">
