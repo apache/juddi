@@ -175,9 +175,11 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			
 			List<String> publisherIdList = body.getPublisherId();
 			for (String publisherId : publisherIdList) {
-				
-				org.apache.juddi.model.Publisher modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
-				if (modelPublisher == null) {
+				org.apache.juddi.model.Publisher modelPublisher = null;
+				try {
+					modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
+				} catch (ClassCastException e) {}
+					if (modelPublisher == null) {
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
 				}
 				
@@ -388,8 +390,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			List<String> subscriptionKeyList = body.getClientSubscriptionKey();
 			for (String subscriptionKey : subscriptionKeyList) {
 				
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
-					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+				try {
+					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				} catch (ClassCastException e) {}
 				if (modelClientSubscriptionInfo == null) {
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
 				}
@@ -523,8 +527,10 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 			this.getEntityPublisher(em, body.getAuthInfo());
 			for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
 				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
-					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+				try {
+					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				} catch (ClassCastException e) {}
 				if (modelClientSubscriptionInfo == null) {
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
 				}

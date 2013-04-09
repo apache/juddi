@@ -75,8 +75,10 @@ public class UDDISubscriptionListenerImpl extends AuthenticatedService implement
 		
 				this.getEntityPublisher(em, body.getAuthInfo());
 				String subscriptionKey = body.getSubscriptionResultsList().getSubscription().getSubscriptionKey();
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo =
-					em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+				try {
+					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+				} catch (ClassCastException e) {}
 				if (modelClientSubscriptionInfo == null) {
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
 				}

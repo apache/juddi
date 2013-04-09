@@ -192,11 +192,11 @@ public class InquiryHelper {
 		keysFound = FindBusinessByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), keysFound);
 		keysFound = FindBusinessByIdentifierQuery.select(em, findQualifiers, body.getIdentifierBag(), keysFound);
 		keysFound = FindBusinessByDiscoveryURLQuery.select(em, findQualifiers, body.getDiscoveryURLs(), keysFound);
-                if (findQualifiers.isCombineCategoryBags()) {
-                    keysFound = FindBusinessByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-                } else {
-                    keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
-                }
+        if (findQualifiers.isCombineCategoryBags()) {
+            keysFound = FindBusinessByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+        } else {
+            keysFound = FindBusinessByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
+        }
 
 		keysFound = FindBusinessByCategoryGroupQuery.select(em, findQualifiers, body.getCategoryBag(), keysFound);
 		keysFound = FindBusinessByNameQuery.select(em, findQualifiers, body.getName(), keysFound);
@@ -470,8 +470,10 @@ public class InquiryHelper {
 			throws DispositionReportFaultMessage {
 		if (relatedBusinessInfos == null)
 			relatedBusinessInfos = new org.uddi.api_v3.RelatedBusinessInfos();
-		
-		org.apache.juddi.model.BusinessEntity focalBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, focalKey);
+		org.apache.juddi.model.BusinessEntity focalBusiness = null;
+		try {
+			focalBusiness = em.find(org.apache.juddi.model.BusinessEntity.class, focalKey);
+		} catch (ClassCastException e) {}
 		if (focalBusiness == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", focalKey));
 
