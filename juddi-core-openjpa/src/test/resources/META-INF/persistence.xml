@@ -75,6 +75,7 @@
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
       <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
       <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
+      <property name="openjpa.Compatibility" value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
       
       <!-- derby connection properties -->
       <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>

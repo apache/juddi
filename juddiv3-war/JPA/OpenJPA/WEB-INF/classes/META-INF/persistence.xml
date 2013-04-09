@@ -75,6 +75,7 @@
       <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
       <property name="openjpa.jdbc.DBDictionary" value="derby"/>
       <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
+      <property name="openjpa.Compatibility" value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
     </properties>
   </persistence-unit>
 </persistence>
