@@ -92,10 +92,10 @@
       -->
       
       <!--  pgsql connection properties 
-      <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost/juddi"/>
+      <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost:5432/juddi"/>
       <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver"/>
       <property name="openjpa.ConnectionUserName" value="juddi"/>
-      <property name="openjpa.ConnectionPassword" value="juddi"/>
+      <property name="openjpa.ConnectionPassword" value="password"/>
       -->
       
     </properties>

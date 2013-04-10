@@ -74,6 +74,8 @@
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
       <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
       <property name="openjpa.jdbc.DBDictionary" value="derby"/>
+      <!-- dialects: derby, postgres, mysql,  oracle, sybase, sqlserver 
+           for a complete list check the OpenJPA documentation -->
       <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
       <property name="openjpa.Compatibility" value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
     </properties>

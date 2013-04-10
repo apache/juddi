@@ -18,6 +18,7 @@
 		-->
 		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
+		<copy file="${dependency.postgres.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.derby.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${lib.dir}"/>
