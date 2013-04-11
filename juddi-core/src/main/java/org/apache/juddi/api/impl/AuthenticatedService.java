@@ -88,7 +88,7 @@ public abstract class AuthenticatedService {
 		}
 
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
-			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
+			throw new AuthTokenExpiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
