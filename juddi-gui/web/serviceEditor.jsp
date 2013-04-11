@@ -547,7 +547,7 @@
                                     out.write("<tr><td>");
                                     out.write(x.SignatureToReadable(bd.getSignature().get(k)));
                                     out.write("</td><td>");
-                                    out.write("<a href=\"ajax/getCert.jsp?type=business&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
+                                    out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
                                     out.write("</td></tr>");
                                 }
                             }
@@ -601,7 +601,7 @@
         <script type="text/javascript">
             function ViewAsXML()
             {
-                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=business", function(data){
+                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=service", function(data){
                     window.console && console.log('asXml success');                
                     $("#viewAsXmlContent").html(safe_tags_replace(data));
                     $( "#viewAsXml" ).modal('show');

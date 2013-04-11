@@ -466,8 +466,8 @@
                         %> <%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist2")%>
                         <%if (!newitem) {
                         %>
-
-                        <a href="serviceEditor.jsp?bizid=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>" class="btn btn-primary">+</a>
+                        <br>
+                        <a href="serviceEditor.jsp?bizid=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>"><i class="icon-plus-sign"></i> <%=ResourceLoader.GetResource(session, "items.service.add")%> </a>
                         <%
                             }
                         %>
@@ -512,21 +512,30 @@
                             } else {
                                 out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                         %>
-                        <table class="table">
-
+                        <table class="table table-hover">
+                            <tr><th>Signed by</th><th></th><th>Signature Status</th></tr>
 
                             <%
-                                    for (int k = 0; k < bd.getSignature().size(); k++) {
-                                        out.write("<tr><td>");
-                                        out.write(x.SignatureToReadable(bd.getSignature().get(k)));
-                                        out.write("</td><td>");
-                                        out.write("<a href=\"ajax/getCert.jsp?type=business&id=" + URLEncoder.encode(bd.getBusinessKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
-                                        out.write("</td></tr>");
-                                    }
+                                for (int k = 0; k < bd.getSignature().size(); k++) {
+                                    out.write("<tr><td>");
+                                    out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                    out.write("</td><td>");
+                                    out.write("<a href=\"ajax/getCert.jsp?type=business&id=" + URLEncoder.encode(bd.getBusinessKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
+                                    out.write("</td><td><div id=\"digsig" + k + "\"></div>");
+                            %>
+                            <script type="text/javascript">
+                                $.get("ajax/validateSignature.jsp?type=business&id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data){
+                                $("#digsig<%=k%>").html(data);
+                            } )
+                            </script>
+                            <%
+                                    out.write("</td></tr>");
                                 }
-
                             %>
                         </table>
+                        <%
+                            }
+                        %>
                     </div>
 
                     <div class="tab-pane" id="opinfo">

@@ -22,6 +22,7 @@ Install Netbeans and open the project. Compiling from Netbeans however doesn't w
 
 
 To build your changes locally and skip the the tests run:
+mvn install -DskipTests=true
 
 To also build the Pluto/GWT/Portlet interface
 cd juddi-console

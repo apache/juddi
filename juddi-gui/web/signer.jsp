@@ -18,10 +18,7 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-            <%=ResourceLoader.GetResource(session, "items.dsigs.description")%>
-            
-            <applet code="org.apache.juddi.gui.dsig.XmlSignatureApplet" archive="applets/juddi-gui-dsig.jar"></applet> 
-            <script type="text/javascript">
+            <%=ResourceLoader.GetResource(session, "items.dsigs.description")%><br>
                 <%
                     //figure out what we are signing
                     //fetch the xml from ajex/toXml and fill the text area
@@ -29,6 +26,12 @@
                     String itemtype = request.getParameter("type");
 
                 %>
+            
+                You're about to digitally sign the <b><%=StringEscapeUtils.escapeHtml(itemtype)%></b> identified by the key <b><%=StringEscapeUtils.escapeHtml(id)%></b>.<br>
+                By electronically signing this UDDI entry, other users will then be able to verify that this entry hasn't been modified.<br>
+            
+            <applet code="org.apache.juddi.gui.dsig.XmlSignatureApplet" archive="applets/juddi-gui-dsig.jar"></applet> 
+            <script type="text/javascript">
                     $.get("ajax/toXML.jsp?id=<%=id%>&type=<%=itemtype%>", function(data){
                         $("#data").val(data);
                     });
@@ -110,9 +113,10 @@
                         if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
                         return OSName;
                     }
+                    //<a class="btn" href="javascript:go();">Go</a>
             </script>
-            <a class="btn" href="javascript:go();">Go</a>
-            <textarea name="data" rows="15" cols="80" id="data">Loading....</textarea>
+            
+            <textarea name="data" rows="15" cols="80" id="data" style="display:none">Loading....</textarea>
         </div>
 
     </div>
