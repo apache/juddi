@@ -178,7 +178,8 @@
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang()) + "</div>");
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.LANG + "\">" + 
+                                          (bd.getDescription().get(i).getLang()==null ? "" :  StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getLang())) + "</div>");
 
                                     out.write("</div>");
                                 }
@@ -513,20 +514,20 @@
                                 out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                         %>
                         <table class="table table-hover">
-                            <tr><th>Signed by</th><th></th><th>Signature Status</th></tr>
+                            <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
 
                             <%
                                 for (int k = 0; k < bd.getSignature().size(); k++) {
-                                    out.write("<tr><td>");
+                                    out.write("<tr><td>" + k + "</td><td>");
                                     out.write(x.SignatureToReadable(bd.getSignature().get(k)));
                                     out.write("</td><td>");
                                     out.write("<a href=\"ajax/getCert.jsp?type=business&id=" + URLEncoder.encode(bd.getBusinessKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
-                                    out.write("</td><td><div id=\"digsig" + k + "\"></div>");
+                                    out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
                             %>
                             <script type="text/javascript">
                                 $.get("ajax/validateSignature.jsp?type=business&id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data){
-                                $("#digsig<%=k%>").html(data);
-                            } )
+                                    $("#digsig<%=k%>").html(data);
+                                } )
                             </script>
                             <%
                                     out.write("</td></tr>");
@@ -571,6 +572,8 @@
                                 }});
                             
                         </script>
+                        <a href="#"> <i class="icon-plus-sign"></i>
+                            <%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></a><br>
                         <div id="relationresults"></div>
 
                     </div>
@@ -598,15 +601,25 @@
                 <script type="text/javascript" src="js/businessEditor.js"></script>
                 <script type="text/javascript">
                     Reedit();
-                    function ViewAsXML()
-                    {
-                        $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data){
-                            window.console && console.log('asXml success');                
-                            $("#viewAsXmlContent").html(safe_tags_replace(data));
-                            $( "#viewAsXml" ).modal('show');
-                        });
+                    <%
+                        if (!newitem) {
+
+                    %>
+                        function ViewAsXML()
+                        {
+                            $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data){
+                                window.console && console.log('asXml success');                
+                  
+                                $("#viewAsXmlContent").html(safe_tags_replace(data) + "<br>" +
+                                    "<a href=\"ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=service\" class=\"btn btn-primary\">Popout</a>  " 
+                            );
+                                $( "#viewAsXml" ).modal('show');
+                            });
                        
-                    }
+                        }
+                    <%
+                        }
+                    %>
                 </script>
 
             </div>
@@ -628,5 +641,27 @@
                 <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
         </div>
     </div>
+
+    <%
+        if (!newitem) {
+
+    %>
+    <div class="modal hide fade" id="viewAsXml">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>As XML</h3>
+        </div>
+        <div class="modal-body" id="viewAsXmlContent">
+
+
+        </div>
+        <div class="modal-footer">
+            <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>&type=business" class="btn btn-primary" target="_blank">Popout</a> 
+            <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+    <%
+        }
+    %>
     <!-- container div is in header bottom-->
     <%@include file="header-bottom.jsp" %>

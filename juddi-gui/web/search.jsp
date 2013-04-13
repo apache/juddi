@@ -34,7 +34,7 @@
                     </div>
                     <div id="collapseOne" class="accordion-body collapse in">
                         <div class="accordion-inner">
-                            <%= ResourceLoader.GetResource(session, "search.waylf")%><Br>
+                            <%= ResourceLoader.GetResource(session, "search.wrylf")%><Br>
                             <div class="btn-group" id="searchfor" data-toggle="buttons-radio">
                                 <button type="button" class="btn active" value="business"><%= ResourceLoader.GetResource(session, "items.business")%></button>
                                 <!--<button type="button" class="btn " >Related Business</button>-->

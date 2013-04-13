@@ -68,6 +68,16 @@ function savetModel()
             value: value
         });
     }); 
+    
+    $("#isDeleted")
+    if ($('#isDeleted').is(':checked')) {
+         postbackdata.push({
+            name: "isDeleted", 
+            value: "checked"
+        });
+    } else {
+       
+    } 
     postbackdata.push({
         name:"nonce", 
         value: $("#nonce").val()

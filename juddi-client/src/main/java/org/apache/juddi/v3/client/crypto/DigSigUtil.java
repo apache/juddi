@@ -15,7 +15,6 @@
  */
 package org.apache.juddi.v3.client.crypto;
 
-import com.sun.xml.internal.messaging.saaj.util.JAXMStreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +52,6 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Reference;
@@ -73,7 +71,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -242,12 +239,12 @@ public final class DigSigUtil {
      * @return an enveloped signed UDDI element, do not modify this object after
      * signing
      */
-    public <T> T signUddiEntity(T jaxbObj) throws JAXBException {
-        //DOMResult domResult = new DOMResult();
-        //JAXB.marshal(jaxbObj, domResult);
-        Document doc = null;//((Document) domResult.getNode());//
-        Element docElement = null;//doc.getDocumentElement();
-       docElement= org.apache.juddi.jaxb.JAXBMarshaller.marshallToElement(jaxbObj, JAXBMarshaller.PACKAGE_UDDIAPI,docElement );
+    public <T> T signUddiEntity(T jaxbObj) {
+        DOMResult domResult = new DOMResult();
+        JAXB.marshal(jaxbObj, domResult);
+        Document doc = ((Document) domResult.getNode());
+        Element docElement = doc.getDocumentElement();
+
         try {
             KeyStore ks = KeyStore.getInstance(map.getProperty(SIGNATURE_KEYSTORE_FILETYPE));
             URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(SIGNATURE_KEYSTORE_FILE));
@@ -286,9 +283,8 @@ public final class DigSigUtil {
             //PublicKey validatingKey = origCert.getPublicKey();
             this.signDOM(docElement, privateKey, origCert);
 
-     //       DOMSource domSource = new DOMSource(doc);
-            T result = (T)  JAXBMarshaller.unmarshallFromElement(docElement, JAXBMarshaller.PACKAGE_UDDIAPI);
-           // T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());
+            DOMSource domSource = new DOMSource(doc);
+            T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());
             return result;
         } catch (Exception e) {
             throw new RuntimeException("Signature failure due to: " + e.getMessage(), e);
@@ -301,8 +297,9 @@ public final class DigSigUtil {
      * @param obj
      */
     public static void JAXB_ToStdOut(Object obj) {
-       
-        System.out.println( JAXBMarshaller.marshallToString(obj, JAXBMarshaller.PACKAGE_UDDIAPI));
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(obj, sw);
+        System.out.println(sw.toString());
 
     }
 
@@ -411,14 +408,10 @@ public final class DigSigUtil {
         }
         try {
             DOMResult domResult = new DOMResult();
-           
-            Element e = null;
-            org.apache.juddi.jaxb.JAXBMarshaller.marshallToElement(obj, JAXBMarshaller.PACKAGE_UDDIAPI,e );
-            
-           // JAXB.marshal(obj, domResult);
+            JAXB.marshal(obj, domResult);
 
-          //  Document doc = ((Document) domResult.getNode());
-            Element docElement = e;  //this is our signed node
+            Document doc = ((Document) domResult.getNode());
+            Element docElement = doc.getDocumentElement();  //this is our signed node
 
             X509Certificate signingcert = getSigningCertificatePublicKey(obj, docElement);
 

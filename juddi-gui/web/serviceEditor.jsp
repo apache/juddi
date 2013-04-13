@@ -84,8 +84,9 @@
                 <br>
                 <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
+                        out.write("<a href=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeHtml(bd.getBusinessKey()) + "\">");
                         out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
-
+                        out.write("</a>");
                         if (bd.getCategoryBag() == null) {
                             bd.setCategoryBag(new CategoryBag());
                         }
@@ -539,21 +540,30 @@
                         } else {
                             out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                     %>
-                    <table class="table">
-
+                    <table class="table table-hover">
+                        <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
 
                         <%
-                                for (int k = 0; k < bd.getSignature().size(); k++) {
-                                    out.write("<tr><td>");
-                                    out.write(x.SignatureToReadable(bd.getSignature().get(k)));
-                                    out.write("</td><td>");
-                                    out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
-                                    out.write("</td></tr>");
-                                }
+                            for (int k = 0; k < bd.getSignature().size(); k++) {
+                                out.write("<tr><td>" + k + "</td><td>");
+                                out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                out.write("</td><td>");
+                                out.write("<a href=\"ajax/getCert.jsp?type=service&id=" + URLEncoder.encode(bd.getServiceKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
+                                out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
+                        %>
+                        <script type="text/javascript">
+                            $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
+                                $("#digsig<%=k%>").html(data);
+                            } )
+                        </script>
+                        <%
+                                out.write("</td></tr>");
                             }
-
                         %>
                     </table>
+                    <%
+                        }
+                    %>
                 </div>
 
                 <div class="tab-pane" id="opinfo">
@@ -592,7 +602,7 @@
             if (!newitem) {
         %>
 
-        |
+
         <a class="btn btn-danger " href="javascript:deleteService();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
         <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>&type=service"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
         <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
@@ -632,6 +642,26 @@
             <%=ResourceLoader.GetResource(session, "modal.savechanges")%></a>
     </div>
 </div>
+  <%
+        if (!newitem) {
 
+    %>
+    <div class="modal hide fade" id="viewAsXml">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>As XML</h3>
+        </div>
+        <div class="modal-body" id="viewAsXmlContent">
+
+
+        </div>
+        <div class="modal-footer">
+            <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service" class="btn btn-primary" target="_blank">Popout</a> 
+            <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+    <%
+        }
+    %>
 <!-- container div is in header bottom-->
 <%@include file="header-bottom.jsp" %>

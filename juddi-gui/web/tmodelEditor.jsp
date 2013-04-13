@@ -125,7 +125,9 @@
                         }
                          %>
                          id="<%=PostBackConstants.SERVICEKEY%>"><%
-                             out.write(StringEscapeUtils.escapeHtml(bd.getTModelKey()));
+                             if (!newitem) {
+                                 out.write(StringEscapeUtils.escapeHtml(bd.getTModelKey()));
+                             }
                         %></div><br>
 
 
@@ -171,6 +173,11 @@
                             }
                         %>
                     </div>
+                    
+                        <input type="checkbox" id="<%=PostBackConstants.TMODEL_DELETED%>" class="noedit" <%
+                        if (bd.isDeleted())
+                            out.write("checked=checked");
+                        %>> Is this tModel Deleted? (not available for future use).<br>
                 </div>
 
                 <div class="tab-pane " id="discovery">
@@ -203,7 +210,7 @@
                             out.write("</div>");//end this block
                         }
                         out.write("</div>");//end of overview
-                    %>
+%>
 
                 </div>
 
@@ -263,21 +270,30 @@
                         } else {
                             out.write("This item is digitally signed " + bd.getSignature().size());
                     %>
-                    <table class="table">
-
+                    <table class="table table-hover">
+                        <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
 
                         <%
-                                for (int k = 0; k < bd.getSignature().size(); k++) {
-                                    out.write("<tr><td>");
-                                    out.write(x.SignatureToReadable(bd.getSignature().get(k)));
-                                    out.write("</td><td>");
-                                    out.write("<a href=\"ajax/getCert.jsp?type=tmodel&id=" + URLEncoder.encode(bd.getTModelKey(), "UTF-8") + "&index=" + k + "\">View Certificate</a>");
-                                    out.write("</td></tr>");
-                                }
+                            for (int k = 0; k < bd.getSignature().size(); k++) {
+                                out.write("<tr><td>" + k + "</td><td>");
+                                out.write(x.SignatureToReadable(bd.getSignature().get(k)));
+                                out.write("</td><td>");
+                                out.write("<a href=\"ajax/getCert.jsp?type=tmodel&id=" + URLEncoder.encode(bd.getTModelKey(), "UTF-8") + "&index=" + k + "\">" + ResourceLoader.GetResource(session, "items.signed.viewcert") + "</a>");
+                                out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
+                        %>
+                        <script type="text/javascript">
+                            $.get("ajax/validateSignature.jsp?type=tmodel&id=<%=StringEscapeUtils.escapeJavaScript(bd.getTModelKey())%>", function(data){
+                                $("#digsig<%=k%>").html(data);
+                            } )
+                        </script>
+                        <%
+                                out.write("</td></tr>");
                             }
-
                         %>
                     </table>
+                    <%
+                        }
+                    %>
                 </div>
                 <div><br>
                     <%
@@ -296,7 +312,7 @@
                     <%
                         if (!newitem) {
                     %>|
-                    <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
+                    <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF8")%>&type=tmodel"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                     <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
                     <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                     <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
@@ -311,18 +327,25 @@
             <script src="js/businessEditor.js"></script>
             <script type="text/javascript">
                 Reedit();
-                function ViewAsXML()
-                {
-                    $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=business", function(data){
-                        window.console && console.log('asXml success');                
-                        $("#viewAsXmlContent").html(safe_tags_replace(data));
-                        $( "#viewAsXml" ).modal('show');
-                    });
+                <%
+                    if (!newitem) {
+                %>
+                
+                    function ViewAsXML()
+                    {
+                        $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel", function(data){
+                            window.console && console.log('asXml success');                
+                            $("#viewAsXmlContent").html(safe_tags_replace(data));
+                            $( "#viewAsXml" ).modal('show');
+                        });
                        
-                }
+                    }
+                <%
+                    }
+                %>
             </script>
 
-            </p>
+
         </div>
 
         <div class="modal hide fade" id="confirmDialog">
@@ -340,4 +363,25 @@
             </div>
         </div>
     </div>
+    <%
+        if (!newitem) {
+
+    %>
+    <div class="modal hide fade" id="viewAsXml">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>As XML</h3>
+        </div>
+        <div class="modal-body" id="viewAsXmlContent">
+
+
+        </div>
+        <div class="modal-footer">
+            <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel" class="btn btn-primary" target="_blank">Popout</a> 
+            <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+    <%
+        }
+    %>
     <%@include file="header-bottom.jsp" %>

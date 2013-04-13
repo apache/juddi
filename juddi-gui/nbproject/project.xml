@@ -127,11 +127,11 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.juddi-client-3.1.5-SNAPSHOT.jar}</file>
+                    <file>${file.reference.junit-3.8.2.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.junit-3.8.2.jar}</file>
+                    <file>${file.reference.juddi-client-3.1.5-SNAPSHOT.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">

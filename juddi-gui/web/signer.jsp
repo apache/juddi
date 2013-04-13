@@ -12,54 +12,68 @@
     <div class="well">
         <h1>
             <%=ResourceLoader.GetResource(session, "items.dsigs")%>
-            </h1>
+        </h1>
     </div>
 
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
             <%=ResourceLoader.GetResource(session, "items.dsigs.description")%><br>
-                <%
-                    //figure out what we are signing
-                    //fetch the xml from ajex/toXml and fill the text area
-                    String id = request.getParameter("id");
-                    String itemtype = request.getParameter("type");
+            <%
+                //figure out what we are signing
+                //fetch the xml from ajex/toXml and fill the text area
+                String id = request.getParameter("id");
+                String itemtype = request.getParameter("type");
 
-                %>
-            
-                You're about to digitally sign the <b><%=StringEscapeUtils.escapeHtml(itemtype)%></b> identified by the key <b><%=StringEscapeUtils.escapeHtml(id)%></b>.<br>
-                By electronically signing this UDDI entry, other users will then be able to verify that this entry hasn't been modified.<br>
-            
+            %>
+
+            You're about to digitally sign the <b><%=StringEscapeUtils.escapeHtml(itemtype)%></b> identified by the key <b><%=StringEscapeUtils.escapeHtml(id)%></b>.<br>
+            By electronically signing this UDDI entry, other users will then be able to verify that this entry hasn't been modified.<br>
+
             <applet code="org.apache.juddi.gui.dsig.XmlSignatureApplet" archive="applets/juddi-gui-dsig.jar"></applet> 
             <script type="text/javascript">
-                    $.get("ajax/toXML.jsp?id=<%=id%>&type=<%=itemtype%>", function(data){
-                        $("#data").val(data);
-                    });
-                    /**
-                     * Called by the applet to obtaining the xml to be signed
-                     */
-                    function getXml()
-                    {
-                        return $("#data").val();
-                    }
+                $.get("ajax/toXML.jsp?id=<%=id%>&type=<%=itemtype%>", function(data){
+                    $("#data").val(data);
+                });
+                /**
+                 * Called by the applet to obtaining the xml to be signed
+                 */
+                function getXml()
+                {
+                    return $("#data").val();
+                }
                     
-                    function go()
-                    {
+                function go()
+                {
                         
-                        var form = $("#uddiform");
-                        var d = form.serializeArray();
-                        var request=   $.ajax({
-                            url: 'ajax/saveFromXML.jsp?id=<%=id%>&type=<%=itemtype%>',
-                            type:"POST",
-                            cache: false, 
+                    var form = $("#uddiform");
+                    var d = form.serializeArray();
+                    var request=   $.ajax({
+                        url: 'ajax/saveFromXML.jsp?id=<%=id%>&type=<%=itemtype%>',
+                        type:"POST",
+                        cache: false, 
 
-                            data: d
-                        });
+                        data: d
+                    });
                   
-                        request.done(function(msg) {
-                            window.console && console.log('postback done ');                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
-                            $("#resultBar").show();
+                    request.done(function(msg) {
+                        window.console && console.log('postback done ');                
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                        $("#resultBar").show();
+                        //TODO timer to auto redirect to the
+                        window.setTimeout(function(){
+                <%
+                    if (itemtype == "business") {
+                        out.write("window.location=\"businessEditor2.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
+                    }
+                    if (itemtype == "service") {
+                        out.write("window.location=\"serviceEditor.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
+                    }
+                    if (itemtype == "tmodel") {
+                        out.write("window.location=\"tmodelEditor.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
+                    }
+                %>
+                            }, 5000);
                         });
 
                         request.fail(function(jqXHR, textStatus) {
@@ -114,9 +128,10 @@
                         return OSName;
                     }
                     //<a class="btn" href="javascript:go();">Go</a>
+                    //display:none  
             </script>
-            
-            <textarea name="data" rows="15" cols="80" id="data" style="display:none">Loading....</textarea>
+
+            <textarea name="data" rows="15" cols="80" id="data" style="">Loading....</textarea>
         </div>
 
     </div>

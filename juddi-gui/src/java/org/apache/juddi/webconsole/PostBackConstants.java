@@ -44,4 +44,5 @@ public static final String HOSTINGREDIRECTOR="hostingRedirector";
     public static final String IDENT_KEY_REF = "identbagkeyref";
     public static final String CATBAG_KEY_REF_GRP = "catbaggrpkeyref";
     public static final String KEY_REF = "keyref";
+    public static final String TMODEL_DELETED="isDeleted";
 }

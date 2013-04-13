@@ -485,8 +485,8 @@ public class Builders {
                 String index = filteredkey.substring(0, match.start());
                 if (!processedIndexes.contains(index)) {
                     BindingTemplate pn = new BindingTemplate();
-
-                    String[] t = (String[]) map.get(prefix + index + PostBackConstants.BINDINGKEY);
+//bindingTemplate0Value
+                    String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
                     if (t != null && t.length > 0) {
                         pn.setBindingKey(t[0]);
                     }

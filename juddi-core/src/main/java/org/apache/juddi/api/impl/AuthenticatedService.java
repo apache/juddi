@@ -30,6 +30,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.AuthenticatorFactory;
 import org.apache.juddi.v3.error.AuthTokenRequiredException;
+import org.apache.juddi.v3.error.AuthTokenExpiredException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
@@ -88,7 +89,7 @@ public abstract class AuthenticatedService {
 		}
 
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
-			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
+			throw new AuthTokenExpiredException(new ErrorMessage("errors.auth.AuthInvalid"));
 		
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
