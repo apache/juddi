@@ -287,7 +287,7 @@ public class InquiryHelper {
 		doFindTModelEmbeddedSearch(em, body.getFindQualifiers(), body.getFindTModel(), body.getTModelBag());
 		
 		keysFound = FindServiceByTModelKeyQuery.select(em, findQualifiers, body.getTModelBag(), body.getBusinessKey(), keysFound);
-                if (findQualifiers.isCombineCategoryBags()) {
+        if (findQualifiers.isCombineCategoryBags()) {
 		    keysFound = FindServiceByCombinedCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);
 		} else {
 			keysFound = FindServiceByCategoryQuery.select(em, findQualifiers, body.getCategoryBag(), body.getBusinessKey(), keysFound);

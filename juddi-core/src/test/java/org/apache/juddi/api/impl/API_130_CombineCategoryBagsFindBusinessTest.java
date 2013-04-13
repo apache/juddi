@@ -1,4 +1,4 @@
-package org.apache.juddi.v3.tck;
+package org.apache.juddi.api.impl;
 
 /*
  * Copyright 2001-2009 The Apache Software Foundation.
@@ -20,8 +20,11 @@ import java.util.List;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.Registry;
+import org.apache.juddi.v3.tck.TckBusiness;
+import org.apache.juddi.v3.tck.TckPublisher;
+import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -31,13 +34,7 @@ import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
-import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.ServiceInfo;
-import org.uddi.api_v3.ServiceList;
-import org.uddi.api_v3.TModelBag;
-import org.uddi.v3_service.UDDIInquiryPortType;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -47,7 +44,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * 
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  */
-public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest 
+public class API_130_CombineCategoryBagsFindBusinessTest 
 {
 	final static String TOM_PUBLISHER_TMODEL_XML      = "uddi_data/tompublisher/tModelKeyGen.xml";
 	final static String TOM_PUBLISHER_TMODEL01_XML 	  = "uddi_data/tompublisher/tModel01.xml";
@@ -69,43 +66,38 @@ public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest
 	final static String BUSINESS_KEY    = "uddi:uddi.tompublisher.com:businesstest04";
 	final static String BUSINESS_KEY545 = "uddi:uddi.tompublisher.com:businesstest545";
 
-	private static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
+	private static Log logger = LogFactory.getLog(API_130_CombineCategoryBagsFindBusinessTest.class);
 
-	protected static TckTModel tckTModel               = null;
-	protected static TckBusiness tckBusiness           = null;
-	
+	private static API_010_PublisherTest api010       = new API_010_PublisherTest();
+    private static TckTModel tckTModel                = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static TckBusiness tckBusiness      = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static UDDIInquiryImpl inquiry             = new UDDIInquiryImpl();
+    
 	protected static String authInfoJoe                = null;
-
-	private static UDDIInquiryPortType inquiry = null;
-	private static UDDIClerkManager manager;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
-		manager.stop();
+		Registry.stop();
 	}
-
+	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClerkManager();
-		manager.start();
-
+		Registry.start();
+		
 		logger.debug("Getting auth tokens..");
 		try {
-			Transport transport = manager.getTransport();
-			UDDISecurityPortType security = transport.getUDDISecurityService();
-			authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-			Assert.assertNotNull(authInfoJoe);
-			UDDIPublicationPortType publication = transport.getUDDIPublishService();
-			inquiry = transport.getUDDIInquiryService();
-
-			tckTModel   = new TckTModel(publication, inquiry);
-			tckBusiness = new TckBusiness(publication, inquiry);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("Could not obtain authInfo token.");
-		} 
+			api010.saveJoePublisher();
+			api010.saveSamSyndicator();
+			UDDISecurityPortType security      = new UDDISecurityImpl();
+        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
+        	 Assert.assertNotNull(authInfoJoe);
+    
+	     } catch (Exception e) {
+	    	 logger.error(e.getMessage(), e);
+				Assert.fail("Could not obtain authInfo token.");
+	     } 
 	}
-
+	
 	@Test
 	public void findBusiness() {
 		try {

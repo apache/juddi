@@ -52,7 +52,6 @@ public class API_040_BusinessServiceTest
 	private static TckTModel tckTModel               = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusiness tckBusiness           = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusinessService tckBusinessService  = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckFindEntity tckFindEntity            = new TckFindEntity(new UDDIInquiryImpl());
 	
 	private static String authInfoJoe                = null;
 	private static String authInfoSam                = null;

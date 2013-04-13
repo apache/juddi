@@ -16,24 +16,28 @@
  *
  */ -->
 
-<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:uddi.tompublisher.com:businesstest01"> 
-        <name>businesstest01</name> 
+<businessEntity xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace" businessKey="uddi:uddi.tompublisher.com:businesstest05"> 
+        <name>businesstest05</name> 
         <businessServices> 
-            <businessService serviceKey="uddi:uddi.tompublisher.com:servicetest01"> 
-                <name>servicetest01</name> 
+            <businessService serviceKey="uddi:uddi.tompublisher.com:servicetest05"> 
+                <name>servicetest05</name> 
                 <bindingTemplates> 
-                    <bindingTemplate bindingKey="uddi:uddi.tompublisher.com:bindingtest01"> 
-                        <accessPoint>http://genericaccesspoint.com</accessPoint> 
+                    <bindingTemplate bindingKey="uddi:uddi.tompublisher.com:bindingtest05"> 
+                        <accessPoint>http://genericaccesspoint.com</accessPoint>
                         <categoryBag> 
                             <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest01" keyValue="value-y"/> 
-                        </categoryBag> 
+                        </categoryBag>
                     </bindingTemplate> 
                 </bindingTemplates> 
-                <categoryBag> 
-                    <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest02" keyValue="value-z"/> 
-                </categoryBag> 
+                <categoryBag>
+                    <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest01" keyValue="value-z"/>
+                    <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest02" keyValue="value-x"/>
+                </categoryBag>
             </businessService> 
         </businessServices> 
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest01" keyValue="value-y"/>
+        </categoryBag>
 </businessEntity> 
 
 

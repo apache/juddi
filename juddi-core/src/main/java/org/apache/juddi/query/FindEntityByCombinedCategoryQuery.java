@@ -18,18 +18,18 @@
 package org.apache.juddi.query;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.config.Constants;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
-import org.apache.juddi.query.util.KeyedRefTModelComparator;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 
@@ -77,27 +77,31 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	
 	@SuppressWarnings("unused")
 	private static Log log = LogFactory.getLog(FindEntityByCombinedCategoryQuery.class);
-
-	private static final String ENTITY_KEYEDREFERENCE = "KeyedReference";
-	private static final String ALIAS_KEYEDREFERENCE = buildAlias(ENTITY_KEYEDREFERENCE);
-	private static final String FIELD_CATEGORYBAG = "categoryBag";
 	
-	private String joinClause;
-	private String currentAlias;
-	
+	protected String entityField2;
 	protected String entityNameChild2;
 	protected String entityAliasChild2;
+	
+	protected String entityField3;
+	protected String entityNameChild3;
+	protected String entityAliasChild3;
 
 	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
 		super(entityName, entityAlias, keyName, entityField, entityNameChild);
 	}
 	
 	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild,
-			String entityNameChild2) {
+			String entityField2, String entityNameChild2, String entityField3, String entityNameChild3) {
 		super(entityName, entityAlias, keyName, entityField, entityNameChild);
 		
 		this.entityNameChild2 = entityNameChild2;
 		this.entityAliasChild2 = buildAlias(entityNameChild2);
+		this.entityField2 = entityField2;
+		if (entityNameChild3!=null) {
+			this.entityField3 = entityField3;
+			this.entityNameChild3 = entityNameChild3;
+			this.entityAliasChild3 = buildAlias(entityNameChild3);
+		}
 		
 		selectSQL = "";
 	}
@@ -109,284 +113,115 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	public String getEntityAliasChild2() {
 		return entityAliasChild2;
 	}
+	
+	public String getEntityNameChild3() {
+		return entityNameChild3;
+	}
+	
+	public String getEntityAliasChild3() {
+		return entityAliasChild3;
+	}
 		
 	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
-	        StringBuffer queryOne = new StringBuffer(200);
-                StringBuffer queryTwo = new StringBuffer(200);
-	    
-                // If keysIn is not null and empty, then search is over.
+	        
+        // If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
 		
 		if (categoryBag == null)
 			return keysIn;
 		
-		List<KeyedReference> categories = categoryBag.getKeyedReference();
-		if (categories == null || categories.size() == 0)
+		List<KeyedReference> keyRefsInCategories = categoryBag.getKeyedReference();
+		if (keyRefsInCategories == null || keyRefsInCategories.size() == 0)
 			return keysIn;
 		
-		queryOne.append("select " + entityAlias + "." + keyName + ", " + entityAliasChild + ".id "
-	                    + "from " + entityName + " " + entityAlias + ", " + entityNameChild + " " + entityAliasChild + " ");
-		
-		ArrayList<List> aggregatedResultsOne = new ArrayList<List>();
-                ArrayList<List> aggregatedResultsTwo = new ArrayList<List>();
-
-		for (KeyedReference elem : categories) {
-		    List<KeyedReference> keyedRefs = new ArrayList<KeyedReference>(0);
-
-		    if (elem instanceof KeyedReference)
-			keyedRefs.add((KeyedReference)elem);
-	            DynamicQuery dynamicQry = new DynamicQuery(queryOne.toString());
-	            currentAlias = entityAliasChild;
-	            joinClause = entityAlias + "." + keyName + " = "
-	                + entityAliasChild + "." + entityField + "." + keyName + " ";
-	            appendConditions(dynamicQry, fq, keyedRefs);
-	            if (restrictions != null && restrictions.length > 0)
-	                dynamicQry.AND().pad().appendGroupedAnd(restrictions);
-
-	            if (keyedRefs.size() != 0) {
-	                List list = getQueryResult(em, dynamicQry, keysIn, entityAlias + "." + keyName);
-	                aggregatedResultsOne.addAll(list);
-	            }
-		}		
-
-	        queryTwo.append("select  " + entityAlias + "." + keyName + ", " + entityAliasChild2 + ".id "
-	                + "from " + entityName + " " + entityAlias + ", " + entityNameChild + " " + entityAliasChild + ", "
-	                + entityNameChild2 + " " + entityAliasChild2 + " ");
-
-                for (KeyedReference elem : categories) {
-                    List<KeyedReference> keyedRefs = new ArrayList<KeyedReference>(0);
-
-                    if (elem instanceof KeyedReference)
-                        keyedRefs.add((KeyedReference)elem);
-                    DynamicQuery dynamicQry = new DynamicQuery(queryTwo.toString());
-                    currentAlias = entityAliasChild2;
-                    
-                    if (BusinessEntityQuery.ENTITY_NAME.equals(entityName)) {
-                        joinClause = entityAlias + ".entityKey" + " = "
-                        + entityAliasChild + "." + entityField + ".entityKey" + " and "
-                        + entityAliasChild + "." + entityField + ".entityKey" + " = "
-                        + entityAliasChild2 + ".businessService.businessEntity.entityKey";
-                    } else {
-                        joinClause = entityAlias + ".entityKey" + " = "
-                            + entityAliasChild + "." + entityField + ".entityKey" + " and "
-                            + entityAliasChild + "." + entityField + ".entityKey" + " = "
-                            + entityAliasChild2 + ".bindingTemplate.businessService.entityKey";
-                    }
-
-                    appendConditions(dynamicQry, fq, keyedRefs);
-                    if (restrictions != null && restrictions.length > 0)
-                        dynamicQry.AND().pad().appendGroupedAnd(restrictions);
-
-                    if (keyedRefs.size() != 0) {
-                        List list = getQueryResult(em, dynamicQry, keysIn, entityAlias + "." + keyName);
-                        aggregatedResultsTwo.addAll(list);
-                    }
-                }               
-
-                ArrayList results = new ArrayList();
-                if (BusinessServiceQuery.ENTITY_NAME.equals(entityName)) {
-                    ArrayList idsOne = new ArrayList();
-                    ArrayList idsTwo = new ArrayList();
-                    
-                    for (Iterator i = aggregatedResultsOne.iterator(); i.hasNext();) {
-                        Object[] l = (Object[]) i.next();
-                        String id = (String) l[0];
-                        idsOne.add(id);
-                    }
-                    for (Iterator i = aggregatedResultsTwo.iterator(); i.hasNext();) {
-                        Object[] l = (Object[]) i.next();
-                        String id = (String) l[0];
-                        idsTwo.add(id);
-                    }
-                    
-                    results.addAll(idsOne);
-                    results.retainAll(idsTwo);
-                } else if (BusinessEntityQuery.ENTITY_NAME.equals(entityName)) {
-                    ArrayList idsOne = new ArrayList();
-                    ArrayList idsTwo = new ArrayList();
-
-                    for (Iterator i = aggregatedResultsOne.iterator(); i.hasNext();) {
-                        Object[] l = (Object[]) i.next();
-                        String id = (String) l[0];
-                        idsOne.add(id);                        
-                    }
-                    for (Iterator i = aggregatedResultsTwo.iterator(); i.hasNext();) {
-                        Object[] l = (Object[]) i.next();
-                        String id = (String) l[0];
-                        idsTwo.add(id);
-                    }
-                    
-                    results.addAll(idsOne);
-                    results.retainAll(idsTwo);                    
-                }
-                		
-		return results;
-	}
-	
-	
-	/*
-	 * Appends the conditions to the query based on the keyedReference list.  With the default or when "orAllKeys" is passed, the keyedReferences are autonomous and are
-	 * all AND'd or OR'd respectively.  However, "orLikeKeys" requires special treatment.  The goal is to create the conditions in this format:
-	 * 
-	 * (likeKey1 = X or likeKey1 = Y) and (likeKey2 = A or likeKey2 = B or likeKey2 = C) 
-	 * 
-	 * ie. the "like" KeyedReferences are OR'd and the groups of "like" KeyedReferences are AND'd with each other.
-	 */
-	public void appendConditions(DynamicQuery qry, FindQualifiers fq, List<KeyedReference> keyedRefs) {
-		
-		// Append the necessary tables (two will always be added connecting the entity to its category table and then the category table to the keyed references).
-		appendJoinTables(qry, fq, keyedRefs);
-		qry.AND().pad().openParen().pad();
-		
-		String predicate = DynamicQuery.PREDICATE_EQUALS;
-		if (fq.isApproximateMatch()) {
-			predicate = DynamicQuery.PREDICATE_LIKE;
+		Map<KeyedReference,Set<String>> map  = new HashMap<KeyedReference,Set<String>>();
+		//1. First match at the top level (i.e. categoryBag on business)
+		findEntityByCategoryQuery(map, em, fq, categoryBag, entityField, entityNameChild, keysIn, restrictions);
+		//2. Now match at the second level (i.e. categoryBag on services for businesses)
+		findEntityByCategoryQuery(map, em, fq, categoryBag, entityField2, entityNameChild2, keysIn, restrictions);
+		//3. Now match at the third level (i.e. categoryBag on binding for businesses)
+		//   This does only apply to businesses (not for services)
+		if (entityNameChild3!=null) {
+			findEntityByCategoryQuery(map, em, fq, categoryBag, entityField3, entityNameChild3, keysIn, restrictions);
 		}
 		
-		// Sorting the collection by tModel Key
-		Collections.sort(keyedRefs, new KeyedRefTModelComparator());
-
-		String prevTModelKey = null;
-		int count = 0;
-		int tblCount = -1;
-		for(KeyedReference keyedRef : keyedRefs) {
-			String tmodelKey = keyedRef.getTModelKey();
-			String keyValue = keyedRef.getKeyValue();
-			String keyName = keyedRef.getKeyName();
-			
-			if (fq.isApproximateMatch()) {
-				// JUDDI-235: wildcards are provided by user (only commenting in case a new interpretation arises)
-				//keyValue = keyValue.endsWith(DynamicQuery.WILDCARD)?keyValue:keyValue + DynamicQuery.WILDCARD;
-				//keyName = keyName.endsWith(DynamicQuery.WILDCARD)?keyName:keyName + DynamicQuery.WILDCARD;
+		//Now build the results taking into account AND/OR/LIKE
+		Set<String> resultingEntityKeys = new HashSet<String>();
+		if (fq.isOrAllKeys()) {
+			//in this case get ALL businessKeys
+			for (KeyedReference keyRef: map.keySet()) {
+				resultingEntityKeys.addAll(map.get(keyRef));
 			}
-
-			// Either opening up (and AND'ing) a new "group" of like keys or simply appending an "or".  If this is not "orLikeKeys", then just need to increment
-			// the table count.
-			if (fq.isOrLikeKeys()) {
-				if (count == 0) {
-					qry.openParen().pad();
-					tblCount++;
-				}
-				else {
-					if (!tmodelKey.equals(prevTModelKey)) {
-						qry.closeParen().pad().AND().pad().openParen().pad();
-						tblCount++;
-					}
-					else
-						qry.OR().pad();
+		} else if (fq.isOrLikeKeys()) {
+			// any keyedReference filters that come from the same namespace (e.g. have the same tModelKey value) 
+			// are OR’d together rather than AND’d
+			// 1. OR if we have keys with similar namespaces (keyValue)
+			Map<String,Set<String>> likeMap  = new HashMap<String,Set<String>>();
+			for (KeyedReference keyRef: map.keySet()) {
+				String keyValue = keyRef.getKeyValue();
+				if (likeMap.containsKey(keyValue)) {
+					likeMap.get(keyValue).addAll(map.get(keyRef));
+				} else {
+					likeMap.put(keyValue, map.get(keyRef));
 				}
 			}
-			else
-				tblCount++;
-			
-			String keyValueTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".keyValue";
-			String keyNameTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".keyName";
-			String tmodelKeyTerm = (fq.isOrAllKeys()?ALIAS_KEYEDREFERENCE + "0":ALIAS_KEYEDREFERENCE + tblCount) + ".tmodelKeyRef";
-			if (fq.isCaseInsensitiveMatch()) {
-				keyValueTerm = "upper(" + keyValueTerm + ")";
-				keyValue = keyValue.toUpperCase();
-				
-				keyNameTerm = "upper(" + keyNameTerm + ")";
-				keyName = keyName.toUpperCase();
-			}
-			
-			
-			// According to specification, if the "general keyword" tmodel is used, then the keyName must be part of the query.
-			if (Constants.GENERAL_KEYWORD_TMODEL.equalsIgnoreCase(tmodelKey)) {
-				qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),
-									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate),
-									 new DynamicQuery.Parameter(keyNameTerm, keyName, predicate));
-			}
-			else {
-				qry.appendGroupedAnd(new DynamicQuery.Parameter(tmodelKeyTerm, tmodelKey, DynamicQuery.PREDICATE_EQUALS),
-									 new DynamicQuery.Parameter(keyValueTerm, keyValue, predicate));
-				
-			}
-			
-			if (count + 1 < keyedRefs.size()) {
-				if (fq.isOrAllKeys())
-					qry.OR().pad();
-				else if (fq.isOrLikeKeys()) {
+			// 2. Now AND the likeMap
+			boolean firstTime = true;
+			for (String keyValue: likeMap.keySet()) {
+				if (firstTime) {
+					resultingEntityKeys = map.get(keyValue);
+					firstTime = false;
+				} else {
+					resultingEntityKeys.retainAll(map.get(keyValue));
 				}
-				else
-					qry.AND().pad();
 			}
-			
-			// The "orLikeKeys" will always leave an unclosed parenthesis.  This will close it.
-			if (fq.isOrLikeKeys() && (count + 1 == keyedRefs.size()))
-				qry.closeParen().pad();
-
-			prevTModelKey = tmodelKey;
-			count++;
+		} else {
+			// AND keys by default, in this case each entity (business or service)
+			// needs to have ALL keys
+			boolean firstTime = true;
+			for (KeyedReference keyRef: map.keySet()) {
+				if (firstTime) {
+					resultingEntityKeys = map.get(keyRef);
+					firstTime = false;
+				} else {
+					resultingEntityKeys.retainAll(map.get(keyRef));
+				}
+			}
 		}
-		qry.closeParen().pad();
-		
+		return new ArrayList<String>(resultingEntityKeys);
 	}
-
-	
-	
-	/*
-	 * Appends the necessary join table for the child entity and additional tables for when keys are AND'd.  When "orLikeKeys" is used, 
-	 * we only need an extra table for each distinct tmodelKey.
+	/**
+	 * Finding the entities (businesses or services) that have a matching keyedReference in their
+	 * categoryBag.
+	 * 
+	 * @param map - result map of keyedReference and matching businesses
+	 * @param em
+	 * @param fq
+	 * @param categoryBag
+	 * @param entityField
+	 * @param entityNameChild
+	 * @param keysIn
+	 * @param restrictions
 	 */
-	public void appendJoinTables(DynamicQuery qry, FindQualifiers fq, List<KeyedReference> keyedRefs) {
-		
-		if (keyedRefs != null && keyedRefs.size() > 0) {
-			// Sorting the collection by tModel Key
-			Collections.sort(keyedRefs, new KeyedRefTModelComparator());
-
-			StringBuffer thetaJoins = new StringBuffer(200);
-			int tblCount = 0;
-			int count = 0;
-			String curTModelKey = null;
-			String prevTModelKey = null;
-			for(KeyedReference kr : keyedRefs) {
-				curTModelKey = kr.getTModelKey();
-				if (count != 0) {
-					if (!fq.isOrAllKeys()) {
-						if (fq.isOrLikeKeys() && curTModelKey.equals(prevTModelKey)) {
-							// Do nothing
-						}
-						else {
-							tblCount++;
-							qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
-							thetaJoins.append(ALIAS_KEYEDREFERENCE + (tblCount - 1) + "." + FIELD_CATEGORYBAG + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_CATEGORYBAG + ".id ");
-					//		thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
-						}
-					}
-
-				}
-				else {
-					qry.comma().pad().append(ENTITY_KEYEDREFERENCE + " " + ALIAS_KEYEDREFERENCE + tblCount).pad();
-					//thetaJoins.append(" ( ");
-                                        thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
-					thetaJoins.append(currentAlias + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_CATEGORYBAG + ".id ");
-					//thetaJoins.append(DynamicQuery.OPERATOR_OR + " ");
-					//thetaJoins.append(entityAliasChild2 + ".id = " + ALIAS_KEYEDREFERENCE + tblCount + "." + FIELD_CATEGORYBAG + ".id ");
-					///thetaJoins.append(" ) ");
-					thetaJoins.append(DynamicQuery.OPERATOR_AND + " ");
-					
-				}
-				prevTModelKey = curTModelKey;
-				count++;
+	private void findEntityByCategoryQuery(Map<KeyedReference,Set<String>> map, EntityManager em, 
+			FindQualifiers fq, CategoryBag categoryBag, String entityField, String entityNameChild, 
+			List<?> keysIn, DynamicQuery.Parameter... restrictions) 
+	{
+		FindEntityByCategoryQuery findEntityByCategoryQuery2 = new FindEntityByCategoryQuery(
+				entityName, entityAlias, keyName, entityField, entityNameChild);
+		for (KeyedReference keyedReference : categoryBag.getKeyedReference()) {
+			CategoryBag categoryBagWithOneKey = new CategoryBag();
+			categoryBagWithOneKey.getKeyedReference().add(keyedReference);
+			List<?> entityKeys =  findEntityByCategoryQuery2.select(
+					em, fq, categoryBagWithOneKey, keysIn, restrictions);
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			Set<String> keySet = new HashSet(entityKeys);
+			if (map.containsKey(keyedReference)) {
+				map.get(keyedReference).addAll(keySet);
+			} else {
+				map.put(keyedReference, keySet);
 			}
-			
-			qry.WHERE().pad().openParen().pad();
-			
-                        qry.append(joinClause).pad();
-
-			
-			// Appending the middling entity-specific category table condition
-			//qry.append(entityAlias + "." + keyName + " = " + entityAliasChild + "." + entityField + "." + KEY_NAME).pad();
-//			qry.AND().pad();
-
-			String thetaJoinsStr = thetaJoins.toString();
-			if (thetaJoinsStr.endsWith(DynamicQuery.OPERATOR_AND + " "))
-				thetaJoinsStr = thetaJoinsStr.substring(0, thetaJoinsStr.length() - (DynamicQuery.OPERATOR_AND + " ").length());
-			qry.append(thetaJoinsStr);
-
-			qry.closeParen().pad();
 		}
 	}
 	
