@@ -208,12 +208,12 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 			FindQualifiers fq, CategoryBag categoryBag, String entityField, String entityNameChild, 
 			List<?> keysIn, DynamicQuery.Parameter... restrictions) 
 	{
-		FindEntityByCategoryQuery findEntityByCategoryQuery2 = new FindEntityByCategoryQuery(
+		FindEntityByCategoryQuery findEntityByCategoryQuery = new FindEntityByCategoryQuery(
 				entityName, entityAlias, keyName, entityField, entityNameChild);
 		for (KeyedReference keyedReference : categoryBag.getKeyedReference()) {
 			CategoryBag categoryBagWithOneKey = new CategoryBag();
 			categoryBagWithOneKey.getKeyedReference().add(keyedReference);
-			List<?> entityKeys =  findEntityByCategoryQuery2.select(
+			List<?> entityKeys =  findEntityByCategoryQuery.select(
 					em, fq, categoryBagWithOneKey, keysIn, restrictions);
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			Set<String> keySet = new HashSet(entityKeys);
