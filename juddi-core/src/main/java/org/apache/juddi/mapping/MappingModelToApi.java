@@ -373,7 +373,19 @@ public class MappingModelToApi {
 		for (org.apache.juddi.model.DiscoveryUrl modelDiscUrl : modelDiscUrlList) {
 			org.uddi.api_v3.DiscoveryURL apiDiscUrl = new org.uddi.api_v3.DiscoveryURL();
 			apiDiscUrl.setUseType(modelDiscUrl.getUseType());
-			apiDiscUrl.setValue(modelDiscUrl.getUrl());
+			String discoveryURL = modelDiscUrl.getUrl();
+			try {
+				String baseUrl = AppConfig.getConfiguration().getString("juddi.server.baseurl");
+				if (baseUrl==null) {
+					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to '" 
+							+ Property.DEFAULT_BASE_URL + "'");
+					baseUrl = Property.DEFAULT_BASE_URL;
+				}
+				discoveryURL = discoveryURL.replaceAll("\\$\\{juddi.server.baseurl\\}", baseUrl);
+			} catch (ConfigurationException e) {
+				logger.error(e.getMessage(),e);
+			}
+			apiDiscUrl.setValue(discoveryURL);
 			apiDiscUrlList.add(apiDiscUrl);
 		}
 		apiBusinessEntity.setDiscoveryURLs(apiDiscUrls);
