@@ -80,6 +80,8 @@ function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
     });*/
 }
 
+
+
 function refresh()
 {
     var displayrecords = $("#displayrecords").text();

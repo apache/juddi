@@ -36,11 +36,11 @@
             }
         }
     }
-    if (session.getAttribute("locale")==null){
+    if (session.getAttribute("locale") == null) {
         //last chance, default to english
         session.setAttribute("locale", "en");
     }
-    %>
+%>
 <html lang="<%=(String) session.getAttribute("locale")%>" dir="<%=ResourceLoader.GetResource(session, "direction")%>">
     <head>
         <meta charset="utf-8">
@@ -96,16 +96,19 @@
                         <a class="brand" href="index.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li ><a href="index.jsp"><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li ><a href="home.jsp"><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
                                 <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.discover")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.businesses.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.businesses")%></a></li>
                                         <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
                                         <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.tmodels.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.tmodels")%></a></li>
                                         <%//                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")">ResourceLoader.GetResource(session, "navbar.publishers")</a></li>
-                                        %>
-                                        <li class="divider"></li>
+%>
+                                        <li class="divider"> </li>
+                                        
                                         <li><a href="search.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.search.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.search")%></a></li>
+
+
                                     </ul>
                                 </li>
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.create")%><b class="caret"></b></a>
@@ -114,16 +117,19 @@
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.service.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.service")%></a></li>
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
+                                        <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
                                         <%
-                                          //  if (hub.IsJuddiRegistry()) {
-                                        
-                                        //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")
+                                            //  if (hub.IsJuddiRegistry()) {
+
+                                            //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")
 
 //"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")</a></li>
-                                        
-                                        
+
+
                                             //                                      }
-                                        %>
+%>
                                     </ul>
                                 </li>
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%><b class="caret"></b></a>

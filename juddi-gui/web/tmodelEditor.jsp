@@ -313,8 +313,8 @@
                         if (!newitem) {
                     %>|
                     <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF8")%>&type=tmodel"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
-                    <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                    <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+                    <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+                    <a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                     <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
                     <%
                         }

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,15 +36,10 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.ws.BindingProvider;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.juddi.api_v3.GetAllPublisherDetail;
-import org.apache.juddi.api_v3.Publisher;
-import org.apache.juddi.api_v3.PublisherDetail;
-import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
 import org.apache.juddi.webconsole.hub.builders.Builders;
@@ -650,7 +646,7 @@ public class UddiHub {
         } else {
             be.setBusinessServices(GetBusinessDetails.getBusinessServices());
         }
-        //TODO signature
+
         be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit")));
 
         be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
@@ -1989,7 +1985,18 @@ public class UddiHub {
         return sb.toString();
     }
 
-    //TODO this fucntion is pointless, it just returns a list of businesses
+    /**
+     * The get_registeredInfo API call is used to get an abbreviated list of all
+     * businessEntity and tModel data that are controlled by a publisher. When
+     * the registry distinguishes between publishers, this is the individual
+     * associated with the credentials passed in the authInfo element. This
+     * returned information is intended, for example, for driving tools that
+     * display lists of registered information and then provide drill-down
+     * features. This is the recommended API to use after a network problem
+     * results in an unknown status of saved information.
+     *
+     * @return
+     */
     public RegisteredInfo GetNodeInformation() {
         try {
             GetRegisteredInfo r = new GetRegisteredInfo();
@@ -2010,8 +2017,6 @@ public class UddiHub {
                     throw ex;
                 }
             }
-
-
             return registeredInfo;
         } catch (Exception ex) {
             HandleException(ex);
@@ -2019,31 +2024,193 @@ public class UddiHub {
         return null;
     }
 
-    public List<PublisherAssertion> GetPublisherAssertions() {
+    public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
+        List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
+        //first, get all the assertions
+/*
+         List<PublisherAssertion> publisherAssertions = null;
+         try {
+         try {
+         publisherAssertions = publish.getPublisherAssertions(GetToken());
+         } catch (Exception ex) {
+         if (ex instanceof DispositionReportFaultMessage) {
+         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+         if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+         token = null;
+         publisherAssertions = publish.getPublisherAssertions(GetToken());
+         }
+         } else {
+         throw ex;
+         }
+         }
+         } catch (Exception ex) {
+         msg.set(HandleException(ex));
+         }
+         */
+        //then, all of the status of each item
+        /*
+         * The get_assertionStatusReport API call provides administrative support for determining 
+         * the status of current and outstanding publisher assertions that involve any of the business 
+         * registrations managed by the individual publisher.  Using this API, a publisher can see the 
+         * status of assertions that they have made, as well as see assertions that others have made that 
+         * involve businessEntity structures controlled by the requesting publisher.   See Appendix A 
+         * Relationships and Publisher Assertions for more information.
+         */
+        List<AssertionStatusItem> STATUS_COMPLETE = null;
+
         try {
-            List<PublisherAssertion> publisherAssertions = publish.getPublisherAssertions(GetToken());
-            return publisherAssertions;
+            try {
+                STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
         } catch (Exception ex) {
-            HandleException(ex);
+            msg.set(HandleException(ex));
         }
-        return null;
+        if (STATUS_COMPLETE != null) {
+            out.addAll(STATUS_COMPLETE);
+        }
+        List<AssertionStatusItem> STATUS_FROM_KEY_INCOMPLETE = null;
+        try {
+            try {
+                STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            msg.set(HandleException(ex));
+        }
+        if (STATUS_FROM_KEY_INCOMPLETE != null) {
+            out.addAll(STATUS_FROM_KEY_INCOMPLETE);
+        }
+        List<AssertionStatusItem> STATUS_TO_KEY_INCOMPLETE = null;
+        try {
+            try {
+                STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            msg.set(HandleException(ex));
+        }
+        if (STATUS_TO_KEY_INCOMPLETE != null) {
+            out.addAll(STATUS_TO_KEY_INCOMPLETE);
+        }
+
+
+        return out;
+        //return publisherAssertions;
     }
-    //publisher assertion, relationship between two business entities
 
-    public String GetUDDISubscriptions() {
-
-        return null;
+    public String DeletePublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
+        DeletePublisherAssertions dp = new DeletePublisherAssertions();
+        dp.setAuthInfo(GetToken());
+        PublisherAssertion add = new PublisherAssertion();
+        add.setToKey(tokey);
+        add.setFromKey(fromkey);
+        add.setKeyedReference(new KeyedReference());
+        add.getKeyedReference().setTModelKey(tmodelkey);
+        add.getKeyedReference().setKeyName(keyname);
+        add.getKeyedReference().setKeyValue(keyvalue);
+        dp.getPublisherAssertion().add(add);
+        try {
+            try {
+                publish.deletePublisherAssertions(dp);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        publish.deletePublisherAssertions(dp);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+        return ResourceLoader.GetResource(session, "actions.saved");
     }
 
     /**
-     * @see FindRelatedBusinesses
+     *
+     * @param tokey
+     * @param fromkey
+     * @param keyname
+     * @param keyvalue
      * @return
      */
-    public String SetPublisherAssertion() {
-        return null;
+    public String AddPublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
+        // List<PublisherAssertion> x = GetPublisherAssertions();
+        AddPublisherAssertions r = new AddPublisherAssertions();
+        r.setAuthInfo(GetToken());
+        PublisherAssertion add = new PublisherAssertion();
+        add.setToKey(tokey);
+        add.setFromKey(fromkey);
+        add.setKeyedReference(new KeyedReference());
+        add.getKeyedReference().setTModelKey(tmodelkey);
+        add.getKeyedReference().setKeyName(keyname);
+        add.getKeyedReference().setKeyValue(keyvalue);
+        //TODO signatures? :(
+        r.getPublisherAssertion().add(add);
+        try {
+            try {
+                publish.addPublisherAssertions(r);
+
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        publish.addPublisherAssertions(r);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+        return ResourceLoader.GetResource(session, "actions.saved");
+    }
+
+    public void GetMyBusinesses() {
     }
 
     public String TransferCustody() {
+        return null;
+    }
+
+    public String GetUDDISubscriptions() {
+
         return null;
     }
 }

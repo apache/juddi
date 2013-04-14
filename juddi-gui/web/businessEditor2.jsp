@@ -576,6 +576,7 @@
                             <%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></a><br>
                         <div id="relationresults"></div>
 
+                        
                     </div>
                 </div>
             </div>
@@ -594,8 +595,8 @@
                 %> | 
                 <a class="btn btn-danger " href="javascript:deleteBusiness();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                 <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
-                <a class="btn btn-info " href="#" title="Alert me when this entity changes"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                <a class="btn btn-warning " href="#" title="Transfer this entity to another UDDI node"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+                <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+                <a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                 <a class="btn "  href="javascript:ViewAsXML();"><%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
                 <%}%>
                 <script type="text/javascript" src="js/businessEditor.js"></script>
@@ -658,6 +659,23 @@
         <div class="modal-footer">
             <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>&type=business" class="btn btn-primary" target="_blank">Popout</a> 
             <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+        
+        <div class="modal hide fade" id="addPublisherAssertion">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Add a publisher assertion</h3>
+        </div>
+        <div class="modal-body" id="viewAsXmlContent">
+            <%
+            
+            %>
+
+        </div>
+        <div class="modal-footer">
+            
+            <a href="javascript:$('#addPublisherAssertion').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
     <%

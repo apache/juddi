@@ -1,0 +1,68 @@
+<%-- 
+    Document   : validateSignature
+    Created on : Apr 10, 2013, 10:14:19 PM
+    Author     : Alex O'Ree
+--%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Map.Entry"%>
+<%@page import="java.util.Set"%>
+<%@page import="java.util.Properties"%>
+<%@page import="java.util.concurrent.atomic.AtomicReference"%>
+<%@page import="org.apache.juddi.v3.client.crypto.DigSigUtil"%>
+<%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%>
+<%@page import="org.apache.juddi.jaxb.EntityCreator"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    //org.apache.juddi.jaxb.PrintUDDI p = new PrintUDDI();
+    UddiHub x = UddiHub.getInstance(application, session);
+
+    String type = request.getParameter("type");
+    String id = request.getParameter("id");
+    if ((type != null && type.length() != 0) && (id != null && id.length() != 0)) {
+        Object j = null;
+        if (type.equalsIgnoreCase("business")) {
+            j = x.GetBusinessDetailsAsObject(id);
+        } else if (type.equalsIgnoreCase("service")) {
+            j = x.GetServiceDetailsAsObject(id);
+        } else if (type.equalsIgnoreCase("bindingTemplate")) {
+            j = x.GetBindingDetailsAsObject(id);
+        } else if (type.equalsIgnoreCase("tModel")) {
+            j = x.GettModelDetailsAsObject(id);
+        }
+        if (j != null) {
+            org.apache.juddi.v3.client.crypto.DigSigUtil dsig = new DigSigUtil();
+            UddiHub hub = UddiHub.getInstance(application, session);
+            Properties config2 = hub.GetRawConfiguration();
+            Set<Entry<Object, Object>> it = config2.entrySet();
+            Iterator it2 = it.iterator();
+            while (it2.hasNext()) {
+                Object j2 = it2.next();
+                Entry<Object, Object> item = (Entry<Object, Object>) j2;
+                dsig.put((String) item.getKey(), (String) item.getValue());
+            }
+
+
+            AtomicReference<String> msg = new AtomicReference<String>();
+            // dsig.put(DigSigUtil., value);
+            boolean success = dsig.verifySignedUddiEntity(j, msg);
+            if (!success) {
+                out.write("<span class=\"label label-important\">" + ResourceLoader.GetResource(session, "items.signatures.invalid") + msg.get() + "</span>");
+            } else {
+                out.write("<span class=\"label label-success\">" + ResourceLoader.GetResource(session, "items.signatures.valid") + "</span>");
+            }
+        } else {
+            response.setStatus(500);
+            out.write(ResourceLoader.GetResource(session, "items.unknown"));
+        }
+    }
+
+
+    //get parameter type
+    //fetch from UDDI
+    //convert to string and output
+
+
+
+%>

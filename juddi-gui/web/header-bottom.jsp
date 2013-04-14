@@ -14,7 +14,6 @@
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<hr>
 
 
 
@@ -26,8 +25,8 @@
 <div style="
      padding: 0px 0px 0px 0px; bottom: 0px; margin: 0px 0px 0px 0px; width:100%; text-align: center; position: fixed; 
      background-color: white; 
-     border-width: 4px; border-color: red; border-style: dashed"><center><footer>BETA - v<%
-
+     "><center><footer><span style="color: red"><b>BETA</b></span> - v<%
+//border-width: 4px; border-color: red; border-style: dashed
     Enumeration resEnum;
     try {
         resEnum = Thread.currentThread().getContextClassLoader().getResources(JarFile.MANIFEST_NAME);
@@ -58,7 +57,7 @@
 
 
 
-        %> - <%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></footer></center></div>
+        %> - <a href="http://www.apache.org"><%=ResourceLoader.GetResource(session, "footer.apachecopyright")%></a</footer></center></div>
 </body>
 </html>
 

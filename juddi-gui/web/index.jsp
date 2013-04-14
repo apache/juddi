@@ -43,7 +43,8 @@
             if (checked != null && checked.equalsIgnoreCase("on")) {
                 Cookie cookie = new Cookie("locale", lang);
                 //TODO this is for debugging purposes 
-                cookie.setMaxAge(356);
+                //this is in ms, Maxvalue represents something like 70 years
+                cookie.setMaxAge(Integer.MAX_VALUE);
                 //cookie.setDomain("/UDDIBrowser");
                 cookie.setPath("/UDDIBrowser");
                 response.addCookie(cookie);
