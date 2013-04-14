@@ -22,7 +22,12 @@ Install Netbeans and open the project. Compiling from Netbeans however doesn't w
 
 
 To build your changes locally and skip the the tests run:
+mvn install -DskipTests=true
 
 To also build the Pluto/GWT/Portlet interface
 cd juddi-console
 mvn clean install
+
+To start Juddi's embedded Tomcat server:
+juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat
+juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh
