@@ -67,7 +67,8 @@ public class FindBusinessByCombinedCategoryQuery {
                             ENTITY_FIELD2,
                             ENTITY_NAME_CHILD2,
                             ENTITY_FIELD3,
-                            ENTITY_NAME_CHILD3);
+                            ENTITY_NAME_CHILD3,
+                            BusinessEntityQuery.SIGNATURE_PRESENT);
         }
         
         public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn) {

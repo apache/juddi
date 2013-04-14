@@ -97,7 +97,9 @@ public class FindTModelByNameQuery extends TModelQuery {
 		}
 
 		qry.closeParen().pad();
-		
+		if (fq!=null && fq.isSignaturePresent()) {
+			qry.AND().pad().openParen().pad().append(TModelQuery.SIGNATURE_PRESENT).pad().closeParen().pad();
+		}
 	}
 	
 }

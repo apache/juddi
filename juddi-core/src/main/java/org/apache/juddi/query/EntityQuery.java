@@ -44,6 +44,7 @@ public abstract class EntityQuery {
 	public static final String TEMP_ENTITY_ALIAS = "tk";
 	public static final String TEMP_ENTITY_PK_TXID_NAME = TEMP_ENTITY_ALIAS + ".pk.txId";
 	public static final String TEMP_ENTITY_PK_KEY_NAME = TEMP_ENTITY_ALIAS + ".pk.entityKey";
+	public static final String SIGNATURE_FIELD  = "signatures";
 
 	public static final int DEFAULT_MAXROWS = 1000;
 	public static final int DEFAULT_MAXINCLAUSE = 1000;

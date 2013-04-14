@@ -15,28 +15,19 @@
 package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
-import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.query.util.DynamicQuery;
-import org.apache.juddi.v3.tck.Property;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
-import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -157,52 +148,6 @@ public class API_040_BusinessServiceTest
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
-	}
-	
-	@Test @Ignore
-	public void combineCategoryBagsFindServices() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveCombineCatBagsPublisherBusiness(authInfoJoe);
-			
-			PersistenceManager pm = new PersistenceManager();
-			EntityManager em = pm.getEntityManager();
-			
-			String sql = "select bs.entityKey from BusinessService bs ," +
-					" ServiceCategoryBag ServiceCategory_ , " +
-					"KeyedReference KeyedRefere_0 , KeyedReference KeyedRefere_1 " +
-					"where ( bs.entityKey = ServiceCategory_.businessService.entityKey and " +
-					" ( ServiceCategory_.id = KeyedRefere_0.categoryBag.id  ))";
-			String sql3 = "select bs.entityKey from BusinessService bs UNION select bs.entityKey from BusinessService bs";
-			
-			String sql2 = "select bs.entityKey, categoryBag.id from BusinessService bs, " +
-	        " BindingTemplate bt,  " +
-			" BindingCategoryBag categoryBag  ," +
-			"KeyedReference KeyedRefere_0, KeyedReference KeyedRefere_1 " +
-			"where  categoryBag.id = bt.categoryBag.id and " +
-			"bt.businessService.entityKey = bs.entityKey and " +
-			"( (KeyedRefere_0.categoryBag.id=categoryBag.id and KeyedRefere_0.tmodelKeyRef = 'uddi:uddi.joepublisher.com:tmodel01' and KeyedRefere_0.keyValue = 'value-z') or " +
-			"(KeyedRefere_1.categoryBag.id=categoryBag.id and KeyedRefere_1.tmodelKeyRef = 'uddi:uddi.joepublisher.com:tmodel02' and KeyedRefere_1.keyValue = 'value-x') ) " +
-			" group by bs.entityKey, categoryBag.id ";
-			
-			String sql1 = "select bs.entityKey from BusinessService bs ," +
-			        " BindingTemplate bt, ServiceCategoryBag ServiceCategory_ , " +
-					" BindingCategoryBag BindingCategory_  , " +
-					"KeyedReference KeyedRefere_0, KeyedReference KeyedRefere_1 " +
-					"where ( ((bt.businessService.entityKey = bs.entityKey and bt.entityKey = BindingCategory_.bindingTemplate.entityKey and " +
-					" BindingCategory_.id = KeyedRefere_0.categoryBag.id) AND (bs.entityKey = ServiceCategory_.businessService.entityKey and ServiceCategory_.id = KeyedRefere_0.categoryBag.id)" +
-					") and KeyedRefere_0.categoryBag.id = KeyedRefere_1.categoryBag.id and ( " +
-					"(KeyedRefere_0.tmodelKeyRef = 'uddi:uddi.joepublisher.com:tmodel01' and KeyedRefere_0.keyValue = 'value-z') and " +
-					"(KeyedRefere_1.tmodelKeyRef = 'uddi:uddi.joepublisher.com:tmodel02' and KeyedRefere_1.keyValue = 'value-x') ) ) ";
-			Query qry = em.createQuery(sql2);
-			List result = qry.getResultList();
-			System.out.println(result);
-			
-			//tckFindEntity.findService_CombinedCatBag();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		} 
 	}
 	
 	@Test

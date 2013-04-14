@@ -72,7 +72,8 @@ public class FindServiceByCombinedCategoryQuery {
 														  ENTITY_FIELD2,
 														  ENTITY_NAME_CHILD2,
 														  null,
-														  null);
+														  null,
+														  BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {

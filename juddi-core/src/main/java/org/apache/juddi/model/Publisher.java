@@ -44,7 +44,7 @@ public class Publisher extends UddiEntityPublisher implements java.io.Serializab
 	private Integer maxServicesPerBusiness;
 	private Integer maxBindingsPerService;
 	private Integer maxTmodels;
-        private List<Signature> signatures = new ArrayList<Signature>(0);
+    private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public Publisher() {
 		super(null);

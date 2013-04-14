@@ -20,6 +20,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -75,9 +76,33 @@ public class API_070_FindEntityTest
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			tckFindEntity.findBusiness();
-			tckFindEntity.findService();
-			tckFindEntity.findBinding();
-			tckFindEntity.findTModel();
+			tckFindEntity.findService(null);
+			tckFindEntity.findBinding(null);
+			tckFindEntity.findTModel(null);
+			tckFindEntity.findAllBusiness();
+			tckFindEntity.getNonExitingBusiness();
+		} finally {
+			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+			tckBusinessService.deleteJoePublisherService(authInfoJoe);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+		
+	}
+	
+	@Test
+	public void findSignedEntities() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
+			tckBusinessService.saveJoePublisherService(authInfoJoe);
+			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+			
+			tckFindEntity.findAllSignedBusiness();
+			tckFindEntity.findService(UDDIConstants.SIGNATURE_PRESENT);
+			tckFindEntity.findBinding(UDDIConstants.SIGNATURE_PRESENT);
+			//tckFindEntity.findTModel(UDDIConstants.SIGNATURE_PRESENT);
+			
 			tckFindEntity.findAllBusiness();
 			tckFindEntity.getNonExitingBusiness();
 		} finally {

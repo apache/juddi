@@ -158,6 +158,9 @@ public class FindServiceByTModelKeyQuery extends BusinessServiceQuery {
 			qry.append(thetaJoinsStr);
 
 			qry.closeParen().pad();
+			if (fq!=null && fq.isSignaturePresent()) {
+				qry.AND().pad().openParen().pad().append(BusinessServiceQuery.SIGNATURE_PRESENT).pad().closeParen().pad();
+			}
 		}
 	}
 	

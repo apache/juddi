@@ -48,7 +48,8 @@ public class FindBindingByCategoryQuery {
 												  BindingTemplateQuery.ENTITY_ALIAS, 
 												  BindingTemplateQuery.KEY_NAME, 
 												  BindingTemplateQuery.ENTITY_FIELD, 
-												  ENTITY_NAME_CHILD);
+												  ENTITY_NAME_CHILD,
+												  BindingTemplateQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {

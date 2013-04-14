@@ -14,8 +14,6 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.Date;
-
 import javax.xml.ws.Endpoint;
 
 import org.apache.commons.configuration.ConfigurationException;

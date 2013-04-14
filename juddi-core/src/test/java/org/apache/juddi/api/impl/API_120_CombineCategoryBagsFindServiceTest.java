@@ -29,7 +29,6 @@ import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.FindQualifiers;

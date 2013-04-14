@@ -39,11 +39,13 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 	private String entityAlias;
 	private String keyName;
 	private String selectSQL;
+	private String signaturePresent;
 	
-	public FindEntityByPublisherQuery(String entityName, String entityAlias, String keyName) {
+	public FindEntityByPublisherQuery(String entityName, String entityAlias, String keyName, String signaturePresent) {
 		this.entityName = entityName;
 		this.entityAlias = entityAlias;
 		this.keyName = keyName;
+		this.signaturePresent = signaturePresent;
 		
 		StringBuffer sql = new StringBuffer(200);
 		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " ");
@@ -66,6 +68,14 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 		return selectSQL;
 	}
 	
+	public String getSignaturePresent() {
+		return signaturePresent;
+	}
+
+	public void setSignaturePresent(String signaturePresent) {
+		this.signaturePresent = signaturePresent;
+	}
+		
 	
 	public List<?> select(EntityManager em, FindQualifiers fq, UddiEntityPublisher publisher, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
@@ -88,7 +98,11 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 	 */
 	public void appendConditions(DynamicQuery qry, FindQualifiers fq, UddiEntityPublisher publisher) {
 		qry.WHERE().pad();
+		if (fq!=null && fq.isSignaturePresent()) {
+			qry.pad().openParen().pad().append(getSignaturePresent()).pad().closeParen().pad().AND();
+		}
 		qry.appendGroupedAnd(new DynamicQuery.Parameter(entityAlias + "." + AUTHORIZED_NAME_FIELD, publisher.getAuthorizedName(), DynamicQuery.PREDICATE_EQUALS));
 	}
-		
+
+
 }

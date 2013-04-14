@@ -3,7 +3,6 @@ package org.apache.juddi.v3.tck;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.UDDIService;

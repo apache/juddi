@@ -37,7 +37,11 @@ public class FindTModelByPublisherQuery {
 	private static FindEntityByPublisherQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByPublisherQuery(TModelQuery.ENTITY_NAME, TModelQuery.ENTITY_ALIAS, TModelQuery.KEY_NAME);
+		findQuery = new FindEntityByPublisherQuery(
+						TModelQuery.ENTITY_NAME, 
+						TModelQuery.ENTITY_ALIAS, 
+						TModelQuery.KEY_NAME,
+						TModelQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, UddiEntityPublisher publisher, List<?> keysIn, DynamicQuery.Parameter... restrictions) {

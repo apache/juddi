@@ -53,14 +53,15 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 	private static Log log = LogFactory.getLog(FindBindingByTModelKeyQuery.class);
 
 	public static final String ENTITY_NAME_CHILD = "TmodelInstanceInfo";
-
+	
 	protected static String entityAliasChild;
 	
 	static {
 		entityAliasChild = buildAlias(ENTITY_NAME_CHILD);
 	}
 
-	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, String parentKey, 
+			List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
 			return keysIn;
@@ -150,6 +151,9 @@ public class FindBindingByTModelKeyQuery extends BindingTemplateQuery {
 			qry.append(thetaJoinsStr);
 
 			qry.closeParen().pad();
+			if (fq!=null && fq.isSignaturePresent()) {
+				qry.AND().pad().openParen().pad().append(BindingTemplateQuery.SIGNATURE_PRESENT).pad().closeParen().pad();
+			}
 		}
 	}
 	

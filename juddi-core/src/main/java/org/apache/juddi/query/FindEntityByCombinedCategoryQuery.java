@@ -85,14 +85,19 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 	protected String entityField3;
 	protected String entityNameChild3;
 	protected String entityAliasChild3;
+	
+	protected String signaturePresent;
 
-	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
-		super(entityName, entityAlias, keyName, entityField, entityNameChild);
+	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName,
+			String entityField, String entityNameChild, String signaturePresent) {
+		super(entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);
 	}
 	
-	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild,
-			String entityField2, String entityNameChild2, String entityField3, String entityNameChild3) {
-		super(entityName, entityAlias, keyName, entityField, entityNameChild);
+	public FindEntityByCombinedCategoryQuery(String entityName, String entityAlias, String keyName, 
+			String entityField, String entityNameChild,
+			String entityField2, String entityNameChild2, String entityField3, String entityNameChild3,
+			String signaturePresent) {
+		super(entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);
 		
 		this.entityNameChild2 = entityNameChild2;
 		this.entityAliasChild2 = buildAlias(entityNameChild2);
@@ -102,7 +107,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 			this.entityNameChild3 = entityNameChild3;
 			this.entityAliasChild3 = buildAlias(entityNameChild3);
 		}
-		
+		this.signaturePresent = signaturePresent;
 		selectSQL = "";
 	}
 	
@@ -122,7 +127,8 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 		return entityAliasChild3;
 	}
 		
-	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
+	public List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, 
+			List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 	        
         // If keysIn is not null and empty, then search is over.
 		if ((keysIn != null) && (keysIn.size() == 0))
@@ -209,7 +215,7 @@ public class FindEntityByCombinedCategoryQuery extends FindEntityByCategoryQuery
 			List<?> keysIn, DynamicQuery.Parameter... restrictions) 
 	{
 		FindEntityByCategoryQuery findEntityByCategoryQuery = new FindEntityByCategoryQuery(
-				entityName, entityAlias, keyName, entityField, entityNameChild);
+				entityName, entityAlias, keyName, entityField, entityNameChild, signaturePresent);
 		for (KeyedReference keyedReference : categoryBag.getKeyedReference()) {
 			CategoryBag categoryBagWithOneKey = new CategoryBag();
 			categoryBagWithOneKey.getKeyedReference().add(keyedReference);

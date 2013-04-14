@@ -46,7 +46,7 @@ import org.uddi.api_v3.Name;
 public class FindBusinessByNameQuery {
 
 	public static final String ENTITY_NAME_CHILD = "BusinessName";
-
+	
 	private static FindEntityByNamesQuery findQuery;
 	
 	static {
@@ -54,7 +54,8 @@ public class FindBusinessByNameQuery {
 											   BusinessEntityQuery.ENTITY_ALIAS, 
 											   BusinessEntityQuery.KEY_NAME, 
 											   BusinessEntityQuery.ENTITY_FIELD, 
-											   ENTITY_NAME_CHILD);
+											   ENTITY_NAME_CHILD,
+											   BusinessEntityQuery.SIGNATURE_PRESENT);
 	}
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn) {

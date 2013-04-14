@@ -26,6 +26,10 @@ public class BindingTemplateQuery extends EntityQuery {
 	public static final String ENTITY_ALIAS = "bt";
 	public static final String ENTITY_FIELD = "bindingTemplate";
 	public static final String KEY_NAME_PARENT = BusinessServiceQuery.ENTITY_FIELD + "." + BusinessServiceQuery.KEY_NAME;
+	public static final String SIGNATURE_PRESENT = 
+			ENTITY_ALIAS + "." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY OR " +
+			ENTITY_ALIAS + ".businessService." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY OR " +
+			ENTITY_ALIAS + ".businessService.businessEntity." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY ";
 	
 	protected static String selectSQL;
 

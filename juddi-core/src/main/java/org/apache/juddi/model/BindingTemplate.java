@@ -46,7 +46,7 @@ public class BindingTemplate extends UddiEntity implements java.io.Serializable 
 	private String hostingRedirector;
 	private BindingCategoryBag categoryBag;
 	private List<TmodelInstanceInfo> tmodelInstanceInfos = new ArrayList<TmodelInstanceInfo>(0);
-        private List<Signature> signatures = new ArrayList<Signature>(0);
+    private List<Signature> signatures = new ArrayList<Signature>(0);
 	
 	public BindingTemplate() {
 	}
