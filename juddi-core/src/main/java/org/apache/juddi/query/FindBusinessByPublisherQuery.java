@@ -37,7 +37,11 @@ public class FindBusinessByPublisherQuery {
 	private static FindEntityByPublisherQuery findQuery;
 	
 	static {
-		findQuery = new FindEntityByPublisherQuery(BusinessEntityQuery.ENTITY_NAME, BusinessEntityQuery.ENTITY_ALIAS, BusinessEntityQuery.KEY_NAME);
+		findQuery = new FindEntityByPublisherQuery(
+						BusinessEntityQuery.ENTITY_NAME, 
+						BusinessEntityQuery.ENTITY_ALIAS, 
+						BusinessEntityQuery.KEY_NAME,
+						BusinessEntityQuery.SIGNATURE_PRESENT);
 	}
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, UddiEntityPublisher publisher, List<?> keysIn) {

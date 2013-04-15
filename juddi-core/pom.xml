@@ -22,22 +22,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
-				<!-- 
-				<configuration>
-					<excludes>
-						<exclude>**/persistence</exclude>
-						<exclude>**/persistence.xml</exclude>
-						<exclude>**/hibernate-persistence.xml</exclude>
-						<exclude>**/openjpa-persistence.xml</exclude>
-						<exclude>**/juddi-orm.xml</exclude>
-					</excludes>
-				</configuration>
-				 -->
-			</plugin>
-			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>1.4.0</version>
@@ -55,7 +39,6 @@
 							org.apache.juddi.v3.error</Export-Package>
 						<Include-Resource>juddi_install_data=src/main/resources/juddi_install_data,
 							src/main/resources/messages.properties</Include-Resource>
-
 					</instructions>
 				</configuration>
 			</plugin>
@@ -68,13 +51,6 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<tasks>
-								<copy file="src/main/resources/version/Release.java.template"
-									tofile="src/main/java/org/apache/juddi/config/Release.java"
-									overwrite="true">
-									<filterset>
-										<filter token="juddi.version" value="${project.version}" />
-									</filterset>
-								</copy>
 								<delete dir="juddi-derby-test-db" />
 							</tasks>
 						</configuration>
@@ -110,7 +86,6 @@
 	</plugins>
 	</build>
 	<dependencies>
-
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>

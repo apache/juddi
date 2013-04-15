@@ -53,7 +53,8 @@ public class FindServiceByCategoryGroupQuery {
 													   BusinessServiceQuery.ENTITY_ALIAS, 
 													   BusinessServiceQuery.KEY_NAME, 
 													   BusinessServiceQuery.ENTITY_FIELD, 
-													   ENTITY_NAME_CHILD);
+													   ENTITY_NAME_CHILD,
+													   BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {

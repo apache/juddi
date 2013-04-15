@@ -47,12 +47,14 @@ public class FindServiceByCategoryQuery {
 												  BusinessServiceQuery.ENTITY_ALIAS, 
 												  BusinessServiceQuery.KEY_NAME, 
 												  BusinessServiceQuery.ENTITY_FIELD, 
-												  ENTITY_NAME_CHILD);
+												  ENTITY_NAME_CHILD,
+												  BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, String parentKey, List<?> keysIn) {
 		if (parentKey != null && parentKey.length() > 0) {
-			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." + BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
+			DynamicQuery.Parameter param = new DynamicQuery.Parameter(BusinessServiceQuery.ENTITY_ALIAS + "." 
+					+ BusinessServiceQuery.KEY_NAME_PARENT, parentKey, DynamicQuery.PREDICATE_EQUALS); 
 			return findQuery.select(em, fq, categoryBag, keysIn, param);
 		}
 		else

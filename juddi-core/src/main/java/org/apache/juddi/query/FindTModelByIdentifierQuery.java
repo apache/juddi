@@ -47,7 +47,8 @@ public class FindTModelByIdentifierQuery {
 													TModelQuery.ENTITY_ALIAS, 
 													TModelQuery.KEY_NAME, 
 													TModelQuery.ENTITY_FIELD, 
-													ENTITY_NAME_CHILD);
+													ENTITY_NAME_CHILD,
+													TModelQuery.SIGNATURE_PRESENT);
 	}
 	
 	public static List<?> select(EntityManager em, FindQualifiers fq, IdentifierBag identifiers, List<?> keysIn) {

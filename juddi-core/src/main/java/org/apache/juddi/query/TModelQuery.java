@@ -25,6 +25,7 @@ public class TModelQuery extends EntityQuery {
 	public static final String ENTITY_NAME = "Tmodel";
 	public static final String ENTITY_ALIAS = "t";
 	public static final String ENTITY_FIELD = "tmodel";
+	public static final String SIGNATURE_PRESENT = ENTITY_ALIAS + "." + SIGNATURE_FIELD + " IS NOT EMPTY ";
 	
 	protected static String selectSQL;
 

@@ -46,7 +46,7 @@ public class BusinessEntity extends UddiEntity implements java.io.Serializable {
 	private List<BusinessService> businessServices = new ArrayList<BusinessService>(0);
 	private List<BusinessDescr> businessDescrs = new ArrayList<BusinessDescr>(0);
 	private List<ServiceProjection> serviceProjections = new ArrayList<ServiceProjection>(0);
-        private List<Signature> signatures = new ArrayList<Signature>(0);
+    private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public BusinessEntity() {
 	}

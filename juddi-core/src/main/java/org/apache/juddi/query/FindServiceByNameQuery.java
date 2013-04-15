@@ -45,7 +45,7 @@ import org.uddi.api_v3.Name;
  */
 public class FindServiceByNameQuery {
 
-	public static final String ENTITY_NAME_CHILD = "ServiceName";
+	public static final String ENTITY_NAME_CHILD = "ServiceName";			
 
 	private static FindEntityByNamesQuery findQuery;
 	
@@ -54,7 +54,8 @@ public class FindServiceByNameQuery {
 											   BusinessServiceQuery.ENTITY_ALIAS, 
 											   BusinessServiceQuery.KEY_NAME, 
 											   BusinessServiceQuery.ENTITY_FIELD, 
-											   ENTITY_NAME_CHILD);
+											   ENTITY_NAME_CHILD,
+											   BusinessServiceQuery.SIGNATURE_PRESENT);
 	}
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, String parentKey, List<?> keysIn) {

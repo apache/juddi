@@ -155,6 +155,9 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 			qry.append(thetaJoinsStr);
 
 			qry.closeParen().pad();
+			if (fq!=null && fq.isSignaturePresent()) {
+				qry.AND().pad().openParen().pad().append(BusinessEntityQuery.SIGNATURE_PRESENT).pad().closeParen().pad();
+			}
 		}
 	}
 	

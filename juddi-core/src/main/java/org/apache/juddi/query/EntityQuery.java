@@ -20,6 +20,7 @@ package org.apache.juddi.query;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -29,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.ListDescription;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.model.TempKey;
 import org.apache.juddi.query.util.DynamicQuery;
 
 /**
@@ -38,6 +40,11 @@ public abstract class EntityQuery {
 	private static Log log = LogFactory.getLog(EntityQuery.class);
 
 	public static final String KEY_NAME = "entityKey";
+	public static final String TEMP_ENTITY_NAME = "TempKey";
+	public static final String TEMP_ENTITY_ALIAS = "tk";
+	public static final String TEMP_ENTITY_PK_TXID_NAME = TEMP_ENTITY_ALIAS + ".pk.txId";
+	public static final String TEMP_ENTITY_PK_KEY_NAME = TEMP_ENTITY_ALIAS + ".pk.entityKey";
+	public static final String SIGNATURE_FIELD  = "signatures";
 
 	public static final int DEFAULT_MAXROWS = 1000;
 	public static final int DEFAULT_MAXINCLAUSE = 1000;
@@ -160,6 +167,15 @@ public abstract class EntityQuery {
 		return result;
 		
 
+	}
+	
+	public static void storeIntermediateKeySetResults (EntityManager em, String txId,  List<?> keysIn) {
+		
+		for (Object key : keysIn) {
+			TempKey tempKey = new TempKey();
+			tempKey.setPk(txId,key.toString());
+			em.persist(tempKey);
+		}
 	}
 	
 }

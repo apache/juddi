@@ -25,16 +25,23 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Holder;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
@@ -47,7 +54,7 @@ import org.apache.juddi.webconsole.hub.builders.Printers;
 import org.apache.juddi.webconsole.resources.ResourceLoader;
 import org.apache.log4j.Level;
 import org.uddi.api_v3.*;
-import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -72,12 +79,14 @@ public class UddiHub {
     Properties properties = null;
     AuthStyle style = null;
     public static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LOGGER_NAME);
+    private DatatypeFactory df;
 
-    private UddiHub() {
+    private UddiHub() throws DatatypeConfigurationException {
+        df = DatatypeFactory.newInstance();
     }
 
     /**
-     * removes the Hub from the current http session and clears any tokens
+     * removes the Hub from the current http session
      *
      * @param _session
      */
@@ -1900,9 +1909,72 @@ public class UddiHub {
      */
     public List<Subscription> GetSubscriptions() {
         try {
-            return subscription.getSubscriptions(GetToken());
+            try {
+                return subscription.getSubscriptions(GetToken());
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        return subscription.getSubscriptions(GetToken());
+                    }
+                } else {
+                    throw ex;
+                }
+            }
         } catch (Exception ex) {
             HandleException(ex);
+        }
+        return null;
+    }
+
+    public String AddSubscription(Subscription sub) {
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub);
+        try {
+            try {
+                subscription.saveSubscription(GetToken(), data);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        subscription.saveSubscription(GetToken(), data);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            HandleException(ex);
+        }
+        return null;
+    }
+
+    public String RemoveSubscription(String key) {
+        DeleteSubscription ds = new DeleteSubscription();
+        ds.setAuthInfo(GetToken());
+        ds.getSubscriptionKey().add(key);
+        try {
+            try {
+                subscription.deleteSubscription(ds);
+                return ResourceLoader.GetResource(session, "actions.deleted");
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        ds.setAuthInfo(GetToken());
+                        subscription.deleteSubscription(ds);
+                        return ResourceLoader.GetResource(session, "actions.deleted");
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
         }
         return null;
     }
@@ -1914,8 +1986,11 @@ public class UddiHub {
      * @return null if theres an error
      */
     public List<OperationalInfo> GetOperationalInfo(String id) {
+        if (id == null) {
+            return null;
+        }
         GetOperationalInfo goi = new GetOperationalInfo();
-        goi.setAuthInfo(id);
+        goi.setAuthInfo(GetToken());
         goi.getEntityKey().add(id);
         OperationalInfos operationalInfo = null;
         try {
@@ -2087,7 +2162,7 @@ public class UddiHub {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
-                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+                        STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
 
                     }
                 } else {
@@ -2103,14 +2178,14 @@ public class UddiHub {
         List<AssertionStatusItem> STATUS_TO_KEY_INCOMPLETE = null;
         try {
             try {
-                STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+                STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
 
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
-                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+                        STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
 
                     }
                 } else {
@@ -2148,6 +2223,7 @@ public class UddiHub {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
+                        dp.setAuthInfo(GetToken());
                         publish.deletePublisherAssertions(dp);
                     }
                 } else {
@@ -2190,6 +2266,7 @@ public class UddiHub {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
+                        r.setAuthInfo(GetToken());
                         publish.addPublisherAssertions(r);
                     }
                 } else {
@@ -2202,15 +2279,153 @@ public class UddiHub {
         return ResourceLoader.GetResource(session, "actions.saved");
     }
 
-    public void GetMyBusinesses() {
+    public String GetNewsFeed(XMLGregorianCalendar lastRefresh) throws DatatypeConfigurationException {
+        if (df == null) {
+            df = DatatypeFactory.newInstance();
+        }
+        List<Subscription> subscriptions = new ArrayList<Subscription>();
+        try {
+            try {
+                subscriptions = subscription.getSubscriptions(GetToken());
+
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+
+                        subscriptions = subscription.getSubscriptions(GetToken());
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+
+
+
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTimeInMillis(System.currentTimeMillis());
+
+        GetSubscriptionResults r = new GetSubscriptionResults();
+        r.setAuthInfo(GetToken());
+        r.setCoveragePeriod(new CoveragePeriod());
+        r.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
+
+        r.getCoveragePeriod().setStartPoint(lastRefresh);
+        StringBuilder sb = new StringBuilder();
+        for (int k = 0; k < subscriptions.size(); k++) {
+
+            r.setSubscriptionKey(subscriptions.get(k).getSubscriptionKey());
+            SubscriptionResultsList subscriptionResults = null;
+            try {
+                try {
+                    subscriptionResults = subscription.getSubscriptionResults(r);
+
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            r.setAuthInfo(GetToken());
+                            subscriptionResults = subscription.getSubscriptionResults(r);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            } catch (Exception ex) {
+                return HandleException(ex);
+            }
+
+            if (subscriptionResults != null) {
+                //    subscriptionResults.getAssertionStatusReport().
+                if (subscriptionResults.getAssertionStatusReport() != null) {
+                    sb.append("Assertion Status Report Changed<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getFromKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getToKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getCompletionStatus().toString()));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getBindingDetail() != null) {
+                    sb.append("Bindings Changed<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getBindingDetail().getBindingTemplate().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getServiceKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getBindingKey()));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getBusinessDetail() != null) {
+                    sb.append("Businesses Changed<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getBusinessDetail().getBusinessEntity().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBusinessDetail().getBusinessEntity().get(i).getBusinessKey()));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getRelatedBusinessesList() != null) {
+                    sb.append("Business Relationships (Publisher Asssertions)<br><table class=\"table table-hover\">");
+                    // for (int i = 0; i < subscriptionResults.getRelatedBusinessesList().getBusinessKey().size(); i++) {
+                    sb.append("<tr><td>");
+                    sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getRelatedBusinessesList().getBusinessKey()));
+                    sb.append("</td></tr>");
+                    //}
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getServiceDetail() != null) {
+                    sb.append("Services Changed<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getServiceDetail().getBusinessService().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceDetail().getBusinessService().get(i).getServiceKey()));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getServiceList() != null) {
+                    sb.append("Service Listing<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getServiceKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getName())));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getTModelDetail() != null) {
+                    sb.append("tModels Changed<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getTModelDetail().getTModel().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelDetail().getTModel().get(i).getTModelKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml((subscriptionResults.getTModelDetail().getTModel().get(i).getName().getValue())));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                } else if (subscriptionResults.getTModelList() != null) {
+                    sb.append("tModel Listing<br><table class=\"table table-hover\">");
+                    for (int i = 0; i < subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().size(); i++) {
+                        sb.append("<tr><td>");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getTModelKey()));
+                        sb.append("</td><td>");
+                        sb.append(StringEscapeUtils.escapeHtml((subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getName().getValue())));
+                        sb.append("</td></tr>");
+                    }
+                    sb.append("</table><br><br>");
+                }
+
+            }
+        }
+        return sb.toString();
     }
 
     public String TransferCustody() {
-        return null;
-    }
-
-    public String GetUDDISubscriptions() {
-
         return null;
     }
 }

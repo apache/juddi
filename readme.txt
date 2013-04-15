@@ -29,5 +29,5 @@ cd juddi-console
 mvn clean install
 
 To start Juddi's embedded Tomcat server:
-juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat -XX:MaxPermSize=128m
-juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh -XX:MaxPermSize=128m
+juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat
+juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh

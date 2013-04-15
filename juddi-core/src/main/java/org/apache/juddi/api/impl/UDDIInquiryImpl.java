@@ -18,6 +18,7 @@
 package org.apache.juddi.api.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -33,6 +34,8 @@ import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.TempKey;
+import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateInquiry;
@@ -105,14 +108,17 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			        // Check that we were passed a valid serviceKey per
         			// 5.1.12.4 of the UDDI v3 spec
         			String serviceKey = body.getServiceKey();
-        			org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
-        	                if (modelBusinessService == null)
-        	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
+        			org.apache.juddi.model.BusinessService modelBusinessService = null;
+        			try {
+        				em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+        			} catch (ClassCastException e) {}
+	                if (modelBusinessService == null)
+	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
 
 			    }
 			}
 			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      
 
@@ -152,7 +158,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
 
@@ -192,7 +198,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
 
@@ -232,19 +238,22 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 		        if (keysFound.size() == 0) {
 		            if (body.getBusinessKey() != null) {
-		                // Check that we were passed a valid serviceKey per
-        	                // 5.1.12.4 of the UDDI v3 spec
-        	                String businessKey = body.getBusinessKey();
-        	                org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
-        	                if (modelBusinessEntity == null) {
-        	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", businessKey));
-        	                }
+		                // Check that we were passed a valid businessKey per
+    	                // 5.1.12.4 of the UDDI v3 spec
+    	                String businessKey = body.getBusinessKey();
+    	                org.apache.juddi.model.BusinessEntity modelBusinessEntity = null;
+    	                try {
+    	                	modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
+    	                } catch (ClassCastException e) {}
+    	                if (modelBusinessEntity == null) {
+    	                    throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", businessKey));
+    	                }
 		            }
 		        }
 
 			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
 
@@ -284,7 +293,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
 
-			tx.commit();
+			tx.rollback();
                         long procTime = System.nanoTime() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
 
@@ -321,8 +330,10 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<String> bindingKeyList = body.getBindingKey();
 			for (String bindingKey : bindingKeyList) {
-
-				org.apache.juddi.model.BindingTemplate modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
+				org.apache.juddi.model.BindingTemplate modelBindingTemplate = null;
+				try {
+					modelBindingTemplate = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
+				} catch (ClassCastException e) {}
 				if (modelBindingTemplate == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BindingTemplateNotFound", bindingKey));
 
@@ -370,8 +381,10 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<String> businessKeyList = body.getBusinessKey();
 			for (String businessKey : businessKeyList) {
-
-				org.apache.juddi.model.BusinessEntity modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
+				org.apache.juddi.model.BusinessEntity modelBusinessEntity = null;
+				try {
+					modelBusinessEntity = em.find(org.apache.juddi.model.BusinessEntity.class, businessKey);
+				} catch (ClassCastException e) {}
 				if (modelBusinessEntity == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.BusinessNotFound", businessKey));
 
@@ -419,8 +432,10 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<String> entityKeyList = body.getEntityKey();
 			for (String entityKey : entityKeyList) {
-
-				org.apache.juddi.model.UddiEntity modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);
+				org.apache.juddi.model.UddiEntity modelUddiEntity = null;
+				try {
+					modelUddiEntity = em.find(org.apache.juddi.model.UddiEntity.class, entityKey);
+				} catch (ClassCastException e) {}
 				if (modelUddiEntity == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.EntityNotFound", entityKey));
 
@@ -447,14 +462,14 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
-                try {
-                    new ValidateInquiry(null).validateGetServiceDetail(body);
-                } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
-                    serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.FAILED, procTime);                      
-                    throw drfm;
-                }
+        long startTime = System.nanoTime();
+        try {
+            new ValidateInquiry(null).validateGetServiceDetail(body);
+        } catch (DispositionReportFaultMessage drfm) {
+            long procTime = System.nanoTime() - startTime;
+            serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.FAILED, procTime);                      
+            throw drfm;
+        }
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -468,8 +483,10 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<String> serviceKeyList = body.getServiceKey();
 			for (String serviceKey : serviceKeyList) {
-
-				org.apache.juddi.model.BusinessService modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+				org.apache.juddi.model.BusinessService modelBusinessService = null;
+				try {
+					modelBusinessService = em.find(org.apache.juddi.model.BusinessService.class, serviceKey);
+				} catch (ClassCastException e){}
 				if (modelBusinessService == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ServiceNotFound", serviceKey));
 
@@ -518,11 +535,12 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<String> tmodelKeyList = body.getTModelKey();
 			for (String tmodelKey : tmodelKeyList) {
-
-				org.apache.juddi.model.Tmodel modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
-				if (modelTModel == null) {
+				org.apache.juddi.model.Tmodel modelTModel = null;
+				try {
+					modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
+				} catch (ClassCastException e) {}
+				if (modelTModel == null)
 					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.TModelNotFound", tmodelKey));
-				}
 
 				org.uddi.api_v3.TModel apiTModel = new org.uddi.api_v3.TModel();
 

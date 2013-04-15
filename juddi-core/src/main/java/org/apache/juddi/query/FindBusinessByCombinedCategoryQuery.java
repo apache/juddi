@@ -49,8 +49,12 @@ import org.uddi.api_v3.CategoryBag;
  */
 public class FindBusinessByCombinedCategoryQuery {
         
-        private static final String ENTITY_NAME_CHILD = "BusinessCategoryBag";
-        private static final String ENTITY_NAME_CHILD2  = "ServiceCategoryBag";
+        private static final String ENTITY_NAME_CHILD  = "BusinessCategoryBag";
+        private static final String ENTITY_FIELD2      = "businessService." + BusinessEntityQuery.ENTITY_FIELD;
+        private static final String ENTITY_NAME_CHILD2 = "ServiceCategoryBag";
+        private static final String ENTITY_FIELD3      = "bindingTemplate.businessService." + BusinessEntityQuery.ENTITY_FIELD;
+        private static final String ENTITY_NAME_CHILD3 = "BindingCategoryBag";
+        
 
         private static FindEntityByCombinedCategoryQuery findQuery;
         
@@ -60,7 +64,11 @@ public class FindBusinessByCombinedCategoryQuery {
                             BusinessEntityQuery.KEY_NAME, 
                             BusinessEntityQuery.ENTITY_FIELD, 
                             ENTITY_NAME_CHILD,
-                            ENTITY_NAME_CHILD2);
+                            ENTITY_FIELD2,
+                            ENTITY_NAME_CHILD2,
+                            ENTITY_FIELD3,
+                            ENTITY_NAME_CHILD3,
+                            BusinessEntityQuery.SIGNATURE_PRESENT);
         }
         
         public static List<?> select(EntityManager em, FindQualifiers fq, CategoryBag categoryBag, List<?> keysIn) {

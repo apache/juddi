@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.EntityCreator;
 import org.junit.Assert;
+import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.FindQualifiers;
@@ -76,8 +77,8 @@ public class TckBusinessService
 		saveService2(authInfoJoe, JOE_SERVICE_KEY, JOE_SERVICE_XML_2, JOE_SERVICE_KEY_2);
 	}
 
-	public void saveJoePublisherServices(String authInfoJoe, int numberOfCopies) {
-		saveServices(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies);
+	public void saveJoePublisherServices(String authInfoJoe, int businessInt, int numberOfCopies) {
+		saveServices(authInfoJoe, businessInt, JOE_SERVICE_XML, JOE_SERVICE_KEY, numberOfCopies);
 	}
 	
 	public void deleteJoePublisherService(String authInfoJoe) {
@@ -97,40 +98,48 @@ public class TckBusinessService
 	}
 
 	
-	public void deleteJoePublisherServices(String authInfoJoe, int numberOfCopies) {
-		deleteServices(authInfoJoe, JOE_SERVICE_KEY, numberOfCopies);
+	public void deleteJoePublisherServices(String authInfoJoe, int businessInt, int numberOfCopies) {
+		deleteServices(authInfoJoe, businessInt,JOE_SERVICE_KEY, numberOfCopies);
 	}
 	
 	public void saveSamSyndicatorService(String authInfoSam) {
 		saveService(authInfoSam, SAM_SERVICE_XML, SAM_SERVICE_KEY);
 	}
 	
-	public void saveSamSyndicatorServices(String authInfoSam, int numberOfCopies) {
-		saveServices(authInfoSam, SAM_SERVICE_XML, SAM_SERVICE_KEY, numberOfCopies);
+	public void saveSamSyndicatorServices(String authInfoSam, int businessInt, int numberOfCopies) {
+		saveServices(authInfoSam, businessInt, SAM_SERVICE_XML, SAM_SERVICE_KEY, numberOfCopies);
 	}
 	
 	public void deleteSamSyndicatorService(String authInfoSam) {
 		deleteService(authInfoSam, SAM_SERVICE_KEY);
 	}
 	
-	public void deleteSamSyndicatorServices(String authInfoSam, int numberOfCopies) {
-		deleteServices(authInfoSam, SAM_SERVICE_KEY, numberOfCopies);
+	public void deleteSamSyndicatorServices(String authInfoSam, int businessInt, int numberOfCopies) {
+		deleteServices(authInfoSam, businessInt, SAM_SERVICE_KEY, numberOfCopies);
 	}
 	
-	public void saveServices(String authInfo, String serviceXML, String serviceKey, int numberOfCopies) {
+	public void saveServices(String authInfo, int businessInt, String serviceXML, String serviceKey, int numberOfCopies) {
+		SaveService ss = null;
 		try {
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(serviceXML, "org.uddi.api_v3");
 			String serviceName = bsIn.getName().get(0).getValue();
 			String bindingKey = bsIn.getBindingTemplates().getBindingTemplate().get(0).getBindingKey();
 			for (int i=0; i<numberOfCopies; i++) {
 			    // save the entity
-				SaveService ss = new SaveService();
+				ss = new SaveService();
 				ss.setAuthInfo(authInfo);
 				bsIn.getName().get(0).setValue(serviceName + "-" + i);
-				
-				bsIn.setServiceKey(serviceKey + "-" + i);
-				bsIn.getBindingTemplates().getBindingTemplate().get(0).setBindingKey(bindingKey + "-" + i);
+				bsIn.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY + "-" + businessInt);
+				bsIn.setServiceKey(serviceKey + "-" + businessInt + "-" + i);
+				bsIn.getBindingTemplates().getBindingTemplate().get(0).setBindingKey(bindingKey + "-" + businessInt + "-" + i);
+				bsIn.getBindingTemplates().getBindingTemplate().get(0).setServiceKey(serviceKey + "-" + businessInt + "-" + i);
 				ss.getBusinessService().add(bsIn);
+				
+				BindingTemplate bt = bsIn.getBindingTemplates().getBindingTemplate().get(0);
+				if (! bt.getServiceKey().equals(serviceKey + "-" + businessInt + "-" + i)) {
+					System.out.println("not the same");
+				}
+				
 				publication.saveService(ss);
 				logger.debug("Add service with key " + bsIn.getServiceKey());
 			}
@@ -223,16 +232,15 @@ public class TckBusinessService
 		}
 	}
 	
-	public void deleteServices(String authInfo, String serviceKey, int numberOfCopies) {
+	public void deleteServices(String authInfo, int businessInt, String serviceKey, int numberOfCopies) {
 		try {
 			for (int i=0; i<numberOfCopies; i++) {
 				// Delete the entity and make sure it is removed
 				DeleteService ds = new DeleteService();
 				ds.setAuthInfo(authInfo);
-				
-				ds.getServiceKey().add(serviceKey + "-" + i);
+				ds.getServiceKey().add(serviceKey + "-" + businessInt + "-" + i);
 				publication.deleteService(ds);
-				logger.debug("Deleted Service with key " + serviceKey + "-" + i);
+				logger.debug("Deleted Service with key " + businessInt + "-" + serviceKey + "-" + i);
 			}
 		}
 		catch(Exception e) {

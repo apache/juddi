@@ -19,7 +19,7 @@
         <div class="span12" >
             <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecords"></span><br>
             <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecords"></span><br>
-           <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
+            <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
             <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
             <a href="javascript:pagedown();"><i class="icon-circle-arrow-left disabled " id="pageup"></i></a>
             <a href="javascript:refreshBusinessList();"><i class="icon-refresh " id="refresh"></i></a>
@@ -28,7 +28,7 @@
             <div id="businesslist">
                 <img src="img/bigrollergreen.gif" title="<%=ResourceLoader.GetResource(session, "items.loading")%>"/>
             </div>
-           
+
             <script src="js/businesssearch.js"></script>
             <script type="text/javascript">
                 

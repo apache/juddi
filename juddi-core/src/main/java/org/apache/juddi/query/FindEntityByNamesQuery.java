@@ -46,14 +46,17 @@ public class FindEntityByNamesQuery extends EntityQuery {
 	private String entityNameChild;
 	private String entityAliasChild;
 	private String selectSQL;
+	private String signaturePresent;
 	
-	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityField, String entityNameChild) {
+	public FindEntityByNamesQuery(String entityName, String entityAlias, String keyName, String entityField, 
+			String entityNameChild, String signaturePresent) {
 		this.entityName = entityName;
 		this.entityAlias = entityAlias;
 		this.keyName = keyName;
 		this.entityField = entityField;
 		this.entityNameChild = entityNameChild;
 		this.entityAliasChild = buildAlias(entityNameChild);
+		this.signaturePresent = signaturePresent;
 		
 		StringBuffer sql = new StringBuffer(200);
 		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " ");
@@ -88,6 +91,13 @@ public class FindEntityByNamesQuery extends EntityQuery {
 		return selectSQL;
 	}
 	
+	public String getSignaturePresent() {
+		return signaturePresent;
+	}
+
+	public void setSignaturePresent(String signaturePresent) {
+		this.signaturePresent = signaturePresent;
+	}
 	
 	public List<?> select(EntityManager em, FindQualifiers fq, List<Name> names, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
@@ -158,6 +168,11 @@ public class FindEntityByNamesQuery extends EntityQuery {
 		qry.WHERE().pad().openParen().pad();
 		qry.append(entityAlias + "." + keyName + " = " + entityAliasChild + "." + entityField + "." + keyName + " ");
 		qry.closeParen().pad();
+		if (fq!=null && fq.isSignaturePresent()) {
+			qry.AND().pad().openParen().pad().append(getSignaturePresent()).pad().closeParen().pad();
+		}
 	}
+
+
 	
 }

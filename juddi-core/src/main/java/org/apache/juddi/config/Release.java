@@ -15,22 +15,28 @@
 package org.apache.juddi.config;
 
 /**
- * WARNING:
- * Do not modify this class as it is generated. Rather update the Release.java.template
- * in main/java/resources/version
+ * 
  */
 public class Release {
-	private static final String REGISTRY_VERSION = "3.1.5-SNAPSHOT";
+	
 	private static final String UDDI_VERSION = "3.0";
+	private static final String JAR_NAME = "juddi-core";
+	private static String registryVersion = null;
    
 	private Release () {
 	}
 
 	public static String getRegistryVersion() {
-		return REGISTRY_VERSION;
+		if (registryVersion == null) {
+			registryVersion = org.apache.juddi.v3.client.Release.getVersionFromManifest(JAR_NAME);
+		}
+		return registryVersion;
+		
 	}
 
 	public static String getUDDIVersion() {
 		return UDDI_VERSION;	
 	} 
+	
+	
 }

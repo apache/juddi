@@ -40,49 +40,90 @@
     <div class="row">
         <div class="span12">
             <p>
-                <%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.content")%>
+                
 
             </p>
-            <h2><%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.listingheader")%></h2>
+            
             <%
-                UddiHub x = UddiHub.getInstance(application, session);
-//TODO more internationalization
-                List<Subscription> list = x.GetSubscriptions();
-                if (list == null) {
-                    out.write(ResourceLoader.GetResource(session, "errors.notsignedin"));
-                }
+                Subscription sub = new Subscription();
 
             %>
 
-            <%
-                if (list != null) {
-                    if (!list.isEmpty()) {
-            %>
-            <table class="table table-hover">
-                <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th><th><%=ResourceLoader.GetResource(session, "items.expires")%></th><th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
 
-                <%
-                    for (int i = 0; i < list.size(); i++) {
-                        out.write("<tr><td>");
-                        out.write(StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()));
-                        out.write("</td><td>");
-                        out.write(StringEscapeUtils.escapeHtml(list.get(i).getExpiresAfter().toString()));
-                        out.write("</td><td>");
-                        out.write("<i class=\"icon-edit\"></i> ");
-                        out.write("<i class=\"icon-remove\"></i> ");
-                        out.write("<i class=\"icon-zoom-in\"></i> ");
-
-                        out.write("</td></tr>");
-                        out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
-                    }
-                %>
-            </table>
-            <%
-                    } else
-                        out.write(ResourceLoader.GetResource(session, "pages.viewsubscriptions.nosubs"));
-
-                }
-            %>
+            <div class="accordion" id="accordion2">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                            Step 1 - What do you type of information to you want alerts on?
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse in">
+                        <div class="accordion-inner">
+                            <div class="btn-group" id="alertType" data-toggle="buttons-radio">
+                                <a href="#" class="btn">Changes to a specific item</a>
+                                <a href="#" class="btn">Changes to search results, such as a new item</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                            Step 2 - Which items do you want alerts on?
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <div class="btn-group" id="alertCritera" data-toggle="buttons-radio">
+                                <a href="#" class="btn">Binding</a>
+                                <a href="#" class="btn">Business</a>
+                                <a href="#" class="btn">Publisher Assertion Status</a>
+                                <a href="#" class="btn">Related Business</a>
+                                <a href="#" class="btn">Service</a>
+                                <a href="#" class="btn">tModel</a>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+                
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                            Step 3 - How do want to receive the alerts?
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <div class="btn-group" id="alertTransport" data-toggle="buttons-radio">
+                                <a href="#" class="btn">Send me alerts directly</a>
+                                <a href="#" class="btn">I'll pick them up</a>
+                            </div><br>
+                            <input type="text" id="bindingKey" autocomplete="false" placeholder="Binding Template">
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse4">
+                            Step 3 - How do want to receive the alerts?
+                        </a>
+                    </div>
+                    <div id="collapse4" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <div class="btn-group" id="alertTransport" data-toggle="buttons-radio">
+                                <a href="#" class="btn">Send me alerts directly</a>
+                                <a href="#" class="btn">I'll pick them up</a>
+                            </div><br>
+                            <input type="text" id="bindingKey" autocomplete="false" placeholder="Binding Template">
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
 
 
         </div>

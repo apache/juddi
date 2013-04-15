@@ -30,7 +30,7 @@
                     </bindingTemplate> 
                 </bindingTemplates> 
                 <categoryBag> 
-                    <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest02" keyValue="value-x"/> 
+                    <keyedReference tModelKey="uddi:uddi.tompublisher.com:tmodeltest02" keyValue="value-z"/> 
                 </categoryBag> 
             </businessService> 
         </businessServices> 

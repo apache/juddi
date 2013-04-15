@@ -23,8 +23,9 @@
                 <img src="img/bigrollergreen.gif" title="<%=ResourceLoader.GetResource(session, "items.loading")%>"/>
             </div>
 
-            
+
             <script type="text/javascript">
+               
                 function ShowAssertionDialog()
                 {
                     $("#addPublisherAssertion").modal('show');
@@ -181,6 +182,9 @@
                     });
                 }
 
+                <%
+                    String fromkey = request.getParameter("fromkey");
+                %>
             </script>
         </div>
     </div>
@@ -191,7 +195,11 @@
             <h3>Add a publisher assertion</h3>
         </div>
         <div class="modal-body" id="addPublisherAssertionContent">
-            <div style="float:left;width:25%">From Key : </div><div id="fromkey" class="edit"></div>
+            <div style="float:left;width:25%">From Key : </div><div id="fromkey" class="edit"><%
+                if (fromkey != null) {
+                    out.write(StringEscapeUtils.escapeHtml(fromkey));
+                }
+                %></div>
             <div style="float:left;width:25%">To Key : </div><div id="tokey" class="edit"></div>
             <div style="float:left;width:25%">tModel Key : </div><div id="tmodelkey" class="edit">uddi:uddi.org:relationships</div>
             <div style="float:left;width:25%">Key Name : </div><div id="keyname" class="edit">Subsidiary</div>
@@ -206,5 +214,12 @@
             <a href="javascript:$('#addPublisherAssertion').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
+    <script type="text/javascript">
+        <%if (fromkey != null) {
+        %>
+            $("#addPublisherAssertion").modal('show');
+        <%                    }
+        %>
+    </script>
 
     <%@include file="header-bottom.jsp" %>

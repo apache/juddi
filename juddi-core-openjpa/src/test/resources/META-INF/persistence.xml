@@ -58,6 +58,7 @@
     <class>org.apache.juddi.model.Subscription</class>
     <class>org.apache.juddi.model.SubscriptionChunkToken</class>
     <class>org.apache.juddi.model.SubscriptionMatch</class>
+    <class>org.apache.juddi.model.TempKey</class>
     <class>org.apache.juddi.model.Tmodel</class>
     <class>org.apache.juddi.model.TmodelCategoryBag</class>
     <class>org.apache.juddi.model.TmodelDescr</class>
@@ -74,6 +75,7 @@
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
       <property name="openjpa.jdbc.UpdateManager" value="operation-order"/>
       <property name="openjpa.RuntimeUnenhancedClasses" value="warn"/>
+      <property name="openjpa.Compatibility" value="CheckDatabaseForCascadePersistToDetachedEntity=true"/>
       
       <!-- derby connection properties -->
       <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
@@ -90,10 +92,10 @@
       -->
       
       <!--  pgsql connection properties 
-      <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost/juddi"/>
+      <property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost:5432/juddi"/>
       <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver"/>
       <property name="openjpa.ConnectionUserName" value="juddi"/>
-      <property name="openjpa.ConnectionPassword" value="juddi"/>
+      <property name="openjpa.ConnectionPassword" value="password"/>
       -->
       
     </properties>

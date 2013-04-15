@@ -26,6 +26,9 @@ public class BusinessServiceQuery extends EntityQuery {
 	public static final String ENTITY_ALIAS = "bs";
 	public static final String ENTITY_FIELD = "businessService";
 	public static final String KEY_NAME_PARENT = BusinessEntityQuery.ENTITY_FIELD + "." + BusinessEntityQuery.KEY_NAME;
+	public static final String SIGNATURE_PRESENT = 
+			ENTITY_ALIAS + "." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY OR " +
+			ENTITY_ALIAS + ".businessEntity." + EntityQuery.SIGNATURE_FIELD + " IS NOT EMPTY ";
 	
 	protected static String selectSQL;
 

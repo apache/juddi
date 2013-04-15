@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.v3.tck.TckBusiness;
+import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
@@ -41,6 +42,7 @@ public class API_030_BusinessEntityTest {
 	private static API_010_PublisherTest api010 = new API_010_PublisherTest();
 	private static TckTModel tckTModel          = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 	private static TckBusiness tckBusiness      = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+	private static TckFindEntity tckFindEntity  = new TckFindEntity(new UDDIInquiryImpl());
 	private static String authInfoJoe           = null;
 	private static String authInfoSam           = null;
 	
@@ -83,6 +85,27 @@ public class API_030_BusinessEntityTest {
 			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
 			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
 		} finally {
+			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		}
+	}
+	
+	@Test
+	public void testJoePublisherBusinessEntitySignature() {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
+			tckFindEntity.findAllBusiness();
+			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+			
+			//find the signed business
+			tckFindEntity.findAllSignedBusiness();
+			
+			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			
+		} finally {
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
 		}
 	}

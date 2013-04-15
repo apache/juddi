@@ -572,11 +572,11 @@
                                 }});
                             
                         </script>
-                        <a href="#"> <i class="icon-plus-sign"></i>
+                        <a href="assertions.jsp?fromkey=<%=URLEncoder.encode(bizid, "UTF-8")%>"> <i class="icon-plus-sign"></i>
                             <%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></a><br>
                         <div id="relationresults"></div>
 
-                        
+
                     </div>
                 </div>
             </div>
@@ -661,20 +661,17 @@
             <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
-        
-        <div class="modal hide fade" id="addPublisherAssertion">
+
+    <div class="modal hide fade" id="addSubscriptionModal">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Add a publisher assertion</h3>
+            <h3>Add a subscription</h3>
         </div>
-        <div class="modal-body" id="viewAsXmlContent">
-            <%
-            
-            %>
-
+        <div class="modal-body">
+          You can setup a subscription for this business to automatically alert you when there is a change
         </div>
         <div class="modal-footer">
-            
+
             <a href="javascript:$('#addPublisherAssertion').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>

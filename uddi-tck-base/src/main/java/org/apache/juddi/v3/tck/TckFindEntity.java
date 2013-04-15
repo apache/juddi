@@ -65,6 +65,7 @@ public class TckFindEntity
 {
 	final static String FIND_BUSINESS_XML             = "uddi_data/find/findBusiness1.xml";
 	final static String FIND_ALL_BUSINESSES_XML       = "uddi_data/find/findAllBusinesses.xml";
+	final static String FIND_ALL_SIGNED_BUSINESSES_XML= "uddi_data/find/findAllSignedBusinesses.xml";
 	final static String FIND_RELATED_BUSINESS_SORT_BY_NAME_XML = "uddi_data/find/findRelatedBusinesses_sortByName.xml";
 	final static String FIND_RELATED_BUSINESS_FROM_KEY= "uddi_data/find/findRelatedBusinesses_fromKey.xml";
 	final static String FIND_RELATED_BUSINESS_TO_KEY  = "uddi_data/find/findRelatedBusinesses_toKey.xml";
@@ -149,6 +150,30 @@ public class TckFindEntity
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
 		}
+	}
+	
+	public List<BusinessInfo> findAllSignedBusiness() {
+		List<BusinessInfo> biList = null;
+		try {
+			FindBusiness body = (FindBusiness)EntityCreator.buildFromDoc(FIND_ALL_SIGNED_BUSINESSES_XML, "org.uddi.api_v3");
+			BusinessList result = inquiry.findBusiness(body);
+			if (result == null)
+				Assert.fail("Null result from find business operation");
+			BusinessInfos bInfos = result.getBusinessInfos();
+			if (bInfos == null)
+				Assert.fail("No result from find business operation");
+			biList = bInfos.getBusinessInfo();
+			if (biList == null || biList.size() == 0)
+				Assert.fail("No result from find business operation");
+			//expecting at one business
+			Assert.assertTrue(biList.size()==1);
+			return biList;
+		}
+		catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			Assert.fail("No exception should be thrown.");
+		}
+		return biList;
 	}
 	
 	public void findRelatedBusiness_sortByName(boolean isOneSided) {
@@ -242,10 +267,11 @@ public class TckFindEntity
 		}
 	}
 	
-	public String findService() {
+	public String findService(String findQualifier) {
 		String serviceKey = null;
 		try {
 			FindService body = (FindService)EntityCreator.buildFromDoc(FIND_SERVICE_XML, "org.uddi.api_v3");
+			if (findQualifier!=null) body.getFindQualifiers().getFindQualifier().add(findQualifier);
 			ServiceList result = inquiry.findService(body);
 			if (result == null)
 				Assert.fail("Null result from find service operation");
@@ -330,9 +356,10 @@ public class TckFindEntity
 			Assert.fail("No exception should be thrown.");
 		}
 	}
-	public void findBinding() {
+	public void findBinding(String findQualifier) {
 		try {
 			FindBinding body = (FindBinding)EntityCreator.buildFromDoc(FIND_BINDING_XML, "org.uddi.api_v3");
+			if (findQualifier!=null) body.getFindQualifiers().getFindQualifier().add(findQualifier);
 			BindingDetail result = inquiry.findBinding(body);
 			if (result == null)
 				Assert.fail("Null result from find binding operation");
@@ -355,9 +382,10 @@ public class TckFindEntity
 		}
 	}
 	
-	public void findTModel() {
+	public void findTModel(String findQualifier) {
 		try {
 			FindTModel body = (FindTModel)EntityCreator.buildFromDoc(FIND_TMODEL_XML, "org.uddi.api_v3");
+			if (findQualifier!=null) body.getFindQualifiers().getFindQualifier().add(findQualifier);
 			TModelList result = inquiry.findTModel(body);
 			if (result == null)
 				Assert.fail("Null result from find tModel operation");

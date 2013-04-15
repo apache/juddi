@@ -43,8 +43,8 @@ public class BusinessService extends UddiEntity implements java.io.Serializable 
 	private List<ServiceDescr> serviceDescrs = new ArrayList<ServiceDescr>(0);
 	private List<BindingTemplate> bindingTemplates = new ArrayList<BindingTemplate>(0);
 	private ServiceCategoryBag categoryBag;
-        private List<ServiceProjection> projectingBusinesses = new ArrayList<ServiceProjection>(0);
-        private List<Signature> signatures = new ArrayList<Signature>(0);
+    private List<ServiceProjection> projectingBusinesses = new ArrayList<ServiceProjection>(0);
+    private List<Signature> signatures = new ArrayList<Signature>(0);
 
 	public BusinessService() {
 	}

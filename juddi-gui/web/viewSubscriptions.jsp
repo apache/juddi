@@ -72,7 +72,10 @@
                         out.write("<i class=\"icon-edit\"></i> ");
                         out.write("<i class=\"icon-remove\"></i> ");
                         out.write("<i class=\"icon-zoom-in\"></i> ");
-
+out.write(list.get(i).getBindingKey());
+out.write(list.get(i).getMaxEntities());
+out.write(list.get(i).getNotificationInterval().toString());
+//out.write(list.get(i).getSubscriptionFilter());
                         out.write("</td></tr>");
                         out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
                     }

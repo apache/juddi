@@ -17,6 +17,14 @@
             url="jdbc:mysql://localhost:3306/juddiv3"
             maxActive="8" 
             />
-        -->    
+    -->
+    <!-- postgresql 
+    <Resource name="jdbc/JuddiDS" auth="Container"
+            type="javax.sql.DataSource" username="juddi" password="juddi"
+            driverClassName="org.postgresql.Driver" 
+            url="jdbc:postgresql://localhost:5432/juddi"
+            maxActive="8" 
+            />
+     -->  
 </Context>
 

@@ -91,17 +91,17 @@ public class API_050_BindingTemplateTest
 			
 			tckFindEntity.findServiceDetail("uddi:uddi.joepublisher.com:serviceone");
 			tckBindingTemplate.deleteBinding(authInfoJoe, "uddi:uddi.joepublisher.com:bindingone");
-			String serviceKey = tckFindEntity.findService();
+			String serviceKey = tckFindEntity.findService(null);
 			tckFindEntity.findServiceDetail(serviceKey);
 			
 			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
 			
-			serviceKey = tckFindEntity.findService();
+			serviceKey = tckFindEntity.findService(null);
 			tckFindEntity.findServiceDetail(serviceKey);
 			
 			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
 			
-			tckFindEntity.findService();
+			tckFindEntity.findService(null);
 			tckFindEntity.findServiceDetail(serviceKey);
 		} finally {
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
