@@ -61,6 +61,9 @@ public class API_080_SubscriptionTest
 			api010.saveSamSyndicator();
 			authInfoSam = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
 
+			String authInfoUDDI  = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
+			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");

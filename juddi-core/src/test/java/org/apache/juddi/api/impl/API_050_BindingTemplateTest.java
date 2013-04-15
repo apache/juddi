@@ -31,6 +31,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -56,6 +57,10 @@ public class API_050_BindingTemplateTest
 		try {
 			api010.saveJoePublisher();
 			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
+			UDDISecurityPortType security      = new UDDISecurityImpl();
+			String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
+			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");

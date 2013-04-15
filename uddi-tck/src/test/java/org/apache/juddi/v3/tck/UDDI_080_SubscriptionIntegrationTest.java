@@ -73,7 +73,9 @@ public class UDDI_080_SubscriptionIntegrationTest
         	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
 
         	 tckSubscription = new TckSubscription(subscription, security);
-        	  
+ 			 String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
+ 			 tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+ 			 tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
 				Assert.fail("Could not obtain authInfo token.");

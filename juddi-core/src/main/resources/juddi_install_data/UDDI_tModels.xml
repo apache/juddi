@@ -975,7 +975,23 @@
         </categoryBag>
     </tModel>
   
-  
+    <tModel tModelKey="uddi:uddi.org:ubr:postaladdress">
+	  <name>ubr-uddi-org:postalAddress</name>
+	  <description xml:lang="EN">Postal address structure</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#postal
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:postalAddress"
+	      keyValue="postalAddress"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
   
   
     <tModel tModelKey="uddi:tmodelkey:keygenerator" xmlns="urn:uddi-org:api_v3">
@@ -995,7 +1011,10 @@
         <description xml:lang="en">Identifies an address. This can be a physical, mailing, or electric address.</description>
        
         <categoryBag>
-            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:categorization" 
+                keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked"
+                keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types"/>
         </categoryBag>
     </tModel>
     
@@ -1007,10 +1026,8 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
-    
-    
-    
-     <tModel tModelKey="uddi:tmodelkey:blank">
+
+    <tModel tModelKey="uddi:tmodelkey:blank">
         <name>uddi:tmodelkey:blank</name>
         <description xml:lang="en">Identifies a blank tModel</description>
        
@@ -1018,7 +1035,4 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
-    
-    
-    
 </save_tModel>

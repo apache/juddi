@@ -43,8 +43,11 @@ public class TckTModel
     final static String MARY_PUBLISHER_TMODEL_KEY     = "uddi:uddi.marypublisher.com:keygenerator";
     final static String SAM_SYNDICATOR_TMODEL_XML     = "uddi_data/samsyndicator/tModelKeyGen.xml";
     final static String SAM_SYNDICATOR_TMODEL_KEY     = "uddi:www.samco.com:keygenerator";
+    final static String TMODEL_PUBLISHER_TMODEL_XML   = "uddi_data/tmodels/tModelKeyGen.xml";
+    final static String TMODEL_PUBLISHER_TMODEL_KEY   = "uddi:tmodelkey:categories:keygenerator";
     final static String FIND_TMODEL_XML               = "uddi_data/find/findTModel1.xml";
     final static String FIND_TMODEL_XML_BY_CAT        = "uddi_data/find/findTModelByCategoryBag.xml";
+    public final static String TMODELS_XML            = "uddi_data/tmodels/tmodels.xml";
     
     public final static String RIFTSAW_PUBLISHER_TMODEL_XML  = "uddi_data/bpel/riftsaw/tModelKeyGen.xml";
     public final static String RIFTSAW_PUBLISHER_TMODEL_KEY  = "uddi:riftsaw.jboss.org:keygenerator";
@@ -66,6 +69,20 @@ public class TckTModel
 		super();
 		this.publication = publication;
 		this.inquiry = inquiry;
+	}
+	
+	public void saveTModels(String authInfo, String tModelXml) {
+		
+		// Add tModels
+		try {
+			SaveTModel st = (org.uddi.api_v3.SaveTModel)EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
+			st.setAuthInfo(authInfo);
+			publication.saveTModel(st);
+			
+		} catch(Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("No exception should be thrown");
+		}
 	}
 
 	public void saveTModel(String authInfo, String tModelXml, String tModelKey) {
@@ -169,6 +186,14 @@ public class TckTModel
 	
 	public void saveJoePublisherTmodel(String authInfoJoe) {
 		saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public void saveUDDIPublisherTmodel(String authInfoTM) {
+		saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY);
+	}
+	
+	public void saveTmodels(String authInfoJoe) {
+		saveTModels(authInfoJoe, TMODELS_XML);
 	}
 	
 	public void deleteJoePublisherTmodel(String authInfoJoe) {

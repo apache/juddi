@@ -15,16 +15,14 @@
  * limitations under the License.
  *
  */ -->
-<find_service xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
-  <findQualifiers>
-    <findQualifier>exactMatch</findQualifier>
-  </findQualifiers>
-  <name xml:lang="en">Service One</name>
-  <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="peaches" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="plums" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
-    </keyedReferenceGroup>
-  </categoryBag>
-</find_service>
+<tModel tModelKey="uddi:tmodelkey:categories:keygenerator" xmlns="urn:uddi-org:api_v3">
+    <name>tmodelkey:categories:keyGenerator</name>
+    <description>Key Generator for generic UDDI tModel Keys</description>
+   <overviewDoc>
+   <overviewURL useType="text">
+      http://uddi.org/pubs/uddi_v3.htm#keyGen</overviewURL>
+    </overviewDoc>
+    <categoryBag>
+        <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+    </categoryBag>
+</tModel>
