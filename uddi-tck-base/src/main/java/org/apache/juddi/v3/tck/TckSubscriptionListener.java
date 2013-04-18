@@ -60,11 +60,13 @@ public class TckSubscriptionListener
 		this.publication = publication;
 	}
 	
-	public void saveNotifierBinding(String authInfo, String bindingXML, String bindingKey) {
+	public void saveNotifierBinding(String authInfo, String bindingXML, String bindingKey, Integer port) {
 		try {
 			SaveBinding sb = new SaveBinding();
 			sb.setAuthInfo(authInfo);
 			BindingTemplate btIn = (BindingTemplate)EntityCreator.buildFromDoc(bindingXML, "org.uddi.api_v3");
+			String value = btIn.getAccessPoint().getValue();
+			value = value.replace("{randomPort}", port.toString());
 			sb.getBindingTemplate().add(btIn);
 			publication.saveBinding(sb);		
 		}
@@ -90,13 +92,20 @@ public class TckSubscriptionListener
 		
 	}
 	
-	public void saveService(String authInfo) {
+	public void saveService(String authInfo, Integer port) {
 		try {
 			// First save the entity
 			ss = new SaveService();
 			ss.setAuthInfo(authInfo);
 			
 			org.uddi.api_v3.BusinessService bsIn = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(LISTENER_SERVICE_XML, "org.uddi.api_v3");
+			if (port > 0) {
+				for (BindingTemplate btIn: bsIn.getBindingTemplates().getBindingTemplate()) {
+					String value = btIn.getAccessPoint().getValue();
+					value = value.replace("{randomPort}", port.toString());
+					btIn.getAccessPoint().setValue(value);
+				}
+			}
 			ss.getBusinessService().add(bsIn);
 			publication.saveService(ss);
 			

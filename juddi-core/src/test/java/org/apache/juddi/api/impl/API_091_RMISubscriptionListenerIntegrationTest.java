@@ -20,6 +20,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -55,6 +56,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
 	private static Registry registry;
 	private static String path = null;
+	private static Integer randomPort = null;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException, AccessException, RemoteException, NotBoundException {
@@ -68,8 +70,11 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	public static void startManager() throws ConfigurationException {
 		org.apache.juddi.Registry.start();
 		try {
+			//random port
+			randomPort = 19800 + new Random().nextInt(99);
+			System.out.println("RMI Random port=" + randomPort);
 			//bring up the RMISubscriptionListener
-			URI rmiEndPoint = new URI("rmi://localhost:9876/tck/rmisubscriptionlistener");
+			URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
 			registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
 			path = rmiEndPoint.getPath();
 			
@@ -113,7 +118,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListenerRMI.saveService(authInfoJoe);
+			tckSubscriptionListenerRMI.saveService(authInfoJoe, randomPort);
 			//Saving the Subscription
 			tckSubscriptionListenerRMI.saveNotifierSubscription(authInfoJoe);
 			//Changing the service we subscribed to "JoePublisherService"

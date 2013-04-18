@@ -24,7 +24,7 @@
   <bindingTemplates>
 	<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindinglistenerrmi">
 	  <description xml:lang="en">This is the endpoint for the RMI subscription listener</description>
-	  <accessPoint useType="endPoint">rmi://localhost:9876/tck/rmisubscriptionlistener</accessPoint>
+	  <accessPoint useType="endPoint">rmi://localhost:{randomPort}/tck/rmisubscriptionlistener</accessPoint>
 	  <tModelInstanceDetails>
 		<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:rmi" />
 	  </tModelInstanceDetails>

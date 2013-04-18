@@ -93,7 +93,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe);
+			tckSubscriptionListener.saveService(authInfoJoe, 0);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
             //Changing the service we subscribed to "JoePublisherService"
@@ -140,7 +140,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe);
+			tckSubscriptionListener.saveService(authInfoJoe, 0);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe);
             //Changing the service we subscribed to "JoePublisherService"
