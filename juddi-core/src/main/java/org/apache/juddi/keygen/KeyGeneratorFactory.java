@@ -51,6 +51,12 @@ public abstract class KeyGeneratorFactory {
 			keyGenerator = createKeyGenerator();
 		return keyGenerator;
 	}
+	
+	public static KeyGenerator forceNewKeyGenerator() {
+		keyGenerator = null;
+		keyGenerator = createKeyGenerator();
+		return keyGenerator;
+	}
 
 	/*
 	 * Returns a new instance of a Cryptor.

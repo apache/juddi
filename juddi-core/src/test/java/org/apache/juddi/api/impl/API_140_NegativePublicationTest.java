@@ -12,20 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.juddi.v3.tck;
+package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.UUID;
-import javax.xml.soap.SOAPFault;
-import javax.xml.ws.soap.SOAPFaultException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.Registry;
 import org.apache.juddi.api_v3.AccessPointType;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
-import org.apache.juddi.v3.client.transport.Transport;
+import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
+import org.apache.juddi.v3.tck.TckPublisher;
+import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -76,17 +78,16 @@ import org.uddi.v3_service.UDDISecurityPortType;
  *
  * @author Alex O'Ree
  */
-public class UDDI_140_NegativePublicationIntegrationTest {
+public class API_140_NegativePublicationTest {
 
-    private static Log logger = LogFactory.getLog(UDDI_140_NegativePublicationIntegrationTest.class);
-    static UDDISecurityPortType security = null;
-    static UDDIInquiryPortType inquiry = null;
-    static UDDIPublicationPortType publication = null;
-    static TckTModel tckTModel               = null;
+    private static Log logger = LogFactory.getLog(API_140_NegativePublicationTest.class);
+    static UDDISecurityPortType security = new UDDISecurityImpl();
+    static UDDIInquiryPortType inquiry = new UDDIInquiryImpl();
+    static UDDIPublicationPortType publication = new UDDIPublicationImpl();
+    static TckTModel tckTModel               = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
 
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
-    private static UDDIClerkManager manager;
     static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String str255 = "uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String strkey256 = "uddi:tmodelkey:categories:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
@@ -106,27 +107,19 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
     @AfterClass
     public static  void stopManager() throws ConfigurationException {
-        manager.stop();
+    	Registry.stop();
     }
 
     @BeforeClass
     public static void startManager() throws ConfigurationException {
-        manager = new UDDIClerkManager();
-        manager.start();
+    	Registry.start();
 
         logger.debug("Getting auth tokens..");
         try {
-            Transport transport = manager.getTransport();
-            security = transport.getUDDISecurityService();
             authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
             authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
             Assert.assertNotNull(authInfoJoe);
             Assert.assertNotNull(authInfoSam);
-
-            publication = transport.getUDDIPublishService();
-            inquiry = transport.getUDDIInquiryService();
-            tckTModel  = new TckTModel(publication, inquiry);
-            
             String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
 			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
 			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
@@ -144,11 +137,8 @@ public class UDDI_140_NegativePublicationIntegrationTest {
     	}
         Assert.assertFalse(ex.getMessage().contains(TRANS));
         Assert.assertFalse(ex.getMessage().contains(MISSING_RESOURCE));
-        if (ex instanceof SOAPFault) {
-            SOAPFault sf = (SOAPFault) ex;
-            if (!sf.getTextContent().contains("org.apache.juddi.v3.error.ValueNotAllowedException")) {
-                Assert.fail();
-            }
+        if (! (ex instanceof ValueNotAllowedException)) {
+            Assert.fail();
         }
     }
 
@@ -158,7 +148,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         System.out.println("BusinessNameSanityTest");
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessKeyTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessKeyTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -176,13 +166,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessNameTooShortTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameTooShortTest");
         SaveBusiness sb = new SaveBusiness();
@@ -199,7 +189,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -222,7 +212,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -240,7 +230,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -265,7 +255,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessNameLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -285,7 +275,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -312,7 +302,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
     
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -335,7 +325,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -387,7 +377,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessDescriptionTooLongLengthTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDescriptionTooLongLengthTest");
         SaveBusiness sb = new SaveBusiness();
@@ -408,14 +398,14 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
 
     }
     
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessDiscoveryURLTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -437,7 +427,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -491,7 +481,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void BusinessDiscoveryURLMaxLengthToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BusinessDiscoveryURLMaxLengthToolongUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
@@ -514,7 +504,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -745,7 +735,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         return cc;
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void ContactTooLongEmailMaxUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactTooLongEmailMaxUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
@@ -764,13 +754,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void ContactMaxEmailToolongUseTypeTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxEmailToolongUseTypeTest");
         SaveBusiness sb = new SaveBusiness();
@@ -792,7 +782,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -818,7 +808,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         
     }
 
-    @Test (expected = SOAPFaultException.class)
+    @Test (expected = ValueNotAllowedException.class)
     public void ContactDescriptionTooLongtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactDescriptionTooLongtest");
         SaveBusiness sb = new SaveBusiness();
@@ -837,13 +827,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test (expected = SOAPFaultException.class)
+    @Test (expected = ValueNotAllowedException.class)
     public void ContactDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactDescriptionLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -862,7 +852,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -888,7 +878,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactPhoneTooLongtest() throws DispositionReportFaultMessage, RemoteException  {
         System.out.println("ContactPhoneTooLongtest");
         SaveBusiness sb = new SaveBusiness();
@@ -906,7 +896,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -949,7 +939,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ValueNotAllowedException.class)
     public void ContactPhoneUseTypeTooLongtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactPhoneUseTypeTooLongtest");
         SaveBusiness sb = new SaveBusiness();
@@ -967,7 +957,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -993,7 +983,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressTFFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressTFFFFFFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1012,13 +1002,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFTFFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFTFFFFFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1037,13 +1027,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFFTFFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFTFFFFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1062,13 +1052,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFFFTFFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFTFFFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1086,13 +1076,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFFFFTFFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFTFFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1111,13 +1101,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFFFFFTFtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFFTFtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1136,13 +1126,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ContactMaxAddressFFFFFFTtest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ContactMaxAddressFFFFFFTtest");
         SaveBusiness sb = new SaveBusiness();
@@ -1161,7 +1151,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1191,7 +1181,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void KeyReferenceKeyTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceKeyTooLong");
         SaveBusiness sb = new SaveBusiness();
@@ -1215,13 +1205,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void KeyReferenceNameTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceNameTooLong");
         SaveBusiness sb = new SaveBusiness();
@@ -1245,13 +1235,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void KeyReferenceValueTooLong() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("KeyReferenceValueTooLong");
         SaveBusiness sb = new SaveBusiness();
@@ -1275,13 +1265,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
     
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ServiceNameTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1306,7 +1296,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1363,7 +1353,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ServiceNameTooLongLangTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceNameTooLongLangTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1389,13 +1379,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ServiceDescTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1423,13 +1413,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ServiceDescLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceDescLangTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1458,7 +1448,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1529,7 +1519,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void ServiceMaxCatBagTooBigTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("ServiceMaxCatBagTooBigTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1564,13 +1554,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
    
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateNoAccessPointTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateNoAccessPointTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1600,7 +1590,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1640,7 +1630,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateAccessPointUseTypeTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointUseTypeTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1674,13 +1664,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateAccessPointValueTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointValueTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1714,7 +1704,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1754,7 +1744,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateNoAccessPointNoRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateNoAccessPointNoRedirectorTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1786,13 +1776,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateAccessPointAndRedirectorTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointAndRedirectorTest");
         SaveBusiness sb = new SaveBusiness();
@@ -1828,7 +1818,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -1958,7 +1948,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest");
         //create a binding template, get the key, use the key as the specific redirector
@@ -1994,13 +1984,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateHostRedirectorTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateHostRedirectorTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -2033,7 +2023,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -2072,7 +2062,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         publication.deleteBusiness(db);
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void BindingTemplateAccessPointTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("BindingTemplateAccessPointTooLongTest");
         SaveBusiness sb = new SaveBusiness();
@@ -2106,7 +2096,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             publication.deleteBusiness(db);
             Assert.fail("request should have been rejected");
 
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -2145,7 +2135,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
     }
 
     //create a oversized tmodel keygen fail
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void CreateKeyGenTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenTooLongTest");
 
@@ -2167,7 +2157,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
             @SuppressWarnings("unused")
 			TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -2175,7 +2165,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
     }
 
     //create a tmodel with a key gen defined valid, with oversized Name
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void CreateKeyGenKeyDescriptionTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
 
@@ -2200,13 +2190,13 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void CreateKeyGenKeyDescriptionLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenKeyDescriptionTooLongTest");
 
@@ -2233,7 +2223,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         } finally {
@@ -2241,7 +2231,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         }
     }
 
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=ValueNotAllowedException.class)
     public void CreateKeyGenNameLangTooLongTest() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateKeyGenNameLangTooLongTest");
 
@@ -2263,7 +2253,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }
@@ -2272,7 +2262,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
     //create a tmodel with a key gen defined valid, regular tmodel,
     //then a business, service, binding template, tmodel instance infos, attach tmodel with some data, success
     //create a tmodel without a key gen defined- fail
-    @Test(expected=SOAPFaultException.class)
+    @Test(expected=InvalidKeyPassedException.class)
     public void CreateTmodelnoKeyGen() throws DispositionReportFaultMessage, RemoteException {
         System.out.println("CreateTmodelnoKeyGen");
 
@@ -2289,7 +2279,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         	@SuppressWarnings("unused")
             TModelDetail saveTModel = publication.saveTModel(st);
             Assert.fail("request should have been rejected");
-        } catch (SOAPFaultException ex) {
+        } catch (ValueNotAllowedException ex) {
             HandleException(ex);
             throw ex;
         }

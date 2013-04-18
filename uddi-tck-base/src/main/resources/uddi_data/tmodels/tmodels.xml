@@ -51,4 +51,12 @@
           <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
       </categoryBag>
     </tModel>
+    <tModel tModelKey="uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" 
+      xmlns="urn:uddi-org:api_v3">
+      <name>length test</name>
+      <description>For testing purposes</description>
+      <categoryBag>
+          <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+      </categoryBag>
+    </tModel>
 </save_tModel>

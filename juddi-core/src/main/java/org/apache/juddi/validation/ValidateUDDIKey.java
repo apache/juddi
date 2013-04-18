@@ -36,14 +36,14 @@ public class ValidateUDDIKey {
 		if (key == null)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NullKey"));
 		
+		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return; //v2 style key; no other validation rules apply
+		
 		String keyToTest = key.trim();
 		if (keyToTest.endsWith(KeyGenerator.PARTITION_SEPARATOR))
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
 
 		StringTokenizer tokenizer = new StringTokenizer(key.toLowerCase(), KeyGenerator.PARTITION_SEPARATOR);
-		int tokensCount = tokenizer.countTokens();
-		if(tokensCount <= 1)
-			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.MalformedKey", key));
+		
 		for(int count = 0; tokenizer.hasMoreTokens(); count++) {
 			String nextToken = tokenizer.nextToken();
 
