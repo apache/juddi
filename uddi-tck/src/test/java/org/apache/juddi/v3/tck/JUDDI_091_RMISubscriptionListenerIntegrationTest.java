@@ -120,9 +120,9 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			rmiSubscriptionListener.saveService(authInfoJoe, randomPort);
+			rmiSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_RMI_SERVICE_XML, randomPort);
 			
-			rmiSubscriptionListener.saveNotifierSubscription(authInfoJoe);
+			rmiSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_XML_RMI);
 
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			
@@ -150,7 +150,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			Assert.fail();
 		} finally {
 			
-			rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
+			rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);

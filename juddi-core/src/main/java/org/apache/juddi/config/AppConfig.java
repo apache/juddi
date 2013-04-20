@@ -75,9 +75,8 @@ public class AppConfig
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
 		PropertiesConfiguration propConfig = null;
-	        final String filename = System.getProperty("juddi.propertiesFile");
-		if (filename != null)
-        	{
+	    final String filename = System.getProperty("juddi.propertiesFile");
+		if (filename != null) {
 			propConfig = new PropertiesConfiguration(filename);
 		} else {
 			propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);

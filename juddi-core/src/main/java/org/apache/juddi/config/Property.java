@@ -41,13 +41,9 @@ public interface Property {
     public final static String JUDDI_RMI_REGISTRATION = "juddi.rmi.registration";
     public final static String JUDDI_RMI_REGISTRY_PORT = "juddi.rmi.registry.port";
     public final static String JUDDI_SUBSCRIPTION_NOTIFICATION = "juddi.subscription.notification";
-    public final static String JUDDI_EMAIL_HOST = "juddi.email.host";
-    public final static String JUDDI_EMAIL_PORT = "juddi.email.port";
-    public final static String JUDDI_EMAIL_AUTH = "juddi.email.auth";
-    public final static String JUDDI_EMAIL_USER = "juddi.email.user";
-    public final static String JUDDI_EMAIL_PASSWORD = "juddi.email.password";
-    public final static String JUDDI_EMAIL_TRANSPORT = "juddi.email.transport";
-    public final static String JUDDI_EMAIL_FROM = "juddi.email.from";
+    public final static String JUDDI_EMAIL_PREFIX = "juddi.mail.smtp.prefix";
+    public final static String JUDDI_EMAIL_FROM   = "juddi.mail.smtp.from";
+    public final static String DEFAULT_JUDDI_EMAIL_PREFIX = "juddi.";
     public final static String DEFAULT_CRYPTOR = "org.apache.juddi.cryptor.DefaultCryptor";
     public final static String DEFAULT_USERSFILE = "juddi-users.properties";
     public final static String DEFAULT_XML_USERSFILE = "juddi-users.xml";
