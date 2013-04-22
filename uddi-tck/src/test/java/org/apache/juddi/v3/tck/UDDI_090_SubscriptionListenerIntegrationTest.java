@@ -58,6 +58,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	private static UDDIClerkManager manager;
 	private static SimpleSmtpServer mailServer;
 	private static Integer smtpPort = 25;
+	private static Integer httpPort = 80;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -71,6 +72,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	public static void startManager() throws ConfigurationException {
 		try {
 			smtpPort = 9700 + new Random().nextInt(99);
+			httpPort = 9600 + new Random().nextInt(99);
 			Properties properties = new Properties();
 			properties.setProperty("juddi.mail.smtp.host", "localhost");
 			properties.setProperty("juddi.mail.smtp.port", String.valueOf(smtpPort));
@@ -89,7 +91,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			properties.store(new FileOutputStream(tmpFile), "tmp email settings");
 			
 			//bring up the TCK SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
+			endPoint = Endpoint.publish("http://localhost:" + httpPort + "/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
 			
 			manager  = new UDDIClerkManager();
 			manager.start();
@@ -125,7 +127,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			//Saving the binding template that will be called by the server for a subscription event
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the HTTP Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the HTTP Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
@@ -195,8 +197,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			@SuppressWarnings("rawtypes")
 			Iterator emailIter = mailServer.getReceivedEmail();
 			SmtpMessage email = (SmtpMessage)emailIter.next();
-			System.out.println(email.getHeaderValue("Subject"));
-			System.out.println(email.getBody());
+			System.out.println("Subject:" + email.getHeaderValue("Subject"));
+			System.out.println("Body:" + email.getBody());
 			if (!email.getBody().contains("<name xml:lang=\"en\">Service One</name>")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
@@ -223,7 +225,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"

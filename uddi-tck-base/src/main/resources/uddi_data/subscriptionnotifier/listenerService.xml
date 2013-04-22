@@ -24,7 +24,7 @@
   <bindingTemplates>
 	<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindinglistener">
 	  <description xml:lang="en">This is the endpoint for the subscription listener</description>
-	  <accessPoint useType="endPoint">http://localhost:12345/tcksubscriptionlistener</accessPoint>
+	  <accessPoint useType="endPoint">http://localhost:{randomPort}/tcksubscriptionlistener</accessPoint>
 	  <tModelInstanceDetails>
 		<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
 	  </tModelInstanceDetails>

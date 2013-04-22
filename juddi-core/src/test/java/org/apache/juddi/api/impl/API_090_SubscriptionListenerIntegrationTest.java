@@ -55,6 +55,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 	private static String authInfoJoe = null;
 	private static SimpleSmtpServer mailServer;
 	private static Integer smtpPort = 25;
+	private static Integer httpPort = 80;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -75,7 +76,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.from", "jUDDI@example.org");
 			mailServer = SimpleSmtpServer.start(smtpPort);
 			//bring up the TCK HTTP SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
+			endPoint = Endpoint.publish("http://localhost:" + httpPort + "/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
 			
 			logger.debug("Getting auth tokens..");
 		
@@ -98,7 +99,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			//Saving the binding template that will be called by the server for a subscription event
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the HTTP Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the HTTP Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
@@ -194,7 +195,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
