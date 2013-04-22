@@ -199,7 +199,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			SmtpMessage email = (SmtpMessage)emailIter.next();
 			System.out.println("Subject:" + email.getHeaderValue("Subject"));
 			System.out.println("Body:" + email.getBody());
-			if (!email.getBody().contains("<name xml:lang=\"en\">Service One</name>")) {
+			if (!email.getBody().contains("Service One")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
 			
