@@ -91,7 +91,9 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			properties.store(new FileOutputStream(tmpFile), "tmp email settings");
 			
 			//bring up the TCK SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:" + httpPort + "/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
+			String httpEndpoint = "http://localhost:" + httpPort + "/tcksubscriptionlistener";
+			System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+			endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
 			
 			manager  = new UDDIClerkManager();
 			manager.start();

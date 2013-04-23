@@ -71,13 +71,15 @@ public class API_090_SubscriptionListenerIntegrationTest
 		Registry.start();
 		try {
 			smtpPort = 9700 + new Random().nextInt(99);
+			httpPort = 9600 + new Random().nextInt(99);
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.host", "localhost");
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.port", String.valueOf(smtpPort));
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.from", "jUDDI@example.org");
 			mailServer = SimpleSmtpServer.start(smtpPort);
 			//bring up the TCK HTTP SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:" + httpPort + "/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
-			
+			String httpEndpoint = "http://localhost:" + httpPort + "/tcksubscriptionlistener";
+			System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+			endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
 			logger.debug("Getting auth tokens..");
 		
 			api010.saveJoePublisher();
@@ -87,7 +89,7 @@ public class API_090_SubscriptionListenerIntegrationTest
         	  
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
+				Assert.fail(e.getMessage());
 	     } 
 	}
 	
