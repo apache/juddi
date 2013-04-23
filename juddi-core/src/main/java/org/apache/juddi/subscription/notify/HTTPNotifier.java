@@ -35,7 +35,7 @@ public class HTTPNotifier implements Notifier {
 					" should start with 'http' or 'https'");
 		}
 		//fix for JIRA JUDDI-597
-		accessPointUrl = bindingTemplate.getAccessPointUrl().toLowerCase();
+		accessPointUrl = bindingTemplate.getAccessPointUrl();
 		if (AccessPointType.WSDL_DEPLOYMENT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 			//WSDL deployment type
 			//TODO, let user override the SUBSCRIPTION_LISTENER_SERVICE setting
