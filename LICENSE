@@ -246,3 +246,9 @@ Rhino (http://www.mozilla.org/rhino/) rhino:js:jar:1.6R5
 WSDL4J (http://sf.net/projects/wsdl4j) wsdl4j:wsdl4j:jar:1.6.2
     License: CPL  (http://www.opensource.org/licenses/cpl1.0.txt)
 
+
+	
+In addition, the jUDDI GUI project includes a number of components and libraries with separate 
+copyright notices and license terms. Your use of those components are 
+subject to the terms and conditions of the following licenses. 
+See juddi-gui\license for details.
