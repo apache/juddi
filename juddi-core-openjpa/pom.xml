@@ -189,7 +189,12 @@
             <version>1.8.2</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>dumbster</groupId>
+            <artifactId>dumbster</artifactId>
+            <version>1.5</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 	
 </project>

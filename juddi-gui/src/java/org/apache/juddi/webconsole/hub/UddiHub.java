@@ -330,7 +330,7 @@ public class UddiHub {
                     }
                     sb.append("</a><a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
                             append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("\"><i class=\"icon-plus-sign icon-white\"></i></a></td></tr>");
+                            append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a></td></tr>");
 
                     sb.append("<tr><td colspan=3><div id=\"").
                             append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
@@ -972,9 +972,11 @@ public class UddiHub {
      * @param lang
      * @param offset
      * @param maxrecords
+     * @param isChooser if true, tModel keys will not be clickable and will
+     * instead be render for a modal dialog box
      * @return
      */
-    public PagableContainer tModelListAsHtml(String keyword, String lang, int offset, int maxrecords) {
+    public PagableContainer tModelListAsHtml(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
         PagableContainer ret = new PagableContainer();
         try {
             FindTModel fm = new FindTModel();
@@ -1012,32 +1014,12 @@ public class UddiHub {
             if (findTModel == null || findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");//"No tModels are defined";
             } else {
-                StringBuilder sb = new StringBuilder();
-
-                sb.append("<table class=\"table table-hover\"><tr><th>")
-                        .append(ResourceLoader.GetResource(session, "items.key"))
-                        .append("</th><th>")
-                        .append(ResourceLoader.GetResource(session, "items.name"))
-                        .append("</th><th>")
-                        .append(ResourceLoader.GetResource(session, "items.description"))
-                        .append("</th></tr>");
-                for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
-                    sb.append("<tr><td><a href=\"tmodelEditor.jsp?id=")
-                            .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
-                            .append("\" >")
-                            .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
-                            .append("</a></td><td>")
-                            .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
-                    if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() != null) {
-                        sb.append(", ")
-                                .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
-                    }
-                    sb.append("</td><td>")
-                            .append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
-                            .append("</td></tr>");
+                if (!isChooser) {
+                    ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session);
                 }
-                sb.append("</table>");
-                ret.renderedHtml = sb.toString();
+                else
+                    ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
+
             }
         } catch (Exception ex) {
             ret.renderedHtml = HandleException(ex);

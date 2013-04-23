@@ -18,15 +18,14 @@ package org.apache.juddi.validation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.AbstractSequentialList;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.xml.ws.Holder;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -42,6 +41,7 @@ import org.apache.juddi.config.Property;
 import org.apache.juddi.keygen.KeyGenerator;
 import org.apache.juddi.keygen.KeyGeneratorFactory;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.model.Tmodel;
 import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.query.FindBusinessByPublisherQuery;
@@ -97,7 +97,6 @@ public class ValidatePublish extends ValidateUDDIApi {
      * This flag will add additional output to stdout for debugging purposes,
      * set this to true if
      */
-    private static final boolean DEBUG = false;
     private Log log = LogFactory.getLog(this.getClass());
     Set<String> buildInTmodels = null;
 
@@ -1104,8 +1103,8 @@ public class ValidatePublish extends ValidateUDDIApi {
     }
 
     public void validateContact(org.uddi.api_v3.Contact contact, Configuration config) throws DispositionReportFaultMessage {
-        if (DEBUG) {
-            System.out.println("validateContact");
+        if (log.isDebugEnabled()) {
+            log.debug("validateContact");
         }
         // A supplied contact can't be null
         if (contact == null) {
@@ -1133,17 +1132,21 @@ public class ValidatePublish extends ValidateUDDIApi {
                     validateKeyLength(address.getTModelKey());
                     validateLang(address.getLang());
                     validateUseType(address.getUseType());
+                    boolean checked = true;
                     // Per section 4.4: keys must be case-folded
                     if (address.getTModelKey() != null) {
                         address.setTModelKey(address.getTModelKey().toLowerCase());
 
-                        verifyTModelKeyExists(address.getTModelKey(), config);
+                        checked = verifyTModelKeyExistsAndChecked(address.getTModelKey(), config);
 
                     }
                     if (address.getAddressLine() == null || address.getAddressLine().size() == 0) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.contact.NoAddressLine"));
                     }
-                    validateAddressLines(address.getAddressLine(), config);
+                    
+                    if (checked) {
+                    	validateAddressLines(address.getAddressLine(), config);
+                    }
                 }
             }
         }
@@ -1215,8 +1218,8 @@ public class ValidatePublish extends ValidateUDDIApi {
 
     public void validateKeyedReferenceGroup(KeyedReferenceGroup krg, Configuration config) throws DispositionReportFaultMessage {
         // Keyed reference groups must contain a tModelKey
-        if (DEBUG) {
-            System.out.println("validateKeyedReferenceGroup");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateKeyedReferenceGroup");
         }
         if (krg.getTModelKey() == null || krg.getTModelKey().length() == 0) {
             throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
@@ -1227,21 +1230,22 @@ public class ValidatePublish extends ValidateUDDIApi {
         krg.setTModelKey(tmodelKey);
         validateKeyLength(tmodelKey);
 
-        verifyTModelKeyExists(tmodelKey, config);
+        boolean checked = verifyTModelKeyExistsAndChecked(tmodelKey, config);
 
-        List<KeyedReference> keyedRefs = krg.getKeyedReference();
-        // Should being empty raise an error?
-        if (keyedRefs != null && keyedRefs.size() > 0) {
-            for (KeyedReference keyedRef : keyedRefs) {
-                validateKeyedReference(keyedRef, config);
-            }
+        if (checked) {
+	        List<KeyedReference> keyedRefs = krg.getKeyedReference();
+	        // Should being empty raise an error?
+	        if (keyedRefs != null && keyedRefs.size() > 0) {
+	            for (KeyedReference keyedRef : keyedRefs) {
+	                validateKeyedReference(keyedRef, config);
+	            }
+	        }
         }
-
     }
 
     public void validateKeyedReference(KeyedReference kr, Configuration config) throws DispositionReportFaultMessage {
-        if (DEBUG) {
-            System.out.println("validateKeyedReference");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateKeyedReference");
         }
         String tmodelKey = kr.getTModelKey();
 
@@ -1260,8 +1264,6 @@ public class ValidatePublish extends ValidateUDDIApi {
         validateKeyValue(kr.getKeyValue());
         validateKeyName(kr.getKeyName());
 
-        verifyTModelKeyExists(tmodelKey, config);
-
         String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
         // Per section 6.2.2.1 of the specification, no publishers (except the root) are allowed to use the node categorization tmodelKey
         if (Constants.NODE_CATEGORY_TMODEL.equalsIgnoreCase(kr.getTModelKey())) {
@@ -1272,8 +1274,8 @@ public class ValidatePublish extends ValidateUDDIApi {
     }
 
     public void validateTModelInstanceDetails(org.uddi.api_v3.TModelInstanceDetails tmodelInstDetails, Configuration config) throws DispositionReportFaultMessage {
-        if (DEBUG) {
-            System.out.println("validateTModelInstanceDetails");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateTModelInstanceDetails");
         }
         // tModel Instance Details is optional
         if (tmodelInstDetails == null) {
@@ -1306,11 +1308,9 @@ public class ValidatePublish extends ValidateUDDIApi {
         tmodelInstInfo.setTModelKey((tmodelInstInfo.getTModelKey().toLowerCase()));
 
         validateInstanceDetails(tmodelInstInfo.getInstanceDetails());
-        if (DEBUG) {
-            System.out.println("validateTModelInstanceInfo");
+        if (log.isDebugEnabled()) {
+            log.debug("validateTModelInstanceInfo");
         }
-
-        verifyTModelKeyExists(tmodelInstInfo.getTModelKey(), config);
 
         validateKeyLength(tmodelInstInfo.getTModelKey());
         validateDescriptions(tmodelInstInfo.getDescription());
@@ -1508,8 +1508,8 @@ public class ValidatePublish extends ValidateUDDIApi {
     }
 
     private void validateAccessPoint(EntityManager em, AccessPoint value, Configuration config) throws ValueNotAllowedException {
-        if (DEBUG) {
-            System.out.println("validateAccessPoint");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateAccessPoint");
         }
         boolean checkRef = false;
 
@@ -1549,8 +1549,8 @@ public class ValidatePublish extends ValidateUDDIApi {
     }
 
     private void validateHostingRedirector(EntityManager em, HostingRedirector hostingRedirector, Configuration config) throws ValueNotAllowedException {
-        if (DEBUG) {
-            System.out.println("validateHostingRedirector");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateHostingRedirector");
         }
         if (hostingRedirector == null) {
             return;
@@ -1595,13 +1595,13 @@ public class ValidatePublish extends ValidateUDDIApi {
     }
 
     private void validateAddressLines(List<AddressLine> addressLine, Configuration config) throws ValueNotAllowedException {
-        if (DEBUG) {
-            System.out.println("validateAddressLines");
+    	if (log.isDebugEnabled()) {
+            log.debug("validateAddressLines");
         }
         if (addressLine != null) {
             for (int i = 0; i < addressLine.size(); i++) {
                 validateKeyName(addressLine.get(i).getKeyName());
-                verifyTModelKeyExists(addressLine.get(i).getKeyName(), config);
+                verifyTModelKeyExistsAndChecked(addressLine.get(i).getKeyName(), config);
 
                 validateKeyValue(addressLine.get(i).getKeyValue());
                 if (addressLine.get(i).getValue() == null || addressLine.get(i).getValue().length() == 0) {
@@ -1696,38 +1696,39 @@ public class ValidatePublish extends ValidateUDDIApi {
      * @throws ValueNotAllowedException
      * @see org.apache.juddi.config.Install
      */
-    private void verifyTModelKeyExists(String tmodelKey, Configuration config) throws ValueNotAllowedException {
-        if (tmodelKey == null || tmodelKey.length()==0) {
-            return;
+    private boolean verifyTModelKeyExistsAndChecked(String tmodelKey, Configuration config) throws ValueNotAllowedException {
+    	boolean checked = true;
+    	if (tmodelKey == null || tmodelKey.length()==0) {
+            return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
-            return;
+            return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:categorization:nodes")) {
-            return;
+            return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_inquiry")) {
-            return;
+        	return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_publication")) {
-            return;
+        	return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_security")) {
-            return;
+        	return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_ownership_transfer")) {
-            return;
+        	return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_subscription")) {
-            return;
+        	return false;
         }
         if (tmodelKey.equalsIgnoreCase("uddi:uddi.org:v3_subscriptionlistener")) {
-            return;
+        	return false;
         }
 
         if (config == null) {
             log.warn(new ErrorMessage("errors.tmodel.ReferentialIntegrityNullConfig"));
-            return;
+            return false;
         }
         boolean checkRef = false;
         try {
@@ -1736,8 +1737,8 @@ public class ValidatePublish extends ValidateUDDIApi {
             log.warn("Error caught reading " + Property.JUDDI_ENFORCE_REFERENTIAL_INTEGRITY + " from config file", ex);
         }
         if (checkRef) {
-            if (DEBUG) {
-                System.out.println("verifyTModelKeyExists " + tmodelKey);
+        	if (log.isDebugEnabled()) {
+                log.debug("verifyTModelKeyExists " + tmodelKey);
             }
             EntityManager em = PersistenceManager.getEntityManager();
 
@@ -1746,15 +1747,25 @@ public class ValidatePublish extends ValidateUDDIApi {
                 log.warn(new ErrorMessage("errors.tmodel.ReferentialIntegrityNullEM"));
             } else {
                 //Collections.sort(buildInTmodels);
-                //if ((buildInTmodels, tmodelKey) == -1) 
+                //if ((buildInTmodels, tmodelKey) == -1)
+            	Tmodel modelTModel = null;
                 {
-
-                    org.apache.juddi.model.Tmodel modelTModel = null;
                     EntityTransaction tx = em.getTransaction();
                     try {
 
                         tx.begin();
                         modelTModel = em.find(org.apache.juddi.model.Tmodel.class, tmodelKey);
+                        
+                    	if (modelTModel == null) checked = false;
+                    	else {
+                	    	for (org.apache.juddi.model.KeyedReference ref : modelTModel.getCategoryBag().getKeyedReferences()) {
+                	    		if ("uddi-org:types:unchecked".equalsIgnoreCase(ref.getKeyName())) {
+                	    			checked = false;
+                	    			break;
+                	    		}
+                	    	}
+                    	}
+                        
                         tx.commit();
 
                     } finally {
@@ -1769,5 +1780,20 @@ public class ValidatePublish extends ValidateUDDIApi {
                 }
             }
         }
+        return checked;
+    }
+    
+    private boolean verifyTModelKeyChecked(Tmodel modelTModel) {
+    	boolean checked = true;
+    	if (modelTModel == null) checked = false;
+    	else {
+	    	for (org.apache.juddi.model.KeyedReference ref : modelTModel.getCategoryBag().getKeyedReferences()) {
+	    		if ("uddi-org:types:unchecked".equalsIgnoreCase(ref.getTmodelKeyRef())) {
+	    			checked = false;
+	    			break;
+	    		}
+	    	}
+    	}
+    	return checked;
     }
 }

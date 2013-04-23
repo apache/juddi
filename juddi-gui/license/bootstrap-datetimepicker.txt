@@ -1,0 +1,4 @@
+http://tarruda.github.io/bootstrap-datetimepicker/
+Apache 2.0 License
+
+Simple date/time picker component based on the work of Stefan Petre, with contributions taken from Andrew Rowls and jdewit.

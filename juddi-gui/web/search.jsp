@@ -218,4 +218,6 @@
         }
                                 
     </script>
+    
+    <%@include file="tmodelChooser.jsp" %>
     <%@include file="header-bottom.jsp" %>

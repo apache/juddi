@@ -13,12 +13,12 @@ package org.apache.juddi.webconsole;
  * @author Alex O'Ree
  */
 public class PostBackConstants {
-    public static final String INSTANCE="instance";
-    public static final String ACCESSPOINT_TYPE="accessPointType";
-    public static final String ACCESSPOINT_VALUE="accessPointValue";
-    
+
+    public static final String INSTANCE = "instance";
+    public static final String ACCESSPOINT_TYPE = "accessPointType";
+    public static final String ACCESSPOINT_VALUE = "accessPointValue";
     @Deprecated
-public static final String HOSTINGREDIRECTOR="hostingRedirector";
+    public static final String HOSTINGREDIRECTOR = "hostingRedirector";
     public static final String OVERVIEW = "overviewDoc";
     public static final String TMODELINSTANCE = "tmodelInstance";
     public static final String BINDINGTEMPLATE = "bindingTemplate";
@@ -44,5 +44,7 @@ public static final String HOSTINGREDIRECTOR="hostingRedirector";
     public static final String IDENT_KEY_REF = "identbagkeyref";
     public static final String CATBAG_KEY_REF_GRP = "catbaggrpkeyref";
     public static final String KEY_REF = "keyref";
-    public static final String TMODEL_DELETED="isDeleted";
+    public static final String TMODEL_DELETED = "isDeleted";
+    
+
 }

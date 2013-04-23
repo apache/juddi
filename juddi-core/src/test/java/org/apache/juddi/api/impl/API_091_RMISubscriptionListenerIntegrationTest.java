@@ -20,14 +20,17 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.SubscriptionListenerQuery;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
+import org.apache.juddi.v3.tck.TckSubscriptionListener;
 import org.apache.juddi.v3.tck.TckSubscriptionListenerRMI;
 import org.apache.juddi.v3.tck.TckTModel;
 import org.apache.juddi.v3.tck.UDDISubscriptionListenerImpl;
@@ -55,6 +58,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
 	private static Registry registry;
 	private static String path = null;
+	private static Integer randomPort = null;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException, AccessException, RemoteException, NotBoundException {
@@ -68,8 +72,11 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	public static void startManager() throws ConfigurationException {
 		org.apache.juddi.Registry.start();
 		try {
+			//random port
+			randomPort = 19800 + new Random().nextInt(99);
+			System.out.println("RMI Random port=" + randomPort);
 			//bring up the RMISubscriptionListener
-			URI rmiEndPoint = new URI("rmi://localhost:9876/tck/rmisubscriptionlistener");
+			URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
 			registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
 			path = rmiEndPoint.getPath();
 			
@@ -113,9 +120,9 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListenerRMI.saveService(authInfoJoe);
+			tckSubscriptionListenerRMI.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_RMI_SERVICE_XML, randomPort);
 			//Saving the Subscription
-			tckSubscriptionListenerRMI.saveNotifierSubscription(authInfoJoe);
+			tckSubscriptionListenerRMI.saveNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_XML_RMI);
 			//Changing the service we subscribed to "JoePublisherService"
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			
@@ -143,7 +150,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			Assert.fail();
 		} finally {
 			
-			tckSubscriptionListenerRMI.deleteNotifierSubscription(authInfoJoe);
+			tckSubscriptionListenerRMI.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);

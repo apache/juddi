@@ -72,14 +72,16 @@ public interface UDDICustodyTransferPortType extends Remote{
         throws DispositionReportFaultMessage, RemoteException
     ;
 
+    
     /**
      * 
-     * @param nodeID
-     * @param opaqueToken
-     * @param keyBag
-     * @param expirationTime
      * @param authInfo
-     * @throws DispositionReportFaultMessage, RemoteException
+     * @param keyBag
+     * @param nodeID
+     * @param expirationTime
+     * @param opaqueToken
+     * @throws DispositionReportFaultMessage
+     * @throws RemoteException 
      */
     @WebMethod(operationName = "get_transferToken", action = "get_transferToken")
     @RequestWrapper(localName = "get_transferToken", targetNamespace = "urn:uddi-org:custody_v3", className = "org.uddi.custody_v3.GetTransferToken")

@@ -15,12 +15,6 @@
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-
-
-
-
-
-
 </div> <!-- /container -->
 </form>
 <div style="

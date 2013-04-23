@@ -276,7 +276,7 @@ public class AES {
         try {
             return AES.EN(clear, key);
         } catch (Exception ex) {
-            Logger.getLogger(logname).log(Level.FATAL, "I cannot encrypt sensitive information! Check to make sure the unlimited strength JCE is installed " + ex.getMessage());
+            Logger.getLogger(logname).log(Level.FATAL, "Cannot encrypt sensitive information! Check to make sure the unlimited strength JCE is installed " + ex.getMessage());
         }
         return "";
     }
@@ -297,7 +297,7 @@ public class AES {
         try {
             return AES.DE(cipher, key);
         } catch (Exception ex) {
-            Logger.getLogger(logname).log(Level.FATAL, "trouble decrypted data, check to make sure the unlimited strength JCE is installed " + ex.getMessage());
+            Logger.getLogger(logname).log(Level.FATAL, "trouble decrypting data, check to make sure the unlimited strength JCE is installed. If this error occured during deployment, I'll automatically try a smaller key size. " + ex.getMessage());
         }
         return cipher;
 

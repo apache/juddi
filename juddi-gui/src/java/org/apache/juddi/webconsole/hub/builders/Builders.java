@@ -21,12 +21,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.juddi.webconsole.PostBackConstants;
 import org.apache.juddi.webconsole.hub.UddiHub;
 import org.uddi.api_v3.*;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
 
 /**
  *
@@ -150,7 +153,7 @@ public class Builders {
         return ret;
     }
 
-    public static Contact BuildSingleContact(Map m, String prefix,String cte) {
+    public static Contact BuildSingleContact(Map m, String prefix, String cte) {
         Contact c = new Contact();
         String[] t = (String[]) m.get(prefix + PostBackConstants.TYPE);
         c.setUseType(t[0]);
@@ -158,7 +161,7 @@ public class Builders {
         c.getDescription().addAll(BuildDescription(MapFilter(m, prefix + PostBackConstants.DESCRIPTION), prefix + PostBackConstants.DESCRIPTION, cte));
         c.getEmail().addAll(BuildEmail(MapFilter(m, prefix + PostBackConstants.EMAIL), prefix + PostBackConstants.EMAIL));
         c.getPhone().addAll(BuildPhone(MapFilter(m, prefix + PostBackConstants.PHONE), prefix + PostBackConstants.PHONE));
-        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS,cte));
+        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS, cte));
         return c;
     }
 
@@ -318,9 +321,13 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     KeyedReferenceGroup pn = new KeyedReferenceGroup();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
-                    pn.setTModelKey(t[0]);
-                    pn.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.KEY_REF), prefix + index + PostBackConstants.KEY_REF));
-                    ret.add(pn);
+                    if (t != null) {
+                        pn.setTModelKey(t[0]);
+                        pn.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.KEY_REF), prefix + index + PostBackConstants.KEY_REF));
+                        ret.add(pn);
+                    } else {
+                        UddiHub.log.warn("Unexpected null from BuildKeyedReferenceGroup " + filteredkey + " " + prefix + " " + key);
+                    }
                     processedIndexes.add(index);
                 }
             } else {
@@ -430,12 +437,14 @@ public class Builders {
                 if (!processedIndexes.contains(index)) {
                     KeyedReference pn = new KeyedReference();
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
-                    pn.setTModelKey(t[0]);
-                    t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
-                    pn.setKeyName(t[0]);
-                    t = (String[]) map.get(prefix + index + PostBackConstants.KEYVALUE);
-                    pn.setKeyValue(t[0]);
-                    ret.add(pn);
+                    if (t != null) {
+                        pn.setTModelKey(t[0]);
+                        t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
+                        pn.setKeyName(t[0]);
+                        t = (String[]) map.get(prefix + index + PostBackConstants.KEYVALUE);
+                        pn.setKeyValue(t[0]);
+                        ret.add(pn);
+                    }
                     processedIndexes.add(index);
                 }
             } else {
@@ -547,7 +556,7 @@ public class Builders {
 
                     tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte));
 
-                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE+PostBackConstants.DESCRIPTION, cte));
+                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte));
 
                     ret.getTModelInstanceInfo().add(tmi);
                     processedIndexes.add(index);
@@ -587,5 +596,94 @@ public class Builders {
             }
         }
         return ret;
+    }
+
+    public static Subscription BuildClientSubscription(Map map, AtomicReference<String> outmsg) {
+        Subscription sub = new Subscription();
+        if (outmsg == null) {
+            outmsg = new AtomicReference<String>();
+        }
+
+        String alertType = ((String[]) map.get("alertType"))[0];
+        if (alertType == null) {
+            outmsg.set("alertType not defined");
+            return null;
+        }
+        if (alertType.equalsIgnoreCase("specificItem")) {
+            sub = BuildClientSubscriptionSpecificItem(map, outmsg);
+        } else if (alertType.equalsIgnoreCase("searchResults")) {
+            sub = BuildClientSubscriptionSearchResults(map);
+        } else {
+            outmsg.set("alertType invalid");
+            return null;
+        }
+        if (sub == null) {
+            return null;
+        }
+
+        String alertTransport = ((String[]) map.get("alertTransport"))[0];
+        if (alertTransport == null) {
+            
+        } else {
+            if (alertTransport.equalsIgnoreCase("bindingTemplate")) {
+                sub.setBindingKey(((String[]) map.get("bindingKey"))[0]);
+            } else {
+                sub.setBindingKey(null);
+            }
+        }
+        //options
+
+
+        return sub;
+    }
+
+    private static Subscription BuildClientSubscriptionSpecificItem(Map map, AtomicReference<String> outmsg) {
+        Subscription sub = new Subscription();
+        boolean ok = true;
+
+        String alertCritera = ((String[]) map.get("alertCriteraSingleItem"))[0];
+
+
+        String ItemKey = ((String[]) map.get("itemKey"))[0];
+        if (ItemKey == null) {
+            outmsg.set("no item defined");
+            return null;
+        }
+        sub.setSubscriptionFilter(new SubscriptionFilter());
+
+        if (alertCritera != null) {
+            if (alertCritera.equalsIgnoreCase("service")) {
+            } else if (alertCritera.equalsIgnoreCase("binding")) {
+                sub.getSubscriptionFilter().setGetBindingDetail(new GetBindingDetail());
+                sub.getSubscriptionFilter().getGetBindingDetail().getBindingKey().add(ItemKey);
+            } else if (alertCritera.equalsIgnoreCase("service")) {
+                sub.getSubscriptionFilter().setGetServiceDetail(new GetServiceDetail());
+                sub.getSubscriptionFilter().getGetServiceDetail().getServiceKey().add(ItemKey);
+            } else if (alertCritera.equalsIgnoreCase("business")) {
+                sub.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+                sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(ItemKey);
+            } else if (alertCritera.equalsIgnoreCase("publisherAssertion")) {
+                //unknow if this will work
+                sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+                sub.getSubscriptionFilter().getGetAssertionStatusReport();
+            } else if (alertCritera.equalsIgnoreCase("relatedBusiness")) {
+                outmsg.set("relatedBusiness is not supported for single item subscriptions");
+                return null;
+            } else if (alertCritera.equalsIgnoreCase("tmodel")) {
+                sub.getSubscriptionFilter().setGetTModelDetail(new GetTModelDetail());
+                sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().add(ItemKey);
+            } else {
+                outmsg.set("alert critera invalid");
+                return null;
+            }
+        } else {
+            outmsg.set("alert critera not defined");
+            return null;
+        }
+        return sub;
+    }
+
+    private static Subscription BuildClientSubscriptionSearchResults(Map map) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

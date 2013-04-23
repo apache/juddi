@@ -49,8 +49,14 @@
         <meta name="description" content="<%=ResourceLoader.GetResource(session, "description")%>">
         <meta name="author" content="Apache Software Foundation">
 
-        <!-- Le styles -->
-        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link href="css/bootstrap-timepicker.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <!--[if IE 7]>
+        <link rel="stylesheet" href="css/font-awesome-ie7.min.css">
+        <![endif]-->
+        
         <link rel="shortcut icon" href="favicon.ico" />
         <style type="text/css">
             body {
@@ -58,7 +64,7 @@
                 padding-bottom: 40px;
             }
         </style>
-        <link href="css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -71,6 +77,8 @@
         <script src="js/jquery-1.9.1.js"></script>
         <script src="js/i18n.js.jsp"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-datetimepicker.min.js"></script>
+        <script src="js/bootstrap-timepicker.min.js"></script>
         <script src="js/jquery.jeditable.js"></script>
         <script src="js/main.js"></script>
     </head>
@@ -103,9 +111,9 @@
                                         <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
                                         <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.tmodels.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.tmodels")%></a></li>
                                         <%//                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")">ResourceLoader.GetResource(session, "navbar.publishers")</a></li>
-%>
+                                        %>
                                         <li class="divider"> </li>
-                                        
+
                                         <li><a href="search.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.search.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.search")%></a></li>
 
 
@@ -129,7 +137,7 @@
 
 
                                             //                                      }
-%>
+                                        %>
                                     </ul>
                                 </li>
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%><b class="caret"></b></a>

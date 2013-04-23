@@ -82,12 +82,14 @@ public class UDDI_140_NegativePublicationIntegrationTest {
     static UDDISecurityPortType security = null;
     static UDDIInquiryPortType inquiry = null;
     static UDDIPublicationPortType publication = null;
+    static TckTModel tckTModel               = null;
+
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
     private static UDDIClerkManager manager;
     static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-    static final String str255 = "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-    static final String strkey256 = "uddi:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+    static final String str255 = "uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+    static final String strkey256 = "uddi:tmodelkey:categories:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String strkey256_1 = "uddi:org.apache:omething.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.somethi.com";
     static final String str26 = "11111111111111111111111111";
     static final String str27 = "111111111111111111111111110";
@@ -123,8 +125,12 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
             publication = transport.getUDDIPublishService();
             inquiry = transport.getUDDIInquiryService();
-
-
+            tckTModel  = new TckTModel(publication, inquiry);
+            
+            String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
+			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             Assert.fail("Could not obtain authInfo token.");
@@ -2180,8 +2186,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         tm.getName().setValue("Key gen name");
         tm.getName().setLang("en");
         Description d = new Description();
-        d.setLang("en");
-        d.setLang(str256);
+        d.setValue(str256);
         tm.getDescription().add(d);
         tm.setCategoryBag(new CategoryBag());
         KeyedReference kr = new KeyedReference();
@@ -2189,7 +2194,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         kr.setKeyName("uddi-org:keyGenerator");
         kr.setKeyValue("keyGenerator");
         tm.getCategoryBag().getKeyedReference().add(kr);
-        tm.setTModelKey("uddi:" + UUID.randomUUID().toString() + ":customkey");
+        tm.setTModelKey("uddi:uddi.joepublisher.com:mycustomkey");
         st.getTModel().add(tm);
         try {
         	@SuppressWarnings("unused")
@@ -2221,7 +2226,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         kr.setKeyName("uddi-org:keyGenerator");
         kr.setKeyValue("keyGenerator");
         tm.getCategoryBag().getKeyedReference().add(kr);
-        String key = "uddi:" + UUID.randomUUID().toString() + ":customkey";
+        String key = UUID.randomUUID().toString();
         tm.setTModelKey(key);
         st.getTModel().add(tm);
         try {
@@ -2278,7 +2283,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         tm.getName().setValue("My Cool Company's tmodel");
         tm.getName().setLang("en");
 
-        tm.setTModelKey("uddi:" + UUID.randomUUID().toString() + ":customkey");
+        tm.setTModelKey("uddi:uddi.joepublisher.com:nokeygenerator:customkey");
         st.getTModel().add(tm);
         try {
         	@SuppressWarnings("unused")

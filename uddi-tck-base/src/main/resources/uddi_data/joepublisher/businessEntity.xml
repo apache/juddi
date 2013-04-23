@@ -40,10 +40,10 @@
       <phone useType="mobile">987-654-3210</phone>
       <email useType="work">jdoe@businessone.com</email>
       <address xml:lang="en" useType="headquarters" sortCode="1" tModelKey="uddi:tmodelKey:address">
-        <addressLine keyName="" keyValue="suite">Suite 1500</addressLine>
-        <addressLine keyName="" keyValue="street">1515 Main St.</addressLine>
-        <addressLine keyName="" keyValue="citystatezip">Chicago, IL 60614</addressLine>
-        <addressLine keyName="" keyValue="country">USA</addressLine>
+        <addressLine keyName="Suite" keyValue="suite">Suite 1500</addressLine>
+        <addressLine keyName="Street" keyValue="street">1515 Main St.</addressLine>
+        <addressLine keyName="ZipCode" keyValue="citystatezip">Chicago, IL 60614</addressLine>
+        <addressLine keyName="Country" keyValue="country">USA</addressLine>
       </address>
     </contact>
     <contact useType="engineer">

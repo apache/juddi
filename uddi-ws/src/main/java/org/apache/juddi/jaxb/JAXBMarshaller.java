@@ -42,6 +42,7 @@ public class JAXBMarshaller {
 	
 	public static final String PACKAGE_UDDIAPI = "org.uddi.api_v3";
 	public static final String PACKAGE_SUBSCRIPTION = "org.uddi.sub_v3";
+	public static final String PACKAGE_SUBSCR_RES = "org.uddi.subr_v3";
 	public static final String PACKAGE_JUDDIAPI = "org.apache.juddi.api_v3";
 	public static final String PACKAGE_JUDDI = "org.apache.juddi";
 	private static final Map<String, JAXBContext> JAXBContexts = new HashMap<String, JAXBContext>();

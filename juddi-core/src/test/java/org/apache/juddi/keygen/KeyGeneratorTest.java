@@ -34,7 +34,8 @@ public class KeyGeneratorTest
 	{
 		System.setProperty(Property.JUDDI_KEYGENERATOR, "org.apache.juddi.keygen.FooGenerator");
 		try {
-			KeyGeneratorFactory.getKeyGenerator();
+			KeyGenerator keyGenerator = KeyGeneratorFactory.forceNewKeyGenerator();
+			System.out.println("Generator = " + keyGenerator.getClass());
 			Assert.fail("This should have thrown an exception because this class does not exist.");
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -47,7 +48,8 @@ public class KeyGeneratorTest
 	{
 		System.setProperty(Property.JUDDI_KEYGENERATOR, "org.apache.juddi.keygen.KeyGenerator");
 		try {
-			KeyGeneratorFactory.getKeyGenerator();
+			KeyGenerator keyGenerator = KeyGeneratorFactory.forceNewKeyGenerator();
+			System.out.println("Generator = " + keyGenerator.getClass());
 			Assert.fail("This should have thrown an exception because you cannot instantiate an interface.");
 		} catch (Exception e) {
 			String message = e.getMessage();
@@ -63,7 +65,7 @@ public class KeyGeneratorTest
 	{
 		System.setProperty(Property.JUDDI_KEYGENERATOR, "org.apache.juddi.keygen.DefaultKeyGenerator");
 		try {
-			KeyGenerator keyGenerator = KeyGeneratorFactory.getKeyGenerator();
+			KeyGenerator keyGenerator = KeyGeneratorFactory.forceNewKeyGenerator();
 			Assert.assertEquals(org.apache.juddi.keygen.DefaultKeyGenerator.class, keyGenerator.getClass());
 			String key = keyGenerator.generate();
 			Assert.assertNotNull(key);

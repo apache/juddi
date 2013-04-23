@@ -343,23 +343,25 @@ public class SubscriptionNotifier extends TimerTask {
 						AccessPointType.WSDL_DEPLOYMENT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 					try {
 						Notifier notifier = new NotifierFactory().getNotifier(bindingTemplate);
-						log.info("Sending out notification to " + bindingTemplate.getAccessPointUrl());
-						notifier.notifySubscriptionListener(body);
-						//there maybe more chunks we have to send
-						String chunkToken=body.getSubscriptionResultsList().getChunkToken();
-						while(chunkToken!=null) {
-							UddiEntityPublisher publisher = new UddiEntityPublisher();
-							publisher.setAuthorizedName(modelSubscription.getAuthorizedName());
-							log.debug("Sending out next chunk: " + chunkToken + " to " + bindingTemplate.getAccessPointUrl());
-							getSubscriptionResults.setChunkToken(chunkToken);
-							resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
-							body.setSubscriptionResultsList(resultList);
+						if (notifier!=null) {
+							log.info("Sending out notification to " + bindingTemplate.getAccessPointUrl());
 							notifier.notifySubscriptionListener(body);
-							chunkToken=body.getSubscriptionResultsList().getChunkToken();
+							//there maybe more chunks we have to send
+							String chunkToken=body.getSubscriptionResultsList().getChunkToken();
+							while(chunkToken!=null) {
+								UddiEntityPublisher publisher = new UddiEntityPublisher();
+								publisher.setAuthorizedName(modelSubscription.getAuthorizedName());
+								log.debug("Sending out next chunk: " + chunkToken + " to " + bindingTemplate.getAccessPointUrl());
+								getSubscriptionResults.setChunkToken(chunkToken);
+								resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+								body.setSubscriptionResultsList(resultList);
+								notifier.notifySubscriptionListener(body);
+								chunkToken=body.getSubscriptionResultsList().getChunkToken();
+							}
+							//successful notification so remove from the badNotificationList
+							if (badNotifications.containsKey(resultList.getSubscription().getSubscriptionKey()))
+								badNotifications.remove(resultList.getSubscription().getSubscriptionKey());
 						}
-						//successful notification so remove from the badNotificationList
-						if (badNotifications.containsKey(resultList.getSubscription().getSubscriptionKey()))
-							badNotifications.remove(resultList.getSubscription().getSubscriptionKey());
 					} catch (WebServiceException e) {
 						if (e.getCause() instanceof IOException) {
 							addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointUrl());

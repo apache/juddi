@@ -17,6 +17,7 @@ package org.apache.juddi.v3.tck;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Random;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -50,6 +51,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 	private static UDDIClerkManager manager;
 	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
 	private static Registry registry;
+	private static Integer randomPort = null;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -63,7 +65,11 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			
 		try {
 			//bring up the RMISubscriptionListener
-			URI rmiEndPoint = new URI("rmi://localhost:9876/tck/rmisubscriptionlistener");
+			//random port
+			randomPort = 19800 + new Random().nextInt(99);
+			System.out.println("RMI Random port=" + randomPort);
+			//bring up the RMISubscriptionListener
+			URI rmiEndPoint = new URI("rmi://localhost:" + randomPort + "/tck/rmisubscriptionlistener");
 			registry = LocateRegistry.createRegistry(rmiEndPoint.getPort());
 			String path = rmiEndPoint.getPath();
 			
@@ -114,9 +120,9 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			rmiSubscriptionListener.saveService(authInfoJoe);
+			rmiSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_RMI_SERVICE_XML, randomPort);
 			
-			rmiSubscriptionListener.saveNotifierSubscription(authInfoJoe);
+			rmiSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_XML_RMI);
 
 			tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 			
@@ -144,7 +150,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			Assert.fail();
 		} finally {
 			
-			rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe);
+			rmiSubscriptionListener.deleteNotifierSubscription(authInfoJoe, TckSubscriptionListenerRMI.SUBSCRIPTION_KEY_RMI);
 			tckBusinessService.deleteJoePublisherService(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);

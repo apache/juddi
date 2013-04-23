@@ -14,23 +14,6 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static junit.framework.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.ws.Holder;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.jaxb.EntityCreator;
-import org.junit.Assert;
-import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.DeleteBinding;
-import org.uddi.api_v3.SaveBinding;
-import org.uddi.api_v3.SaveService;
-import org.uddi.sub_v3.DeleteSubscription;
-import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
@@ -53,7 +36,7 @@ public class TckSubscriptionListenerRMI extends TckSubscriptionListener
     	
 		super(subscription, publication);
 		this.LISTENER_SERVICE_KEY = LISTENER_SERVICE_KEY_RMI;
-    	this.LISTENER_SERVICE_XML = LISTENER_SERVICE_XML_RMI;
+    	this.LISTENER_HTTP_SERVICE_XML = LISTENER_SERVICE_XML_RMI;
     	this.SUBSCRIPTION_KEY     = SUBSCRIPTION_KEY_RMI;
     	this.SUBSCRIPTION_XML     = SUBSCRIPTION_XML_RMI;
     	

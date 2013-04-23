@@ -25,9 +25,10 @@ import java.util.Properties;
 public class TckPublisher 
 {	
 	private static Properties tckProperties = new Properties();
-	public final static String JOE_PUBLISHER_XML  = "uddi_data/joepublisher/publisher.xml";
-	public final static String SAM_SYNDICATOR_XML = "uddi_data/samsyndicator/publisher.xml";
-    public final static String MARY_PUBLISHER_XML = "uddi_data/marypublisher/publisher.xml";
+	public final static String JOE_PUBLISHER_XML    = "uddi_data/joepublisher/publisher.xml";
+	public final static String TMODEL_PUBLISHER_XML = "uddi_data/tmodels/publisher.xml";
+	public final static String SAM_SYNDICATOR_XML   = "uddi_data/samsyndicator/publisher.xml";
+    public final static String MARY_PUBLISHER_XML   = "uddi_data/marypublisher/publisher.xml";
     
 	static {
 		try {
@@ -47,12 +48,28 @@ public class TckPublisher
     	return tckProperties.getProperty(Property.ROOT_PASSWORD);
     }
     
+    public final static String getUDDIPublisherId() {
+    	return tckProperties.getProperty(Property.UDDI_PUBLISHER);
+    }
+    
+    public final static String getUDDIPassword() {
+    	return tckProperties.getProperty(Property.UDDI_PASSWORD);
+    }
+    
     public final static String getJoePublisherId() {
     	return tckProperties.getProperty(Property.JOE_PUBLISHER);
     }
     
     public final static String getJoePassword() {
     	return tckProperties.getProperty(Property.JOE_PASSWORD);
+    }
+    
+    public final static String getTModelPublisherId() {
+    	return tckProperties.getProperty(Property.TMODEL_PUBLISHER);
+    }
+    
+    public final static String getTModelPassword() {
+    	return tckProperties.getProperty(Property.TMODEL_PASSWORD);
     }
     
     public final static String getSamPublisherId() {

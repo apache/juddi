@@ -17,11 +17,14 @@
 package org.apache.juddi.webconsole.hub.builders;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.juddi.webconsole.resources.ResourceLoader;
 import org.uddi.api_v3.*;
 
 /**
  * Provides very basic UDDI spec to String formats, mostly used for debugging
+ *
  * @author Alex O'Ree
  */
 public class Printers {
@@ -46,12 +49,12 @@ public class Printers {
             return "no data";
         }
         for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
-            sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i),locale));
+            sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i), locale));
         }
         for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
             sb.append("Key Ref Grp: TModelKey=");
             for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k),locale));
+                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k), locale));
             }
         }
         return sb.toString();
@@ -77,7 +80,7 @@ public class Printers {
         for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
             sb.append("Binding Key: ").append(bindingTemplates.getBindingTemplate().get(i).getBindingKey()).append("<Br>");
             sb.append("Description: ").append(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription())).append("<Br>");
-            sb.append("CatBag: ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(),locale)).append("<Br>");
+            sb.append("CatBag: ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(), locale)).append("<Br>");
             sb.append("tModels: ").append(Printers.TModelInfoToString(bindingTemplates.getBindingTemplate().get(i).getTModelInstanceDetails())).append("<Br>");
             if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
                 sb.append("Access Point: ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue()).append(" type ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType()).append("<Br>");
@@ -119,7 +122,7 @@ public class Printers {
     /**
      * converts contacts to a simple string output
      */
-    public static String PrintContacts(Contacts contacts,String locale) {
+    public static String PrintContacts(Contacts contacts, String locale) {
         if (contacts == null) {
             return "";
         }
@@ -152,13 +155,13 @@ public class Printers {
         return sb.toString();
     }
 
-    public static String ListIdentBagToString(IdentifierBag info,String locale) {
+    public static String ListIdentBagToString(IdentifierBag info, String locale) {
         StringBuilder sb = new StringBuilder();
         if (info == null) {
             return "";
         }
         for (int i = 0; i < info.getKeyedReference().size(); i++) {
-            sb.append(KeyedReferenceToString(info.getKeyedReference().get(i),locale));
+            sb.append(KeyedReferenceToString(info.getKeyedReference().get(i), locale));
         }
         return sb.toString();
     }
@@ -177,12 +180,90 @@ public class Printers {
             sb.append("</td><td>");
             sb.append(list.get(i).getSignature().isEmpty());
             sb.append("</td><td>");
-            sb.append(StringEscapeUtils.escapeHtml(Printers.KeyedReferenceToString(list.get(i).getKeyedReference(),locale)));
+            sb.append(StringEscapeUtils.escapeHtml(Printers.KeyedReferenceToString(list.get(i).getKeyedReference(), locale)));
             sb.append("</td></tr>");
         }
         sb.append("</table>");
         return sb.toString();
     }
 
-  
+    public static String PrintTModelListAsHtml(TModelList findTModel, HttpSession session) {
+        boolean isChooser = false;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<table class=\"table table-hover\"><tr><th>");
+        if (isChooser) {
+            sb.append("</th><th>");
+        }
+        sb.append(ResourceLoader.GetResource(session, "items.key"))
+                .append("</th><th>")
+                .append(ResourceLoader.GetResource(session, "items.name"))
+                .append("</th><th>")
+                .append(ResourceLoader.GetResource(session, "items.description"))
+                .append("</th></tr>");
+        for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
+            sb.append("<tr><td>");
+            if (isChooser) {
+                sb.append("<input class=\"modalable\" type=checkbox id=\"")
+                        .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
+                        .append("\"></td><td>");
+            }
+            if (!isChooser) {
+                sb.append("<a href=\"tmodelEditor.jsp?id=")
+                        .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
+                        .append("\" >");
+            }
+            sb.append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()));
+            if (!isChooser) {
+                sb.append("</a>");
+            }
+            sb.append("</td><td>")
+                    .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
+            if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() != null) {
+                sb.append(", ")
+                        .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
+            }
+            sb.append("</td><td>")
+                    .append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
+                    .append("</td></tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+    public static String PrintTModelListAsHtmlModel(TModelList findTModel, HttpSession session) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<table class=\"table table-hover\"><tr><th>");
+
+        sb.append("</th><th>");
+
+        sb.append(ResourceLoader.GetResource(session, "items.key"))
+                .append("</th><th>")
+                .append(ResourceLoader.GetResource(session, "items.name"))
+                .append("</th><th>")
+                .append(ResourceLoader.GetResource(session, "items.description"))
+                .append("</th></tr>");
+        for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
+            sb.append("<tr><td>");
+
+            sb.append("<input class=\"modalable\" type=checkbox id=\"")
+                    .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
+                    .append("\"></td><td>");
+
+            sb.append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()));
+            sb.append("</td><td>")
+                    .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
+            if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() != null) {
+                sb.append(", ")
+                        .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
+            }
+            sb.append("</td><td>")
+                    .append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
+                    .append("</td></tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
 }

@@ -15,10 +15,10 @@
     int maxrecords = 50;
     int offset = 0;
     String lang = request.getParameter("lang");
-     if (lang == null || lang.length() == 0) {
+    if (lang == null || lang.length() == 0) {
         lang = null;
     }
-    if (lang!=null && lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
+    if (lang != null && lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
         lang = null;
     }
 
@@ -40,8 +40,12 @@
     if (maxrecords > 50) {
         maxrecords = 50;
     }
-
-    PagableContainer ret = (x.tModelListAsHtml(keyword, lang, offset, maxrecords));
+    boolean isChooser = false;
+    try {
+        isChooser = Boolean.parseBoolean(request.getParameter("chooser"));
+    } catch (Exception ex) {
+    }
+    PagableContainer ret = (x.tModelListAsHtml(keyword, lang, offset, maxrecords, isChooser));
 
     out.write(ret.renderedHtml);
 %>

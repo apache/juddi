@@ -7,7 +7,6 @@
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 
 <div class="navbar-form pull-right">
 

@@ -23,9 +23,9 @@
             <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
             <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
 
-            <a href="javascript:pagedown();"><i class="icon-circle-arrow-left disabled " id="pageup"></i></a>
-            <a href="javascript:reload();"><i class="icon-refresh"></i></a>
-            <a href="javascript:pageup();"><i class="icon-circle-arrow-right disabled" id="pagedown"></i></a>
+            <a href="javascript:pagedown();"><i class="icon-circle-arrow-left disabled  icon-large" id="pageup"></i></a>
+            <a href="javascript:reload();"><i class="icon-refresh icon-large"></i></a>
+            <a href="javascript:pageup();"><i class="icon-circle-arrow-right disabled  icon-large" id="pagedown"></i></a>
 
             <div id="tmodellist">
                 <img src="img/bigrollergreen.gif" title="Loading"/>
@@ -35,7 +35,7 @@
                 
                 function reload()
                 {
-                    RenderTmodelListBySearch('%', offset, maxrecords);
+                    RenderTmodelListBySearch('%', offset, maxrecords, false);
                 }
                 $('.edit').editable(function(value, settings) { 
                     console.log(this);

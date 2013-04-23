@@ -18,7 +18,7 @@
     <div class="row">
         <div class="span12" >
 
-            <a href="javascript:ShowAssertionDialog();" ><i class="icon-plus-sign"></i><%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%> </a><br><br>
+            <a href="javascript:ShowAssertionDialog();" ><i class="icon-plus-sign icon-large"></i><%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%> </a><br><br>
             <div id="businesslist">
                 <img src="img/bigrollergreen.gif" title="<%=ResourceLoader.GetResource(session, "items.loading")%>"/>
             </div>

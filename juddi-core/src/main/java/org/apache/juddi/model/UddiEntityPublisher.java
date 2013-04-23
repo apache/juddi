@@ -104,7 +104,7 @@ public class UddiEntityPublisher {
 		if (keyGeneratorKeys == null)
 			populateKeyGeneratorKeys(em);
 		
-
+		if (! key.contains(KeyGenerator.PARTITION_SEPARATOR)) return true; //v2 style key
 		String keyPartition = key.substring(0, key.lastIndexOf(KeyGenerator.PARTITION_SEPARATOR));
 		
 		for (String keyGenKey : keyGeneratorKeys) {

@@ -69,15 +69,21 @@
                         out.write("</td><td>");
                         out.write(StringEscapeUtils.escapeHtml(list.get(i).getExpiresAfter().toString()));
                         out.write("</td><td>");
-                        out.write("<i class=\"icon-edit\"></i> ");
-                        out.write("<i class=\"icon-remove\"></i> ");
-                        out.write("<i class=\"icon-zoom-in\"></i> ");
-out.write(list.get(i).getBindingKey());
-out.write(list.get(i).getMaxEntities());
-out.write(list.get(i).getNotificationInterval().toString());
+                          out.write(StringEscapeUtils.escapeHtml(list.get(i).getBindingKey()));
+                        out.write("</td><td>");
+                        
+                        
+                        out.write("<i class=\"icon-edit icon-large\"></i> ");
+                        out.write("<i class=\"icon-remove icon-large\"></i> ");
+                        out.write("<i class=\"icon-zoom-in icon-large\"></i> ");
+                        out.write(list.get(i).getBindingKey());
+                        if (list.get(i).getMaxEntities() != null)
+                            out.write(list.get(i).getMaxEntities().toString());
+                        if (list.get(i).getNotificationInterval()!=null)
+                        out.write(list.get(i).getNotificationInterval().toString());
 //out.write(list.get(i).getSubscriptionFilter());
                         out.write("</td></tr>");
-                        out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
+                      //  out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
                     }
                 %>
             </table>

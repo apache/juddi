@@ -21,8 +21,9 @@
             
             <div id="container">
                 <%=ResourceLoader.GetResource(session, "pages.tmodelpart.content")%>
-                <br>
-                <i class="icon-info-sign"></i><%=ResourceLoader.GetResource(session, "pages.tmodelpart.juddinote")%>
+                <br><br>
+                <div class="alert alert-info">
+                <i class="icon-info-sign  icon-large"></i><%=ResourceLoader.GetResource(session, "pages.tmodelpart.juddinote")%></div>
                 <br><Br>
                 <table class="table">
                     <tr><td><%=ResourceLoader.GetResource(session, "pages.tmodelpart.key")%></td><td><input type="text" value="uddi:www.mycompany.com:keyGenerator" id="keyGeneratorKey"  style="width:100%"></td></tr>
@@ -30,7 +31,9 @@
                     <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" value="<%=ResourceLoader.GetResource(session, "language")%>" id="keyGeneratorLang" style="width:100%"></td></tr>
                 </table>
                                 
-                <a class="btn btn-primary" title="Save" id="savekeygen" onclick="javascript:savekeygen();"><%=ResourceLoader.GetResource(session, "actions.save")%></a>
+                <a class="btn btn-primary" title="Save" id="savekeygen" onclick="javascript:savekeygen();">
+                   <i class="icon-save icon-large"></i> 
+                    <%=ResourceLoader.GetResource(session, "actions.save")%></a>
             </div>
             <div id="results"></div>
             <script type="text/javascript">

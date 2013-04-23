@@ -36,9 +36,9 @@ public class NotifierFactory {
 		}
 		if (notifierClassName == null) {
 			//JUDDI-496 TODO make sure the tModel is loaded
-			log.debug("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport. Defaulting " 
+			log.error("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport. Defaulting " 
 				  +	"to http.");
-			notifierClassName = "org.apache.juddi.subscription.notify.HTTPNotifier";
+			return null;
 		}
 		if (log.isDebugEnabled()) log.debug("Going find and instantiate notifier class: " + notifierClassName);
 		

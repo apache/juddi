@@ -43,7 +43,7 @@
                         out.write("<tr><td>");
                         out.write("<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8") + "\">");
                         out.write(StringEscapeUtils.escapeHtml(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey()));
-                        out.write(" <i class=\"icon-edit\"></i></a>");
+                        out.write(" <i class=\"icon-edit icon-large\"></i></a>");
                         out.write("</td><td>");
                         out.write(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(info.getBusinessInfos().getBusinessInfo().get(i).getName())));
                         out.write("</td><td>");

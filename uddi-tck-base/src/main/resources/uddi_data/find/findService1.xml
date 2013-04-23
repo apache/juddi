@@ -21,8 +21,8 @@
   </findQualifiers>
   <name xml:lang="en">Service One</name>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="peaches" />
+    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="plums" />
     <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
       <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>

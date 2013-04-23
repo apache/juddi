@@ -56,6 +56,9 @@ public class API_030_BusinessEntityTest {
 			UDDISecurityPortType security      = new UDDISecurityImpl();
 			authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
 			authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
+			String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
+			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
@@ -71,8 +74,12 @@ public class API_030_BusinessEntityTest {
 	public void testJoePublisherBusinessEntity() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
 		} finally {
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}

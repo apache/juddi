@@ -24,9 +24,9 @@
                 <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
                 <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
 
-                <a href="javascript:pagedown();"><i class="icon-circle-arrow-left " id="pageup"></i></a>
-                <a href="javascript:refreshServiceList();"><i class="icon-refresh " id="refresh"></i></a>
-                <a href="javascript:pageup();"><i class="icon-circle-arrow-right " id="pagedown"></i></a>
+                <a href="javascript:pagedown();"><i class="icon-circle-arrow-left icon-large" id="pageup"></i></a>
+                <a href="javascript:refreshServiceList();"><i class="icon-refresh icon-large " id="refresh"></i></a>
+                <a href="javascript:pageup();"><i class="icon-circle-arrow-right  icon-large" id="pagedown"></i></a>
 
                 <div id="serviceBrowserListings">
                     <img src="img/bigrollergreen.gif" title="Loading"/>

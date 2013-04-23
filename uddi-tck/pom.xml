@@ -82,8 +82,11 @@
 		    <version>2.0</version>
 		    <scope>test</scope>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>dumbster</groupId>
+			<artifactId>dumbster</artifactId>
+			<version>1.5</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

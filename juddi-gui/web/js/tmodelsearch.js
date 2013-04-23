@@ -6,6 +6,33 @@ var totalrecords=0;
 
 RenderTmodelListBySearch('%', offset, maxrecords);
 
+function pagedownChooser()
+{
+    offset = $("#offset").text();
+    //alert(offset);
+    var newoffset = offset - maxrecords;
+    if (newoffset < 0)
+        return;
+    //alert(newoffset);
+    if (newoffset != offset)
+        RenderTmodelListBySearch('%', newoffset, maxrecords, true);
+}
+function pageupChooser()
+{
+    offset = $("#offset").text();
+    //alert(offset);
+    var fetch = maxrecords;
+    if ((parseInt(offset) + parseInt(maxrecords))  > totalrecords)
+        //fetch = maxrecords - offset;
+        return;
+    else 
+        fetch = (parseInt(offset) + parseInt(maxrecords));    
+    //alert(fetch);
+    offset = fetch;
+    RenderTmodelListBySearch('%', fetch, maxrecords, true);
+}
+
+
 function pagedown()
 {
     offset = $("#offset").text();
@@ -15,7 +42,7 @@ function pagedown()
         return;
     //alert(newoffset);
     if (newoffset != offset)
-        RenderTmodelListBySearch('%', newoffset, maxrecords);
+        RenderTmodelListBySearch('%', newoffset, maxrecords, false);
 }
 function pageup()
 {
@@ -29,16 +56,17 @@ function pageup()
         fetch = (parseInt(offset) + parseInt(maxrecords));    
     //alert(fetch);
     offset = fetch;
-    RenderTmodelListBySearch('%', fetch, maxrecords);
+    RenderTmodelListBySearch('%', fetch, maxrecords, false);
 }
+var selectedItem=null;
 
 //offset, maxrecords, keyword
-function RenderTmodelListBySearch(keyword1, offset1, maxrecords1)
+function RenderTmodelListBySearch(keyword1, offset1, maxrecords1, isForChooser)
 {
     var lang = $("#lang").text();
     $("#tmodellist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/tmodelsearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang,
+        url: 'ajax/tmodelsearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
         type:"GET",
         cache: false
     });
@@ -46,6 +74,9 @@ function RenderTmodelListBySearch(keyword1, offset1, maxrecords1)
     request.done(function(msg) {
         window.console && console.log('postback done ');                
         $("#tmodellist").html(msg);
+        $('.modalable').click(function(){
+            selectedItem =$(this).attr("id");
+        });
     //refresh();
     });
 

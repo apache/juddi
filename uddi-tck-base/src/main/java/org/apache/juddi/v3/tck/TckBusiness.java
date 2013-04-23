@@ -292,7 +292,6 @@ public class TckBusiness
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
 
-			
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
 			
