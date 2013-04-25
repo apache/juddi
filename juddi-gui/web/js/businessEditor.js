@@ -15,6 +15,46 @@
  *
  */
 
+
+function deleteBusinessByID(id)
+{
+            
+    var    url='ajax/deletebusiness.jsp?id=' + id;
+            
+    var postbackdata = new Array();
+    postbackdata.push({
+        name:"nonce", 
+        value: $("#nonce").val()
+    });
+    var request=   $.ajax({
+        url: url,
+        type:"POST",
+        //  data" + i18n_type + ": "html", 
+        cache: false, 
+        //  processData: false,f
+        data: postbackdata
+    });
+
+    request.done(function(msg) {
+        window.console && console.log('postback done '  + url);                
+        
+        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+        $("#resultBar").show();
+        $("#" + escapeJquerySelector(id)).remove();
+        
+    });
+
+    request.fail(function(jqXHR, textStatus) {
+        window.console && console.log('postback failed ' + url);                                
+        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus );
+        //$(".alert").alert();
+        $("#resultBar").show();
+        
+    });
+}
+
+
+
 function AddName()
 {
     currentNameEntries++;
@@ -248,8 +288,8 @@ function AddCategoryKeyReferenceGroup()
 var currentcatkeyrefgrpitems=0;
 function AddCategoryKeyReferenceGroupKeyRef(div)
 {
-     var i=currentcatkeyrefgrp;
-     currentcatkeyrefgrpitems++;
+    var i=currentcatkeyrefgrp;
+    currentcatkeyrefgrpitems++;
     var k=currentcatkeyrefgrpitems;
     
     $("<div id=\"" + div + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">"+

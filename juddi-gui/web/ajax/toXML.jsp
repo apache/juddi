@@ -2,7 +2,8 @@
     Document   : toXML
     Created on : Mar 14, 2013, 9:17:21 PM
     Author     : Alex O'Ree
---%><%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%><%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%><%@page import="org.apache.juddi.jaxb.EntityCreator"%><%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><?xml version="1.0" encoding="UTF-8" standalone="yes"?><%
+--%><%@page import="javax.xml.bind.JAXB"%><%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%><%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%><%@page import="org.apache.juddi.jaxb.EntityCreator"%><%@page import="org.apache.juddi.webconsole.hub.UddiHub"%><%@page import="org.apache.juddi.jaxb.PrintUDDI"%><%@page contentType="text/html" pageEncoding="UTF-8"%><%
+//<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     //org.apache.juddi.jaxb.PrintUDDI p = new PrintUDDI();
     UddiHub x = UddiHub.getInstance(application, session);
 
@@ -20,7 +21,8 @@
             j = x.GettModelDetailsAsObject(id);
         }
         if (j != null) {
-            out.write(JAXBMarshaller.marshallToString(j, JAXBMarshaller.PACKAGE_UDDIAPI));
+            JAXB.marshal(j, out);
+         //   out.write(JAXBMarshaller.marshallToString(j, JAXBMarshaller.PACKAGE_UDDIAPI));
             // out.write(EntityCreator.outputEntityToString(j, "org.apache.juddi.api_v3"));
         } else {
             out.write(ResourceLoader.GetResource(session, "items.unknown"));

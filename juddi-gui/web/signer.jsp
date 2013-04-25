@@ -72,6 +72,7 @@
                     if (itemtype == "tmodel") {
                         out.write("window.location=\"tmodelEditor.jsp?id=" + StringEscapeUtils.escapeJavaScript(id) + "\";");
                     }
+                 
                 %>
                             }, 5000);
                         });
@@ -127,8 +128,12 @@
                         if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
                         return OSName;
                     }
-                    //<a class="btn" href="javascript:go();">Go</a>
-                    //display:none  
+                    function getObjectType()
+                    {
+                        return "<%=StringEscapeUtils.escapeJavaScript(itemtype)%>";
+                    }
+                    //
+                    //display:none  <a class="btn" href="javascript:go();">Go</a>
             </script>
 
             <textarea name="data" rows="15" cols="80" id="data" style="">Loading....</textarea>

@@ -31,10 +31,17 @@ function safe_tags_replace(str) {
     return str.replace(/[&<>]/g, replaceTag);
 }
 
+function escapeJquerySelector(str)
+{
+    if (str)
+        return str.replace(/([ #;?&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1');
+    return str;
+}
+
   
 function Reedit()
 {
-   window.console && console.log('Reedit');                
+    window.console && console.log('Reedit');                
     $('.edit').editable(function(value, settings) { 
                 
         window.console && console.log(this);
@@ -102,7 +109,7 @@ function RefreshLoginPage()
 //source http://totaldev.com/content/escaping-characters-get-valid-jquery-id
 function jqSelector(str)
 {
-	return str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+    return str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 }
 
 function ShowServicesByBusinessKey(bizid)

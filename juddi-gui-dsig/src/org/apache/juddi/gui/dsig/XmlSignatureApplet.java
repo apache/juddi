@@ -7,6 +7,7 @@ package org.apache.juddi.gui.dsig;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -15,6 +16,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.xml.bind.JAXB;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Reference;
@@ -42,8 +45,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import netscape.javascript.JSObject;
-import org.w3c.dom.DOMConfiguration;
-import org.w3c.dom.DOMStringList;
+import org.apache.juddi.v3.client.crypto.DigSigUtil;
+import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.TModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -74,8 +80,6 @@ public class XmlSignatureApplet extends java.applet.Applet {
         setupCertificates();
     }
 
-    
-    
     private XMLSignatureFactory initXMLSigFactory() {
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance();
         return fac;
@@ -138,7 +142,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
         LSSerializer lsSerializer = domImplementation.createLSSerializer();
         lsSerializer.getDomConfig().setParameter("xml-declaration", false);
         //lsSerializer.getDomConfig().setParameter("xml-declaration", false);
-        
+
         return lsSerializer.writeToString(doc);
     }
     KeyStore keyStore = null;
@@ -164,7 +168,6 @@ public class XmlSignatureApplet extends java.applet.Applet {
             keyStore.load(null, null);
         } catch (Exception ex) {
             //JOptionPane.showMessageDialog(this, ex.getMessage());
-
         }
         //firefox keystore
         if (keyStore != null) {
@@ -214,8 +217,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
         jList1.setListData(certs);
-        if (!certs.isEmpty())
-        {
+        if (!certs.isEmpty()) {
             jList1.setSelectedIndex(0);
         }
     }
@@ -227,7 +229,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
         // Create the KeyInfo containing the X509Data.
         KeyInfoFactory kif = fac.getKeyInfoFactory();
         List<Object> x509Content = new ArrayList<Object>();
-        x509Content.add(cert.getSubjectX500Principal().getName());
+        //x509Content.add(cert.getSubjectX500Principal().getName());
         x509Content.add(cert);
         X509Data xd = kif.newX509Data(x509Content);
         KeyInfo ki = kif.newKeyInfo(Collections.singletonList(xd));
@@ -249,7 +251,6 @@ public class XmlSignatureApplet extends java.applet.Applet {
         }
     }
 
-    
     /**
      * This method is called from within the init() method to initialize the
      * form. WARNING: Do NOT modify this code. The content of this method is
@@ -279,30 +280,80 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
+
         JSObject window = JSObject.getWindow(this);
         Object object2 = window.call("getBrowserName", null);
         Object object1 = window.call("getOsName", null);
+        Object object3 = window.call("getObjectType", null);
         String browserName = (String) object2;
         String osName = (String) object2;
-
+        String objecttype = (String) object3;
 
         //get the xml
         String xml = (String) window.call("getXml", new Object[]{});
-        //sign it
-
-        String signedXml = "error!";;
-        try {
-            signedXml = this.sign(xml);
-        } catch (Exception ex) {
-            signedXml = ex.getMessage();
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        Object j = null;
+        StringReader sr = new StringReader(xml);
+        if (objecttype.equalsIgnoreCase("business")) {
+            try {
+                j = (BusinessEntity) JAXB.unmarshal(sr, BusinessEntity.class);
+            } catch (Exception ex) {
+            }
         }
+        if (objecttype.equalsIgnoreCase("service")) {
+            try {
+                j = (BusinessService) JAXB.unmarshal(sr, BusinessService.class);
+            } catch (Exception ex) {
+            }
+        }
+        if (objecttype.equalsIgnoreCase("binding")) {
+            try {
+                j = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
+            } catch (Exception ex) {
+            }
+        }
+        if (objecttype.equalsIgnoreCase("tmodel")) {
+            try {
+                j = (TModel) JAXB.unmarshal(sr, TModel.class);
+            } catch (Exception ex) {
+            }
+        }
+
+        String signedXml = "error!";
+        if (j != null) {
+            try {
+                //sign it
+                org.apache.juddi.v3.client.crypto.DigSigUtil ds = new DigSigUtil();
+                ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+                PrivateKey key = (PrivateKey) keyStore.getKey((String) jList1.getSelectedValue(), null);
+
+                Certificate publickey = keyStore.getCertificate((String) jList1.getSelectedValue());
+
+
+                j = ds.signUddiEntity(j, publickey, key);
+                ds.clear();
+                StringWriter sw = new StringWriter();
+                JAXB.marshal(j, sw);
+                signedXml = sw.toString();
+            } catch (Exception ex) {
+                Logger.getLogger(XmlSignatureApplet.class.getName()).log(Level.SEVERE, null, ex);
+                signedXml = ex.getMessage();
+            }
+        } else {
+            signedXml = "Unable to determine which type of object that we're signing";
+        }
+
+
+        /*
+         try {
+         signedXml = this.sign(xml);
+         } catch (Exception ex) {
+         signedXml = ex.getMessage();
+         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+         }*/
 
         //write it back to the web page
         window.call("writeXml", new Object[]{signedXml});
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;

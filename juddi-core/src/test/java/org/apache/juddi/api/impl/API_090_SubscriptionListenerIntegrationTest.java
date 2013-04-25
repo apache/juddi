@@ -55,6 +55,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 	private static String authInfoJoe = null;
 	private static SimpleSmtpServer mailServer;
 	private static Integer smtpPort = 25;
+	private static Integer httpPort = 80;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -70,13 +71,15 @@ public class API_090_SubscriptionListenerIntegrationTest
 		Registry.start();
 		try {
 			smtpPort = 9700 + new Random().nextInt(99);
+			httpPort = 9600 + new Random().nextInt(99);
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.host", "localhost");
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.port", String.valueOf(smtpPort));
 			System.setProperty(Property.DEFAULT_JUDDI_EMAIL_PREFIX + "mail.smtp.from", "jUDDI@example.org");
 			mailServer = SimpleSmtpServer.start(smtpPort);
 			//bring up the TCK HTTP SubscriptionListener
-			endPoint = Endpoint.publish("http://localhost:12345/tcksubscriptionlistener", new UDDISubscriptionListenerImpl());
-			
+			String httpEndpoint = "http://localhost:" + httpPort + "/tcksubscriptionlistener";
+			System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
+			endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
 			logger.debug("Getting auth tokens..");
 		
 			api010.saveJoePublisher();
@@ -86,7 +89,7 @@ public class API_090_SubscriptionListenerIntegrationTest
         	  
 	     } catch (Exception e) {
 	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
+				Assert.fail(e.getMessage());
 	     } 
 	}
 	
@@ -98,7 +101,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			//Saving the binding template that will be called by the server for a subscription event
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the HTTP Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the HTTP Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"
@@ -169,7 +172,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			System.out.println("Subject:" + email.getHeaderValue("Subject"));
 			System.out.println("Body:" + email.getBody());
 			
-			if (!email.getBody().contains("<name xml:lang=\"en\">Service One</name>")) {
+			if (!email.getBody().contains("Service One")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
 			
@@ -194,7 +197,7 @@ public class API_090_SubscriptionListenerIntegrationTest
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			tckBusinessService.saveJoePublisherService(authInfoJoe);
 			//Saving the Listener Service
-			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, 0);
+			tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
 			//Saving the Subscription
 			tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_XML);
             //Changing the service we subscribed to "JoePublisherService"

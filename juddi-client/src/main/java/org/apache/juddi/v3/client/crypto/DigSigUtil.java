@@ -232,7 +232,9 @@ public final class DigSigUtil {
 
     /**
      * Digital signs a UDDI entity, such as a business, service, tmodel or
-     * binding template
+     * binding template using the map to provide certificate key stores and
+     * credentials<br><br> The UDDI entity MUST support XML Digital Signatures
+     * (tModel, Business, Service, Binding Template)
      *
      * @param <T> Any UDDI entity that supports digital signatures
      * @param jaxbObj
@@ -292,6 +294,35 @@ public final class DigSigUtil {
     }
 
     /**
+     * Digital signs a UDDI entity, such as a business, service, tmodel or
+     * binding template, provided you've already done the legwork to provide the
+     * signing keys <br><br> The UDDI entity MUST support XML Digital Signatures
+     * (tModel, Business, Service, Binding Template)
+     *
+     * @param <T>
+     * @param jaxbObj
+     * @param publicKey
+     * @param privateKey
+     * @return
+     */
+    public <T> T signUddiEntity(T jaxbObj, Certificate publicKey, PrivateKey privateKey) {
+        DOMResult domResult = new DOMResult();
+        JAXB.marshal(jaxbObj, domResult);
+        Document doc = ((Document) domResult.getNode());
+        Element docElement = doc.getDocumentElement();
+        try {
+
+            //PublicKey validatingKey = origCert.getPublicKey();
+            this.signDOM(docElement, privateKey, publicKey);
+            DOMSource domSource = new DOMSource(doc);
+            T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException("Signature failure due to: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Serializes a JAXB object and prints to stdout
      *
      * @param obj
@@ -300,7 +331,18 @@ public final class DigSigUtil {
         StringWriter sw = new StringWriter();
         JAXB.marshal(obj, sw);
         System.out.println(sw.toString());
+    }
 
+    /**
+     * Serializes a JAXB object and prints to stdout
+     *
+     * @param obj
+     * @return
+     */
+    public static String JAXB_ToString(Object obj) {
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(obj, sw);
+        return (sw.toString());
     }
 
     /**
@@ -385,12 +427,13 @@ public final class DigSigUtil {
 
     /**
      * Verifies the signature on an enveloped digital signature on a UDDI
-     * entity, such as a business, service, tmodel or binding template.
-     *
-     * It is expect that either the public key of the signing certificate is
+     * entity, such as a business, service, tmodel or binding template. <br><Br>
+     * It is expected that either the public key of the signing certificate is
      * included within the signature keyinfo section OR that sufficient
      * information is provided in the signature to reference a public key
-     * located within the Trust Store provided
+     * located within the Trust Store provided<br><Br> Optionally, this function
+     * also validate the signing certificate using the options provided to the
+     * configuration map.
      *
      * @param obj an enveloped signed JAXB object
      * @param OutErrorMessage a human readable error message explaining the
@@ -692,11 +735,11 @@ public final class DigSigUtil {
         {
             x509Content = new ArrayList<Object>();
             x509Content.add(cert);
-            x509Content.add(cert.getSubjectX500Principal().getName());
+            //x509Content.add(cert.getSubjectX500Principal().getName());
             X509Data xd = kif.newX509Data(x509Content);
             data.add(xd);
         }
-        x509Content.add(cert);
+        //x509Content.add(cert);
 
 
         KeyInfo ki = kif.newKeyInfo(data);
@@ -720,12 +763,13 @@ public final class DigSigUtil {
 
     /**
      * searches local keystores for a referenced signing certificate
+     *
      * @param childNodes
      * @return null or the public key of a signing certificate
      */
     private X509Certificate FindCert(NodeList childNodes) {
 
-
+        //TODO implement
         return null;
     }
 

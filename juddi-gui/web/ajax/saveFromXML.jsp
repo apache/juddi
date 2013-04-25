@@ -59,7 +59,7 @@
                     TModel be = (TModel) JAXB.unmarshal(sr, TModel.class);
                     //JAXB.marshal(be, System.out);
 
-
+/*
                     org.apache.juddi.v3.client.crypto.DigSigUtil dsig = new DigSigUtil();
                     UddiHub hub = UddiHub.getInstance(application, session);
                     Properties config2 = hub.GetRawConfiguration();
@@ -74,8 +74,8 @@
                     boolean success = dsig.verifySignedUddiEntity(be, msg2);
                     if (!success) {
                         msg = "WARNING! unable to validate signature!" + msg2.get();
-                    }
-                    msg += (x.SaveTModel(be));
+                    }*/
+                    msg = (x.SaveTModel(be));
                 } else {
                     msg = (ResourceLoader.GetResource(session, "errors.unknownentity"));
                 }

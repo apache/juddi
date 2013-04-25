@@ -59,7 +59,7 @@
                     <div id="collapseOne" class="accordion-body collapse in">
                         <div class="accordion-inner">
                             <div class="btn-group" id="alertType" data-toggle="buttons-radio">
-                                <button onclick="return toggleType1();" value="specificItem" class="btn" >Changes to a specific item</button>
+                                <button onclick="return toggleType1();" value="specificItem" class="btn active" >Changes to a specific item</button>
                                 <button onclick="return toggleType2();" value="searchResults" class="btn">Changes to search results, such as a new item</button>
                             </div>
                         </div>

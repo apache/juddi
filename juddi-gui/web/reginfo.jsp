@@ -25,22 +25,22 @@
         <div class="span12">
             <%=ResourceLoader.GetResource(session, "navbar.create.mybiz.content")%>
             <br><Br>
-            <%
+            <%                
                 UddiHub x = UddiHub.getInstance(application, session);
                 RegisteredInfo info = x.GetNodeInformation();
                 if (info == null || info.getBusinessInfos() == null || info.getBusinessInfos().getBusinessInfo().isEmpty()) {
                     out.write(ResourceLoader.GetResource(session, "errors.nodatareturned"));
                 } else {
                     //TODO i18n
-%>
+                    %>
 
             <table class="table table-hover">
                 <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th><th><%=ResourceLoader.GetResource(session, "items.name")%></th>
                     <th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
 
-                <%
+                <%                    
                     for (int i = 0; i < info.getBusinessInfos().getBusinessInfo().size(); i++) {
-                        out.write("<tr><td>");
+                        out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey()) + "\"><td>");
                         out.write("<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8") + "\">");
                         out.write(StringEscapeUtils.escapeHtml(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey()));
                         out.write(" <i class=\"icon-edit icon-large\"></i></a>");
@@ -56,7 +56,7 @@
                     <ul class="dropdown-menu">
                         <!-- dropdown menu links -->
                         <li>
-                            <a class="btn btn-danger " href="javascript:deleteBusiness();"><%=ResourceLoader.GetResource(session, "actions.delete")%></a></li>
+                            <a class="btn btn-danger " href="javascript:deleteBusinessByID('<%=URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8")%>');"><%=ResourceLoader.GetResource(session, "actions.delete")%></a></li>
                         <li><a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8")%>&type=business"><%=ResourceLoader.GetResource(session, "actions.sign")%></a></li>
                         <li><a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><%=ResourceLoader.GetResource(session, "actions.subscribe")%></a></li>
                         <li><a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><%=ResourceLoader.GetResource(session, "actions.transfer")%></a></li>
@@ -70,7 +70,7 @@
                     }
                 %>
             </table>
-            <%
+            <%                    
                 }
             %>
         </div>
@@ -92,6 +92,10 @@
     </div>
     <script type="text/javascript" src="js/businessEditor.js"></script>
     <script type="text/javascript">
+        
+                       
+    
+        
         function ViewAsXML(bizid)
         {
             $.get("ajax/toXML.jsp?id=" + bizid + "&type=business", function(data){
