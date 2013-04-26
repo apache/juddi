@@ -10,7 +10,7 @@ this page is meant to be included via jsp:include
 <div class="modal hide fade" id="tmodelChooser">
     <div class="modal-header">
         <a href="javascript:$('#tmodelChooser').modal('hide');" class="close" data-dismiss="modal" aria-hidden="true">&times;</a>
-        <h3>tModel Chooser</h3>
+        <h3><%=ResourceLoader.GetResource(session, "items.tmodel.chooser")%></h3>
     </div>
     <div class="modal-body">
 
@@ -19,9 +19,9 @@ this page is meant to be included via jsp:include
         <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
         <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
 
-        <a href="javascript:pagedownChooser();"><i class="icon-circle-arrow-left disabled icon-large" id="pageup"></i></a>
+        <a href="javascript:pagedownChooserTmodel();"><i class="icon-circle-arrow-left disabled icon-large" id="pageup"></i></a>
         <a href="javascript:reload();"><i class="icon-refresh icon-large"></i></a>
-        <a href="javascript:pageupChooser();"><i class="icon-circle-arrow-right disabled icon-large" id="pagedown"></i></a>
+        <a href="javascript:pageupChooserTmodel();"><i class="icon-circle-arrow-right disabled icon-large" id="pagedown"></i></a>
 
         <div id="tmodellist">
             <img src="img/bigrollergreen.gif" title="Loading"/>
@@ -46,8 +46,8 @@ this page is meant to be included via jsp:include
 
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-        <a href="javascript:$('#tmodelChooser').modal('hide');" class="btn btn-primary" data-dismiss="modal">Select</a>
+        <a href="#" class="btn" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.cancel")%></a>
+        <a href="javascript:$('#tmodelChooser').modal('hide');" class="btn btn-primary" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.select")%></a>
     </div>
 </div>
 <%

@@ -620,9 +620,7 @@
                             $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data){
                                 window.console && console.log('asXml success');                
                   
-                                $("#viewAsXmlContent").html(safe_tags_replace(data) + "<br>" +
-                                    "<a href=\"ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business\" class=\"btn btn-primary\">Popout</a>  " 
-                            );
+                                $("#viewAsXmlContent").html(safe_tags_replace(data));
                                 $( "#viewAsXml" ).modal('show');
                             });
                        
@@ -667,10 +665,15 @@
         </div>
         <div class="modal-footer">
             <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>&type=business" class="btn btn-primary" target="_blank">Popout</a> 
-            <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+            <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
-
+    <script type="text/javascript">
+        function closeXmlPop(modaldiv)
+        {
+           $('#' + modaldiv).modal('hide');
+        }
+    </script>
     <div class="modal hide fade" id="addSubscriptionModal">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -681,7 +684,7 @@
         </div>
         <div class="modal-footer">
 
-            <a href="javascript:$('#addPublisherAssertion').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+            <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
     <%

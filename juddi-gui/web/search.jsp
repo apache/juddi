@@ -220,4 +220,5 @@
     </script>
     
     <%@include file="tmodelChooser.jsp" %>
+    <%@include file="bindingChooser.jsp" %>
     <%@include file="header-bottom.jsp" %>

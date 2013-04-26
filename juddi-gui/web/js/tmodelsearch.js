@@ -6,7 +6,7 @@ var totalrecords=0;
 
 RenderTmodelListBySearch('%', offset, maxrecords);
 
-function pagedownChooser()
+function pagedownChooserTmodel()
 {
     offset = $("#offset").text();
     //alert(offset);
@@ -17,7 +17,7 @@ function pagedownChooser()
     if (newoffset != offset)
         RenderTmodelListBySearch('%', newoffset, maxrecords, true);
 }
-function pageupChooser()
+function pageupChooserTmodel()
 {
     offset = $("#offset").text();
     //alert(offset);

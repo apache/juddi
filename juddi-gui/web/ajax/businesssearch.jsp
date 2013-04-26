@@ -45,7 +45,7 @@
     } catch (Exception ex) {
     }
 //public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword) {
-    PagableContainer ret= (x.GetBusinessListAsHtml(offset, maxrecords, keyword, lang));
+    PagableContainer ret= (x.GetBusinessListAsHtml(offset, maxrecords, keyword, lang, false));
     out.write(ret.renderedHtml);
 %>
 <script type="text/javascript">

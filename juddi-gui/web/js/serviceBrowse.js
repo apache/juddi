@@ -25,7 +25,7 @@ function refreshServiceList()
 }
 RenderServiceListBySearch('%', offset, maxrecords);
 //offset += maxrecords;
-function pagedown()
+function pagedownService()
 {
     offset = $("#offset").text();
     //alert(offset);
@@ -36,7 +36,7 @@ function pagedown()
     if (newoffset != offset)
         RenderServiceListBySearch('%', newoffset, maxrecords);
 }
-function pageup()
+function pageupService()
 {
     offset = $("#offset").text();
     //alert(offset);

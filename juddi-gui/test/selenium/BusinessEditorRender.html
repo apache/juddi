@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/UDDIBrowser" />
+<title>BusinessEditor render</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">BusinessEditor render</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/UDDIBrowser/businessBrowse.jsp</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Discover</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Businesses</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=An Apache jUDDI Node</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>View as XML</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Operational Info</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=View as XML</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>businessEntity</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Close')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Signatures</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//a[contains(text(),'Services')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Identifiers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=General</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=i.icon-plus-sign.icon-large</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=Name1Value</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=value</td>
+	<td>new name</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=Name0Lang</td>
+	<td>Click to edit</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=Name0Lang</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=value</td>
+	<td>en</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=button[type=&quot;submit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>id=Name1Lang</td>
+	<td>en</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=Name1Value</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

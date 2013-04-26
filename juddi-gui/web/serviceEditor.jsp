@@ -340,7 +340,7 @@
                                         out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
                                     }
                                     out.write("</div>");    //end of binding template key section
-%>          
+                            %>          
                             <br>
                             <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');">
                                 <i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.bindingtemplate.description.add")%> <Br>
@@ -363,7 +363,7 @@
                                     }
 
                                     //1:1
-%>
+                                %>
                             </div>
                             <b><%=ResourceLoader.GetResource(session, "items.accesspoint")%></b> - <%=ResourceLoader.GetResource(session, "items.accesspoint.description")%><br>
                             <%
@@ -403,7 +403,7 @@
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
                                         //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
                                         //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
-%>
+                                    %>
                                     <br>
                                     <%
 
@@ -484,7 +484,7 @@
                                 </div>
 
                                 <%    } //end of instance details
-%>
+                                %>
 
                                 <%
                                     }
@@ -551,7 +551,7 @@
                         <%
 
                             } //end of binding templates loop
-%>
+                        %>
                     </div> <!-- binding template container-->
 
 
@@ -685,13 +685,19 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>As XML</h3>
     </div>
+    <script type="text/javascript">
+        function closeXmlPop(modaldiv)
+        {
+            $('#' + modaldiv).modal('hide');
+        }
+    </script>
     <div class="modal-body" id="viewAsXmlContent">
 
 
     </div>
     <div class="modal-footer">
         <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service" class="btn btn-primary" target="_blank">Popout</a> 
-        <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
     </div>
 </div>
 <%

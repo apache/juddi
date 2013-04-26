@@ -211,7 +211,7 @@
                             out.write("</div>");//end this block
                         }
                         out.write("</div>");//end of overview
-                    %>
+%>
 
                 </div>
 
@@ -230,12 +230,12 @@
                                 out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
                                 out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
                                 out.write(//"<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
-                                          "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i  + PostBackConstants.VALUE +"\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
+                                        "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i  + PostBackConstants.KEYNAME+ "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyName()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ": &nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i +   PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.KEYVALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getKeyValue()) + "</div>");
                                 out.write("</div>");
                             }
                         %>
@@ -379,9 +379,15 @@
 
 
         </div>
+        <script type="text/javascript">
+            function closeXmlPop(modaldiv)
+            {
+                $('#' + modaldiv).modal('hide');
+            }
+        </script>
         <div class="modal-footer">
             <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel" class="btn btn-primary" target="_blank">Popout</a> 
-            <a href="javascript:$('#viewAsXml').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+            <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
     <%

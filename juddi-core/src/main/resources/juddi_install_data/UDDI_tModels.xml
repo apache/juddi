@@ -411,6 +411,78 @@
             <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	
+	    <tModel tModelKey="uddi:uddi.org:transport:amqp">
+        <name>uddi-org:amqp</name>
+        <description> A Web service that uses the AMQP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+               http://www.amqp.org/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+
+	
+		    <tModel tModelKey="uddi:uddi.org:transport:omgdds">
+        <name>uddi-org:omgdds</name>
+        <description> A Web service that uses the OMG DDS transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://portals.omg.org/dds/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:transport:udp">
+        <name>uddi-org:udp</name>
+        <description> A Web service that uses the UDP transport</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://docs.oasis-open.org/ws-dd/soapoverudp/1.1/os/wsdd-soapoverudp-1.1-spec-os.html
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:transport:jms">
+        <name>uddi-org:jms</name>
+        <description> A Web service that uses the JMS API</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+              http://docs.oasis-open.org/ws-dd/soapoverudp/1.1/os/wsdd-soapoverudp-1.1-spec-os.html
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:transport" keyValue="transport" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:protocol:rest">
+        <name>uddi-org:protocol:rest</name>
+        <description xml:lang="en">A tModel that represents the Representational State Transfer architectural style</description>
+        <overviewDoc>
+            <overviewURL>
+               http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
+	
+	
     <tModel tModelKey="uddi:uddi.org:findqualifier:approximatematch">
         <name>uddi-org:approximateMatch:SQL99
         </name>

@@ -266,7 +266,8 @@ public class UddiHub {
     //private JUDDIApiPortType juddi = null;
     private String token = null;
 
-    public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang) {
+    public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang, boolean isChooser) {
+        //TODO chooser
         PagableContainer ret = new PagableContainer();
         ret.offset = offset;
         ret.displaycount = 0;
@@ -775,7 +776,8 @@ public class UddiHub {
         HTTP_CLIENT_CERT
     }
 
-    public PagableContainer SearchForServices(String keyword, String lang, int maxrecords, int offset) {
+    public PagableContainer SearchForServices(String keyword, String lang, int maxrecords, int offset, boolean isChooser) {
+        //TODO chooser
         PagableContainer ret = new PagableContainer();
         ret.displaycount = 0;
         ret.offset = offset;
@@ -1016,9 +1018,9 @@ public class UddiHub {
             } else {
                 if (!isChooser) {
                     ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session);
-                }
-                else
+                } else {
                     ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
+                }
 
             }
         } catch (Exception ex) {
@@ -2405,6 +2407,131 @@ public class UddiHub {
             }
         }
         return sb.toString();
+    }
+
+    public PagableContainer SearchForBinding(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
+        PagableContainer ret = new PagableContainer();
+        ret.displaycount = 0;
+        ret.offset = offset;
+        ret.totalrecords = 0;
+        try {
+
+            FindService fs = new FindService();
+            fs.setAuthInfo(GetToken());
+            fs.setMaxRows(maxrecords);
+            fs.setListHead(offset);
+            Name n = new Name();
+            if (lang == null || lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
+                n.setLang(null);
+            } else {
+                n.setLang(lang);
+            }
+            n.setValue(keyword);
+            fs.getName().add(n);
+            fs.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
+            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+            ServiceList findService = null;//inquiry.findService(fs);
+            try {
+                findService = inquiry.findService(fs);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        fs.setAuthInfo(GetToken());
+                        findService = inquiry.findService(fs);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+
+            if (findService == null || findService.getServiceInfos() == null) {
+                ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
+                return ret;
+            }
+            ret.displaycount = findService.getListDescription().getIncludeCount();
+            ret.totalrecords = findService.getListDescription().getActualCount();
+
+            GetServiceDetail gs = new GetServiceDetail();
+            gs.setAuthInfo(GetToken());
+            for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
+                gs.getServiceKey().add(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey());
+            }
+            ServiceDetail serviceDetail = null;
+            try {
+                serviceDetail = inquiry.getServiceDetail(gs);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        fs.setAuthInfo(GetToken());
+                        serviceDetail = inquiry.getServiceDetail(gs);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+            if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {
+                ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
+                return ret;
+            }
+
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("<table class=\"table\"><tr><th>").
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.business")).
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.service")).
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.bindingtemplate.key")).
+                    append("</th><th>").
+                    append(ResourceLoader.GetResource(session, "items.accesspoint.value")).
+                    append("</th></tr>");
+
+            for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
+                //   System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size());
+                if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {
+                    for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
+                        //System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue());
+                        sb.append("<tr><td><input type=\"checkbox\" class=\"modalable\" id=\"").
+                                append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
+                                append("\">").
+                                append("</td><td>").
+                                append("<a href=\"businessEditor2.jsp?id=").
+                                append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())).
+                                append("\">").
+                                append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()))).
+                                append("</a>").
+                                append("</td><td>").append("<a href=\"serviceEditor.jsp?id=").
+                                append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
+                                append("\" title=\"").
+                                append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getServiceKey())).
+                                append("\">").
+                                append(Printers.ListNamesToString(serviceDetail.getBusinessService().get(i).getName())).
+                                append("</a>").
+                                append("</td><td>").
+                                append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
+                                append("</td><td>");
+                        if (serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint() != null) {
+                            sb.append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue()));
+                        }
+                        sb.append("</td></tr>");
+                    }
+                }
+            }
+
+            sb.append("</table>");
+            ret.renderedHtml = sb.toString();
+            return ret;
+        } catch (Exception ex) {
+            ret.renderedHtml = HandleException(ex);
+        }
+        return ret;
+
     }
 
     public String TransferCustody() {
