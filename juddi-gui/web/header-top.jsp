@@ -53,10 +53,11 @@
         <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
         <link href="css/bootstrap-timepicker.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.2.custom.min.css">
         <!--[if IE 7]>
         <link rel="stylesheet" href="css/font-awesome-ie7.min.css">
         <![endif]-->
-        
+
         <link rel="shortcut icon" href="favicon.ico" />
         <style type="text/css">
             body {
@@ -80,6 +81,7 @@
         <script src="js/bootstrap-datetimepicker.min.js"></script>
         <script src="js/bootstrap-timepicker.min.js"></script>
         <script src="js/jquery.jeditable.js"></script>
+        <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
         <script src="js/main.js"></script>
     </head>
 
@@ -101,10 +103,21 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="brand" href="index.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
+                        <a class="brand" href="home.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li ><a href="home.jsp"><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li class="dropdown"><a href="home.jsp" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.home")%><b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
+                                        <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
+                                        <li><a href="createSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
+                                        <li><a href="subscriptionFeed.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></a></li>
+                                    </ul>
+
+
+                                </li>
                                 <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.discover")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.businesses.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.businesses")%></a></li>
@@ -125,26 +138,6 @@
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.service.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.service")%></a></li>
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
-                                        <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
-                                        <%
-                                            //  if (hub.IsJuddiRegistry()) {
-
-                                            //<li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.publisher.tooltip")
-
-//"><%=ResourceLoader.GetResource(session, "navbar.create.publisher")</a></li>
-
-
-                                            //                                      }
-                                        %>
-                                    </ul>
-                                </li>
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%><b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
-                                        <li><a href="createSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
-                                        <li><a href="subscriptionFeed.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></a></li>
                                     </ul>
                                 </li>
 

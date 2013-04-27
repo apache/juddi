@@ -102,7 +102,7 @@
                 window.console && console.log('asXml success');                
                   
                 $("#viewAsXmlContent").html(
-                "<a href=\"ajax/toXML.jsp?id=" + bizid + "&type=service\" class=\"btn btn-primary\">Popout</a>  " 
+                "<a href=\"ajax/toXML.jsp?id=" + bizid + "&type=business\" class=\"btn btn-primary\">Popout</a>  " 
                     +safe_tags_replace(data) + "<br>" 
             );
                 $( "#viewAsXml" ).modal('show');

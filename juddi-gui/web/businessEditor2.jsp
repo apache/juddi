@@ -97,7 +97,7 @@
 
                     <li><a href="#identifiers" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.identifiers")%></a></li>
                     <li><a href="#services" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.services")%></a></li>
-                    <li><a href="#signatures" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
+                    <li><a href="#signatures" id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
 
                     <li><a href="#opinfo" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.opinfo")%></a></li>
                     <li><a href="#relations" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.relatedbusinesses")%></a></li>
@@ -509,6 +509,7 @@
                     <div class="tab-pane" id="signatures"><b><%=ResourceLoader.GetResource(session, "items.dsigs")%></b>
                         <br>
                         <%
+                            //icon-exclamation-sign
                             if (bd.getSignature().isEmpty()) {
                                 out.write(ResourceLoader.GetResource(session, "items.signed.not"));
                             } else {
@@ -528,6 +529,14 @@
                             <script type="text/javascript">
                                 $.get("ajax/validateSignature.jsp?type=business&id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data){
                                     $("#digsig<%=k%>").html(data);
+                                    if (data.indexOf("invalid") !== -1 )
+                                    {
+                                        $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
+                                    }
+                                    else
+                                    {
+                                        $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
+                                    }
                                 } )
                             </script>
                             <%
@@ -603,7 +612,7 @@
                 <a class="btn btn-danger " href="javascript:deleteBusiness();"><i class="icon-remove-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                 <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                 <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-                <a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+                <a class="btn btn-warning "  href="transfer.jsp?biz=<%=URLEncoder.encode(bizid, "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                 <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
                 <%
                     }
@@ -671,7 +680,7 @@
     <script type="text/javascript">
         function closeXmlPop(modaldiv)
         {
-           $('#' + modaldiv).modal('hide');
+            $('#' + modaldiv).modal('hide');
         }
     </script>
     <div class="modal hide fade" id="addSubscriptionModal">

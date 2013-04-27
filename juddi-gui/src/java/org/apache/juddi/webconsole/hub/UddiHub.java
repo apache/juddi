@@ -272,7 +272,6 @@ public class UddiHub {
         ret.offset = offset;
         ret.displaycount = 0;
         ret.totalrecords = 0;
-        StringBuilder sb = new StringBuilder();
 
         try {
             FindBusiness fb = new FindBusiness();
@@ -302,49 +301,101 @@ public class UddiHub {
                 }
             }
             if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
-                sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
+                ret.renderedHtml = (ResourceLoader.GetResource(session, "errors.nodatareturned"));
             } else {
                 ret.displaycount = findBusiness.getListDescription().getIncludeCount();
                 ret.offset = findBusiness.getListDescription().getListHead();
                 ret.totalrecords = findBusiness.getListDescription().getActualCount();
-                sb.append("<table class=\"table table-hover\"<tr><th>").
-                        append(ResourceLoader.GetResource(session, "items.name")).
-                        append("</th><th>").
-                        append(ResourceLoader.GetResource(session, "items.service")).
-                        append("</th></tr>");
-                for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
-                    sb.append("<tr><td><a title=\"").
-                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("\"  href=\"businessEditor2.jsp?id=").
-                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("\">").
-                            append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
-                            append("</a></td><td>").
-                            append("<a class=\"btn btn-primary\" href=\"javascript:ShowServicesByBusinessKey('").
-                            append(StringEscapeUtils.escapeJavaScript(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("');\">");
-
-                    if (findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos() == null) {
-                        sb.append("0");
-                    } else {
-                        sb.append("Show ").append(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size());
-                    }
-                    sb.append("</a><a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
-                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a></td></tr>");
-
-                    sb.append("<tr><td colspan=3><div id=\"").
-                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                            append("\"></div></td></tr>");
-                }
-                sb.append("</table>");
+                ret.renderedHtml = Printers.BusinessListAsTable(findBusiness, session);
             }
 
         } catch (Exception ex) {
-            sb.append(HandleException(ex));
+            ret.renderedHtml = (HandleException(ex));
         }
-        ret.renderedHtml = sb.toString();
+
         return ret;
+    }
+
+    /**
+     * The get_registeredInfo API call is used to get an abbreviated list of all
+     * businessEntity and tModel data that are controlled by a publisher. When
+     * the registry distinguishes between publishers, this is the individual
+     * associated with the credentials passed in the authInfo element. This
+     * returned information is intended, for example, for driving tools that
+     * display lists of registered information and then provide drill-down
+     * features. This is the recommended API to use after a network problem
+     * results in an unknown status of saved information.
+     *
+     * @return
+     */
+    public String GetMyTransferableKeys(boolean businesses, boolean tModels) {
+
+        StringBuilder sb = new StringBuilder();
+
+
+        RegisteredInfo findBusiness = null;
+        try {
+            GetRegisteredInfo r = new GetRegisteredInfo();
+            r.setAuthInfo(GetToken());
+            if (r.getAuthInfo() == null) {
+                return null;
+            }
+            r.setInfoSelection(InfoSelection.ALL);
+
+            try {
+                findBusiness = publish.getRegisteredInfo(r);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        r.setAuthInfo(GetToken());
+                        findBusiness = publish.getRegisteredInfo(r);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+
+
+        if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
+            return (ResourceLoader.GetResource(session, "errors.nodatareturned"));
+
+        } else {
+            if (findBusiness.getBusinessInfos() != null && businesses) {
+                sb.append("<select id=\"businesslist\" multiple=\"multiple\" size=\"10\">");
+                for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
+                    sb.append("<option class=\"transferable\" id=\"").
+                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                            append("\" title=\"").
+                            append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                            append("\">").
+                            append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
+                            append("</option>");
+                }
+                sb.append("</select>");
+            }
+            if (findBusiness.getTModelInfos() != null && tModels) {
+                sb.append("<select id=\"tmodellist\" multiple=\"multiple\" size=\"10\">");
+                for (int i = 0; i < findBusiness.getTModelInfos().getTModelInfo().size(); i++) {
+                    sb.append("<option  class=\"transferable\" id=\"").
+                            append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
+                            append("\" title=\"").
+                            append(StringEscapeUtils.escapeHtml(findBusiness.getTModelInfos().getTModelInfo().get(i).getTModelKey())).
+                            append("\">").
+                            append(StringEscapeUtils.escapeHtml((findBusiness.getTModelInfos().getTModelInfo().get(i).getName().getValue()))).
+                            append("</option>");
+                }
+                sb.append("</select>");
+            }
+
+            return sb.toString();
+        }
+
     }
 
     public String GetServiceDetailAsHtml(String serviceid) {
@@ -2060,6 +2111,9 @@ public class UddiHub {
         try {
             GetRegisteredInfo r = new GetRegisteredInfo();
             r.setAuthInfo(GetToken());
+            if (r.getAuthInfo() == null) {
+                return null;
+            }
             r.setInfoSelection(InfoSelection.ALL);
             RegisteredInfo registeredInfo = null;
             try {
@@ -2534,7 +2588,52 @@ public class UddiHub {
 
     }
 
-    public String TransferCustody() {
+    /**
+     *
+     *
+     * authInfo: This OPTIONAL argument is an element that contains an
+     * authentication token. Authentication tokens are obtained using the
+     * get_authToken API call or through some other means external to this
+     * specification, and represent the identity of the publisher at a UDDI
+     * node.
+     *
+     * · transferToken: This is a known transferToken obtained by a publisher at
+     * the node where the get_transferToken API was invoked.
+     *
+     * · keyBag: One or more uddiKeys associated either with businessEntity or
+     * tModel entities owned by the publisher that were to be transferred to
+     * some other publisher and/or node in the registry as the result of
+     * invocation of get_transferToken. At least one businessKey or tModelKey
+     * must be provided in a keyBag.
+     *
+     * @param keys
+     * @param transferTo
+     * @param outExpires
+     * @param outToken
+     * @return
+     */
+    public String GetCustodyTransferToken(List<String> keys, Holder<String> transferTo, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
+
+        org.uddi.custody_v3.KeyBag kb = new org.uddi.custody_v3.KeyBag();
+        kb.getKey().addAll(keys);
+        try {
+            try {
+                custody.getTransferToken(GetToken(), kb, transferTo, outExpires, outToken);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        custody.getTransferToken(GetToken(), kb, transferTo, outExpires, outToken);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+
+        }
         return null;
     }
 }

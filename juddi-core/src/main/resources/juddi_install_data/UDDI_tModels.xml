@@ -101,7 +101,7 @@
         </categoryBag>
     </tModel>
     <tModel tModelKey="uddi:uddi.org:protocol:keygenerator" xmlns="urn:uddi-org:api_v3">
-        <name>uddi-org: protocol:keyGenerator</name>
+        <name>uddi-org:protocol:keyGenerator</name>
         <description> Key Generator for UDDI Protocol tModels </description>
         <overviewDoc>
             <overviewURL useType="text">
@@ -981,6 +981,22 @@
             <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	
+	 <tModel tModelKey="uddi:uddi.org:protocol:soap12">
+        <name>uddi-org:protocol:soap12</name>
+        <description xml:lang="en">A tModel that represents the SOAP 1.2 protocol</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v2.htm#soap
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:protocol" keyValue="protocol" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
     <!-- 6. HTTP Protocol tModel -->
     <tModel tModelKey="uddi:uddi.org:protocol:http">
         <name>uddi-org:protocol:http</name>

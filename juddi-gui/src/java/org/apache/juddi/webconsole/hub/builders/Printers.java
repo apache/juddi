@@ -266,4 +266,40 @@ public class Printers {
         sb.append("</table>");
         return sb.toString();
     }
+
+    public static String BusinessListAsTable(BusinessList findBusiness, HttpSession session) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table class=\"table table-hover\"<tr><th>").
+                append(ResourceLoader.GetResource(session, "items.name")).
+                append("</th><th>").
+                append(ResourceLoader.GetResource(session, "items.service")).
+                append("</th></tr>");
+        for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
+            sb.append("<tr><td><a title=\"").
+                    append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                    append("\"  href=\"businessEditor2.jsp?id=").
+                    append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                    append("\">").
+                    append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getName()))).
+                    append("</a></td><td>").
+                    append("<a class=\"btn btn-primary\" href=\"javascript:ShowServicesByBusinessKey('").
+                    append(StringEscapeUtils.escapeJavaScript(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                    append("');\">");
+
+            if (findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos() == null) {
+                sb.append("0");
+            } else {
+                sb.append("Show ").append(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size());
+            }
+            sb.append("</a><a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
+                    append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                    append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a></td></tr>");
+
+            sb.append("<tr><td colspan=3><div id=\"").
+                    append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                    append("\"></div></td></tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
 }

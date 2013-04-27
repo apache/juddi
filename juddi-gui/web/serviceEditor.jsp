@@ -168,7 +168,7 @@
 
                     <li><a href="#bindingtemplates" ><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></a></li>
 
-                    <li><a href="#signatures" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
+                    <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
 
                     <li><a href="#opinfo" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.opinfo")%></a></li>
                 </ul>
@@ -340,7 +340,7 @@
                                         out.write(StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()));
                                     }
                                     out.write("</div>");    //end of binding template key section
-                            %>          
+%>          
                             <br>
                             <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.DESCRIPTION%>');">
                                 <i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "items.bindingtemplate.description.add")%> <Br>
@@ -363,7 +363,7 @@
                                     }
 
                                     //1:1
-                                %>
+%>
                             </div>
                             <b><%=ResourceLoader.GetResource(session, "items.accesspoint")%></b> - <%=ResourceLoader.GetResource(session, "items.accesspoint.description")%><br>
                             <%
@@ -403,7 +403,7 @@
                                                 + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.KEYNAME + "\">" + StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey()) + "</div>");
                                         //  out.write("<div style=\"float:left\"><span title=\"Instance Params\">Value</span>:&nbsp;</div>"
                                         //          + "<div class=\"edit\" id=\"" + PostBackConstants.BINDINGTEMPLATE + i + PostBackConstants.TMODELINSTANCE + k + PostBackConstants.VALUE + "\">" + ((bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) ? StringEscapeUtils.escapeHtml(bd.getBindingTemplates().getBindingTemplate().get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms()) : "") + "</div>");
-                                    %>
+%>
                                     <br>
                                     <%
 
@@ -484,7 +484,7 @@
                                 </div>
 
                                 <%    } //end of instance details
-                                %>
+%>
 
                                 <%
                                     }
@@ -551,7 +551,7 @@
                         <%
 
                             } //end of binding templates loop
-                        %>
+%>
                     </div> <!-- binding template container-->
 
 
@@ -585,6 +585,14 @@
                         <script type="text/javascript">
                             $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
                                 $("#digsig<%=k%>").html(data);
+                                if (data.indexOf("invalid") !== -1 )
+                                {
+                                    $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
+                                }
+                                else
+                                {
+                                    $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
+                                }
                             } )
                         </script>
                         <%
@@ -638,9 +646,9 @@
 
 
         <a class="btn btn-danger " href="javascript:deleteService();"><i class="icon-remove-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
-        <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF8")%>&type=service"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
+        <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getServiceKey(), "UTF-8")%>&type=service"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
         <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
-        <a class="btn btn-warning " href="#" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
+        <a class="btn btn-warning " href="transfer.jsp?biz=<%=URLEncoder.encode(bd.getBusinessKey(), "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
         <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
         <script type="text/javascript">
             function ViewAsXML()
