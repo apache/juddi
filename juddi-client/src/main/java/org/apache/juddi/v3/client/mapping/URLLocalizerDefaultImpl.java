@@ -18,7 +18,7 @@ package org.apache.juddi.v3.client.mapping;
 
 import java.net.URL;
 
-public class URLLocalizerImpl implements URLLocalizer {
+public class URLLocalizerDefaultImpl implements URLLocalizer {
 
 	public String rewrite (URL urlIn) {
 		return urlIn.toExternalForm();

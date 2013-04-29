@@ -30,8 +30,6 @@ public class HelloWorld {
         	// create a manager and read the config in the archive; 
         	// you can use your config file name
         	UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/hello-world-uddi.xml");
-        	// register the clerkManager with the client side container
-        	UDDIClientContainer.addClerkManager(clerkManager);
         	// a ClerkManager can be a client to multiple UDDI nodes, so 
         	// supply the nodeName (defined in your uddi.xml.
         	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml

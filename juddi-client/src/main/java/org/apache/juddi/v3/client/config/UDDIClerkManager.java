@@ -45,7 +45,7 @@ public class UDDIClerkManager {
     public UDDIClerkManager() throws ConfigurationException {
     	super();
 		clientConfig = new ClientConfig(CONFIG_FILE, properties);
-		
+		UDDIClientContainer.addClerkManager(this);
     }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
@@ -54,6 +54,7 @@ public class UDDIClerkManager {
 	public UDDIClerkManager(String configurationFile) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile);
+		UDDIClientContainer.addClerkManager(this);
 	}
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
@@ -62,6 +63,7 @@ public class UDDIClerkManager {
 	public UDDIClerkManager(String configurationFile, Properties properties) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile, properties);
+		UDDIClientContainer.addClerkManager(this);
 	}
 	/**
 	 * Stops the clerks.
@@ -290,7 +292,8 @@ public class UDDIClerkManager {
 			String managerName = clientConfig.getManagerName();
 			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClerkManager.class);
 			if (transportClass!=null) {
-				Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
+				Transport transport = (Transport) 
+						transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
 				return transport;
 			} else {
 				throw new ConfigurationException ("ProxyTransport was not defined in the " + clientConfig.getConfigurationFile());
@@ -298,6 +301,10 @@ public class UDDIClerkManager {
 		} catch (Exception e) {
 			throw new ConfigurationException (e.getMessage(),e);
 		}
+	}
+	
+	public UDDIClerk getClerk(String clerkName) {
+		return getClientConfig().getUDDIClerks().get(clerkName);
 	}
 	
 }

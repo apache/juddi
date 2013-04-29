@@ -52,7 +52,7 @@ public class BPEL2UDDITest {
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
 		properties.put("nodeName", "localhost");
-		URLLocalizer urlLocalizer = new URLLocalizerImpl();
+		URLLocalizer urlLocalizer = new URLLocalizerDefaultImpl();
 		
 		bpel2UDDI = new BPEL2UDDI(null, urlLocalizer, properties);
 	}

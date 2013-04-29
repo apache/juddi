@@ -41,6 +41,7 @@ import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
@@ -99,7 +100,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		
 		//Obtaining values from the properties
 		this.keyDomainURI = "uddi:" + properties.getProperty("keyDomain") + ":";
-		this.businessKey = Property.getBusinessKey(properties);
+		this.businessKey = UDDIKeyConvention.getBusinessKey(properties);
 		this.lang = properties.getProperty(Property.LANG,Property.DEFAULT_LANG);
 		
 		this.wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
@@ -162,7 +163,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		String genericWSDLURL  = wsdlDefinition.getDocumentBaseURI();   //TODO maybe point to repository version
 		String bpelOverviewURL = "http://localhost:8080/bpel-console/"; //TODO maybe point to bpel in console
 		
-		String serviceKey = Property.getServiceKey(properties, serviceName);
+		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart());
 		BusinessService service = lookupService(serviceKey);
 		if (service==null) {
 			List<TModel> tModels = new ArrayList<TModel>();
@@ -193,10 +194,10 @@ public class BPEL2UDDI extends AnnotationProcessor {
 	
 	public String unRegister(QName serviceName, String portName, URL serviceUrl) throws RemoteException, ConfigurationException, TransportException {
 		
-		String serviceKey = Property.getServiceKey(properties, serviceName);
+		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart());
 		BusinessService service = lookupService(serviceKey);
 		boolean isRemoveServiceIfNoTemplates = true; 
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
+		String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceName, portName, serviceUrl);
 		//check if this bindingKey is in the service's binding templates
 		for (BindingTemplate bindingTemplate : service.getBindingTemplates().getBindingTemplate()) {
 			if (bindingKey.equals(bindingTemplate.getBindingKey())) {
@@ -234,7 +235,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 									if (namespaceRef!=null) namespace = namespaceRef.getKeyValue();
 									//find the bindingTModel
 									for (KeyedReference keyedReference : portTypeTModelKeys) {
-										FindTModel findBindingTModel = wsdl2UDDI.createFindBindingTModelForPortType(keyedReference.getKeyValue(), namespace);
+										FindTModel findBindingTModel = WSDL2UDDI.createFindBindingTModelForPortType(keyedReference.getKeyValue(), namespace);
 										TModelList bindingTmodels = clerk.findTModel(findBindingTModel);
 										if (bindingTmodels!=null && bindingTmodels.getTModelInfos()!=null && bindingTmodels.getTModelInfos().getTModelInfo()!=null) {
 											for (TModelInfo bindingTModelInfo : bindingTmodels.getTModelInfos().getTModelInfo()) {
@@ -283,7 +284,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		// BusinessKey
 		service.setBusinessKey(businessKey);
 		// ServiceKey
-		service.setServiceKey(Property.getServiceKey(properties, serviceName));
+		service.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart()));
 		// Description
 		String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
 		if (wsdlDefinition.getService(serviceName) !=null) {
@@ -362,16 +363,16 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	CategoryBag categoryBag = new CategoryBag();
     	
     	if (targetNamespace!=null) {
-    		KeyedReference namespaceReference = wsdl2UDDI.newKeyedReference(
+    		KeyedReference namespaceReference = WSDL2UDDI.newKeyedReference(
     			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", targetNamespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
     	}
-    	KeyedReference typesReference = wsdl2UDDI.newKeyedReference(
+    	KeyedReference typesReference = WSDL2UDDI.newKeyedReference(
     			"uddi:uddi.org:bpel:types", "uddi-org:bpel:types", "process");
     	categoryBag.getKeyedReference().add(typesReference);
     	for (QName qName : portTypes.keySet()) {
     		String portTypeKey = keyDomainURI + qName.getLocalPart();
-	    	KeyedReference portTypeReference = wsdl2UDDI.newKeyedReference(
+	    	KeyedReference portTypeReference = WSDL2UDDI.newKeyedReference(
 	    			"uddi:uddi.org:wsdl:porttypereference", "uddi-org:wsdl:portTypeReference", portTypeKey);
 	    	categoryBag.getKeyedReference().add(portTypeReference);
     	}
@@ -389,9 +390,9 @@ public class BPEL2UDDI extends AnnotationProcessor {
 		
     	BindingTemplate bindingTemplate = new BindingTemplate();
 		// Set BusinessService Key
-		bindingTemplate.setServiceKey(Property.getServiceKey(properties, serviceName));
+		bindingTemplate.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart()));
 		// Set Binding Key
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
+		String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceName, portName, serviceUrl);
 		bindingTemplate.setBindingKey(bindingKey);
 		// Set AccessPoint
 		AccessPoint accessPoint = new AccessPoint();
@@ -495,12 +496,12 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	
     	String namespace = serviceName.getNamespaceURI();
     	if (namespace!=null && namespace!="") {
-    		KeyedReference namespaceReference = wsdl2UDDI.newKeyedReference(
-    			"uddi:uddi.org:xml:namespace", namespace);
+    		KeyedReference namespaceReference = WSDL2UDDI.newKeyedReference(
+    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
     	}
-    	KeyedReference typesReference = wsdl2UDDI.newKeyedReference(
-    			"uddi:uddi.org:bpel:types", "process");
+    	KeyedReference typesReference = WSDL2UDDI.newKeyedReference(
+    			"uddi:uddi.org:bpel:types", "uddi-org:bpel:types", "process");
     	categoryBag.getKeyedReference().add(typesReference);
     	findTModel.setCategoryBag(categoryBag);
     	
@@ -519,12 +520,12 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	FindTModel findTModel = new FindTModel();
     	CategoryBag categoryBag = new CategoryBag();
     	
-    	KeyedReference typesReference = wsdl2UDDI.newKeyedReference(
-    			"uddi:uddi.org:bpel:types", "process");
+    	KeyedReference typesReference = WSDL2UDDI.newKeyedReference(
+    			"uddi:uddi.org:bpel:types", "uddi-org:bpel:types", "process");
     	categoryBag.getKeyedReference().add(typesReference);
     	
-    	KeyedReference portTypeReference = wsdl2UDDI.newKeyedReference(
-    			"uddi:uddi.org:wsdl:porttypereference", portTypeKey);
+    	KeyedReference portTypeReference = WSDL2UDDI.newKeyedReference(
+    			"uddi:uddi.org:wsdl:porttypereference", "uddi-org:wsdl:portTypeReference", portTypeKey);
     	categoryBag.getKeyedReference().add(portTypeReference);
     	
     	findTModel.setCategoryBag(categoryBag);

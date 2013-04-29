@@ -30,7 +30,7 @@ public class TokenResolver {
 	public synchronized static String replaceTokens(String string, Properties properties) {
     	
     	if (properties==null || string==null) return string;
-    	string = string.replaceAll("\\n"," ").replaceAll("\\r", "");
+    	string = string.replaceAll("\\n"," ").replaceAll("\\r", "").replaceAll(" ","");
 		/* pattern that is multi-line (?m), and looks for a pattern of
 		 * ${token}, in a 'reluctant' manner, by using the ? to 
 		 * make sure we find ALL the tokens.
