@@ -92,9 +92,9 @@ public class SMTPNotifier implements Notifier {
 			//TODO maybe update the user's bindingTemplate with the error?, and also validate setting onsave
 		} else {
 			notificationEmailAddress = accessPointUrl.substring(accessPointUrl.indexOf(":")+1);
-			if (Boolean.getBoolean(properties.getProperty("mail.smtp.starttls.enable"))) {
-				final String username = properties.getProperty("mail.smtp.username");
-				final String password = properties.getProperty("mail.smtp.password");
+			if (Boolean.getBoolean(getEMailProperties().getProperty("mail.smtp.starttls.enable"))) {
+				final String username = getEMailProperties().getProperty("mail.smtp.username");
+				final String password = getEMailProperties().getProperty("mail.smtp.password");
 				session = Session.getInstance(getEMailProperties(), new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(username, password);
