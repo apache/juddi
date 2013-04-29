@@ -663,10 +663,10 @@
         if (!newitem) {
 
     %>
-    <div class="modal hide fade" id="viewAsXml">
+    <div class="modal hide fade container" id="viewAsXml">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>As XML</h3>
+            <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%></h3>
         </div>
         <div class="modal-body" id="viewAsXmlContent">
 
@@ -683,7 +683,7 @@
             $('#' + modaldiv).modal('hide');
         }
     </script>
-    <div class="modal hide fade" id="addSubscriptionModal">
+    <div class="modal hide fade container" id="addSubscriptionModal">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3>Add a subscription</h3>

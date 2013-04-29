@@ -66,6 +66,7 @@
             }
         </style>
         <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="css/bootstrap-modal.css" rel="stylesheet">
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -80,6 +81,8 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-datetimepicker.min.js"></script>
         <script src="js/bootstrap-timepicker.min.js"></script>
+        <script src="js/bootstrap-modalmanager.js"></script>
+        <script src="js/bootstrap-modal.js"></script>
         <script src="js/jquery.jeditable.js"></script>
         <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
         <script src="js/main.js"></script>
@@ -110,6 +113,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
                                         <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
+                                        <li><a href="transfer.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.transfer.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.transfer")%></a></li>
                                         <li class="divider"></li>
                                         <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
                                         <li><a href="createSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
@@ -124,7 +128,7 @@
                                         <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
                                         <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.tmodels.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.tmodels")%></a></li>
                                         <%//                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")">ResourceLoader.GetResource(session, "navbar.publishers")</a></li>
-                                        %>
+%>
                                         <li class="divider"> </li>
 
                                         <li><a href="search.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.search.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.search")%></a></li>
@@ -156,6 +160,7 @@
                                         <li><a href="http://juddi.apache.org/issue-tracking.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%>"><%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%></a></li>
                                         <li><a href="http://juddi.apache.org/" title="<%=ResourceLoader.GetResource(session, "navbar.help.website")%>"><%=ResourceLoader.GetResource(session, "navbar.help.website")%></a></li>
                                         <li><a href="http://www.nabble.com/jUDDI-f218.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%>"><%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%></a></li>
+                                        <li><a href="about.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.help.about.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.help.about")%></a></li>
 
                                     </ul>
                                 </li>

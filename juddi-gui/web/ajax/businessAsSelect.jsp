@@ -7,6 +7,7 @@
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:include page="../csrf.jsp" />
 <%
     UddiHub x = UddiHub.getInstance(application, session);
 

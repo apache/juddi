@@ -5,71 +5,72 @@
  * and open the template in the editor.
  */
 
-function reloadBindingModal()
+function reloadBusinessModal()
 {
-    RenderBindingListBySearch('%', offsetBinding, maxrecordsBinding, true);
+    var name=$("#nameBusiness").text();
+    RenderBusinessListBySearchModal(name, offsetBusiness, maxrecordsBusiness, true);
                       
 }
 
 
 
-var offsetBinding=0; //start at the begining
-var maxrecordsBinding=10;  //record 20 at a time
-var langBinding="en";  //langauge english
-var totalrecordsBinding=0;
+var offsetBusiness=0; //start at the begining
+var maxrecordsBusiness=10;  //record 20 at a time
+var langBusiness="en";  //langauge english
+var totalrecordsBusiness=0;
 
-RenderBindingListBySearch('%', offsetBinding, maxrecordsBinding, true);
+RenderBusinessListBySearchModal('%', offsetBusiness, maxrecordsBusiness, true);
 
-function pagedownChooserBinding()
+function pagedownChooserBusiness()
 {
-    offsetBinding = $("#offsetBinding").text();
+    offsetBusiness = $("#offsetBusiness").text();
     //alert(offset);
-    var newoffset = offsetBinding - maxrecordsBinding;
+    var newoffset = offsetBusiness - maxrecordsBusiness;
     if (newoffset < 0)
         return;
     //alert(newoffset);
-    if (newoffset != offsetBinding)
-        RenderBindingListBySearch('%', newoffset, maxrecordsBinding, true);
+    if (newoffset != offsetBusiness)
+        RenderBusinessListBySearchModal($("#nameBusiness").text(), newoffset, maxrecordsBusiness, true);
 }
-function pageupChooserBinding()
+function pageupChooserBusiness()
 {
-    offsetBinding = $("#offsetBinding").text();
+    offsetBusiness = $("#offsetBusiness").text();
     //alert(offset);
-    var fetch = maxrecordsBinding;
-    if ((parseInt(offsetBinding) + parseInt(maxrecordsBinding))  > totalrecordsBinding)
+    var fetch = maxrecordsBusiness;
+    if ((parseInt(offsetBusiness) + parseInt(maxrecordsBusiness))  > totalrecordsBusiness)
         //fetch = maxrecords - offset;
         return;
     else 
-        fetch = (parseInt(offsetBinding) + parseInt(maxrecordsBinding));    
+        fetch = (parseInt(offsetBusiness) + parseInt(maxrecordsBusiness));    
     //alert(fetch);
-    offsetBinding = fetch;
-    RenderBindingListBySearch('%', fetch, maxrecordsBinding, true);
+    offsetBusiness = fetch;
+    RenderBusinessListBySearchModal($("#nameBusiness").text(), fetch, maxrecordsBusiness, true);
 }
 
 
-var selectedItemBinding=null;
+var selectedItemBusiness=null;
 
 //offset, maxrecords, keyword
-function RenderBindingListBySearch(keyword1, offset1, maxrecords1, isForChooser)
+function RenderBusinessListBySearchModal(keyword1, offset1, maxrecords1, isForChooser)
 {
-    var lang = $("#langBinding").text();
-    $("#bindinglist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
+    var lang = $("#langBusiness").text();
+    $("#businesslist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/bindingsearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
+        url: 'ajax/businesssearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
         type:"GET",
         cache: false
     });
                   
     request.done(function(msg) {
         window.console && console.log('postback done ');                
-        $("#bindinglist").html(msg);
-       
+        $("#businesslist").html(msg);
+        
     //refresh();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#bindinglist").html("An error occured! " + jqXHR.responseText + textStatus);
+        $("#businesslist").html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 /*
@@ -79,26 +80,26 @@ function RenderBindingListBySearch(keyword1, offset1, maxrecords1, isForChooser)
     });*/
 }
 
-function refreshBinding()
+function refreshBusiness()
 {
     var displayrecords = $("#displayrecords").text();
-    if (displayrecords == totalrecordsBinding)
+    if (displayrecords == totalrecordsBusiness)
     {
-        $("#pageupBinding").addClass("disabled");
-        $("#pagedownBinding").addClass("disabled");
+        $("#pageupBusiness").addClass("disabled");
+        $("#pagedownBusiness").addClass("disabled");
     }
-    else if (offsetBinding + maxrecordsBinding > totalrecordsBinding)
+    else if (offsetBusiness + maxrecordsBusiness > totalrecordsBusiness)
     {
-        $("#pageupBinding").addClass("disabled");    
+        $("#pageupBusiness").addClass("disabled");    
     }
-    else if (offsetBinding ==0)
+    else if (offsetBusiness ==0)
     {
-        $("#pagedownBinding").removeClass("disabled");        
+        $("#pagedownBusiness").removeClass("disabled");        
     }
     else
     {
-        $("#pagedownBinding").removeClass("disabled");        
-        $("#pageupBinding").removeClass("disabled");        
+        $("#pagedownBusiness").removeClass("disabled");        
+        $("#pageupBusiness").removeClass("disabled");        
     }
 }
 
@@ -106,11 +107,11 @@ function refreshBinding()
  *This launches the tModel model div, upon return (and if not abprted), the contents of the div parameter will be replaced with the 
  *first selected tModel
  */
-function bindingModal(div){
+function businessModal(div){
     //reset the form in case it was lanucheed more than once per page view
-    reloadBindingModal();
+    reloadBusinessModal();
     
-    $.dialogBinding.confirm({
+    $.dialogBusiness.confirm({
         callback: function(success, result) {
             if (!success)
             {
@@ -128,22 +129,22 @@ function bindingModal(div){
 }
             
             
-function bindingCancel()
+function businessCancel()
 {
-    $(".modalableBinding").each(function()
+    $(".modalableBusinessChooser").each(function()
     {
         $(this).prop('checked', false);
     }); 
-    $('#bindingChooser').modal('hide');
+    $('#businessChooser').modal('hide');
                 
 }
             
 /**
  *returns an array of selected tmodel keys
  */            
-$.dialogBinding = {
+$.dialogBusiness = {
     confirm: function(options) {
-        var $modal = $('#bindingChooser');
+        var $modal = $('#businessChooser');
         //$modal.find('.modal-body').text(options.message);
         
         $modal.off('click.dialog', '.btn, .close')
@@ -157,7 +158,7 @@ $.dialogBinding = {
                          * find the result from the model (the selected key)
                          */
             var selectedtmodels =  new Array();
-            $(".modalableBinding").each(function()
+            $(".modalableBusinessChooser").each(function()
             {
                 var id=$(this).attr("id");
                 if ($(this).is(':checked')) {

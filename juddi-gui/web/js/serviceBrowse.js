@@ -72,7 +72,7 @@ function RenderServiceListBySearch(keyword, offset, maxrecords)
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#serviceBrowserListings").html("An error occured! " + textStatus + jqXHR);
+        $("#serviceBrowserListings").html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 /*

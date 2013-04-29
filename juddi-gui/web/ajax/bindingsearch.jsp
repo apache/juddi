@@ -51,8 +51,8 @@
 %>
 <script type="text/javascript">
     totalrecordsBinding=<%=ret.totalrecords%>;
-    $("#totalrecordsBinding").text(totalrecords);
-    $("#offsetBinding").text(<%=offset%>);
-    $("#displayrecordsBinding").text (<%=ret.displaycount%>);
+    $("#totalrecordsBinding").text(totalrecordsBinding);
+    $("#offsetBinding").text('<%=offset%>');
+    $("#displayrecordsBinding").text ('<%=ret.displaycount%>');
     refresh();
 </script>

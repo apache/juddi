@@ -70,7 +70,7 @@ function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#businesslist").html("An error occured! " + textStatus + jqXHR);
+        $("#businesslist").html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 /*

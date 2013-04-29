@@ -42,8 +42,13 @@
     if (maxrecords > 50) {
         maxrecords = 50;
     }
+    boolean isChooser = false;
+    try {
+        isChooser = Boolean.parseBoolean(request.getParameter("chooser"));
+    } catch (Exception ex) {
+    }
 
-    PagableContainer ret = (x.SearchForServices(keyword, lang, maxrecords, offset, false));
+    PagableContainer ret = (x.SearchForServices(keyword, lang, maxrecords, offset, isChooser));
     out.write(ret.renderedHtml);
 
 %>

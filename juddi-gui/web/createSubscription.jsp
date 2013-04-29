@@ -21,6 +21,14 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="javax.xml.datatype.DatatypeFactory"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="org.uddi.sub_v3.SubscriptionFilter"%>
+<%@page import="org.apache.juddi.webconsole.hub.builders.SubscriptionHelper"%>
 <%@page import="java.util.List"%>
 <%@page import="org.uddi.sub_v3.Subscription"%>
 <%@page import="java.net.URLEncoder"%>
@@ -35,20 +43,37 @@
     <div class="well">
         <h1><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%></h1>
     </div>
+    <%
+        //TODO i18n
+        //TODO use this page as a subscription editor
+        Subscription sub = null;
+        boolean newitem = false;
+        UddiHub x = UddiHub.getInstance(application, session);
+        if (request.getParameter("id") != null) {
+            sub = x.GetSubscriptionDetails(request.getParameter("id"));
+        }
+        if (sub == null) {
+            sub = new Subscription();
+            sub.setMaxEntities(50);
+            sub.setBrief(false);
+            GregorianCalendar gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gcal.add(Calendar.YEAR, 1);
+            DatatypeFactory df = DatatypeFactory.newInstance();
+            sub.setNotificationInterval(df.newDuration(1000 * 60 * 15));
+            sub.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            newitem = true;
+        }
+        
+    %>
 
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-            <p>
-
-
-            </p>
-
-            <%                
-                
-            %>
-
-
+            UDDI has a feature that allows you to be alerted of updates to either specific UDDI entries or to search results.
+            This page will help you setup a subscription to meet your needs. Note: only one type of subscription filter can be defined per subscription.
+            Normally, users can make as many subscriptions as they want, however it may be effectively limited by the registry implementation.
             <div class="accordion" id="accordion2">
                 <div class="accordion-group">
                     <div class="accordion-heading">
@@ -59,23 +84,35 @@
                     <div id="collapseOne" class="accordion-body collapse in">
                         <div class="accordion-inner">
                             <div class="btn-group" id="alertType" data-toggle="buttons-radio">
-                                <button onclick="return toggleType1();" value="specificItem" class="btn active" >Changes to a specific item</button>
-                                <button onclick="return toggleType2();" value="searchResults" class="btn">Changes to search results, such as a new item</button>
+                                <button onclick="return toggleType1();" id="btn-specificitem" value="specificItem" class="btn <%                                    
+                                    if (newitem || SubscriptionHelper.isSpecificItem(sub)) {
+                                        out.write(" active");
+                                    }
+                                        %>" >Changes to a specific item</button>
+                                <button onclick="return toggleType1();" id="btn-searchresults" value="searchResults" class="btn <%                                    
+                                    if (!newitem && !SubscriptionHelper.isSpecificItem(sub)) {
+                                        out.write(" active");
+                                    }
+                                        %>">Changes to search results, such as a new item</button>
                             </div>
                         </div>
                         <script type="text/javascript">
                             function toggleType1()
                             {
-                                $("#basedonresults").hide();
-                                $("#specific").show();
+                                if ($("#btn-specificitem").hasClass("active"))
+                                {
+                                    $("#basedonresults").hide();
+                                    $("#specific").show();
+                                }
+                                else
+                                {
+                                    $("#basedonresults").show();
+                                    $("#specific").hide();
+                                }
                                 return false;
                             }
-                            function toggleType2()
-                            {
-                                  $("#basedonresults").show();
-                                $("#specific").hide();
-                                return false;
-                            }
+                            $(document).ready(function(){ toggleType1();});
+                           
                         </script>
                     </div>
                 </div>
@@ -91,10 +128,10 @@
                             <div id="specific">
                                 A specific item:<Br>
                                 <div class="btn-group" id="alertCriteraSingleItem" data-toggle="buttons-radio">
-                                    <button onclick="return false;" class="btn" value="binding">Binding</button>
-                                    <button onclick="return false;" class="btn" value="business">Business</button>
-                                    <button onclick="return false;" class="btn" value="service">Service</button>
-                                    <button onclick="return false;" class="btn" value="tmodel">tModel</button>
+                                    <button onclick="javascript:bindingModal('itemKey'); return false;" class="btn" value="binding">Binding</button>
+                                    <button onclick="javascript:businessModal('itemKey'); return false;" class="btn" value="business">Business</button>
+                                    <button onclick="javascript:serviceModal('itemKey'); return false;" class="btn" value="service">Service</button>
+                                    <button onclick="javascript:tModelModal('itemKey'); return false;" class="btn" value="tmodel">tModel</button>
                                 </div><br><br>
                                 <div style="float:left">Key: &nbsp;</div>
                                 <div class="edit" id="itemKey"></div>
@@ -132,16 +169,21 @@
                                 <button onclick="return toggleTransport1();" value="bindingTemplate" class="btn" title="Either via a UDDI Subscription Callback or via Email">Send me alerts directly</button>
                                 <button onclick="return toggleTransport2();" value="manual" class="btn" title="Either via this website or from your own software">I'll pick them up</button>
                             </div><br>
-                            <input type="text" id="bindingKey" autocomplete="false" placeholder="Binding Template Key or Email Address">
+                            <div class="" id="bindingKeyDiv">
+                                <input type="text" id="bindingKey" placeholder="Binding Template Key or Email Address" style="width:300px">
+                                <a href="javascript:bindingModal('bindingKey');" class="btn " data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.select")%></a>
+                            </div>
                             <script type="text/javascript">
+                                
+                             
                                 function toggleTransport1()
                                 {
-                                    $("#bindingKey").show();
+                                    $("#bindingKeyDiv").show();
                                     return false;
                                 }
                                 function toggleTransport2()
                                 {
-                                    $("#bindingKey").hide();
+                                    $("#bindingKeyDiv").hide();
                                     return false;
                                 }
                             </script>
@@ -161,18 +203,30 @@
                             <div style="float:left">Max records per callback: &nbsp;</div>
                             <div class="edit" id="maxRecords">50</div>
                             <div style="float:left">Brief subscription: &nbsp;</div>
-                            <div class="edit" id="brief">true</div>
+                            <div> <input type="checkbox" id="brief" 
+                                         <%                                             
+                                             out.write(sub.isBrief() ? "checked" : "");
+                                         %> >
+                            </div><br>
 
                             Expiration: 
                             <div id="datetimepicker2" class="input-append">
-                                <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text"></input>
+                                <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" value="<%                                    
+                                    if (sub.getExpiresAfter() != null) {
+                                        Date d = sub.getExpiresAfter().toGregorianCalendar().getTime();
+                                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+                                        String dateStr = dateFormat.format(d);
+                                   //TODO DOES NOT WORK     out.write(dateStr);
+                                    }
+                                       %>">
+                                
                                 <span class="add-on">
                                     <i data-time-icon="icon-time" data-date-icon="icon-calendar">
                                     </i>
                                 </span>
                             </div>
                             <script type="text/javascript">
-                                $(function() {
+                                $(document).ready(function() {
                                     $('#datetimepicker2').datetimepicker({
                                         language: '<%=(String) session.getAttribute("locale")%>',
                                         pick12HourFormat: true
@@ -181,10 +235,16 @@
                             </script>
 
 
-                            <div style="">Notification Interval: &nbsp;</div>
+                            <div style="">Notification Interval (hh:mm:ss) : &nbsp;</div>
 
                             <div class="input-append bootstrap-timepicker">
-                                <input id="timepicker2" type="text" class="input-small">
+                                <input id="timepicker2" type="text" class="input-small" placeholder="Duration of time (hh:mm:ss)" value="<%                                    
+                                    if (sub.getNotificationInterval() != null) {
+                                        out.write(sub.getNotificationInterval().getHours() + ":"
+                                                + sub.getNotificationInterval().getMinutes() + ":"
+                                                + sub.getNotificationInterval().getSeconds());
+                                    }
+                                       %>">
                                 <span class="add-on">
                                     <i class="icon-time"></i>
                                 </span>
@@ -193,14 +253,23 @@
                             <script type="text/javascript">
                                 $('#timepicker2').timepicker({
                                     minuteStep: 1,
+                                    defaultTime: '00:05:00',
+                                    showSeconds: true,
                                     template: 'modal',
                                     showSeconds: true,
                                     showMeridian: false
                                 });
                             </script>
                             <br>
+
                             <div style="float:left">Subscription Key: &nbsp;</div>
-                            <div class="edit" id="subkey"></div>
+                            <div class="edit" id="subkey"><%                                
+                                if (sub.getSubscriptionKey() != null) {
+                                    out.write(StringEscapeUtils.escapeHtml(sub.getSubscriptionKey()));
+                                }
+                                %> </div>
+                            About Subscription Keys: You can optionally specify a subscription key. If you do, it must follow the rules for UDDI keys (uniqueness, prefixes, tModel Partitions, etc).
+                            If you do not define one, the UDDI server should generate one for you. 
 
 
 
@@ -211,6 +280,7 @@
 
                 <script type="text/javascript">
                     Reedit()
+                    $("#bindingKey").resizable();
                     function saveSubscription()
                     {
                         
@@ -311,4 +381,9 @@
             <a  class="btn btn-primary" href="javascript:saveSubscription();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
         </div>
     </div>
+
+    <%@include file="tmodelChooser.jsp" %>
+    <%@include file="bindingChooser.jsp" %>
+    <%@include file="businessChooser.jsp" %>
+    <%@include file="serviceChooser.jsp" %>
     <%@include file="header-bottom.jsp" %>

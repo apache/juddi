@@ -20,7 +20,7 @@ function tModelModal(div){
     //reset the form in case it was lanucheed more than once per page view
     reloadTmodelModal();
     
-    $.dialog.confirm({
+    $.dialogTmodel.confirm({
         callback: function(success, result) {
             if (!success)
             {
@@ -31,14 +31,16 @@ function tModelModal(div){
                 //alert('Result: ' + result.join());
                 $("#" + div).html(result[0]);
             }
+        //    return false;
         }
     });
+   // return false;
 }
             
             
 function tModelCancel()
 {
-    $(".modalable").each(function()
+    $(".modalableTmodel").each(function()
     {
         $(this).prop('checked', false);
     }); 
@@ -49,7 +51,7 @@ function tModelCancel()
 /**
  *returns an array of selected tmodel keys
  */            
-$.dialog = {
+$.dialogTmodel = {
     confirm: function(options) {
         var $modal = $('#tmodelChooser');
         //$modal.find('.modal-body').text(options.message);
@@ -65,7 +67,7 @@ $.dialog = {
                          * find the result from the model (the selected key)
                          */
             var selectedtmodels =  new Array();
-            $(".modalable").each(function()
+            $(".modalableTmodel").each(function()
             {
                 var id=$(this).attr("id");
                 if ($(this).is(':checked')) {

@@ -11,7 +11,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <%
-
+    if (!request.getRemoteHost().equalsIgnoreCase("localhost") && !request.getRemoteHost().equalsIgnoreCase("127.0.0.1")) {
+        response.setStatus(403);
+    }
     if (!request.isUserInRole("manager")) {
         response.setStatus(403);
     }

@@ -130,7 +130,7 @@ function ShowServicesByBusinessKey(bizid)
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#" + jqSelector(bizid)).html("An error occured! " + textStatus + jqXHR);
+        $("#" + jqSelector(bizid)).html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 

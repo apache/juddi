@@ -187,8 +187,7 @@ public class Printers {
         return sb.toString();
     }
 
-    public static String PrintTModelListAsHtml(TModelList findTModel, HttpSession session) {
-        boolean isChooser = false;
+    public static String PrintTModelListAsHtml(TModelList findTModel, HttpSession session, boolean isChooser) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -205,7 +204,7 @@ public class Printers {
         for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
             sb.append("<tr><td>");
             if (isChooser) {
-                sb.append("<input class=\"modalable\" type=checkbox id=\"")
+                sb.append("<input class=\"modalableTmodel\" type=checkbox id=\"")
                         .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
                         .append("\"></td><td>");
             }
@@ -232,7 +231,8 @@ public class Printers {
         return sb.toString();
     }
 
-    public static String PrintTModelListAsHtmlModel(TModelList findTModel, HttpSession session) {
+    @Deprecated
+    private static String PrintTModelListAsHtmlModel(TModelList findTModel, HttpSession session) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<table class=\"table table-hover\"><tr><th>");
@@ -248,7 +248,7 @@ public class Printers {
         for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
             sb.append("<tr><td>");
 
-            sb.append("<input class=\"modalable\" type=checkbox id=\"")
+            sb.append("<input class=\"modalableTmodel\" type=checkbox id=\"")
                     .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
                     .append("\"></td><td>");
 
@@ -267,15 +267,24 @@ public class Printers {
         return sb.toString();
     }
 
-    public static String BusinessListAsTable(BusinessList findBusiness, HttpSession session) {
+    public static String BusinessListAsTable(BusinessList findBusiness, HttpSession session, boolean isChooser) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<table class=\"table table-hover\"<tr><th>").
-                append(ResourceLoader.GetResource(session, "items.name")).
+        sb.append("<table class=\"table table-hover\"<tr><th>");
+        if (isChooser) {
+            sb.append("</th><th>");
+        }
+        sb.append(ResourceLoader.GetResource(session, "items.name")).
                 append("</th><th>").
                 append(ResourceLoader.GetResource(session, "items.service")).
                 append("</th></tr>");
         for (int i = 0; i < findBusiness.getBusinessInfos().getBusinessInfo().size(); i++) {
-            sb.append("<tr><td><a title=\"").
+            sb.append("<tr><td>");
+            if (isChooser) {
+                sb.append("<input type=\"checkbox\" class=\"modalableBusinessChooser\" id=\"").
+                        append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                        append("\"></td><td>");
+            }
+            sb.append("<a title=\"").
                     append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
                     append("\"  href=\"businessEditor2.jsp?id=").
                     append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
@@ -291,13 +300,51 @@ public class Printers {
             } else {
                 sb.append("Show ").append(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size());
             }
-            sb.append("</a><a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
-                    append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
-                    append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a></td></tr>");
+            sb.append("</a>");
+            if (!isChooser) {
+                sb.append("<a class=\"btn btn-primary\" href=\"serviceEditor.jsp?bizid=").
+                        append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
+                        append("\"><i class=\"icon-plus-sign icon-white  icon-large\"></i></a>");
+            }
+            sb.append("</td></tr>");
 
             sb.append("<tr><td colspan=3><div id=\"").
                     append(StringEscapeUtils.escapeHtml(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())).
                     append("\"></div></td></tr>");
+        }
+        sb.append("</table>");
+        return sb.toString();
+    }
+
+    public static String ServiceListAsHtml(ServiceList findService, boolean chooser, HttpSession session) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table class=\"table\"><tr><th>");
+        if (chooser) {
+            sb.append("</th><th>");
+        }
+        sb.append(ResourceLoader.GetResource(session, "items.name")).
+                append("</th><th>").
+                append(ResourceLoader.GetResource(session, "items.key")).
+                append("</th><th>").
+                append(ResourceLoader.GetResource(session, "items.business")).
+                append("</th></tr>");
+        for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
+            sb.append("<tr><td>");
+            if (chooser) {
+                sb.append("<input class=\"modalableServiceChooser\" type=\"checkbox\" id=\"").
+                        append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
+                        append("\">");
+                sb.append("</td><td>");
+            }
+            sb.append("<a href=\"serviceEditor.jsp?id=").
+                    append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
+                    append("\" title=\"").
+                    append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()))
+                    .append("\">");
+            sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("</a></td><td>");
+            sb.append((findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).append("</td><td>");
+            sb.append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))
+                    .append("</td></tr>");
         }
         sb.append("</table>");
         return sb.toString();

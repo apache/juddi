@@ -5,71 +5,72 @@
  * and open the template in the editor.
  */
 
-function reloadBindingModal()
+function reloadServiceModal()
 {
-    RenderBindingListBySearch('%', offsetBinding, maxrecordsBinding, true);
+    var name=$("#nameService").text();
+    RenderServiceListBySearchModal(name, offsetService, maxrecordsService, true);
                       
 }
 
 
 
-var offsetBinding=0; //start at the begining
-var maxrecordsBinding=10;  //record 20 at a time
-var langBinding="en";  //langauge english
-var totalrecordsBinding=0;
+var offsetService=0; //start at the begining
+var maxrecordsService=10;  //record 20 at a time
+var langService="en";  //langauge english
+var totalrecordsService=0;
 
-RenderBindingListBySearch('%', offsetBinding, maxrecordsBinding, true);
+RenderServiceListBySearchModal('%', offsetService, maxrecordsService, true);
 
-function pagedownChooserBinding()
+function pagedownChooserService()
 {
-    offsetBinding = $("#offsetBinding").text();
+    offsetService = $("#offsetService").text();
     //alert(offset);
-    var newoffset = offsetBinding - maxrecordsBinding;
+    var newoffset = offsetService - maxrecordsService;
     if (newoffset < 0)
         return;
     //alert(newoffset);
-    if (newoffset != offsetBinding)
-        RenderBindingListBySearch('%', newoffset, maxrecordsBinding, true);
+    if (newoffset != offsetService)
+        RenderServiceListBySearchModal($("#nameService").text(), newoffset, maxrecordsService, true);
 }
-function pageupChooserBinding()
+function pageupChooserService()
 {
-    offsetBinding = $("#offsetBinding").text();
+    offsetService = $("#offsetService").text();
     //alert(offset);
-    var fetch = maxrecordsBinding;
-    if ((parseInt(offsetBinding) + parseInt(maxrecordsBinding))  > totalrecordsBinding)
+    var fetch = maxrecordsService;
+    if ((parseInt(offsetService) + parseInt(maxrecordsService))  > totalrecordsService)
         //fetch = maxrecords - offset;
         return;
     else 
-        fetch = (parseInt(offsetBinding) + parseInt(maxrecordsBinding));    
+        fetch = (parseInt(offsetService) + parseInt(maxrecordsService));    
     //alert(fetch);
-    offsetBinding = fetch;
-    RenderBindingListBySearch('%', fetch, maxrecordsBinding, true);
+    offsetService = fetch;
+    RenderServiceListBySearchModal($("#nameService").text(), fetch, maxrecordsService, true);
 }
 
 
-var selectedItemBinding=null;
+var selectedItemService=null;
 
 //offset, maxrecords, keyword
-function RenderBindingListBySearch(keyword1, offset1, maxrecords1, isForChooser)
+function RenderServiceListBySearchModal(keyword1, offset1, maxrecords1, isForChooser)
 {
-    var lang = $("#langBinding").text();
-    $("#bindinglist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
+    var lang = $("#langService").text();
+    $("#servicelist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
-        url: 'ajax/bindingsearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
+        url: 'ajax/servicesearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang + "&chooser=" + isForChooser,
         type:"GET",
         cache: false
     });
                   
     request.done(function(msg) {
         window.console && console.log('postback done ');                
-        $("#bindinglist").html(msg);
-       
+        $("#servicelist").html(msg);
+        
     //refresh();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#bindinglist").html("An error occured! " + jqXHR.responseText + textStatus);
+        $("#servicelist").html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 /*
@@ -79,26 +80,26 @@ function RenderBindingListBySearch(keyword1, offset1, maxrecords1, isForChooser)
     });*/
 }
 
-function refreshBinding()
+function refreshService()
 {
     var displayrecords = $("#displayrecords").text();
-    if (displayrecords == totalrecordsBinding)
+    if (displayrecords == totalrecordsService)
     {
-        $("#pageupBinding").addClass("disabled");
-        $("#pagedownBinding").addClass("disabled");
+        $("#pageupService").addClass("disabled");
+        $("#pagedownService").addClass("disabled");
     }
-    else if (offsetBinding + maxrecordsBinding > totalrecordsBinding)
+    else if (offsetService + maxrecordsService > totalrecordsService)
     {
-        $("#pageupBinding").addClass("disabled");    
+        $("#pageupService").addClass("disabled");    
     }
-    else if (offsetBinding ==0)
+    else if (offsetService ==0)
     {
-        $("#pagedownBinding").removeClass("disabled");        
+        $("#pagedownService").removeClass("disabled");        
     }
     else
     {
-        $("#pagedownBinding").removeClass("disabled");        
-        $("#pageupBinding").removeClass("disabled");        
+        $("#pagedownService").removeClass("disabled");        
+        $("#pageupService").removeClass("disabled");        
     }
 }
 
@@ -106,11 +107,11 @@ function refreshBinding()
  *This launches the tModel model div, upon return (and if not abprted), the contents of the div parameter will be replaced with the 
  *first selected tModel
  */
-function bindingModal(div){
+function serviceModal(div){
     //reset the form in case it was lanucheed more than once per page view
-    reloadBindingModal();
+    reloadServiceModal();
     
-    $.dialogBinding.confirm({
+    $.dialogService.confirm({
         callback: function(success, result) {
             if (!success)
             {
@@ -128,22 +129,22 @@ function bindingModal(div){
 }
             
             
-function bindingCancel()
+function serviceCancel()
 {
-    $(".modalableBinding").each(function()
+    $(".modalableServiceChooser").each(function()
     {
         $(this).prop('checked', false);
     }); 
-    $('#bindingChooser').modal('hide');
+    $('#serviceChooser').modal('hide');
                 
 }
             
 /**
  *returns an array of selected tmodel keys
  */            
-$.dialogBinding = {
+$.dialogService = {
     confirm: function(options) {
-        var $modal = $('#bindingChooser');
+        var $modal = $('#serviceChooser');
         //$modal.find('.modal-body').text(options.message);
         
         $modal.off('click.dialog', '.btn, .close')
@@ -157,7 +158,7 @@ $.dialogBinding = {
                          * find the result from the model (the selected key)
                          */
             var selectedtmodels =  new Array();
-            $(".modalableBinding").each(function()
+            $(".modalableServiceChooser").each(function()
             {
                 var id=$(this).attr("id");
                 if ($(this).is(':checked')) {

@@ -4,26 +4,46 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/UDDIBrowser" />
-<title>LangSelect1</title>
+<title>LoginRoot</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">LangSelect1</td></tr>
+<tr><td rowspan="1" colspan="3">LoginRoot</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/UDDIBrowser/</td>
+	<td>/UDDIBrowser/home.jsp</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>css=button.btn.btn-primary</td>
+	<td>type</td>
+	<td>id=username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=password</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td>5000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=i.icon-user</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>jUDDI</td>
+	<td>root</td>
 	<td></td>
 </tr>
 

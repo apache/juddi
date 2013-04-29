@@ -64,9 +64,9 @@
                 out.write(data.get(i).getToKey());
                 out.write("</td><td>");
                 if (data.get(i).getKeyedReference() != null) {
-                    out.write("<div style=\"float:left\">Key :</div><div id=\"" + PostBackConstants.VALUE + "\" class=\"edit\">" + data.get(i).getKeyedReference().getTModelKey());
-                    out.write("<div style=\"float:left\">Name :</div><div id=\"" + PostBackConstants.KEYNAME + "\" class=\"edit\">" + data.get(i).getKeyedReference().getKeyName());
-                    out.write("<div style=\"float:left\">Value :</div><div id=\"" + PostBackConstants.KEYVALUE + "\" class=\"edit\">" + data.get(i).getKeyedReference().getKeyValue());
+                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " :</div><div id=\"" + PostBackConstants.VALUE + "\" class=\"edit\">" + data.get(i).getKeyedReference().getTModelKey());
+                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + " :</div><div id=\"" + PostBackConstants.KEYNAME + "\" class=\"edit\">" + data.get(i).getKeyedReference().getKeyName());
+                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + " :</div><div id=\"" + PostBackConstants.KEYVALUE + "\" class=\"edit\">" + data.get(i).getKeyedReference().getKeyValue());
                 }
                 out.write("</td><td>");
                 out.write("<a class=\"btn btn-primary\" href=\"javascript:removeAssertion('"
@@ -80,7 +80,7 @@
                         + "','"
                         + StringEscapeUtils.escapeJavaScript(data.get(i).getKeyedReference().getKeyValue())
                         + "');"
-                        + "\">Delete</a>");
+                        + "\">" + ResourceLoader.GetResource(session, "actions.delete") + "</a>");
                 out.write("</td><td>");
                 out.write(data.get(i).getCompletionStatus().toString());
                 out.write("</td></tr>");

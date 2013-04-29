@@ -7,7 +7,7 @@ this page is meant to be included via jsp:include
 
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div class="modal hide fade" id="tmodelChooser">
+<div class="modal hide fade container" id="tmodelChooser">
     <div class="modal-header">
         <a href="javascript:$('#tmodelChooser').modal('hide');" class="close" data-dismiss="modal" aria-hidden="true">&times;</a>
         <h3><%=ResourceLoader.GetResource(session, "items.tmodel.chooser")%></h3>

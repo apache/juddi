@@ -44,8 +44,14 @@
         }
     } catch (Exception ex) {
     }
-//public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword) {
-    PagableContainer ret= (x.GetBusinessListAsHtml(offset, maxrecords, keyword, lang, false));
+     boolean isChooser = false;
+    try {
+        isChooser = Boolean.parseBoolean(request.getParameter("chooser"));
+    } catch (Exception ex) {
+    }
+     
+
+    PagableContainer ret= (x.GetBusinessListAsHtml(offset, maxrecords, keyword, lang, isChooser));
     out.write(ret.renderedHtml);
 %>
 <script type="text/javascript">

@@ -54,27 +54,7 @@
                     BindingTemplate be = (BindingTemplate) JAXB.unmarshal(sr, BindingTemplate.class);
                     msg = (x.SaveBindingTemplate(be));
                 } else if (type.equalsIgnoreCase("tModel")) {
-                    //System.out.println(signedxml);
-
                     TModel be = (TModel) JAXB.unmarshal(sr, TModel.class);
-                    //JAXB.marshal(be, System.out);
-
-/*
-                    org.apache.juddi.v3.client.crypto.DigSigUtil dsig = new DigSigUtil();
-                    UddiHub hub = UddiHub.getInstance(application, session);
-                    Properties config2 = hub.GetRawConfiguration();
-                    Set<Entry<Object, Object>> it = config2.entrySet();
-                    Iterator it2 = it.iterator();
-                    while (it2.hasNext()) {
-                        Object j2 = it2.next();
-                        Entry<Object, Object> item = (Entry<Object, Object>) j2;
-                        dsig.put((String) item.getKey(), (String) item.getValue());
-                    }
-                    AtomicReference<String> msg2 = new AtomicReference<String>();
-                    boolean success = dsig.verifySignedUddiEntity(be, msg2);
-                    if (!success) {
-                        msg = "WARNING! unable to validate signature!" + msg2.get();
-                    }*/
                     msg = (x.SaveTModel(be));
                 } else {
                     msg = (ResourceLoader.GetResource(session, "errors.unknownentity"));

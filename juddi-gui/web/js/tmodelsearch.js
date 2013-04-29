@@ -82,7 +82,7 @@ function RenderTmodelListBySearch(keyword1, offset1, maxrecords1, isForChooser)
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
-        $("#tmodellist").html("An error occured! " + textStatus + jqXHR);
+        $("#tmodellist").html("An error occured! " + jqXHR.responseText + textStatus);
     //refresh();
     });
 /*

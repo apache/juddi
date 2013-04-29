@@ -359,7 +359,7 @@
 
         </div>
 
-        <div class="modal hide fade" id="confirmDialog">
+        <div class="modal hide fade container" id="confirmDialog">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3><%=ResourceLoader.GetResource(session, "modal.digitalsignaturewarning.title")%></h3>
@@ -378,10 +378,10 @@
         if (!newitem) {
 
     %>
-    <div class="modal hide fade" id="viewAsXml">
+    <div class="modal hide fade container" id="viewAsXml">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>As XML</h3>
+            <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%></h3>
         </div>
         <div class="modal-body" id="viewAsXmlContent">
 

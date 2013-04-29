@@ -18,6 +18,7 @@ package org.apache.juddi.webconsole.hub;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -54,6 +55,9 @@ import org.apache.juddi.webconsole.hub.builders.Printers;
 import org.apache.juddi.webconsole.resources.ResourceLoader;
 import org.apache.log4j.Level;
 import org.uddi.api_v3.*;
+import org.uddi.custody_v3.DiscardTransferToken;
+import org.uddi.custody_v3.TransferEntities;
+import org.uddi.custody_v3.TransferToken;
 import org.uddi.sub_v3.*;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -267,7 +271,6 @@ public class UddiHub {
     private String token = null;
 
     public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang, boolean isChooser) {
-        //TODO chooser
         PagableContainer ret = new PagableContainer();
         ret.offset = offset;
         ret.displaycount = 0;
@@ -306,7 +309,7 @@ public class UddiHub {
                 ret.displaycount = findBusiness.getListDescription().getIncludeCount();
                 ret.offset = findBusiness.getListDescription().getListHead();
                 ret.totalrecords = findBusiness.getListDescription().getActualCount();
-                ret.renderedHtml = Printers.BusinessListAsTable(findBusiness, session);
+                ret.renderedHtml = Printers.BusinessListAsTable(findBusiness, session, isChooser);
             }
 
         } catch (Exception ex) {
@@ -828,7 +831,6 @@ public class UddiHub {
     }
 
     public PagableContainer SearchForServices(String keyword, String lang, int maxrecords, int offset, boolean isChooser) {
-        //TODO chooser
         PagableContainer ret = new PagableContainer();
         ret.displaycount = 0;
         ret.offset = offset;
@@ -871,27 +873,9 @@ public class UddiHub {
             }
             ret.displaycount = findService.getListDescription().getIncludeCount();
             ret.totalrecords = findService.getListDescription().getActualCount();
-            StringBuilder sb = new StringBuilder();
-            sb.append("<table class=\"table\"><tr><th>").
-                    append(ResourceLoader.GetResource(session, "items.name")).
-                    append("</th><th>").
-                    append(ResourceLoader.GetResource(session, "items.key")).
-                    append("</th><th>").
-                    append(ResourceLoader.GetResource(session, "items.business")).
-                    append("</th></tr>");
-            for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                sb.append("<tr><td><a href=\"serviceEditor.jsp?id=").
-                        append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).
-                        append("\" title=\"").
-                        append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()))
-                        .append("\">");
-                sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("</a></td><td>");
-                sb.append((findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).append("</td><td>");
-                sb.append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))
-                        .append("</td></tr>");
-            }
-            sb.append("</table>");
-            ret.renderedHtml = sb.toString();
+            ret.renderedHtml = Printers.ServiceListAsHtml(findService, isChooser, session);
+
+            //  ret.renderedHtml = sb.toString();
             return ret;
         } catch (Exception ex) {
             ret.renderedHtml = HandleException(ex);
@@ -1067,11 +1051,11 @@ public class UddiHub {
             if (findTModel == null || findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");//"No tModels are defined";
             } else {
-                if (!isChooser) {
-                    ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session);
-                } else {
-                    ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
-                }
+                // if (!isChooser) {
+                ret.renderedHtml = Printers.PrintTModelListAsHtml(findTModel, session, isChooser);
+                // } else {
+                //     ret.renderedHtml = Printers.PrintTModelListAsHtmlModel(findTModel, session);
+                // }
 
             }
         } catch (Exception ex) {
@@ -2381,7 +2365,8 @@ public class UddiHub {
             if (subscriptionResults != null) {
                 //    subscriptionResults.getAssertionStatusReport().
                 if (subscriptionResults.getAssertionStatusReport() != null) {
-                    sb.append("Assertion Status Report Changed<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion")).
+                            append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getFromKey()));
@@ -2393,7 +2378,8 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getBindingDetail() != null) {
-                    sb.append("Bindings Changed<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.bindings")).
+                            append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getBindingDetail().getBindingTemplate().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getServiceKey()));
@@ -2403,7 +2389,8 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getBusinessDetail() != null) {
-                    sb.append("Businesses Changed<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.business")).
+                            append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getBusinessDetail().getBusinessEntity().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBusinessDetail().getBusinessEntity().get(i).getBusinessKey()));
@@ -2411,7 +2398,8 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getRelatedBusinessesList() != null) {
-                    sb.append("Business Relationships (Publisher Asssertions)<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion2")).
+                            append("<br><table class=\"table table-hover\">");
                     // for (int i = 0; i < subscriptionResults.getRelatedBusinessesList().getBusinessKey().size(); i++) {
                     sb.append("<tr><td>");
                     sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getRelatedBusinessesList().getBusinessKey()));
@@ -2419,7 +2407,8 @@ public class UddiHub {
                     //}
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getServiceDetail() != null) {
-                    sb.append("Services Changed<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.services")).
+                            append("d<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getServiceDetail().getBusinessService().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceDetail().getBusinessService().get(i).getServiceKey()));
@@ -2427,7 +2416,7 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getServiceList() != null) {
-                    sb.append("Service Listing<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.servicelist")).append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getServiceKey()));
@@ -2437,7 +2426,7 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getTModelDetail() != null) {
-                    sb.append("tModels Changed<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.tmodels")).append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getTModelDetail().getTModel().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelDetail().getTModel().get(i).getTModelKey()));
@@ -2447,7 +2436,8 @@ public class UddiHub {
                     }
                     sb.append("</table><br><br>");
                 } else if (subscriptionResults.getTModelList() != null) {
-                    sb.append("tModel Listing<br><table class=\"table table-hover\">");
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.tmodels2"))
+                            .append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getTModelKey()));
@@ -2531,7 +2521,7 @@ public class UddiHub {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
             }
-
+            
 
 
             StringBuilder sb = new StringBuilder();
@@ -2551,7 +2541,7 @@ public class UddiHub {
                 if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {
                     for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
                         //System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue());
-                        sb.append("<tr><td><input type=\"checkbox\" class=\"modalable\" id=\"").
+                        sb.append("<tr><td><input type=\"checkbox\" class=\"modalableBinding\" id=\"").
                                 append(StringEscapeUtils.escapeHtml(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())).
                                 append("\">").
                                 append("</td><td>").
@@ -2607,24 +2597,24 @@ public class UddiHub {
      * must be provided in a keyBag.
      *
      * @param keys
-     * @param transferTo
+     * @param nodeid
      * @param outExpires
      * @param outToken
      * @return
      */
-    public String GetCustodyTransferToken(List<String> keys, Holder<String> transferTo, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
+    public String GetCustodyTransferToken(org.uddi.custody_v3.KeyBag keys, Holder<String> nodeid, Holder<XMLGregorianCalendar> outExpires, Holder<byte[]> outToken) {
 
-        org.uddi.custody_v3.KeyBag kb = new org.uddi.custody_v3.KeyBag();
-        kb.getKey().addAll(keys);
+        // org.uddi.custody_v3.KeyBag kb = new org.uddi.custody_v3.KeyBag();
+        // kb.getKey().addAll(keys);
         try {
             try {
-                custody.getTransferToken(GetToken(), kb, transferTo, outExpires, outToken);
+                custody.getTransferToken(GetToken(), keys, nodeid, outExpires, outToken);
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
-                        custody.getTransferToken(GetToken(), kb, transferTo, outExpires, outToken);
+                        custody.getTransferToken(GetToken(), keys, nodeid, outExpires, outToken);
                     }
                 } else {
                     throw ex;
@@ -2633,6 +2623,96 @@ public class UddiHub {
         } catch (Exception ex) {
             return HandleException(ex);
 
+        }
+        return null;//"Success";
+    }
+
+    /**
+     *
+     * @param tokenxml
+     * @return The discard_transferToken API is a client API used to discard a
+     * transferToken obtained through the get_transferToken API at the same
+     * node. This API accepts either a transferToken or a keyBag as parameters
+     * to remove the permission to transfer data associated with a particular
+     * transferToken. If a keyBag is provided, all tokens corresponding to the
+     * keys in the keyBag will be discarded and will no longer be valid for
+     * custody or ownership transfer after the discard_transferToken is
+     * processed, irrespective of whether the keys match any known business or
+     * tmodelKey values. In the event that the keyBag represents a subset of the
+     * keyBag for one or more transferToken elements, the transferToken is
+     * discarded and will no longer be valid for transferring any entity. If the
+     * token passed in the transferToken argument does not match an existing
+     * token known to the system, no action is taken and success is reported.
+     * Keys in the keyBag argument that do not have a corresponding token are
+     * ignored.
+     */
+    public String DiscardToken(String tokenxml) {
+        DiscardTransferToken r = new DiscardTransferToken();
+        r.setAuthInfo(GetToken());
+        r.setTransferToken(JAXB.unmarshal(new StringReader(tokenxml), TransferToken.class));
+
+        try {
+            try {
+                custody.discardTransferToken(r);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        custody.discardTransferToken(r);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+        return null;//"Success";
+
+    }
+
+    public String AcceptCustodyTranferToken(String tokenXML, String keyBagXML) {
+        try {
+            TransferEntities te = new TransferEntities();
+            te.setAuthInfo(GetToken());
+            StringReader sr = new StringReader(tokenXML.trim());
+            te.setTransferToken(JAXB.unmarshal(sr, TransferToken.class));
+            sr = new StringReader(keyBagXML.trim());
+            te.setKeyBag(JAXB.unmarshal(sr, org.uddi.custody_v3.KeyBag.class));
+
+            try {
+                custody.transferEntities(te);
+            } catch (Exception ex) {
+                if (ex instanceof DispositionReportFaultMessage) {
+                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                        token = null;
+                        custody.transferEntities(te);
+                    }
+                } else {
+                    throw ex;
+                }
+            }
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+        return null;//"Success";
+
+    }
+
+    public Subscription GetSubscriptionDetails(String id) {
+        if (id == null) {
+            return null;
+        }
+        List<Subscription> GetSubscriptions = this.GetSubscriptions();
+        if (GetSubscriptions == null) {
+            return null;
+        }
+        for (int i = 0; i < GetSubscriptions.size(); i++) {
+            if (GetSubscriptions.get(i).getSubscriptionKey() != null && GetSubscriptions.get(i).getSubscriptionKey().equalsIgnoreCase(id)) {
+                return GetSubscriptions.get(i);
+            }
         }
         return null;
     }

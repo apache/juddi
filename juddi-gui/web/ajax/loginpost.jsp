@@ -16,21 +16,25 @@
 
     URL prop = application.getResource("/META-INF/config.properties");
     if (prop == null) {
+        prop = application.getResource("META-INF/config.properties");
+
+    }
+    if (prop == null) {
         throw new Exception("Cannot locate the configuration file.");
     }
-
+    
     InputStream in = prop.openStream();
     Properties p = new Properties();
     p.load(in);
     in.close();
     session.setAttribute("username", request.getParameter("username"));
-    session.setAttribute("password", AES.Encrypt(request.getParameter("password"), (String)p.get("key")));
+    session.setAttribute("password", AES.Encrypt(request.getParameter("password"), (String) p.get("key")));
 
 
 
     UddiHub.reset(request.getSession());
     UddiHub x = UddiHub.getInstance(application, request.getSession());
-    
+
 
 
 %>

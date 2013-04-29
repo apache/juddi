@@ -4,6 +4,11 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
+<%@page import="javax.xml.bind.JAXB"%>
+<%@page import="java.io.StringWriter"%>
+<%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
+<%@page import="org.uddi.custody_v3.TransferToken"%>
 <%@page import="javax.xml.datatype.DatatypeFactory"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -12,44 +17,66 @@
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<jsp:include page="../csrf.jsp" />
 <%
     if (request.getMethod().equalsIgnoreCase("POST")) {
-        String businesslist = request.getParameter("keylist");
+        String keylist = request.getParameter("keylist");
+        if (keylist == null) {
+            response.setStatus(400);
+        } else {
 
-        //String tmodellist = request.getParameter("tmodellist");
-        String username = request.getParameter("transferto");
+            UddiHub x = UddiHub.getInstance(application, session);
+            Holder<byte[]> outToken = new Holder<byte[]>();
+            Holder<XMLGregorianCalendar> outXcal = new Holder<XMLGregorianCalendar>();
+            DatatypeFactory df = DatatypeFactory.newInstance();
+            outXcal.value = df.newXMLGregorianCalendar();
+            Holder<String> transferTo = new Holder<String>();
+            //transferTo.value = username;
+            //  List<String> keys = new ArrayList<String>();
+
+            /*if (tmodellist != null) {
+             String[] tmodelkeys = tmodellist.split(",");
+             for (int i = 0; i < tmodelkeys.length; i++) {
+             keys.add(tmodelkeys[i]);
+             }
+             }*/
+            org.uddi.custody_v3.KeyBag keys = new org.uddi.custody_v3.KeyBag();
+
+            if (keylist != null) {
+                String[] keylists = keylist.split(",");
+
+                for (int i = 0; i < keylists.length; i++) {
+                    keys.getKey().add(keylists[i]);
+                }
+            }
+
+            String msg = x.GetCustodyTransferToken(keys, transferTo, outXcal, outToken);
+            if (msg != null) {
+                out.write(msg);
+            } else {
+                TransferToken tt = new TransferToken();
+                tt.setExpirationTime(outXcal.value);
+                tt.setNodeID(transferTo.value);
+                tt.setOpaqueToken(outToken.value);
+                try {
+                    StringWriter sw = new StringWriter();
+                    sw.write(ResourceLoader.GetResource(session, "items.transfertoken") + ": ");
+                    JAXB.marshal(tt, sw);
+                    
+
+                    sw.write(ResourceLoader.GetResource(session, "items.transferkeys") + ": ");
+                    JAXB.marshal(keys, sw);
+                    out.write(sw.toString());
 
 
-        UddiHub x = UddiHub.getInstance(application, session);
-        Holder<byte[]> outToken = new Holder<byte[]>();
-        Holder<XMLGregorianCalendar> outXcal = new Holder<XMLGregorianCalendar>();
-        DatatypeFactory df = DatatypeFactory.newInstance();
-        outXcal.value = df.newXMLGregorianCalendar();
-        Holder<String> transferTo = new Holder<String>();
-        transferTo.value = username;
-        List<String> keys = new ArrayList<String>();
-        if (businesslist != null) {
-            String[] businesskeys = businesslist.split(",");
+                } catch (Exception ex) {
+                    out.write(ex.getMessage());
+                }
 
-            for (int i = 0; i < businesskeys.length; i++) {
-                keys.add(businesskeys[i]);
+
+                //out.write(new String(outToken.value) + "<br>");
             }
         }
-        /*if (tmodellist != null) {
-            String[] tmodelkeys = tmodellist.split(",");
-            for (int i = 0; i < tmodelkeys.length; i++) {
-                keys.add(tmodelkeys[i]);
-            }
-        }*/
-        x.GetCustodyTransferToken(keys, transferTo, outXcal, outToken);
-        try{
-        if (outXcal!=null && outXcal.value!=null)
-        out.write(outXcal.value.toString() + "<br>");
-               }
-        catch (Exception ex){}
-        out.write(new String(outToken.value) + "<br>");
     }
-
 
 %>

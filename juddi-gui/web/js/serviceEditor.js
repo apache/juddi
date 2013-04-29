@@ -197,7 +197,7 @@ function saveService()
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ' + url);                                
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText );
+        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + textStatus );
         //$(".alert").alert();
         $("#resultBar").show();
         
@@ -231,7 +231,7 @@ function deleteService()
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ' + url);                                
-        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText );
+        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus );
         //$(".alert").alert();
         $("#resultBar").show();
         

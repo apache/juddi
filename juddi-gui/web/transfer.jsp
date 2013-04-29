@@ -41,6 +41,8 @@
 
                 <li><a href="#discard" >Discard a Token</a></li>
 
+                <li><a href="#accept" >Accept a Transfer</a></li>
+
             </ul>
             <script>
                 $(function () {
@@ -51,6 +53,10 @@
                     $(this).tab('show');
                 });
                 $('#myTab a[href=#discard]').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                $('#myTab a[href=#accept]').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
@@ -66,10 +72,6 @@
                         <img src="img/ajax-loader.gif">
                     </div>
 
-
-                    <div>
-                        Transfer to: <input type="text" id="transferto" placeholder="Username"> 
-                    </div>
                     <div>
                         <a href="javascript:getToken();" class="btn btn-primary btn-large" style="width:90%">Get Token</a>
                     </div>
@@ -109,24 +111,107 @@
                                 name: "keylist", 
                                 value: keys.join()
                             });
-                            /*
-                            var id=$("#businesslist.transferable").find('option:selected').attr('id');
-                            //$("#businesslist").val();
-                            if (id!=null)
-                                postbackdata.push({
-                                    name: "businesslist", 
-                                    value: id.join()
-                                });
-                            id=id=$("#tmodellist").find('option:selected').attr('id');//$("#tmodellist").val();
-                            if (id!=null)
-                                postbackdata.push({
-                                    name: "tmodellist", 
-                                    value: id.join()
-                                });
-                             */              
+                                  
                             postbackdata.push({
                                 name:"transferto", 
                                 value: $("#transferto").val()
+                            });
+                            
+                            postbackdata.push({
+                                name:"nonce", 
+                                value: $("#nonce").val()
+                            });
+    
+                            var request=   $.ajax({
+                                url: url,
+                                type:"POST",
+                                //  data" + i18n_type + ": "html", 
+                                cache: false, 
+                                //  processData: false,f
+                                data: postbackdata
+                            });
+                
+                
+                            request.done(function(msg) {
+                                window.console && console.log('postback done '  + url);                
+        
+                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +
+                                    safe_tags_replace(msg));
+                                $("#resultBar").show();
+        
+                            });
+
+                            request.fail(function(jqXHR, textStatus) {
+                                window.console && console.log('postback failed ' + url);                                
+                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + textStatus );
+                                //$(".alert").alert();
+                                $("#resultBar").show();
+        
+                            });
+                        }
+                        
+                        function discardToken()
+                        {
+                            var url='ajax/abortTransferToken.jsp';
+                            var postbackdata = new Array();
+
+                           
+                            postbackdata.push({
+                                name:"tokenxml", 
+                                value: $("#tokenxml").val()
+                            });
+                            
+                            postbackdata.push({
+                                name:"nonce", 
+                                value: $("#nonce").val()
+                            });
+    
+                            var request=   $.ajax({
+                                url: url,
+                                type:"POST",
+                                //  data" + i18n_type + ": "html", 
+                                cache: false, 
+                                //  processData: false,f
+                                data: postbackdata
+                            });
+                
+                
+                            request.done(function(msg) {
+                                window.console && console.log('postback done '  + url);                
+        
+                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                                $("#resultBar").show();
+        
+                            });
+
+                            request.fail(function(jqXHR, textStatus) {
+                                window.console && console.log('postback failed ' + url);                                
+                                $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText + textStatus );
+                                //$(".alert").alert();
+                                $("#resultBar").show();
+        
+                            });
+                        }
+                        
+                        
+                        
+                        
+                        
+                        function acceptToken()
+                        {
+                            var url='ajax/acceptTransferToken.jsp';
+                            var postbackdata = new Array();
+
+                           
+                            postbackdata.push({
+                                name:"tokenxml", 
+                                value: $("#accepttoken").val()
+                            });
+                            
+                            
+                            postbackdata.push({
+                                name:"keybag", 
+                                value: $("#keybag").val()
                             });
                             
                             postbackdata.push({
@@ -162,11 +247,20 @@
                         }
                     </script>
                 </div>
+                <div class="tab-pane" id="accept">
+                    Accept a transfer<Br><br>
+
+                    Token: <textarea  id="accepttoken" placeholder="Token XML"></textarea> <br>
+                    
+                    Key Cag: <textarea  id="keybag" placeholder="Token XML"></textarea> <br>
+                    <a href="javascript:acceptToken();" class="btn btn-info btn-large" style="width:90%"><i class="icon-large icon-plus"></i> Accept</a>
+                </div>
+
                 <div class="tab-pane" id="discard">
                     Discard a transfer token (abort the transfer)<Br><br>
 
-                    Token: <input type="text" id="discardtoken" placeholder="Token data"> <br>
-                    <a href="javascript:submit();" class="btn btn-danger btn-large" style="width:90%"><i class="icon-large icon-remove-sign"></i> Discard Token</a>
+                    Token: <textarea id="tokenxml" placeholder="Token XML"></textarea> <br>
+                    <a href="javascript:discardToken();" class="btn btn-danger btn-large" style="width:90%"><i class="icon-large icon-remove-sign"></i> Discard Token</a>
                 </div>
             </div>
         </div>
