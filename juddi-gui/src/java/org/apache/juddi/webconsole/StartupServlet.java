@@ -16,6 +16,10 @@ import javax.servlet.ServletContextEvent;
  */
 public class StartupServlet implements javax.servlet.ServletContextListener {
 
+    /**
+     * creates a new AES key and stores it to the properties files
+     * @param sce 
+     */
     public void contextInitialized(ServletContextEvent sce) {
         FileOutputStream fos = null;
         try {
@@ -45,6 +49,10 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
         }
     }
 
+    /**
+     * does nothing
+     * @param sce 
+     */
     public void contextDestroyed(ServletContextEvent sce) {
     }
 }

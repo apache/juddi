@@ -1,5 +1,5 @@
 <%-- 
-    Document   : businessAsSelect
+    Document   : businessAsSelect This actually returns a list of all businesses and/or tmodel keys owned by the current user
     Created on : Apr 27, 2013, 10:05:21 AM
     Author     : Alex O'Ree
 --%>
@@ -11,16 +11,6 @@
 <%
     UddiHub x = UddiHub.getInstance(application, session);
 
-    String lang = request.getParameter("lang");
-    if (lang == null || lang.length() == 0) {
-        lang = null;
-    }
-    if (lang != null && lang.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
-        lang = null;
-    }
-  
-   
-
-    out.write(x.GetMyTransferableKeys(true,true));
+    out.write(x.GetMyTransferableKeys(true, true));
 
 %>

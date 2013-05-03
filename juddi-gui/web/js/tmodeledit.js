@@ -22,7 +22,7 @@ function AddOverviewDocument()
     var i = currentOverviewDocs;
     $("<div id=\"overviewDoc" + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('overviewDoc" + i 
-        +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
+        +"');\"><i class=\"icon-trash\"></i></a></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"overviewDoc" + i + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_type + ": &nbsp;</div>"
@@ -44,7 +44,7 @@ function AddDescriptionOverviewSpecific(div)
     var i = currentDescriptionSpecific;
     $("<div id=\""+ div + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i 
-        +"');\"><i class=\"icon-remove-sign\"></i></a></div>"
+        +"');\"><i class=\"icon-trash\"></i></a></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" + div + "Description" + i + "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_lang + ": &nbsp;</div>"

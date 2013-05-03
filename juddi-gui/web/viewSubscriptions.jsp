@@ -44,46 +44,52 @@
                 <%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.content")%>
 
             </p>
-            <h2><%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.listingheader")%></h2>
             <%
                 UddiHub x = UddiHub.getInstance(application, session);
-//TODO more internationalization
+
                 List<Subscription> list = x.GetSubscriptions();
                 if (list == null) {
-                    out.write(ResourceLoader.GetResource(session, "errors.notsignedin"));
-                }
-
             %>
-
+            <div class="alert alert-error" >
+                <h3> <i class="icon-warning-sign"></i> <%=ResourceLoader.GetResource(session, "errors.notsignedin")%></h3>
+            </div>
             <%
+
+                }
                 if (list != null) {
                     if (!list.isEmpty()) {
             %>
             <table class="table table-hover">
-                <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th><th><%=ResourceLoader.GetResource(session, "items.expires")%></th><th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
+                <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.expires")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
 
                 <%
                     for (int i = 0; i < list.size(); i++) {
-                        out.write("<tr><td>");
+                        out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"><td>");
                         out.write(StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()));
                         out.write("</td><td>");
                         out.write(StringEscapeUtils.escapeHtml(list.get(i).getExpiresAfter().toString()));
                         out.write("</td><td>");
-                          out.write(StringEscapeUtils.escapeHtml(list.get(i).getBindingKey()));
+                        out.write(StringEscapeUtils.escapeHtml(list.get(i).getBindingKey()));
                         out.write("</td><td>");
-                        
-                        
-                        out.write("<i class=\"icon-edit icon-large\"></i> ");
-                        out.write("<i class=\"icon-remove icon-large\"></i> ");
-                        out.write("<i class=\"icon-zoom-in icon-large\"></i> ");
+
+
+                        out.write("<a href=\"editSubscription.jsp?id=" + URLEncoder.encode(list.get(i).getSubscriptionKey(), "UTF8") + "\"><i class=\"icon-edit icon-2x\"></i></a> ");
+                        out.write("<a href=\"javascript:deleteSub('" + StringEscapeUtils.escapeJavaScript(list.get(i).getSubscriptionKey()) + "');\"><i class=\"icon-trash icon-2x\"></i></a> ");
+                        out.write("<a href=\"javascript:ViewAsXML('" + StringEscapeUtils.escapeJavaScript(list.get(i).getSubscriptionKey()) + "');\"><i class=\"icon-zoom-in icon-2x\"></i></a> ");
+
                         out.write(list.get(i).getBindingKey());
-                        if (list.get(i).getMaxEntities() != null)
+                        if (list.get(i).getMaxEntities() != null) {
                             out.write(list.get(i).getMaxEntities().toString());
-                        if (list.get(i).getNotificationInterval()!=null)
-                        out.write(list.get(i).getNotificationInterval().toString());
+                        }
+                        if (list.get(i).getNotificationInterval() != null) {
+                            out.write(list.get(i).getNotificationInterval().toString());
+                        }
 //out.write(list.get(i).getSubscriptionFilter());
                         out.write("</td></tr>");
-                      //  out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
+                        //  out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
                     }
                 %>
             </table>
@@ -94,7 +100,85 @@
                 }
             %>
 
+            <script type="text/javascript">
+                function deleteSub(key)
+                {
+                    var postbackdata = new Array();
+                    var url='ajax/subscription.jsp';
+                        
+                              
+                    postbackdata.push({
+                        name:"nonce", 
+                        value: $("#nonce").val()
+                    });
+    
+                        
+                    postbackdata.push({
+                        name:"DELETE", 
+                        value: key
+                    });
+            
+                    var request=   $.ajax({
+                        url: url,
+                        type:"POST",
+                        //  dataType: "html", 
+                        cache: false, 
+                        //  processData: false,f
+                        data: postbackdata
+                    });
+                
+                
+                    request.done(function(msg) {
+                        window.console && console.log('postback done '  + url);                
+        
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                        $("#resultBar").show();
+                        $("#" + escapeJquerySelector(key)).remove();
+        
+                    });
 
+                    request.fail(function(jqXHR, textStatus) {
+                        window.console && console.log('postback failed ' + url);                                
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
+                        $("#resultBar").show();
+        
+                    });
+                }
+            </script>
         </div>
     </div>
+
+
+
+    <div class="modal hide fade container" id="viewAsXml">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%></h3>
+        </div>
+        <div class="modal-body" id="viewAsXmlContent">
+
+
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
+        </div>
+    </div>
+    <script type="text/javascript">
+         
+        function ViewAsXML(id)
+        {
+            $.get("ajax/toXML.jsp?id=" + id + "&type=subscription", function(data){
+                window.console && console.log('asXml success');                
+                  
+                $("#viewAsXmlContent").html(safe_tags_replace(data));
+                $( "#viewAsXml" ).modal('show');
+            });
+                       
+        }
+                   
+        function closeXmlPop(modaldiv)
+        {
+            $('#' + modaldiv).modal('hide');
+        }
+    </script>
     <%@include file="header-bottom.jsp" %>

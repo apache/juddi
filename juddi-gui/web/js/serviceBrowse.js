@@ -15,40 +15,40 @@
  *
  */
 
-var offset=0; //start at the begining
-var maxrecords=20;  //record 20 at a time
-var totalrecords=0;
+var offseServicet=0; //start at the begining
+var maxrecordsService=20;  //record 20 at a time
+var totalrecordsService=0;
 
 function refreshServiceList()
 {
-    RenderServiceListBySearch('%', offset, maxrecords);    
+    RenderServiceListBySearch('%', offsetService, maxrecordsService);    
 }
-RenderServiceListBySearch('%', offset, maxrecords);
+RenderServiceListBySearch('%', offsetService, maxrecordsService);
 //offset += maxrecords;
 function pagedownService()
 {
-    offset = $("#offset").text();
+    offsetService = $("#offsetService").text();
     //alert(offset);
-    var newoffset = offset - maxrecords;
+    var newoffset = offsetService - maxrecordsService;
     if (newoffset < 0)
         return;
     //alert(newoffset);
-    if (newoffset != offset)
-        RenderServiceListBySearch('%', newoffset, maxrecords);
+    if (newoffset != offsetService)
+        RenderServiceListBySearch('%', newoffset, maxrecordsService);
 }
 function pageupService()
 {
-    offset = $("#offset").text();
+    offsetService = $("#offsetService").text();
     //alert(offset);
-    var fetch = maxrecords;
-    if ((parseInt(offset) + parseInt(maxrecords))  > totalrecords)
+    var fetch = maxrecordsService;
+    if ((parseInt(offsetService) + parseInt(maxrecordsService))  > totalrecordsService)
         //fetch = maxrecords - offset;
         return;
     else 
-        fetch = (parseInt(offset) + parseInt(maxrecords));    
+        fetch = (parseInt(offsetService) + parseInt(maxrecordsService));    
     //alert(fetch);
-    offset = fetch;
-    RenderServiceListBySearch('%', fetch, maxrecords);
+    offsetService = fetch;
+    RenderServiceListBySearch('%', fetch, maxrecordsService);
 }
 
 function RenderServiceListBySearch(keyword, offset, maxrecords)
@@ -84,23 +84,23 @@ function RenderServiceListBySearch(keyword, offset, maxrecords)
 
 function refresh()
 {
-    var displayrecords = $("#displayrecords").text();
-    if (displayrecords == totalrecords)
+    var displayrecords = $("#displayrecordsService").text();
+    if (displayrecords == totalrecordsService)
     {
-        $("#pageup").addClass("disabled");
-        $("#pagedown").addClass("disabled");
+        $("#pageupService").addClass("disabled");
+        $("#pagedownService").addClass("disabled");
     }
-    else if (offset + maxrecords > totalrecords)
+    else if (offsetService + maxrecordsService > totalrecordsService)
     {
-        $("#pageup").addClass("disabled");    
+        $("#pageupService").addClass("disabled");    
     }
-    else if (offset ==0)
+    else if (offsetService ==0)
     {
-        $("#pagedown").removeClass("disabled");        
+        $("#pagedownService").removeClass("disabled");        
     }
     else
     {
-        $("#pagedown").removeClass("disabled");        
-        $("#pageup").removeClass("disabled");        
+        $("#pagedownService").removeClass("disabled");        
+        $("#pageupService").removeClass("disabled");        
     }
 }

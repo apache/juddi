@@ -109,20 +109,20 @@
                         <a class="brand" href="home.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li class="dropdown"><a href="home.jsp" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.home")%><b class="caret"></b></a>
+                                <li class="dropdown"><a href="home.jsp" data-toggle="dropdown" class="dropdowb-town"><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
                                         <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
                                         <li><a href="transfer.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.transfer.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.transfer")%></a></li>
                                         <li class="divider"></li>
                                         <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
-                                        <li><a href="createSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
+                                        <li><a href="editSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
                                         <li><a href="subscriptionFeed.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></a></li>
                                     </ul>
 
 
                                 </li>
-                                <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.discover")%><b class="caret"></b></a>
+                                <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-search icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.discover")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.businesses.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.businesses")%></a></li>
                                         <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
@@ -136,7 +136,7 @@
 
                                     </ul>
                                 </li>
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.create")%><b class="caret"></b></a>
+                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-pencil icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.create")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessEditor2.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.business.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.business")%></a></li>
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.service.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.service")%></a></li>
@@ -145,13 +145,13 @@
                                     </ul>
                                 </li>
 
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.settings")%><b class="caret"></b></a>
+                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-cog icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.settings")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="settings.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.settings.config.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.settings.config")%></a></li>
                                     </ul>
                                 </li>
 
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>
+                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-question-sign icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.userguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.userguide")%></a></li>
                                         <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.devguide")%>"><%=ResourceLoader.GetResource(session, "navbar.help.devguide")%></a></li>

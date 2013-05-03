@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<uddi>
+    <reloadDelay>5000</reloadDelay>
+    <manager name="example-manager">
+        <nodes>
+            <node>
+                <!-- required 'default' node -->
+                <name>default</name> 
+                <properties>
+                    <property name="serverName" value="localhost"/>
+                    <property name="serverPort" value="8080"/>
+                </properties>
+                <description>Main jUDDI node</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
+            </node>
+        </nodes>
+    </manager>
+</uddi>

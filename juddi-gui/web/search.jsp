@@ -44,19 +44,19 @@
                                 <% 
                                 //if (x.IsJuddiRegistry()) {
                               
-                                //<button type="button" class="btn " ><%= ResourceLoader.GetResource(session, "items.publisher")%></button>
+                                //<button type="button" class="btn " ><%= ResourceLoader.GetResource(session, "items.publisher")% ></button>
 
                                 //}
                                 %>
                             </div><br><Br>
                             <%= ResourceLoader.GetResource(session, "search.criteria")%><br>
                             <div class="btn-group" id="searchcriteria" data-toggle="buttons-radio">
-                                <button type="button" class="btn active" active value="name"><%= ResourceLoader.GetResource(session, "search.criteria.byname")%></button>
+                                <button type="button" class="btn active" value="name"><%= ResourceLoader.GetResource(session, "search.criteria.byname")%></button>
                                 <button type="button" class="btn " value="category"><%= ResourceLoader.GetResource(session, "search.criteria.bycategory")%></button>
                                 <button type="button" class="btn " value="key"><%= ResourceLoader.GetResource(session, "search.criteria.bykey")%></button>
                                 <button type="button" class="btn " value="tmodel"><%= ResourceLoader.GetResource(session, "search.criteria.bytmodel")%></button>
                             </div><br>
-                            Find Qualifiers<br>
+                            <%=ResourceLoader.GetResource(session, "items.findqualifiers")%><br>
 
                             <div style=" float:left; padding: 2px">
 

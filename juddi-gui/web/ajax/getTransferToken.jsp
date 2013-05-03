@@ -53,6 +53,7 @@
             String msg = x.GetCustodyTransferToken(keys, transferTo, outXcal, outToken);
             if (msg != null) {
                 out.write(msg);
+                response.setStatus(400);
             } else {
                 TransferToken tt = new TransferToken();
                 tt.setExpirationTime(outXcal.value);
@@ -60,16 +61,19 @@
                 tt.setOpaqueToken(outToken.value);
                 try {
                     StringWriter sw = new StringWriter();
-                    sw.write(ResourceLoader.GetResource(session, "items.transfertoken") + ": ");
+//BREAK is replaced via javascript in a popup
+                    sw.write(ResourceLoader.GetResource(session, "actions.savethis") + "  BREAK  ");
+                    sw.write(ResourceLoader.GetResource(session, "items.transfertoken") + ": BREAK ");
                     JAXB.marshal(tt, sw);
-                    
 
-                    sw.write(ResourceLoader.GetResource(session, "items.transferkeys") + ": ");
+
+                    sw.write(" BREAK BREAK" + ResourceLoader.GetResource(session, "items.transferkeys") + ": BREAK ");
                     JAXB.marshal(keys, sw);
                     out.write(sw.toString());
 
 
                 } catch (Exception ex) {
+                    response.setStatus(400);
                     out.write(ex.getMessage());
                 }
 

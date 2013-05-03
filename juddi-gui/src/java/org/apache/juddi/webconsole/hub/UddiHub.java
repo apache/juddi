@@ -26,13 +26,11 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -72,16 +70,24 @@ import sun.misc.BASE64Encoder;
 /**
  * UddiHub - The hub acts as a single point for managing browser to uddi
  * services. At most 1 instance is allowed per http session. In general, all
- * methods in the class trigger web service call outs
+ * methods in the class trigger web service call outs. All callouts also support
+ * expired UDDI tokens and will attempt to reauthenticate and retry the request.
  *
  * @author Alex O'Ree
  */
 public class UddiHub {
 
+    /**
+     * The logger name
+     */
     public static final String LOGGER_NAME = "org.apache.juddi";
     URL propertiesurl = null;
     Properties properties = null;
     AuthStyle style = null;
+    /**
+     * The Log4j logger. This is also referenced from the Builders class, thus
+     * it is public
+     */
     public static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LOGGER_NAME);
     private DatatypeFactory df;
 
@@ -99,6 +105,10 @@ public class UddiHub {
         // token = null;
     }
 
+    /**
+     * This kills any authentication tokens, logs the user out and nulls out all
+     * services
+     */
     public void die() {
         DiscardAuthToken da = new DiscardAuthToken();
         da.setAuthInfo(token);
@@ -117,6 +127,15 @@ public class UddiHub {
         subscription = null;
     }
 
+    /**
+     * This is the singleton accessor UddiHub. There should be at most 1
+     * instance per HTTP Session (user login)
+     *
+     * @param application
+     * @param _session
+     * @return
+     * @throws Exception
+     */
     public static UddiHub getInstance(ServletContext application, HttpSession _session) throws Exception {
         Object j = _session.getAttribute("hub");
         if (j == null) {
@@ -129,10 +148,22 @@ public class UddiHub {
     }
     String locale = "en";
 
+    /**
+     * Provides access to the configuration file for the Hub. useful for I/O
+     * changes to the config
+     *
+     * @return
+     * @throws URISyntaxException
+     */
     public String GetRawConfigurationPath() throws URISyntaxException {
         return propertiesurl.toString();
     }
 
+    /**
+     *
+     * @return Provides access to the configuration file for the Hub. useful for
+     * I/O changes to the config
+     */
     public Properties GetRawConfiguration() {
         return properties;
     }
@@ -197,17 +228,6 @@ public class UddiHub {
         }
     }
     private HttpSession session;
-    /*
-     public boolean IsJuddiRegistry() {
-     String type = properties.getProperty("registryType");
-     if (type == null) {
-     return false;
-     }
-     if (type.equalsIgnoreCase("juddi")) {
-     return true;
-     }
-     return false;
-     }*/
 
     private String GetToken() {
         if (style != AuthStyle.UDDI_AUTH) {
@@ -259,6 +279,12 @@ public class UddiHub {
         return token;
     }
 
+    /**
+     * Returns true if the current user has a token and is signed in. Does not
+     * apply to non-UDDI security API logins
+     *
+     * @return
+     */
     public boolean getUddiIsAuthenticated() {
         return (token != null && !token.isEmpty());
     }
@@ -270,6 +296,16 @@ public class UddiHub {
     //private JUDDIApiPortType juddi = null;
     private String token = null;
 
+    /**
+     * Performs a find_business call in the inquiry API
+     *
+     * @param offset
+     * @param maxrecords
+     * @param keyword
+     * @param lang
+     * @param isChooser
+     * @return
+     */
     public PagableContainer GetBusinessListAsHtml(int offset, int maxrecords, String keyword, String lang, boolean isChooser) {
         PagableContainer ret = new PagableContainer();
         ret.offset = offset;
@@ -341,7 +377,7 @@ public class UddiHub {
             GetRegisteredInfo r = new GetRegisteredInfo();
             r.setAuthInfo(GetToken());
             if (r.getAuthInfo() == null) {
-                return null;
+                return "<h1>" + ResourceLoader.GetResource(session, "errors.notsignedin") + "</h1>";
             }
             r.setInfoSelection(InfoSelection.ALL);
 
@@ -361,7 +397,7 @@ public class UddiHub {
             }
 
         } catch (Exception ex) {
-            return HandleException(ex);
+            return ToErrorAlert(HandleException(ex));
         }
 
 
@@ -401,6 +437,12 @@ public class UddiHub {
 
     }
 
+    /**
+     * Performs Inquiry Find_service API
+     *
+     * @param serviceid
+     * @return
+     */
     public String GetServiceDetailAsHtml(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
             return "No business id specified";
@@ -501,6 +543,12 @@ public class UddiHub {
         return sb.toString();
     }
 
+    /**
+     * Performs a getServiceDetails in Inquiry API
+     *
+     * @param serviceid
+     * @return
+     */
     public BusinessService GetServiceDetail(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
             return null;
@@ -537,6 +585,12 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * Calls Publisher Save Service API
+     *
+     * @param be
+     * @return
+     */
     public String SaveService(BusinessService be) {
         try {
             SaveService sb = new SaveService();
@@ -595,6 +649,13 @@ public class UddiHub {
         }
     }
 
+    /**
+     * This method will rebuild a Service entity from the HTTP request from the
+     * Service Editor page and will then attempt to save it.
+     *
+     * @param request
+     * @return a localized Saved or an error message
+     */
     public String SaveServiceDetails(HttpServletRequest request) {
 
         BusinessService be = new BusinessService();
@@ -628,6 +689,12 @@ public class UddiHub {
         return SaveServiceDetails(be);
     }
 
+    /**
+     * Saves a Service
+     *
+     * @param be
+     * @return a readable error message or, success
+     */
     public String SaveServiceDetails(BusinessService be) {
         try {
             SaveService sb = new SaveService();
@@ -657,7 +724,7 @@ public class UddiHub {
      * Saves a business entity
      *
      * @param be
-     * @return
+     * @return a readable error message
      */
     public String SaveBusinessDetails(BusinessEntity be) {
         try {
@@ -697,19 +764,23 @@ public class UddiHub {
      */
     public String SaveBusinessDetails(HttpServletRequest request) {
 
-        BusinessEntity GetBusinessDetails = GetBusinessDetails(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
+
 
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
         if (be.getBusinessKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
             be.setBusinessKey(null);
+        } else {
+            BusinessEntity GetBusinessDetails = GetBusinessDetails(be.getBusinessKey());
+            if (GetBusinessDetails == null) //this is a new business
+            {
+            } else {
+                //copy over the existing child element, business
+                be.setBusinessServices(GetBusinessDetails.getBusinessServices());
+            }
         }
         be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit")));
-        if (GetBusinessDetails == null) //this is a new business
-        {
-        } else {
-            be.setBusinessServices(GetBusinessDetails.getBusinessServices());
-        }
+
 
         be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit")));
 
@@ -726,7 +797,15 @@ public class UddiHub {
         return SaveBusinessDetails(be);
     }
 
-    public String GetBusinessDetailsAsHtml(String bizid) throws Exception {
+    /**
+     * Returns
+     *
+     * @param bizid
+     * @return
+     * @throws Exception
+     */
+    @Deprecated
+    private String GetBusinessDetailsAsHtml(String bizid) throws Exception {
         if (bizid == null || bizid.isEmpty()) {
             return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
@@ -821,15 +900,47 @@ public class UddiHub {
 
     }
 
+    private String ToErrorAlert(String HandleException) {
+        return "<div class=\"alert alert-error\">" + HandleException + "</div>";
+    }
+
+    /**
+     * AuthStyles for the Hub to use, default is UDDI_AUTH
+     */
     public enum AuthStyle {
 
+        /**
+         * Http Basic
+         */
         HTTP_BASIC,
+        /**
+         * Http Digest
+         */
         HTTP_DIGEST,
+        /**
+         * HTTP NTLM
+         */
         HTTP_NTLM,
+        /**
+         * UDDI Authentication via the Security API
+         */
         UDDI_AUTH,
+        /**
+         * HTTP Client Certificate Authentication
+         */
         HTTP_CLIENT_CERT
     }
 
+    /**
+     * Search for services using find_services
+     *
+     * @param keyword
+     * @param lang
+     * @param maxrecords
+     * @param offset
+     * @param isChooser
+     * @return
+     */
     public PagableContainer SearchForServices(String keyword, String lang, int maxrecords, int offset, boolean isChooser) {
         PagableContainer ret = new PagableContainer();
         ret.displaycount = 0;
@@ -885,61 +996,6 @@ public class UddiHub {
     }
 
     /**
-     * not used yet?
-     *
-     * @param request
-     * @return
-     * @ deprecated
-     *
-     * @ Deprecated public String AddPublisher(HttpServletRequest request) { try
-     * { SavePublisher sp = new SavePublisher(); sp.setAuthInfo(GetToken());
-     * Publisher p = new Publisher(); //TODO code sp.getPublisher().add(p);
-     * PublisherDetail savePublisher = juddi.savePublisher(sp); return
-     * "Success"; //TODO resource this } catch (Exception ex) { return
-     * HandleException(ex); }
-     *
-     *
-     * }
-     */
-    /**
-     * returns an html listing of Juddi authorized publishers
-     *
-     * @return
-     *
-     * public String GetPublisherListAsHtml() { if (!this.IsJuddiRegistry()) {
-     * return "This function is only available on Juddi registries"; } try {
-     * GetAllPublisherDetail gpd = new GetAllPublisherDetail();
-     * gpd.setAuthInfo(GetToken()); PublisherDetail allPublisherDetail =
-     * juddi.getAllPublisherDetail(gpd); StringBuilder sb = new StringBuilder();
-     * for (int i = 0; i < allPublisherDetail.getPublisher().size(); i++) {
-     * sb.append(ResourceLoader.GetResource(session, "items.pubisher.name"))
-     * .append(" =
-     * ").append(allPublisherDetail.getPublisher().get(i).getPublisherName()).append("<br>");
-     * sb.append(ResourceLoader.GetResource(session,
-     * "items.pubisher.authname")).append(" =
-     * ").append(allPublisherDetail.getPublisher().get(i).getAuthorizedName()).append("<br>");
-     * sb.append(ResourceLoader.GetResource(session, "items.email"));
-     * sb.append(" =
-     * ").append(allPublisherDetail.getPublisher().get(i).getEmailAddress()).append("<br>");
-     * sb.append(ResourceLoader.GetResource(session, "items.publisher.admin"))
-     * .append(" =
-     * ").append(allPublisherDetail.getPublisher().get(i).getIsAdmin()).append("<br>");
-     * sb.append("Is Enabled? =
-     * ").append(allPublisherDetail.getPublisher().get(i).getIsEnabled()).append("<br>");
-     * sb.append("Max bindings per service =
-     * ").append(allPublisherDetail.getPublisher().get(i).getMaxBindingsPerService()).append("<br>");
-     * sb.append("Max businesses =
-     * ").append(allPublisherDetail.getPublisher().get(i).getMaxBusinesses()).append("<br>");
-     * sb.append("Max Services per Business =
-     * ").append(allPublisherDetail.getPublisher().get(i).getMaxServicePerBusiness()).append("<br>");
-     * sb.append("Max tModels =
-     * ").append(allPublisherDetail.getPublisher().get(i).getMaxTModels()).append("<br><br>");
-     *
-     * }
-     * return sb.toString(); } catch (Exception ex) { return
-     * HandleException(ex); } }
-     */
-    /**
      * Adds a special tModel key generator keyGenerator: Marking a tModel with
      * this categorization designates it as one whose tModelKey identifies a key
      * generator partition that can be used by its owner to derive and assign
@@ -987,7 +1043,15 @@ public class UddiHub {
         }
     }
 
-    String HandleException(Exception ex) {
+    /**
+     * This function provides a basic error handling rutine that will pull out
+     * the true error message in a UDDI fault message, returning bootstrap
+     * stylized html error message
+     *
+     * @param ex
+     * @return
+     */
+    private String HandleException(Exception ex) {
         if (ex instanceof DispositionReportFaultMessage) {
             DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
             log.log(Level.ERROR, null, ex);
@@ -999,7 +1063,10 @@ public class UddiHub {
             return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
         log.log(Level.ERROR, null, ex);
-        return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage();
+        return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
+                ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
+        //+ "</h3></div>";
+
     }
 
     /**
@@ -1108,14 +1175,32 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * A convenience function for GetBusinessDetails
+     *
+     * @param key
+     * @return
+     */
     public BusinessEntity GetBusinessDetailsAsObject(String key) {
         return GetBusinessDetails(key);
     }
 
+    /**
+     * A convenience function for GetServiceDetail
+     *
+     * @param key
+     * @return
+     */
     public BusinessService GetServiceDetailsAsObject(String key) {
         return GetServiceDetail(key);
     }
 
+    /**
+     * Returns a specific binding template as an object
+     *
+     * @param key
+     * @return null if not found
+     */
     public BindingTemplate GetBindingDetailsAsObject(String key) {
         try {
             GetBindingDetail r = new GetBindingDetail();
@@ -1143,6 +1228,12 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * Returns a tmodel given the key
+     *
+     * @param key
+     * @return null if not found
+     */
     public TModel GettModelDetailsAsObject(String key) {
         try {
             GetTModelDetail r = new GetTModelDetail();
@@ -1171,16 +1262,70 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * An enum to help make UDDI searching easier to work with
+     */
     public enum FindType {
 
-        Business, RelatedBusiness, Service, tModel, BindingTemplate
+        /**
+         * search for a business
+         */
+        Business,
+        /**
+         * search for a related business
+         */
+        RelatedBusiness,
+        /**
+         * search for a business
+         */
+        Service,
+        /**
+         * search for a tmodel
+         */
+        tModel,
+        /**
+         * search for a binding template
+         */
+        BindingTemplate
     }
 
+    /**
+     * An enum to help make UDDI searching easier to work with
+     */
     public enum CriteriaType {
 
-        Name, Category, uid, tmodel, identbag
+        /**
+         * search by name
+         */
+        Name,
+        /**
+         * by category
+         */
+        Category,
+        /**
+         * by key
+         */
+        uid,
+        /**
+         * by tmodel
+         */
+        tmodel,
+        /**
+         * by identifier bag
+         */
+        identbag
     }
 
+    /**
+     * Provides a simple search interface for the complex UDDI search APIs
+     *
+     * @param type
+     * @param criteria
+     * @param parameters
+     * @param lang
+     * @param findqualifier
+     * @return stylized html
+     */
     public String Search(FindType type, CriteriaType criteria, String parameters, String lang, String[] findqualifier) {
         switch (type) {
             case BindingTemplate:
@@ -1195,7 +1340,7 @@ public class UddiHub {
             case tModel:
                 return FindtModels(criteria, parameters, lang, findqualifier);
         }
-        return "unknown error";
+        return ResourceLoader.GetResource(session, "items.unknown");
     }
 
     private String FindBindingTemplateToHtml(CriteriaType criteria, String parameters, String lang, String[] fq) {
@@ -1604,6 +1749,12 @@ public class UddiHub {
         return deleteBusiness(x);
     }
 
+    /**
+     * delete a service
+     *
+     * @param serviceId
+     * @return
+     */
     public String deleteService(String serviceId) {
         if (serviceId == null || serviceId.length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput");
@@ -1613,6 +1764,12 @@ public class UddiHub {
         return deleteService(x);
     }
 
+    /**
+     * deletes a list of services
+     *
+     * @param serviceId
+     * @return
+     */
     public String deleteService(List<String> serviceId) {
         if (serviceId == null || serviceId.isEmpty()) {
             return ResourceLoader.GetResource(session, "errors.noinput");
@@ -1675,6 +1832,12 @@ public class UddiHub {
         return ResourceLoader.GetResource(session, "actions.delete.business");
     }
 
+    /**
+     * delete a tmodel
+     *
+     * @param bizid
+     * @return
+     */
     public String deleteTmodel(String bizid) {
         if (bizid == null || bizid.length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput");
@@ -1807,6 +1970,13 @@ public class UddiHub {
 
     }
 
+    /**
+     * Converts a UDDI Signature to a readable representation of the signing
+     * certificate subject name
+     *
+     * @param sig
+     * @return
+     */
     public static String SignatureToReadable(SignatureType sig) {
         StringBuilder sb = new StringBuilder();
         // X509Certificate signingcert = null;
@@ -1947,6 +2117,12 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * attempts to save subscription
+     *
+     * @param sub
+     * @return a success or fail message
+     */
     public String AddSubscription(Subscription sub) {
         Holder<List<Subscription>> data = new Holder<List<Subscription>>();
         data.value = new ArrayList<Subscription>();
@@ -1966,11 +2142,17 @@ public class UddiHub {
                 }
             }
         } catch (Exception ex) {
-            HandleException(ex);
+            return HandleException(ex);
         }
-        return null;
+        return ResourceLoader.GetResource(session, "messages.success");
     }
 
+    /**
+     * Removes/deletes a subscription
+     *
+     * @param key
+     * @return sucess or failure message
+     */
     public String RemoveSubscription(String key) {
         DeleteSubscription ds = new DeleteSubscription();
         ds.setAuthInfo(GetToken());
@@ -1995,7 +2177,7 @@ public class UddiHub {
         } catch (Exception ex) {
             return HandleException(ex);
         }
-        return null;
+        return ResourceLoader.GetResource(session, "messages.success");
     }
 
     /**
@@ -2080,6 +2262,7 @@ public class UddiHub {
     }
 
     /**
+     * This function returns all businesses that the current user owns<br><br>
      * The get_registeredInfo API call is used to get an abbreviated list of all
      * businessEntity and tModel data that are controlled by a publisher. When
      * the registry distinguishes between publishers, this is the individual
@@ -2121,38 +2304,25 @@ public class UddiHub {
         return null;
     }
 
+    /**
+     * Gets a list of all assertions for all businesses owned by the current
+     * user
+     *
+     * The get_assertionStatusReport API call provides administrative support
+     * for determining the status of current and outstanding publisher
+     * assertions that involve any of the business registrations managed by the
+     * individual publisher. Using this API, a publisher can see the status of
+     * assertions that they have made, as well as see assertions that others
+     * have made that involve businessEntity structures controlled by the
+     * requesting publisher. See Appendix A Relationships and Publisher
+     * Assertions for more information.
+     *
+     * @param msg
+     * @return
+     */
     public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
         List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
-        //first, get all the assertions
-/*
-         List<PublisherAssertion> publisherAssertions = null;
-         try {
-         try {
-         publisherAssertions = publish.getPublisherAssertions(GetToken());
-         } catch (Exception ex) {
-         if (ex instanceof DispositionReportFaultMessage) {
-         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-         if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-         token = null;
-         publisherAssertions = publish.getPublisherAssertions(GetToken());
-         }
-         } else {
-         throw ex;
-         }
-         }
-         } catch (Exception ex) {
-         msg.set(HandleException(ex));
-         }
-         */
-        //then, all of the status of each item
-        /*
-         * The get_assertionStatusReport API call provides administrative support for determining 
-         * the status of current and outstanding publisher assertions that involve any of the business 
-         * registrations managed by the individual publisher.  Using this API, a publisher can see the 
-         * status of assertions that they have made, as well as see assertions that others have made that 
-         * involve businessEntity structures controlled by the requesting publisher.   See Appendix A 
-         * Relationships and Publisher Assertions for more information.
-         */
+
         List<AssertionStatusItem> STATUS_COMPLETE = null;
 
         try {
@@ -2226,6 +2396,16 @@ public class UddiHub {
         //return publisherAssertions;
     }
 
+    /**
+     * deletes a publisher assertion, all fields must match exactly
+     *
+     * @param tokey
+     * @param fromkey
+     * @param tmodelkey
+     * @param keyname
+     * @param keyvalue
+     * @return
+     */
     public String DeletePublisherAssertion(String tokey, String fromkey, String tmodelkey, String keyname, String keyvalue) {
         DeletePublisherAssertions dp = new DeletePublisherAssertions();
         dp.setAuthInfo(GetToken());
@@ -2259,6 +2439,7 @@ public class UddiHub {
     }
 
     /**
+     * Adds a new publisher assertion
      *
      * @param tokey
      * @param fromkey
@@ -2301,6 +2482,12 @@ public class UddiHub {
         return ResourceLoader.GetResource(session, "actions.saved");
     }
 
+    /**
+     * Returns bootstrap stylized html representing all changes in the last refresh
+     * @param lastRefresh
+     * @return
+     * @throws DatatypeConfigurationException 
+     */
     public String GetNewsFeed(XMLGregorianCalendar lastRefresh) throws DatatypeConfigurationException {
         if (df == null) {
             df = DatatypeFactory.newInstance();
@@ -2366,7 +2553,7 @@ public class UddiHub {
                 //    subscriptionResults.getAssertionStatusReport().
                 if (subscriptionResults.getAssertionStatusReport() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion")).
-                            append("<br><table class=\"table table-hover\">");
+                            append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getFromKey()));
@@ -2376,10 +2563,11 @@ public class UddiHub {
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(i).getCompletionStatus().toString()));
                         sb.append("</td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getBindingDetail() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getBindingDetail() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.bindings")).
-                            append("<br><table class=\"table table-hover\">");
+                            append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getBindingDetail().getBindingTemplate().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getServiceKey()));
@@ -2387,45 +2575,56 @@ public class UddiHub {
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBindingDetail().getBindingTemplate().get(i).getBindingKey()));
                         sb.append("</td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getBusinessDetail() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getBusinessDetail() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.business")).
-                            append("<br><table class=\"table table-hover\">");
+                            append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getBusinessDetail().getBusinessEntity().size(); i++) {
-                        sb.append("<tr><td>");
+                        sb.append("<tr><td><a href=\"businessEditor2.jsp?id=");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBusinessDetail().getBusinessEntity().get(i).getBusinessKey()));
-                        sb.append("</td></tr>");
+                        sb.append("\">");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getBusinessDetail().getBusinessEntity().get(i).getBusinessKey()));
+                        sb.append("<i class=\"icon-large icon-edit\"></i></a></td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getRelatedBusinessesList() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getRelatedBusinessesList() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.assertion2")).
-                            append("<br><table class=\"table table-hover\">");
+                            append("<table class=\"table table-hover\">");
                     // for (int i = 0; i < subscriptionResults.getRelatedBusinessesList().getBusinessKey().size(); i++) {
                     sb.append("<tr><td>");
                     sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getRelatedBusinessesList().getBusinessKey()));
                     sb.append("</td></tr>");
                     //}
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getServiceDetail() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getServiceDetail() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.services")).
-                            append("d<br><table class=\"table table-hover\">");
+                            append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getServiceDetail().getBusinessService().size(); i++) {
-                        sb.append("<tr><td>");
+                        sb.append("<tr><td><a href=\"serviceEditor.jsp?id=");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceDetail().getBusinessService().get(i).getServiceKey()));
-                        sb.append("</td></tr>");
+                        sb.append("\">");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceDetail().getBusinessService().get(i).getServiceKey()));
+                        sb.append("<i class=\"icon-large icon-edit\"></i></a></td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getServiceList() != null) {
-                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.servicelist")).append("<br><table class=\"table table-hover\">");
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getServiceList() != null) {
+                    sb.append(ResourceLoader.GetResource(session, "items.subscriptions.servicelist")).
+                            append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getServiceKey()));
+
                         sb.append("</td><td>");
                         sb.append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getName())));
                         sb.append("</td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getTModelDetail() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getTModelDetail() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.tmodels")).append("<br><table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getTModelDetail().getTModel().size(); i++) {
                         sb.append("<tr><td>");
@@ -2434,18 +2633,21 @@ public class UddiHub {
                         sb.append(StringEscapeUtils.escapeHtml((subscriptionResults.getTModelDetail().getTModel().get(i).getName().getValue())));
                         sb.append("</td></tr>");
                     }
-                    sb.append("</table><br><br>");
-                } else if (subscriptionResults.getTModelList() != null) {
+                    sb.append("</table><br>");
+                }
+                if (subscriptionResults.getTModelList() != null) {
                     sb.append(ResourceLoader.GetResource(session, "items.subscriptions.tmodels2"))
-                            .append("<br><table class=\"table table-hover\">");
+                            .append("<table class=\"table table-hover\">");
                     for (int i = 0; i < subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().size(); i++) {
-                        sb.append("<tr><td>");
+                        sb.append("<tr><td><a href=\"serviceEditor.jsp?id=");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getTModelKey()));
-                        sb.append("</td><td>");
+                        sb.append("\">");
+                        sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getTModelKey()));
+                        sb.append("<i class=\"icon-large icon-edit\"></i></a></td><td>");
                         sb.append(StringEscapeUtils.escapeHtml((subscriptionResults.getTModelList().getTModelInfos().getTModelInfo().get(i).getName().getValue())));
                         sb.append("</td></tr>");
                     }
-                    sb.append("</table><br><br>");
+                    sb.append("</table>");
                 }
 
             }
@@ -2453,6 +2655,16 @@ public class UddiHub {
         return sb.toString();
     }
 
+    /**
+     * Searches first for a service, then iterates through to identify bindings matching the specified criteria.
+     * Since UDDI does not have a find_binding API, this is as good as it gets.
+     * @param keyword
+     * @param lang
+     * @param offset
+     * @param maxrecords
+     * @param isChooser
+     * @return 
+     */
     public PagableContainer SearchForBinding(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
         PagableContainer ret = new PagableContainer();
         ret.displaycount = 0;
@@ -2521,7 +2733,7 @@ public class UddiHub {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
             }
-            
+
 
 
             StringBuilder sb = new StringBuilder();
@@ -2579,7 +2791,7 @@ public class UddiHub {
     }
 
     /**
-     *
+     * Get a custody transfer token for giving away control of the specified business or tmodel keys
      *
      * authInfo: This OPTIONAL argument is an element that contains an
      * authentication token. Authentication tokens are obtained using the
@@ -2672,6 +2884,12 @@ public class UddiHub {
 
     }
 
+    /**
+     * Accepts a transfer token and transfers the entities.
+     * @param tokenXML
+     * @param keyBagXML
+     * @return 
+     */
     public String AcceptCustodyTranferToken(String tokenXML, String keyBagXML) {
         try {
             TransferEntities te = new TransferEntities();
@@ -2701,6 +2919,12 @@ public class UddiHub {
 
     }
 
+    /**
+     * returns a subscription by id, since UDDI does not provide this function, it simply gets all of them for the current user
+     * then filters out the requested item
+     * @param id
+     * @return null if not found
+     */
     public Subscription GetSubscriptionDetails(String id) {
         if (id == null) {
             return null;

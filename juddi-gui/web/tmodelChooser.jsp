@@ -19,9 +19,9 @@ this page is meant to be included via jsp:include
         <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
         <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
 
-        <a href="javascript:pagedownChooserTmodel();"><i class="icon-circle-arrow-left disabled icon-large" id="pageup"></i></a>
+        <a href="javascript:pagedownChooserTmodel();"><i class="icon-circle-arrow-left disabled icon-2x" id="pageup"></i></a>
         <a href="javascript:reload();"><i class="icon-refresh icon-large"></i></a>
-        <a href="javascript:pageupChooserTmodel();"><i class="icon-circle-arrow-right disabled icon-large" id="pagedown"></i></a>
+        <a href="javascript:pageupChooserTmodel();"><i class="icon-circle-arrow-right disabled icon-2x" id="pagedown"></i></a>
 
         <div id="tmodellist">
             <img src="img/bigrollergreen.gif" title="Loading"/>

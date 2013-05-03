@@ -48,7 +48,7 @@
 
                     request.fail(function(jqXHR, textStatus) {
                         window.console && console.log('postback failed ');                                
-                        $("#businesslist").html("An error occured! " + textStatus + jqXHR);
+                        $("#businesslist").html("An error occured! " + jqXHR.responseText + textStatus);
                         //refresh();
                     });
                 }
@@ -96,7 +96,7 @@
                         });
                     }); 
                     if (!ok)
-                    {
+                    {//TODO more internationalization
                         $("#saveresult").html("A value must be specified for each value.");
                         return;
                     }

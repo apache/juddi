@@ -22,16 +22,24 @@ package org.apache.juddi.webconsole;
  */
 public class CrossSiteRequestForgeryException extends Exception {
     //Parameterless Constructor
-
+/**
+ * CrossSiteRequestForgeryException
+ */
     public CrossSiteRequestForgeryException() {
         super(msg, null);
     }
 
-    //Constructor that accepts a message
+    /**
+     * Constructor that accepts a message
+     */
     public CrossSiteRequestForgeryException(String message) {
         super(msg, null);
     }
-
+/**
+ * CrossSiteRequestForgeryException
+ * @param message
+ * @param cause 
+ */
     public CrossSiteRequestForgeryException(String message, Throwable cause) {
         super(msg, null);
     }

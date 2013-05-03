@@ -25,7 +25,7 @@ function AddCategoryKeyReferenceSpecificBT (div)
     var i=currentcatkeyrefBT;
     
     $("<div id=\""+div + i + "\" style=\"border-width:1px; border-style:solid\">"+
-        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
         "<div style=\"float:left\">" + i18n_key +" (<a href=\"javascript:tModelModal('"+div + i + "Value')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
         + "<div class=\"edit\" id=\""+ div + i + "Value\"></div>"
         + "<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
@@ -43,7 +43,7 @@ function AddCategoryKeyReferenceGroupSpecificBT(div)
     var i=currentcatkeyrefgrpBT;
     
     $("<div id=\""+div + i + "\" style=\"border-width:2px; border-style:solid\">"+
-        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>"+
+        "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
         "<div style=\"float:left\">" + i18n_key + " (<a href=\"javascript:tModelModal('"+div + i + "Value')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
         + "<div class=\"edit\" id=\"" +div+ i + "Value\"></div>"
         
@@ -65,7 +65,7 @@ function AddCategoryKeyReferenceGroupKeyRefBT(div)
     
     $("<div id=\""+div + i + "keyref" + k + "\" style=\"border-width:1px; border-style:solid\">"+
         "<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('"+div + i + "keyref" + k+  
-        "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>"+
+        "');\"><i class=\"icon-trash icon-large\"></i></a></div>"+
         "<div style=\"float:left\">" + i18n_key + " (<a href=\"javascript:tModelModal('"+div + i +"keyref" + k+ "Value')\"><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div>"
         + "<div class=\"edit\" id=\""+div + i +"keyref" + k+ "Value\"></div>"
         +"<div style=\"float:left\">" + i18n_name + ": &nbsp;</div>"
@@ -82,7 +82,7 @@ function AddOverviewDocumentSpecific(div)
     var i = currentOverviewDocs;
     $("<div id=\"" + div + i + "\" style=\"border-width:1px; border-style:solid\" >" 
         +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i 
-        +"');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>"
+        +"');\"><i class=\"icon-trash icon-large\"></i></a></div>"
         +"<div style=\"float:left\">" + i18n_value + ": &nbsp;</div>"
         +"<div class=\"edit\" id=\"" +div+ i + "Value\"></div>"
         +"<div style=\"float:left\">Use " + i18n_type + ": &nbsp;</div>"
@@ -103,7 +103,7 @@ function AddBindingTemplate()
     currentbindingtemplates++;
     var i =  currentbindingtemplates;         
       
-    $("<br><div id=\"bindingTemplate" + i + "\" style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\"><div style=\"float:left\"><a href=\"javascript:Remove('bindingTemplate"+i+"');\"><i class=\"icon-remove-sign icon-large\"></i></a>" + i18n_bindingTemplateKey + ": &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"Value\">"
+    $("<br><div id=\"bindingTemplate" + i + "\" style=\"border-width: 2px; border-style: dashed;; border-color: lightseagreen\"><div style=\"float:left\"><a href=\"javascript:Remove('bindingTemplate"+i+"');\"><i class=\"icon-trash icon-large\"></i></a>" + i18n_bindingTemplateKey + ": &nbsp;</div><div class=\"edit\" id=\"bindingTemplate"+i+"Value\">"
         +"</div><br><a href=\"javascript:AddDescriptionSpecific('bindingTemplate"+i+"Description');\"><i class=\"icon-plus-sign icon-large\"></i></a>"
         +i18n_bindingTemplateDescriptionAdd
         +"<br>"
@@ -131,7 +131,7 @@ function AddTmodelInstance(div)
     currentOverviewDocs++;
     var k = currentOverviewDocs;
     $("<div id=\"" + div + i + "\" style=\"border-width: 2px; border-style: dashed; border-color: red\">"        
-        +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div><div style=\"float:left\">"
+        +"<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + div + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div><div style=\"float:left\">"
         +"<b>" + i18n_tmodelkey + "</b> (<a href=\"javascript:tModelModal('"+div + i + "KeyName\')\" ><i class=\"icon-list-alt icon-large\"></i>" + il8n_picker + "</a>): &nbsp;</div><div class=\"edit\" id=\"" + div + i + "KeyName\"></div>"
         +"<br><div style=\"float:left\"><b>" + i18n_tmodelInstanceParams + ":</b> &nbsp;</div><div class=\"edit\" id=\"" + div + i + "instanceValue\"></div>"
         +"<br><b>" + i18n_tmodelInstanceDescription + "</b> - " + i18n_tmodelInstanceDescription2 + "<br>"
@@ -154,7 +154,7 @@ function saveService()
     var postbackdata = new Array();
     $("div.edit").each(function()
     {
-        //TODO filter out (click to edit) values
+      
         var id=$(this).attr("id");
         var value=$(this).text();
         postbackdata.push({

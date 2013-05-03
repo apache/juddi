@@ -13,14 +13,14 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well">
-        <h1>News Feed</h1>
+        <h1><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></h1>
 
     </div>
 
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
-            <p>The news feed provides you a list of all updated content per your subscription settings.</p>
+            <p><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.content")%>.</p>
             <div id="feedcontent"></div>
             <script type="text/javascript">
                 $("#feedcontent").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");

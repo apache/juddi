@@ -20,6 +20,9 @@
         } else if (type.equalsIgnoreCase("tModel")) {
             j = x.GettModelDetailsAsObject(id);
         }
+        else if (type.equalsIgnoreCase("subscription")) {
+            j = x.GetSubscriptionDetails(id);
+        }
         if (j != null) {
             JAXB.marshal(j, out);
          //   out.write(JAXBMarshaller.marshallToString(j, JAXBMarshaller.PACKAGE_UDDIAPI));

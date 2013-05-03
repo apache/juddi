@@ -79,7 +79,7 @@
 
                         request.fail(function(jqXHR, textStatus) {
                             window.console && console.log('postback failed ');                                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR + textStatus);
+                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
                             $("#resultBar").show();
                         });
                     }
@@ -110,7 +110,7 @@
 
                         request.fail(function(jqXHR, textStatus) {
                             window.console && console.log('postback failed ');                                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR + textStatus);
+                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
                             $("#resultBar").show();
                         });
                     }

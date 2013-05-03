@@ -19,14 +19,14 @@
     <div class="row">
         <div class="span12" >
             <div id="businesslist">
-                <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecords"></span><br>
-                <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecords"></span><br>
-                <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offset">0</span><br>
+                <%=ResourceLoader.GetResource(session, "totals.records")%>: <span id="totalrecordsService"></span><br>
+                <%=ResourceLoader.GetResource(session, "totals.recordsreturned")%>: <span id="displayrecordsService"></span><br>
+                <%=ResourceLoader.GetResource(session, "totals.offset")%> : <span id="offsetService">0</span><br>
                 <%=ResourceLoader.GetResource(session, "items.lang")%>: <span id="lang" class="edit"></span><br>
 
-                <a href="javascript:pagedownService();"><i class="icon-circle-arrow-left icon-2x" id="pageup"></i></a>
+                <a href="javascript:pagedownService();"><i class="icon-circle-arrow-left icon-2x" id="pageupService"></i></a>
                 <a href="javascript:refreshServiceList();"><i class="icon-refresh icon-2x" id="refresh"></i></a>
-                <a href="javascript:pageupService();"><i class="icon-circle-arrow-right  icon-2x" id="pagedown"></i></a>
+                <a href="javascript:pageupService();"><i class="icon-circle-arrow-right  icon-2x" id="pagedownService"></i></a>
 
                 <div id="serviceBrowserListings">
                     <img src="img/bigrollergreen.gif" title="Loading"/>

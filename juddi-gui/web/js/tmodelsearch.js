@@ -1,6 +1,6 @@
 
 var offset=0; //start at the begining
-var maxrecords=20;  //record 20 at a time
+var maxrecords=10;  //record 20 at a time
 var lang="en";  //langauge english
 var totalrecords=0;
 

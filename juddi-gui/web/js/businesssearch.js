@@ -15,40 +15,41 @@
  *
  */
 
-var offset=0; //start at the begining
-var maxrecords=20;  //record 20 at a time
-var totalrecords=0;
 
-RenderBusinessListBySearch('%', offset, maxrecords);
+var offsetBusiness=0; //start at the begining
+var maxrecordsBusiness=10;  //record 20 at a time
+var totalrecordsBusiness=0;
 
-function pagedown()
+RenderBusinessListBySearch('%', offsetBusiness, maxrecordsBusiness);
+
+function pagedownBusiness()
 {
-    offset = $("#offset").text();
+    offset = $("#offsetBusiness").text();
     //alert(offset);
-    var newoffset = offset - maxrecords;
+    var newoffset = offsetBusiness - maxrecordsBusiness;
     if (newoffset < 0)
         return;
     //alert(newoffset);
-    if (newoffset != offset)
-        RenderBusinessListBySearch('%', newoffset, maxrecords);
+    if (newoffset != offsetBusiness)
+        RenderBusinessListBySearch('%', newoffset, maxrecordsBusiness);
 }
 function refreshBusinessList()
 {
-    RenderBusinessListBySearch('%', offset, maxrecords);
+    RenderBusinessListBySearch('%', offsetBusiness, maxrecordsBusiness);
 }
-function pageup()
+function pageupBusiness()
 {
-    offset = $("#offset").text();
+    offsetBusiness = $("#offsetBusiness").text();
     //alert(offset);
-    var fetch = maxrecords;
-    if ((parseInt(offset) + parseInt(maxrecords))  > totalrecords)
+    var fetch = maxrecordsBusiness;
+    if ((parseInt(offsetBusiness) + parseInt(maxrecordsBusiness))  > totalrecordsBusiness)
         //fetch = maxrecords - offset;
         return;
     else 
-        fetch = (parseInt(offset) + parseInt(maxrecords));    
+        fetch = (parseInt(offsetBusiness) + parseInt(maxrecordsBusiness));    
     //alert(fetch);
-    offset = fetch;
-    RenderBusinessListBySearch('%', fetch, maxrecords);
+    offsetBusiness = fetch;
+    RenderBusinessListBySearch('%', fetch, maxrecordsBusiness);
 }
 
 //offset, maxrecords, keyword
@@ -84,23 +85,23 @@ function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
 
 function refresh()
 {
-    var displayrecords = $("#displayrecords").text();
-    if (displayrecords == totalrecords)
+    var displayrecords = $("#displayrecordsBusiness").text();
+    if (displayrecords == totalrecordsBusiness)
     {
-        $("#pageup").addClass("disabled");
-        $("#pagedown").addClass("disabled");
+        $("#pageupBusiness").addClass("disabled");
+        $("#pagedownBusiness").addClass("disabled");
     }
-    else if (offset + maxrecords > totalrecords)
+    else if (offsetBusiness + maxrecordsBusiness > totalrecordsBusiness)
     {
-        $("#pageup").addClass("disabled");    
+        $("#pageupBusiness").addClass("disabled");    
     }
-    else if (offset ==0)
+    else if (offsetBusiness ==0)
     {
-        $("#pagedown").removeClass("disabled");        
+        $("#pagedownBusiness").removeClass("disabled");        
     }
     else
     {
-        $("#pagedown").removeClass("disabled");        
-        $("#pageup").removeClass("disabled");        
+        $("#pagedownBusiness").removeClass("disabled");        
+        $("#pageupBusiness").removeClass("disabled");        
     }
 }

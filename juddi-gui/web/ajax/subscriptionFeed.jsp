@@ -16,6 +16,7 @@
     DatatypeFactory df = DatatypeFactory.newInstance();
     GregorianCalendar gcal = new GregorianCalendar();
     gcal.setTimeInMillis(System.currentTimeMillis());
+    //TODO get/set cookie data
     gcal.add(Calendar.DATE, -1);
     XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
     out.write(x.GetNewsFeed(xcal));

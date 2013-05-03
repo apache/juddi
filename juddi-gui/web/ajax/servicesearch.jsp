@@ -53,9 +53,9 @@
 
 %>
 <script type="text/javascript">
-    totalrecords=<%=ret.totalrecords%>;
-    $("#totalrecords").text(totalrecords);
-    $("#offset").text(<%=offset%>);
-    $("#displayrecords").text (<%=ret.displaycount%>);
+    totalrecordsService=<%=ret.totalrecords%>;
+    $("#totalrecordsService").text(totalrecordsService);
+    $("#offsetService").text(<%=offset%>);
+    $("#displayrecordsService").text (<%=ret.displaycount%>);
     refresh();
 </script>

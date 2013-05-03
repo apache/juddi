@@ -55,9 +55,9 @@
     out.write(ret.renderedHtml);
 %>
 <script type="text/javascript">
-    totalrecords=<%=ret.totalrecords%>;
-    $("#totalrecords").text(totalrecords);
-    $("#offset").text(<%=offset%>);
-    $("#displayreco rds").text (<%=ret.displaycount%>);
+    totalrecordsBusiness=<%=ret.totalrecords%>;
+    $("#totalrecordsBusiness").text(totalrecordsBusiness);
+    $("#offsetBusiness").text(<%=offset%>);
+    $("#displayrecordsBusiness").text (<%=ret.displaycount%>);
     refresh();
 </script>

@@ -106,7 +106,7 @@ function refreshBinding()
  *This launches the tModel model div, upon return (and if not abprted), the contents of the div parameter will be replaced with the 
  *first selected tModel
  */
-function bindingModal(div){
+function bindingModal(div, type){
     //reset the form in case it was lanucheed more than once per page view
     reloadBindingModal();
     
@@ -114,17 +114,19 @@ function bindingModal(div){
         callback: function(success, result) {
             if (!success)
             {
-              //  alert("aborted!");    
+            //  alert("aborted!");    
             }
                 
             else{
-               // alert('Result: ' + result.join());
-                $("#" + div).html(result[0]);
+                if (type=='val')
+                    $("#" + div).val(result[0]);
+                else if (type=='html')
+                    $("#" + div).html(result[0]);
             }
-       //     return false;
+        //     return false;
         }
     });
-   // return false;
+// return false;
 }
             
             

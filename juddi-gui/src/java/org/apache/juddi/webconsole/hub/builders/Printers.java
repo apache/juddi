@@ -316,6 +316,13 @@ public class Printers {
         return sb.toString();
     }
 
+    /**
+     * service list as html
+     * @param findService
+     * @param chooser
+     * @param session
+     * @return 
+     */
     public static String ServiceListAsHtml(ServiceList findService, boolean chooser, HttpSession session) {
         StringBuilder sb = new StringBuilder();
         sb.append("<table class=\"table\"><tr><th>");
@@ -341,10 +348,14 @@ public class Printers {
                     append("\" title=\"").
                     append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()))
                     .append("\">");
-            sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("</a></td><td>");
+            sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("<i class=\"icon-edit icon-large\"></i<</a></td><td>");
+           
             sb.append((findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).append("</td><td>");
+             sb.append("<a href=\"businessEditor2.jsp?id=")
+                    .append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))
+                    .append("\">");
             sb.append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))
-                    .append("</td></tr>");
+                    .append("<i class=\"icon-edit icon-large\"></i<</a></td></tr>");
         }
         sb.append("</table>");
         return sb.toString();

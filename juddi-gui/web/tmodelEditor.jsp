@@ -139,7 +139,7 @@
                             bd.setName(new Name());
                         }
                         out.write("<div id=\"" + PostBackConstants.NAME + "\" style=\"border-width:2px; border-style:solid\" >");
-                        out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
+                        out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.VALUE + "\">" + (bd.getName().getValue() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getValue())) + "</div>");
                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
@@ -159,7 +159,7 @@
                             {
                                 for (int i = 0; i < bd.getDescription().size(); i++) {
                                     out.write("<div id=\"" + PostBackConstants.DESCRIPTION + i + "\" style=\"border-width:1px; border-style:solid\">");
-                                    out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
+                                    out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('Description" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.DESCRIPTION + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getDescription().get(i).getValue()) + "</div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
@@ -187,7 +187,7 @@
                         out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
                         for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + "\" style=\"border-width:1px; border-style:solid\">");
-                            out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
+                            out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                             out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                     + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
                             out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ":&nbsp;</div>"
@@ -200,7 +200,7 @@
                             out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + "\" style=\"border-width:1px; border-style:dotted\">");
                             for (int k = 0; k < bd.getOverviewDoc().get(i).getDescription().size(); k++) {
                                 out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-remove-sign\"></i></a></div>");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-trash\"></i></a></div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getValue()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
@@ -228,7 +228,7 @@
                             for (int i = 0; i < bd.getCategoryBag().getKeyedReference().size(); i++) {
 
                                 out.write("<div id=\"" + PostBackConstants.CATBAG_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.CATBAG_KEY_REF + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                                 out.write(//"<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
                                         "<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + " (<a href=\"javascript:tModelModal('" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "')\" >" + "<i class=\"icon-list-alt icon-large\"></i>" + ResourceLoader.GetResource(session, "items.picker") + "</a>): &nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.CATBAG_KEY_REF + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getCategoryBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
@@ -252,7 +252,7 @@
                             }
                             for (int i = 0; i < bd.getIdentifierBag().getKeyedReference().size(); i++) {
                                 out.write("<div id=\"" + PostBackConstants.IDENT_KEY_REF + i + "\" style=\"border-width:2px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.IDENT_KEY_REF + i + "');\"><i class=\"icon-remove-sign icon-large\"></i></a></div>");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.IDENT_KEY_REF + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.key") + ": &nbsp;</div>"
                                         + "<div class=\"edit\" id=\"" + PostBackConstants.IDENT_KEY_REF + i + "Value\">" + StringEscapeUtils.escapeHtml(bd.getIdentifierBag().getKeyedReference().get(i).getTModelKey()) + "</div>");
                                 out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.name") + ": &nbsp;</div>"
@@ -322,7 +322,7 @@
                     <%
                         if (!newitem) {
                     %> |
-                    <a class="btn btn-danger " href="javascript:deletetModel();"><i class="icon-remove-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
+                    <a class="btn btn-danger " href="javascript:deletetModel();"><i class="icon-trash icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                     <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
                     <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
                     <a class="btn btn-warning " href="transfer.jsp?biz=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>"  title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
