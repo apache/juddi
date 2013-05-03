@@ -50,14 +50,14 @@ import org.uddi.custody_v3.TransferEntities;
  * ownership of these structures from one publisher to another. Associated
  * entities of a businessEntity such as its businessService, bindingTemplate,
  * and publisherAssertion structures are transferred as part of the custody
- * transfer of the business entity.  *
- * From a custody transfer point of view, the publishers are always distinct,
- * though it may be the case that the publishers are the same person. Also, the
- * two nodes may or may not be distinct; intra-node transfer between two
- * publishers is simply a degenerate case in which node custody does not change.
- * Thus, in the case of an inter-node transfer, ownership transfer is implied.
- * In the case of an intra-node transfer the behavior results in the transfer of
- * ownership between two publishers.
+ * transfer of the business entity. * From a custody transfer point of view, the
+ * publishers are always distinct, though it may be the case that the publishers
+ * are the same person. Also, the two nodes may or may not be distinct;
+ * intra-node transfer between two publishers is simply a degenerate case in
+ * which node custody does not change. Thus, in the case of an inter-node
+ * transfer, ownership transfer is implied. In the case of an intra-node
+ * transfer the behavior results in the transfer of ownership between two
+ * publishers.
  *
  * For example, one UDDI registry, UDDI-1, MAY allow each node in UDDI-1
  * (composed of nodes 1A, 1B and 1C) to define its own policies for
@@ -166,8 +166,8 @@ import org.uddi.custody_v3.TransferEntities;
  * get_transferToken and transfer_entities; in short, this constitutes the
  * Ownership Transfer API portion of this API set. The inter-node-API is
  * transfer_ custody which when combined with replication makes up the Custody
- * Transfer API portion of this API set.  *
- * The overall flow of custody and ownership transfer is as follows:
+ * Transfer API portion of this API set. * The overall flow of custody and
+ * ownership transfer is as follows:
  *
  * Publisher P1 invokes get_transferToken on N1, specifying the keys K1…Kn of
  * the entities E1…En that are to be transferred. If P1 is authorized to do this
@@ -274,8 +274,54 @@ public interface UDDICustodyTransferPortType extends Remote {
      * Keys in the keyBag argument that do not have a corresponding token are
      * ignored.
      *
-     * @param body
-     * @throws DispositionReportFaultMessage, RemoteException
+     * @param body <p class="MsoBodyText"
+     * style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b><i>authInfo</i></b>: This OPTIONAL argument is an
+     * element that contains an authentication token.&nbsp; Authentication
+     * tokens are obtained using the get_authToken API call or through some
+     * other means external to this specification, and represent the identity of
+     * the publisher at a UDDI node.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b><i>transferToken</i></b>: This is a known transferToken
+     * obtained by a publisher at the node where the get_transferToken API was
+     * invoked.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b><i>keyBag</i></b>: One or more uddiKeys associated
+     * either with businessEntity or tModel entities owned by the publisher that
+     * were to be transferred to some other publisher and/or node in the
+     * registry as the result of invocation of get_transferToken.&nbsp; At least
+     * one businessKey or tModelKey must be provided in a keyBag.</p>
+     * @return Upon successful completion, an empty message is returned. See
+     * section 4.8 Success and Error Reporting.
+     *
+     * No error will be reported if the transferToken provided in the call does
+     * not match an existing token. No error will be reported if a token is not
+     * found for a particular key in the keyBag.
+     * @throws DispositionReportFaultMessage
+     * @throws RemoteException <p class="MsoBodyText">If an error occurs in
+     * processing this API call, a dispositionReport structure MUST be returned
+     * to the caller in a SOAP Fault. See Section <a href="#_Ref8979716
+     * ">4.8</a> <i>Success and Error Reporting.&nbsp; </i>In addition to the
+     * errors common to all APIs, the following error information is relevant
+     * here: </p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·</span><span
+     * style="font-size:7.0pt;font-family: &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span><b>E_invalidKeyPassed</b>: signifies that one of the
+     * <i>uddiKey</i> values passed for entities to be transferred did not match
+     * with any known businessKey or tModelKey values.&nbsp; The key and element
+     * or attribute that caused the problem SHOULD be clearly indicated in the
+     * error text.</p>
      */
     @WebMethod(operationName = "discard_transferToken", action = "discard_transferToken")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
@@ -284,14 +330,74 @@ public interface UDDICustodyTransferPortType extends Remote {
             throws DispositionReportFaultMessage, RemoteException;
 
     /**
+     * The get_transferToken API is a client API used to initiate the transfer
+     * of custody of one or more businessEntity or tModel entities from one node
+     * to another. As previously stated, the two nodes may or may not be
+     * distinct; intra-node transfer between two publishers is simply a
+     * degenerate case in which node custody does not change. No actual transfer
+     * takes place with the invocation of this API. Instead, this API obtains
+     * permission from the custodial node, in the form of a transferToken, to
+     * perform the transfer. The publisher who will be recipient of the
+     * transferToken returned by this API must invoke the transfer_entities API
+     * on the target custodial node to actually transfer the entities.
      *
-     * @param authInfo
-     * @param keyBag
-     * @param nodeID
-     * @param expirationTime
-     * @param opaqueToken
+     * @param authInfo · authInfo: This OPTIONAL argument is an element that
+     * contains an authentication token. Authentication tokens are obtained
+     * using the get_authToken API call or through some other means external to
+     * this specification and represent the identity of the publisher at a UDDI
+     * node.
+     * @param keyBag keyBag: One or more key (of type uddi:uddiKey) associated
+     * either with businessEntity or tModel entities owned by the publisher that
+     * are to be transferred to some other publisher and/or node in the
+     * registry. At least one businessKey or tModelKey must be provided.
+     * @param nodeID this is a return value. The transfer token consists of a
+     * nodeID, an expirationTime and an opaqueToken. The nodeID is used during
+     * the transfer_entities API by the recipient node to confirm with the
+     * relinquishing custodial node that the custody transfer is authorized and
+     * still valid. The nodeID of the transferToken is the value of the nodeID
+     * element of the Replication Configuration Structure. Refer to Section
+     * 7.5.2 Configuration of a UDDI Node – operator Element.
+     * @param expirationTime this is a return value. The expirationTime, defined
+     * as xsd:dateTime, represents the time at which the transfer token is no
+     * longer valid.
+     * @param opaqueToken this is a return value. The opaqueToken is only
+     * meaningful to the node that issues it. The opaqueToken is defined as
+     * xsd:base64Binary to allow for a RECOMMENDED encryption of the token under
+     * the relinquishing custody node’s own encryption key.
      * @throws DispositionReportFaultMessage
-     * @throws RemoteException
+     * @throws RemoteException <p class="MsoBodyText">If an error occurs in
+     * processing this API call, a dispositionReport structure MUST be returned
+     * to the caller in a SOAP Fault. See section <a href="#_Ref8979716
+     * ">4.8</a> <i>Success and Error Reporting.&nbsp; </i>In addition to the
+     * errors common to all APIs, the following error information is relevant
+     * here: </p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_invalidKeyPassed</b>: signifies that one of the
+     * <i>uddiKey</i> values passed for entities to be transferred did not match
+     * with any known businessKey or tModelKey values.&nbsp; The key and element
+     * or attribute that caused the problem SHOULD be clearly indicated in the
+     * error text.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_tokenAlreadyExists</b>: signifies that one or more of
+     * the businessKey or tModelKey elements that identify entities to be
+     * transferred are associated with a transferToken that is still valid and
+     * has not been discarded, used or expired.&nbsp; The error text SHOULD
+     * clearly indicate which entity keys caused the error.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_userMismatch</b>: signifies that one or more of the
+     * businessKey or tModelKey elements that identify entities to be
+     * transferred are not owned by the publisher identified by the
+     * <i>authInfo</i> element.&nbsp; The error text SHOULD clearly indicate
+     * which entity keys caused the error</p>
      */
     @WebMethod(operationName = "get_transferToken", action = "get_transferToken")
     @RequestWrapper(localName = "get_transferToken", targetNamespace = "urn:uddi-org:custody_v3", className = "org.uddi.custody_v3.GetTransferToken")
@@ -328,7 +434,88 @@ public interface UDDICustodyTransferPortType extends Remote {
      * in the registry. The set of keys must be the same as the set of keys in
      * the keyBag of the get_transferToken API call from which the given
      * transferToken was once obtained.
-     * @throws DispositionReportFaultMessage, RemoteException
+     * @return <p class="MsoBodyText">The target node responds to this API by
+     * performing the transfer operation.&nbsp; This operation is comprised of
+     * four steps:</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span>Verification that the entity keys are valid.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span>Verification that ownership of the entities by the
+     * recipient publisher is allowed and would not violate any policies at the
+     * target node related to publisher limits.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span>Verification with the custodial node that the transfer of
+     * the designated entities is allowed.&nbsp; This is accomplished by
+     * invoking transfer_custody on the custodial node that is identified by the
+     * nodeID element in the transferToken.&nbsp; Any errors returned by the
+     * custodial node cause this API to fail and are propagated to the
+     * caller.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span>Changing custody and ownership of the designated entities
+     * and entering these changes into the replication stream.</p>
+     *
+     * <p class="MsoBodyText">Upon successful completion, an empty message is
+     * returned indicating the success of the transfer operation. In the case of
+     * an inter-node custody transfer, while the transfer is in process, the
+     * entities being transferred are not available for modification. To
+     * determine the state of the data, UDDI clients can use the
+     * get_operationalInfo API to determine when custody and ownership transfer
+     * has taken place. A change in the nodeID of the operationalInfo provides
+     * such an indication.</p>
+     * @throws DispositionReportFaultMessage, RemoteException <p
+     * class="MsoBodyText">If an error occurs in processing this API call, a
+     * dispositionReport structure MUST be returned to the caller in a SOAP
+     * Fault. See Section <a href="#_Ref8979732 ">4.8</a> <i>Success and Error
+     * Reporting.&nbsp; </i>In addition to the errors common to all APIs, the
+     * following error information is relevant here:</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_accountLimitExceeded</b>: signifies that the target
+     * node has determined that the transfer of custody of the identified
+     * entities would result in the target publisher exceeding policy limits for
+     * the number of owned entities.&nbsp; The error text SHOULD clearly
+     * indicate which entities cause the publishers limits to be exceeded. It is
+     * possible for a publisher to come into possession of more data than the
+     * target node’s policy allows. The condition and node behavior under these
+     * circumstances are described in Section <a href="#_Ref11680087
+     * ">5.4.3</a><i>Transfer Execution.</i></p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_invalidKeyPassed</b>: signifies that one of the
+     * <i>uddiKey</i> values passed for entities to be transferred did not match
+     * with any known businessKey or tModelKey values.&nbsp; The key and element
+     * or attribute that caused the problem SHOULD be clearly indicated in the
+     * error text.</p>
+     *
+     * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span
+     * style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New
+     * Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     * </span></span><b>E_transferNotAllowed</b>: signifies that the transfer of
+     * one or more entities has been rejected by the target node or the
+     * custodial node.&nbsp; Reasons for rejection include expiration of the
+     * transferToken, use of an invalid transferToken, and attempts to transfer
+     * a set of entities that does not match the one represented by the
+     * transferToken. The reason for rejecting the custody transfer SHOULD be
+     * clearly indicated in the error text.</p>
+     *
+     * <span
+     * style="font-size:10.0pt;font-family:Arial;letter-spacing:-.25pt"></span>
      */
     @WebMethod(operationName = "transfer_entities", action = "transfer_entities")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
