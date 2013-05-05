@@ -43,6 +43,8 @@ public class PublicationHelper {
 		businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
 		
 		List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, completionStatus);
+                if (pubAssertionList==null)
+                    return result;
 		for(org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
 			org.uddi.api_v3.AssertionStatusItem apiAssertionStatusItem = new org.uddi.api_v3.AssertionStatusItem();
 

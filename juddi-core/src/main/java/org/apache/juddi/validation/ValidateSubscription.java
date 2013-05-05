@@ -60,7 +60,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
 		}
 	}
 	
-	public void validateSubscription(EntityManager em, org.uddi.sub_v3.Subscription subscription) throws DispositionReportFaultMessage {
+	private void validateSubscription(EntityManager em, org.uddi.sub_v3.Subscription subscription) throws DispositionReportFaultMessage {
 
 		// A supplied subscription can't be null
 		if (subscription == null)
@@ -103,12 +103,30 @@ public class ValidateSubscription extends ValidateUDDIApi {
 			if (!isUniqueKey(em, entityKey))
 				throw new KeyUnavailableException(new ErrorMessage("errors.keyunavailable.KeyExists", entityKey));
 		}
-		
+                //AO, if it's already expired, why even allow it?
+		if (subscription.getExpiresAfter()!=null)
+                {
+                    long expiresat= subscription.getExpiresAfter().toGregorianCalendar().getTimeInMillis();
+                    if (System.currentTimeMillis() > expiresat)
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.expired"));
+                }
+                if (subscription.getMaxEntities()!=null)
+                {
+                    if (subscription.getMaxEntities().intValue() <= 0)
+                    {
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.maxrecordstoosmall"));
+                    }
+                }
 		
 		validateSubscriptionFilter(subscription.getSubscriptionFilter(), entityExists);
 	}
-
-	public void validateSubscriptionFilter(SubscriptionFilter subscriptionFilter, boolean entityExists) throws DispositionReportFaultMessage {
+        /**
+         * this handles just the filter items only
+         * @param subscriptionFilter
+         * @param entityExists or more accurately, is this a new item or not?
+         * @throws DispositionReportFaultMessage 
+         */
+	private void validateSubscriptionFilter(SubscriptionFilter subscriptionFilter, boolean entityExists) throws DispositionReportFaultMessage {
 		if (!entityExists && subscriptionFilter == null)
 			throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.NoFilterOnNewSubscription"));
 			

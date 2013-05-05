@@ -80,6 +80,10 @@ import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidValueException;
 import org.apache.juddi.validation.ValidateSubscription;
 
+/**
+ * 
+ * This is jUDDI's implementation of the UDDIv3 Subscription API
+ */
 @WebService(serviceName="UDDISubscriptionService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
@@ -818,7 +822,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	}
 
 
-	/* (non-Javadoc)
+	/* 
 	 * @see org.uddi.v3_service.UDDISubscriptionPortType#saveSubscription(java.lang.String, javax.xml.ws.Holder)
 	 * 
 	 * Notes: The matching keys are saved on a new subscription (or renewed subscription) for the find_* filters only.  With the other filter 
