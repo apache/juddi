@@ -160,6 +160,7 @@
                                         <li><a href="http://juddi.apache.org/issue-tracking.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%>"><%=ResourceLoader.GetResource(session, "navbar.help.bugreport")%></a></li>
                                         <li><a href="http://juddi.apache.org/" title="<%=ResourceLoader.GetResource(session, "navbar.help.website")%>"><%=ResourceLoader.GetResource(session, "navbar.help.website")%></a></li>
                                         <li><a href="http://www.nabble.com/jUDDI-f218.html" title="<%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%>"><%=ResourceLoader.GetResource(session, "navbar.help.mailinglist")%></a></li>
+                                        <li><a href="http://svn.apache.org/viewvc/juddi/" title="<%=ResourceLoader.GetResource(session, "navbar.help.source")%>"><%=ResourceLoader.GetResource(session, "navbar.help.source")%></a></li>
                                         <li><a href="about.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.help.about.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.help.about")%></a></li>
 
                                     </ul>
