@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.uddi.api_v3.CompletionStatus"%>
 <%@page import="org.uddi.api_v3.AssertionStatusItem"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.util.concurrent.atomic.AtomicReference"%>
@@ -55,8 +56,8 @@
         <th><%=ResourceLoader.GetResource(session, "items.status")%></th>
     </tr>
         <%
-    //TODO i18n
-
+   
+        
             for (int i = 0; i < data.size(); i++) {
                 out.write("<tr><td>");
                 out.write(data.get(i).getFromKey());
@@ -69,6 +70,22 @@
                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + " :</div><div id=\"" + PostBackConstants.KEYVALUE + "\" class=\"edit\">" + data.get(i).getKeyedReference().getKeyValue());
                 }
                 out.write("</td><td>");
+                if (data.get(i).getCompletionStatus() == CompletionStatus.STATUS_FROM_KEY_INCOMPLETE ||
+                        data.get(i).getCompletionStatus() == CompletionStatus.STATUS_TO_KEY_INCOMPLETE)
+                                       {
+                     out.write("<a class=\"btn btn-primary\" href=\"javascript:approveAssertion('"
+                        + StringEscapeUtils.escapeJavaScript(data.get(i).getFromKey())
+                        + "','"
+                        + StringEscapeUtils.escapeJavaScript(data.get(i).getToKey())
+                        + "','"
+                        + StringEscapeUtils.escapeJavaScript(data.get(i).getKeyedReference().getTModelKey())
+                        + "','"
+                        + StringEscapeUtils.escapeJavaScript(data.get(i).getKeyedReference().getKeyName())
+                        + "','"
+                        + StringEscapeUtils.escapeJavaScript(data.get(i).getKeyedReference().getKeyValue())
+                        + "');"
+                        + "\">" + ResourceLoader.GetResource(session, "actions.approve") + "</a>");
+                }
                 out.write("<a class=\"btn btn-primary\" href=\"javascript:removeAssertion('"
                         + StringEscapeUtils.escapeJavaScript(data.get(i).getFromKey())
                         + "','"

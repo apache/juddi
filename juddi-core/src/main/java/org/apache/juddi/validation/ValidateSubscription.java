@@ -117,7 +117,11 @@ public class ValidateSubscription extends ValidateUDDIApi {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.maxrecordstoosmall"));
                     }
                 }
-		
+		if (subscription.getNotificationInterval()==null)
+                {
+                    //TODO default value?
+                     throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.notificationintervalnotdefined"));
+                }
 		validateSubscriptionFilter(subscription.getSubscriptionFilter(), entityExists);
 	}
         /**

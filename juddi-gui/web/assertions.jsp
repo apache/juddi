@@ -123,6 +123,58 @@
                     });
                 }
               
+                function approveAssertion(fromkey,tokey, tmodelkey, keyname, keyvalue)
+                {
+                    var ok=true;
+                    var url='ajax/assertions.jsp';
+                    var postbackdata = new Array();
+                    postbackdata.push({
+                        name: 'fromkey', 
+                        value: fromkey
+                    });
+                    postbackdata.push({
+                        name: 'tokey', 
+                        value: tokey
+                    });
+                    postbackdata.push({
+                        name: 'tmodelkey', 
+                        value: tmodelkey
+                    });
+                    postbackdata.push({
+                        name: 'keyname', 
+                        value: keyname
+                    });
+                    postbackdata.push({
+                        name: 'keyvalue', 
+                        value: keyvalue
+                    });
+                        
+                    postbackdata.push({
+                        name:"nonce", 
+                        value: $("#nonce").val()
+                    });
+                    
+                    var request=   $.ajax({
+                        url: url,
+                        type:"POST",
+                        //  data" + i18n_type + ": "html", 
+                        cache: false, 
+                        //  processData: false,f
+                        data: postbackdata
+                    });
+                
+                
+                    request.done(function(msg) {
+                        window.console && console.log('postback done '  + url);                
+                        $("#saveresult").html(msg);
+                        RenderAssertions();
+                    });
+
+                    request.fail(function(jqXHR, textStatus) {
+                        window.console && console.log('postback failed ' + url);                                
+                        $("#saveresult").html(jqXHR.responseText + textStatus);
+                    });
+                }
               
                 function removeAssertion(fromkey,tokey, tmodelkey, keyname, keyvalue)
                 {
@@ -192,7 +244,7 @@
     <div class="modal hide fade" id="addPublisherAssertion">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Add a publisher assertion</h3>
+            <h3><%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></h3>
         </div>
         <div class="modal-body" id="addPublisherAssertionContent">
             <div style="float:left;width:25%">From Key : </div><div id="fromkey" class="edit"><%
@@ -204,13 +256,13 @@
             <div style="float:left;width:25%">tModel Key : </div><div id="tmodelkey" class="edit">uddi:uddi.org:relationships</div>
             <div style="float:left;width:25%">Key Name : </div><div id="keyname" class="edit">Subsidiary</div>
             <div style="float:left;width:25%">Key Value : </div><div id="keyvalue" class="edit">parent-child</div>
-            <div id="saveresult"></div>
+            <div id="saveresult" style="color:red"></div>
         </div>
         <script type="text/javascript">
             Reedit();
         </script>
         <div class="modal-footer">
-            <a href="javascript:addAssertion();" class="btn btn-primary">Save</a>
+            <a href="javascript:addAssertion();" class="btn btn-primary"><%=ResourceLoader.GetResource(session, "actions.save")%></a>
             <a href="javascript:$('#addPublisherAssertion').modal('hide');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
