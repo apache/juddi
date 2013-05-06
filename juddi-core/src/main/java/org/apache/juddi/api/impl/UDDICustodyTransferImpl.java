@@ -76,7 +76,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 	@SuppressWarnings("unchecked")
 	public void discardTransferToken(DiscardTransferToken body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -122,7 +122,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			}
 	
 			tx.commit();
-	                long procTime = System.nanoTime() - startTime;
+	                long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(CustodyTransferQuery.DISCARD_TRANSFERTOKEN, 
 	                        QueryStatus.SUCCESS, procTime);
 
@@ -137,7 +137,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 	public void getTransferToken(String authInfo, KeyBag keyBag,
 			Holder<String> nodeID, Holder<XMLGregorianCalendar> expirationTime,
 			Holder<byte[]> opaqueToken) throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -186,7 +186,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			
 			tx.commit();
 			
-	                long procTime = System.nanoTime() - startTime;
+	                long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(CustodyTransferQuery.GET_TRANSFERTOKEN, 
 	                        QueryStatus.SUCCESS, procTime);
 
@@ -200,7 +200,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 
 	public void transferEntities(TransferEntities body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -239,7 +239,7 @@ public class UDDICustodyTransferImpl extends AuthenticatedService implements UDD
 			em.remove(modelTransferToken);
 			
 			tx.commit();
-			long procTime = System.nanoTime() - startTime;
+			long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(CustodyTransferQuery.TRANSFER_ENTITIES, 
 	                        QueryStatus.SUCCESS, procTime);
 

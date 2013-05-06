@@ -81,11 +81,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BindingDetail findBinding(FindBinding body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateFindBinding(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -119,7 +119,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 			BindingDetail result = InquiryHelper.getBindingDetailFromKeys(body, findQualifiers, em, keysFound);
 			tx.rollback();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BINDING, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -134,11 +134,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BusinessList findBusiness(FindBusiness body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateFindBusiness(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -159,7 +159,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			BusinessList result = InquiryHelper.getBusinessListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.rollback();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_BUSINESS, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -174,11 +174,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public RelatedBusinessesList findRelatedBusinesses(FindRelatedBusinesses body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateFindRelatedBusinesses(body, false);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -199,7 +199,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			RelatedBusinessesList result = InquiryHelper.getRelatedBusinessesList(body, em);
 
 			tx.rollback();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_RELATEDBUSINESSES, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -214,11 +214,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public ServiceList findService(FindService body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateFindService(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -254,7 +254,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			ServiceList result = InquiryHelper.getServiceListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.rollback();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_SERVICE, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -269,11 +269,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public TModelList findTModel(FindTModel body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateFindTModel(body, false);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -294,7 +294,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			TModelList result = InquiryHelper.getTModelListFromKeys(body, findQualifiers, em, keysFound);
 
 			tx.rollback();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -309,11 +309,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BindingDetail getBindingDetail(GetBindingDetail body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateGetBindingDetail(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.FIND_TMODEL, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -345,7 +345,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_BINDINGDETAIL, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -360,11 +360,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public BusinessDetail getBusinessDetail(GetBusinessDetail body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateGetBusinessDetail(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -396,7 +396,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_BUSINESSDETAIL, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -411,11 +411,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public OperationalInfos getOperationalInfo(GetOperationalInfo body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateGetOperationalInfo(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -447,7 +447,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_OPERATIONALINFO, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -462,11 +462,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public ServiceDetail getServiceDetail(GetServiceDetail body)
 			throws DispositionReportFaultMessage {
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
         try {
             new ValidateInquiry(null).validateGetServiceDetail(body);
         } catch (DispositionReportFaultMessage drfm) {
-            long procTime = System.nanoTime() - startTime;
+            long procTime = System.currentTimeMillis() - startTime;
             serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.FAILED, procTime);                      
             throw drfm;
         }
@@ -498,7 +498,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_SERVICEDETAIL, QueryStatus.SUCCESS, procTime);                      
 
 			return result;
@@ -514,11 +514,11 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 	
     public TModelDetail getTModelDetail(GetTModelDetail body)
 			throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
                 try {
                     new ValidateInquiry(null).validateGetTModelDetail(body);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 }
@@ -550,7 +550,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 			}
 
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(InquiryQuery.GET_TMODELDETAIL, QueryStatus.SUCCESS, procTime);                      
 
 			return result;

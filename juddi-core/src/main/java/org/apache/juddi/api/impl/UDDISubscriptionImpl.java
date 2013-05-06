@@ -105,7 +105,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	
 	public void deleteSubscription(DeleteSubscription body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -122,11 +122,11 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	        }
 	
 	        tx.commit();
-                long procTime = System.nanoTime() - startTime;
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, 
                         QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SubscriptionQuery.DELETE_SUBSCRIPTION, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 
@@ -154,7 +154,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	 */
 	@SuppressWarnings("unchecked")
 	public SubscriptionResultsList getSubscriptionResults(GetSubscriptionResults body, UddiEntityPublisher publisher) throws DispositionReportFaultMessage {
-                long startTime = System.nanoTime();
+                long startTime = System.currentTimeMillis();
             
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -759,13 +759,13 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 			
 	        tx.commit();
-                long procTime = System.nanoTime() - startTime;
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, 
                         QueryStatus.SUCCESS, procTime);
 
 	        return result;
         } catch (DispositionReportFaultMessage drfm) {
-            long procTime = System.nanoTime() - startTime;
+            long procTime = System.currentTimeMillis() - startTime;
             serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONRESULTS, 
                     QueryStatus.FAILED, procTime);                      
             throw drfm;                                                                                                 
@@ -780,7 +780,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	@SuppressWarnings("unchecked")
 	public List<Subscription> getSubscriptions(String authInfo)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
                 try {
@@ -803,13 +803,13 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 	        
 	        tx.commit();
-                long procTime = System.nanoTime() - startTime;
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, 
                         QueryStatus.SUCCESS, procTime);
 
 		return result;
         } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SubscriptionQuery.GET_SUBSCRIPTIONS, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 		
@@ -832,7 +832,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 	public void saveSubscription(String authInfo,
 			Holder<List<Subscription>> subscription)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -878,11 +878,11 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			}
 	
 			tx.commit();
-	                long procTime = System.nanoTime() - startTime;
+	                long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, 
 	                        QueryStatus.SUCCESS, procTime);
 	        } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SubscriptionQuery.SAVE_SUBSCRIPTION, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                                 

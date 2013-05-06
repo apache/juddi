@@ -46,8 +46,8 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
     
 	public DispositionReport validateValues(ValidateValues body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
-                long procTime = System.nanoTime() - startTime;
+	        long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES, 
                         QueryStatus.SUCCESS, procTime);
 

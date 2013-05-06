@@ -49,8 +49,8 @@ public class UDDIValueSetCachingImpl extends AuthenticatedService implements UDD
     public void getAllValidValues(String authInfo, String modelKey,
 			Holder<String> chunkToken, Holder<List<ValidValue>> validValue)
 			throws DispositionReportFaultMessage {
-            long startTime = System.nanoTime();
-            long procTime = System.nanoTime() - startTime;
+            long startTime = System.currentTimeMillis();
+            long procTime = System.currentTimeMillis() - startTime;
             serviceCounter.update(ValueSetCachingQuery.GET_ALLVALIDVALUES, 
                     QueryStatus.SUCCESS, procTime);
 

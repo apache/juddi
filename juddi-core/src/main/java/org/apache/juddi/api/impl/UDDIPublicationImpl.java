@@ -92,7 +92,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	
 	public void addPublisherAssertions(AddPublisherAssertions body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -152,11 +152,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS, 
                                 QueryStatus.SUCCESS, procTime);			
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.ADD_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);                      
                     throw drfm;
                 } finally {
@@ -169,7 +169,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public void deleteBinding(DeleteBinding body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -192,11 +192,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_BINDING, 
                                 QueryStatus.SUCCESS, procTime);                      
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.DELETE_BINDING, QueryStatus.FAILED, procTime);                      
                     throw drfm;
 		} finally {
@@ -209,7 +209,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public void deleteBusiness(DeleteBusiness body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -227,10 +227,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_BUSINESS, QueryStatus.SUCCESS, procTime);               
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.DELETE_BUSINESS, QueryStatus.FAILED, procTime);                      
                     throw drfm;
 		} finally {
@@ -243,7 +243,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public void deletePublisherAssertions(DeletePublisherAssertions body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -262,11 +262,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS, 
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.DELETE_PUBLISHERASSERTIONS, QueryStatus.FAILED, procTime);                      
                     throw drfm;                        
 		} finally {
@@ -279,7 +279,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public void deleteService(DeleteService body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -300,11 +300,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_SERVICE, 
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.DELETE_SERVICE, QueryStatus.FAILED, procTime);                      
                     throw drfm;                                               
 		} finally {
@@ -318,7 +318,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public void deleteTModel(DeleteTModel body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -338,10 +338,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.DELETE_TMODEL, QueryStatus.SUCCESS, procTime);                      
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.DELETE_TMODEL, QueryStatus.FAILED, procTime);                      
                     throw drfm;                                               
 		} finally {
@@ -356,7 +356,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	public List<AssertionStatusItem> getAssertionStatusReport(String authInfo,
 			CompletionStatus completionStatus)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -368,13 +368,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			List<org.uddi.api_v3.AssertionStatusItem> result = PublicationHelper.getAssertionStatusItemList(publisher, completionStatus, em);
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_ASSERTIONSTATUSREPORT, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.GET_ASSERTIONSTATUSREPORT, QueryStatus.FAILED, procTime);                      
                     throw drfm;                                               
 		} finally {
@@ -387,7 +387,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public List<PublisherAssertion> getPublisherAssertions(String authInfo)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -411,12 +411,12 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS, 
                                 QueryStatus.SUCCESS, procTime);                      
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.GET_PUBLISHERASSERTIONS, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                               			
@@ -431,7 +431,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public RegisteredInfo getRegisteredInfo(GetRegisteredInfo body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -488,13 +488,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 			
 			tx.commit();	
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.GET_REGISTEREDINFO, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                 
@@ -509,7 +509,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public BindingDetail saveBinding(SaveBinding body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -542,13 +542,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BINDING, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.SAVE_BINDING, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                 
@@ -563,7 +563,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public BusinessDetail saveBusiness(SaveBusiness body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -595,13 +595,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			validator.validateSaveBusinessMax(em);
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_BUSINESS, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.SAVE_BUSINESS, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                 	
@@ -616,7 +616,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public ServiceDetail saveService(SaveService body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -650,13 +650,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			
 			
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_SERVICE, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.SAVE_SERVICE, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                         			
@@ -671,7 +671,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 
 	public TModelDetail saveTModel(SaveTModel body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -700,13 +700,13 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SAVE_TMODEL, 
                                 QueryStatus.SUCCESS, procTime);                      
 
 			return result;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.SAVE_TMODEL, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 
@@ -722,7 +722,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 	public void setPublisherAssertions(String authInfo,
 			Holder<List<PublisherAssertion>> publisherAssertion)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -765,11 +765,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS, 
                                 QueryStatus.SUCCESS, procTime);                      
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(PublicationQuery.SET_PUBLISHERASSERTIONS, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 
