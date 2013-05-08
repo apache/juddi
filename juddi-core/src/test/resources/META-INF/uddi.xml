@@ -10,6 +10,7 @@
 				<description>InVM jUDDI node</description>
 				<properties>
 					<property name="serverName" value="localhost" />
+					<property name="serverPort" value="8080" />
 				</properties>
 				<!-- In VM Transport Settings -->
 				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
@@ -23,7 +24,10 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="false">
-		   <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher"/>
+		   <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher">
+		      <wsdl businessKey="uddi:uddi.joepublisher.com:businessone">wsdl/sample.wsdl</wsdl>
+		   </clerk>
+		   
 	   </clerks>
 	</manager>
 </uddi>

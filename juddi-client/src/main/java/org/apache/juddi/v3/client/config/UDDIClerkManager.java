@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -23,17 +25,25 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.mapping.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
+import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
+
+import com.ibm.wsdl.util.IOUtils;
 
 public class UDDIClerkManager {
 	
@@ -305,6 +315,32 @@ public class UDDIClerkManager {
 	
 	public UDDIClerk getClerk(String clerkName) {
 		return getClientConfig().getUDDIClerks().get(clerkName);
+	}
+	
+	/**
+	 * Registers services to UDDI using a clerk, and the uddi.xml
+	 * configuration.
+	 * @throws WSDLException 
+	 * @throws TransportException 
+	 * @throws ConfigurationException 
+	 * @throws RemoteException 
+	 */
+	public void registerWSDLs() throws WSDLException, RemoteException, ConfigurationException, TransportException {
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
+			for (UDDIClerk uddiClerk : uddiClerks.values()) {
+				uddiClerk.registerWsdls();
+			}
+		}
+	}
+	
+	public void unRegisterWSDLs() throws WSDLException, RemoteException, ConfigurationException, TransportException, MalformedURLException {
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
+			for (UDDIClerk uddiClerk : uddiClerks.values()) {
+				uddiClerk.unRegisterWsdls();
+			}
+		}
 	}
 	
 }

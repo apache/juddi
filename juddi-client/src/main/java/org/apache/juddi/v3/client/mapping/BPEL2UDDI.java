@@ -91,7 +91,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
 
 	private WSDL2UDDI wsdl2UDDI;
 	
-	public BPEL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) {
+	public BPEL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
 		super();
 		
 		this.clerk = clerk;

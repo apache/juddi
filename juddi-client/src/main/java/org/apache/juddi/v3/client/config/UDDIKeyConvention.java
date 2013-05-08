@@ -29,8 +29,8 @@ public class UDDIKeyConvention
 	//Default Values
 	public static final String DEFAULT_BUSINESS_KEY_FORMAT      = "uddi:${keyDomain}:business_${businessName}";
 	public static final String DEFAULT_SERVICE_KEY_FORMAT       = "uddi:${keyDomain}:service_${serviceName}";
-	public static final String DEFAULT_SUBSCRIPTION_KEY_FORMAT  = "uddi:${keyDomain}:service_cache_${nodeName}";
-	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${nodeName}_${serviceName}_${portName}";
+	public static final String DEFAULT_SUBSCRIPTION_KEY_FORMAT  = "uddi:${keyDomain}:service_cache_${serverName}";
+	public static final String DEFAULT_BINDING_KEY_FORMAT       = "uddi:${keyDomain}:binding_${serverName}_${serviceName}_${portName}_${serverPort}";
 	
 	/**
 	 * Constructs the serviceKey based on the bindingKeyFormat specified in the properties. When no
@@ -106,7 +106,7 @@ public class UDDIKeyConvention
 				port = 443;
 			}
 		}
-		tempProperties.put("port", String.valueOf(port));
+		tempProperties.put("serverPort", String.valueOf(port));
 		//Constructing the binding Key
 		String keyFormat = properties.getProperty(Property.BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
 		String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();

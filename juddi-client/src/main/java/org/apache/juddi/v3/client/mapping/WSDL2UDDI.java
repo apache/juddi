@@ -104,13 +104,31 @@ public class WSDL2UDDI {
 	 * @param clerk - can be null if register/unregister methods are not used.
 	 * @param urlLocalizer - A reference to an custom
 	 * @param properties
+	 * @throws ConfigurationException 
 	 */
-	public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) {
+	public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
 		super();
 		
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
+		
+		if (clerk!=null) {
+			if (!properties.containsKey("keyDomain")) {
+				throw new ConfigurationException("Property keyDomain is a required property when using WSDL2UDDI.");
+			}
+			if (!properties.containsKey("businessKey") && !properties.containsKey("businessName")) {
+				throw new ConfigurationException("Either property businessKey, or businessName, is a required property when using WSDL2UDDI.");
+			}
+			if (!properties.containsKey("nodeName")) {
+				if (properties.containsKey("serverName") && properties.containsKey("serverPort")) {
+					String nodeName = properties.getProperty("serverName") + "_" + properties.getProperty("serverPort");
+					properties.setProperty("nodeName", nodeName);
+				} else {
+					throw new ConfigurationException("Property nodeName is not defined and is a required property when using WSDL2UDDI.");
+				}
+			}
+		}
 		
 		//Obtaining values from the properties
 		this.keyDomainURI =  "uddi:" + properties.getProperty("keyDomain") + ":";

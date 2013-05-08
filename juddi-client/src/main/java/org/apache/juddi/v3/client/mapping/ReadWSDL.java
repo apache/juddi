@@ -53,6 +53,21 @@ public class ReadWSDL {
 		return wsdlDefinition;
 	}
 	
+	public Definition readWSDL(URL wsdlUrl) throws WSDLException {
+		
+		Definition wsdlDefinition = null;
+		WSDLFactory factory = WSDLFactoryImpl.newInstance();
+		WSDLReader reader = factory.newWSDLReader();
+		try {
+			URI uri = wsdlUrl.toURI();
+			WSDLLocator locator = new WSDLLocatorImpl(uri);
+			wsdlDefinition = reader.readWSDL(locator);
+		} catch (URISyntaxException e) {
+			log.error(e.getMessage(),e);
+		}
+		return wsdlDefinition;
+	}
+	
 	
 	
 	

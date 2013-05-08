@@ -25,8 +25,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
-import org.apache.juddi.api_v3.Clerk;
-import org.apache.juddi.config.Property;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
@@ -35,17 +33,13 @@ import org.apache.juddi.v3.client.mapping.URLLocalizer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.TransportException;
-import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
-import org.apache.juddi.v3.tck.TckBusinessService;
-import org.apache.juddi.v3.tck.TckFindEntity;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.uddi.api_v3.FindTModel;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -86,8 +80,8 @@ public class API_051_BindingTemplateWSDLTest
 		Registry.stop();
 	}
 	
-	@Test
-	public void joepublisher() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException {
+	@Test 
+	public void testDirectCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
@@ -113,6 +107,31 @@ public class API_051_BindingTemplateWSDLTest
 			System.out.println(new PrintUDDI<FindTModel>().print(findTModelForPortType));
 			
 			wsdl2UDDI.unRegisterBusinessServices(wsdlDefinition);
+		} finally {
+			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		}
+	}
+	
+	@Test 
+	public void testClerkCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException {
+		try {
+			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+			
+			UDDIClerk clerk = new UDDIClerkManager("META-INF/uddi.xml").getClerk("joe");
+			clerk.registerWsdls();
+			
+			
+			String portTypeName = "StockQuotePortType";
+			String namespace    = "http://example.com/stockquote/";
+			FindTModel findTModelForPortType = WSDL2UDDI.createFindPortTypeTModelForPortType(portTypeName, namespace);
+			System.out.println(new PrintUDDI<FindTModel>().print(findTModelForPortType));
+			
+			clerk.unRegisterWsdls();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
 		} finally {
 			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);

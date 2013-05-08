@@ -26,6 +26,7 @@ import javax.wsdl.WSDLException;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class WSDL2UDDITest {
 	ReadWSDL rw = new ReadWSDL();
 	
 	@Test
-	public void testUDDIBindingModel() throws WSDLException, JAXBException {
+	public void testUDDIBindingModel() throws WSDLException, JAXBException, ConfigurationException {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
@@ -63,7 +64,7 @@ public class WSDL2UDDITest {
 	}
 	
 	@Test
-	public void testWSDLBindingModel() throws WSDLException, JAXBException {
+	public void testWSDLBindingModel() throws WSDLException, JAXBException, ConfigurationException {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");

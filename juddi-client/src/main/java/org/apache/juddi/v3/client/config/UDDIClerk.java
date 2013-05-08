@@ -18,6 +18,8 @@ package org.apache.juddi.v3.client.config;
 
 import java.io.Serializable;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -38,6 +42,9 @@ import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.v3.client.mapping.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
+import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
@@ -45,6 +52,7 @@ import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteBinding;
+import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -83,6 +91,7 @@ public class UDDIClerk implements Serializable {
 	private Date tokenBirthDate;
 	private String authToken;
 	private String[] classWithAnnotations;
+	private WSDL[] wsdls;
 	private String managerName;
 
 	private Map<String,Properties> services = new HashMap<String,Properties>(); 
@@ -124,6 +133,54 @@ public class UDDIClerk implements Serializable {
 
 	public void setManagerName(String managerName) {
 		this.managerName = managerName;
+	}
+	
+	public void registerWsdls() {
+		if (this.getWsdls()!=null) {
+			Properties properties = new Properties();
+			properties.putAll(this.getUDDINode().getProperties());
+			
+			for (WSDL wsdl : this.getWsdls()) {
+				try {
+					URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());
+					ReadWSDL rw = new ReadWSDL();
+					Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
+					if (wsdl.keyDomain!=null) properties.setProperty("keyDomain", wsdl.keyDomain);
+					if (wsdl.businessKey!=null) properties.setProperty("businessKey", wsdl.getBusinessKey());
+					
+					WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
+					wsdl2UDDI.registerBusinessServices(wsdlDefinition);
+				} catch (Exception e) {
+					log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.getMessage(),e);
+				} catch (Throwable t) {
+					log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + t.getMessage(),t);
+				}
+			}
+		}
+	}
+	
+	public void unRegisterWsdls() {
+		if (this.getWsdls()!=null) {
+			Properties properties = new Properties();
+			properties.putAll(this.getUDDINode().getProperties());
+			
+			for (WSDL wsdl : this.getWsdls()) {
+				try {
+					URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());
+					ReadWSDL rw = new ReadWSDL();
+					Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
+					if (wsdl.keyDomain!=null) properties.setProperty("keyDomain", wsdl.keyDomain);
+					if (wsdl.businessKey!=null) properties.setProperty("businessKey", wsdl.getBusinessKey());
+					
+					WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
+					wsdl2UDDI.unRegisterBusinessServices(wsdlDefinition);
+				} catch (Exception e) {
+					log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.getMessage(),e);
+				} catch (Throwable t) {
+					log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + t.getMessage(),t);
+				}
+			}
+		}
 	}
 	
 	public Subscription register(Subscription subscription) {
@@ -279,6 +336,27 @@ public class UDDIClerk implements Serializable {
 					+ " ." + t.getMessage(),t);
 		}
 		return businessEntity;
+	}
+	
+	public void unRegisterBusiness(String businessKey) {
+		unRegisterBusiness(businessKey, this.getUDDINode().getApiNode());
+	}
+	/**
+	 * Unregisters the service with specified serviceKey.
+	 * @param service
+	 */
+	public void unRegisterBusiness(String businessKey, Node node) {
+		log.info("UnRegistering the business " + businessKey);
+		try {
+			String authToken = getAuthToken(node.getSecurityUrl()); 
+			DeleteBusiness deleteBusiness = new DeleteBusiness();
+			deleteBusiness.setAuthInfo(authToken);
+			deleteBusiness.getBusinessKey().add(businessKey);
+			getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBusiness(deleteBusiness);
+		} catch (Exception e) {
+			log.error("Unable to register service " + businessKey
+					+ " ." + e.getMessage(),e);
+		}
 	}
 	
 	public void unRegisterService(String serviceKey) {
@@ -651,6 +729,37 @@ public class UDDIClerk implements Serializable {
 		this.password = password;
 	}
 
-	
+	public WSDL[] getWsdls() {
+		return wsdls;
+	}
+
+	public void setWsdls(WSDL[] wsdls) {
+		this.wsdls = wsdls;
+	}
+
+	public class WSDL {
+		
+		private String businessKey;
+		private String keyDomain;
+		private String fileName;
+		public String getBusinessKey() {
+			return businessKey;
+		}
+		public void setBusinessKey(String businessKey) {
+			this.businessKey = businessKey;
+		}
+		public String getFileName() {
+			return fileName;
+		}
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+		public String getKeyDomain() {
+			return keyDomain;
+		}
+		public void setKeyDomain(String keyDomain) {
+			this.keyDomain = keyDomain;
+		}
+	}
 
 }

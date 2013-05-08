@@ -28,6 +28,7 @@ import javax.wsdl.WSDLException;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.jaxb.EntityCreator;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.junit.Assert;
@@ -57,7 +58,8 @@ public class WSDLinaUDDIRegistryTest {
 			wsdlDefinition = rw.readWSDL("wsdl/sample.wsdl");
 			properties.put("keyDomain", "uddi.joepublisher.com");
 			properties.put("businessName", "samplebusiness");
-			properties.put("nodeName", "api.example.org_80");
+			properties.put("serverName", "api.example.org");
+			properties.put("serverPort", "80");
 			wsdlURL = wsdlDefinition.getDocumentBaseURI();
 		} catch (WSDLException e) {
 			e.printStackTrace();
@@ -66,7 +68,7 @@ public class WSDLinaUDDIRegistryTest {
 	}
 	
 	@Test
-	public void test_3_2_1_UDDI_portType_tModel() throws WSDLException, IOException, JAXBException {
+	public void test_3_2_1_UDDI_portType_tModel() throws WSDLException, IOException, JAXBException, ConfigurationException {
 		
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
 		Set<TModel> tModels = new HashSet<TModel>();
@@ -116,7 +118,7 @@ public class WSDLinaUDDIRegistryTest {
 	}
 	
 	@Test 
-	public void test_3_2_2_UDDI_binding_tModel() throws WSDLException, JAXBException, IOException {
+	public void test_3_2_2_UDDI_binding_tModel() throws WSDLException, JAXBException, IOException, ConfigurationException {
 		
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
 	    @SuppressWarnings("unchecked")
@@ -162,7 +164,7 @@ public class WSDLinaUDDIRegistryTest {
 	}
 	
 	@Test
-	public void test_3_2_3_UDDI_businessService_and_bindingTemplate() throws JAXBException, IOException {
+	public void test_3_2_3_UDDI_businessService_and_bindingTemplate() throws JAXBException, IOException, ConfigurationException {
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
 		
 		BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);

@@ -31,6 +31,7 @@
        <module>hello-world</module>
        <module>simple-browse</module>
        <module>simple-publish</module>
+       <module>wsdl2uddi</module>
        <module>uddi-annotations</module>
     </modules>
 </project>

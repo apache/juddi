@@ -5,7 +5,7 @@
     <name>StockQuoteService</name>
     <bindingTemplates>
          <bindingTemplate
-                 bindingKey="uddi:uddi.joepublisher.com:binding_api.example.org_80_stockquoteservice_stockquoteport"
+                 bindingKey="uddi:uddi.joepublisher.com:binding_api.example.org_stockquoteservice_stockquoteport_80"
                  serviceKey="uddi:uddi.joepublisher.com:service_stockquoteservice">
              <accessPoint URLType="http">http://location/sample</accessPoint>
              <tModelInstanceDetails>

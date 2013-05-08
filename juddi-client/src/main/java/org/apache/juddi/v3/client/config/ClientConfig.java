@@ -125,8 +125,54 @@ public class ClientConfig
 				uddiClerk.setUDDINode(uddiNode);
 				uddiClerk.setPublisher(config.getString("manager.clerks.clerk(" + i + ")[@publisher]"));
 				uddiClerk.setPassword( config.getString("manager.clerks.clerk(" + i + ")[@password]"));
+				
+				String clerkBusinessKey = config.getString("manager.clerks.clerk(" + i + ")[@businessKey]");
+				String clerkBusinessName = config.getString("manager.clerks.clerk(" + i + ")[@businessName]");
+				String clerkKeyDomain = config.getString("manager.clerks.clerk(" + i + ")[@keyDomain]");
+				
 				String[] classes = config.getStringArray("manager.clerks.clerk(" + i + ").class");
 				uddiClerk.setClassWithAnnotations(classes);
+				
+				int numberOfWslds = config.getStringArray("manager.clerks.clerk(" + i + ").wsdl").length;
+				if (numberOfWslds > 0) {
+					UDDIClerk.WSDL[] wsdls = new UDDIClerk.WSDL[numberOfWslds];
+					for (int w=0; w<wsdls.length; w++) {
+						UDDIClerk.WSDL wsdl = uddiClerk.new WSDL();
+						String fileName = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")");
+						wsdl.setFileName(fileName);
+						String businessKey = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessKey]");
+						String businessName = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessName]");
+						String keyDomain = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@keyDomain]");
+						if (businessKey==null) businessKey = clerkBusinessKey;
+						if (businessKey==null) businessKey = uddiClerk.getUDDINode().getProperties().getProperty("businessKey");
+						if (businessKey==null) {
+							//use key convention to build the businessKey
+							if (businessName==null) businessName = clerkBusinessName;
+							if (keyDomain==null) keyDomain = clerkKeyDomain;
+							if (keyDomain==null) keyDomain = uddiClerk.getUDDINode().getProperties().getProperty("keyDomain");
+							if ((businessName==null && ! uddiClerk.getUDDINode().getProperties().containsKey("businessName"))
+								|| keyDomain==null && ! uddiClerk.getUDDINode().getProperties().containsKey("keyDomain")) throw new ConfigurationException("Either the wsdl(" + wsdls[w] 
+									+ ") or clerk (" + uddiClerk.name + ") elements require a businessKey, or businessName & keyDomain attributes");
+							else {
+								Properties properties = new Properties(uddiClerk.getUDDINode().getProperties());
+								if (businessName!=null) properties.put("businessName", businessName);
+								if (keyDomain!=null) properties.put("keyDomain", keyDomain);
+								businessKey = UDDIKeyConvention.getBusinessKey(properties);
+							}
+						}
+						if (! businessKey.toLowerCase().startsWith("uddi:") || ! businessKey.substring(5).contains(":")) {
+							throw new ConfigurationException("The businessKey " + businessKey + " does not implement a valid UDDI v3 key format.");
+						}
+						wsdl.setBusinessKey(businessKey);
+						if (keyDomain==null) {
+							keyDomain = businessKey.split(":")[1];
+						}
+						wsdl.setKeyDomain(keyDomain);
+						wsdls[w]=wsdl;
+					}
+					uddiClerk.setWsdls(wsdls);
+				}
+				
 				clerks.put(names[i],uddiClerk);
 			}
 		}
