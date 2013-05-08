@@ -34,10 +34,8 @@ import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
 import org.uddi.api_v3.OverviewURL;
-import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 public class Publish {
@@ -67,9 +65,10 @@ public class Publish {
 			UDDIClerk clerk = clerkManager.getClerk("joe");
 			
 			//setting up the publisher
-			sp.setupJoePublisher();
-			//publish the business and the wsdl
+			sp.setupJoePublisher(clerk);
+			//publish the business
 			sp.publishBusiness(clerk);
+			//and the wsdl
 			sp.publishWSDL(clerk);
 			
 		} catch (Exception e) {
@@ -78,7 +77,7 @@ public class Publish {
 	}
 	
 	// This setup needs to be done once, either using the console or using code like this
-	private void setupJoePublisher() throws DispositionReportFaultMessage, RemoteException, ConfigurationException, TransportException {
+	private void setupJoePublisher(UDDIClerk clerk) throws DispositionReportFaultMessage, RemoteException, ConfigurationException, TransportException {
 		
 		UDDISecurityPortType security = clerkManager.getTransport("default").getUDDISecurityService();
 		
@@ -89,7 +88,6 @@ public class Publish {
 		// Making API call that retrieves the authentication token for the 'root' user.
 		AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
 		System.out.println ("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-		
 		//Creating joe publisher
 		JUDDIApiPortType juddiApi = clerkManager.getTransport("default").getJUDDIApiService();
 		Publisher p = new Publisher();
@@ -101,14 +99,7 @@ public class Publish {
 		sp.setAuthInfo(rootAuthToken.getAuthInfo());
 		juddiApi.savePublisher(sp);
 		
-		getAuthTokenRoot = new GetAuthToken();
-		getAuthTokenRoot.setUserID("joepublisher");
-		getAuthTokenRoot.setCred("joepublisher");
-		// Making API call that retrieves the authentication token for the 'root' user.
-		AuthToken authToken = security.getAuthToken(getAuthTokenRoot);
-		
-		//Add a keygenerater for this publisher
-		UDDIPublicationPortType publish = clerkManager.getTransport("default").getUDDIPublishService();	
+		//Joe should have a keyGenerator
 		TModel keyGenerator = new TModel();
 		keyGenerator.setTModelKey("uddi:uddi.joepublisher.com:keygenerator");
 		Name name = new Name();
@@ -130,10 +121,6 @@ public class Publish {
 		keyedReference.setTModelKey("uddi:uddi.org:categorization:types");
 		categoryBag.getKeyedReference().add(keyedReference);
 		keyGenerator.setCategoryBag(categoryBag);
-		
-		SaveTModel saveTModel = new SaveTModel();
-		saveTModel.setAuthInfo(authToken.getAuthInfo());
-		saveTModel.getTModel().add(keyGenerator);
-		publish.saveTModel(saveTModel);
+		clerk.register(keyGenerator);
 	}
 }

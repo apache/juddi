@@ -79,7 +79,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>org.apache.juddi.example.wsdl2uddi.FindService</mainClass>
+                                    <mainClass>org.apache.juddi.example.wsdl2uddi.Find</mainClass>
                                 </configuration>
                             </execution>
                         </executions>

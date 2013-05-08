@@ -23,7 +23,7 @@ import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
 
-public class FindService {
+public class Find {
 	
 	public void find() {
 		try {
@@ -56,8 +56,9 @@ public class FindService {
         	}
 	        		
         	businessEntity.getBusinessServices();
+        	
+        	//TODO JUDDI-610
 			//FindTModel findBindingTModel = WSDL2UDDI.createFindBindingTModelForPortType(portType, namespace);
-			//clerk.fin
 			
 		} 
 		catch (Exception e) {
@@ -66,7 +67,7 @@ public class FindService {
 	}		
 
 	public static void main (String args[]) {
-		FindService sp = new FindService();
+		Find sp = new Find();
 		sp.find();	
 	}
 }
