@@ -10,18 +10,87 @@
   <name>jUDDI Example WSDL2UDDI Deployment Lifecycle</name>
   <description>Demonstrates the steps taken to publish a webservice using the WSDL file</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.juddi</groupId>
-      <artifactId>uddi-ws</artifactId>
-      <version>3.1.5-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.juddi</groupId>
-      <artifactId>juddi-client</artifactId>
-      <version>3.1.5-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
+    <properties>
+        <cxf.version>2.3.1</cxf.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <artifactId>juddi-client</artifactId>
+            <groupId>org.apache.juddi</groupId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>uddi-ws</artifactId>
+            <groupId>org.apache.juddi</groupId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.1_3</version>
+        </dependency>
+    </dependencies>
+    <build>
+       <finalName>wsdl2uddi</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>*.xml</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- examples are not very useful from a maven repo, so don't put it there -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
   
     <profiles>
         <profile>
@@ -42,7 +111,7 @@
             </build>
         </profile>
         <profile>
-            <id>publish</id>
+            <id>setup</id>
             <build>
                 <plugins>
                     <plugin>
@@ -56,7 +125,7 @@
                                     <goal>java</goal>
                                 </goals>
                                 <configuration>
-                                    <mainClass>org.apache.juddi.example.wsdl2uddi.Publish</mainClass>
+                                    <mainClass>org.apache.juddi.example.wsdl2uddi.Setup</mainClass>
                                 </configuration>
                             </execution>
                         </executions>
@@ -87,29 +156,7 @@
                 </plugins>
             </build>
         </profile>
-         <profile>
-            <id>delete</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.1.1</version>
-                        <executions>
-                            <execution>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>java</goal>
-                                </goals>
-                                <configuration>
-                                    <mainClass>org.apache.juddi.example.wsdl2uddi.Delete</mainClass>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
+    <packaging>war</packaging>
 </project>
 
