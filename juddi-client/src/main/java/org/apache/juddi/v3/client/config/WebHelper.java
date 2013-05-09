@@ -91,18 +91,6 @@ public class WebHelper {
 				throw new ConfigurationException("A manager name needs to be specified in the client config file.");
 			}
 			
-			String baseUrl = servletContext.getRealPath("/");
-			System.out.println("Realpath=" + baseUrl);
-			try {
-				URL url=new URL(baseUrl);
-				String host = url.getHost();
-				int port = url.getPort();
-				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^" + host + ":" + port);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
 			manager.start();
 			servletContext.setAttribute(JUDDI_CLIENT_MANAGER_NAME, managerName);
 			return manager;

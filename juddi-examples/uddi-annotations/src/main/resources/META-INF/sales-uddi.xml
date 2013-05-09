@@ -24,7 +24,7 @@
 		</nodes>
 		<clerks registerOnStartup="true">
            <clerk name="BobCratchit" node="default" publisher="sales" password="sales">
-                <class>org.apache.juddi.samples.HelloWorldImpl</class>
+                <class>org.apache.juddi.example.HelloWorldImpl</class>
            </clerk>
         </clerks>
 	</manager>

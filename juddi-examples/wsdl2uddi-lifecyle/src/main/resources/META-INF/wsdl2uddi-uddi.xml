@@ -12,14 +12,15 @@
                     <property name="serverPort" value="8080"/>
                 </properties>
 				<description>Main jUDDI node</description>
-				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
-                <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
-                <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-                <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-                <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-                <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
-                <subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
-                <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
+				<!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
 			</node>
 		</nodes>
 		<clerks registerOnStartup="true">

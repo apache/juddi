@@ -93,7 +93,10 @@ public class UDDIClerkManager {
 	}
 	
 	private void releaseResources() {
-		unRegisterBindingsOfAnnotatedServices(true);
+		if (this.clientConfig.isRegisterOnStartup()) {
+			unRegisterWSDLs();
+			unRegisterBindingsOfAnnotatedServices(true);
+		}
 	}
  	/**
 	 * Initializes the UDDI Clerk.
@@ -107,10 +110,11 @@ public class UDDIClerkManager {
 				log.info("Starting embedded Server");
 				startEmbeddedServer();
 			}
-			
-			Runnable runnable = new BackGroundRegistration(this);
-			Thread thread = new Thread(runnable);
-			thread.start();
+			if (this.clientConfig.isRegisterOnStartup()) {
+				Runnable runnable = new BackGroundRegistration(this);
+				Thread thread = new Thread(runnable);
+				thread.start();
+			}
 		}
  	}
 	
@@ -325,7 +329,7 @@ public class UDDIClerkManager {
 	 * @throws ConfigurationException 
 	 * @throws RemoteException 
 	 */
-	public void registerWSDLs() throws WSDLException, RemoteException, ConfigurationException, TransportException {
+	public void registerWSDLs() {
 		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
 		if (uddiClerks.size() > 0) {
 			for (UDDIClerk uddiClerk : uddiClerks.values()) {
@@ -334,7 +338,7 @@ public class UDDIClerkManager {
 		}
 	}
 	
-	public void unRegisterWSDLs() throws WSDLException, RemoteException, ConfigurationException, TransportException, MalformedURLException {
+	public void unRegisterWSDLs() {
 		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
 		if (uddiClerks.size() > 0) {
 			for (UDDIClerk uddiClerk : uddiClerks.values()) {

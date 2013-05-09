@@ -156,6 +156,36 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+        <id>deploy</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <version>1.3.3</version>
+                    <configuration>
+                        <container>
+                            <containerId>tomcat6x</containerId>
+                        </container>
+                        <configuration>
+                            <type>existing</type>
+                            <home>${basedir}/../../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26</home>
+                          <!--   <home>${basedir}/../../juddi-tomcat-${project.parent.version}</home> --> 
+                        </configuration>
+                        <deployables>
+                            <deployable>
+                                <groupId>org.apache.juddi.example</groupId>
+                                <artifactId>wsdl2uddi-lifecycle</artifactId>
+                                <type>war</type>
+                                
+                            </deployable>
+                         </deployables>
+                     </configuration>
+                </plugin>
+            </plugins>
+        </build>  
+        </profile>
     </profiles>
     <packaging>war</packaging>
 </project>

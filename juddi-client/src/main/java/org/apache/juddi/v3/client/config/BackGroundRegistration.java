@@ -36,6 +36,7 @@ public class BackGroundRegistration implements Runnable {
 				log.debug("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
 				manager.saveClerkAndNodeInfo();
 				manager.registerAnnotatedServices();
+				manager.registerWSDLs();
 				manager.xRegister();
 				log.debug("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
 			} else {
