@@ -19,11 +19,21 @@ INFO: Registering business WSDL-Business with key uddi:uddi.joepublisher.com:bus
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 
-4. Now that the business is there, we can deploy the wsdl2uddi.war which contains the
+4. Build the wsdl2uddi.war:
+
+mvn clean package
+
+5. Now that the business is there, we can deploy the wsdl2uddi.war which contains the
 JAX-WS HelloWorld WebService and it deploys its wsdl (in wsdl/HelloWorld.wsdl). So on deployment
-it brings up the WebService AND it registers it to UDDI.
+it brings up the WebService AND it registers it to UDDI. 
+
+From the distro use:
 
 mvn -Pdeploy cargo:deploy
+
+when in src tree tomcat is in a different location, so use the deploydev profile:
+
+mvn -Pdeploydev cargo:deploy
 
 [INFO] Scanning for projects...
 [INFO]                                                                         
@@ -65,7 +75,7 @@ Registering the WSDL:
 2013-05-08 21:31:58,421 INFO [org.apache.juddi.v3.client.config.UDDIClerk] - Registering bindingTemplate with key uddi:uddi.joepublisher.com:binding_localhost_helloworld_helloworldimplport_8080
 
 
-5. Check that we can find this business in the registry by running from Queries
+6. Check that we can find this business in the registry by running from Queries
 
 mvn -Pfind test
 
@@ -90,9 +100,15 @@ BindingTemplates: 1
 So we got one Service, which one binding. Note that the descriptions were provided in the wsdl file
 using <wsdl:documentation> elements.
 
-6. Finally to undeploy the wsdl2uddi.war call 
+7. Finally to undeploy the wsdl2uddi.war call 
+
+From the distro use:
 
 mvn -Pdeploy cargo:undeploy
+
+when in src tree tomcat is in a different location, so use the deploydev profile:
+
+mvn -Pdeploydev cargo:undeploy
 
 This removes the HelloWorld WebService and removes the data from the UDDI server.
 
