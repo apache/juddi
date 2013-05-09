@@ -49,12 +49,7 @@
 
                 List<Subscription> list = x.GetSubscriptions();
                 if (list == null) {
-            %>
-            <div class="alert alert-error" >
-                <h3> <i class="icon-warning-sign"></i> <%=ResourceLoader.GetResource(session, "errors.notsignedin")%></h3>
-            </div>
-            <%
-
+                    out.write(UddiHub.ToErrorAlert(ResourceLoader.GetResource(session, "errors.notsignedin")));
                 }
                 if (list != null) {
                     if (!list.isEmpty()) {

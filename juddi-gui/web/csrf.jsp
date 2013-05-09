@@ -25,10 +25,7 @@
         //last change, default to english
         session.setAttribute("locale", "en");
     }
-%>
-<%
-
-    String current = null;
+    String currentNonce = null;
 
     if (request.getMethod().equalsIgnoreCase("post")) {
 
@@ -53,7 +50,7 @@
             //generate new one, add to page and session
             //else redirect to index page
             if (noncestr.equals(postedstr)) {
-                current = noncestr;
+                currentNonce = noncestr;
                 //OK
                 // current = UUID.randomUUID();
                 //session.removeAttribute("nonce");
@@ -68,12 +65,12 @@
         }
     } else {
         //HTTP GET or otherwise message
-        if ((current == null) || current.isEmpty()) {
-            current = (String)session.getAttribute("nonce");
-            if (current == null) {
-                current = java.util.UUID.randomUUID().toString();
+        if ((currentNonce == null) || currentNonce.isEmpty()) {
+            currentNonce = (String)session.getAttribute("nonce");
+            if (currentNonce == null) {
+                currentNonce = java.util.UUID.randomUUID().toString();
             }
-            session.setAttribute("nonce", current);
+            session.setAttribute("nonce", currentNonce);
         }
 
     }

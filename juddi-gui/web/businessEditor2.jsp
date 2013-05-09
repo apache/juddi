@@ -43,6 +43,10 @@
                     } else {
                         bd = new BusinessEntity();
                     }
+                    if (bd == null) {
+                        bd = new BusinessEntity();
+                        newitem = true;
+                    }
 
                 %>
                 <%

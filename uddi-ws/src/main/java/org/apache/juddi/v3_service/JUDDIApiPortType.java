@@ -48,6 +48,10 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * This portType defines all of the jUDDI publisher operations.
+ * This is above and beyond the original UDDI v3 specification and is NOT part of the standard.
+ * Method behavior within this class may change from version to version. These methods are
+ * primarily mean for administrative functions.
+ * 
  * 
  */
 @WebService(name = "JUDDI_Api_PortType", targetNamespace = "urn:juddi-apache-org:v3_service")

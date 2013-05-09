@@ -42,9 +42,9 @@
         AtomicReference<String> msg = new AtomicReference<String>();
         data = x.GetPublisherAssertions(msg);
         if (msg != null && msg.get() != null) {
-            out.write(msg.get());
+            out.write(UddiHub.ToErrorAlert(msg.get()));
         } else if (data == null || data.isEmpty())
-            out.write(ResourceLoader.GetResource(session, "errors.nodatareturned"));
+            out.write(UddiHub.ToErrorAlert(ResourceLoader.GetResource(session, "errors.nodatareturned")));
         else {
 
 %>

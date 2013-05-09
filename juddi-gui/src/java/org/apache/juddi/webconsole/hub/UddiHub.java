@@ -377,7 +377,7 @@ public class UddiHub {
             GetRegisteredInfo r = new GetRegisteredInfo();
             r.setAuthInfo(GetToken());
             if (r.getAuthInfo() == null) {
-                return "<h1>" + ResourceLoader.GetResource(session, "errors.notsignedin") + "</h1>";
+                return ToErrorAlert(ResourceLoader.GetResource(session, "errors.notsignedin"));
             }
             r.setInfoSelection(InfoSelection.ALL);
 
@@ -445,7 +445,7 @@ public class UddiHub {
      */
     public String GetServiceDetailAsHtml(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
-            return "No business id specified";
+            return ResourceLoader.GetResource(session, "errors.noinput");
         }
         StringBuilder sb = new StringBuilder();
         try {
@@ -547,7 +547,7 @@ public class UddiHub {
      * Performs a getServiceDetails in Inquiry API
      *
      * @param serviceid
-     * @return
+     * @return  null if no id was specified or if it didn't exist
      */
     public BusinessService GetServiceDetail(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
@@ -861,8 +861,7 @@ public class UddiHub {
      * Gets a business's details used for the businessEditor
      *
      * @param bizid
-     * @return null if no id is provided
-     * @throws Exception if there's an error
+     * @return null if no id is provided or if there is a remote error
      */
     public BusinessEntity GetBusinessDetails(String bizid) {
         if (bizid == null || bizid.isEmpty()) {
@@ -900,8 +899,8 @@ public class UddiHub {
 
     }
 
-    private String ToErrorAlert(String HandleException) {
-        return "<div class=\"alert alert-error\">" + HandleException + "</div>";
+    public static String ToErrorAlert(String HandleException) {
+        return "<div class=\"alert alert-error\"><i class=\"icon-warning-sign icon-large\"></i>&nbsp;" + HandleException + "</div>";
     }
 
     /**
@@ -2274,11 +2273,14 @@ public class UddiHub {
      *
      * @return
      */
-    public RegisteredInfo GetNodeInformation() {
+    public RegisteredInfo GetNodeInformation(AtomicReference<String> outmsg) {
+        if (outmsg==null)
+            outmsg = new AtomicReference<String>();
         try {
             GetRegisteredInfo r = new GetRegisteredInfo();
             r.setAuthInfo(GetToken());
             if (r.getAuthInfo() == null) {
+                outmsg.set(ResourceLoader.GetResource(session, "errors.notsignedin"));
                 return null;
             }
             r.setInfoSelection(InfoSelection.ALL);
@@ -2299,7 +2301,7 @@ public class UddiHub {
             }
             return registeredInfo;
         } catch (Exception ex) {
-            HandleException(ex);
+            outmsg.set(HandleException(ex));
         }
         return null;
     }
@@ -2323,6 +2325,11 @@ public class UddiHub {
     public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
         List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
 
+        if (GetToken()==null)
+        {
+            msg.set( ResourceLoader.GetResource(session, "errors.notsignedin"));
+           return null;
+        }
         List<AssertionStatusItem> STATUS_COMPLETE = null;
 
         try {
@@ -2483,12 +2490,18 @@ public class UddiHub {
     }
 
     /**
-     * Returns bootstrap stylized html representing all changes in the last refresh
+     * Returns bootstrap stylized html representing all changes in the last
+     * refresh
+     *
      * @param lastRefresh
      * @return
-     * @throws DatatypeConfigurationException 
+     * @throws DatatypeConfigurationException
      */
     public String GetNewsFeed(XMLGregorianCalendar lastRefresh) throws DatatypeConfigurationException {
+        if (GetToken()==null)
+        {
+            return ToErrorAlert(ResourceLoader.GetResource(session, "errors.notsignedin"));
+        }
         if (df == null) {
             df = DatatypeFactory.newInstance();
         }
@@ -2656,14 +2669,16 @@ public class UddiHub {
     }
 
     /**
-     * Searches first for a service, then iterates through to identify bindings matching the specified criteria.
-     * Since UDDI does not have a find_binding API, this is as good as it gets.
+     * Searches first for a service, then iterates through to identify bindings
+     * matching the specified criteria. Since UDDI does not have a find_binding
+     * API, this is as good as it gets.
+     *
      * @param keyword
      * @param lang
      * @param offset
      * @param maxrecords
      * @param isChooser
-     * @return 
+     * @return
      */
     public PagableContainer SearchForBinding(String keyword, String lang, int offset, int maxrecords, boolean isChooser) {
         PagableContainer ret = new PagableContainer();
@@ -2791,7 +2806,8 @@ public class UddiHub {
     }
 
     /**
-     * Get a custody transfer token for giving away control of the specified business or tmodel keys
+     * Get a custody transfer token for giving away control of the specified
+     * business or tmodel keys
      *
      * authInfo: This OPTIONAL argument is an element that contains an
      * authentication token. Authentication tokens are obtained using the
@@ -2886,9 +2902,10 @@ public class UddiHub {
 
     /**
      * Accepts a transfer token and transfers the entities.
+     *
      * @param tokenXML
      * @param keyBagXML
-     * @return 
+     * @return
      */
     public String AcceptCustodyTranferToken(String tokenXML, String keyBagXML) {
         try {
@@ -2920,8 +2937,10 @@ public class UddiHub {
     }
 
     /**
-     * returns a subscription by id, since UDDI does not provide this function, it simply gets all of them for the current user
-     * then filters out the requested item
+     * returns a subscription by id, since UDDI does not provide this function,
+     * it simply gets all of them for the current user then filters out the
+     * requested item
+     *
      * @param id
      * @return null if not found
      */

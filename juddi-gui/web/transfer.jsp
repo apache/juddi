@@ -63,7 +63,7 @@
 
                     <div id="data">
 
-                        <img src="img/ajax-loader.gif">
+                        <img src="img/bigrollergreen.gif">
                     </div>
 
                     <div>

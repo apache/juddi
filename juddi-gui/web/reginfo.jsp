@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="java.util.concurrent.atomic.AtomicReference"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="org.apache.juddi.webconsole.hub.builders.Printers"%>
 <%@page import="org.uddi.api_v3.RegisteredInfo"%>
@@ -25,20 +26,23 @@
         <div class="span12">
             <%=ResourceLoader.GetResource(session, "navbar.create.mybiz.content")%>
             <br><Br>
-            <%                
+            <%
                 UddiHub x = UddiHub.getInstance(application, session);
-                RegisteredInfo info = x.GetNodeInformation();
-                if (info == null || info.getBusinessInfos() == null || info.getBusinessInfos().getBusinessInfo().isEmpty()) {
-                    out.write(ResourceLoader.GetResource(session, "errors.nodatareturned"));
+                AtomicReference<String> msg = new AtomicReference<String>();
+                RegisteredInfo info = x.GetNodeInformation(msg);
+                if (msg != null && msg.get() != null) {
+                    out.write(UddiHub.ToErrorAlert(msg.get()));
+                } else if (info == null || info.getBusinessInfos() == null || info.getBusinessInfos().getBusinessInfo().isEmpty()) {
+                    out.write(UddiHub.ToErrorAlert(ResourceLoader.GetResource(session, "errors.nodatareturned")));
                 } else {
                     //TODO i18n
-                    %>
+            %>
 
             <table class="table table-hover">
                 <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th><th><%=ResourceLoader.GetResource(session, "items.name")%></th>
                     <th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
 
-                <%                    
+                <%
                     for (int i = 0; i < info.getBusinessInfos().getBusinessInfo().size(); i++) {
                         out.write("<tr id=\"" + StringEscapeUtils.escapeHtml(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey()) + "\"><td>");
                         out.write("<a href=\"businessEditor2.jsp?id=" + URLEncoder.encode(info.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey(), "UTF-8") + "\">");
@@ -70,7 +74,7 @@
                     }
                 %>
             </table>
-            <%                    
+            <%
                 }
             %>
         </div>
@@ -78,7 +82,7 @@
         <div class="modal hide fade" id="viewAsXml">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>As XML</h3>
+                <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%></h3>
             </div>
             <div class="modal-body" id="viewAsXmlContent">
 
