@@ -170,8 +170,10 @@
                         </container>
                         <configuration>
                             <type>existing</type>
-                            <home>${basedir}/../../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26</home>
-                          <!--   <home>${basedir}/../../juddi-tomcat-${project.parent.version}</home> --> 
+                            <!-- in src tree use this
+                            <home>${basedir}/../../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26</home> -->
+                            <!--  in distro use this -->
+                            <home>${basedir}/../../juddi-tomcat-${project.parent.version}</home>
                         </configuration>
                         <deployables>
                             <deployable>
