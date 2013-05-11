@@ -33,7 +33,7 @@ import com.ibm.wsdl.factory.WSDLFactoryImpl;
 /**
  * A WSDL parser/reader
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- * Modified for support http based credentials by Alex O'Ree
+ * Modified for supporting http based credentials by Alex O'Ree
  */
 public class ReadWSDL {
 	
