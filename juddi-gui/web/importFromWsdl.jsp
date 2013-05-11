@@ -47,7 +47,7 @@
                             %>
                             <div class="alert alert-error">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <h4>Warning!</h4>
+                                <h4><i class="icon-warning-sign"></i> Warning!</h4>
                                 Please consider switching to a secure connection such as SSL or TLS (the address bar starts with https://), 
                                 otherwise your password may be exposed.
                             </div>
