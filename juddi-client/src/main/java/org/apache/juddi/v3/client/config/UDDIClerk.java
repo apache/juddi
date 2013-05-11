@@ -18,7 +18,6 @@ package org.apache.juddi.v3.client.config;
 
 import java.io.Serializable;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.wsdl.Definition;
-import javax.wsdl.WSDLException;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -831,8 +829,19 @@ public class UDDIClerk implements Serializable {
     }
 
     /**
-     *
-     * @param partitionName
+     *A helper class to create a tModel key generator.<br>
+     * Why would I want a key generator? In UDDIv3, you're support to specify what you want the keys (unique identifiers) to be, however there's
+     * a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
+     * Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
+     * should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method.<br><br>
+     * In addition, no changes are made to the UDDI server. You'll have to do that one using code similar to this:
+     * <pre>
+     * UDDIClerk clerk = ...
+     * TModel keygen = UDDIClerk.createKeyGenator("mydomain.com", "my domain", "en");
+     * clerk.register(keygen);
+     * 
+     * @param partitionName think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
+     * key associated with the tModel generator (uddi:juddi.apache.org:keygenerator)
      * @param DescriptiveName required. max length is 255 char
      * @param DescriptiveNameLanguage optional, max length is 26 char
      * @return a populated tModel entity representing a tModel key generator. No changes are made to any connect UDDI service
@@ -842,6 +851,7 @@ public class UDDIClerk implements Serializable {
         if (partitionName == null || partitionName.length() == 0) {
             throw new IllegalArgumentException();
         }
+        
         if (DescriptiveName == null || DescriptiveName.length() == 0) {
             throw new IllegalArgumentException();
         }

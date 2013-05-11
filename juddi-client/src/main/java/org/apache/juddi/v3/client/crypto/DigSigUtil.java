@@ -83,7 +83,7 @@ import sun.security.provider.certpath.OCSP.RevocationStatus;
  * entities.
  *
  * Notes: This class only supports elements that are signed once. Multiple
- * signature are not currently support.
+ * signature are not currently supported.
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree </a>
  */

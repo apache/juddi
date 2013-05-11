@@ -26,6 +26,7 @@
         <h3><em>Welcome</em> to Apache jUDDI!</h3>
         <ul>
             <li><a href="/pluto/portal/jUDDI">jUDDI Portal</a></li>
+			<li><a href="happy.jsp">jUDDI Status</a></li>
             <li><a href="services">View</a> service listing</li>
             <li><a href="http://juddi.apache.org/">Visit</a> the Apache-jUDDI Home Page</li>
             <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html">Users Guide</a></li>
@@ -35,6 +36,7 @@
             <li><a href="http://juddi.apache.org/issue-tracking.html" >Report a bug</a></li>
             <li><a href="http://svn.apache.org/viewvc/juddi/" >jUDDI Source Code</a></li>
             <li><a href="http://www.nabble.com/jUDDI-f218.html">Mailing list</a></li>
+			
         </ul>
 
         <div class="install">

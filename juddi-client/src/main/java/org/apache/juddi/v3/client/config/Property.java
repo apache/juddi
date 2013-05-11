@@ -15,14 +15,10 @@
  *
  */
 package org.apache.juddi.v3.client.config;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Properties;
-
-import javax.xml.namespace.QName;
-
+/**
+ * Contains a properties that are used in the juddi client config (uddi.xml)
+ * 
+ */
 public class Property 
 {
 	public final static String UDDI_RELOAD_DELAY  ="reloadDelay";
