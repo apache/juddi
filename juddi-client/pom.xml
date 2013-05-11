@@ -51,5 +51,10 @@
     	<artifactId>wsdl4j</artifactId>
     	<version>1.6.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.2.5</version>
+    </dependency>
   </dependencies> 
 </project>

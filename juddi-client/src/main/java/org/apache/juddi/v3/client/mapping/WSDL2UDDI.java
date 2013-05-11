@@ -80,7 +80,7 @@ import org.w3c.dom.Element;
  * </ul>
  * 
  * @author Kurt T Stam
- *
+ * @Since 3.1.5
  */
 public class WSDL2UDDI {
 	
@@ -484,12 +484,12 @@ public class WSDL2UDDI {
 		<p>The tModel MUST contain an overviewDoc with an overviewURL containing the location 
 		of the WSDL document that describes the wsdl:portType.</p>
 
-	 * @param wsdlURL
+	 * @param wsdlURL This is used to set the Overview URL
 	 * @param portType Map
 	 * @return set of WSDL PortType tModels 
 	 * @throws WSDLException
 	 */
-	protected Set<TModel> createWSDLPortTypeTModels(String wsdlURL, Map<QName,PortType> portTypes) throws WSDLException 
+	public Set<TModel> createWSDLPortTypeTModels(String wsdlURL, Map<QName,PortType> portTypes) throws WSDLException 
 	{
 		Set<TModel> tModels = new HashSet<TModel>();
 	    // Create a tModel for each portType
@@ -627,7 +627,7 @@ public class WSDL2UDDI {
 		return service;
 	}
 	
-    protected BusinessServices createBusinessServices(Definition wsdlDefinition) {
+    public BusinessServices createBusinessServices(Definition wsdlDefinition) {
 		BusinessServices businessServices = new BusinessServices();
 		for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {
 			QName serviceQName = (QName) serviceName;
