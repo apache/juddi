@@ -65,7 +65,7 @@ public class ReadWSDL {
          * @return a Definition object representing the WSDL
          * @throws WSDLException 
          */
-        public Definition readWSDL(URL wsdlUrl, String username, String password, String domain) throws WSDLException {
+        public Definition readWSDL(URL wsdlUrl, String username, String password) throws WSDLException {
 	
 		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();
@@ -87,7 +87,7 @@ public class ReadWSDL {
          * @throws WSDLException 
          */
 	public Definition readWSDL(URL wsdlUrl) throws WSDLException {
-		return readWSDL(wsdlUrl, null, null, null);
+		return readWSDL(wsdlUrl, null, null);
 	}
 	
 	

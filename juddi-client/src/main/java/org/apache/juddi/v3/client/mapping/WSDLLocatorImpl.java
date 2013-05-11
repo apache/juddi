@@ -49,7 +49,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
     private InputStream inputStream = null;
     private URI baseURI;
     private String latestImportURI;
-    private String username = null, password = null, domain = null;
+    private String username = null, password = null;
 
     /**
      * Constructor taking the URI to the WSDL. This class implements the
@@ -71,11 +71,10 @@ public class WSDLLocatorImpl implements WSDLLocator {
      * @param password
      * @param domain
      */
-    public WSDLLocatorImpl(URI baseURI, String username, String password, String domain) {
+    public WSDLLocatorImpl(URI baseURI, String username, String password) {
         this.baseURI = baseURI;
         this.username = username;
         this.password = password;
-        this.domain = domain;
     }
 
     /**
