@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.samples;
+package org.apache.juddi.example;
 
 import javax.jws.WebService;
 
@@ -33,7 +33,7 @@ import org.apache.juddi.v3.annotations.UDDIServiceBinding;
 	    accessPointType="wsdlDeployment",
 	    accessPoint="http://${serverName}:${serverPort}/uddi-annotations/services/helloworld?wsdl")
 @WebService(
-		endpointInterface = "org.apache.juddi.samples.HelloWorld",
+		endpointInterface = "org.apache.juddi.example.HelloWorld",
         serviceName = "HelloWorld")
 
 public class HelloWorldImpl implements HelloWorld {

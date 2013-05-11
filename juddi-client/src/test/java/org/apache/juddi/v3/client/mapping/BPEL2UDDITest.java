@@ -27,6 +27,7 @@ import javax.wsdl.WSDLException;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -48,11 +49,11 @@ public class BPEL2UDDITest {
 	ReadWSDL rw = new ReadWSDL();
 	
 	@BeforeClass
-	public static void before() throws JAXBException {
+	public static void before() throws JAXBException, ConfigurationException {
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
 		properties.put("nodeName", "localhost");
-		URLLocalizer urlLocalizer = new URLLocalizerImpl();
+		URLLocalizer urlLocalizer = new URLLocalizerDefaultImpl();
 		
 		bpel2UDDI = new BPEL2UDDI(null, urlLocalizer, properties);
 	}

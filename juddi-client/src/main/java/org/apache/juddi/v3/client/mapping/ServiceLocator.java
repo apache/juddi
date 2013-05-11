@@ -31,6 +31,7 @@ import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
@@ -44,10 +45,7 @@ public class ServiceLocator {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
-	private String keyDomainURI;
 	private UDDIClerk clerk;
-	//private String lang;
-	//private String businessKey;
 	private Properties properties = new Properties();
 	private UDDIServiceCache serviceCache = null;
 	private SelectionPolicy selectionPolicy = null;
@@ -57,11 +55,6 @@ public class ServiceLocator {
 
 		this.clerk = clerk;
 		this.properties = properties;
-		
-		//Obtaining values from the properties
-		this.keyDomainURI = "uddi:" + properties.getProperty("keyDomain") + ":";
-		//this.businessKey = Property.getBusinessKey(properties);
-		//this.lang = properties.getProperty(Property.LANG,Property.DEFAULT_LANG);
 		
 		serviceCache = new UDDIServiceCache(clerk, urlLocalizer, properties);
 		String policy = properties.getProperty("juddi.client.selection.policy", "org.apache.juddi.v3.client.mapping.PolicyLocalFirst");
@@ -87,7 +80,7 @@ public class ServiceLocator {
 	
 	public String lookupEndpoint(QName serviceQName, String portName) {
 		String epr =null;
-		String serviceKey = Property.getServiceKey(properties, serviceQName);
+		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart());
 		Topology topology = serviceCache.lookupService(serviceKey);
 		if (topology==null) {
 			topology = lookupEndpointInUDDI(serviceKey);

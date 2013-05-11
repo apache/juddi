@@ -46,9 +46,6 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 			targetNamespace = "urn:uddi-org:v3_service")
 public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListenerPortType {
 	
-	
-
-	private static final long serialVersionUID = 100157393329807903L;
 	private static Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);
 	private static Map<String,UDDIServiceCache> serviceCacheMap = new ConcurrentHashMap<String,UDDIServiceCache>();
 	

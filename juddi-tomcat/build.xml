@@ -3,6 +3,7 @@
 	<property name="lib.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/lib"/>
 	<property name="webapps.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/webapps"/>
 	<property name="conf.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/conf"/>
+	<property name="endorsed.dir" value="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/endorsed"/>
 
 	<target name="unzip-tomcat">
 		<mkdir dir="${basedir}/target/tomcat"/>
@@ -13,29 +14,13 @@
 	<target name="copy-resources" depends="unzip-tomcat">
 		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF" overwrite="true"/>
-		<!--
-		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3-samples/META-INF"/>
-		-->
 		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>
  		<copy file="${dependency.mysql.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.postgres.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.log4j.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.derby.jar}" todir="${lib.dir}"/>
 		<copy file="${dependency.commons-discovery.jar}" todir="${lib.dir}"/>
-		<!--
-		<replace file="${webapps.dir}/juddiv3/WEB-INF/juddiv3.properties">
-			<replacetoken>juddi-sql/mysql</replacetoken>
-			<replacevalue>juddi-sql/derby</replacevalue>
-		</replace>
-		<replace file="${webapps.dir}/juddiv3/WEB-INF/juddiv3.properties">
-			<replacetoken>#juddi.jdbcUrl=jdbc:mysql://localhost/juddi</replacetoken>
-			<replacevalue>juddi.jdbcUrl=jdbc:derby:juddi-derby-test-db;create=true</replacevalue>
-		</replace>
-	        <replace file="${webapps.dir}/juddiv3/WEB-INF/juddiv3.properties">
-                        <replacetoken>#juddi.jdbcDriver=com.mysql.jdbc.Driver</replacetoken>
-                        <replacevalue>juddi.jdbcDriver=org.apache.derby.jdbc.EmbeddedDriver</replacevalue>
-                </replace>	
-		-->
+		<copy file="${dependency.jaxws.jar}" todir="${endorsed.dir}"/>
 	</target>
 	
 	<target name="package-tomcat" depends="copy-resources">

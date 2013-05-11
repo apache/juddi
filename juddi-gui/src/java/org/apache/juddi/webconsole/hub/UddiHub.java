@@ -547,7 +547,7 @@ public class UddiHub {
      * Performs a getServiceDetails in Inquiry API
      *
      * @param serviceid
-     * @return  null if no id was specified or if it didn't exist
+     * @return null if no id was specified or if it didn't exist
      */
     public BusinessService GetServiceDetail(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
@@ -899,6 +899,11 @@ public class UddiHub {
 
     }
 
+    /**
+     * returns a bootstrap html stylizies an error message with a warning icon
+     * @param HandleException, any string representing an error message
+     * @return 
+     */
     public static String ToErrorAlert(String HandleException) {
         return "<div class=\"alert alert-error\"><i class=\"icon-warning-sign icon-large\"></i>&nbsp;" + HandleException + "</div>";
     }
@@ -1032,6 +1037,12 @@ public class UddiHub {
             kr.setKeyName("uddi-org:keyGenerator");
             kr.setKeyValue("keyGenerator");
             tm.getCategoryBag().getKeyedReference().add(kr);
+            OverviewDoc overviewDoc = new OverviewDoc();
+            OverviewURL overviewUrl = new OverviewURL();
+            overviewUrl.setUseType("text");
+            overviewUrl.setValue("http://uddi.org/pubs/uddi_v3.htm#keyGen");
+            overviewDoc.setOverviewURL(overviewUrl);
+            tm.getOverviewDoc().add(overviewDoc);
             tm.setTModelKey(partitionName.toLowerCase());
             st.getTModel().add(tm);
             publish.saveTModel(st);
@@ -2274,8 +2285,9 @@ public class UddiHub {
      * @return
      */
     public RegisteredInfo GetNodeInformation(AtomicReference<String> outmsg) {
-        if (outmsg==null)
+        if (outmsg == null) {
             outmsg = new AtomicReference<String>();
+        }
         try {
             GetRegisteredInfo r = new GetRegisteredInfo();
             r.setAuthInfo(GetToken());
@@ -2325,10 +2337,9 @@ public class UddiHub {
     public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
         List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
 
-        if (GetToken()==null)
-        {
-            msg.set( ResourceLoader.GetResource(session, "errors.notsignedin"));
-           return null;
+        if (GetToken() == null) {
+            msg.set(ResourceLoader.GetResource(session, "errors.notsignedin"));
+            return null;
         }
         List<AssertionStatusItem> STATUS_COMPLETE = null;
 
@@ -2498,8 +2509,7 @@ public class UddiHub {
      * @throws DatatypeConfigurationException
      */
     public String GetNewsFeed(XMLGregorianCalendar lastRefresh) throws DatatypeConfigurationException {
-        if (GetToken()==null)
-        {
+        if (GetToken() == null) {
             return ToErrorAlert(ResourceLoader.GetResource(session, "errors.notsignedin"));
         }
         if (df == null) {

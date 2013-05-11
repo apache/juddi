@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tModel tModelKey="uuid:49662926-f4a5-4ba5-b8d0-32ab388dadda" xmlns="urn:uddi-org:api_v3">
+    <name>StockQuoteSoapBinding</name>
+    <overviewDoc>
+         <overviewURL>http://location/sample.wsdl</overviewURL>
+    </overviewDoc>
+    <categoryBag>
+         <keyedReference
+             tModelKey="uddi:uddi.org:xml:namespace"
+             keyName="uddi-org:xml:namespace"
+             keyValue="http://example.com/stockquote/" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:wsdl:types"
+             keyName="uddi-org:wsdl:types"
+             keyValue="binding" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:wsdl:porttypereference"
+             keyName="uddi-org:wsdl:portTypeReference"
+             keyValue="uddi:uddi.joepublisher.com:StockQuotePortType" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:wsdl:categorization:protocol"
+             keyName="uddi-org:protocol:soap"
+             keyValue= "uddi:uddi.org:protocol:soap" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:wsdl:categorization:transport"
+             keyName="uddi-org:http"
+             keyValue="uddi:uddi.org:transport:http" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:categorization:types"
+             keyName="uddi-org:types"
+             keyValue="wsdlSpec" />
+    </categoryBag>
+</tModel>

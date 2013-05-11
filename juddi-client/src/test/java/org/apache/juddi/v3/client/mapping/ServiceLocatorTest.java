@@ -39,7 +39,7 @@ public class ServiceLocatorTest {
 			
 			
 			Properties properties = new Properties();
-			ServiceLocator locator = new ServiceLocator(null, new URLLocalizerImpl(), properties);
+			ServiceLocator locator = new ServiceLocator(null, new URLLocalizerDefaultImpl(), properties);
 			System.out.println(locator);
 			locator.shutdown();
 		} catch (Exception e) {

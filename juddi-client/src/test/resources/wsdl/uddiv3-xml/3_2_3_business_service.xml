@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessService xmlns="urn:uddi-org:api_v3"
+         serviceKey="uddi:uddi.joepublisher.com:service_stockquoteservice"
+         businessKey="uddi:uddi.joepublisher.com:business_samplebusiness">
+    <name>StockQuoteService</name>
+    <bindingTemplates>
+         <bindingTemplate
+                 bindingKey="uddi:uddi.joepublisher.com:binding_api.example.org_stockquoteservice_stockquoteport_80"
+                 serviceKey="uddi:uddi.joepublisher.com:service_stockquoteservice">
+             <accessPoint URLType="http">http://location/sample</accessPoint>
+             <tModelInstanceDetails>
+                 <tModelInstanceInfo
+                      tModelKey="uddi:uddi.joepublisher.com:StockQuoteSoapBinding">
+                      <description xml:lang="en">The wsdl:binding that this wsdl:port implements. The instanceParms specifies the port local name.</description>
+                      <instanceDetails>
+                          <instanceParms>StockQuotePort</instanceParms>
+                      </instanceDetails>
+                 </tModelInstanceInfo>
+                 <tModelInstanceInfo
+                      tModelKey="uddi:uddi.joepublisher.com:StockQuotePortType">
+                      <description xml:lang="en">The wsdl:portType that this wsdl:port implements.</description>
+                 </tModelInstanceInfo>
+             </tModelInstanceDetails>
+         </bindingTemplate>
+    </bindingTemplates>
+    <categoryBag>
+        <keyedReference
+          tModelKey="uddi:uddi.org:wsdl:types"
+          keyName="uddi-org:wsdl:types"
+          keyValue="service" />
+        <keyedReference
+          tModelKey="uddi:uddi.org:xml:namespace"
+          keyName="uddi-org:xml:namespace"
+          keyValue="http://example.com/stockquote/" />
+        <keyedReference
+          tModelKey="uddi:uddi.org:xml:localname"
+          keyName="uddi-org:xml:localName"
+          keyValue="StockQuoteService" />
+    </categoryBag>
+</businessService>

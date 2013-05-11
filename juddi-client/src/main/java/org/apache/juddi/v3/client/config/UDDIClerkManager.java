@@ -16,6 +16,8 @@
  */
 package org.apache.juddi.v3.client.config;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -23,17 +25,25 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.wsdl.Definition;
+import javax.wsdl.WSDLException;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.mapping.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
+import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
+
+import com.ibm.wsdl.util.IOUtils;
 
 public class UDDIClerkManager {
 	
@@ -45,7 +55,7 @@ public class UDDIClerkManager {
     public UDDIClerkManager() throws ConfigurationException {
     	super();
 		clientConfig = new ClientConfig(CONFIG_FILE, properties);
-		
+		UDDIClientContainer.addClerkManager(this);
     }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
@@ -54,6 +64,7 @@ public class UDDIClerkManager {
 	public UDDIClerkManager(String configurationFile) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile);
+		UDDIClientContainer.addClerkManager(this);
 	}
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
@@ -62,6 +73,7 @@ public class UDDIClerkManager {
 	public UDDIClerkManager(String configurationFile, Properties properties) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile, properties);
+		UDDIClientContainer.addClerkManager(this);
 	}
 	/**
 	 * Stops the clerks.
@@ -81,7 +93,10 @@ public class UDDIClerkManager {
 	}
 	
 	private void releaseResources() {
-		unRegisterBindingsOfAnnotatedServices(true);
+		if (this.clientConfig.isRegisterOnStartup()) {
+			unRegisterWSDLs();
+			unRegisterBindingsOfAnnotatedServices(true);
+		}
 	}
  	/**
 	 * Initializes the UDDI Clerk.
@@ -95,10 +110,11 @@ public class UDDIClerkManager {
 				log.info("Starting embedded Server");
 				startEmbeddedServer();
 			}
-			
-			Runnable runnable = new BackGroundRegistration(this);
-			Thread thread = new Thread(runnable);
-			thread.start();
+			if (this.clientConfig.isRegisterOnStartup()) {
+				Runnable runnable = new BackGroundRegistration(this);
+				Thread thread = new Thread(runnable);
+				thread.start();
+			}
 		}
  	}
 	
@@ -290,13 +306,44 @@ public class UDDIClerkManager {
 			String managerName = clientConfig.getManagerName();
 			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClerkManager.class);
 			if (transportClass!=null) {
-				Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
+				Transport transport = (Transport) 
+						transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
 				return transport;
 			} else {
 				throw new ConfigurationException ("ProxyTransport was not defined in the " + clientConfig.getConfigurationFile());
 			}
 		} catch (Exception e) {
 			throw new ConfigurationException (e.getMessage(),e);
+		}
+	}
+	
+	public UDDIClerk getClerk(String clerkName) {
+		return getClientConfig().getUDDIClerks().get(clerkName);
+	}
+	
+	/**
+	 * Registers services to UDDI using a clerk, and the uddi.xml
+	 * configuration.
+	 * @throws WSDLException 
+	 * @throws TransportException 
+	 * @throws ConfigurationException 
+	 * @throws RemoteException 
+	 */
+	public void registerWSDLs() {
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
+			for (UDDIClerk uddiClerk : uddiClerks.values()) {
+				uddiClerk.registerWsdls();
+			}
+		}
+	}
+	
+	public void unRegisterWSDLs() {
+		Map<String,UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
+		if (uddiClerks.size() > 0) {
+			for (UDDIClerk uddiClerk : uddiClerks.values()) {
+				uddiClerk.unRegisterWsdls();
+			}
 		}
 	}
 	

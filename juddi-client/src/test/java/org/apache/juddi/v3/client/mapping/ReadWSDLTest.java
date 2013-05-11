@@ -14,7 +14,9 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -27,20 +29,27 @@ import org.junit.Test;
  */
 public class ReadWSDLTest {
 
-	@Test
-	public void readFromFile() throws WSDLException, URISyntaxException {
-		
-		ReadWSDL readWSDL = new ReadWSDL();
-		Definition definition = readWSDL.readWSDL("wsdl/HelloWorld.wsdl");
-		Assert.assertNotNull(definition);
-	}
-	
-	@Test
-	public void readFromJar() throws WSDLException, URISyntaxException {
-		
-		ReadWSDL readWSDL = new ReadWSDL();
-		Definition definition = readWSDL.readWSDL("uddi_v3_service.wsdl");
-		Assert.assertNotNull(definition);
-	}
-	
+    @Test
+    public void readFromFile() throws WSDLException, URISyntaxException {
+
+        ReadWSDL readWSDL = new ReadWSDL();
+        Definition definition = readWSDL.readWSDL("wsdl/HelloWorld.wsdl");
+        Assert.assertNotNull(definition);
+    }
+
+    @Test
+    public void readFromURL() throws WSDLException, URISyntaxException, MalformedURLException {
+
+        ReadWSDL readWSDL = new ReadWSDL();
+        Definition definition = readWSDL.readWSDL(new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl"));
+        Assert.assertNotNull(definition);
+    }
+
+    @Test
+    public void readFromJar() throws WSDLException, URISyntaxException {
+
+        ReadWSDL readWSDL = new ReadWSDL();
+        Definition definition = readWSDL.readWSDL("uddi_v3_service.wsdl");
+        Assert.assertNotNull(definition);
+    }
 }

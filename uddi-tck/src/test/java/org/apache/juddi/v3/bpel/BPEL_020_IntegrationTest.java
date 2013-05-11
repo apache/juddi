@@ -34,7 +34,7 @@ import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClerkManager;
 import org.apache.juddi.v3.client.mapping.BPEL2UDDI;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
-import org.apache.juddi.v3.client.mapping.URLLocalizerImpl;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3.tck.TckBusiness;
@@ -132,7 +132,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 		properties.put("keyDomain", "riftsaw.jboss.org");
 		properties.put("nodeName", "localhost");
 		properties.put("businessName", "redhat-jboss");
-		BPEL2UDDI bpel2UDDI = new BPEL2UDDI(clerk, new URLLocalizerImpl(), properties);
+		BPEL2UDDI bpel2UDDI = new BPEL2UDDI(clerk, new URLLocalizerDefaultImpl(), properties);
 		
 	    Definition wsdlDefinition = rw.readWSDL("uddi_data/bpel/riftsaw/HelloWorld.wsdl");
 		QName serviceName = new QName("http://www.jboss.org/bpel/examples/wsdl","HelloService");

@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import javax.mail.Address;
 import javax.mail.Message.RecipientType;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -37,7 +38,7 @@ public class SMTPNotifier implements Notifier {
 	
 	private final static String[] mailProps = {"mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
 		"mail.smtp.socketFactory.class", "mail.smtp.socketFactory.fallback", "mail.smtp.starttls.enable",
-		"mail.smtp.socketFactory.port","mail.smtp.auth"};
+		"mail.smtp.socketFactory.port","mail.smtp.auth","mail.smtp.user","mail.smtp.password"};
 	
 	protected Properties getEMailProperties() throws ConfigurationException {
 		if (properties==null) {
@@ -88,10 +89,20 @@ public class SMTPNotifier implements Notifier {
 		if (!accessPointUrl.startsWith("mailto:")) {
 			log.warn("smtp accessPointUrl for bindingTemplate " + bindingTemplate.getEntityKey() + 
 					" should start with 'mailto'");
-			//TODO maybe update the user's bindingTemplate with the error?
+			//TODO maybe update the user's bindingTemplate with the error?, and also validate setting onsave
 		} else {
 			notificationEmailAddress = accessPointUrl.substring(accessPointUrl.indexOf(":")+1);
-			session = Session.getInstance(getEMailProperties());
+			if (Boolean.getBoolean(getEMailProperties().getProperty("mail.smtp.starttls.enable"))) {
+				final String username = getEMailProperties().getProperty("mail.smtp.username");
+				final String password = getEMailProperties().getProperty("mail.smtp.password");
+				session = Session.getInstance(getEMailProperties(), new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(username, password);
+					}
+				});
+			} else {
+				session = Session.getInstance(getEMailProperties());
+			}
 		}
 	}
 

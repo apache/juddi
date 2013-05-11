@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import javax.wsdl.PortType;
 import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.http.HTTPBinding;
+import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.xml.namespace.QName;
 
@@ -42,10 +44,13 @@ import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
+import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.FindTModel;
@@ -75,11 +80,11 @@ import org.w3c.dom.Element;
  * </ul>
  * 
  * @author Kurt T Stam
- *
+ * @Since 3.1.5
  */
 public class WSDL2UDDI {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static Log log = LogFactory.getLog(WSDL2UDDI.class);
 	private String keyDomainURI;
 	private String businessKey;
 	private String lang;
@@ -87,27 +92,85 @@ public class WSDL2UDDI {
 	private Properties properties = null;
 	private URLLocalizer urlLocalizer;
 	
-	public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) {
+	/**
+	 * Required Properties are:
+	 * 	businessName, for example: 'Apache'
+	 *  nodeName, for example: 'uddi.example.org_80'
+	 *  keyDomain, for example: juddi.apache.org
+	 * 
+	 * Optional Properties are:
+	 *  lang: for example: 'nl'
+	 *  
+	 * @param clerk - can be null if register/unregister methods are not used.
+	 * @param urlLocalizer - A reference to an custom
+	 * @param properties
+	 * @throws ConfigurationException 
+	 */
+	public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
 		super();
 		
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
 		
+		if (clerk!=null) {
+			if (!properties.containsKey("keyDomain")) {
+				throw new ConfigurationException("Property keyDomain is a required property when using WSDL2UDDI.");
+			}
+			if (!properties.containsKey("businessKey") && !properties.containsKey("businessName")) {
+				throw new ConfigurationException("Either property businessKey, or businessName, is a required property when using WSDL2UDDI.");
+			}
+			if (!properties.containsKey("nodeName")) {
+				if (properties.containsKey("serverName") && properties.containsKey("serverPort")) {
+					String nodeName = properties.getProperty("serverName") + "_" + properties.getProperty("serverPort");
+					properties.setProperty("nodeName", nodeName);
+				} else {
+					throw new ConfigurationException("Property nodeName is not defined and is a required property when using WSDL2UDDI.");
+				}
+			}
+		}
+		
 		//Obtaining values from the properties
 		this.keyDomainURI =  "uddi:" + properties.getProperty("keyDomain") + ":";
-		this.businessKey = Property.getBusinessKey(properties);
+		if (properties.contains(Property.BUSINESS_KEY)) {
+			this.businessKey = properties.getProperty(Property.BUSINESS_KEY);
+		} else {
+			//using the BusinessKey Template, and the businessName to construct the key 
+			this.businessKey = UDDIKeyConvention.getBusinessKey(properties);
+		}
 		this.lang = properties.getProperty(Property.LANG,Property.DEFAULT_LANG);
 	}
 	
+	public BusinessServices registerBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException {
+		
+		BusinessServices businessServices = new BusinessServices();
+		
+		for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {
+			QName serviceQName = (QName) serviceName;
+			Service service = wsdlDefinition.getService(serviceQName);
+			BusinessService businessService = null;
+			//add service
+			URL serviceUrl = null;
+			if (service.getPorts()!=null && service.getPorts().size()>0) {
+				for (Object portName : service.getPorts().keySet()) {
+					businessService = registerBusinessService(serviceQName, (String) portName, serviceUrl, wsdlDefinition).getBusinessService();
+				}
+			}
+			if (businessService!=null) businessServices.getBusinessService().add(businessService);
+		}
+		
+		return businessServices;
+		
+	}
+	
 	@SuppressWarnings("unchecked")
-	public BindingTemplate register(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException {
+	public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException {
 		
 		String genericWSDLURL  = wsdlDefinition.getDocumentBaseURI();   //TODO maybe point to repository version
-		
-		String serviceKey = Property.getServiceKey(properties, serviceQName);
-		BusinessService service = lookupService(serviceKey);
-		if (service==null) {
+		ServiceRegistrationResponse response = new ServiceRegistrationResponse();
+		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart());
+		BusinessService businessService = lookupService(serviceKey);
+		if (businessService==null) {
 			List<TModel> tModels = new ArrayList<TModel>();
 			// Create the PortType tModels
 			Map<QName,PortType> portTypes = (Map<QName,PortType>) wsdlDefinition.getAllPortTypes();
@@ -120,23 +183,47 @@ public class WSDL2UDDI {
 				clerk.register(tModel);
 			}
 		    // Service
-		    service = createBusinessService(serviceQName, wsdlDefinition);
+		    businessService = createBusinessService(serviceQName, wsdlDefinition);
 		    // Register this Service
-		    clerk.register(service);
+		    clerk.register(businessService);
 		}
 		//Add the BindingTemplate to this Service
 		BindingTemplate binding = createWSDLBinding(serviceQName, portName, serviceUrl, wsdlDefinition);
 		// Register BindingTemplate
 		clerk.register(binding);
-		return binding;
+		if (businessService.getBindingTemplates() == null) businessService.setBindingTemplates(new BindingTemplates());
+		businessService.getBindingTemplates().getBindingTemplate().add(binding);
+		response.setBindingKey(binding.getBindingKey());
+		response.setBusinessService(businessService);
+		return response;
 	}
 	
-	public String unRegister(QName serviceName, String portName, URL serviceUrl) throws RemoteException, ConfigurationException, TransportException {
+	public String[] unRegisterBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, MalformedURLException {
 		
-		String serviceKey = Property.getServiceKey(properties, serviceName);
+		String[] businessServices = new String[wsdlDefinition.getAllServices().size()];
+		int i=0;
+		for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {
+			QName serviceQName = (QName) serviceName;
+			Service service = wsdlDefinition.getService(serviceQName);
+			//unregister service
+			URL serviceUrl = null;
+			if (service.getPorts()!=null && service.getPorts().size() > 0) {
+				for (Object portName : service.getPorts().keySet()) {
+					//construct the accessURL
+					serviceUrl = new URL(getBindingURL((Port) service.getPorts().get(portName)));
+					businessServices[i++] = unRegisterBusinessService(serviceQName, (String) portName, serviceUrl);
+				}
+			}
+		}
+		return businessServices;
+	}
+	
+	public String unRegisterBusinessService(QName serviceName, String portName, URL serviceUrl) throws RemoteException, ConfigurationException, TransportException {
+		
+		String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart());
 		BusinessService service = lookupService(serviceKey);
 		boolean isRemoveServiceIfNoTemplates = true; 
-		String bindingKey = Property.getBindingKey(properties, serviceName, portName, serviceUrl);
+		String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceName, portName, serviceUrl);
 		//check if this bindingKey is in the service's binding templates
 		for (BindingTemplate bindingTemplate : service.getBindingTemplates().getBindingTemplate()) {
 			if (bindingKey.equals(bindingTemplate.getBindingKey())) {
@@ -269,7 +356,7 @@ public class WSDL2UDDI {
 	 * @return set of WSDL Binding tModels
 	 * @throws WSDLException
 	 */
-	public Set<TModel> createWSDLBindingTModels(String wsdlURL, Map<QName,Binding> bindings) throws WSDLException 
+	protected Set<TModel> createWSDLBindingTModels(String wsdlURL, Map<QName,Binding> bindings) throws WSDLException 
 	{
 		
 		Set<TModel> tModels = new HashSet<TModel>();
@@ -299,7 +386,7 @@ public class WSDL2UDDI {
 	    	if (namespace!=null && !"".equals(namespace)) {
 	    		// A keyedReference with a tModelKey of the WSDL Entity Type category system and a keyValue of "binding".
 	    		KeyedReference namespaceReference = newKeyedReference(
-		    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:binding:namespace", namespace); 
+		    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace); 
 		    	categoryBag.getKeyedReference().add(namespaceReference);
 	    	}
 	    	
@@ -397,7 +484,7 @@ public class WSDL2UDDI {
 		<p>The tModel MUST contain an overviewDoc with an overviewURL containing the location 
 		of the WSDL document that describes the wsdl:portType.</p>
 
-	 * @param wsdlURL
+	 * @param wsdlURL This is used to set the Overview URL
 	 * @param portType Map
 	 * @return set of WSDL PortType tModels 
 	 * @throws WSDLException
@@ -444,7 +531,7 @@ public class WSDL2UDDI {
 			// MUST NOT contain a keyedReference to the XML Namespace category system.
 	    	if (namespace!=null && !"".equals(namespace)) {
 		    	KeyedReference namespaceReference = newKeyedReference(
-		    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:porttype:namespace", namespace); 
+		    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace); 
 		    	categoryBag.getKeyedReference().add(namespaceReference);
 	    	}
 	    	
@@ -454,15 +541,7 @@ public class WSDL2UDDI {
 	    return tModels;
 	}
 	
-	protected KeyedReference newKeyedReference(String tModelKey, String value) 
-	{
-		KeyedReference typesReference = new KeyedReference();
-    	typesReference.setTModelKey(tModelKey);
-    	typesReference.setKeyValue(value);
-    	return typesReference;
-	}
-	
-	protected KeyedReference newKeyedReference(String tModelKey, String keyName, String value) 
+	protected static KeyedReference newKeyedReference(String tModelKey, String keyName, String value) 
 	{
 		KeyedReference typesReference = new KeyedReference();
     	typesReference.setTModelKey(tModelKey);
@@ -476,22 +555,22 @@ public class WSDL2UDDI {
      * @param processName
      * @return
      */
-    public FindTModel createFindBindingTModelForPortType (String portType, String namespace) {
+    public static FindTModel createFindBindingTModelForPortType (String portType, String namespace) {
     	
     	FindTModel findTModel = new FindTModel();
     	CategoryBag categoryBag = new CategoryBag();
     
     	if (namespace!=null && namespace.length()!=0) {
     		KeyedReference namespaceReference = newKeyedReference(
-    			"uddi:uddi.org:xml:namespace", namespace);
+    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
     	}
     	KeyedReference bindingReference = newKeyedReference(
-    			"uddi:uddi.org:wsdl:types", "binding");
+    			"uddi:uddi.org:wsdl:types", "uddi-org:wsdl:types", "binding");
     	categoryBag.getKeyedReference().add(bindingReference);
     	
     	KeyedReference portTypeReference = newKeyedReference(
-    			"uddi:uddi.org:wsdl:porttypereference", portType);
+    			"uddi:uddi.org:wsdl:porttypereference", "uddi-org:wsdl:portTypeReference", portType);
     	categoryBag.getKeyedReference().add(portTypeReference);
     	
     	findTModel.setCategoryBag(categoryBag);
@@ -507,27 +586,23 @@ public class WSDL2UDDI {
      * @param processName
      * @return
      */
-    public FindTModel createFindPortTypeTModelForPortType (String portType, String namespace) {
+    public static FindTModel createFindPortTypeTModelForPortType (String portTypeName, String namespace) {
     	
     	FindTModel findTModel = new FindTModel();
     	Name name = new Name();
-    	name.setLang(lang);
-    	name.setValue(portType);
+    	name.setLang("en");
+    	name.setValue(portTypeName);
     	findTModel.setName(name);
     	
     	CategoryBag categoryBag = new CategoryBag();
     	if (namespace!=null && namespace.length()!=0) {
     		KeyedReference namespaceReference = newKeyedReference(
-    			"uddi:uddi.org:xml:namespace", namespace);
+    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
     	}
     	KeyedReference bindingReference = newKeyedReference(
-    			"uddi:uddi.org:wsdl:types", "portType");
+    			"uddi:uddi.org:wsdl:types", "uddi-org:wsdl:types", "portType");
     	categoryBag.getKeyedReference().add(bindingReference);
-    	
-    	KeyedReference portTypeReference = newKeyedReference(
-    			"uddi:uddi.org:wsdl:porttypereference", portType);
-    	categoryBag.getKeyedReference().add(portTypeReference);
     	
     	findTModel.setCategoryBag(categoryBag);
     	
@@ -545,13 +620,34 @@ public class WSDL2UDDI {
 	 * @throws ConfigurationException
 	 * @throws TransportException
 	 */
-	public BusinessService lookupService(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
+    private BusinessService lookupService(String serviceKey) throws RemoteException, ConfigurationException, TransportException {
 		
 		//Checking if this serviceKey already exist
 		BusinessService service = clerk.findService(serviceKey);
 		return service;
 	}
 	
+    public BusinessServices createBusinessServices(Definition wsdlDefinition) {
+		BusinessServices businessServices = new BusinessServices();
+		for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {
+			QName serviceQName = (QName) serviceName;
+			Service service = wsdlDefinition.getService(serviceQName);
+			BusinessService businessService = createBusinessService(serviceQName, wsdlDefinition);
+			//service.getExtensibilityElements().
+			//add the bindingTemplates
+			URL serviceUrl = null;
+			if (service.getPorts()!=null && service.getPorts().size()>0) {
+				businessService.setBindingTemplates(new BindingTemplates());
+				for (Object portName : service.getPorts().keySet()) {
+					BindingTemplate bindingTemplate = createWSDLBinding(serviceQName, (String) portName, serviceUrl, wsdlDefinition);
+					businessService.getBindingTemplates().getBindingTemplate().add(bindingTemplate);
+				}
+			}
+			businessServices.getBusinessService().add(businessService);
+		}
+		
+		return businessServices;
+	}
 	/**
 	 * Creates a UDDI Business Service.
 	 * 
@@ -559,14 +655,14 @@ public class WSDL2UDDI {
 	 * @param wsldDefinition
 	 * @return
 	 */
-	public BusinessService createBusinessService(QName serviceQName, Definition wsdlDefinition) {
+    protected BusinessService createBusinessService(QName serviceQName, Definition wsdlDefinition) {
 		
 		log.debug("Constructing Service UDDI Information for " + serviceQName);
 		BusinessService service = new BusinessService();
 		// BusinessKey
 		service.setBusinessKey(businessKey);
 		// ServiceKey
-		service.setServiceKey(Property.getServiceKey(properties, serviceQName));
+		service.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));
 		// Description
 		String serviceDescription = properties.getProperty(Property.SERVICE_DESCRIPTION, Property.DEFAULT_SERVICE_DESCRIPTION);
 		// Override with the service description from the WSDL if present
@@ -591,16 +687,16 @@ public class WSDL2UDDI {
 		String namespace = serviceQName.getNamespaceURI();
 		if (namespace!=null && namespace!="") {
     		KeyedReference namespaceReference = newKeyedReference(
-    			"uddi:uddi.org:xml:namespace", "service namespace", namespace);
+    			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);
     	}
 		
 		KeyedReference serviceReference = newKeyedReference(
-    			"uddi:uddi.org:wsdl:types", "WSDL type", "service");
+    			"uddi:uddi.org:wsdl:types", "uddi-org:wsdl:types", "service");
     	categoryBag.getKeyedReference().add(serviceReference);
     	
     	KeyedReference localNameReference = newKeyedReference(
-    			"uddi:uddi.org:xml:localname", "service local name", serviceQName.getLocalPart());
+    			"uddi:uddi.org:xml:localname", "uddi-org:xml:localName", serviceQName.getLocalPart());
     	categoryBag.getKeyedReference().add(localNameReference);
     	
 		service.setCategoryBag(categoryBag);
@@ -608,19 +704,22 @@ public class WSDL2UDDI {
 		return service;
 	}
 	
-	public BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) {
+	protected BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) {
 			
     	BindingTemplate bindingTemplate = new BindingTemplate();
 		// Set BusinessService Key
-		bindingTemplate.setServiceKey(Property.getServiceKey(properties, serviceQName));
-		// Set Binding Key
-		String bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
-		bindingTemplate.setBindingKey(bindingKey);
-		// Set AccessPoint
-		AccessPoint accessPoint = new AccessPoint();
-		accessPoint.setUseType(AccessPointType.END_POINT.toString());
-		accessPoint.setValue(urlLocalizer.rewrite(serviceUrl));
-		bindingTemplate.setAccessPoint(accessPoint);
+		bindingTemplate.setServiceKey(UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart()));
+		
+		if (serviceUrl!=null) {
+			// Set AccessPoint
+			AccessPoint accessPoint = new AccessPoint();
+			accessPoint.setUseType(AccessPointType.END_POINT.toString());
+			accessPoint.setValue(urlLocalizer.rewrite(serviceUrl));
+			bindingTemplate.setAccessPoint(accessPoint);
+			// Set Binding Key
+			String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
+			bindingTemplate.setBindingKey(bindingKey);
+		}
 		
 		Service service =  wsdlDefinition.getService(serviceQName);
 		if (service!=null) {
@@ -628,6 +727,30 @@ public class WSDL2UDDI {
 			
 			Port port = service.getPort(portName);
 			if (port!=null) {
+				if (serviceUrl==null) {
+					for (Object element: port.getExtensibilityElements()) {
+						if (element instanceof SOAPAddress) {
+							SOAPAddress address = (SOAPAddress) element;
+							URL locationURI;
+							try {
+								locationURI = new URL(address.getLocationURI());
+								if (locationURI!=null) {
+									AccessPoint accessPoint = new AccessPoint();
+									accessPoint.setUseType(AccessPointType.END_POINT.toString());
+									accessPoint.setValue(urlLocalizer.rewrite(locationURI));
+									bindingTemplate.setAccessPoint(accessPoint);
+									// Set Binding Key
+									String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, locationURI);
+									bindingTemplate.setBindingKey(bindingKey);
+								}
+								break;
+							} catch (MalformedURLException e) {
+								log.error(e.getMessage());
+							}
+						}
+					}
+					
+				}
 				Binding binding = port.getBinding();
 				// Set the Binding Description
 				String bindingDescription = properties.getProperty(Property.BINDING_DESCRIPTION, Property.DEFAULT_BINDING_DESCRIPTION);
@@ -678,6 +801,27 @@ public class WSDL2UDDI {
 		}
 		
 		return bindingTemplate;
+	}
+	/**
+	 * Obtains the accessUrl from the WSDL
+	 * @param port
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	private String getBindingURL(Port port) throws MalformedURLException {
+		
+		String bindingUrl = null;
+		for (Object element: port.getExtensibilityElements()) {
+			if (element instanceof SOAPAddress) {
+				SOAPAddress address = (SOAPAddress) element;
+				URL locationURI = new URL(address.getLocationURI());
+				if (locationURI!=null) {
+					bindingUrl = urlLocalizer.rewrite(locationURI);
+					break;
+				}
+			}
+		}
+		return bindingUrl;
 	}
 	
 }

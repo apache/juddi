@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<uddi>
+    <reloadDelay>5000</reloadDelay>
+    <manager name="juddi-core-unittest-client">
+		<nodes>
+			<node isHomeJUDDI="true">
+			    <!-- required 'default' node -->
+				<name>default</name> 
+				<description>InVM jUDDI node</description>
+				<properties>
+					<property name="serverName" value="localhost" />
+				</properties>
+				<!-- In VM Transport Settings -->
+				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
+				<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
+				<inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
+		        <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
+		        <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
+				<subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
+				<subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
+				<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
+			</node>
+		</nodes>
+		<clerks registerOnStartup="false">
+		   <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher"/>
+	   </clerks>
+	</manager>
+</uddi>

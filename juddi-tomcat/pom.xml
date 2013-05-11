@@ -54,6 +54,12 @@
 			<version>5.1.6</version>
 		</dependency>
 		<dependency>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-jaxws_2.2_spec</artifactId>
+          <version>1.0</version>
+          <type>jar</type>
+        </dependency>
+		<dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>8.2-504.jdbc3</version>
@@ -94,6 +100,7 @@
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
 								<property name="dependency.juddiv3.war" value="${basedir}/../juddiv3-war/target/juddiv3.war" />
+								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
 									<target name="package-tomcat" />

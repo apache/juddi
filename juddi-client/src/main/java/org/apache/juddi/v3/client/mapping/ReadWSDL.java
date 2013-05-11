@@ -31,14 +31,16 @@ import org.apache.juddi.v3.client.ClassUtil;
 import com.ibm.wsdl.factory.WSDLFactoryImpl;
 
 /**
+ * A WSDL parser/reader
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * Modified for support http based credentials by Alex O'Ree
  */
 public class ReadWSDL {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
 	public Definition readWSDL(String fileName) throws WSDLException {
-	
+            
 		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
@@ -51,6 +53,41 @@ public class ReadWSDL {
 			log.error(e.getMessage(),e);
 		}
 		return wsdlDefinition;
+	}
+	
+        /**
+         * Reads a WSDL file, assumes that credentials are required. This is useful for when the WSDL document itself
+         * is protected by HTTP based authentication mechanisms
+         * @param wsdlUrl
+         * @param username
+         * @param password
+         * @param domain
+         * @return a Definition object representing the WSDL
+         * @throws WSDLException 
+         */
+        public Definition readWSDL(URL wsdlUrl, String username, String password, String domain) throws WSDLException {
+	
+		Definition wsdlDefinition = null;
+		WSDLFactory factory = WSDLFactoryImpl.newInstance();
+		WSDLReader reader = factory.newWSDLReader();
+		try {
+			URI uri = wsdlUrl.toURI();
+			WSDLLocator locator = new WSDLLocatorImpl(uri);
+			wsdlDefinition = reader.readWSDL(locator);
+		} catch (URISyntaxException e) {
+			log.error(e.getMessage(),e);
+		}
+		return wsdlDefinition;
+	}
+        /**
+         * Reads a WSDL file, assumes that credentials are not required. This is a convenience wrapper for
+         * readWSDL(URL wsdlUrl, null, null, null)
+         * @param wsdlUrl
+         * @return a Definition object representing the WSDL
+         * @throws WSDLException 
+         */
+	public Definition readWSDL(URL wsdlUrl) throws WSDLException {
+		return readWSDL(wsdlUrl, null, null, null);
 	}
 	
 	

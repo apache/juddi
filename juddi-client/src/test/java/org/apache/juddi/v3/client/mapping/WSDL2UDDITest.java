@@ -26,6 +26,7 @@ import javax.wsdl.WSDLException;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class WSDL2UDDITest {
 	ReadWSDL rw = new ReadWSDL();
 	
 	@Test
-	public void testUDDIBindingModel() throws WSDLException, JAXBException {
+	public void testUDDIBindingModel() throws WSDLException, JAXBException, ConfigurationException {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
@@ -48,7 +49,7 @@ public class WSDL2UDDITest {
 		
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerImpl(), properties);
+		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
 		Set<TModel> tModels = new HashSet<TModel>();
 	    @SuppressWarnings("unchecked")
 		Map<QName,PortType> portTypes = (Map<QName,PortType>) wsdlDefinition.getAllPortTypes();
@@ -63,7 +64,7 @@ public class WSDL2UDDITest {
 	}
 	
 	@Test
-	public void testWSDLBindingModel() throws WSDLException, JAXBException {
+	public void testWSDLBindingModel() throws WSDLException, JAXBException, ConfigurationException {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
@@ -71,7 +72,7 @@ public class WSDL2UDDITest {
 		
 		Properties properties = new Properties();
 		properties.put("keyDomain", "juddi.apache.org");
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerImpl(), properties);
+		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
 		Set<TModel> tModels = new HashSet<TModel>();
 	    @SuppressWarnings("unchecked")
 		Map<QName,Binding> bindings= (Map<QName,Binding>) wsdlDefinition.getAllBindings();

@@ -32,5 +32,7 @@
        <module>simple-browse</module>
        <module>simple-publish</module>
        <module>uddi-annotations</module>
+       <module>wsdl2uddi</module>
+       <module>wsdl2uddi-lifecyle</module>
     </modules>
 </project>

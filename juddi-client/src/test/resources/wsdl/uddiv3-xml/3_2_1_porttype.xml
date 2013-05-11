@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tModel tModelKey="uddi:uddi.joepublisher.com:StockQuotePortType" xmlns="urn:uddi-org:api_v3">
+    <name>StockQuotePortType</name>
+    <overviewDoc>
+         <overviewURL>http://location/sample.wsdl</overviewURL>
+    </overviewDoc>
+    <categoryBag>
+         <keyedReference
+             tModelKey="uddi:uddi.org:xml:namespace"
+             keyName="uddi-org:xml:namespace"
+             keyValue="http://example.com/stockquote/" />
+         <keyedReference
+             tModelKey="uddi:uddi.org:wsdl:types"
+             keyName="uddi-org:wsdl:types"
+             keyValue="portType" />
+    </categoryBag>
+</tModel>

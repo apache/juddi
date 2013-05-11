@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.samples;
+package org.apache.juddi.example;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;

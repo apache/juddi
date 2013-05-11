@@ -17,6 +17,8 @@
 package org.apache.juddi.v3.client.config;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -88,8 +90,8 @@ public class WebHelper {
 			} else {
 				throw new ConfigurationException("A manager name needs to be specified in the client config file.");
 			}
+			
 			manager.start();
-			UDDIClientContainer.addClerkManager(manager);
 			servletContext.setAttribute(JUDDI_CLIENT_MANAGER_NAME, managerName);
 			return manager;
 		}

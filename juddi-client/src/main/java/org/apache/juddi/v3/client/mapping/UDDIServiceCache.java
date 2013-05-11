@@ -35,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
@@ -71,7 +72,7 @@ public class UDDIServiceCache {
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
-		this.subscriptionKey = Property.getSubscriptionKey(properties);
+		this.subscriptionKey = UDDIKeyConvention.getSubscriptionKey(properties);
 		
 		init();
 	}
@@ -88,13 +89,13 @@ public class UDDIServiceCache {
 			serviceUrl = new URL(url);
 			log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
 					+ " with endpoint " + url);
-			bindingKey = Property.getBindingKey(properties, serviceQName, portName, serviceUrl);
+			bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
 			endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
 			endpoint.publish(serviceUrl.toExternalForm());
 			
 			WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
 			Definition wsdlDefinition = new ReadWSDL().readWSDL("juddi_client_subscriptionlistener.wsdl");
-			bindingKey = wsdl2UDDI.register(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
+			bindingKey = wsdl2UDDI.registerBusinessService(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
 			
 			registerSubscription();
 		}
@@ -105,7 +106,7 @@ public class UDDIServiceCache {
 		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
 		String portName = "UDDIClientSubscriptionListenerImplPort";
 		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-		wsdl2UDDI.unRegister(serviceQName, portName, serviceUrl);
+		wsdl2UDDI.unRegisterBusinessService(serviceQName, portName, serviceUrl);
 		endpoint.stop();
 		endpoints.remove(serviceUrl.toExternalForm());
 		UDDIClientSubscriptionListenerImpl.getServiceCacheMap().remove(bindingKey);
