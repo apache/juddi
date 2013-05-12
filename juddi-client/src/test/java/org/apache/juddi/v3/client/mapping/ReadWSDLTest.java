@@ -30,7 +30,7 @@ import org.junit.Test;
 public class ReadWSDLTest {
 
     @Test
-    public void readFromFile() throws WSDLException, URISyntaxException {
+    public void readFromFile() throws WSDLException, URISyntaxException , Exception{
 
         ReadWSDL readWSDL = new ReadWSDL();
         Definition definition = readWSDL.readWSDL("wsdl/HelloWorld.wsdl");
@@ -38,7 +38,7 @@ public class ReadWSDLTest {
     }
 
     @Test
-    public void readFromURL() throws WSDLException, URISyntaxException, MalformedURLException {
+    public void readFromURL() throws WSDLException, URISyntaxException, MalformedURLException, Exception {
 
         ReadWSDL readWSDL = new ReadWSDL();
         Definition definition = readWSDL.readWSDL(new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl"));
@@ -46,7 +46,7 @@ public class ReadWSDLTest {
     }
 
     @Test
-    public void readFromJar() throws WSDLException, URISyntaxException {
+    public void readFromJar() throws WSDLException, URISyntaxException, Exception {
 
         ReadWSDL readWSDL = new ReadWSDL();
         Definition definition = readWSDL.readWSDL("uddi_v3_service.wsdl");

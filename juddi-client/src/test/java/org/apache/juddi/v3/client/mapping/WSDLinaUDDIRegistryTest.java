@@ -53,7 +53,7 @@ public class WSDLinaUDDIRegistryTest {
 	
 	
 	@BeforeClass
-	public static void before() {
+	public static void before() throws Exception{
 		try {
 			wsdlDefinition = rw.readWSDL("wsdl/sample.wsdl");
 			properties.put("keyDomain", "uddi.joepublisher.com");

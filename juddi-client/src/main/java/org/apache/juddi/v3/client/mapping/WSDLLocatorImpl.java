@@ -22,32 +22,34 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
-
 import javax.wsdl.xml.WSDLLocator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.xml.sax.InputSource;
 
 /**
  * Implementation of the interface {@link WSDLLocatorImpl}.
  *
- * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a> Modified for
- * supporting http based credentials by Alex O'Ree
+ * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a> 
+ * @author Alex O'Ree - Modified for supporting http based credentials 
  */
 public class WSDLLocatorImpl implements WSDLLocator {
-
+    private Exception lastException=null;
     private final Log log = LogFactory.getLog(this.getClass());
     private InputStream inputStream = null;
     private URI baseURI;
+    private boolean ignoreSSLErrors = false;
     private String latestImportURI;
     private String username = null, password = null;
 
@@ -59,6 +61,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
      */
     public WSDLLocatorImpl(URI baseURI) {
         this.baseURI = baseURI;
+        this.ignoreSSLErrors = ignoreSSLErrors;
     }
 
     /**
@@ -71,10 +74,11 @@ public class WSDLLocatorImpl implements WSDLLocator {
      * @param password
      * @param domain
      */
-    public WSDLLocatorImpl(URI baseURI, String username, String password) {
+    public WSDLLocatorImpl(URI baseURI, String username, String password, boolean ignoreSSLErrors) {
         this.baseURI = baseURI;
         this.username = username;
         this.password = password;
+        this.ignoreSSLErrors = ignoreSSLErrors;
     }
 
     /**
@@ -116,23 +120,35 @@ public class WSDLLocatorImpl implements WSDLLocator {
 
     private InputSource getImportFromUrl(String url) {
         InputSource inputSource = null;
-        DefaultHttpClient httpclient = new DefaultHttpClient();
+        DefaultHttpClient httpclient = null;
         try {
             URL url2 = new URL(url);
             if (!url.toLowerCase().startsWith("http")) {
                 return getImportFromFile(url);
             }
+            boolean usessl = false;
+            int port = 80;
+            if (url.toLowerCase().startsWith("https://")) {
+                port = 443;
+                usessl = true;
+            }
+
+            if (url2.getPort() > 0) {
+                port = url2.getPort();
+            }
+
+            if (ignoreSSLErrors && usessl) {
+                SchemeRegistry schemeRegistry = new SchemeRegistry();
+                schemeRegistry.register(new Scheme("https", port, new MockSSLSocketFactory()));
+                ClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);
+                httpclient = new DefaultHttpClient(cm);
+            } else {
+                httpclient = new DefaultHttpClient();
+            }
 
             if (username != null && username.length() > 0
                     && password != null && password.length() > 0) {
-                int port = 80;
-                if (url.toLowerCase().startsWith("https://")) {
-                    port = 443;
-                }
 
-                if (url2.getPort() > 0) {
-                    port = url2.getPort();
-                }
 
                 httpclient.getCredentialsProvider().setCredentials(
                         new AuthScope(url2.getHost(), port),
@@ -162,8 +178,11 @@ public class WSDLLocatorImpl implements WSDLLocator {
             latestImportURI = url;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            lastException = e;
         } finally {
-            httpclient.getConnectionManager().shutdown();
+            if (httpclient != null) {
+                httpclient.getConnectionManager().shutdown();
+            }
         }
         return inputSource;
     }
@@ -178,6 +197,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
             return getImportFromUrl(importUrl.toExternalForm());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            lastException=e;
         }
         return inputSource;
     }
@@ -191,6 +211,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
             baseURIStr = baseURI.toURL().toExternalForm();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+            lastException=e;
         }
         return baseURIStr;
     }
@@ -211,6 +232,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
                 inputStream.close();
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
+                lastException=e;
             }
         }
     }
@@ -224,7 +246,17 @@ public class WSDLLocatorImpl implements WSDLLocator {
             latestImportURI = importUrl.toExternalForm();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            lastException=e;
         }
         return inputSource;
+    }
+    
+    /**
+     * Returns the last exception or null if there wasn't any. This was done because the authors of WSDLLocator apparently thought it would always work
+     * @return 
+     */
+    public Exception getLastException()
+    {
+        return lastException;
     }
 }

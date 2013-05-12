@@ -478,7 +478,10 @@
                             }
                         %>
                         <br>
-                        <table class="table table-hover"><tr><th><%=ResourceLoader.GetResource(session, "items.key")%> </th><th><%=ResourceLoader.GetResource(session, "items.name")%></th><th><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></th></tr>
+                        <table class="table table-hover"><tr>
+                                <th><%=ResourceLoader.GetResource(session, "items.name")%> </th>
+                                <th><%=ResourceLoader.GetResource(session, "items.key")%></th>
+                                <th><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></th></tr>
                             <%
                                 if (bd.getBusinessServices() != null) {
                                     for (int i = 0; i < bd.getBusinessServices().getBusinessService().size(); i++) {

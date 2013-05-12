@@ -59,7 +59,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testTN_WSDLPortTypeModels() throws WSDLException, JAXBException {
+	public void testTN_WSDLPortTypeModels() throws WSDLException, JAXBException, Exception {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("bpel/bpel-technote.wsdl");
@@ -74,7 +74,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testTN_BPEL4WSProcessTModel() throws WSDLException, JAXBException {
+	public void testTN_BPEL4WSProcessTModel() throws WSDLException, JAXBException, Exception {
 
 		// Obtained from the .bpel file:
 		String targetNamespace = "http://example.com/travelagent";
@@ -108,7 +108,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testHelloWorld_WSDLPortTypeModels() throws WSDLException, JAXBException {
+	public void testHelloWorld_WSDLPortTypeModels() throws WSDLException, JAXBException , Exception{
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("bpel/HelloWorld.wsdl");
@@ -124,7 +124,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testHelloWorld_UDDIBindingModel() throws WSDLException, JAXBException {
+	public void testHelloWorld_UDDIBindingModel() throws WSDLException, JAXBException, Exception {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("bpel/HelloWorld.wsdl");
@@ -140,7 +140,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testHelloWorld_BPEL4WSProcessTModel() throws WSDLException, JAXBException {
+	public void testHelloWorld_BPEL4WSProcessTModel() throws WSDLException, JAXBException , Exception{
 
 		//Obtained from the .bpel file:
 		String targetNamespace = "http://www.jboss.org/bpel/examples";
@@ -161,7 +161,7 @@ public class BPEL2UDDITest {
 	}
 	
 	@Test
-	public void testHelloWorld_BPELBinding() throws WSDLException, JAXBException, MalformedURLException {
+	public void testHelloWorld_BPELBinding() throws WSDLException, JAXBException, MalformedURLException, Exception {
 
 		//Obtained from the .bpel file:
 		String portName = "HelloPort";
