@@ -77,8 +77,8 @@ public class Node implements Serializable{
 	public String getClientName() {
 		return clientName;
 	}
-	public void setClientName(String managerName) {
-		this.clientName = managerName;
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 	public String getDescription() {
 		return description;
