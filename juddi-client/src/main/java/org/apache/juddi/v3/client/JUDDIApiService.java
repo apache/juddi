@@ -9,7 +9,12 @@ import javax.xml.ws.WebServiceFeature;
 
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 
-
+/**
+ * This call is for client side access to the JUDDI API, a web service meant for administrative functions above and beyond the
+ * UDDI v3 specification.
+ * 
+ * @author jUDDI Team
+ */
 @WebServiceClient(name = "JUDDIApiService", targetNamespace = "urn:juddi-apache-org:v3_service", wsdlLocation = "classpath:/juddi_api_v1.wsdl")
 public class JUDDIApiService
     extends Service

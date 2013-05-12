@@ -50,7 +50,7 @@ public class ServiceLocator {
 	private UDDIServiceCache serviceCache = null;
 	private SelectionPolicy selectionPolicy = null;
 	
-	public ServiceLocator(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException {
+	public ServiceLocator(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException, Exception {
 		super();
 
 		this.clerk = clerk;

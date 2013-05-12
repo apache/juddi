@@ -1,5 +1,12 @@
 package org.apache.juddi.v3.client;
 
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.api_v3.Name;
+import org.uddi.api_v3.OverviewDoc;
+import org.uddi.api_v3.OverviewURL;
+import org.uddi.api_v3.TModel;
+
 /**
  * This file was borrowed from juddi-core's constants file with modifications
  *
@@ -467,32 +474,46 @@ public interface UDDIConstants {
      */
     public static String WILDCARD = "%";
     /**
-     * Presents any SINGLE character<br>
-     * Wildcards, when they are allowed, may occur at any position in the string
-     * of characters that constitutes the argument value and may occur more than
-     * once. Wildcards are denoted with a percent sign (%) to indicate any value
-     * for any number of characters and an underscore (_) to indicate any value
-     * for a single character. The backslash character (\) is used as an escape
-     * character for the percent sign, underscore and backslash characters. Use
-     * of the "exactMatch" findQualifier will cause wildcard characters to be
-     * interpreted literally, and as such should not also be combined with the
-     * escape character.
+     * Presents any SINGLE character<br> Wildcards, when they are allowed, may
+     * occur at any position in the string of characters that constitutes the
+     * argument value and may occur more than once. Wildcards are denoted with a
+     * percent sign (%) to indicate any value for any number of characters and
+     * an underscore (_) to indicate any value for a single character. The
+     * backslash character (\) is used as an escape character for the percent
+     * sign, underscore and backslash characters. Use of the "exactMatch"
+     * findQualifier will cause wildcard characters to be interpreted literally,
+     * and as such should not also be combined with the escape character.
      */
     public static String WILDCARD_CHAR = "_";
     /**
-     * unchecked: Marking a tModel with this categorization asserts that it represents a value set or category group system whose use, through keyedReferences, is not checked.
+     * unchecked: Marking a tModel with this categorization asserts that it
+     * represents a value set or category group system whose use, through
+     * keyedReferences, is not checked.
      */
     public static String TMODEL_GENERAL_KEYWORDS = "uddi:uddi.org:categorization:general_keywords";
     /**
-     * An unchecked value set is one that allows unrestricted references to its values.  A UDDI registry is REQUIRED to have a policy to differentiate between unchecked value sets and checked value sets.  UDDI registries MUST allow unchecked value sets to be referred to in keyedReferences. tModels that represent unchecked value sets SHOULD be categorized with the unchecked value from the uddi-org:types category system.
+     * An unchecked value set is one that allows unrestricted references to its
+     * values. A UDDI registry is REQUIRED to have a policy to differentiate
+     * between unchecked value sets and checked value sets. UDDI registries MUST
+     * allow unchecked value sets to be referred to in keyedReferences. tModels
+     * that represent unchecked value sets SHOULD be categorized with the
+     * unchecked value from the uddi-org:types category system.
      */
     public static String UNCHECKED = "uddi-org:types:unchecked";
     /**
-     * checked: Marking a tModel with this categorization asserts that it represents a value set or category group system whose use, through keyedReferences, may be checked.  Registry, and possibly node policy determines when and how a checked value set is supported.
+     * checked: Marking a tModel with this categorization asserts that it
+     * represents a value set or category group system whose use, through
+     * keyedReferences, may be checked. Registry, and possibly node policy
+     * determines when and how a checked value set is supported.
      */
     public static String CHECKED = "uddi-org:types:checked";
     /**
-     * uncacheable: Marking a tModel with this categorization asserts that it represents a checked value set or category group system whose values must not be cached for validation.  The validation algorithm for a supported uncacheable checked value set must be specified and associated with the tModel marked with this categorization and may consider contextual criteria involving the entity associated with the reference.
+     * uncacheable: Marking a tModel with this categorization asserts that it
+     * represents a checked value set or category group system whose values must
+     * not be cached for validation. The validation algorithm for a supported
+     * uncacheable checked value set must be specified and associated with the
+     * tModel marked with this categorization and may consider contextual
+     * criteria involving the entity associated with the reference.
      */
     public static String UNCACHEABLE = "uddi-org:types:uncacheable";
     /**
@@ -500,9 +521,32 @@ public interface UDDIConstants {
      */
     public static String RELATIONSHIPS = "uddi:uddi.org:relationships";
     /**
-     *  keyGenerator: Marking a tModel with this categorization designates it as one whose tModelKey identifies a key generator partition that can be used by its owner to derive and assign other entity keys. This categorization is reserved for key generator tModels. Any attempt to use this categorization for something other than a key generator tModel will fail with E_valueNotAllowed returned.
+     * "uddi:uddi.org:keygenerator" keyGenerator: Marking a tModel with this
+     * categorization designates it as one whose tModelKey identifies a key
+     * generator partition that can be used by its owner to derive and assign
+     * other entity keys. This categorization is reserved for key generator
+     * tModels. Any attempt to use this categorization for something other than
+     * a key generator tModel will fail with E_valueNotAllowed returned.
      */
-    public static String KEY_GENERATOR = "uddi:uddi.org:keygenerator";
+    public static String KEY_GENERATOR_TMODEL = "uddi:uddi.org:keygenerator";
+    /**
+     * "uddi.org:keygenerator" keyGenerator: Marking a tModel with this
+     * categorization designates it as one whose tModelKey identifies a key
+     * generator partition that can be used by its owner to derive and assign
+     * other entity keys. This categorization is reserved for key generator
+     * tModels. Any attempt to use this categorization for something other than
+     * a key generator tModel will fail with E_valueNotAllowed returned.
+     */
+    public static String KEY_GENERATOR = "uddi.org:keygenerator";
+    /**
+     * "keyGenerator" keyGenerator: Marking a tModel with this categorization
+     * designates it as one whose tModelKey identifies a key generator partition
+     * that can be used by its owner to derive and assign other entity keys.
+     * This categorization is reserved for key generator tModels. Any attempt to
+     * use this categorization for something other than a key generator tModel
+     * will fail with E_valueNotAllowed returned.
+     */
+    public static String KEY_GENERATOR_VALUE = "keyGenerator";
     /**
      * Identifier system used to point to the UDDI entity, using UDDI keys, that
      * is the logical replacement for the one in which isReplacedBy is used.
@@ -593,4 +637,6 @@ public interface UDDIConstants {
      * A tModel that represents the SOAP 1.2 protocol
      */
     public static String PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
+
+    
 }

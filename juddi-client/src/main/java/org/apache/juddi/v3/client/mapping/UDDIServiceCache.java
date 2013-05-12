@@ -67,7 +67,7 @@ public class UDDIServiceCache {
 		this.clerk = clerk;
 	}
 
-	public UDDIServiceCache(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException {
+	public UDDIServiceCache(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException, Exception {
 		super();
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
@@ -77,7 +77,7 @@ public class UDDIServiceCache {
 		init();
 	}
 
-	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException {
+	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException, Exception {
 		
 		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
 		String portName = "UDDIClientSubscriptionListenerImplPort";
