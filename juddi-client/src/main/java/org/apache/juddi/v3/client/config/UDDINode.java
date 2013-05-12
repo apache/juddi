@@ -32,7 +32,7 @@ public class UDDINode implements Serializable {
 	
 	private boolean isHomeJUDDI;
 	private String name;
-	private String managerName;
+	private String clientName;
 	private String description;
 	private String custodyTransferUrl;
 	private String inquiryUrl;
@@ -54,7 +54,7 @@ public class UDDINode implements Serializable {
 	public UDDINode(Node node) {
 		super();
 		name = node.getName();
-		managerName = node.getManagerName();
+		clientName = node.getClientName();
 		description = node.getDescription();
 		custodyTransferUrl = node.getCustodyTransferUrl();
 		inquiryUrl = node.getInquiryUrl();
@@ -86,7 +86,7 @@ public class UDDINode implements Serializable {
 		apiNode.setFactoryURLPkgs(factoryURLPkgs);
 		apiNode.setInquiryUrl(inquiryUrl);
 		apiNode.setJuddiApiUrl(juddiApiUrl);
-		apiNode.setManagerName(managerName);
+		apiNode.setClientName(clientName);
 		apiNode.setName(name);
 		apiNode.setProxyTransport(proxyTransport);
 		apiNode.setPublishUrl(publishUrl);
@@ -101,7 +101,7 @@ public class UDDINode implements Serializable {
 			try {
 				String clazz = getProxyTransport();
 				Class<?> transportClass = ClassUtil.forName(clazz,this.getClass());
-				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(managerName,name);
+				transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clientName,name);
 			} catch (Exception e) {
 				throw new TransportException(e.getMessage(),e);
 			}
@@ -117,12 +117,12 @@ public class UDDINode implements Serializable {
 		this.name = name;
 	}
 
-	public String getManagerName() {
-		return managerName;
+	public String getClientName() {
+		return clientName;
 	}
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 	public String getDescription() {

@@ -32,7 +32,7 @@ import org.apache.juddi.portlets.client.service.SecurityResponse;
 import org.apache.juddi.portlets.client.service.SecurityService;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
@@ -147,8 +147,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 		HttpServletRequest request = getThreadLocalRequest();
 		HttpSession session = request.getSession();
 		//upon success obtain tokens from other registries
-		UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
-		Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
+		UDDIClient client = WebHelper.getUDDIClient(session.getServletContext());
+		Map<String, UDDIClerk> clerks = client.getClientConfig().getUDDIClerks();
 		for (UDDIClerk clerk : clerks.values()) {
 			//only setting token for the clerks of the current user/publisher
 			if (username.equals(clerk.getPublisher())) {

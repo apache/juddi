@@ -16,8 +16,6 @@
  */
 package org.apache.juddi.v3.client.config;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -25,62 +23,56 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.ClassUtil;
-import org.apache.juddi.v3.client.mapping.ReadWSDL;
-import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
+import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 
-import com.ibm.wsdl.util.IOUtils;
-
-public class UDDIClerkManager {
+public class UDDIClient {
 	
-	private static Log log = LogFactory.getLog(UDDIClerkManager.class);
+	private static Log log = LogFactory.getLog(UDDIClient.class);
     private ClientConfig clientConfig = null;
     private String CONFIG_FILE = "META-INF/uddi.xml";
     private Properties properties = null;
 	
-    public UDDIClerkManager() throws ConfigurationException {
+    public UDDIClient() throws ConfigurationException {
     	super();
 		clientConfig = new ClientConfig(CONFIG_FILE, properties);
-		UDDIClientContainer.addClerkManager(this);
+		UDDIClientContainer.addClient(this);
     }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
 	 * @throws ConfigurationException 
 	 */
-	public UDDIClerkManager(String configurationFile) throws ConfigurationException {
+	public UDDIClient(String configurationFile) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile);
-		UDDIClientContainer.addClerkManager(this);
+		UDDIClientContainer.addClient(this);
 	}
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.
 	 * @throws ConfigurationException 
 	 */
-	public UDDIClerkManager(String configurationFile, Properties properties) throws ConfigurationException {
+	public UDDIClient(String configurationFile, Properties properties) throws ConfigurationException {
 		super();
 		clientConfig = new ClientConfig(configurationFile, properties);
-		UDDIClientContainer.addClerkManager(this);
+		UDDIClientContainer.addClient(this);
 	}
 	/**
 	 * Stops the clerks.
 	 * @throws ConfigurationException 
 	 */
 	public void stop() throws ConfigurationException {
-		log.info("Stopping UDDI Clerks for manager " + clientConfig.getManagerName());
+		log.info("Stopping UDDI Client " + clientConfig.getClientName());
 		releaseResources();
 		UDDIClientContainer.removeClerkManager(getName());
 		
@@ -89,7 +81,7 @@ public class UDDIClerkManager {
 			log.info("Shutting down embedded Server");
 			stopEmbeddedServer();
 		}
-		log.info("UDDI Clerks shutdown completed for manager " + clientConfig.getManagerName());
+		log.info("UDDI Clerks shutdown completed for manager " + clientConfig.getClientName());
 	}
 	
 	private void releaseResources() {
@@ -104,7 +96,7 @@ public class UDDIClerkManager {
 	 */
 	public void start() throws ConfigurationException {
 		
-		if (UDDIClientContainer.addClerkManager(this)) {
+		if (UDDIClientContainer.addClient(this)) {
 			//If running in embedded mode
 			if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {
 				log.info("Starting embedded Server");
@@ -282,7 +274,7 @@ public class UDDIClerkManager {
 	}
 	
 	public String getName() {
-		return clientConfig.getManagerName();
+		return clientConfig.getClientName();
 	}
 	/**
 	 * @deprecated, use the getTransport(String nodeName) instead.
@@ -303,8 +295,8 @@ public class UDDIClerkManager {
 	public Transport getTransport(String nodeName) throws ConfigurationException {
 		try {
 			String clazz = clientConfig.getHomeNode().getProxyTransport();
-			String managerName = clientConfig.getManagerName();
-			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClerkManager.class);
+			String managerName = clientConfig.getClientName();
+			Class<?> transportClass = ClassUtil.forName(clazz, UDDIClient.class);
 			if (transportClass!=null) {
 				Transport transport = (Transport) 
 						transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);

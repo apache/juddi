@@ -22,7 +22,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;
@@ -40,7 +40,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 public class Publish {
 	
-	static UDDIClerkManager clerkManager;
+	static UDDIClient uddiClient;
 	
 	public void publishBusiness(UDDIClerk clerk) {
 		// Creating the parent business entity that will contain our service.
@@ -61,8 +61,8 @@ public class Publish {
 		
 		Publish sp = new Publish();
 		try {
-			clerkManager = new UDDIClerkManager("META-INF/wsdl2uddi-uddi.xml");
-			UDDIClerk clerk = clerkManager.getClerk("joe");
+			uddiClient = new UDDIClient("META-INF/wsdl2uddi-uddi.xml");
+			UDDIClerk clerk = uddiClient.getClerk("joe");
 			
 			//setting up the publisher
 			sp.setupJoePublisher(clerk);
@@ -79,7 +79,7 @@ public class Publish {
 	// This setup needs to be done once, either using the console or using code like this
 	private void setupJoePublisher(UDDIClerk clerk) throws DispositionReportFaultMessage, RemoteException, ConfigurationException, TransportException {
 		
-		UDDISecurityPortType security = clerkManager.getTransport("default").getUDDISecurityService();
+		UDDISecurityPortType security = uddiClient.getTransport("default").getUDDISecurityService();
 		
 		//login as root so we can create joe publisher
 		GetAuthToken getAuthTokenRoot = new GetAuthToken();
@@ -89,7 +89,7 @@ public class Publish {
 		AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
 		System.out.println ("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
 		//Creating joe publisher
-		JUDDIApiPortType juddiApi = clerkManager.getTransport("default").getJUDDIApiService();
+		JUDDIApiPortType juddiApi = uddiClient.getTransport("default").getJUDDIApiService();
 		Publisher p = new Publisher();
 		p.setAuthorizedName("joepublisher");
 		p.setPublisherName("Joe Publisher");

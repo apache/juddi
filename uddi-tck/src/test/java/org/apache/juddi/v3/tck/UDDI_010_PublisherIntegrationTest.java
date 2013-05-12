@@ -15,7 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -30,11 +30,11 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UDDI_010_PublisherIntegrationTest {
 	
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 	}
 	

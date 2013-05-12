@@ -25,7 +25,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.JUDDIApiService;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.Property;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
@@ -39,7 +39,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 public class JAXWSTransport extends Transport {
 	
 	String nodeName = null;
-	String managerName = null;
+	String clientName = null;
 	UDDIInquiryPortType inquiryService = null;
 	UDDISecurityPortType securityService = null;
 	UDDIPublicationPortType publishService = null;
@@ -58,9 +58,9 @@ public class JAXWSTransport extends Transport {
 		this.nodeName = nodeName;
 	}
 	
-	public JAXWSTransport(String managerName, String nodeName) {
+	public JAXWSTransport(String clientName, String nodeName) {
 		super();
-		this.managerName = managerName;
+		this.clientName = clientName;
 		this.nodeName = nodeName;
 	}
 	
@@ -69,8 +69,8 @@ public class JAXWSTransport extends Transport {
 		if (inquiryService==null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
 				}
 				UDDIService service = new UDDIService();
 				inquiryService = service.getUDDIInquiryPort();
@@ -89,8 +89,8 @@ public class JAXWSTransport extends Transport {
 		if (securityService==null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
 				}
 				UDDIService service = new UDDIService();
 				securityService = service.getUDDISecurityPort();
@@ -109,8 +109,8 @@ public class JAXWSTransport extends Transport {
 		if (publishService==null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getPublishUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();
 				}
 				UDDIService service = new UDDIService();
 				publishService = service.getUDDIPublicationPort();
@@ -129,8 +129,8 @@ public class JAXWSTransport extends Transport {
 		if (subscriptionService==null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
 				}
 				UDDIService service = new UDDIService();
 				subscriptionService = service.getUDDISubscriptionPort();
@@ -148,8 +148,8 @@ public class JAXWSTransport extends Transport {
 		if (subscriptionListenerService == null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
 				}
 				UDDIService service = new UDDIService();
 				subscriptionListenerService = service.getUDDISubscriptionListenerPort();
@@ -167,8 +167,8 @@ public class JAXWSTransport extends Transport {
 		if (custodyTransferService == null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
 				}
 				UDDIService service = new UDDIService();
 				custodyTransferService = service.getUDDICustodyPort();
@@ -189,8 +189,8 @@ public class JAXWSTransport extends Transport {
 		if (publisherService == null) {
 			try {
 				if (endpointURL==null)  {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					endpointURL = manager.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					endpointURL = client.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
 				}
 				JUDDIApiService service = new JUDDIApiService();
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);
@@ -221,8 +221,8 @@ public class JAXWSTransport extends Transport {
 	 * @throws ConfigurationException
 	 */
 	private void setCredentials(Map<String, Object> requestContext) throws ConfigurationException {
-		UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-		Properties properties = manager.getClientConfig().getUDDINode(nodeName).getProperties();
+		UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+		Properties properties = client.getClientConfig().getUDDINode(nodeName).getProperties();
 		if (properties!=null) {
     		String username = null;
     		String password = null;

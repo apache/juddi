@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<uddi>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
-    <manager name="juddi-core-unittest-client">
+    <client name="juddi-core-unittest-client">
 		<nodes>
 			<node isHomeJUDDI="true">
 			    <!-- required 'default' node -->
@@ -25,5 +24,5 @@
 		<clerks registerOnStartup="false">
 		   <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher"/>
 	   </clerks>
-	</manager>
+	</client>
 </uddi>

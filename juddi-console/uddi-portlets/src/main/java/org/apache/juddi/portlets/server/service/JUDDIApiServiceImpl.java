@@ -34,7 +34,7 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.portlets.client.model.Publisher;
 import org.apache.juddi.portlets.client.service.JUDDIApiResponse;
 import org.apache.juddi.portlets.client.service.JUDDIApiService;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.WebHelper;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -161,7 +161,7 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 		return response;
 	}
 
-	public JUDDIApiResponse restartManager(String authToken) {
+	public JUDDIApiResponse restartClient(String authToken) {
 		
 		JUDDIApiResponse response = new JUDDIApiResponse();
 		
@@ -184,10 +184,10 @@ public class JUDDIApiServiceImpl extends RemoteServiceServlet implements JUDDIAp
 	         PublisherDetail publisherDetail = apiService.getPublisherDetail(getPublisherDetail);
        	     org.apache.juddi.api_v3.Publisher publisher = publisherDetail.getPublisher().get(0);
        	     if ("true".equalsIgnoreCase(publisher.getIsAdmin())) {
-       	    	UDDIClerkManager manager =  WebHelper.getUDDIClerkManager(session.getServletContext());
-       	    	logger.info("managerName=" + manager.getName());
-       	    	manager.restart();
-       	    	response.setMessage("Successfull manager restart.");
+       	    	UDDIClient client =  WebHelper.getUDDIClient(session.getServletContext());
+       	    	logger.info("clientName=" + client.getName());
+       	    	client.restart();
+       	    	response.setMessage("Successfull client restart.");
        	    	response.setSuccess(true);
        	     } else {
        	    	response.setMessage("Only publishers with Admin privileges can perform a restart.");

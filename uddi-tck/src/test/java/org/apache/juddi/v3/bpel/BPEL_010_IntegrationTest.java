@@ -17,7 +17,7 @@ package org.apache.juddi.v3.bpel;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -46,13 +46,13 @@ public class BPEL_010_IntegrationTest {
 	
 	private static String authInfoRiftSaw        = null;
 	
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
 		
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 		logger.debug("Getting auth token for user riftsaw/riftsaw..");
 		try {

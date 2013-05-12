@@ -22,7 +22,7 @@ import java.util.Random;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -48,7 +48,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 	private static TckSubscriptionListenerRMI rmiSubscriptionListener = null;
 	
 	private static String authInfoJoe = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
 	private static Registry registry;
 	private static Integer randomPort = null;
@@ -89,7 +89,7 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest
 			Assert.fail();
 		}
 
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 		
 		logger.debug("Getting auth tokens..");

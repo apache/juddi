@@ -24,7 +24,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -86,7 +86,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
-    private static UDDIClerkManager manager;
+    private static UDDIClient manager;
     static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String str255 = "uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String strkey256 = "uddi:tmodelkey:categories:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
@@ -111,7 +111,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
     @BeforeClass
     public static void startManager() throws ConfigurationException {
-        manager = new UDDIClerkManager();
+        manager = new UDDIClient();
         manager.start();
 
         logger.debug("Getting auth tokens..");

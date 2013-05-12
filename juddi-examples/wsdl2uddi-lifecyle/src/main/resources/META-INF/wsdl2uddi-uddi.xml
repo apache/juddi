@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<uddi>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
-    <manager name="example-manager">
+    <client name="example-client" >
 		<nodes>
 			<node>
 			    <!-- required 'default' node -->
@@ -25,8 +24,8 @@
 		</nodes>
 		<clerks registerOnStartup="true">
            <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher">
-              <wsdl businessKey="uddi:uddi.joepublisher.com:business-for-wsdl">wsdl/helloworld.wsdl</wsdl>
+              <wsdl  businessKey="uddi:uddi.joepublisher.com:business-for-wsdl">wsdl/helloworld.wsdl</wsdl>
            </clerk>
         </clerks>
-	</manager>
+	</client>
 </uddi>

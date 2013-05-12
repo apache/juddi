@@ -33,8 +33,8 @@ public class Node implements java.io.Serializable {
 	@Id
 	@Column(name="name", nullable = false)
 	private String name;
-	@Column(name="manager_name", nullable = false, length=255)
-	private String managerName;
+	@Column(name="client_name", nullable = false, length=255)
+	private String clientName;
 	@Column(name="proxy_transport", nullable = false, length=255)
 	private String proxyTransport;
 	@Column(name="security_url", nullable = false, length=255)
@@ -80,12 +80,12 @@ public class Node implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public String getManagerName() {
-		return managerName;
+	public String getClientName() {
+		return clientName;
 	}
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 	public String getProxyTransport() {

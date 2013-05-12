@@ -17,7 +17,7 @@
 package org.apache.juddi.example.wsdl2uddi;
 
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
@@ -27,10 +27,8 @@ public class Find {
 	
 	public void find() {
 		try {
-			UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/wsdl2uddi-uddi.xml");
-			UDDIClerk clerk = clerkManager.getClerk("joe");
-        	// register the clerkManager with the client side container
-        	UDDIClientContainer.addClerkManager(clerkManager);
+			UDDIClient uddiClient = new UDDIClient("META-INF/wsdl2uddi-uddi.xml");
+			UDDIClerk clerk = uddiClient.getClerk("joe");
         	
         	BusinessEntity businessEntity = clerk.findBusiness("uddi:uddi.joepublisher.com:business-for-wsdl");
         	//

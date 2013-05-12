@@ -54,7 +54,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 	private static TckSubscriptionListenerRMI tckSubscriptionListenerRMI = new TckSubscriptionListenerRMI(new UDDISubscriptionImpl(), new UDDIPublicationImpl());
 	
 	private static String authInfoJoe = null;
-	//private static UDDIClerkManager manager;
+	//private static UDDIClient manager;
 	private static UDDISubscriptionListenerImpl rmiSubscriptionListenerService = null;
 	private static Registry registry;
 	private static String path = null;
@@ -96,7 +96,7 @@ public class API_091_RMISubscriptionListenerIntegrationTest
 			Assert.fail();
 		}
 
-		//manager  = new UDDIClerkManager();
+		//manager  = new UDDIClient();
 		//manager.start();
 		
 		logger.debug("Getting auth tokens..");

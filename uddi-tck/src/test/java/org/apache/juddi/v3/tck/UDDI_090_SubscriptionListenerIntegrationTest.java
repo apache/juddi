@@ -26,7 +26,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.Release;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -55,7 +55,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	private static TckSubscriptionListener tckSubscriptionListener = null;
 	private static Endpoint endPoint;
 	private static String authInfoJoe = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	private static SimpleSmtpServer mailServer;
 	private static Integer smtpPort = 25;
 	private static Integer httpPort = 80;
@@ -95,7 +95,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
 			endPoint = Endpoint.publish(httpEndpoint, new UDDISubscriptionListenerImpl());
 			
-			manager  = new UDDIClerkManager();
+			manager  = new UDDIClient();
 			manager.start();
 			
 			logger.debug("Getting auth tokens..");

@@ -2,7 +2,7 @@
 
 <uddi>
     <reloadDelay>5000</reloadDelay>
-    <manager name="example-manager">
+    <client name="example-client">
 		<nodes>
 			<node>
 			    <!-- required 'default' node -->
@@ -28,5 +28,5 @@
               <wsdl businessKey="uddi:uddi.joepublisher.com:business-for-wsdl">wsdl/helloworld.wsdl</wsdl>
            </clerk>
         </clerks>
-	</manager>
+	</client>
 </uddi>

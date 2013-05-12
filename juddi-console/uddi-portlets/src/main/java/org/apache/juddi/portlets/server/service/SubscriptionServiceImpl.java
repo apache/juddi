@@ -44,7 +44,7 @@ import org.apache.juddi.portlets.client.service.SubscriptionResponse;
 import org.apache.juddi.portlets.client.service.SubscriptionService;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.config.WebHelper;
@@ -87,9 +87,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		try {
 			boolean isMatchingClerk=false;
 			UDDIClerk toClerk = null;
-			UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
+			UDDIClient client = WebHelper.getUDDIClient(session.getServletContext());
 			UDDINode homeNode = WebHelper.getUDDIHomeNode(session.getServletContext());
-			Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
+			Map<String, UDDIClerk> clerks = client.getClientConfig().getUDDIClerks();
 			for (UDDIClerk clerk : clerks.values()) {
 				if (publisher.equals(clerk.getPublisher()) 
 						&& homeNode.getName().equals(clerk.getUDDINode().getName())) {
@@ -123,8 +123,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		modelNode.setClerkName(clerk.getName());
 		modelNode.setDescription(node.getDescription());
 		try {
-			UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(clerk.getManagerName());
-			String clazz = manager.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
+			UDDIClient client = UDDIClientContainer.getUDDIClient(clerk.getManagerName());
+			String clazz = client.getClientConfig().getUDDINode(clerk.getUDDINode().getName()).getProxyTransport();
 			Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
 			Transport transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(clerk.getManagerName(),clerk.getUDDINode().getName());  
 			String authToken = (String) session.getAttribute("token-" + clerk.getName());
@@ -164,13 +164,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		logger.info("Sending saveSubscriptions request..");
 		try {
 			//before sending this we need to ready the listener node
-			UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
+			UDDIClient client = WebHelper.getUDDIClient(session.getServletContext());
 			UDDINode homeNode = WebHelper.getUDDIHomeNode(session.getServletContext());
-			UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
-			UDDIClerk toClerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
+			UDDIClerk clerk = client.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+			UDDIClerk toClerk = client.getClientConfig().getUDDIClerks().get(modelSubscription.getToClerkName());
 			if (toClerk==null) {
 				String publisher = (String) session.getAttribute("UserName"); 
-				Map<String, UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
+				Map<String, UDDIClerk> clerks = client.getClientConfig().getUDDIClerks();
 				for (UDDIClerk uddiClerk : clerks.values()) {
 					if (publisher.equals(uddiClerk.getPublisher()) 
 							&& homeNode.getName().equals(uddiClerk.getUDDINode().getName())) {
@@ -290,8 +290,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 		try {
 		
 			try {
-				UDDIClerkManager manager = WebHelper.getUDDIClerkManager(session.getServletContext());
-				UDDIClerk clerk = manager.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
+				UDDIClient client = WebHelper.getUDDIClient(session.getServletContext());
+				UDDIClerk clerk = client.getClientConfig().getUDDIClerks().get(modelSubscription.getFromClerkName());
 				Transport transport = WebHelper.getTransport(session.getServletContext(), clerk.getUDDINode());
 				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService();
 				DeleteSubscription deleteSubscription = new DeleteSubscription();

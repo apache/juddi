@@ -17,7 +17,7 @@ package org.apache.juddi.v3.tck;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,7 +40,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	protected static TckFindEntity tckFindEntity  = null;
 	protected static String authInfoJoe           = null;
 	protected static String authInfoSam           = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -49,7 +49,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 		
 		logger.debug("Getting auth tokens..");

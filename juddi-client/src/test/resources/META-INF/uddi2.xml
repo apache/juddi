@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<uddi>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
-    <manager name="second-manager">
+    <client name="second-client">
 		<nodes>
 			<node isHomeJUDDI="true">
 				<name>default</name> 
@@ -43,5 +42,5 @@
 		   </xregister>
 	   </clerks>
 	  
-	</manager>
+	</client>
 </uddi>

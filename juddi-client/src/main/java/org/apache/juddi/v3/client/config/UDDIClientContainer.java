@@ -25,49 +25,49 @@ import org.apache.commons.logging.LogFactory;
 public class UDDIClientContainer {
 
 	private static Log log = LogFactory.getLog(UDDIClientContainer.class);
-	private static Map<String,UDDIClerkManager> managers = new HashMap<String, UDDIClerkManager>();
+	private static Map<String,UDDIClient> clients = new HashMap<String, UDDIClient>();
 	
-	public static UDDIClerkManager getUDDIClerkManager(String managerName) 
+	public static UDDIClient getUDDIClient(String clientName) 
 		throws ConfigurationException {
 
-		if (managerName!=null) {
-			if (managers.containsKey(managerName)) {
-				return (managers.get(managerName));
+		if (clientName!=null) {
+			if (clients.containsKey(clientName)) {
+				return (clients.get(clientName));
 			} else {
-				throw new ConfigurationException("No manager by name " + managerName + " was found. " +
-						" Please check your client uddi.xml files, and make sure this manager was started");
+				throw new ConfigurationException("No client by name " + clientName + " was found. " +
+						" Please check your client uddi.xml files, and make sure this client was started");
 			}
-		} else if (managers.size()==1 && managerName==null) {
-			log.warn("Deprecated, please specify a manager name");
-			return managers.values().iterator().next();
+		} else if (clients.size()==1 && clientName==null) {
+			log.warn("Deprecated, please specify a client name");
+			return clients.values().iterator().next();
 		} else {
-			log.warn("Deprecated, please specify a manager name");
-			UDDIClerkManager manager = new UDDIClerkManager(null);
-			addClerkManager(manager);
-			manager.start();
-			return manager;
+			log.warn("Deprecated, please specify a client name");
+			UDDIClient client = new UDDIClient(null);
+			addClient(client);
+			client.start();
+			return client;
 		}
 	}
 	
-	public static boolean addClerkManager(UDDIClerkManager manager) {
-		if (!managers.containsKey(manager.getClientConfig().getManagerName())) {
-			managers.put(manager.getClientConfig().getManagerName(), manager);
+	public static boolean addClient(UDDIClient manager) {
+		if (!clients.containsKey(manager.getClientConfig().getClientName())) {
+			clients.put(manager.getClientConfig().getClientName(), manager);
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	public static void removeClerkManager(String managerName)
+	public static void removeClerkManager(String clientName)
 		throws ConfigurationException {
-		if (managers.containsKey(managerName)) {
-			managers.remove(managerName);
-		} else if (managers.size()==1 && managerName==null) {
-			String name = managers.keySet().iterator().next();
+		if (clients.containsKey(clientName)) {
+			clients.remove(clientName);
+		} else if (clients.size()==1 && clientName==null) {
+			String name = clients.keySet().iterator().next();
 			log.info("Removing " + name + " from UDDIClient.");
-			managers.remove(name);
+			clients.remove(name);
 		} else {
-			throw new ConfigurationException("Could not remove UDDIClerkManager for name " + managerName);
+			throw new ConfigurationException("Could not remove UDDIClient for name " + clientName);
 		}
 	}
 	
