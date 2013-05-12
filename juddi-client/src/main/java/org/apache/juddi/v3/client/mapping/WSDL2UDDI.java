@@ -32,9 +32,11 @@ import javax.wsdl.Port;
 import javax.wsdl.PortType;
 import javax.wsdl.Service;
 import javax.wsdl.WSDLException;
+import javax.wsdl.extensions.http.HTTPAddress;
 import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
+import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -189,12 +191,14 @@ public class WSDL2UDDI {
         //Add the BindingTemplate to this Service
         BindingTemplate binding = createWSDLBinding(serviceQName, portName, serviceUrl, wsdlDefinition);
         // Register BindingTemplate
-        clerk.register(binding);
-        if (businessService.getBindingTemplates() == null) {
-            businessService.setBindingTemplates(new BindingTemplates());
+        if (binding.getAccessPoint()!=null) {
+	        clerk.register(binding);
+	        if (businessService.getBindingTemplates() == null) {
+	            businessService.setBindingTemplates(new BindingTemplates());
+	        }
+	        businessService.getBindingTemplates().getBindingTemplate().add(binding);
+	        response.setBindingKey(binding.getBindingKey());
         }
-        businessService.getBindingTemplates().getBindingTemplate().add(binding);
-        response.setBindingKey(binding.getBindingKey());
         response.setBusinessService(businessService);
         return response;
     }
@@ -805,20 +809,29 @@ public class WSDL2UDDI {
             if (port != null) {
                 if (serviceUrl == null) {
                     for (Object element : port.getExtensibilityElements()) {
+                    	String location = null;
                         if (element instanceof SOAPAddress) {
                             SOAPAddress address = (SOAPAddress) element;
-                            URL locationURI;
+                            location = address.getLocationURI();
+                        } 
+                        else if (element instanceof HTTPAddress) {
+                        	HTTPAddress address = (HTTPAddress) element;
+                            location = address.getLocationURI();
+                        }
+                        else if (element instanceof SOAP12Address) {
+                        	SOAP12Address address = (SOAP12Address) element;
+                            location = address.getLocationURI();
+                        }
+                        if (location != null ) {
                             try {
-                                locationURI = new URL(address.getLocationURI());
-                                if (locationURI != null) {
-                                    AccessPoint accessPoint = new AccessPoint();
-                                    accessPoint.setUseType(AccessPointType.END_POINT.toString());
-                                    accessPoint.setValue(urlLocalizer.rewrite(locationURI));
-                                    bindingTemplate.setAccessPoint(accessPoint);
-                                    // Set Binding Key
-                                    String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, locationURI);
-                                    bindingTemplate.setBindingKey(bindingKey);
-                                }
+                            	URL locationURI = new URL(location);
+                                AccessPoint accessPoint = new AccessPoint();
+                                accessPoint.setUseType(AccessPointType.END_POINT.toString());
+                                accessPoint.setValue(urlLocalizer.rewrite(locationURI));
+                                bindingTemplate.setAccessPoint(accessPoint);
+                                // Set Binding Key
+                                String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, locationURI);
+                                bindingTemplate.setBindingKey(bindingKey);
                                 break;
                             } catch (MalformedURLException e) {
                                 log.error(e.getMessage());
