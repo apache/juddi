@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,17 +29,17 @@ import org.uddi.api_v3.BusinessService;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIClerkManagerTest {
+public class UDDIClientTest {
 	
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-	    	 manager.start();
-	    	 manager.getClientConfig().getUDDINode("default");
-	    	 assertEquals(2,manager.getClientConfig().getUDDIClerks().size());
+	    	 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+	    	 client.start();
+	    	 client.getClientConfig().getUDDINode("default");
+	    	 assertEquals(2,client.getClientConfig().getUDDIClerks().size());
 	    	 Thread.sleep(500);
-	    	 manager.stop();
+	    	 client.stop();
 	     } catch (Exception e) {
 	    	 //we should not have any issues reading the config
 	         e.printStackTrace();
@@ -50,16 +50,16 @@ public class UDDIClerkManagerTest {
      @Test
      public void testMultipleClientConfigFiles() {
     	 try {
-    		 UDDIClerkManager manager = new UDDIClerkManager("META-INF/uddi.xml");
-    		 manager.start();
-			 assertEquals("test-manager", manager.getName());
+    		 UDDIClient client = new UDDIClient("META-INF/uddi.xml");
+    		 client.start();
+			 assertEquals("test-client", client.getName());
 			 
-    		 UDDIClerkManager manager2 = new UDDIClerkManager("META-INF/uddi2.xml");
-    		 manager2.start();
-			 assertEquals("second-manager", manager2.getName());
+    		 UDDIClient client2 = new UDDIClient("META-INF/uddi2.xml");
+    		 client2.start();
+			 assertEquals("second-client", client2.getName());
 			 Thread.sleep(500);
-			 manager.stop();
-			 manager2.stop();
+			 client.stop();
+			 client2.stop();
 			 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -72,12 +72,12 @@ public class UDDIClerkManagerTest {
      @Test
      public void testDefaultConfigFile() {
     	 try {
-    		 UDDIClerkManager manager = new UDDIClerkManager(null);
-    		 //We're expecting the manager defined in the META-INF/uddi.xml file.
-    		 manager.start();
-			 assertEquals("test-manager", manager.getName());
+    		 UDDIClient client = new UDDIClient(null);
+    		 //We're expecting the client defined in the META-INF/uddi.xml file.
+    		 client.start();
+			 assertEquals("test-client", client.getName());
 			 Thread.sleep(500);
-			 manager.stop();
+			 client.stop();
 			 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -90,15 +90,15 @@ public class UDDIClerkManagerTest {
      @Test
      public void testDefaultManager() {
     	 try {		
-    		 //This is a special case where the manager in the META-INF/uddi.xml file is 
+    		 //This is a special case where the client in the META-INF/uddi.xml file is 
     		 //instantiated and started simply by getting it.
     		 //This functionality was add for backwards compatibility. 
-    		 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-    		 manager.start();
-			 assertEquals("test-manager", manager.getName());
-			 assertEquals("default", manager.getClientConfig().getHomeNode().getName());
+    		 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+    		 client.start();
+			 assertEquals("test-client", client.getName());
+			 assertEquals("default", client.getClientConfig().getHomeNode().getName());
 			 Thread.sleep(500);
-			 manager.stop();
+			 client.stop();
 			 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -111,8 +111,8 @@ public class UDDIClerkManagerTest {
      @Test
      public void testReadingAnnotations() {
     	 try {
-    		 UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(null);
-	    	 Map<String,UDDIClerk> clerks = manager.getClientConfig().getUDDIClerks();
+    		 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+	    	 Map<String,UDDIClerk> clerks = client.getClientConfig().getUDDIClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 if (clerks.containsKey("default")) {
 		 		 UDDIClerk clerk = clerks.get("default");

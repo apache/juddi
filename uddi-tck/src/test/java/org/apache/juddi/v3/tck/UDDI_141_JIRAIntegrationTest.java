@@ -30,7 +30,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -61,7 +61,7 @@ public class UDDI_141_JIRAIntegrationTest {
     static UDDIPublicationPortType publication = null;
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
-    private static UDDIClerkManager manager;
+    private static UDDIClient manager;
     static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String str255 = "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     static final String strkey256 = "uddi:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
@@ -86,7 +86,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
     @BeforeClass
     public static void startManager() throws ConfigurationException {
-        manager = new UDDIClerkManager();
+        manager = new UDDIClient();
         manager.start();
 
         logger.debug("Getting auth tokens..");
@@ -770,9 +770,13 @@ public class UDDI_141_JIRAIntegrationTest {
 
     }
 
-    //testing upper case subscription callbacks
+    /**
+     *  //testing upper case subscription callbacks
+     *
+     * @throws Exception
+     */
     @Test
-  public  void JIRA_597() throws Exception {
+    public void JIRA_597() throws Exception {
         System.out.println("JIRA_597");
         int port = 4444;
         String localhostname = java.net.InetAddress.getLocalHost().getHostName();
@@ -840,7 +844,7 @@ public class UDDI_141_JIRAIntegrationTest {
         gcal.setTimeInMillis(System.currentTimeMillis());
         gcal.add(Calendar.HOUR, 1);
         s.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
-        
+
         s.setNotificationInterval(df.newDuration(5000));
         list.value.add(s);
         subscription.saveSubscription(authInfoJoe, list);
@@ -854,13 +858,114 @@ public class UDDI_141_JIRAIntegrationTest {
         publication.saveBusiness(sb);
         int maxwait = 30000;
         while (maxwait > 0) {
-            if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0)
+            if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
                 break;
+            }
             Thread.sleep(1000);
             maxwait = maxwait - 1000;
         }
-        if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty())
-        {
+        if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
+            Assert.fail("no callbacks were recieved.");
+        }
+
+
+    }
+
+    /**
+     * testing callbacks with underfined transport type
+     *
+     * @throws Exception
+     */
+    @Test
+    public void JIRA_596() throws Exception {
+        System.out.println("JIRA_596");
+        int port = 4444;
+        String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+        UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+        UDDISubscriptionListenerImpl.notifcationMap.clear();
+        UDDISubscriptionListenerImpl.notificationCount = 0;
+        Endpoint ep = null;
+        boolean ok = false;
+        do {
+            try {
+                ep = Endpoint.publish("http://" + localhostname + ":" + port + "/UDDI_CALLBACK", impl);
+                ok = true;
+            } catch (Exception ex) {
+                port++;
+            }
+        } while (!ok);
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Joe's callback business");
+        be.setBusinessServices(new BusinessServices());
+        BusinessService bs = new BusinessService();
+        bs.getName().add(new Name());
+        bs.getName().get(0).setValue("Joe's callback service");
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setAccessPoint(new AccessPoint());
+        bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
+        bt.getAccessPoint().setUseType("endPoint");
+        //Added per Kurt
+        /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+         instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
+         bt.setTModelInstanceDetails(new TModelInstanceDetails());
+         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
+         */
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.getBusinessServices().getBusinessService().add(bs);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+
+        //ok Joe's callback is setup
+
+        //Setup a business to subscribe to
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Sam's business");
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness1 = publication.saveBusiness(sb);
+
+        //ok Joe now needs to subscribe for Sam's business
+        Holder<List<Subscription>> list = new Holder<List<Subscription>>();
+        list.value = new ArrayList<Subscription>();
+        Subscription s = new Subscription();
+        s.setBindingKey(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+        s.setSubscriptionFilter(new SubscriptionFilter());
+        s.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+        s.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTimeInMillis(System.currentTimeMillis());
+        gcal.add(Calendar.HOUR, 1);
+        s.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+
+        s.setNotificationInterval(df.newDuration(5000));
+        list.value.add(s);
+        subscription.saveSubscription(authInfoJoe, list);
+
+        //ok have sam change his business around.
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = saveBusiness1.getBusinessEntity().get(0);
+        be.getName().get(0).setLang("en");
+        sb.getBusinessEntity().add(be);
+        publication.saveBusiness(sb);
+        int maxwait = 30000;
+        while (maxwait > 0) {
+            if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
+                break;
+            }
+            Thread.sleep(1000);
+            maxwait = maxwait - 1000;
+        }
+        if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
             Assert.fail("no callbacks were recieved.");
         }
 

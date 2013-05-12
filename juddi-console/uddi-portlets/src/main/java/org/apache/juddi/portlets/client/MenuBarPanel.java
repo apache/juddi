@@ -33,7 +33,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 	PushButton newButton = new PushButton();
 	PushButton deleteButton = new PushButton();
 	PushButton syncButton = new PushButton();
-	PushButton managerButton = new PushButton();
+	PushButton clientButton = new PushButton();
 	String context = PUBLISHER;
 
 	public MenuBarPanel(String context) {
@@ -69,11 +69,11 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 		}
 		
 		if (PUBLISHER.equals(context)) {
-			managerButton.setHTML(images.manager().getHTML());
-			managerButton.setStyleName(("portlet-form-button"));
-			managerButton.addClickListener(this);
-			managerButton.setTitle("Restart ClerkManager");
-			pushPanel.add(managerButton);
+			clientButton.setHTML(images.manager().getHTML());
+			clientButton.setStyleName(("portlet-form-button"));
+			clientButton.addClickListener(this);
+			clientButton.setTitle("Restart Client");
+			pushPanel.add(clientButton);
 			newButton.setTitle("Create New Publisher");
 			deleteButton.setTitle("Delete Selected Publisher");
 			saveButton.setTitle("Save Publisher");
@@ -96,7 +96,7 @@ public class MenuBarPanel extends FlowPanel implements ClickListener {
 			else if (SUBSCRIPTION.equals(context)) UDDISubscription.getInstance().deleteSubscription();
 		} else if (sender == syncButton) {
 			UDDISubscription.getInstance().syncListedServices();
-		} else if (sender == managerButton) {
+		} else if (sender == clientButton) {
 			JUDDIPublisher.getInstance().crossRegister();
 		}
 		

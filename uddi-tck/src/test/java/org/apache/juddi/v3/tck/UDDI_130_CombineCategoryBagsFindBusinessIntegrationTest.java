@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -73,7 +73,7 @@ public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest
 	protected static String authInfoJoe                = null;
 
 	private static UDDIInquiryPortType inquiry = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 
 	@AfterClass
 	public static void stopManager() throws ConfigurationException {
@@ -82,7 +82,7 @@ public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest
 
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 
 		logger.debug("Getting auth tokens..");

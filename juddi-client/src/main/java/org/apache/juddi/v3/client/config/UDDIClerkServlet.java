@@ -32,16 +32,16 @@ public class UDDIClerkServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -91998529871296125L;
 	private Log logger = LogFactory.getLog(UDDIClerkServlet.class);
-	private UDDIClerkManager manager = null;
+	private UDDIClient manager = null;
 	
 	/**
-	 * Starting the UDDIClerkManager
+	 * Starting the UDDIClient
 	 */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		try {
-			manager = WebHelper.getUDDIClerkManager(config.getServletContext());
+			manager = WebHelper.getUDDIClient(config.getServletContext());
 			if (manager.getClientConfig().isRegisterOnStartup()) {
 				manager.registerWSDLs();
 			}

@@ -167,7 +167,7 @@ public class JUDDIPublisher implements EntryPoint, Login {
 	
 	public void crossRegister() {
 		String token = getToken();
-		juddiApiService.restartManager(token, new AsyncCallback<JUDDIApiResponse>() 
+		juddiApiService.restartClient(token, new AsyncCallback<JUDDIApiResponse>() 
 		{
 			public void onFailure(Throwable caught) {
 				Window.alert("Error: " + caught.getMessage());

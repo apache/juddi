@@ -1,0 +1,110 @@
+<definitions name='UDDIClient' targetNamespace='urn:juddi-apache-org:v3_client'
+	xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:xsdd='http://www.w3.org/2001/XMLSchema'>
+	<types>
+		<xsd:schema elementFormDefault='qualified'
+			targetNamespace='urn:juddi-apache-org:api_v3' version='1.0'
+			xmlns:ns1='http://www.w3.org/2000/09/xmldsig#' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+			<xsd:element name="uddi">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element type="xsd:short" name="reloadDelay" />
+						<xsd:element name="client" nillable="false">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="nodes">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="node" maxOccurs="unbounded"
+													minOccurs="0">
+													<xsd:complexType>
+														<xsd:sequence>
+															<xsd:element type="xsd:string" name="name" />
+															<xsd:element type="xsd:string" name="description" />
+															<xsd:element name="properties" minOccurs="0">
+																<xsd:complexType>
+																	<xsd:sequence>
+																		<xsd:element name="property" maxOccurs="unbounded"
+																			minOccurs="0">
+																			<xsd:complexType>
+																				<xsd:simpleContent>
+																					<xsd:extension base="xsd:string">
+																						<xsd:attribute type="xsd:string"
+																							name="name" use="optional" />
+																						<xsd:attribute type="xsd:string"
+																							name="value" use="optional" />
+																					</xsd:extension>
+																				</xsd:simpleContent>
+																			</xsd:complexType>
+																		</xsd:element>
+																	</xsd:sequence>
+																</xsd:complexType>
+															</xsd:element>
+															<xsd:element type="xsd:string" name="proxyTransport" />
+															<xsd:element type="xsd:anyURI" name="custodyTransferUrl" />
+															<xsd:element type="xsd:anyURI" name="inquiryUrl" />
+															<xsd:element type="xsd:anyURI" name="publishUrl" />
+															<xsd:element type="xsd:anyURI" name="securityUrl" />
+															<xsd:element type="xsd:anyURI" name="subscriptionUrl" />
+															<xsd:element type="xsd:anyURI" name="subscriptionListenerUrl" />
+															<xsd:element type="xsd:anyURI" name="juddiApiUrl" />
+														</xsd:sequence>
+														<xsd:attribute type="xsd:boolean" name="isHomeJUDDI"
+															use="optional" />
+													</xsd:complexType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attribute type="xsd:string" name="name" />
+							</xsd:complexType>
+						</xsd:element>
+
+						<xsd:element name="clerks">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="clerk" maxOccurs="unbounded"
+										minOccurs="0">
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="wsdl">
+													<xsd:simpleType>
+														<xsd:attribute type="xsd:string" name="businessKey" 
+														    use="optional"/>
+														<xsd:attribute type="xsd:string" name="businessName"
+															use="optional" />
+														<xsd:attribute type="xsd:string" name="keyDomain"
+															use="optional" />
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+											<xsd:attribute type="xsd:string" name="name"
+												use="required" />
+											<xsd:attribute type="xsd:string" name="node"
+												use="required" />
+											<xsd:attribute type="xsd:string" name="publisher"
+												use="required" />
+											<xsd:attribute type="xsd:string" name="password"
+												use="required" />
+											<xsd:attribute type="xsd:string" name="businessKey"
+												use="optional" />
+											<xsd:attribute type="xsd:string" name="businessName"
+												use="optional" />
+											<xsd:attribute type="xsd:string" name="keyDomain"
+												use="optional" />
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attribute type="xsd:boolean" name="registerOnStartup"
+									use="optional" />
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute type="xsd:string" name="name" use="required"/>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:sequence>
+		</xsd:complexType>
+		</xsd:element>
+		</xsd:schema>

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.UDDIService;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDINode;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,12 +27,12 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UDDI_001_UDDIServiceTest {
 	
-	static UDDIClerkManager manager;
+	static UDDIClient manager;
 	static UDDINode uddiServer;
 	
 	@BeforeClass
 	public static void readClientConfig() throws ConfigurationException {
-		manager = new UDDIClerkManager();
+		manager = new UDDIClient();
 		manager.start();
 		uddiServer = manager.getClientConfig().getHomeNode();
 	}

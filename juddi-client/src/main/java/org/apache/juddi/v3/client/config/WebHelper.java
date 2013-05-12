@@ -31,9 +31,9 @@ import org.apache.juddi.v3.client.transport.Transport;
 public class WebHelper {
 	
 	public static Log logger = LogFactory.getLog(WebHelper.class);
-	public static final String UDDI_CLIENT_MANAGER_NAME  = "uddi.client.manager.name";
+	public static final String UDDI_CLIENT_NAME           = "uddi.client.name";
 	public static final String UDDI_CLIENT_CONFIG_FILE    = "uddi.client.config.file";
-	public static final String JUDDI_CLIENT_MANAGER_NAME  = "juddi.client.manager.name";
+	public static final String JUDDI_CLIENT_NAME          = "juddi.client.name";
 	public static final String JUDDI_CLIENT_TRANSPORT     = "juddi.client.transport";
 	
 
@@ -59,41 +59,41 @@ public class WebHelper {
 	 * @return
 	 * @throws ConfigurationException
 	 */
-	public static UDDIClerkManager getUDDIClerkManager(ServletContext servletContext) throws ConfigurationException 
+	public static UDDIClient getUDDIClient(ServletContext servletContext) throws ConfigurationException 
 	{
-		if (servletContext.getAttribute(JUDDI_CLIENT_MANAGER_NAME)!=null) {
-			String managerName = String.valueOf(servletContext.getAttribute(JUDDI_CLIENT_MANAGER_NAME));
-			return UDDIClientContainer.getUDDIClerkManager(managerName);
+		if (servletContext.getAttribute(JUDDI_CLIENT_NAME)!=null) {
+			String clientName = String.valueOf(servletContext.getAttribute(JUDDI_CLIENT_NAME));
+			return UDDIClientContainer.getUDDIClient(clientName);
 		} else {
-			String managerName = servletContext.getInitParameter(UDDI_CLIENT_MANAGER_NAME);
-			if (managerName!=null) {
+			String clientName = servletContext.getInitParameter(UDDI_CLIENT_NAME);
+			if (clientName!=null) {
 				try {
-					UDDIClerkManager manager = UDDIClientContainer.getUDDIClerkManager(managerName);
-					logger.info("Manager " + managerName + " was already started.");
-					servletContext.setAttribute(JUDDI_CLIENT_MANAGER_NAME, managerName);
-					return manager;
+					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
+					logger.info("Client " + clientName + " was already started.");
+					servletContext.setAttribute(JUDDI_CLIENT_NAME, clientName);
+					return client;
 				} catch (ConfigurationException ce) {
-					logger.debug("Manager " + managerName + " is not yet started.");
+					logger.debug("Client " + clientName + " is not yet started.");
 				}
 			}
 			String clientConfigFile = servletContext.getInitParameter(UDDI_CLIENT_CONFIG_FILE);
 			if (clientConfigFile==null) clientConfigFile = ClientConfig.DEFAULT_UDDI_CONFIG;
 			
-			logger.info("Reading the managerName from the clientConfig file " + clientConfigFile);
-			UDDIClerkManager manager = new UDDIClerkManager(clientConfigFile);
-			if (clientConfigFile==null && manager.getName()==null) {
-				logger.warn("Deprecated, manager name set to 'default', however it should be provided in the uddi.xml");
-				managerName = "default";
+			logger.info("Reading the clientName from the clientConfig file " + clientConfigFile);
+			UDDIClient client = new UDDIClient(clientConfigFile);
+			if (clientConfigFile==null && client.getName()==null) {
+				logger.warn("Deprecated, client name set to 'default', however it should be provided in the uddi.xml");
+				clientName = "default";
 			}
-			if (manager.getName()!=null) {
-				logger.info("Starting Clerk Manager " + manager.getName() + "...");
+			if (client.getName()!=null) {
+				logger.info("Starting Client " + client.getName() + "...");
 			} else {
-				throw new ConfigurationException("A manager name needs to be specified in the client config file.");
+				throw new ConfigurationException("A client name needs to be specified in the client config file.");
 			}
 			
-			manager.start();
-			servletContext.setAttribute(JUDDI_CLIENT_MANAGER_NAME, managerName);
-			return manager;
+			client.start();
+			servletContext.setAttribute(JUDDI_CLIENT_NAME, clientName);
+			return client;
 		}
 	}
 	/**
@@ -103,8 +103,8 @@ public class WebHelper {
 	 * @throws ConfigurationException
 	 */
 	public static UDDINode getUDDIHomeNode(ServletContext servletContext) throws ConfigurationException {
-		UDDIClerkManager manager = getUDDIClerkManager(servletContext);
-		return manager.getClientConfig().getHomeNode();	
+		UDDIClient client = getUDDIClient(servletContext);
+		return client.getClientConfig().getHomeNode();	
 	}
 	
 	public static Transport getTransport(ServletContext servletContext) 
@@ -113,10 +113,10 @@ public class WebHelper {
 	{
 		Transport transport = (Transport) servletContext.getAttribute(JUDDI_CLIENT_TRANSPORT);
 		if (transport==null) {
-			UDDIClerkManager manager = getUDDIClerkManager(servletContext);
-			UDDINode node = manager.getClientConfig().getHomeNode();
+			UDDIClient client = getUDDIClient(servletContext);
+			UDDINode node = client.getClientConfig().getHomeNode();
 			Class<?> transportClass = ClassUtil.forName(node.getProxyTransport(), Transport.class);
-			transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(manager.getName(),node.getName());
+			transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(client.getName(),node.getName());
 			servletContext.setAttribute(JUDDI_CLIENT_TRANSPORT, transport);
 		}
 		return transport;
@@ -128,7 +128,7 @@ public class WebHelper {
 	{
 		Transport transport = (Transport) servletContext.getAttribute(JUDDI_CLIENT_TRANSPORT + "-" + remoteNode.getName());
 		if (transport==null) {
-			UDDIClerkManager manager = getUDDIClerkManager(servletContext);
+			UDDIClient manager = getUDDIClient(servletContext);
 			Class<?> transportClass = ClassUtil.forName(remoteNode.getProxyTransport(), Transport.class);
 			transport = (Transport) transportClass.getConstructor(String.class,String.class).newInstance(manager.getName(),remoteNode.getName());
 			servletContext.setAttribute(JUDDI_CLIENT_TRANSPORT + "-" + remoteNode.getName(), transport);

@@ -31,5 +31,5 @@ public interface JUDDIApiService extends RemoteService {
 	public JUDDIApiResponse getPublishers(String authToken, String publisherId);
 	public JUDDIApiResponse savePublisher(String authToken, Publisher publisher);
 	public JUDDIApiResponse deletePublisher(String authToken, String publisherId);
-	public JUDDIApiResponse restartManager(String authToken);
+	public JUDDIApiResponse restartClient(String authToken);
 }

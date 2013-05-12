@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "node", propOrder = {
 	"name",
-	"managerName",
+	"clientName",
     "description",
     "custodyTransferUrl",
     "inquiryUrl",
@@ -51,7 +51,7 @@ public class Node implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = -4601378453000384721L;
 	private String name;
-	private String managerName;
+	private String clientName;
 	private String description;
 	private String custodyTransferUrl;
 	private String inquiryUrl;
@@ -74,11 +74,11 @@ public class Node implements Serializable{
 		this.name = name;
 	}
 	
-	public String getManagerName() {
-		return managerName;
+	public String getClientName() {
+		return clientName;
 	}
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 	public String getDescription() {
 		return description;

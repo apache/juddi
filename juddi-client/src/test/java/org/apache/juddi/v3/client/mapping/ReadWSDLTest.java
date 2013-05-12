@@ -30,7 +30,7 @@ import org.junit.Test;
 public class ReadWSDLTest {
 
     @Test
-    public void readFromFile() throws WSDLException, URISyntaxException , Exception{
+    public void readFromFile() throws WSDLException, URISyntaxException, Exception {
 
         ReadWSDL readWSDL = new ReadWSDL();
         Definition definition = readWSDL.readWSDL("wsdl/HelloWorld.wsdl");

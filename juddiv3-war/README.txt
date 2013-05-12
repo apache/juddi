@@ -29,6 +29,13 @@ The juddiv3.war relies on Hibernate and JBossWS-cxf in the appserver.
 mvn clean package -P hibernate-jbossws-cxf
 
 
+5. Target platform Tomcat and Derby using OpenJPA and Apache Axis2 
+
+Both OpenJPA and Apache Axis2 are packaged up in the juddiv3.war.
+
+mvn clean package -P hibernate-jbossws-cxf
+
+
 KNOWN ISSUES
 
 I. 15:14:37,275 SEVERE [RegistryServlet] jUDDI registry could not be started.

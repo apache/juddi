@@ -47,7 +47,7 @@ public class ClientConfig
 	private Map<String,UDDIClerk> uddiClerks = null;
 	private Set<XRegistration> xBusinessRegistrations = null;
 	private Set<XRegistration> xServiceBindingRegistrations = null;
-	private String managerName = null;
+	private String clientName = null;
 	private String configurationFile=null;
 	
 	/**
@@ -66,7 +66,7 @@ public class ClientConfig
 	{
 		loadConfiguration(configurationFile, properties);
 	}
-	protected void loadManager(Properties properties) throws ConfigurationException {
+	protected void readConfig(Properties properties) throws ConfigurationException {
 		uddiNodes = readNodeConfig(config, properties);
 		uddiClerks = readClerkConfig(config, uddiNodes);
 		xServiceBindingRegistrations = readXServiceBindingRegConfig(config,uddiClerks);
@@ -104,45 +104,45 @@ public class ClientConfig
 		compositeConfig.addConfiguration(xmlConfig);
 		//Making the new configuration globally accessible.
 		config = compositeConfig;
-		loadManager(properties);
+		readConfig(properties);
 	}
 
 	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> uddiNodes) 
 	throws ConfigurationException {
-		managerName = config.getString("manager[@name]");
+		clientName = config.getString("client[@name]");
 		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
-		if (config.containsKey("manager.clerks.clerk[@name]")) {
-			String[] names = config.getStringArray("manager.clerks.clerk[@name]");
+		if (config.containsKey("client.clerks.clerk[@name]")) {
+			String[] names = config.getStringArray("client.clerks.clerk[@name]");
 			
 			log.debug("clerk names=" + names);
 			for (int i=0; i<names.length; i++) {
 				UDDIClerk uddiClerk = new UDDIClerk();
-				uddiClerk.setManagerName(managerName);
-				uddiClerk.setName(     config.getString("manager.clerks.clerk(" + i + ")[@name]"));
-				String nodeRef = config.getString("manager.clerks.clerk(" + i + ")[@node]");
+				uddiClerk.setManagerName(clientName);
+				uddiClerk.setName(     config.getString("client.clerks.clerk(" + i + ")[@name]"));
+				String nodeRef = config.getString("client.clerks.clerk(" + i + ")[@node]");
 				if (!uddiNodes.containsKey(nodeRef)) throw new ConfigurationException("Could not find Node with name=" + nodeRef);
 				UDDINode uddiNode = uddiNodes.get(nodeRef);
 				uddiClerk.setUDDINode(uddiNode);
-				uddiClerk.setPublisher(config.getString("manager.clerks.clerk(" + i + ")[@publisher]"));
-				uddiClerk.setPassword( config.getString("manager.clerks.clerk(" + i + ")[@password]"));
+				uddiClerk.setPublisher(config.getString("client.clerks.clerk(" + i + ")[@publisher]"));
+				uddiClerk.setPassword( config.getString("client.clerks.clerk(" + i + ")[@password]"));
 				
-				String clerkBusinessKey = config.getString("manager.clerks.clerk(" + i + ")[@businessKey]");
-				String clerkBusinessName = config.getString("manager.clerks.clerk(" + i + ")[@businessName]");
-				String clerkKeyDomain = config.getString("manager.clerks.clerk(" + i + ")[@keyDomain]");
+				String clerkBusinessKey = config.getString("client.clerks.clerk(" + i + ")[@businessKey]");
+				String clerkBusinessName = config.getString("client.clerks.clerk(" + i + ")[@businessName]");
+				String clerkKeyDomain = config.getString("client.clerks.clerk(" + i + ")[@keyDomain]");
 				
-				String[] classes = config.getStringArray("manager.clerks.clerk(" + i + ").class");
+				String[] classes = config.getStringArray("client.clerks.clerk(" + i + ").class");
 				uddiClerk.setClassWithAnnotations(classes);
 				
-				int numberOfWslds = config.getStringArray("manager.clerks.clerk(" + i + ").wsdl").length;
+				int numberOfWslds = config.getStringArray("client.clerks.clerk(" + i + ").wsdl").length;
 				if (numberOfWslds > 0) {
 					UDDIClerk.WSDL[] wsdls = new UDDIClerk.WSDL[numberOfWslds];
 					for (int w=0; w<wsdls.length; w++) {
 						UDDIClerk.WSDL wsdl = uddiClerk.new WSDL();
-						String fileName = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")");
+						String fileName = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")");
 						wsdl.setFileName(fileName);
-						String businessKey = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessKey]");
-						String businessName = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessName]");
-						String keyDomain = config.getString("manager.clerks.clerk(" + i + ").wsdl(" + w + ")[@keyDomain]");
+						String businessKey = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessKey]");
+						String businessName = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@businessName]");
+						String keyDomain = config.getString("client.clerks.clerk(" + i + ").wsdl(" + w + ")[@keyDomain]");
 						if (businessKey==null) businessKey = clerkBusinessKey;
 						if (businessKey==null) businessKey = uddiClerk.getUDDINode().getProperties().getProperty("businessKey");
 						if (businessKey==null) {
@@ -181,47 +181,47 @@ public class ClientConfig
 	
 	public boolean isRegisterOnStartup() {
 		boolean isRegisterOnStartup = false;
-		if (config.containsKey("manager.clerks[@registerOnStartup]")) {
-			isRegisterOnStartup = config.getBoolean("manager.clerks[@registerOnStartup]");
+		if (config.containsKey("client.clerks[@registerOnStartup]")) {
+			isRegisterOnStartup = config.getBoolean("client.clerks[@registerOnStartup]");
 		}
 		return isRegisterOnStartup;
 	}
 
 	private Map<String,UDDINode> readNodeConfig(Configuration config, Properties properties) 
 	throws ConfigurationException {
-		String[] names = config.getStringArray("manager.nodes.node.name");
+		String[] names = config.getStringArray("client.nodes.node.name");
 		Map<String,UDDINode> nodes = new HashMap<String,UDDINode>();
 		log.debug("node names=" + names);
 		for (int i=0; i<names.length; i++) {
 			UDDINode uddiNode = new UDDINode();
-			String nodeName = config.getString("manager.nodes.node(" + i +").name");
-			String[] propertyKeys = config.getStringArray("manager.nodes.node(" + i +").properties.property[@name]");
+			String nodeName = config.getString("client.nodes.node(" + i +").name");
+			String[] propertyKeys = config.getStringArray("client.nodes.node(" + i +").properties.property[@name]");
 			
 			if (propertyKeys!=null && propertyKeys.length>0) {
 				if (properties==null) properties = new Properties();
 				for (int p=0; p<propertyKeys.length; p++) {
-					String name=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@name]");
-					String value=config.getString("manager.nodes.node(" + i +").properties.property(" + p + ")[@value]");
+					String name=config.getString("client.nodes.node(" + i +").properties.property(" + p + ")[@name]");
+					String value=config.getString("client.nodes.node(" + i +").properties.property(" + p + ")[@value]");
 					log.debug("Property: name=" + name + " value=" + value);
 					properties.put(name, value);
 				}
 				uddiNode.setProperties(properties);
 			}
-			uddiNode.setHomeJUDDI(              config.getBoolean("manager.nodes.node(" + i +")[@isHomeJUDDI]",false));
-			uddiNode.setName(                   TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").name"),properties));
-			uddiNode.setManagerName(            TokenResolver.replaceTokens(config.getString("manager[@name]"),properties));
-			uddiNode.setDescription(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").description"),properties));
-			uddiNode.setProxyTransport(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").proxyTransport"),properties));
-			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").inquiryUrl"),properties));
-			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").publishUrl"),properties));
-			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").custodyTransferUrl"),properties));
-			uddiNode.setSecurityUrl(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").securityUrl"),properties));
-			uddiNode.setSubscriptionUrl(        TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionUrl"),properties));
-			uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").subscriptionListenerUrl"),properties));
-			uddiNode.setJuddiApiUrl(            TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").juddiApiUrl"),properties));
-			uddiNode.setFactoryInitial(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingFactoryInitial"),properties));
-			uddiNode.setFactoryURLPkgs(         TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingFactoryUrlPkgs"),properties));
-			uddiNode.setFactoryNamingProvider(  TokenResolver.replaceTokens(config.getString("manager.nodes.node(" + i +").javaNamingProviderUrl"),properties));
+			uddiNode.setHomeJUDDI(              config.getBoolean("client.nodes.node(" + i +")[@isHomeJUDDI]",false));
+			uddiNode.setName(                   TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").name"),properties));
+			uddiNode.setClientName(             TokenResolver.replaceTokens(config.getString("client[@name]"),properties));
+			uddiNode.setDescription(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").description"),properties));
+			uddiNode.setProxyTransport(         TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").proxyTransport"),properties));
+			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").inquiryUrl"),properties));
+			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").publishUrl"),properties));
+			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").custodyTransferUrl"),properties));
+			uddiNode.setSecurityUrl(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").securityUrl"),properties));
+			uddiNode.setSubscriptionUrl(        TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").subscriptionUrl"),properties));
+			uddiNode.setSubscriptionListenerUrl(TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").subscriptionListenerUrl"),properties));
+			uddiNode.setJuddiApiUrl(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").juddiApiUrl"),properties));
+			uddiNode.setFactoryInitial(         TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").javaNamingFactoryInitial"),properties));
+			uddiNode.setFactoryURLPkgs(         TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").javaNamingFactoryUrlPkgs"),properties));
+			uddiNode.setFactoryNamingProvider(  TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").javaNamingProviderUrl"),properties));
 			nodes.put(nodeName,uddiNode);
 		}
 		return nodes;
@@ -239,19 +239,19 @@ public class ClientConfig
 	
 	private Set<XRegistration> readXRegConfig(Configuration config, Map<String,UDDIClerk> clerks, String entityType) 
 	throws ConfigurationException {
-		String[] entityKeys = config.getStringArray("manager.clerks.xregister." + entityType + "[@entityKey]");
+		String[] entityKeys = config.getStringArray("client.clerks.xregister." + entityType + "[@entityKey]");
 		Set<XRegistration> xRegistrations = new HashSet<XRegistration>();
 		if (entityKeys.length > 0) log.info("XRegistration " + entityKeys.length + " " + entityType + "Keys");
 		for (int i=0; i<entityKeys.length; i++) {
 			XRegistration xRegistration = new XRegistration();
-			xRegistration.setEntityKey(config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@entityKey]"));
+			xRegistration.setEntityKey(config.getString("client.clerks.xregister." + entityType + "(" + i + ")[@entityKey]"));
 			
-			String fromClerkRef = config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@fromClerk]");
+			String fromClerkRef = config.getString("client.clerks.xregister." + entityType + "(" + i + ")[@fromClerk]");
 			if (!clerks.containsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
 			UDDIClerk fromClerk = clerks.get(fromClerkRef);
 			xRegistration.setFromClerk(fromClerk);
 			
-			String toClerkRef = config.getString("manager.clerks.xregister." + entityType + "(" + i + ")[@toClerk]");
+			String toClerkRef = config.getString("client.clerks.xregister." + entityType + "(" + i + ")[@toClerk]");
 			if (!clerks.containsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
 			UDDIClerk toClerk = clerks.get(toClerkRef);
 			xRegistration.setToClerk(toClerk);
@@ -281,7 +281,7 @@ public class ClientConfig
 	public UDDINode getUDDINode(String nodeName) throws ConfigurationException {
 		if (! uddiNodes.containsKey(nodeName)) {
 			throw new ConfigurationException("Node '" + nodeName 
-					+ "' cannot be found in the config '"+  getManagerName() + "'" );
+					+ "' cannot be found in the config '"+  getClientName() + "'" );
 		}
 		return uddiNodes.get(nodeName);
 	}
@@ -302,8 +302,8 @@ public class ClientConfig
     	return config;
     }
     
-    public String getManagerName() {
-		return managerName;
+    public String getClientName() {
+		return clientName;
 	}
     
     public String getConfigurationFile() {

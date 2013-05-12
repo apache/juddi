@@ -22,25 +22,25 @@ import org.apache.commons.logging.LogFactory;
 
 public class BackGroundRegistration implements Runnable {
 
-	private UDDIClerkManager manager = null;
+	private UDDIClient uddiClient = null;
 	private static Log log = LogFactory.getLog(BackGroundRegistration.class);
 	
-	public BackGroundRegistration(UDDIClerkManager manager) {
+	public BackGroundRegistration(UDDIClient manager) {
 		super();
-		this.manager = manager;
+		this.uddiClient = manager;
 	}
 
 	public void run() {
 		try {
-			if (UDDIClientContainer.getUDDIClerkManager(manager.getName())!=null && manager.getClientConfig().isRegisterOnStartup()) {
-				log.debug("Starting UDDI Clerks for manager " + manager.getClientConfig().getManagerName() + "...");
-				manager.saveClerkAndNodeInfo();
-				manager.registerAnnotatedServices();
-				manager.registerWSDLs();
-				manager.xRegister();
-				log.debug("Clerks started succesfully for manager " + manager.getClientConfig().getManagerName());
+			if (UDDIClientContainer.getUDDIClient(uddiClient.getName())!=null && uddiClient.getClientConfig().isRegisterOnStartup()) {
+				log.debug("Starting UDDI Clerks for uddiClient " + uddiClient.getClientConfig().getClientName() + "...");
+				uddiClient.saveClerkAndNodeInfo();
+				uddiClient.registerAnnotatedServices();
+				uddiClient.registerWSDLs();
+				uddiClient.xRegister();
+				log.debug("Clerks started succesfully for uddiClient " + uddiClient.getClientConfig().getClientName());
 			} else {
-				log.debug(manager.getName() + " already registered to the UDDIClientContainer.");
+				log.debug(uddiClient.getName() + " already registered to the UDDIClientContainer.");
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(),e);

@@ -16,9 +16,9 @@
  *
  */ -->
 
-<uddi>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
-    <manager name="uddi-portlet-manager">
+    <client name="uddi-portlet-manager">
 		<nodes>
 			<node isHomeJUDDI="true">
 				<name>default</name>
@@ -59,6 +59,6 @@
 		   <clerk name="SalesCratchit" node="default" publisher="sales" password="sales"/>
 	       <clerk name="MarketingCratchit" node="marketing" publisher="sales" password="sales"/>
 	   </clerks>
-	</manager> 
+	</client> 
    
 </uddi>

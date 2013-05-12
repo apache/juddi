@@ -24,7 +24,7 @@ import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
@@ -43,12 +43,12 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 	private static JUDDIApiPortType publisher         = null;
 	private static Log logger = LogFactory.getLog(JUDDI_100_ClientSubscriptionInfoTest.class);
 	private static String authInfo                    = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 
 	@BeforeClass
 	public static void startRegistry() throws ConfigurationException {
 
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 
 

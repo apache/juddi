@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
@@ -81,12 +81,12 @@ public class API_051_BindingTemplateWSDLTest
 	}
 	
 	@Test 
-	public void testDirectCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException {
+	public void testDirectCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException, Exception {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			
-			UDDIClerk clerk = new UDDIClerkManager("META-INF/uddi.xml").getClerk("joe");
+			UDDIClerk clerk = new UDDIClient("META-INF/uddi.xml").getClerk("joe");
 			Properties properties = clerk.getUDDINode().getProperties();
 			URLLocalizer urlLocalizer = new URLLocalizerDefaultImpl();
 			
@@ -119,7 +119,7 @@ public class API_051_BindingTemplateWSDLTest
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
 			
-			UDDIClerk clerk = new UDDIClerkManager("META-INF/uddi.xml").getClerk("joe");
+			UDDIClerk clerk = new UDDIClient("META-INF/uddi.xml").getClerk("joe");
 			clerk.registerWsdls();
 			
 			

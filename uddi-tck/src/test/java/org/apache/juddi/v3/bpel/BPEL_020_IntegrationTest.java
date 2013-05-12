@@ -31,7 +31,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.mapping.BPEL2UDDI;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
@@ -59,13 +59,13 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 	private static TckBusinessService tckService = null;
 	private static TckBusiness tckBusiness       = null;
 	private static String authInfoRiftSaw        = null;
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	static ReadWSDL rw;
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
 		
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 		
 		logger.debug("Getting auth token for user riftsaw/riftsaw..");
@@ -97,7 +97,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 	}
 	
 	@Test
-	public void parseWSDL_PortTypeTModels() throws WSDLException  {
+	public void parseWSDL_PortTypeTModels() throws WSDLException , Exception {
 		
 	    Definition wsdlDefinition = rw.readWSDL("uddi_data/bpel/riftsaw/bpel-technote.wsdl");
 		@SuppressWarnings("unchecked")
@@ -118,7 +118,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 	
 	@Test
 	public void registerBPELProcess() throws WSDLException, ConfigurationException,
-		MalformedURLException, RemoteException, TransportException  {
+		MalformedURLException, RemoteException, TransportException, Exception  {
 		
 		UDDIClerk clerk = new UDDIClerk();
 		clerk.setManagerName(manager.getName());

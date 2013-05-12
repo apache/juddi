@@ -31,7 +31,7 @@ import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.jaxb.EntityCreator;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
@@ -49,7 +49,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class JUDDI_010_PublisherIntegrationTest {
 	
 	private static Log logger = LogFactory.getLog(JUDDI_010_PublisherIntegrationTest.class);
-	private static UDDIClerkManager manager;
+	private static UDDIClient manager;
 	private static UDDISecurityPortType security =null;
 	private static JUDDIApiPortType publisher = null;
 	private static String authInfo = null;
@@ -57,7 +57,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
 		
-		manager  = new UDDIClerkManager();
+		manager  = new UDDIClient();
 		manager.start();
 
 

@@ -17,11 +17,11 @@
 package org.apache.juddi.example.wsdl2uddi;
 
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 
 public class Delete {
 	
-	static UDDIClerkManager clerkManager;
+	static UDDIClient uddiClient;
 	
 	public void deleteBusiness(UDDIClerk clerk) {
 		// Deleting the parent business entity that contains our service.
@@ -37,8 +37,8 @@ public class Delete {
 		
 		Delete sp = new Delete();
 		try {
-			clerkManager = new UDDIClerkManager("META-INF/wsdl2uddi-uddi.xml");
-			UDDIClerk clerk = clerkManager.getClerk("joe");
+			uddiClient = new UDDIClient("META-INF/wsdl2uddi-uddi.xml");
+			UDDIClerk clerk = uddiClient.getClerk("joe");
 			
 			sp.deleteWSDL(clerk);
 			sp.deleteBusiness(clerk);

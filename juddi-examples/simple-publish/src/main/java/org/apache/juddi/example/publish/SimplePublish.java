@@ -18,7 +18,7 @@ package org.apache.juddi.example.publish;
 
 import org.uddi.api_v3.*;
 import org.apache.juddi.api_v3.*;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
@@ -33,15 +33,13 @@ public class SimplePublish {
 
 	public SimplePublish() {
         try {
-        	// create a manager and read the config in the archive; 
+        	// create a client and read the config in the archive; 
         	// you can use your config file name
-        	UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
-        	// register the clerkManager with the client side container
-        	UDDIClientContainer.addClerkManager(clerkManager);
-        	// a ClerkManager can be a client to multiple UDDI nodes, so 
+        	UDDIClient uddiClient = new UDDIClient("META-INF/simple-publish-uddi.xml");
+        	// a UddiClient can be a client to multiple UDDI nodes, so 
         	// supply the nodeName (defined in your uddi.xml.
         	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-        	Transport transport = clerkManager.getTransport("default");
+        	Transport transport = uddiClient.getTransport("default");
         	// Now you create a reference to the UDDI API
         	security = transport.getUDDISecurityService();
 			juddiApi = transport.getJUDDIApiService();
