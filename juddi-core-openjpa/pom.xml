@@ -47,7 +47,7 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>clean</phase>
+						<phase>validate</phase>
 						<configuration>
 							<tasks>
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
