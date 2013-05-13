@@ -185,6 +185,7 @@
                     <extensions>true</extensions>
                     <configuration>
                       <classifier>${envClassifier}</classifier>
+                      <obrRepository>target/OBRRepository.xml</obrRepository>
                     </configuration>
                 </plugin>
                 <plugin>
