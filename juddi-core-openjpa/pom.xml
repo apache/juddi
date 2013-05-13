@@ -37,7 +37,6 @@
 				<instructions>
 				<Export-Package>org.apache.juddi, org.apache.juddi.api, org.apache.juddi.api.impl, org.apache.juddi.api.util, org.apache.juddi.config, org.apache.juddi.config, org.apache.juddi.cryptor, org.apache.juddi.keygen, org.apache.juddi.mapping, org.apache.juddi.model, org.apache.juddi.query, org.apache.juddi.query.util, org.apache.juddi.rmi, org.apache.juddi.subscription, org.apache.juddi.subscription.notify, org.apache.juddi.validation, org.apache.juddi.v3.auth, org.apache.juddi.v3.error</Export-Package>
 				<Include-Resource>juddi_install_data=target/classes/juddi_install_data, target/classes/messages.properties</Include-Resource>
-			
 				</instructions>
 				</configuration>
 			</plugin>
@@ -47,15 +46,15 @@
 				<version>1.3</version>
 				<executions>
 					<execution>
-						<id>unzip</id>
-						<phase>compile</phase>
+						<id>copy</id>
+						<phase>clean</phase>
 						<configuration>
 							<tasks>
 								<property name="dependency.juddi.core" value="${maven.dependency.org.apache.juddi.juddi-core.jar.path}" />
 								<property name="juddi.core.dir" value="${basedir}/../juddi-core" />
 								<echo>Enhancing juddi-core=${dependency.juddi.core}</echo>
 								<ant antfile="${basedir}/build.xml">
-									<target name="package-jar" />
+									<target name="copy-from-core" />
 								</ant>
 							</tasks>
 						</configuration>
