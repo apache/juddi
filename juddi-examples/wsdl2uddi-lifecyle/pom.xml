@@ -3,7 +3,7 @@
   <parent>
      <groupId>org.apache.juddi.example</groupId>
      <artifactId>juddi-examples</artifactId>
-     <version>3.1.5-SNAPSHOT</version>
+     <version>3.1.5</version>
      <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>wsdl2uddi-lifecycle</artifactId>
@@ -199,7 +199,7 @@
                         </container>
                         <configuration>
                             <type>existing</type>
-                            <home>${basedir}/../../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26</home> -->
+                            <home>${basedir}/../../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26</home> --&gt;
                         </configuration>
                         <deployables>
                             <deployable>

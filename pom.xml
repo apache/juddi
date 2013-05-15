@@ -25,7 +25,7 @@
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>3.1.5-SNAPSHOT</version>
+	<version>3.1.5</version>
 	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
@@ -148,9 +148,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/juddi/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/juddi/trunk/</developerConnection>
-		<url>http://svn.apache.org/viewcvs.cgi/juddi/trunk/</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/juddi/tags/juddi-3.1.5</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/juddi/tags/juddi-3.1.5</developerConnection>
+		<url>http://svn.apache.org/viewcvs.cgi/juddi/tags/juddi-3.1.5</url>
 	</scm>
 	    <build>
         <pluginManagement>

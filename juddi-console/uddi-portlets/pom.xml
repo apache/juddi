@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-console</artifactId>
-		<version>3.1.5-SNAPSHOT</version>
+		<version>3.1.5</version>
 	</parent>
 	<!--
 		GWT-Maven archetype generated POM 
@@ -80,12 +80,12 @@
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-ws</artifactId>
-			<version>3.1.5-SNAPSHOT</version>
+			<version>3.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-client</artifactId>
-			<version>3.1.5-SNAPSHOT</version>
+			<version>3.1.5</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.portlet</groupId>
