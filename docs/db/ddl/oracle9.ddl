@@ -1,19 +1,4 @@
-<*
- * Copyright 2001-2009 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+
     create table j3_address (
         id number(19,0) not null,
         sort_code varchar2(10 char),
@@ -51,15 +36,15 @@
 
     create table j3_binding_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         entity_key varchar2(255 char) not null,
         primary key (id)
     );
 
     create table j3_binding_template (
         access_point_type varchar2(255 char),
-        access_point_url varchar2(4000 char),
+        access_point_url long,
         hosting_redirector varchar2(255 char),
         entity_key varchar2(255 char) not null,
         service_key varchar2(255 char) not null,
@@ -75,8 +60,8 @@
 
     create table j3_business_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         entity_key varchar2(255 char) not null,
         primary key (id)
     );
@@ -97,7 +82,7 @@
 
     create table j3_business_name (
         id number(19,0) not null,
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         name varchar2(255 char) not null,
         entity_key varchar2(255 char) not null,
         primary key (id)
@@ -145,15 +130,15 @@
 
     create table j3_contact_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         contact_id number(19,0) not null,
         primary key (id)
     );
 
     create table j3_discovery_url (
         id number(19,0) not null,
-        url varchar2(255 char) not null,
+        url long not null,
         use_type varchar2(255 char) not null,
         entity_key varchar2(255 char) not null,
         primary key (id)
@@ -161,7 +146,7 @@
 
     create table j3_email (
         id number(19,0) not null,
-        email_address varchar2(255 char) not null,
+        email_address long not null,
         use_type varchar2(255 char),
         contact_id number(19,0) not null,
         primary key (id)
@@ -169,16 +154,16 @@
 
     create table j3_instance_details_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         tmodel_instance_info_id number(19,0) not null,
         primary key (id)
     );
 
     create table j3_instance_details_doc_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         tmodel_instance_info_id number(19,0) not null,
         primary key (id)
     );
@@ -219,13 +204,13 @@
 
     create table j3_node (
         name varchar2(255 char) not null,
+        client_name varchar2(255 char) not null,
         custody_transfer_url varchar2(255 char) not null,
         factory_initial varchar2(255 char),
         factory_naming_provider varchar2(255 char),
         factory_url_pkgs varchar2(255 char),
         inquiry_url varchar2(255 char) not null,
         juddi_api_url varchar2(255 char),
-        manager_name varchar2(255 char) not null,
         proxy_transport varchar2(255 char) not null,
         publish_url varchar2(255 char) not null,
         security_url varchar2(255 char) not null,
@@ -261,14 +246,14 @@
     create table j3_overview_doc_descr (
         id number(19,0) not null,
         descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         overview_doc_id number(19,0),
         primary key (id)
     );
 
     create table j3_person_name (
         id number(19,0) not null,
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         name varchar2(255 char) not null,
         contact_id number(19,0) not null,
         primary key (id)
@@ -327,14 +312,14 @@
     create table j3_service_descr (
         id number(19,0) not null,
         descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         entity_key varchar2(255 char) not null,
         primary key (id)
     );
 
     create table j3_service_name (
         id number(19,0) not null,
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         name varchar2(255 char) not null,
         entity_key varchar2(255 char) not null,
         primary key (id)
@@ -427,9 +412,15 @@
         primary key (id)
     );
 
+    create table j3_temp_key (
+        entity_key varchar2(255 char) not null,
+        tx_id varchar2(255 char) not null,
+        primary key (entity_key, tx_id)
+    );
+
     create table j3_tmodel (
         deleted number(1,0),
-        lang_code varchar2(5 char),
+        lang_code varchar2(26 char),
         name varchar2(255 char) not null,
         entity_key varchar2(255 char) not null,
         primary key (entity_key)
@@ -444,8 +435,8 @@
 
     create table j3_tmodel_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         entity_key varchar2(255 char) not null,
         primary key (id)
     );
@@ -461,7 +452,7 @@
 
     create table j3_tmodel_instance_info (
         id number(19,0) not null,
-        instance_parms varchar2(512 char),
+        instance_parms long,
         tmodel_key varchar2(255 char) not null,
         entity_key varchar2(255 char) not null,
         primary key (id)
@@ -469,8 +460,8 @@
 
     create table j3_tmodel_instance_info_descr (
         id number(19,0) not null,
-        descr varchar2(1024 char) not null,
-        lang_code varchar2(5 char),
+        descr varchar2(255 char) not null,
+        lang_code varchar2(26 char),
         tmodel_instance_info_id number(19,0) not null,
         primary key (id)
     );

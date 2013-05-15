@@ -1,19 +1,4 @@
-<*
- * Copyright 2001-2009 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+
     create table j3_address (
         id bigint not null auto_increment,
         sort_code varchar(10),
@@ -51,8 +36,8 @@
 
     create table j3_binding_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         entity_key varchar(255) not null,
         primary key (id)
     );
@@ -75,8 +60,8 @@
 
     create table j3_business_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         entity_key varchar(255) not null,
         primary key (id)
     );
@@ -97,7 +82,7 @@
 
     create table j3_business_name (
         id bigint not null auto_increment,
-        lang_code varchar(5),
+        lang_code varchar(26),
         name varchar(255) not null,
         entity_key varchar(255) not null,
         primary key (id)
@@ -145,15 +130,15 @@
 
     create table j3_contact_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         contact_id bigint not null,
         primary key (id)
     );
 
     create table j3_discovery_url (
         id bigint not null auto_increment,
-        url varchar(255) not null,
+        url longtext not null,
         use_type varchar(255) not null,
         entity_key varchar(255) not null,
         primary key (id)
@@ -161,7 +146,7 @@
 
     create table j3_email (
         id bigint not null auto_increment,
-        email_address varchar(255) not null,
+        email_address longtext not null,
         use_type varchar(255),
         contact_id bigint not null,
         primary key (id)
@@ -169,16 +154,16 @@
 
     create table j3_instance_details_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         tmodel_instance_info_id bigint not null,
         primary key (id)
     );
 
     create table j3_instance_details_doc_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         tmodel_instance_info_id bigint not null,
         primary key (id)
     );
@@ -219,13 +204,13 @@
 
     create table j3_node (
         name varchar(255) not null,
+        client_name varchar(255) not null,
         custody_transfer_url varchar(255) not null,
         factory_initial varchar(255),
         factory_naming_provider varchar(255),
         factory_url_pkgs varchar(255),
         inquiry_url varchar(255) not null,
         juddi_api_url varchar(255),
-        manager_name varchar(255) not null,
         proxy_transport varchar(255) not null,
         publish_url varchar(255) not null,
         security_url varchar(255) not null,
@@ -261,14 +246,14 @@
     create table j3_overview_doc_descr (
         id bigint not null auto_increment,
         descr longtext not null,
-        lang_code varchar(5),
+        lang_code varchar(26),
         overview_doc_id bigint,
         primary key (id)
     );
 
     create table j3_person_name (
         id bigint not null auto_increment,
-        lang_code varchar(5),
+        lang_code varchar(26),
         name varchar(255) not null,
         contact_id bigint not null,
         primary key (id)
@@ -327,14 +312,14 @@
     create table j3_service_descr (
         id bigint not null auto_increment,
         descr longtext not null,
-        lang_code varchar(5),
+        lang_code varchar(26),
         entity_key varchar(255) not null,
         primary key (id)
     );
 
     create table j3_service_name (
         id bigint not null auto_increment,
-        lang_code varchar(5),
+        lang_code varchar(26),
         name varchar(255) not null,
         entity_key varchar(255) not null,
         primary key (id)
@@ -427,9 +412,15 @@
         primary key (id)
     );
 
+    create table j3_temp_key (
+        entity_key varchar(255) not null,
+        tx_id varchar(255) not null,
+        primary key (entity_key, tx_id)
+    );
+
     create table j3_tmodel (
         deleted bit,
-        lang_code varchar(5),
+        lang_code varchar(26),
         name varchar(255) not null,
         entity_key varchar(255) not null,
         primary key (entity_key)
@@ -444,8 +435,8 @@
 
     create table j3_tmodel_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         entity_key varchar(255) not null,
         primary key (id)
     );
@@ -469,8 +460,8 @@
 
     create table j3_tmodel_instance_info_descr (
         id bigint not null auto_increment,
-        descr longtext not null,
-        lang_code varchar(5),
+        descr varchar(255) not null,
+        lang_code varchar(26),
         tmodel_instance_info_id bigint not null,
         primary key (id)
     );
