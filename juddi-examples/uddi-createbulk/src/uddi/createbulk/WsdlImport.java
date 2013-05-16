@@ -14,7 +14,7 @@ import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
@@ -50,9 +50,9 @@ public class WsdlImport {
 
         // create a manager and read the config in the archive; 
         // you can use your config file name
-        UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
+        UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
         // register the clerkManager with the client side container
-        UDDIClientContainer.addClerkManager(clerkManager);
+        UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
         // a ClerkManager can be a client to multiple UDDI nodes, so 
         // supply the nodeName (defined in your uddi.xml.
         // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
@@ -159,7 +159,7 @@ public class WsdlImport {
         sb.getBusinessEntity().add(be);
         PrintUDDI<SaveBusiness> sbp = new PrintUDDI<SaveBusiness>();
         System.out.println("Request " + sbp.print(sb));
-       // publish.saveBusiness(sb);
+        // publish.saveBusiness(sb);
 
         //and we're done
 
@@ -177,7 +177,7 @@ public class WsdlImport {
         }
     }
 
-    private void someting() throws Exception{
+    private void someting() throws Exception {
         URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
         String domain = url.getHost();
         ReadWSDL rw = new ReadWSDL();
