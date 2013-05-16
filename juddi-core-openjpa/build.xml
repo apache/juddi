@@ -1,26 +1,18 @@
-<project name="juddi-core-jpa" default="package-jar" basedir=".">
-
-	<target name="unzip-jar">
-		<mkdir dir="${basedir}/target/classes"/>
-		<echo>unzip: ${dependency.juddi.core}</echo>
-		<unzip dest="${basedir}/target/classes">
-			<fileset file="${dependency.juddi.core}"/>
-		</unzip>
-	</target>
+<project name="juddi-core-jpa" default="copy-from-core" basedir=".">
 	
-	<target name="copy-src">
-		    <echo>delete: ${basedir}/src/main/java</echo>
-		    <delete dir="${basedir}/src/main/java"  />
-	        <mkdir dir="${basedir}/src/main/java"/>
-	        <echo>copy: ${juddi.core.dir}/src/test/java</echo>
-	        <copy todir="${basedir}/src/main/java">
-	            <fileset dir="${juddi.core.dir}/src/main/java">
-	               <include name="**/*.java"/>
+	<target name="copy-main">
+		    <echo>delete: ${basedir}/src/main/</echo>
+		    <delete dir="${basedir}/src/main/"  />
+	        <mkdir dir="${basedir}/src/main/"/>
+	        <echo>copy: ${juddi.core.dir}/src/main</echo>
+	        <copy todir="${basedir}/src/main">
+	            <fileset dir="${juddi.core.dir}/src/main">
+	               <include name="**/*"/>
 	            </fileset>
 	        </copy>
 	    </target>
 	
-	<target name="copy-tests">
+	<target name="copy-test-java">
 		<echo>delete: ${basedir}/src/test/java</echo>
 		<delete dir="${basedir}/src/test/java" />
         <mkdir dir="${basedir}/src/test/java"/>
@@ -32,6 +24,6 @@
         </copy>
     </target>
 	
-	<target name="package-jar" depends="copy-src,copy-tests,unzip-jar"/>
+	<target name="copy-from-core" depends="copy-main,copy-test-java"/>
 
 </project>

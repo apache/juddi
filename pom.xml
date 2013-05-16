@@ -25,7 +25,7 @@
 	<packaging>pom</packaging>
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-parent</artifactId>
-	<version>3.1.5-SNAPSHOT</version>
+	<version>3.1.6-SNAPSHOT</version>
 	<name>jUDDI_v3 Parent</name>
 	<description>jUDDI (pronounced "Judy") is an open source Java
 		implementation of the Universal Description, Discovery, and
@@ -171,11 +171,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <preparationGoals>clean install</preparationGoals>
                         <goals>deploy</goals>
                         <releaseProfiles>apache-release</releaseProfiles>
+                        <tagNameFormat>juddi-@{project.version}</tagNameFormat>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -185,6 +187,7 @@
                     <extensions>true</extensions>
                     <configuration>
                       <classifier>${envClassifier}</classifier>
+                      <obrRepository>target/OBRRepository.xml</obrRepository>
                     </configuration>
                 </plugin>
                 <plugin>

@@ -14,6 +14,113 @@
  * limitations under the License.
  *
  * -->
+ 
+ 
+        <h1>Release Notes - jUDDI - Version 3.1.5
+                </h1>
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-363'>JUDDI-363</a>] -         Move hibernate and openjpa persistence files out of resources
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-409'>JUDDI-409</a>] -         problems in digital signature on entity
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-496'>JUDDI-496</a>] -         The tModel is not loaded in the SubscriptionNotifier
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-545'>JUDDI-545</a>] -         combineCategoryBags findQualifier not performing correctly when used in find_business call
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-548'>JUDDI-548</a>] -         java7 compatibility
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-553'>JUDDI-553</a>] -         TModelDetail not deleted when TModel is deleted
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-557'>JUDDI-557</a>] -         Update all POMs on example
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-560'>JUDDI-560</a>] -         Issues from findbugs
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-561'>JUDDI-561</a>] -         Transaction rollback when PersonName Lang is greater than 5 characters
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-562'>JUDDI-562</a>] -         CI build integration failures
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-565'>JUDDI-565</a>] -         Binding template validation rules are incorrect
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-566'>JUDDI-566</a>] -         Using service/binding/hostingDirector causes a NPE
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-568'>JUDDI-568</a>] -         If publication of the root publisher fails, juddi goes into an infinite loop
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-569'>JUDDI-569</a>] -         Performance Issue fetching service list
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-571'>JUDDI-571</a>] -         find_services lang issue
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-572'>JUDDI-572</a>] -         Sending a business key for getServiceDetail causing a class cast exception
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-573'>JUDDI-573</a>] -         Performance Issue fetching business
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-574'>JUDDI-574</a>] -         findTmodel search results does not return the Lang element
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-576'>JUDDI-576</a>] -         Fix broken links and old wiki site
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-582'>JUDDI-582</a>] -         KeyedReferenceGroup/tModelKey is either not saved or not retrieved
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-589'>JUDDI-589</a>] -         find qualifier signaturePresent doesn&#39;t appear to follow the spec
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-591'>JUDDI-591</a>] -         Add support for email alerts for Subscription API
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-592'>JUDDI-592</a>] -         failing unit test on latest trunk
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-612'>JUDDI-612</a>] -         Build &#39;clean&#39; target does not remove the content in juddi-core-openjpa\src\main
+</li>
+</ul>
+                
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-89'>JUDDI-89</a>] -         JDBC Datastore performance improvements
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-554'>JUDDI-554</a>] -         Link to wiki from participation page goes to a different url
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-555'>JUDDI-555</a>] -         Add additional examples for working with UDDI
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-559'>JUDDI-559</a>] -         Authentication Tokens do not expire
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-575'>JUDDI-575</a>] -         Referential Integrity Check 
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-588'>JUDDI-588</a>] -         Default Juddi business has services with endpoints starting with ${juddi.server.baseurl}/juddiv3
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-601'>JUDDI-601</a>] -         Add more constant fields and documentation to juddi-client
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-611'>JUDDI-611</a>] -         UDDIClerkManager renamed to UDDIClient
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-563'>JUDDI-563</a>] -         Package a Jboss 5/6 compatible war
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-580'>JUDDI-580</a>] -         Validation Framework Enhancements
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-584'>JUDDI-584</a>] -         provide a working example of configuring juddi with postgres
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-585'>JUDDI-585</a>] -         Add a generated Release class to the juddi-client to provide version information at runtime
+</li>
+</ul>
+                        
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-480'>JUDDI-480</a>] -         Add juddiv3.war distribution for other appservers
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-514'>JUDDI-514</a>] -         Upgrade support WSDL2UDDI registration
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-540'>JUDDI-540</a>] -         Revisit Distro
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-541'>JUDDI-541</a>] -         Small changes to the build
+</li>
+<li>[<a href='https://issues.apache.org/jira/browse/JUDDI-586'>JUDDI-586</a>] -         Upgrade OpenJPA to 2.x
+</li>
+</ul>
+                    
+                    
 <h1>Release Notes - jUDDI - Version 3.1.4</h1>
                 
 <h2>        Bug

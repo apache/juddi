@@ -26,7 +26,7 @@ Dialects can be found at https://www.hibernate.org/hib_docs/v3/api/org/hibernate
 
 DB2Dialect
 DerbyDialect
-MySQLDBDialect
+MySQLDialect
 MySQL5InnoDBDialect
 Oracle9Dialect
 PostgreSQLDialect
