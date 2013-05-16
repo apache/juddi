@@ -284,6 +284,10 @@ public class TckSubscription
 		try {
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(subscriptionXML, "org.uddi.sub_v3");
 			List<Subscription> subscriptionList = new ArrayList<Subscription>();
+                        subIn.setSubscriptionKey(subscriptionKey);
+                        if (subIn.getBindingKey()!=null && subIn.getBindingKey().length()==0){
+                                subIn.setBindingKey(null);
+                        }
 			subscriptionList.add(subIn);
 			Holder<List<Subscription>> subscriptionHolder = new Holder<List<Subscription>>();
 			subscriptionHolder.value = subscriptionList;

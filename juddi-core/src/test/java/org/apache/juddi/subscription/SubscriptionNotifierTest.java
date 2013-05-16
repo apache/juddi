@@ -49,71 +49,95 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class SubscriptionNotifierTest 
-{
-	private static Log logger = LogFactory.getLog(SubscriptionNotifierTest.class);
-	private static API_010_PublisherTest api010 = new API_010_PublisherTest();
-	private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-	private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
+public class SubscriptionNotifierTest {
 
-	private static String authInfoJoe = null;
-	
-	@BeforeClass
-	public static void setup() {
-		logger.debug("Getting auth token..");
-		try {
-			api010.saveJoePublisher();
-			authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			//tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckSubscription.saveJoePublisherSubscription(authInfoJoe);
-			//tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(), e);
-			Assert.fail("Could not obtain authInfo token.");
-		}
-	}
-	@Test
-	public void testGetSubscriptionResults() 
-		throws ConfigurationException, MalformedURLException, DispositionReportFaultMessage, DatatypeConfigurationException
-	{
-		SubscriptionNotifier notifier = new SubscriptionNotifier();
-		notifier.cancel();
-		Collection<Subscription> subscriptions = notifier.getAllAsyncSubscriptions();
-		Assert.assertEquals(1, subscriptions.size());
-		Subscription subscription = subscriptions.iterator().next();
-		GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription, new Date(new Date().getTime() + 60000l));
-		getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
-		UddiEntityPublisher publisher = new UddiEntityPublisher();
-		publisher.setAuthorizedName(subscription.getAuthorizedName());
-		SubscriptionResultsList resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
-		logger.info("Expecting the resultList to be null: " + resultList.getServiceList());
-		Assert.assertNull(resultList.getServiceList());
-		tckBusinessService.updateJoePublisherService(authInfoJoe, "updated description");
-		resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
-		//We're expecting a changed service
-		logger.info("Expecting the resultList to have 1 service: " + resultList.getServiceList());
-		Assert.assertNotNull(resultList.getServiceList());
-		//We should detect these changes.
-		boolean hasChanges = notifier.resultListContainsChanges(resultList);
-		Assert.assertTrue(hasChanges);
-		System.out.print(resultList);
-		notifier.notify(getSubscriptionResults,resultList,new Date());
-	}
-	
-	
-	@AfterClass
-	public static void teardown() {
-		tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
-		//tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-		tckBusinessService.deleteJoePublisherService(authInfoJoe);
-		tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-	}
-	
+    private static Log logger = LogFactory.getLog(SubscriptionNotifierTest.class);
+    private static API_010_PublisherTest api010 = new API_010_PublisherTest();
+    private static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static TckBusiness tckBusiness = new TckBusiness(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static TckBusinessService tckBusinessService = new TckBusinessService(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static TckBindingTemplate tckBindingTemplate = new TckBindingTemplate(new UDDIPublicationImpl(), new UDDIInquiryImpl());
+    private static TckSubscription tckSubscription = new TckSubscription(new UDDISubscriptionImpl(), new UDDISecurityImpl());
+    private static String authInfoJoe = null;
+
+    @BeforeClass
+    public static void setup() {
+        logger.debug("Getting auth token..");
+        try {
+            //calls uddi-tck-base//rc/main/resources/uddi_data/joepublisher
+            //setups up a JUDDI user account
+            api010.saveJoePublisher();
+            
+            //login as joe
+            authInfoJoe = TckSecurity.getAuthToken(new UDDISecurityImpl(), TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+            //makes tmodel uddi:uddi.joepublisher.com:keygenerator
+            tckTModel.saveJoePublisherTmodel(authInfoJoe);
+            
+            //saves a signed business, no services
+            //key = uddi:uddi.joepublisher.com:businessone
+            tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+            
+            //service key = uddi:uddi.joepublisher.com:serviceone
+            //bt = uddi:uddi.joepublisher.com:bindingone
+            tckBusinessService.saveJoePublisherService(authInfoJoe);
+            
+            
+            //tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+            
+            
+            //makes subscription key=uddi:uddi.joepublisher.com:subscriptionone
+            //find exact match on "Service One"
+            //callback binding key=empty string
+            tckSubscription.saveJoePublisherSubscription(authInfoJoe);
+            
+            
+            tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+           
+            
+            
+            
+            
+            
+            //tckSubscription.getJoePublisherSubscriptionResults(authInfoJoe);
+        } catch (RemoteException e) {
+            logger.error(e.getMessage(), e);
+            Assert.fail("Could not obtain authInfo token.");
+        }
+    }
+
+    @Test
+    public void testGetSubscriptionResults()
+            throws ConfigurationException, MalformedURLException, DispositionReportFaultMessage, DatatypeConfigurationException {
+        SubscriptionNotifier notifier = new SubscriptionNotifier();
+        notifier.cancel();
+        Collection<Subscription> subscriptions = notifier.getAllAsyncSubscriptions();
+        Assert.assertEquals(1, subscriptions.size());
+        Subscription subscription = subscriptions.iterator().next();
+        GetSubscriptionResults getSubscriptionResults = notifier.buildGetSubscriptionResults(subscription, new Date(new Date().getTime() + 60000l));
+        getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
+        UddiEntityPublisher publisher = new UddiEntityPublisher();
+        publisher.setAuthorizedName(subscription.getAuthorizedName());
+        SubscriptionResultsList resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
+        logger.info("Expecting the resultList to be null: " + resultList.getServiceList());
+        Assert.assertNull(resultList.getServiceList());
+        tckBusinessService.updateJoePublisherService(authInfoJoe, "updated description");
+        resultList = notifier.getSubscriptionImpl().getSubscriptionResults(getSubscriptionResults, publisher);
+        //We're expecting a changed service
+        logger.info("Expecting the resultList to have 1 service: " + resultList.getServiceList());
+        Assert.assertNotNull(resultList.getServiceList());
+        //We should detect these changes.
+        boolean hasChanges = notifier.resultListContainsChanges(resultList);
+        Assert.assertTrue(hasChanges);
+        System.out.print(resultList);
+        notifier.notify(getSubscriptionResults, resultList, new Date());
+    }
+
+    @AfterClass
+    public static void teardown() {
+        tckSubscription.deleteJoePublisherSubscription(authInfoJoe);
+        //tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+    }
 }

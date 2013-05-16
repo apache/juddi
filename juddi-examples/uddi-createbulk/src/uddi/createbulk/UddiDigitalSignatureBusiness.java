@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.crypto.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -34,10 +34,9 @@ public class UddiDigitalSignatureBusiness {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
+            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
-            UDDIClientContainer.addClerkManager(clerkManager);
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
+            UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
             Transport transport = clerkManager.getTransport("default");
@@ -92,13 +91,13 @@ public class UddiDigitalSignatureBusiness {
             ob.getName().add(name);
             sb.getBusinessEntity().add(ob);
             BusinessDetail saveBusiness = publish.saveBusiness(sb);
-            
+
             System.out.println("business created with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
 
-            
+
             BusinessEntity be = saveBusiness.getBusinessEntity().get(0);//findBusiness.getBusinessInfos().getBusinessInfo().get(0));
             DigSigUtil.JAXB_ToStdOut(be);
-            
+
             be.getSignature().clear();
             //DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("signing");
@@ -112,7 +111,7 @@ public class UddiDigitalSignatureBusiness {
             publish.saveBusiness(sb);
             System.out.println("saved, fetching");
 
-           // findBusiness = GetBusinessList(token);
+            // findBusiness = GetBusinessList(token);
             GetBusinessDetail gb = new GetBusinessDetail();
             gb.setAuthInfo(token);
             gb.getBusinessKey().add(be.getBusinessKey());
@@ -284,7 +283,6 @@ public class UddiDigitalSignatureBusiness {
         }
     }
 
-    
     private enum AuthStyle {
 
         HTTP_BASIC,

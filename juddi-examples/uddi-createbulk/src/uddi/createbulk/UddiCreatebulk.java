@@ -9,7 +9,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -22,19 +22,18 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * @author Alex
  */
 public class UddiCreatebulk {
-    
+
     private static UDDISecurityPortType security = null;
     private static JUDDIApiPortType juddiApi = null;
     private static UDDIPublicationPortType publish = null;
-    
+
     public UddiCreatebulk() {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
+            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
-            UDDIClientContainer.addClerkManager(clerkManager);
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
+            UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
             Transport transport = clerkManager.getTransport("default");
@@ -46,7 +45,7 @@ public class UddiCreatebulk {
             e.printStackTrace();
         }
     }
-    
+
     public void publish() {
         try {
             // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
@@ -58,10 +57,10 @@ public class UddiCreatebulk {
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
             System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-            
-            int servicesPerBusiness=5;
-            int businesses=15;
-            
+
+            int servicesPerBusiness = 5;
+            int businesses = 15;
+
             DatatypeFactory df = DatatypeFactory.newInstance();
             GregorianCalendar gcal = new GregorianCalendar();
             gcal.setTimeInMillis(System.currentTimeMillis());
@@ -101,38 +100,38 @@ public class UddiCreatebulk {
                     kr.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                     kr.setKeyName("keyname1");
                     kr.setKeyValue("myvalue1");
-                    
+
                     myBindingTemplate.getCategoryBag().getKeyedReference().add(kr);
-                    
+
                     KeyedReferenceGroup krg = new KeyedReferenceGroup();
                     krg.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                     kr = new KeyedReference();
                     kr.setTModelKey(UDDIConstants.PROTOCOL_SSLv3);
                     kr.setKeyName("keyname1grp");
                     kr.setKeyValue("myvalue1grp");
-                    
+
                     krg.getKeyedReference().add(kr);
                     myBindingTemplate.getCategoryBag().getKeyedReferenceGroup().add(krg);
-                    
-                    
+
+
                     myService.setCategoryBag(new CategoryBag());
-                    
+
                     kr = new KeyedReference();
                     kr.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                     kr.setKeyName("Servicekeyname2grp");
                     kr.setKeyValue("Servicemyvalue2grp");
                     myService.getCategoryBag().getKeyedReference().add(kr);
-                    
+
                     krg = new KeyedReferenceGroup();
                     krg.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                     kr = new KeyedReference();
                     kr.setTModelKey(UDDIConstants.TRANSPORT_HTTP);
                     kr.setKeyName("keyname1grp");
                     kr.setKeyValue("myvalue1grp");
-                    
+
                     krg.getKeyedReference().add(kr);
                     myService.getCategoryBag().getKeyedReferenceGroup().add(krg);
-                    
+
                     AccessPoint accessPoint = new AccessPoint();
                     accessPoint.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());
                     accessPoint.setValue("http://example.org/services/myservice" + i + k + "?wsdl");
@@ -155,8 +154,8 @@ public class UddiCreatebulk {
                     od.getOverviewURL().setValue("www.apache.org");
                     tii.getInstanceDetails().getOverviewDoc().add(od);
                     myBindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
-                    
-                    
+
+
                     BindingTemplates myBindingTemplates = new BindingTemplates();
                     myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
                     myService.setBindingTemplates(myBindingTemplates);
@@ -179,7 +178,7 @@ public class UddiCreatebulk {
             e.printStackTrace();
         }
     }
-    
+
     public static void main(String args[]) {
         UddiCreatebulk sp = new UddiCreatebulk();
         sp.publish();

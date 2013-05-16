@@ -33,7 +33,7 @@
       </categoryBag>
     </find_service>
   </subscriptionFilter>
-  <bindingKey xmlns="urn:uddi-org:api_v3">bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <bindingKey xmlns="urn:uddi-org:api_v3"></bindingKey>
   <notificationInterval>P5D</notificationInterval>
   <maxEntities>1000</maxEntities>
 </subscription>

@@ -12,7 +12,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.Holder;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
@@ -42,10 +42,9 @@ public class UddiSubscribe {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
+            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
-            UDDIClientContainer.addClerkManager(clerkManager);
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
+            UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
             Transport transport = clerkManager.getTransport("default");
@@ -233,7 +232,7 @@ public class UddiSubscribe {
         instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
         bt.setTModelInstanceDetails(new TModelInstanceDetails());
         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
-        
+
         bs.getBindingTemplates().getBindingTemplate().add(bt);
 
 
@@ -279,7 +278,7 @@ public class UddiSubscribe {
             timer = timer - 5000;
         }
         ep.stop();
-        if (callbackRecieved ) {
+        if (callbackRecieved) {
             System.out.println("Callback recieved successfully");
             System.exit(0);
         } else {

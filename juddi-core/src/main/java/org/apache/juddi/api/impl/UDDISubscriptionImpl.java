@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
-
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -30,7 +29,25 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.Holder;
-
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.QueryStatus;
+import org.apache.juddi.api.util.SubscriptionQuery;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
+import org.apache.juddi.config.Property;
+import org.apache.juddi.jaxb.JAXBMarshaller;
+import org.apache.juddi.mapping.MappingApiToModel;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.SubscriptionChunkToken;
+import org.apache.juddi.model.SubscriptionMatch;
+import org.apache.juddi.model.UddiEntityPublisher;
+import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
+import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.v3.error.InvalidValueException;
+import org.apache.juddi.validation.ValidateSubscription;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.AssertionStatusReport;
 import org.uddi.api_v3.BindingDetail;
@@ -59,26 +76,6 @@ import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.api.util.QueryStatus;
-import org.apache.juddi.api.util.SecurityQuery;
-import org.apache.juddi.api.util.SubscriptionQuery;
-import org.apache.juddi.config.AppConfig;
-import org.apache.juddi.config.PersistenceManager;
-import org.apache.juddi.config.Property;
-import org.apache.juddi.jaxb.JAXBMarshaller;
-import org.apache.juddi.mapping.MappingApiToModel;
-import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.model.SubscriptionChunkToken;
-import org.apache.juddi.model.SubscriptionMatch;
-import org.apache.juddi.model.UddiEntityPublisher;
-import org.apache.juddi.query.FindSubscriptionByPublisherQuery;
-import org.apache.juddi.v3.error.ErrorMessage;
-import org.apache.juddi.v3.error.FatalErrorException;
-import org.apache.juddi.v3.error.InvalidValueException;
-import org.apache.juddi.validation.ValidateSubscription;
 
 /**
  * 
@@ -858,7 +855,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				} else {
 					modelSubscription.setCreateDate(new Date());
 				}
-	
+                              
 				doSubscriptionExpirationDate(apiSubscription);
 				
 				MappingApiToModel.mapSubscription(apiSubscription, modelSubscription);

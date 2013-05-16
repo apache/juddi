@@ -25,7 +25,7 @@
       </categoryBag>
      </find_tModel>
   </subscriptionFilter>
-  <bindingKey xmlns="urn:uddi-org:api_v3">bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <bindingKey xmlns="urn:uddi-org:api_v3"></bindingKey>
   <notificationInterval>P5D</notificationInterval>
   <maxEntities>3</maxEntities>
 </subscription>

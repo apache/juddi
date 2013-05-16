@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.api_v3.Publisher;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.config.UDDIClerkManager;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.crypto.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -34,10 +34,9 @@ public class UddiDigitalSignatureTmodel {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClerkManager clerkManager = new UDDIClerkManager("META-INF/simple-publish-uddi.xml");
+            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
-            UDDIClientContainer.addClerkManager(clerkManager);
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
+            UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
             Transport transport = clerkManager.getTransport("default");
@@ -146,8 +145,8 @@ public class UddiDigitalSignatureTmodel {
              */
             System.out.println("this is the real test =====================");
 
-           // BusinessList findBusiness = GetBusinessList(token);
-            
+            // BusinessList findBusiness = GetBusinessList(token);
+
             TModel be = GetBusinessDetails();//findBusiness.getBusinessInfos().getBusinessInfo().get(0));
             be.getSignature().clear();
             //DigSigUtil.JAXB_ToStdOut(be);
@@ -162,7 +161,7 @@ public class UddiDigitalSignatureTmodel {
             publish.saveTModel(sb);
             System.out.println("saved, fetching");
 
-           // findBusiness = GetBusinessList(token);
+            // findBusiness = GetBusinessList(token);
             be = GetBusinessDetails();//findBusiness.getBusinessInfos().getBusinessInfo().get(0));
             DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("verifing");
@@ -332,7 +331,7 @@ public class UddiDigitalSignatureTmodel {
     }
 
     private TModel GetBusinessDetails() throws Exception {
-     //   BusinessInfo get
+        //   BusinessInfo get
         GetTModelDetail r = new GetTModelDetail();
         r.getTModelKey().add("uddi:juddi.apache.org:23748881-bb2f-4896-8283-4a15be1d0bc1");
         return inquiry.getTModelDetail(r).getTModel().get(0);

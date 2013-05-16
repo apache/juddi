@@ -183,7 +183,7 @@ public class UddiHub {
         style = (AuthStyle) AuthStyle.valueOf((String) p.get("authtype"));
         try {
 
-            String clazz = UDDIClientContainer.getUDDIClerkManager(null).
+            String clazz = UDDIClientContainer.getUDDIClient(null).
                     getClientConfig().getUDDINode("default").getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
             if (transportClass != null) {

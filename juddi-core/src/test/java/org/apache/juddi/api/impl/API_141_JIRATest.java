@@ -14,17 +14,30 @@
  */
 package org.apache.juddi.api.impl;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.Holder;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
@@ -32,6 +45,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.AccessPoint;
+import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
@@ -56,10 +71,17 @@ import org.uddi.api_v3.ServiceInfos;
 import org.uddi.api_v3.ServiceList;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelInstanceDetails;
+import org.uddi.api_v3.TModelInstanceInfo;
 import org.uddi.api_v3.TModelList;
+import org.uddi.sub_v3.DeleteSubscription;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * This test class provides test cases of items discovered or reported through
@@ -72,12 +94,11 @@ import org.uddi.v3_service.UDDISecurityPortType;
 public class API_141_JIRATest {
 
     private static Log logger = LogFactory.getLog(API_141_JIRATest.class);
-
     static UDDISecurityPortType security = new UDDISecurityImpl();
     static UDDIInquiryPortType inquiry = new UDDIInquiryImpl();
     static UDDIPublicationPortType publication = new UDDIPublicationImpl();
-    static TckTModel tckTModel               = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
-
+    static UDDISubscriptionPortType sub = new UDDISubscriptionImpl();
+    static TckTModel tckTModel = new TckTModel(new UDDIPublicationImpl(), new UDDIInquiryImpl());
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
     private static UDDIClient manager;
@@ -97,15 +118,17 @@ public class API_141_JIRATest {
     static final String str51 = "111111111111111111111111111111111111111111111111111";
     static final String str50 = "11111111111111111111111111111111111111111111111111";
     static final String MISSING_RESOURCE = "Can't find resource for bundle";
+    static DatatypeFactory df = null;
 
     @AfterClass
-    public static  void stopManager() throws ConfigurationException {
-    	Registry.stop();
+    public static void stopManager() throws ConfigurationException {
+        Registry.stop();
     }
 
     @BeforeClass
-    public static void startManager() throws ConfigurationException {
-    	Registry.start();
+    public static void startManager() throws ConfigurationException, DatatypeConfigurationException {
+        df = DatatypeFactory.newInstance();
+        Registry.start();
 
         logger.debug("Getting auth tokens..");
         try {
@@ -113,10 +136,10 @@ public class API_141_JIRATest {
             authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
             Assert.assertNotNull(authInfoJoe);
             Assert.assertNotNull(authInfoSam);
-            String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
-			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
-			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
+            String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+            tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+            tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
+            tckTModel.saveJoePublisherTmodel(authInfoJoe);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             Assert.fail("Could not obtain authInfo token.");
@@ -510,6 +533,359 @@ public class API_141_JIRATest {
     //TODO binding template tmodel instance info
     //TODO tmodel tests
     //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
+    /**
+     * test when the subscription expiration is null
+     */
+    @Test
+    public void JUDDI_606_1() {
+        System.out.println("JUDDI_606_1 Null expiration time");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(1);
+        sub1.setExpiresAfter(null);
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            key = data.value.get(0).getSubscriptionKey();
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail("null expires after should be allowed");
+
+        } finally {
+            DeleteSubscriptionInternal(authInfoJoe, key);
+        }
+
+
+    }
+
+    /**
+     * test when the subscription expiration is null
+     */
+    @Test(expected = ValueNotAllowedException.class)
+    public void JUDDI_606_2() throws Exception {
+
+        System.out.println("JUDDI_606_2 invalid expiration time");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(1);
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.add(Calendar.DATE, -1);
+        sub1.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("request should have been rejected, saving a subscription that's already expired");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            //HandleException(ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * confirm a subscription key is returned
+     */
+    @Test
+    public void JUDDI_606_3() throws Exception {
+
+        System.out.println("JUDDI_606_3 confirm a subscription key is returned");
+
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(1);
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.add(Calendar.DATE, 1);
+        sub1.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.assertNotNull(data);
+            Assert.assertNotNull(data.value);
+            key = data.value.get(0).getSubscriptionKey();
+            Assert.assertFalse(data.value.isEmpty());
+            Assert.assertEquals(data.value.size(), 1);
+            Assert.assertNotNull(data.value.get(0).getSubscriptionKey());
+            Assert.assertTrue("subscription key is empty or invalid", (data.value.get(0).getSubscriptionKey().length() > 5));
+
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail("this should have worked");
+        } finally {
+            DeleteSubscriptionInternal(authInfoJoe, key);
+        }
+    }
+
+    /**
+     * JUDDI_606_4 null subscription filter
+     */
+    @Test
+    public void JUDDI_606_4() throws Exception {
+
+        System.out.println("JUDDI_606_4 null subscription filter");
+
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(1);
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.add(Calendar.DATE, 1);
+        sub1.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(null);
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        //sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("this should have been rejected");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            //HandleException(ex);
+        }
+    }
+
+    /**
+     * JUDDI_606_5 empty subscription filter
+     */
+    @Test
+    public void JUDDI_606_5() throws Exception {
+
+        System.out.println("JUDDI_606_5 empty subscription filter");
+
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(1);
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.add(Calendar.DATE, 1);
+        sub1.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        //sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("this should have been rejected");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            //HandleException(ex);
+        }
+    }
+
+    /**
+     * JUDDI_606_6 negative max entities
+     */
+    @Test(expected = ValueNotAllowedException.class)
+    public void JUDDI_606_6() throws Exception {
+
+        System.out.println("JUDDI_606_6 negative max entities");
+
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setMaxEntities(-1);
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.add(Calendar.DATE, 1);
+        sub1.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+        sub1.setNotificationInterval(df.newDuration(5000));
+        sub1.setBrief(false);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        //sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("this should have been rejected");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            // HandleException(ex);
+            throw ex;
+        }
+    }
+
+    /**
+     * JUDDI_606_7 minimal settings
+     */
+    @Test()
+    public void JUDDI_606_7() throws Exception {
+
+        System.out.println("JUDDI_606_7 minimal settings");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setExpiresAfter(null);
+        sub1.setNotificationInterval(null);
+        sub1.setBrief(null);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            key = data.value.get(0).getSubscriptionKey();
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail("this should have worked");
+        } finally {
+            DeleteSubscriptionInternal(authInfoJoe, key);
+        }
+    }
+
+    /**
+     * JUDDI_606_8 reset expiration Invoking save_subscription automatically
+     * resets the expiration period for the subscription in question to a value
+     * based upon the node’s policy.
+     */
+    @Test()
+    public void JUDDI_606_8() throws Exception {
+
+        System.out.println("JUDDI_606_8 reset expiration");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setExpiresAfter(null);
+        sub1.setNotificationInterval(null);
+        sub1.setBrief(null);
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            XMLGregorianCalendar initialExpiration = data.value.get(0).getExpiresAfter();
+            key = data.value.get(0).getSubscriptionKey();
+            Thread.sleep(5000);
+            data.value.get(0).setExpiresAfter(null);
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.assertFalse("timestamp should have been reset", initialExpiration.equals(data.value.get(0).getExpiresAfter()));
+            Assert.assertEquals(key, data.value.get(0).getSubscriptionKey());
+
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail("this should have worked");
+        } finally {
+            DeleteSubscriptionInternal(authInfoJoe, key);
+        }
+    }
+
+    /**
+     * JUDDI_606_9 asynch subscriptions, key doesn't exist
+     */
+    @Test(expected = ValueNotAllowedException.class)
+    public void JUDDI_606_9() throws Exception {
+
+        System.out.println("JUDDI_606_9 asynch subscriptions, key doesn't exist");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setExpiresAfter(null);
+        sub1.setNotificationInterval(df.newDuration(60000));
+        sub1.setBrief(null);
+        sub1.setBindingKey("uddi:juddi.apache.org:" + UUID.randomUUID().toString());
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("this should have failed");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            throw ex;
+        } finally {
+        }
+    }
+
+    
+    /**
+     * JUDDI_606_10 asynch subscriptions, key exists, null interval
+     */
+    @Test(expected = ValueNotAllowedException.class)
+    public void JUDDI_606_10() throws Exception {
+
+        System.out.println("JUDDI_606_10 asynch subscriptions, key exists, null interval");
+        org.uddi.sub_v3.Subscription sub1 = new org.uddi.sub_v3.Subscription();
+        sub1.setExpiresAfter(null);
+        sub1.setNotificationInterval(null);
+        sub1.setBrief(null);
+        sub1.setBindingKey(CreateBindingForSubscription(authInfoJoe));
+        sub1.setSubscriptionFilter(new SubscriptionFilter());
+        FindBusiness fb = new FindBusiness();
+        fb.setFindQualifiers(new FindQualifiers());
+        fb.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.getName().add(new Name("%", null));
+        sub1.getSubscriptionFilter().setFindBusiness(fb);
+        Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+        data.value = new ArrayList<Subscription>();
+        data.value.add(sub1);
+        String key = null;
+        try {
+            sub.saveSubscription(authInfoJoe, data);
+            Assert.fail("this should have failed");
+        } //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
+        catch (Exception ex) {
+            throw ex;
+        } finally {
+        }
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
     /**
      * Converts category bags of tmodels to a readable string
@@ -679,5 +1055,42 @@ public class API_141_JIRATest {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void DeleteSubscriptionInternal(String token, String key) {
+
+        //cleanup
+        try {
+            DeleteSubscription x = new DeleteSubscription();
+            x.setAuthInfo(token);
+            x.getSubscriptionKey().add(key);
+            sub.deleteSubscription(x);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String CreateBindingForSubscription(String authInfoJoe) throws Exception {
+        SaveBusiness sb = new SaveBusiness();
+        BusinessEntity be = new BusinessEntity();
+        be.getName().add(new Name("joe's callback", "en"));
+        be.setBusinessServices(new BusinessServices());
+        BusinessService bs = new BusinessService();
+        bs.getName().add(new Name("Joe's callback service", "en"));
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setAccessPoint(new AccessPoint("http://localhost/somewhere", AccessPointType.END_POINT.toString()));
+       
+        TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+        instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
+        bt.setTModelInstanceDetails(new TModelInstanceDetails());
+        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
+
+
+        be.getBusinessServices().getBusinessService().add(bs);
+        sb.getBusinessEntity().add(be);
+        sb.setAuthInfo(authInfoJoe);
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+        return saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey();
     }
 }

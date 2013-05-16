@@ -58,6 +58,21 @@ public class Name implements Serializable{
     protected String lang;
 
     /**
+     * A simple convenience constructor
+     * @param value max length is 255 chars
+     * @param lang max length is 26 chars
+     */
+    public Name(String value, String lang) {
+        this.value = value;
+        this.lang = lang;
+    }
+
+    public Name() {
+        value=null;
+        lang=null;
+    }
+
+    /**
      * Gets the value of the value property.
      * 
      * @return

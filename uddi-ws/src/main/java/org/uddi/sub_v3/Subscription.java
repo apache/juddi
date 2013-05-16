@@ -31,6 +31,110 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
+ * <h1>UDDI Subscription</h1>
+ * The save_subscription API registers a request to monitor specific registry content and to have the node periodically notify the subscriber when changes are available.  Notifications are not returned synchronously with results for this API.  Only data that matches the requested subscription criteria and which changes after the point in time that the subscription request is accepted is returned to the subscriber via a notification.
+
+This API returns a duration for which this particular subscription is valid.  Depending upon the policy of the Node, subscriptions need to be renewed before the expiration date in order to insure that they remain active.  Subscriptions can also be redefined or renewed using this API.  The subscriptionKey pertaining to the subscription to be renewed must be supplied in the save_subscription invocation in order to accomplish this. This allows both renewal and changes to the subscription.  Invoking save_subscription automatically resets the expiration period for the subscription in question to a value based upon the node’s policy.
+ * <p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>authInfo</i></b>:&nbsp; This optional argument is an element
+that contains an authentication token.&nbsp; Registries that wish to restrict who
+can save a subscription typically require authInfo for this call, though this
+is a matter of node policy.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>bindingKey:</i></b>&nbsp; This optional argument of type anyURI
+specifies the <i>bindingTemplate</i> which the node is to use to deliver
+notifications to subscription listeners.&nbsp; It is only required when asynchronous
+notifications are used.&nbsp; This <i>bindingTemplate</i> MUST define either a Web
+service that implements notify_subscriptionListener (see below), or an email
+address to receive the notifications. If a notify_subscriptionListener Web
+service is identified, the node invokes it to deliver notifications.&nbsp; If an
+email address is identified, the node delivers notifications via email to the
+address supplied. When notifications are delivered via email, the body of the
+email contains the body of the SOAP message, which would have been sent to the
+notify_subscriptionListener service if that option had been chosen.<span class="MsoCommentReference"><span style="display:none">.</span></span> The
+publisher making the subscription request MUST own the bindingTemplate.&nbsp; If
+this argument is not supplied, no notifications are sent, although subscribers
+may still use the get_subscriptionResults API to obtain subscription results.&nbsp;
+See Section <a href="#_Ref536844845 ">5.5.11</a> <i>get_subscriptionResults </i>for
+details.&nbsp; If email delivery to the specified address fails, nodes MAY attempt re-delivery, but are not obligated to do so.&nbsp; Depending upon node policy, excessive
+delivery failures MAY result in cancellation of the corresponding subscription.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>brief</i></b>:&nbsp; This optional argument controls the level
+of detail returned to a subscription listener.&nbsp; The default is "false"
+when omitted. When set to "true," it indicates that the subscription
+results are to be returned to the subscriber in the form of a keyBag, listing
+all of the entities that matched the subscriptionFilter.&nbsp; Refer to Section <a href="#_Ref3401043 ">5.5.6</a> <i>Use of keyBag in Subscription,</i> for
+additional information.&nbsp; This option has no effect on the assertionStatusReport
+structure, which is returned as part of a notification when the
+subscriptionFilter specifies the get_assertionStatusReport filter criteria.&nbsp;
+See the explanation of subscriptionFilter below.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>expiresAfter</i></b>:&nbsp; This optional argument allows
+subscribers to specify the period of time for which they would like the
+subscription to exist.&nbsp; It is of the XML Schema type xsd:dateTime.&nbsp; Specifying
+a value for this argument is no guarantee that the node will accept it without
+change.&nbsp; Information on the format of expiresAfter can be found in Section <a href="#_Ref535515666 ">5.5.1.1</a> <i>Specifying Durations</i>.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>maxEntities</i></b>:&nbsp; This optional integer specifies the
+maximum number of entities in a notification returned to a subscription
+listener. If not specified, the number of entities sent is not limited, unless
+by node policy.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>subscriptionFilter</i></b>:&nbsp; This argument specifies the
+filtering criteria which limits the scope of a subscription to a subset of
+registry records. It is required except when renewing an existing subscription.
+The get_xx and find_xx APIs are all valid choices for use as a
+subscriptionFilter.&nbsp; Only one of these can be chosen for each subscription.&nbsp;
+Notifications, based on the subscriptionFilter, are sent to the subscriber if
+and only if there are changes at the node, which match this criterion during a
+notification period.&nbsp; A subscriptionFilter MUST contain exactly one of the
+allowed inquiry elements. The authInfo argument of the specified get_xx or
+find_xx API call is not required here and is ignored if specified.&nbsp; All of the
+other arguments supported with each of these inquiry APIs are valid for use
+here.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in">Specifying find_relatedBusinesses
+is useful for tracking when reciprocal relationships are formed or dissolved.&nbsp;
+Specifying get_assertionStatusReport can be used in tracking when reciprocal
+relationships (which pertain to a business owned by the subscriber) are formed,
+dissolved, or requested by the owners of some other business.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in">For a get_assertionStatusReport
+based subscription, there is a specific status value, <b>status:both_incomplete</b>,
+defined in the XML schema. When appearing in an assertionStatusItem of a
+subscriptionResultsList, status:both_incomplete indicates that the publisher
+assertion embedded in the assertionStatusItem has been deleted from both ends. </p>
+
+<p class="MsoBodyText" style="margin-left:1.0in">Note that the above handling of
+deleted publisher assertions is different from the case when a business entity,
+business service, binding template, or tModel is removed. In the latter case,
+the key to the entity in question is simply put inside a keyBag. A publisher
+assertion, on the other hand, has no key and therefore the keyBag idea is not
+applicable.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>subscriptionKey</i></b>:&nbsp; This optional argument of type <i>anyURI</i>
+identifies the subscription.&nbsp; To renew or change an existing subscription, a
+valid subscriptionKey MUST be provided. When establishing a new subscription,
+the subscriptionKey MAY also be either omitted or specified as an empty string in
+which case the node MUST assign a unique key. If subscriptionKey is specified
+for a new subscription, the key MUST conform to the registry’s policy on
+publisher-assigned keys.</p>
+
+<p class="MsoBodyText" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><i>notificationInterval</i></b>:&nbsp; This optional argument is
+only required when asynchronous notifications are used.&nbsp; It is of type
+xsd:duration and specifies how often change notifications are to be provided to
+a subscriber.&nbsp; If the notificationInterval specified is not acceptable due to
+node policy, then the node adjusts the value to match the next longer time
+period that is supported.&nbsp; The adjusted value is provided with the returns from
+this API.&nbsp; Also see Section <a href="#_Ref535515666 ">5.5.1.1</a> <i>Specifying
+Durations</i>.</p>
  * <p>Java class for subscription complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
@@ -52,6 +156,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ * 
  * 
  * 
  */
