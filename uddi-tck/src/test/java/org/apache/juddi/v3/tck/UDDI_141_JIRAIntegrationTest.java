@@ -14,9 +14,18 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.net.Inet4Address;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.xml.bind.JAXB;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.Endpoint;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,9 +37,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.*;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
+import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
  * This test class provides test cases of items discovered or reported through
@@ -44,6 +56,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
     private static Log logger = LogFactory.getLog(UDDI_141_JIRAIntegrationTest.class);
     static UDDISecurityPortType security = null;
+    static UDDISubscriptionPortType subscription = null;
     static UDDIInquiryPortType inquiry = null;
     static UDDIPublicationPortType publication = null;
     protected static String authInfoJoe = null;
@@ -80,6 +93,7 @@ public class UDDI_141_JIRAIntegrationTest {
         try {
             Transport transport = manager.getTransport();
             security = transport.getUDDISecurityService();
+            subscription = transport.getUDDISubscriptionService();
             authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
             authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
             Assert.assertNotNull(authInfoJoe);
@@ -479,6 +493,486 @@ public class UDDI_141_JIRAIntegrationTest {
 
     }
 
+    /**
+     * sets up a compelte publisher assertion
+     *
+     * @throws Exception
+     */
+    @Test
+    public void JUDDI_590() throws Exception {
+        //create two businesses
+        System.out.println("JUDDI_590");
+
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_590 Joe");
+        be.getName().add(n);
+        sb.getBusinessEntity().add(be);
+        String joeBiz = null;
+        try {
+            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+            joeBiz = saveBusiness.getBusinessEntity().get(0).getBusinessKey();
+            //DeleteBusiness db = new DeleteBusiness();
+            //db.setAuthInfo(authInfoJoe);
+            //db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            //publication.deleteBusiness(db);
+            //Assert.fail("request should have been rejected");
+        } catch (SOAPFaultException ex) {
+            HandleException(ex);
+        }
+
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = new BusinessEntity();
+        n = new Name();
+        n.setValue("JUDDI_590 Sam");
+        be.getName().add(n);
+        sb.getBusinessEntity().add(be);
+        String samBiz = null;
+        try {
+            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+            samBiz = saveBusiness.getBusinessEntity().get(0).getBusinessKey();
+            //DeleteBusiness db = new DeleteBusiness();
+            //db.setAuthInfo(authInfoJoe);
+            //db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            //publication.deleteBusiness(db);
+            //Assert.fail("request should have been rejected");
+        } catch (SOAPFaultException ex) {
+            HandleException(ex);
+        }
+
+
+        //create an assertion on one end
+        AddPublisherAssertions apa = new AddPublisherAssertions();
+        apa.setAuthInfo(authInfoJoe);
+        apa.getPublisherAssertion().add(new PublisherAssertion());
+        apa.getPublisherAssertion().get(0).setFromKey(joeBiz);
+        apa.getPublisherAssertion().get(0).setToKey(samBiz);
+        KeyedReference kr = new KeyedReference();
+        kr.setKeyName("Subsidiary");
+        kr.setKeyValue("parent-child");
+        kr.setTModelKey("uddi:uddi.org:relationships");
+        apa.getPublisherAssertion().get(0).setKeyedReference(kr);
+        publication.addPublisherAssertions(apa);
+        //check get status is not null from 1 and from 2
+        boolean ok = true;
+        String msg = "";
+        try {
+            List<AssertionStatusItem> assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+            if (assertionStatusReport.isEmpty()) {
+                msg = "Stage1: no result returned, expected at least 1";
+                ok = false;
+            }
+            for (int i = 0; i < assertionStatusReport.size(); i++) {
+                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                    if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
+                        ok = false;
+                        msg = "Stage1: status type mismatch";
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ok = false;
+            ex.printStackTrace();
+        }
+
+
+        //aprove the assertion from sam
+        apa = new AddPublisherAssertions();
+        apa.setAuthInfo(authInfoSam);
+        apa.getPublisherAssertion().add(new PublisherAssertion());
+        apa.getPublisherAssertion().get(0).setFromKey(joeBiz);
+        apa.getPublisherAssertion().get(0).setToKey(samBiz);
+        kr = new KeyedReference();
+        kr.setKeyName("Subsidiary");
+        kr.setKeyValue("parent-child");
+        kr.setTModelKey("uddi:uddi.org:relationships");
+        apa.getPublisherAssertion().get(0).setKeyedReference(kr);
+        publication.addPublisherAssertions(apa);
+        try {
+            List<AssertionStatusItem> assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_COMPLETE);
+            if (assertionStatusReport.isEmpty()) {
+                msg = "Stage2: no result returned, expected at least 1";
+                ok = false;
+            }
+            for (int i = 0; i < assertionStatusReport.size(); i++) {
+                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                    if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_COMPLETE)) {
+                        ok = false;
+                        msg = "Stage2: status type mismatch";
+                    }
+                }
+            }
+            //test to see what the status actually is
+            if (!ok) {
+                assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+                for (int i = 0; i < assertionStatusReport.size(); i++) {
+                    JAXB.marshal(assertionStatusReport.get(i), System.out);
+                    if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                        msg = "Stage3: status is " + assertionStatusReport.get(i).getCompletionStatus().toString() + " instead of complete";
+                    }
+                }
+
+                assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+                for (int i = 0; i < assertionStatusReport.size(); i++) {
+                    JAXB.marshal(assertionStatusReport.get(i), System.out);
+                    if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                        msg = "Stage3: status is " + assertionStatusReport.get(i).getCompletionStatus().toString() + " instead of complete";
+                    }
+                }
+                assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_BOTH_INCOMPLETE);
+                for (int i = 0; i < assertionStatusReport.size(); i++) {
+                    JAXB.marshal(assertionStatusReport.get(i), System.out);
+                    if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                        msg = "Stage3: status is " + assertionStatusReport.get(i).getCompletionStatus().toString() + " instead of complete";
+                    }
+                }
+
+            }
+        } catch (Exception ex) {
+            ok = false;
+            ex.printStackTrace();
+        }
+        List<String> biz = new ArrayList<String>();
+        biz.add(samBiz);
+        DeleteBusinesses(biz, authInfoSam);
+
+        biz = new ArrayList<String>();
+        biz.add(joeBiz);
+        DeleteBusinesses(biz, authInfoJoe);
+        Assert.assertTrue(msg, ok);
+
+
+    }
+
+    /**
+     * setups up a partial relationship and confirms its existence
+     *
+     * @throws Exception
+     */
+    @Test
+    public void JUDDI_590_1() throws Exception {
+        //create two businesses
+        System.out.println("JUDDI_590_1");
+
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        Name n = new Name();
+        n.setValue("JUDDI_590 Joe");
+        be.getName().add(n);
+        sb.getBusinessEntity().add(be);
+        String joeBiz = null;
+        try {
+            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+            joeBiz = saveBusiness.getBusinessEntity().get(0).getBusinessKey();
+            //DeleteBusiness db = new DeleteBusiness();
+            //db.setAuthInfo(authInfoJoe);
+            //db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            //publication.deleteBusiness(db);
+            //Assert.fail("request should have been rejected");
+        } catch (SOAPFaultException ex) {
+            HandleException(ex);
+        }
+
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = new BusinessEntity();
+        n = new Name();
+        n.setValue("JUDDI_590 Sam");
+        be.getName().add(n);
+        sb.getBusinessEntity().add(be);
+        String samBiz = null;
+        try {
+            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+            samBiz = saveBusiness.getBusinessEntity().get(0).getBusinessKey();
+            //DeleteBusiness db = new DeleteBusiness();
+            //db.setAuthInfo(authInfoJoe);
+            //db.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            //publication.deleteBusiness(db);
+            //Assert.fail("request should have been rejected");
+        } catch (SOAPFaultException ex) {
+            HandleException(ex);
+        }
+
+
+        //create an assertion on one end
+        AddPublisherAssertions apa = new AddPublisherAssertions();
+        apa.setAuthInfo(authInfoJoe);
+        apa.getPublisherAssertion().add(new PublisherAssertion());
+        apa.getPublisherAssertion().get(0).setFromKey(joeBiz);
+        apa.getPublisherAssertion().get(0).setToKey(samBiz);
+        KeyedReference kr = new KeyedReference();
+        kr.setKeyName("Subsidiary");
+        kr.setKeyValue("parent-child");
+        kr.setTModelKey("uddi:uddi.org:relationships");
+        apa.getPublisherAssertion().get(0).setKeyedReference(kr);
+        publication.addPublisherAssertions(apa);
+        //ok so joe has asserted that he knows sam
+
+        //check get status is not null from 1 and from 2
+        boolean ok = true;
+        String msg = "";
+        try {
+            List<AssertionStatusItem> assertionStatusReport = publication.getAssertionStatusReport(authInfoJoe, CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+            if (assertionStatusReport.isEmpty()) {
+                msg = "Stage1: no result returned, expected at least 1";
+                ok = false;
+            }
+            for (int i = 0; i < assertionStatusReport.size(); i++) {
+                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                    if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
+                        ok = false;
+                        msg = "Stage1: status type mismatch";
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ok = false;
+            ex.printStackTrace();
+        }
+        //check that sam got the message
+
+        try {
+            List<AssertionStatusItem> assertionStatusReport = publication.getAssertionStatusReport(authInfoSam, CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+            if (assertionStatusReport.isEmpty()) {
+                msg = "Stage2: no result returned, expected at least 1";
+                ok = false;
+            }
+            for (int i = 0; i < assertionStatusReport.size(); i++) {
+                JAXB.marshal(assertionStatusReport.get(i), System.out);
+                if (assertionStatusReport.get(i).getToKey().equals(samBiz)) {
+                    if (!assertionStatusReport.get(i).getCompletionStatus().equals(CompletionStatus.STATUS_TO_KEY_INCOMPLETE)) {
+                        ok = false;
+                        msg = "Stage2: status type mismatch";
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ok = false;
+            ex.printStackTrace();
+        }
+
+        List<String> biz = new ArrayList<String>();
+        biz.add(samBiz);
+        DeleteBusinesses(biz, authInfoSam);
+
+        biz = new ArrayList<String>();
+        biz.add(joeBiz);
+        DeleteBusinesses(biz, authInfoJoe);
+        Assert.assertTrue(msg, ok);
+
+
+    }
+
+    /**
+     *  //testing upper case subscription callbacks
+     *
+     * @throws Exception
+     */
+    @Test
+    public void JIRA_597() throws Exception {
+        System.out.println("JIRA_597");
+        int port = 4444;
+        String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+        UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+        UDDISubscriptionListenerImpl.notifcationMap.clear();
+        UDDISubscriptionListenerImpl.notificationCount = 0;
+        Endpoint ep = null;
+        boolean ok = false;
+        do {
+            try {
+                ep = Endpoint.publish("http://" + localhostname + ":" + port + "/UDDI_CALLBACK", impl);
+                ok = true;
+            } catch (Exception ex) {
+                port++;
+            }
+        } while (!ok);
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Joe's callback business");
+        be.setBusinessServices(new BusinessServices());
+        BusinessService bs = new BusinessService();
+        bs.getName().add(new Name());
+        bs.getName().get(0).setValue("Joe's callback service");
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setAccessPoint(new AccessPoint());
+        bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
+        bt.getAccessPoint().setUseType("endPoint");
+        //Added per Kurt
+        TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+        instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
+        bt.setTModelInstanceDetails(new TModelInstanceDetails());
+        bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
+
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.getBusinessServices().getBusinessService().add(bs);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+
+        //ok Joe's callback is setup
+
+        //Setup a business to subscribe to
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Sam's business");
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness1 = publication.saveBusiness(sb);
+
+        //ok Joe now needs to subscribe for Sam's business
+        Holder<List<Subscription>> list = new Holder<List<Subscription>>();
+        list.value = new ArrayList<Subscription>();
+        Subscription s = new Subscription();
+        s.setBindingKey(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+        s.setSubscriptionFilter(new SubscriptionFilter());
+        s.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+        s.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTimeInMillis(System.currentTimeMillis());
+        gcal.add(Calendar.HOUR, 1);
+        s.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+
+        s.setNotificationInterval(df.newDuration(5000));
+        list.value.add(s);
+        subscription.saveSubscription(authInfoJoe, list);
+
+        //ok have sam change his business around.
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = saveBusiness1.getBusinessEntity().get(0);
+        be.getName().get(0).setLang("en");
+        sb.getBusinessEntity().add(be);
+        publication.saveBusiness(sb);
+        int maxwait = 30000;
+        while (maxwait > 0) {
+            if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
+                break;
+            }
+            Thread.sleep(1000);
+            maxwait = maxwait - 1000;
+        }
+        if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
+            Assert.fail("no callbacks were recieved.");
+        }
+
+
+    }
+
+    /**
+     * testing callbacks with underfined transport type
+     *
+     * @throws Exception
+     */
+    @Test
+    public void JIRA_596() throws Exception {
+        System.out.println("JIRA_596");
+        int port = 4444;
+        String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+        UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+        UDDISubscriptionListenerImpl.notifcationMap.clear();
+        UDDISubscriptionListenerImpl.notificationCount = 0;
+        Endpoint ep = null;
+        boolean ok = false;
+        do {
+            try {
+                ep = Endpoint.publish("http://" + localhostname + ":" + port + "/UDDI_CALLBACK", impl);
+                ok = true;
+            } catch (Exception ex) {
+                port++;
+            }
+        } while (!ok);
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Joe's callback business");
+        be.setBusinessServices(new BusinessServices());
+        BusinessService bs = new BusinessService();
+        bs.getName().add(new Name());
+        bs.getName().get(0).setValue("Joe's callback service");
+        bs.setBindingTemplates(new BindingTemplates());
+        BindingTemplate bt = new BindingTemplate();
+        bt.setAccessPoint(new AccessPoint());
+        bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
+        bt.getAccessPoint().setUseType("endPoint");
+        //Added per Kurt
+        /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+         instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
+         bt.setTModelInstanceDetails(new TModelInstanceDetails());
+         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
+         */
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+
+        bs.getBindingTemplates().getBindingTemplate().add(bt);
+        be.getBusinessServices().getBusinessService().add(bs);
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+
+        //ok Joe's callback is setup
+
+        //Setup a business to subscribe to
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = new BusinessEntity();
+        be.getName().add(new Name());
+        be.getName().get(0).setValue("Sam's business");
+        sb.getBusinessEntity().add(be);
+        BusinessDetail saveBusiness1 = publication.saveBusiness(sb);
+
+        //ok Joe now needs to subscribe for Sam's business
+        Holder<List<Subscription>> list = new Holder<List<Subscription>>();
+        list.value = new ArrayList<Subscription>();
+        Subscription s = new Subscription();
+        s.setBindingKey(saveBusiness.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getBindingTemplates().getBindingTemplate().get(0).getBindingKey());
+        s.setSubscriptionFilter(new SubscriptionFilter());
+        s.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+        s.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        GregorianCalendar gcal = new GregorianCalendar();
+        gcal.setTimeInMillis(System.currentTimeMillis());
+        gcal.add(Calendar.HOUR, 1);
+        s.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+
+        s.setNotificationInterval(df.newDuration(5000));
+        list.value.add(s);
+        subscription.saveSubscription(authInfoJoe, list);
+
+        //ok have sam change his business around.
+        sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoSam);
+        be = saveBusiness1.getBusinessEntity().get(0);
+        be.getName().get(0).setLang("en");
+        sb.getBusinessEntity().add(be);
+        publication.saveBusiness(sb);
+        int maxwait = 30000;
+        while (maxwait > 0) {
+            if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
+                break;
+            }
+            Thread.sleep(1000);
+            maxwait = maxwait - 1000;
+        }
+        if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
+            Assert.fail("no callbacks were recieved.");
+        }
+
+
+    }
+
+    //once more without any relationship
     //TODO binding template tmodel instance info
     //TODO tmodel tests
     //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
@@ -628,11 +1122,17 @@ public class UDDI_141_JIRAIntegrationTest {
 
     private void DeleteBusinesses(List<String> businesskeysToDelete) {
 
+        DeleteBusinesses(businesskeysToDelete, authInfoJoe);
+
+    }
+
+    private void DeleteBusinesses(List<String> businesskeysToDelete, String authinfo) {
+
 
         //cleanup
         try {
             DeleteBusiness db = new DeleteBusiness();
-            db.setAuthInfo(authInfoJoe);
+            db.setAuthInfo(authinfo);
             db.getBusinessKey().addAll(businesskeysToDelete);
             publication.deleteBusiness(db);
         } catch (Exception ex) {

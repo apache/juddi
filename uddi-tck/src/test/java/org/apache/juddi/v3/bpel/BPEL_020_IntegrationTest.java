@@ -97,7 +97,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 	}
 	
 	@Test
-	public void parseWSDL_PortTypeTModels() throws WSDLException  {
+	public void parseWSDL_PortTypeTModels() throws WSDLException , Exception {
 		
 	    Definition wsdlDefinition = rw.readWSDL("uddi_data/bpel/riftsaw/bpel-technote.wsdl");
 		@SuppressWarnings("unchecked")
@@ -118,7 +118,7 @@ private static Log logger = LogFactory.getLog(BPEL_010_IntegrationTest.class);
 	
 	@Test
 	public void registerBPELProcess() throws WSDLException, ConfigurationException,
-		MalformedURLException, RemoteException, TransportException  {
+		MalformedURLException, RemoteException, TransportException, Exception  {
 		
 		UDDIClerk clerk = new UDDIClerk();
 		clerk.setManagerName(manager.getName());

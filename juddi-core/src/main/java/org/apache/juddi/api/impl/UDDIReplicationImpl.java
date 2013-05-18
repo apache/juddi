@@ -50,8 +50,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 
 	public String doPing(DoPing body) throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
-                long procTime = System.nanoTime() - startTime;
+	        long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ReplicationQuery.DO_PING, QueryStatus.SUCCESS, procTime);
 
 		ValidateReplication.unsupportedAPICall();
@@ -64,8 +64,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 			BigInteger responseLimitCount,
 			HighWaterMarkVectorType responseLimitVector)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
-                long procTime = System.nanoTime() - startTime;
+	        long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ReplicationQuery.GET_CHANGERECORDS, 
                         QueryStatus.SUCCESS, procTime);
 
@@ -76,8 +76,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 	public List<ChangeRecordIDType> getHighWaterMarks()
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
-                long procTime = System.nanoTime() - startTime;
+	        long startTime = System.currentTimeMillis();
+                long procTime = System.currentTimeMillis() - startTime;
                 serviceCounter.update(ReplicationQuery.GET_HIGHWATERMARKS, QueryStatus.SUCCESS, procTime);
 
 		ValidateReplication.unsupportedAPICall();
@@ -87,8 +87,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 	public void notifyChangeRecordsAvailable(NotifyChangeRecordsAvailable body)
 			throws DispositionReportFaultMessage {
-            long startTime = System.nanoTime();
-            long procTime = System.nanoTime() - startTime;
+            long startTime = System.currentTimeMillis();
+            long procTime = System.currentTimeMillis() - startTime;
             serviceCounter.update(ReplicationQuery.NOTIFY_CHANGERECORDSAVAILABLE, 
                     QueryStatus.SUCCESS, procTime);
 
@@ -98,8 +98,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
 	public void transferCustody(TransferCustody body)
 			throws DispositionReportFaultMessage {
-	    long startTime = System.nanoTime();
-            long procTime = System.nanoTime() - startTime;
+	    long startTime = System.currentTimeMillis();
+            long procTime = System.currentTimeMillis() - startTime;
             serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY, 
                     QueryStatus.SUCCESS, procTime);
 

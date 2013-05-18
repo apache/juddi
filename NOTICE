@@ -30,4 +30,7 @@ This product includes schemas and specification developed by Oasis:
 		followed, or as required to translate it into languages other than
 		English.
 
-
+This product includes files and components protected under the Open Font License.
+These fonts can only be distributed as part of a piece of software, but not individually. See the license for details.
+http://scripts.sil.org/OFL.  More information on included components for the jUDDI GUI are located
+within the source tree at juddi-gui/license

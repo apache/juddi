@@ -28,6 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.UDDIQuery;
 
+/**
+ * This class provides MBean functionality that offers metrics on UDDI service method invocations
+ * and various management functions (documented by Alex O'Ree)
+ * @author Tom Cunningham
+ */
 public class UDDIServiceCounter implements DynamicMBean, Serializable {
 
     private static Log log = LogFactory.getLog(UDDIServiceCounter.class);
@@ -146,6 +151,14 @@ public class UDDIServiceCounter implements DynamicMBean, Serializable {
 
     }
 
+    /**
+     * This updates the performance metrics for a given service.
+     * 
+     * Note, as of jUDDI 3.2, procTime MUST be in milliseconds. Prior to 3.2 used nanoseconds
+     * @param queryObject the item that was executed
+     * @param queryStatus success or fail status
+     * @param procTime Expects time in milliseconds
+     */
     public synchronized void update(UDDIQuery queryObject, QueryStatus queryStatus, 
             long procTime) {        
         //log.info("Updating " + queryObject.getQuery() + " time " + procTime);

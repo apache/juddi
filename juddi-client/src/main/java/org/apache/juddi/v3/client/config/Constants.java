@@ -17,10 +17,13 @@
 
 package org.apache.juddi.v3.client.config;
 
+import org.apache.juddi.v3.client.UDDIConstants;
+
 /**
  * Contains all the juddi client constants
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @see UDDIConstants
  */
 public class Constants {
 	

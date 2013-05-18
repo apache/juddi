@@ -105,7 +105,7 @@ public class JAXBMarshaller {
 		try {
 			JAXBContext jc = getContext(thePackage);
 			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
 			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -60,7 +60,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 	
 	public void discardAuthToken(DiscardAuthToken body)
 			throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 	    
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -77,11 +77,11 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			}
 	
 			tx.commit();
-                        long procTime = System.nanoTime() - startTime;
+                        long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 
@@ -105,7 +105,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 	
 	public AuthToken getAuthToken(String publisherId)
 	throws DispositionReportFaultMessage {
-	        long startTime = System.nanoTime();
+	        long startTime = System.currentTimeMillis();
 
 		if (publisherId == null || publisherId.length() == 0)
 			throw new UnknownUserException(new ErrorMessage("errors.auth.InvalidCredentials", publisherId));
@@ -138,13 +138,13 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
 
 			tx.commit();
-	                long procTime = System.nanoTime() - startTime;
+	                long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
 	                        QueryStatus.SUCCESS, procTime);
 
 			return apiAuthToken;
                 } catch (DispositionReportFaultMessage drfm) {
-                    long procTime = System.nanoTime() - startTime;
+                    long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
                             QueryStatus.FAILED, procTime);                      
                     throw drfm;                                                                                                 

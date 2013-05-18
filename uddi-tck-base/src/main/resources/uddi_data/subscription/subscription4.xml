@@ -51,7 +51,7 @@
       <tModelKey>uddi:garbage.key.7</tModelKey>
      </get_tModelDetail>
   </subscriptionFilter>
-  <bindingKey xmlns="urn:uddi-org:api_v3">bindingKeyOfTheClientsNotifySubscriptionListenerService</bindingKey>
+  <bindingKey xmlns="urn:uddi-org:api_v3"></bindingKey>
   <notificationInterval>P5D</notificationInterval>
   <maxEntities>5</maxEntities>
 </subscription>

@@ -1,0 +1,6 @@
+http://www.appelsiini.net/projects/jeditable
+by Mike Tuupola, see MIT license
+
+
+based on Editable by Dylan Verheul, see MIT license
+http://www.dyve.net/jquery/?editable

@@ -57,6 +57,11 @@ public class Name implements Serializable{
     @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;
 
+    /**
+     * A simple convenience constructor
+     * @param value max length is 255 chars
+     * @param lang max length is 26 chars
+     */
     public Name(String value, String lang) {
         this.value = value;
         this.lang = lang;

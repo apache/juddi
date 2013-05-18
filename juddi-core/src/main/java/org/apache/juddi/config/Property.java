@@ -1,7 +1,7 @@
 package org.apache.juddi.config;
 
 public interface Property {
-
+    public final static String JDDU_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
     public final static String JUDDI_ROOT_PUBLISHER = "juddi.root.publisher";
     public final static String JUDDI_LOAD_INSTALL_DATA = "juddi.load.install.data";
     public final static String JUDDI_PERSISTENCEUNIT_NAME = "juddi.persistenceunit.name";

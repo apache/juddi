@@ -1,0 +1,4 @@
+https://github.com/jdewit/bootstrap-timepicker
+http://jdewit.github.io/bootstrap-timepicker/
+
+MIT license

@@ -1,0 +1,3 @@
+Twitter's Boostrap is licensed under the Apache 2.0 license
+
+http://twitter.github.com/bootstrap/
