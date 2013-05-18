@@ -40,28 +40,28 @@ public class MockSSLSocketFactory extends SSLSocketFactory {
         super(trustStrategy, hostnameVerifier);
     }
     private static final X509HostnameVerifier hostnameVerifier = new X509HostnameVerifier() {
-        @Override
+        //@Override
         public void verify(String host, SSLSocket ssl) throws IOException {
             // Do nothing
         }
 
-        @Override
+        //@Override
         public void verify(String host, X509Certificate cert) throws SSLException {
             //Do nothing
         }
 
-        @Override
+        //@Override
         public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
             //Do nothing
         }
 
-        @Override
+        //@Override
         public boolean verify(String s, SSLSession sslSession) {
             return true;
         }
     };
     private static final TrustStrategy trustStrategy = new TrustStrategy() {
-        @Override
+        //@Override
         public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
             return true;
         }
