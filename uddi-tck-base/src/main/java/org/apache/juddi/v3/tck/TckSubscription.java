@@ -74,13 +74,16 @@ public class TckSubscription
 		this.security = security;
 	}
 
-	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,
-			String subscriptionKey) {
-		saveSubscription(authInfoJoe, subscriptionXML, subscriptionKey);
+	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,String subscriptionKey) {
+		saveSubscription(authInfoJoe, subscriptionXML, subscriptionKey, null);
 	}
 		
 	public void saveJoePublisherSubscription(String authInfoJoe) {
-		saveSubscription(authInfoJoe, JOE_SUBSCRIPTION_XML, JOE_SUBSCRIPTION_KEY);
+		saveSubscription(authInfoJoe, JOE_SUBSCRIPTION_XML, JOE_SUBSCRIPTION_KEY, null);
+	}
+         
+        public void saveJoePublisherSubscription(String authInfoJoe, String bindingkey) {
+		saveSubscription(authInfoJoe, JOE_SUBSCRIPTION_XML, JOE_SUBSCRIPTION_KEY, bindingkey);
 	}
 
 	public void deleteJoePublisherSubscription(String authInfoJoe) {
@@ -118,15 +121,15 @@ public class TckSubscription
 	}
 	
 	public void saveSamSyndicatorSubscription(String authInfoSam) {
-		saveSubscription(authInfoSam, SAM_SUBSCRIPTION_XML, SAM_SUBSCRIPTION_KEY);
+		saveSubscription(authInfoSam, SAM_SUBSCRIPTION_XML, SAM_SUBSCRIPTION_KEY, null);
 	}
 
 	public void saveSamSyndicatorSubscriptionWithChunkingOnFind(String authInfoSam) {
-		saveSubscription(authInfoSam, SAM_SUBSCRIPTION2_XML, SAM_SUBSCRIPTION2_KEY);
+		saveSubscription(authInfoSam, SAM_SUBSCRIPTION2_XML, SAM_SUBSCRIPTION2_KEY, null);
 	}
 
 	public void saveSamSyndicatorSubscriptionWithChunkingOnGet(String authInfoSam) {
-		saveSubscription(authInfoSam, SAM_SUBSCRIPTION3_XML, SAM_SUBSCRIPTION3_KEY);
+		saveSubscription(authInfoSam, SAM_SUBSCRIPTION3_XML, SAM_SUBSCRIPTION3_KEY, null);
 	}
 	
 	public void deleteSamSyndicatorSubscription(String authInfoSam) {
@@ -280,14 +283,15 @@ public class TckSubscription
 		
 	}
 	
-	public void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey) {
+	public void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey, String bindingkey) {
 		try {
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(subscriptionXML, "org.uddi.sub_v3");
 			List<Subscription> subscriptionList = new ArrayList<Subscription>();
                         subIn.setSubscriptionKey(subscriptionKey);
-                        if (subIn.getBindingKey()!=null && subIn.getBindingKey().length()==0){
-                                subIn.setBindingKey(null);
-                        }
+                       // if (subIn.getBindingKey()!=null && subIn.getBindingKey().length()==0){
+                         //       subIn.setBindingKey(null);
+                        //}
+                        subIn.setBindingKey(bindingkey);
 			subscriptionList.add(subIn);
 			Holder<List<Subscription>> subscriptionHolder = new Holder<List<Subscription>>();
 			subscriptionHolder.value = subscriptionList;

@@ -65,8 +65,8 @@ public class TckBusinessService
 		this.inquiry = inquiry;
 	}
 
-	public void saveJoePublisherService(String authInfoJoe) {
-		saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
+	public String saveJoePublisherService(String authInfoJoe) {
+		return saveService(authInfoJoe, JOE_SERVICE_XML, JOE_SERVICE_KEY);
 	}
 	
 	public void updateJoePublisherService(String authInfoJoe, String description) {
@@ -150,11 +150,11 @@ public class TckBusinessService
 		}
 	}
 	
-	public void saveService(String authInfo, String serviceXML, String serviceKey) {
-		saveService(authInfo, serviceXML, serviceKey, null);
+	public String saveService(String authInfo, String serviceXML, String serviceKey) {
+		return saveService(authInfo, serviceXML, serviceKey, null);
 	}
 	
-	public void saveService(String authInfo, String serviceXML, String serviceKey, String description) {
+	public String saveService(String authInfo, String serviceXML, String serviceKey, String description) {
 		try {
 			// First save the entity
 			SaveService ss = new SaveService();
@@ -179,13 +179,14 @@ public class TckBusinessService
 			TckValidator.checkDescriptions(bsIn.getDescription(), bsOut.getDescription());
 			TckValidator.checkBindingTemplates(bsIn.getBindingTemplates(), bsOut.getBindingTemplates());
 			TckValidator.checkCategories(bsIn.getCategoryBag(), bsOut.getCategoryBag());
-			
+                        if (bsOut.getBindingTemplates()!=null && !bsOut.getBindingTemplates().getBindingTemplate().isEmpty())
+                            return bsOut.getBindingTemplates().getBindingTemplate().get(0).getBindingKey();
 		}
 		catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown.");
 		}
-		
+		return null;
 	}
 	
 	public void saveService2(String authInfo, String serviceKey, String serviceXML2,  String serviceKey2) {
