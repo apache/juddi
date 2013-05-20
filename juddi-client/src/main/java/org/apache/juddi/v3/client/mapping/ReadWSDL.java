@@ -37,9 +37,10 @@ import com.ibm.wsdl.factory.WSDLFactoryImpl;
  */
 public class ReadWSDL {
 	
+        private boolean IgnoreSSLErrors = false;
 	private final Log log = LogFactory.getLog(this.getClass());
 	
-	public Definition readWSDL(String fileName) throws WSDLException {
+	public Definition readWSDL(String fileName) throws Exception {
             
 		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();
@@ -65,20 +66,34 @@ public class ReadWSDL {
          * @return a Definition object representing the WSDL
          * @throws WSDLException 
          */
-        public Definition readWSDL(URL wsdlUrl, String username, String password) throws WSDLException {
+        public Definition readWSDL(URL wsdlUrl, String username, String password) throws WSDLException, Exception {
 	
 		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
+                URI uri=null;
 		try {
-			URI uri = wsdlUrl.toURI();
-			WSDLLocator locator = new WSDLLocatorImpl(uri);
-			wsdlDefinition = reader.readWSDL(locator);
-		} catch (URISyntaxException e) {
+                        uri = wsdlUrl.toURI();
+                } catch (Exception e) {
 			log.error(e.getMessage(),e);
+                        throw new WSDLException("Unable to parse the URL", null, e);
+		}
+		WSDLLocatorImpl locator = new WSDLLocatorImpl(uri, username, password, IgnoreSSLErrors );
+                try{
+			wsdlDefinition = reader.readWSDL(locator);
+		} catch (Exception e) {
+                        log.error(e.getMessage(),e);
+                        if (locator.getLastException()!=null)
+                        {
+                            log.error(e.getMessage(),locator.getLastException());
+                            throw locator.getLastException();
+                        }
+                        throw e;
+                        //throw new WSDLException("Error loading from " + wsdlUrl.toString(), null, e);
 		}
 		return wsdlDefinition;
 	}
+        
         /**
          * Reads a WSDL file, assumes that credentials are not required. This is a convenience wrapper for
          * readWSDL(URL wsdlUrl, null, null, null)
@@ -86,9 +101,17 @@ public class ReadWSDL {
          * @return a Definition object representing the WSDL
          * @throws WSDLException 
          */
-	public Definition readWSDL(URL wsdlUrl) throws WSDLException {
+	public Definition readWSDL(URL wsdlUrl) throws Exception {
 		return readWSDL(wsdlUrl, null, null);
 	}
+
+    public boolean isIgnoreSSLErrors() {
+        return IgnoreSSLErrors;
+    }
+
+    public void setIgnoreSSLErrors(boolean IgnoreSSLErrors) {
+        this.IgnoreSSLErrors = IgnoreSSLErrors;
+    }
 	
 	
 	

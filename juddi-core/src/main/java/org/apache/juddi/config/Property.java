@@ -57,4 +57,8 @@ public interface Property {
     public final static String HBM_DDL_AUTO = "hibernate.hbm2ddl.auto";
     public final static String DEFAULT_SCHEMA = "hibernate.default_schema";
     public final static String HIBERNATE_DIALECT = "hibernate.dialect";
+    /**
+     * @since 3.2
+     */
+    public final static String JUDDI_FINE_GRAIN_ACCESS_CONTROL_PROVIDER = "juddi.fineGrainAccessControlProvider";
 }

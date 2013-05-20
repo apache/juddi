@@ -41,7 +41,7 @@ public class WSDL2UDDITest {
 	ReadWSDL rw = new ReadWSDL();
 	
 	@Test
-	public void testUDDIBindingModel() throws WSDLException, JAXBException, ConfigurationException {
+	public void testUDDIBindingModel() throws WSDLException, JAXBException, ConfigurationException , Exception{
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");
@@ -64,7 +64,7 @@ public class WSDL2UDDITest {
 	}
 	
 	@Test
-	public void testWSDLBindingModel() throws WSDLException, JAXBException, ConfigurationException {
+	public void testWSDLBindingModel() throws WSDLException, JAXBException, ConfigurationException, Exception {
 
 		// Reading the WSDL
 		Definition wsdlDefinition = rw.readWSDL("wsdl/HelloWorld.wsdl");

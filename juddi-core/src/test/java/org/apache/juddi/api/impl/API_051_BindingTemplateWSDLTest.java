@@ -81,7 +81,7 @@ public class API_051_BindingTemplateWSDLTest
 	}
 	
 	@Test 
-	public void testDirectCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException {
+	public void testDirectCall() throws ConfigurationException, WSDLException, RemoteException, TransportException, MalformedURLException, Exception {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
 			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
