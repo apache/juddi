@@ -2,7 +2,7 @@
 
 <uddi>
     <reloadDelay>5000</reloadDelay>
-    <manager name="example-manager">
+    <client name="example-client">
         <nodes>
             <node>
                 <!-- required 'default' node -->
@@ -23,5 +23,5 @@
                 <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
             </node>
         </nodes>
-    </manager>
+    </client>
 </uddi>
