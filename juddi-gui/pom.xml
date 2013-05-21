@@ -94,6 +94,7 @@
                                     <artifactId>juddi-gui-dsig</artifactId>
                                     <classifier>jar-with-dependencies</classifier>
                                     <overWrite>true</overWrite>
+                                    <destFileName>juddi-gui-dsig-all.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/juddi-gui/applets</outputDirectory>
