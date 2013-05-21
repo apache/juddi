@@ -42,6 +42,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
@@ -51,7 +53,6 @@ import org.apache.juddi.webconsole.PostBackConstants;
 import org.apache.juddi.webconsole.hub.builders.Builders;
 import org.apache.juddi.webconsole.hub.builders.Printers;
 import org.apache.juddi.webconsole.resources.ResourceLoader;
-import org.apache.log4j.Level;
 import org.uddi.api_v3.*;
 import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.custody_v3.TransferEntities;
@@ -88,7 +89,7 @@ public class UddiHub {
      * The Log4j logger. This is also referenced from the Builders class, thus
      * it is public
      */
-    public static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(LOGGER_NAME);
+    public static final Log log = LogFactory.getLog(LOGGER_NAME);
     private DatatypeFactory df;
 
     private UddiHub() throws DatatypeConfigurationException {
@@ -1064,15 +1065,15 @@ public class UddiHub {
     private String HandleException(Exception ex) {
         if (ex instanceof DispositionReportFaultMessage) {
             DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-            log.log(Level.ERROR, null, ex);
+            log.error( null, ex);
             return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
         if (ex instanceof RemoteException) {
             RemoteException f = (RemoteException) ex;
-            log.log(Level.ERROR, null, ex);
+            log.error( null, ex);
             return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
-        log.log(Level.ERROR, null, ex);
+        log.error( null, ex);
         return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
                 ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
         //+ "</h3></div>";

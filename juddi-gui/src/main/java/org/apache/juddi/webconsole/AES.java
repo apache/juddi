@@ -22,8 +22,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * <summary> This program uses a AES key, retrieves its raw bytes, and then
@@ -35,7 +37,7 @@ import org.apache.log4j.Logger;
 public class AES {
 
     public static final String logname = "org.apache.juddi.gui";
-    public static final Logger log = Logger.getLogger(logname);
+    public static final Log log = LogFactory.getLog(logname);
 
     /**
      * Turns array of bytes into string
@@ -96,7 +98,7 @@ public class AES {
             byte[] raw = skey.getEncoded();
             return asHex(raw);
         } catch (Exception ex) {
-            log.log(Level.FATAL, "error generating key", ex);
+            log.fatal("error generating key", ex);
         }
         return null;
     }
@@ -121,49 +123,49 @@ public class AES {
         if (url == null) {
             try {
                 url = Thread.currentThread().getContextClassLoader().getResource(FileName);
-                log.log(Level.DEBUG, "8 file loaded  from " + url.toString());
+                log.debug( "8 file loaded  from " + url.toString());
             } catch (Exception ex) {
-                log.log(Level.DEBUG, "not found", ex);
+                log.debug( "not found", ex);
             }
         }
         if (url == null) {
             try {
                 url = Thread.currentThread().getContextClassLoader().getResource("/" + FileName);
-                log.log(Level.DEBUG, "7 file loaded  from " + url.toString());
+                log.debug( "7 file loaded  from " + url.toString());
             } catch (Exception ex) {
-                log.log(Level.DEBUG, "not found", ex);
+                log.debug( "not found", ex);
             }
         }
 
         if (url == null) {
             try {
                 url = new URL(FileName);
-                log.log(Level.DEBUG, "1 file loaded  from " + url.toString());
+                log.debug( "1 file loaded  from " + url.toString());
             } catch (Exception ex) {
-                log.log(Level.DEBUG, "not found", ex);
+                log.debug( "not found", ex);
             }
         }
 
         if (url == null) {
             try {
                 url = this.getClass().getClassLoader().getResource(FileName);
-                log.log(Level.DEBUG, "3 file loaded  from " + url.toString());
+                log.debug( "3 file loaded  from " + url.toString());
             } catch (Exception ex) {
-                log.log(Level.DEBUG, "not found", ex);
+                log.debug( "not found", ex);
             }
         }
         if (url == null) {
             try {
                 url = this.getClass().getClassLoader().getResource("/" + FileName);
-                log.log(Level.DEBUG, "3 file loaded  from " + url.toString());
+                log.debug( "3 file loaded  from " + url.toString());
             } catch (Exception ex) {
-                log.log(Level.DEBUG, "not found", ex);
+                log.debug( "not found", ex);
             }
         }
         try {
             return url.toURI();
         } catch (URISyntaxException ex) {
-            log.log(Level.DEBUG, null, ex);
+            log.debug( null, ex);
         }
         return null;
     }
@@ -203,10 +205,10 @@ public class AES {
         } catch (Exception e) {
         }
         if (key != null) {
-            log.log(Level.DEBUG, "key loaded from file");
+            log.debug( "key loaded from file");
             return key;
         } else {
-            log.log(Level.DEBUG, "default encryption key loaded.");
+            log.debug( "default encryption key loaded.");
             return something2;
         }
     }
@@ -257,7 +259,7 @@ public class AES {
             }
             return false;
         } catch (Exception ex) {
-            log.log(Level.WARN, null, ex);
+            log.warn( null, ex);
             return false;
         }
     }
@@ -276,7 +278,7 @@ public class AES {
         try {
             return AES.EN(clear, key);
         } catch (Exception ex) {
-            Logger.getLogger(logname).log(Level.FATAL, "Cannot encrypt sensitive information! Check to make sure the unlimited strength JCE is installed " + ex.getMessage());
+            log.fatal("Cannot encrypt sensitive information! Check to make sure the unlimited strength JCE is installed " + ex.getMessage());
         }
         return "";
     }
@@ -297,7 +299,7 @@ public class AES {
         try {
             return AES.DE(cipher, key);
         } catch (Exception ex) {
-            Logger.getLogger(logname).log(Level.FATAL, "trouble decrypting data, check to make sure the unlimited strength JCE is installed. If this error occured during deployment, I'll automatically try a smaller key size. " + ex.getMessage());
+            log.fatal("trouble decrypting data, check to make sure the unlimited strength JCE is installed. If this error occured during deployment, I'll automatically try a smaller key size. " + ex.getMessage());
         }
         return cipher;
 

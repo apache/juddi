@@ -18,22 +18,22 @@
         <mime-type>application/x-font-woff</mime-type>
     </mime-mapping>    
     <error-page>
-        <description>Missing login</description>
+        <!-- <description>Missing login</description> -->
         <error-code>401</error-code>
         <location>/error.jsp</location>
     </error-page>
     <error-page>
-        <description>Forbidden directory listing</description>
+        <!-- <description>Forbidden directory listing</description> -->
         <error-code>403</error-code>
         <location>/error.jsp</location>
     </error-page>
     <error-page>
-        <description>Uncaught exception</description>
+        <!-- <description>Uncaught exception</description> -->
         <error-code>500</error-code>
         <location>/error.jsp</location>
     </error-page>
     <error-page>
-        <description>Unsupported servlet method</description>
+        <!-- <description>Unsupported servlet method</description> -->
         <error-code>503</error-code>
         <location>/error.jsp</location>
     </error-page>

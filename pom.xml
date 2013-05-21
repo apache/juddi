@@ -267,6 +267,7 @@
 		<module>juddiv3-war</module>
 		<module>juddi-examples</module>
 		<module>juddi-gui-dsig</module>
+		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
 	</modules>
