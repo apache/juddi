@@ -16,7 +16,7 @@
 		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddi-gui-dsig</artifactId>
-	<name>jUDDI Client side Code</name>
+	<name>jUDDI Web Client Digital Signature Applet</name>
 
 	<build>
 		<finalName>${artifactId}-${version}</finalName>

@@ -71,9 +71,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Provides a Java web applet that digitally signs UDDI xml
+ *
  * @author Alex O'Ree
  */
 public class XmlSignatureApplet extends java.applet.Applet {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -149,6 +151,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
     }
 
+    
     public String getStringFromDoc(org.w3c.dom.Document doc) {
         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
         LSSerializer lsSerializer = domImplementation.createLSSerializer();
@@ -233,6 +236,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
             jList1.setSelectedIndex(0);
         }
     }
+    
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
 
     private void signDOM(Node node, PrivateKey privateKey, Certificate origCert) {
@@ -292,7 +296,20 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
+        String signedXml = "error!";
+        try {
+            if (keyStore == null || keyStore.size() == 0) {
+                signedXml = "Unforunately, it looks as if you don't have any certificates to choose from.";
+                return;
+            }
+        } catch (Exception ex) {
+            signedXml = "Unforunately, it looks as if you don't have any certificates to choose from.";
+            return;
+        }
+        if (jList1.getSelectedValue() == null) {
+            signedXml = "You must pick a certificate first";
+            return;
+        }
         JSObject window = JSObject.getWindow(this);
         Object object2 = window.call("getBrowserName", null);
         Object object1 = window.call("getOsName", null);
@@ -330,7 +347,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
             }
         }
 
-        String signedXml = "error!";
+
         if (j != null) {
             try {
                 //sign it
@@ -348,7 +365,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
                 signedXml = sw.toString();
             } catch (Exception ex) {
                 Logger.getLogger(XmlSignatureApplet.class.getName()).log(Level.SEVERE, null, ex);
-                signedXml = ex.getMessage();
+                signedXml = "Sorry I couldn't sign the data. " + ex.getMessage();
             }
         } else {
             signedXml = "Unable to determine which type of object that we're signing";
