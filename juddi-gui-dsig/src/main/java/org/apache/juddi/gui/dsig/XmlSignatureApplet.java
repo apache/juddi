@@ -191,8 +191,8 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
                 String strCfg = System.getProperty("user.home") + File.separator
                         + "jdk6-nss-mozilla.cfg";
-                Provider p1 = new sun.security.pkcs11.SunPKCS11(strCfg);
-                Security.addProvider(p1);
+             //   Provider p1 = new sun.security.pkcs11.SunPKCS11(strCfg);
+             //   Security.addProvider(p1);
                 keyStore = KeyStore.getInstance("PKCS11");
                 keyStore.load(null, "password".toCharArray());
             } catch (Exception ex) {
