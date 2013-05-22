@@ -18,9 +18,6 @@
 	<packaging>war</packaging>
 	<name>jUDDI GUI war construction</name>
 	<url>http://juddi.apache.org</url>
-	<properties>
-		<cxf.version>2.3.1</cxf.version>
-	</properties>
 	<dependencies>
 		<dependency>
             <groupId>org.apache.juddi</groupId>

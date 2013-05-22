@@ -25,9 +25,6 @@
   <artifactId>juddi-client</artifactId>
   <packaging>bundle</packaging>
   <name>jUDDI Client side Code</name>
-  <properties>
-    <cxf.version>2.3.6</cxf.version>
-  </properties>
 
   <dependencies>
     <dependency>
