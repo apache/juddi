@@ -248,7 +248,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
             custodyTransferPortType.getTransferToken(authInfoJoe, kb, nodeidOUT, expiresOUT, tokenOUT);
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+    //        HandleException(ex);
         }
 
     }
@@ -267,7 +267,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+      //      HandleException(ex);
         }
 
     }
@@ -306,7 +306,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+        //    HandleException(ex);
         }
 
     }
@@ -376,7 +376,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
             custodyTransferPortType.transferEntities(te);
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+          //  HandleException(ex);
         }
 
     }
@@ -394,11 +394,12 @@ public class UDDI_150_CustodyTransferIntegrationTest {
             custodyTransferPortType.getTransferToken(authInfoJoe, kb, nodeidOUT, expiresOUT, tokenOUT);
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+            //HandleException(ex);
         }
     }
 
     @Test
     public void ExpiredTransferToken() {
+        //TODO
     }
 }

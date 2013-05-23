@@ -180,6 +180,8 @@ public class ValidateCustodyTransfer extends ValidateUDDIApi {
 		Collections.sort(apiKeyList);
 		Collections.sort(modelKeyList);
 		int count = 0;
+                if (modelKeyList.size()!=apiKeyList.size())
+                    throw new TransferNotAllowedException(new ErrorMessage("errors.transferentities.KeySizeMismatch"));
 		for (String key : apiKeyList) {
 			// Per section 4.4: keys must be case-folded
 			key = key.toLowerCase();
