@@ -33,12 +33,20 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.AddPublisherAssertions;
 import org.uddi.api_v3.BusinessEntity;
+import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.CompletionStatus;
+import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.GetAssertionStatusReport;
+import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
+import org.uddi.api_v3.PublisherAssertion;
 import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
 import org.uddi.sub_v3.CoveragePeriod;
 import org.uddi.sub_v3.GetSubscriptionResults;
 import org.uddi.sub_v3.Subscription;
@@ -193,6 +201,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
      */
     @Test
     public void JUDDI_606_1() {
+        System.out.println("JUDDI_606_1");
         // Null expiration time
 
         Subscription sub = new Subscription();
@@ -220,6 +229,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_2() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_2");
         // invalid expiration time
         DatatypeFactory df = DatatypeFactory.newInstance();
         GregorianCalendar gcal = new GregorianCalendar();
@@ -251,6 +261,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_3() {
+        System.out.println("JUDDI_606_3");
         //confirm a subscription key is returned when not specified
 
         Subscription sub = new Subscription();
@@ -278,6 +289,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_4() {
+        System.out.println("JUDDI_606_4");
         //null subscription filter
 
         Subscription sub = new Subscription();
@@ -300,6 +312,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_5() {
+        System.out.println("JUDDI_606_5");
         //empty subscription filter
 
         Subscription sub = new Subscription();
@@ -323,6 +336,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_6() {
+        System.out.println("JUDDI_606_6");
         //negative max entities
 
         Subscription sub = new Subscription();
@@ -349,12 +363,43 @@ public class UDDI_080_SubscriptionIntegrationTest {
     }
 
     @Test
-    public void JUDDI_606_7() {
-        //minimal settings 
+    public void JUDDI_606_7() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_7");
+        //more filters that expected
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        try {
+
+            Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+            data.value = new ArrayList<Subscription>();
+            Subscription sub = new Subscription();
+            sub.setBrief(false);
+            sub.setExpiresAfter(null);
+            sub.setMaxEntities(null);
+            sub.setNotificationInterval(null);
+            sub.setBindingKey(null);
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            sub.getSubscriptionFilter().setFindBusiness(new FindBusiness());
+            sub.getSubscriptionFilter().getFindBusiness().setFindQualifiers(new FindQualifiers());
+            sub.getSubscriptionFilter().getFindBusiness().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+            sub.getSubscriptionFilter().getFindBusiness().getName().add(new Name("%", null));
+            sub.getSubscriptionFilter().setFindService(new FindService());
+            sub.getSubscriptionFilter().getFindService().setFindQualifiers(new FindQualifiers());
+            sub.getSubscriptionFilter().getFindService().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+            sub.getSubscriptionFilter().getFindService().getName().add(new Name("%", null));
+
+            data.value.add(sub);
+
+            tckSubscription.subscription.saveSubscription(authInfoJoe, data);
+            Assert.fail();
+        } catch (Exception ex) {
+            HandleException(ex);
+
+        }
     }
 
     @Test
     public void JUDDI_606_8() {
+        System.out.println("JUDDI_606_8");
         //reset expiration
 
         try {
@@ -395,6 +440,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_9() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_9");
         //asynch subscriptions , key doesn't exist
 
         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -426,6 +472,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_10() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_10");
         //asynch subscriptions, key exists , null interval
 
         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -456,6 +503,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_11() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_11");
         //set subscription, make a change as the same user, get subscription results
         //no key specified
         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -505,6 +553,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_12() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_12");
         //set subscription, make a change as the same user, get subscription results
         //no period specified
 
@@ -547,6 +596,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void JUDDI_606_13() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_13");
         //set subscription, make a change as the same user, get subscription results
         //valid find_Business
         DatatypeFactory df = DatatypeFactory.newInstance();
@@ -594,7 +644,289 @@ public class UDDI_080_SubscriptionIntegrationTest {
             Assert.assertNotNull(subscriptionResults.getBusinessList().getBusinessInfos().getBusinessInfo().get(0));
             Assert.assertNotNull(subscriptionResults.getBusinessList().getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
             Assert.assertNotNull(subscriptionResults.getBusinessList().getBusinessInfos().getBusinessInfo().get(0).getName().get(0));
-            
+
+        } catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail();
+        }
+    }
+
+    public void JUDDI_606_14() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_14");
+        //set subscription, make a change as the same user, get subscription results
+        //valid find_services
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        try {
+
+            Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+            data.value = new ArrayList<Subscription>();
+            Subscription sub = new Subscription();
+            sub.setBrief(false);
+            sub.setExpiresAfter(null);
+            sub.setMaxEntities(null);
+            sub.setNotificationInterval(null);
+            sub.setBindingKey(null);
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            sub.getSubscriptionFilter().setFindService(new FindService());
+            sub.getSubscriptionFilter().getFindService().setFindQualifiers(new FindQualifiers());
+            sub.getSubscriptionFilter().getFindService().getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+            sub.getSubscriptionFilter().getFindService().getName().add(new Name("%", null));
+            data.value.add(sub);
+
+            tckSubscription.subscription.saveSubscription(authInfoJoe, data);
+            SaveService sb = new SaveService();
+            sb.setAuthInfo(authInfoJoe);
+            BusinessService bs = new BusinessService();
+            bs.getName().add(new Name("svc", null));
+            sb.getBusinessService().add(bs);
+            publication.saveService(sb);
+
+            GetSubscriptionResults gsr = new GetSubscriptionResults();
+            gsr.setAuthInfo(authInfoJoe);
+            gsr.setSubscriptionKey(data.value.get(0).getSubscriptionKey());
+            gsr.setCoveragePeriod(new CoveragePeriod());
+            GregorianCalendar gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gcal.add(Calendar.HOUR, -1);
+            gsr.getCoveragePeriod().setStartPoint(df.newXMLGregorianCalendar(gcal));
+            gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gsr.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
+            SubscriptionResultsList subscriptionResults = tckSubscription.subscription.getSubscriptionResults(gsr);
+            Assert.assertNotNull(subscriptionResults);
+            Assert.assertNull(subscriptionResults.getBusinessList());
+            Assert.assertNotNull(subscriptionResults.getCoveragePeriod());
+            Assert.assertNotNull(subscriptionResults.getServiceList());
+            Assert.assertNotNull(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(0));
+            Assert.assertNotNull(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(0).getBusinessKey());
+            Assert.assertNotNull(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(0).getName().get(0));
+
+        } catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail();
+        }
+    }
+
+    public void JUDDI_606_15() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_15");
+        //set subscription, make a change as the same user, get subscription results
+        //valid publisher assertion, incomplete
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        try {
+
+            Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+            data.value = new ArrayList<Subscription>();
+            Subscription sub = new Subscription();
+            sub.setBrief(false);
+            sub.setExpiresAfter(null);
+            sub.setMaxEntities(null);
+            sub.setNotificationInterval(null);
+            sub.setBindingKey(null);
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+            sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+            data.value.add(sub);
+
+            tckSubscription.subscription.saveSubscription(authInfoJoe, data);
+
+            AddPublisherAssertions r = new AddPublisherAssertions();
+            r.setAuthInfo(authInfoJoe);
+            PublisherAssertion pa = new PublisherAssertion();
+            pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+            pa.setToKey(TckBusiness.SAM_BUSINESS_KEY);
+            pa.setKeyedReference(new KeyedReference());
+            pa.getKeyedReference().setKeyName("Subsidiary");
+            pa.getKeyedReference().setKeyValue("parent-child");
+
+            pa.getKeyedReference().setTModelKey("uddi:uddi.org:relationships");
+
+            r.getPublisherAssertion().add(pa);
+            publication.addPublisherAssertions(r);
+
+            GetSubscriptionResults gsr = new GetSubscriptionResults();
+            gsr.setAuthInfo(authInfoJoe);
+            gsr.setSubscriptionKey(data.value.get(0).getSubscriptionKey());
+            gsr.setCoveragePeriod(new CoveragePeriod());
+            GregorianCalendar gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gcal.add(Calendar.HOUR, -1);
+            gsr.getCoveragePeriod().setStartPoint(df.newXMLGregorianCalendar(gcal));
+            gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gsr.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
+            SubscriptionResultsList subscriptionResults = tckSubscription.subscription.getSubscriptionResults(gsr);
+            Assert.assertNotNull(subscriptionResults);
+            Assert.assertNull(subscriptionResults.getBusinessList());
+            Assert.assertNotNull(subscriptionResults.getCoveragePeriod());
+            Assert.assertNull(subscriptionResults.getServiceList());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem());
+            Assert.assertFalse(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().isEmpty());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getFromKey(), TckBusiness.JOE_BUSINESS_KEY);
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getToKey(), TckBusiness.SAM_BUSINESS_KEY);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getKeyedReference());
+        } catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail();
+        }
+    }
+
+    public void JUDDI_606_16() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_16");
+        //set subscription, make a change as the same user, get subscription results
+        //valid publisher assertion, complete
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        try {
+
+            Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+            data.value = new ArrayList<Subscription>();
+            Subscription sub = new Subscription();
+            sub.setBrief(false);
+            sub.setExpiresAfter(null);
+            sub.setMaxEntities(null);
+            sub.setNotificationInterval(null);
+            sub.setBindingKey(null);
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+            sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_COMPLETE);
+            data.value.add(sub);
+
+            tckSubscription.subscription.saveSubscription(authInfoJoe, data);
+
+            AddPublisherAssertions r = new AddPublisherAssertions();
+            r.setAuthInfo(authInfoJoe);
+            PublisherAssertion pa = new PublisherAssertion();
+            pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+            pa.setToKey(TckBusiness.SAM_BUSINESS_KEY);
+            pa.setKeyedReference(new KeyedReference());
+            pa.getKeyedReference().setKeyName("Subsidiary");
+            pa.getKeyedReference().setKeyValue("parent-child");
+            pa.getKeyedReference().setTModelKey("uddi:uddi.org:relationships");
+            r.getPublisherAssertion().add(pa);
+            publication.addPublisherAssertions(r);
+
+
+            r = new AddPublisherAssertions();
+            r.setAuthInfo(authInfoSam);
+            pa = new PublisherAssertion();
+            pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+            pa.setToKey(TckBusiness.SAM_BUSINESS_KEY);
+            pa.setKeyedReference(new KeyedReference());
+            pa.getKeyedReference().setKeyName("Subsidiary");
+            pa.getKeyedReference().setKeyValue("parent-child");
+            pa.getKeyedReference().setTModelKey("uddi:uddi.org:relationships");
+            r.getPublisherAssertion().add(pa);
+            publication.addPublisherAssertions(r);
+
+
+
+            GetSubscriptionResults gsr = new GetSubscriptionResults();
+            gsr.setAuthInfo(authInfoJoe);
+            gsr.setSubscriptionKey(data.value.get(0).getSubscriptionKey());
+            gsr.setCoveragePeriod(new CoveragePeriod());
+            GregorianCalendar gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gcal.add(Calendar.HOUR, -1);
+            gsr.getCoveragePeriod().setStartPoint(df.newXMLGregorianCalendar(gcal));
+            gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gsr.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
+            SubscriptionResultsList subscriptionResults = tckSubscription.subscription.getSubscriptionResults(gsr);
+            Assert.assertNotNull(subscriptionResults);
+            Assert.assertNull(subscriptionResults.getBusinessList());
+            Assert.assertNotNull(subscriptionResults.getCoveragePeriod());
+            Assert.assertNull(subscriptionResults.getServiceList());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem());
+            Assert.assertFalse(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().isEmpty());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getFromKey(), TckBusiness.JOE_BUSINESS_KEY);
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getToKey(), TckBusiness.SAM_BUSINESS_KEY);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus(), CompletionStatus.STATUS_COMPLETE);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getKeyedReference());
+        } catch (Exception ex) {
+            HandleException(ex);
+            Assert.fail();
+        }
+    }
+
+    public void JUDDI_606_17() throws DatatypeConfigurationException {
+        System.out.println("JUDDI_606_17");
+        //set subscription, make a change as the same user, get subscription results
+        //valid publisher assertion, deleted
+        DatatypeFactory df = DatatypeFactory.newInstance();
+        try {
+
+            Holder<List<Subscription>> data = new Holder<List<Subscription>>();
+            data.value = new ArrayList<Subscription>();
+            Subscription sub = new Subscription();
+            sub.setBrief(false);
+            sub.setExpiresAfter(null);
+            sub.setMaxEntities(null);
+            sub.setNotificationInterval(null);
+            sub.setBindingKey(null);
+            sub.setSubscriptionFilter(new SubscriptionFilter());
+            sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
+            sub.getSubscriptionFilter().getGetAssertionStatusReport().setCompletionStatus(CompletionStatus.STATUS_BOTH_INCOMPLETE);
+            data.value.add(sub);
+
+            tckSubscription.subscription.saveSubscription(authInfoJoe, data);
+
+            AddPublisherAssertions r = new AddPublisherAssertions();
+            r.setAuthInfo(authInfoJoe);
+            PublisherAssertion pa = new PublisherAssertion();
+            pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+            pa.setToKey(TckBusiness.SAM_BUSINESS_KEY);
+            pa.setKeyedReference(new KeyedReference());
+            pa.getKeyedReference().setKeyName("Subsidiary");
+            pa.getKeyedReference().setKeyValue("parent-child");
+            pa.getKeyedReference().setTModelKey("uddi:uddi.org:relationships");
+            r.getPublisherAssertion().add(pa);
+            publication.addPublisherAssertions(r);
+
+            //approve it
+            r = new AddPublisherAssertions();
+            r.setAuthInfo(authInfoSam);
+            r.getPublisherAssertion().add(pa);
+            publication.addPublisherAssertions(r);
+
+            DeletePublisherAssertions dp = new DeletePublisherAssertions();
+            dp.setAuthInfo(authInfoJoe);
+            dp.getPublisherAssertion().add(pa);
+            publication.deletePublisherAssertions(dp);
+
+            dp = new DeletePublisherAssertions();
+            dp.setAuthInfo(authInfoSam);
+            dp.getPublisherAssertion().add(pa);
+            publication.deletePublisherAssertions(dp);
+
+
+            GetSubscriptionResults gsr = new GetSubscriptionResults();
+            gsr.setAuthInfo(authInfoJoe);
+            gsr.setSubscriptionKey(data.value.get(0).getSubscriptionKey());
+            gsr.setCoveragePeriod(new CoveragePeriod());
+            GregorianCalendar gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gcal.add(Calendar.HOUR, -1);
+            gsr.getCoveragePeriod().setStartPoint(df.newXMLGregorianCalendar(gcal));
+            gcal = new GregorianCalendar();
+            gcal.setTimeInMillis(System.currentTimeMillis());
+            gsr.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
+            SubscriptionResultsList subscriptionResults = tckSubscription.subscription.getSubscriptionResults(gsr);
+            Assert.assertNotNull(subscriptionResults);
+            Assert.assertNull(subscriptionResults.getBusinessList());
+            Assert.assertNotNull(subscriptionResults.getCoveragePeriod());
+            Assert.assertNull(subscriptionResults.getServiceList());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport());
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem());
+            Assert.assertFalse(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().isEmpty());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getFromKey(), TckBusiness.JOE_BUSINESS_KEY);
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getToKey(), TckBusiness.SAM_BUSINESS_KEY);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus());
+            Assert.assertEquals(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getCompletionStatus(), CompletionStatus.STATUS_BOTH_INCOMPLETE);
+            Assert.assertNotNull(subscriptionResults.getAssertionStatusReport().getAssertionStatusItem().get(0).getKeyedReference());
         } catch (Exception ex) {
             HandleException(ex);
             Assert.fail();

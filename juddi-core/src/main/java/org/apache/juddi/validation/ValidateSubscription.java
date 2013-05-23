@@ -219,7 +219,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
             if (filterCount == 0) {
                 throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.BlankFilter"));
             }
-
+            //the spec defines subscription filters as a switch, exactly one is required
             if (filterCount > 1) {
                 throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.TooManyFilters", String.valueOf(filterCount)));
             }
