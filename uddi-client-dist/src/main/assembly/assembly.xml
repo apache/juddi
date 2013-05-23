@@ -32,11 +32,11 @@
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
-                <exclude>org.apache.juddi:uddi-tc:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-tck:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
-                <exclude>org.apache.juddi:uddi-tc:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-tck:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
             </excludes>
@@ -67,7 +67,7 @@
 			<outputDirectory>src</outputDirectory>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
-				<include>org.apache.juddi:uddi-tc:jar:sources</include>
+				<include>org.apache.juddi:uddi-tck:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
 			</includes>
