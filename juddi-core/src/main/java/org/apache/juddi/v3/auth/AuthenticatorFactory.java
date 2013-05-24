@@ -39,7 +39,7 @@ public class AuthenticatorFactory {
 	private static Authenticator auth = null;
 
 
-	/*
+	/**
 	 * Returns a new instance of a AuthenticatorFactory.
 	 * 
 	 * @return Authenticator
@@ -50,7 +50,7 @@ public class AuthenticatorFactory {
 		return auth;
 	}
 
-	/*
+	/**
 	 * Returns a new instance of a Authenticator.
 	 * 
 	 * @return Authenticator

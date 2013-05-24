@@ -25,6 +25,9 @@ public interface Property {
     public final static String JUDDI_ROOT_PARTITION = "juddi.rootPartition";
     public final static String JUDDI_NODE_ID = "juddi.nodeId";
     public final static String JUDDI_TRANSFER_EXPIRATION_DAYS = "juddi.transfer.expiration.days";
+    /**
+     * identifies whether or not authentication is required for the Inquiry endpoint
+     */
     public final static String JUDDI_AUTHENTICATE_INQUIRY = "juddi.authenticate.Inquiry";
     public final static String JUDDI_AUTH_TOKEN_EXPIRATION = "juddi.auth.token.Expiration";
     public final static String JUDDI_AUTH_TOKEN_TIMEOUT = "juddi.auth.token.Timeout";
@@ -60,5 +63,5 @@ public interface Property {
     /**
      * @since 3.2
      */
-    public final static String JUDDI_FINE_GRAIN_ACCESS_CONTROL_PROVIDER = "juddi.fineGrainAccessControlProvider";
+    public final static String JUDDI_ACCESS_CONTROL_PROVIDER = "juddi.accessControlProvider";
 }

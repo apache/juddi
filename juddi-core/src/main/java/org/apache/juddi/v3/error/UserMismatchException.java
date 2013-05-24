@@ -17,10 +17,6 @@
 
 package org.apache.juddi.v3.error;
 
-import org.apache.juddi.v3.error.ErrorMessage;
-import org.apache.juddi.v3.error.RegistryException;
-import org.apache.juddi.v3.error.UDDIErrorHelper;
-
 /**
  *   E_userMismatch: (10140) Signifies that an attempt was made to use the publishing API to change data that is controlled by another party. 
  * 
