@@ -465,7 +465,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
             tckSubscription.subscription.saveSubscription(authInfoJoe, data);
             Assert.fail();
         } catch (Exception ex) {
-            HandleException(ex);
+//            HandleException(ex);
             //Assert.fail();
         }
     }
