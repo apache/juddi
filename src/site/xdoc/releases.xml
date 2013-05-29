@@ -30,32 +30,18 @@
           <td><strong>Date</strong></td>
           <td><strong>Description</strong></td>
         </tr>
-	<tr>
-	  <td><a href="http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.1.5/">3.1.5</a></td>
-	  <td>May 20, 2013</td>
-	  <td>Stable 3.1.5 Release</td>
-	</tr>
+		<tr>
+		  <td><a href="http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.1.5/">3.1.5</a></td>
+		  <td>May 20, 2013</td>
+		  <td>Stable 3.1.5 Release</td>
+		</tr>
         <tr>
-          <td><a href="http://www.apache.org/dyn/closer.cgi/juddi/juddi/3.1.0/">3.1.0</a></td>
+          <td><a href="http://archive.apache.org/dist/juddi/">older</a></td>
           <td>Mon 13, 2011</td>
-          <td>Stable 3.1.0 Release</td>
+          <td>Archived Releases</td>
         </tr>
     </table>
     </section>
-    
-    <section name="Official 2.x Releases"> 
-    <table>
-        <tr> 
-          <td><strong>Name</strong></td>
-          <td><strong>Date</strong></td>
-          <td><strong>Description</strong></td>
-        </tr>
-        <tr>
-          <td><a href="http://www.apache.org/dyn/closer.cgi/ws/juddi/juddi/2.0.1/">2.0.1</a></td>
-          <td>Aug 11, 2009</td>
-          <td>Stable SP Release Version 2.0.1.</td>
-        </tr> 
-      </table>
 		
     </section>
   </body>
