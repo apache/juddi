@@ -1,15 +1,36 @@
 package org.apache.juddi.config;
 
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
+import org.apache.juddi.v3.auth.LdapExpandedAuthenticator;
+import org.apache.juddi.v3.auth.LdapSimpleAuthenticator;
 import org.apache.juddi.v3.auth.MD5XMLDocAuthenticator;
 
+/**
+ * This defines constants used for accessing information from jUDDI's juddiv3.properties file
+ * @author various
+ */
 public interface Property {
     public final static String JDDU_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
     public final static String JUDDI_ROOT_PUBLISHER = "juddi.root.publisher";
     public final static String JUDDI_LOAD_INSTALL_DATA = "juddi.load.install.data";
     public final static String JUDDI_PERSISTENCEUNIT_NAME = "juddi.persistenceunit.name";
     public final static String JUDDI_AUTHENTICATOR = "juddi.authenticator";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
     public final static String JUDDI_AUTHENTICATOR_URL = "juddi.authenticator.url";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_INITIAL_CONTEXT = "juddi.authenticator.initialcontext";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_STYLE = "juddi.authenticator.style";
+    /**
+     * @see LdapExpandedAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_LDAP_EXPANDED_STR= "juddi.authenticator.ldapexp";
     public final static String JUDDI_CONFIGURATION_RELOAD_DELAY = "juddi.configuration.reload.delay";
     public final static String JUDDI_LOCALE = "juddi.locale";
     public final static String JUDDI_OPERATOR_EMAIL_ADDRESS = "juddi.operatorEmailAddress";

@@ -15,7 +15,9 @@
  */
 package org.apache.juddi.v3.auth;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -40,8 +42,9 @@ import org.apache.juddi.v3.error.UnknownUserException;
 import org.apache.commons.configuration.ConfigurationException;
 
 /**
- * This is a implementation of jUDDI's Authenticator interface, that uses the
- * LDAP. z
+ * This is an expanded implementation of jUDDI's Authenticator interface, that uses the
+ * LDAP with string formatting to enable users to sign in as a common name instead of the full
+ * distinguished name.
  * 
  * Usage:
  * 
@@ -54,22 +57,16 @@ import org.apache.commons.configuration.ConfigurationException;
  * # LDAP authentication URL
  * juddi.authenticator.url=ldap://localhost:389
  *
- * This authenticator assumes that the publisher username is the same as the LDAP 
- * principal name, which may not be the case as the LDAP principal might be a bind name.
- * This class could easily be extended so that the uid of the LDAP authenticated user is
- * used, or to authenticate by group.
+ * juddi.authenticator.ldapexp=CN=%s, OU=Users,DC=Domain, etc
+ * 
+ * This authenticator assumes that the publisher username can be reformatted to a LDAP 
+ * common name. This is common for Microsoft based LDAPs. The configuration item juddi.authenticator.ldapexp
+ * should contain exactly one instance of "%s", which is replaced by the requestor's username
  *
- * This class was tested with OpenLDAP.
  *
- * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
- * @author <a href="mailto:gunnlaugursig@gmail.com">Gunnlaugur Sigurðsson</a>
  * @author Alex O'Ree
- * 
- * 
- * @since 3.2, all values are now configurable
- * @see Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT, JUDDI_AUTHENTICATOR_STYLE
  */
-public class LdapSimpleAuthenticator implements Authenticator {
+public class LdapExpandedAuthenticator implements Authenticator {
     private Log logger = LogFactory.getLog(this.getClass());
 
     private LdapContext ctx = null;
@@ -79,7 +76,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
     
     private static final String DEFAULT_URL = "ldap://localhost:389";
     
-    public LdapSimpleAuthenticator() throws NamingException, ConfigurationException {
+    public LdapExpandedAuthenticator() throws NamingException, ConfigurationException {
     	String authURL = null;
     	try {
     		authURL = AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_URL, DEFAULT_URL);
@@ -90,7 +87,7 @@ public class LdapSimpleAuthenticator implements Authenticator {
     	init(authURL);
     }
     
-    public LdapSimpleAuthenticator(String url) throws NamingException, ConfigurationException {
+    public LdapExpandedAuthenticator(String url) throws NamingException, ConfigurationException {
     	init(url);
     }
 
@@ -121,8 +118,11 @@ public class LdapSimpleAuthenticator implements Authenticator {
             env = new Hashtable<String, String>();
             env.put(Context.INITIAL_CONTEXT_FACTORY, AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT, "com.sun.jndi.ldap.LdapCtxFactory"));
             env.put(Context.SECURITY_AUTHENTICATION, AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_STYLE, "simple"));
+            
             env.put(Context.PROVIDER_URL, url); // organization ldap url, example ldap://localhost:389
-            env.put(Context.SECURITY_PRINCIPAL, authorizedName);
+            String format = String.format(AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_LDAP_EXPANDED_STR), authorizedName);
+            
+            env.put(Context.SECURITY_PRINCIPAL, format);
             env.put(Context.SECURITY_CREDENTIALS, cred);
             ctx = new InitialLdapContext(env, null);
             isLdapUser = true;
