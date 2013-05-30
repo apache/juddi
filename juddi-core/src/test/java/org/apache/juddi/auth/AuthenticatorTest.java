@@ -30,6 +30,7 @@ import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
 import org.apache.juddi.v3.auth.JUDDIAuthenticator;
 import org.apache.juddi.v3.auth.JuddiUsers;
+import org.apache.juddi.v3.auth.MD5XMLDocAuthenticator;
 import org.apache.juddi.v3.auth.User;
 import org.apache.juddi.v3.auth.XMLDocAuthenticator;
 import org.apache.juddi.v3.error.AuthenticationException;
@@ -170,6 +171,28 @@ public class AuthenticatorTest
 	public void testBadCryptedXMLDocAuthenticator() throws Exception
 	{
 		Authenticator auth = new CryptedXMLDocAuthenticator();
+		auth.authenticate("anou_mana","badpass");
+	}
+        
+        
+        @Test
+	public void testMD5XMLDocAuthenticator() 
+	{
+		try {
+			Authenticator auth = new CryptedXMLDocAuthenticator();
+			auth.authenticate("anou_mana","password");
+			auth.authenticate("bozo","clown");
+			auth.authenticate("sviens","password");
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
+        @Test(expected=UnknownUserException.class) 
+	public void testBadMD5XMLDocAuthenticator() throws Exception
+	{
+		Authenticator auth = new MD5XMLDocAuthenticator();
 		auth.authenticate("anou_mana","badpass");
 	}
 }

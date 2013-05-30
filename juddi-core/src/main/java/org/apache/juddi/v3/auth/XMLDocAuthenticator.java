@@ -19,7 +19,9 @@ package org.apache.juddi.v3.auth;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -66,13 +68,20 @@ public class XMLDocAuthenticator implements Authenticator
 {
 	private static Log log = LogFactory.getLog(AuthenticatorFactory.class);
 	/** Container for the user credentials */
-	Hashtable<String,User> userTable;
+	Map<String,User> userTable;
 	
 	/**
 	 *
 	 */
 	public XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
 		readUserFile();
+	}
+        
+        /**
+	 * an empty constructor
+	 */
+	public XMLDocAuthenticator(boolean b) {
+		
 	}
 	
 	protected String getFilename() throws ConfigurationException {
@@ -87,7 +96,7 @@ public class XMLDocAuthenticator implements Authenticator
 	 */
 	public synchronized void readUserFile() throws JAXBException, IOException, ConfigurationException
 	{
-		userTable = new Hashtable<String,User>();
+		userTable = new HashMap<String, User> ();
 		String usersFileName = getFilename();
 		log.info("Reading jUDDI Users File: " + usersFileName + "...");
 		InputStream stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();

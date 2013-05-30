@@ -49,6 +49,32 @@ public abstract class CryptorFactory {
 			cryptor = createCryptor();
 		return cryptor;
 	}
+        
+        
+        public static Cryptor getCryptor(String className) throws Exception {
+		Class<?> cryptorClass = null;
+		try {
+			// Use Loader to locate & load the Cryptor implementation
+			cryptorClass = ClassUtil.forName(className, CryptorFactory.class);
+		}
+		catch(ClassNotFoundException e) {
+			log.error("The specified Cryptor class '" + className + "' was not found in classpath.");
+			log.error(e);
+                        throw e;
+		}
+	
+		try {
+			// try to instantiate the Cryptor implementation
+			cryptor = (Cryptor)cryptorClass.newInstance();
+		}
+		catch(Exception e) {
+			log.error("Exception while attempting to instantiate the implementation of Cryptor: " + cryptorClass.getName() + "\n" + e.getMessage());
+			log.error(e);
+                        throw e;
+		}
+	
+		return cryptor;
+	}
 
 	/*
 	 * Returns a new instance of a Cryptor.

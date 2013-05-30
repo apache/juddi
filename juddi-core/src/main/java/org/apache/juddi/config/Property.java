@@ -1,5 +1,8 @@
 package org.apache.juddi.config;
 
+import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
+import org.apache.juddi.v3.auth.MD5XMLDocAuthenticator;
+
 public interface Property {
     public final static String JDDU_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
     public final static String JUDDI_ROOT_PUBLISHER = "juddi.root.publisher";
@@ -50,7 +53,14 @@ public interface Property {
     public final static String DEFAULT_CRYPTOR = "org.apache.juddi.cryptor.DefaultCryptor";
     public final static String DEFAULT_USERSFILE = "juddi-users.properties";
     public final static String DEFAULT_XML_USERSFILE = "juddi-users.xml";
+    /**
+     * @see CryptedXMLDocAuthenticator
+     */
     public final static String DEFAULT_ENCRYPTED_XML_USERSFILE = "juddi-users-encrypted.xml";
+    /**
+     * @see MD5XMLDocAuthenticator
+     */
+    public final static String DEFAULT_HASHED_XML_USERSFILE = "juddi-users-hashed.xml";
     public final static String DEFAULT_SECURITY_DOMAIN = "java:/jaas/other";
     public final static boolean DEFAULT_LOAD_INSTALL_DATA = true;
     public final static String DEFAULT_BASE_URL = "http://localhost:8080/juddiv3";

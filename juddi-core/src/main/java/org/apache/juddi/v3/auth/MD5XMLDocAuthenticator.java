@@ -18,22 +18,13 @@
 package org.apache.juddi.v3.auth;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.JAXBException;
-
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.cryptor.Cryptor;
-import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
@@ -41,9 +32,10 @@ import org.apache.juddi.v3.error.RegistryException;
 import org.apache.juddi.v3.error.UnknownUserException;
 
 /**
- * @author Anou Manavalan
+ * Uses MD5 hashes for passwords
+ * @author Alex O'Ree
  */
-public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
+public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
 	
 	private Log logger = LogFactory.getLog(this.getClass());
 	/**
@@ -52,16 +44,19 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 	 * @throws ConfigurationException 
 	 * 
 	 */
-	public CryptedXMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
+	public MD5XMLDocAuthenticator() throws JAXBException, IOException, ConfigurationException {
 		super();
 	}
-        
-        private CryptedXMLDocAuthenticator(boolean b) {
-		super(b);
+        /**
+         * A private constructor used for calculating hashes only
+         * @param x 
+         */
+        private MD5XMLDocAuthenticator(boolean x)  {
+            super(x);
 	}
 	@Override
 	protected String getFilename() throws ConfigurationException {
-		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_ENCRYPTED_XML_USERSFILE);
+		return AppConfig.getConfiguration().getString(Property.JUDDI_USERSFILE, Property.DEFAULT_HASHED_XML_USERSFILE);
 	}
 	/**
 	 *
@@ -69,42 +64,21 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 	public String authenticate(String userID, String credential)
 	throws AuthenticationException, FatalErrorException {
 		preProcess(userID, credential);
-		String encryptedCredential = encrypt(credential);
+		String encryptedCredential = hash(credential);
 		return postProcess(userID, encryptedCredential);
 	}
 	/**
 	 *
 	 */
-	private String encrypt(String str) throws FatalErrorException {
+	private String hash(String str) throws FatalErrorException {
 		try {
-			Cryptor cryptor = (Cryptor) CryptorFactory.getCryptor();
-			return cryptor.encrypt(str);
-		} catch (InvalidKeyException e) {
-			logger.error("Invalid Key Exception in crypting the password", e);
+               return DigestUtils.md5Hex(str)       ;
+			//return instance..encrypt(str);
+		} catch (Exception e) {
+			logger.error("Exception caught hashing password", e);
 			throw new FatalErrorException(new ErrorMessage(
 					"errors.auth.cryptor.InvalidKey", e.getMessage()));
-		} catch (NoSuchPaddingException e) {
-			logger.error("Padding Exception in crypting the password", e);
-			throw new FatalErrorException(new ErrorMessage(
-					"errors.auth.cryptor.Padding", e.getMessage()));
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("Algorithm Exception in crypting the password", e);
-			throw new FatalErrorException(new ErrorMessage(
-					"errors.auth.cryptor.Algorithm", e.getMessage()));
-		} catch (InvalidAlgorithmParameterException e) {
-			logger.error("Algorithm parameter Exception in crypting the password",
-					e);
-			throw new FatalErrorException(new ErrorMessage(
-					"errors.auth.cryptor.AlgorithmParam", e.getMessage()));
-		} catch (IllegalBlockSizeException e) {
-			logger.error("Block size Exception in crypting the password", e);
-			throw new FatalErrorException(new ErrorMessage(
-					"errors.auth.cryptor.BlockSize", e.getMessage()));
-		} catch (BadPaddingException e) {
-			logger.error("Bad Padding Exception in crypting the password", e);
-			throw new FatalErrorException(new ErrorMessage(
-					"errors.auth.cryptor.BadPadding", e.getMessage()));
-		}
+		} 
 	}
 	/**
 	 * @param userID
@@ -145,4 +119,11 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 		}
 		return userID;
 	}
+        
+         public static void main(String[] args) throws Exception
+         {
+             System.out.print("Password: ");
+             char[] readPassword = System.console().readPassword();
+             System.out.println("Cipher: " + new MD5XMLDocAuthenticator(true).hash(new String(readPassword)));
+         }
 }
