@@ -72,8 +72,7 @@ public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
 	 */
 	private String hash(String str) throws FatalErrorException {
 		try {
-               return DigestUtils.md5Hex(str)       ;
-			//return instance..encrypt(str);
+                        return DigestUtils.md5Hex(str)       ;
 		} catch (Exception e) {
 			logger.error("Exception caught hashing password", e);
 			throw new FatalErrorException(new ErrorMessage(

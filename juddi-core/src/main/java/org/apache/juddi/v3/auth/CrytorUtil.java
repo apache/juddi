@@ -42,5 +42,10 @@ public class CrytorUtil {
         
         System.out.println("Provided crypto providers:");
         System.out.println("\torg.apache.juddi.cryptor.DefaultCryptor - uses PBEWithMD5AndDES");
+        System.out.println("\torg.apache.juddi.cryptor.TripleDESCrytor - uses TripleDES");
+        System.out.println("\torg.apache.juddi.cryptor.AES128Cryptor - uses AES128");
+        System.out.println("\torg.apache.juddi.cryptor.AES256Cryptor - uses AES256*");
+        System.out.println();
+        System.out.println("* Requires Unlimited Strength JCE *");
     }
 }

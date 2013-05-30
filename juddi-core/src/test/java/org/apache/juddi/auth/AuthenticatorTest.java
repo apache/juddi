@@ -24,8 +24,10 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
+import org.apache.juddi.cryptor.AES128Cryptor;
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
+import org.apache.juddi.cryptor.TripleDESCrytor;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
 import org.apache.juddi.v3.auth.JUDDIAuthenticator;
@@ -52,6 +54,7 @@ public class AuthenticatorTest
 	@Test
 	public void testDefaultAuthenticator()
 	{
+            System.out.println("testDefaultAuthenticator");
 		Authenticator auth = new JUDDIAuthenticator();
 		try {
 			API_010_PublisherTest api010 = new API_010_PublisherTest();
@@ -69,6 +72,7 @@ public class AuthenticatorTest
 	@Test
 	public void testCreateJuddiUsers() throws Exception
 	{
+            System.out.println("testCreateJuddiUsers");
 		try {
 			JuddiUsers juddiUsers = new JuddiUsers();
 			juddiUsers.getUser().add(new User("anou_mana","password"));
@@ -93,6 +97,7 @@ public class AuthenticatorTest
 	@Test
 	public void testXMLDocAuthenticator() 
 	{
+            System.out.println("testXMLDocAuthenticator");
 		try {
 			Authenticator auth = new XMLDocAuthenticator();
 			auth.authenticate("anou_mana","password");
@@ -116,12 +121,14 @@ public class AuthenticatorTest
 	@Test(expected=UnknownUserException.class) 
 	public void testBadXMLDocAuthenticator() throws Exception
 	{
+            System.out.println("testBadXMLDocAuthenticator");
 		Authenticator auth = new XMLDocAuthenticator();
 		auth.authenticate("anou_mana","badpass");
 	}
 	@Test
 	public void testCreateJuddiUsersEncrypted() throws Exception
 	{
+            System.out.println("testCreateJuddiUsersEncrypted");
 		try {
 			Cryptor cryptor = (Cryptor) CryptorFactory.getCryptor();
 			JuddiUsers juddiUsers = new JuddiUsers();
@@ -147,6 +154,7 @@ public class AuthenticatorTest
 	@Test
 	public void testCryptedXMLDocAuthenticator() 
 	{
+            System.out.println("testCryptedXMLDocAuthenticator");
 		try {
 			Authenticator auth = new CryptedXMLDocAuthenticator();
 			auth.authenticate("anou_mana","password");
@@ -169,7 +177,9 @@ public class AuthenticatorTest
 	 */
 	@Test(expected=UnknownUserException.class) 
 	public void testBadCryptedXMLDocAuthenticator() throws Exception
+                
 	{
+            System.out.println("testBadCryptedXMLDocAuthenticator");
 		Authenticator auth = new CryptedXMLDocAuthenticator();
 		auth.authenticate("anou_mana","badpass");
 	}
@@ -178,8 +188,9 @@ public class AuthenticatorTest
         @Test
 	public void testMD5XMLDocAuthenticator() 
 	{
+            System.out.println("testMD5XMLDocAuthenticator");
 		try {
-			Authenticator auth = new CryptedXMLDocAuthenticator();
+			Authenticator auth = new MD5XMLDocAuthenticator();
 			auth.authenticate("anou_mana","password");
 			auth.authenticate("bozo","clown");
 			auth.authenticate("sviens","password");
@@ -189,10 +200,44 @@ public class AuthenticatorTest
 		}
 	}
         
+        
+        
         @Test(expected=UnknownUserException.class) 
 	public void testBadMD5XMLDocAuthenticator() throws Exception
 	{
 		Authenticator auth = new MD5XMLDocAuthenticator();
 		auth.authenticate("anou_mana","badpass");
+	}
+        
+        
+        @Test
+	public void testAES128Cryptor() 
+	{
+            System.out.println("testAES128Cryptor");
+		try {
+			Cryptor auth = new AES128Cryptor();
+                        String encrypt = auth.encrypt("test");
+                        Assert.assertNotNull(encrypt);
+                        Assert.assertNotSame(encrypt, "test");
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
+        
+        @Test
+	public void testTripleDESCryptor() 
+	{
+            System.out.println("testTripleDESCryptor");
+		try {
+			Cryptor auth = new TripleDESCrytor();
+                        String encrypt = auth.encrypt("test");
+                        Assert.assertNotNull(encrypt);
+                        Assert.assertNotSame(encrypt, "test");
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
 	}
 }
