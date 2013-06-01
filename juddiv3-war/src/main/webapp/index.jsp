@@ -23,24 +23,29 @@
         <h1>Apache jUDDI version <%= Release.getRegistryVersion()%></h1>
 
 
-        <h3><em>Welcome</em> to Apache jUDDI!</h3>
+        <h2><em>Welcome</em> to Apache jUDDI!</h2>
+        jUDDI is an open source implementation of <a href="http://oasis-open.org">OASIS</a>'s <a href="http://oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">Universal Discovery Description and Integration (UDDI)</a>.
+        You've reached the deployment page for jUDDI's web services.<br>
+        
+        <h4><a href="/juddi-gui">View the jUDDI User Interface (fully featured end user web app)</a></h4>
+        <h4><a href="/pluto/portal/jUDDI">View the jUDDI Portal (older with limited features)</a></h4>
+        <h4><a href="admin">View the jUDDI Administration Interface (authentication required)</a></h4>
+        Here's some useful links to learn more about the UDDI and jUDDI.
         <ul>
-            <li><a href="/pluto/portal/jUDDI">jUDDI Portal</a></li>
-			<li><a href="happy.jsp">jUDDI Status</a></li>
-            <li><a href="services">View</a> service listing</li>
+            <li><a href="services">View the service listing on this UDDI node</a></li>
             <li><a href="http://juddi.apache.org/">Visit</a> the Apache-jUDDI Home Page</li>
-            <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html">Users Guide</a></li>
-            <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" >Developers Guide</a></li>
-            <li><a href="http://juddi.apache.org/docs.html" >API Documentation</a></li>
+            <li><a href="http://juddi.apache.org/docs/3.x/userguide/html/index.html">jUDDI Users Guide</a></li>
+            <li><a href="http://juddi.apache.org/docs/3.x/devguide/html/index.html" >jUDDI Developers Guide</a></li>
+            <li><a href="http://juddi.apache.org/docs.html" >jUDDI API Documentation</a></li>
             <li><a href="http://wiki.apache.org/juddi" >jUDDI Wiki</a></li>
-            <li><a href="http://juddi.apache.org/issue-tracking.html" >Report a bug</a></li>
-            <li><a href="http://svn.apache.org/viewvc/juddi/" >jUDDI Source Code</a></li>
-            <li><a href="http://www.nabble.com/jUDDI-f218.html">Mailing list</a></li>
+            <li><a href="http://juddi.apache.org/issue-tracking.html" >jUDDI's Issue Tracker (report a bug)</a></li>
+            <li><a href="http://svn.apache.org/viewvc/juddi/" >jUDDI's Source Code</a></li>
+            <li><a href="http://www.nabble.com/jUDDI-f218.html">jUDDI's Mailing lists</a></li>
 			
         </ul>
 
         <div class="install">
-            <h4>jUDDI Installation</h4>
+            <h4>jUDDI Installation Status</h4>
             <div class="content">
                 <%
                     // This will tirgger the install process...
@@ -68,7 +73,7 @@
                 %>
                 <div>jUDDI has been successfully installed!</div>
                 <p />
-                <h3>Node Information</h3>
+                <h4>Node Information</h4>
                 <table>
                     <tr>
                         <td><b>Root Partition:</b></td>

@@ -2,9 +2,9 @@
     Document   : mbeans
     Created on : May 6, 2013, 9:07:43 PM
     Author     : Alex O'Ree
---%><%@page import="java.util.HashMap"%><%@page import="java.util.Map"%><%@page import="javax.management.AttributeList"%><%@page import="java.util.Map.Entry"%><%@page import="java.util.Hashtable"%><%@page import="java.util.Iterator"%><%@page import="javax.management.ObjectName"%><%@page import="java.util.Set"%><%@page import="javax.management.MBeanServerFactory"%><%@page import="java.util.ArrayList"%><%@page import="javax.management.MBeanServer"%><%@page import="java.lang.management.MemoryPoolMXBean"%><%@page import="java.lang.management.ManagementFactory"%><%@page import="java.util.List"%><%@page contentType="application/json" pageEncoding="UTF-8"%><%
+--%><%@page import="java.util.TreeMap"%><%@page import="java.util.Map"%><%@page import="javax.management.AttributeList"%><%@page import="java.util.Map.Entry"%><%@page import="java.util.Hashtable"%><%@page import="java.util.Iterator"%><%@page import="javax.management.ObjectName"%><%@page import="java.util.Set"%><%@page import="javax.management.MBeanServerFactory"%><%@page import="java.util.ArrayList"%><%@page import="javax.management.MBeanServer"%><%@page import="java.lang.management.MemoryPoolMXBean"%><%@page import="java.lang.management.ManagementFactory"%><%@page import="java.util.List"%><%@page contentType="application/json" pageEncoding="UTF-8"%><%
 
-    HashMap data = new HashMap<String, String>();
+    TreeMap data = new TreeMap<String, String>();
     data.put("timestamp", Long.toString(System.currentTimeMillis()));
     MBeanServer mbserver = null;
 
@@ -67,5 +67,6 @@
     // for (MemoryPoolMXBean mpb : memPoolBeans) {
     //    out.write("Memory Pool: " + mpb.getName() + "<br>");
     //}
+
     out.write(new org.json.JSONObject(data).toString());
 %>
