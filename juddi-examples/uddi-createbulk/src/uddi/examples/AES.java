@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 /**
- *
+ * This call is a simple test class that shows how to encrypt stuff in Java using AES
  * @author Alex O'Ree
  */
 public class AES {

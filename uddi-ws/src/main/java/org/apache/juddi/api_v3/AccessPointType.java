@@ -35,6 +35,7 @@ public enum AccessPointType {
 	HOSTING_REDIRECTOR("hostingDirector"),
         /**
          * wsdlDeployment: designates that the accessPoint points to a remotely hosted WSDL document that already contains the necessary binding information, including the actual service endpoint.
+         *  The bindingTemplate of a Web service making use of indirection via a hostingRedirector Web service contains the bindingKey of the hosting redirector service’s bindingTemplate.  The hosting redirector’s bindingTemplate contains the accessPoint of the Hosting Redirector Web service
          */
 	WSDL_DEPLOYMENT ("wsdlDeployment");
 	

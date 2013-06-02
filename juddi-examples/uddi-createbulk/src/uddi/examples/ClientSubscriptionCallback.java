@@ -3,20 +3,20 @@
  * and open the template in the editor.
  */
 
-package uddi.createbulk;
+package uddi.examples;
 
 import java.rmi.RemoteException;
 import javax.jws.WebService;
-import javax.xml.bind.annotation.XmlSchemaTypes;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.ws.Endpoint;
 import org.uddi.api_v3.DispositionReport;
-import org.uddi.api_v3.ErrInfo;
-import org.uddi.api_v3.Result;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
- *
+ * this class is a very basic callback service for UDDI.
+ * Fire it up with the EndPoint api
+ * @see  Endpoint
  * @author Alex O'Ree
  */
 @WebService(serviceName="UDDISubscriptionListenerService", 

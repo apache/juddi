@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -26,7 +26,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- *
+ * Thie class shows you how to create a business and a subscription using UDDI Subscription asynchronous callbacks
  * @author Alex
  */
 public class UddiSubscribe {
@@ -59,77 +59,9 @@ public class UddiSubscribe {
         }
     }
 
-    public void publish() {
-        try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-            // and can save other publishers).
-
-
-
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("root");
-            getAuthTokenRoot.setCred("root");
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-
-
-            getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("uddi");
-            getAuthTokenRoot.setCred("uddi");
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("uddi AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-
-
-
-
-
-
-            DatatypeFactory df = DatatypeFactory.newInstance();
-            GregorianCalendar gcal = new GregorianCalendar();
-            gcal.setTimeInMillis(System.currentTimeMillis());
-            XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
-
-            // Creating the parent business entity that will contain our service.
-            BusinessEntity myBusEntity = new BusinessEntity();
-            Name myBusName = new Name();
-            myBusName.setLang("en");
-            myBusName.setValue("My Business Dept 1" + " " + xcal.toString());
-            myBusEntity.getName().add(myBusName);
-
-            // Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
-            SaveBusiness sb = new SaveBusiness();
-            sb.getBusinessEntity().add(myBusEntity);
-            sb.setAuthInfo(rootAuthToken.getAuthInfo());
-            BusinessDetail bd = publish.saveBusiness(sb);
-            String myBusKey1 = bd.getBusinessEntity().get(0).getBusinessKey();
-            System.out.println("myBusiness key:  " + myBusKey1);
-
-            Holder<List<Subscription>> subs = new Holder<List<Subscription>>();
-            subs.value = new ArrayList<Subscription>();
-            Subscription sub = new Subscription();
-            sub.setMaxEntities(20);
-            sub.setSubscriptionFilter(new SubscriptionFilter());
-            sub.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
-            sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(myBusKey1);
-            sub.getSubscriptionFilter().setGetAssertionStatusReport(new GetAssertionStatusReport());
-            //  sub.getSubscriptionFilter().s
-            //uddi:juddi.apache.org:72619170-d391-41cb-99a0-238cb0b76eb9
-            subs.value.add(sub);
-            uddiSubscriptionService.saveSubscription(rootAuthToken.getAuthInfo(), subs);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String args[]) throws Exception {
         UddiSubscribe sp = new UddiSubscribe();
         sp.SetupAndRegisterCallback();
-        //sp.publish();
     }
 
     private void SetupAndRegisterCallback() throws Exception {

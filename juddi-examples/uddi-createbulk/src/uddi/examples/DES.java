@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package uddi.createbulk;
+package uddi.examples;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -20,7 +20,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- *
+ * This call is a simple test class that shows how to encrypt stuff in Java using 3DES
  * @author Alex O'Ree
  */
 public class DES {

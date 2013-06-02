@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.ws.Holder;

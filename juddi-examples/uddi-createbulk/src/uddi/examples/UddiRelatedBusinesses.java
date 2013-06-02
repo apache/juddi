@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -20,7 +20,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- *
+ * This will create two businesses under different users, then setup a relationship between the two
  * @author Alex
  */
 public class UddiRelatedBusinesses {
@@ -55,10 +55,18 @@ public class UddiRelatedBusinesses {
             GetAuthToken getAuthTokenRoot = new GetAuthToken();
             getAuthTokenRoot.setUserID("root");
             getAuthTokenRoot.setCred("root");
+            
+            
+            GetAuthToken getAuthTokenUDDI = new GetAuthToken();
+            getAuthTokenRoot.setUserID("uddi");
+            getAuthTokenRoot.setCred("uddi");
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
             System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            
+            AuthToken UDDIAuthToken = security.getAuthToken(getAuthTokenUDDI);
+            System.out.println("UDDI AUTHTOKEN = " + rootAuthToken.getAuthInfo());
 
 
 
@@ -66,7 +74,7 @@ public class UddiRelatedBusinesses {
             GregorianCalendar gcal = new GregorianCalendar();
             gcal.setTimeInMillis(System.currentTimeMillis());
             XMLGregorianCalendar xcal = df.newXMLGregorianCalendar(gcal);
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 1; i++) {   //this loop is used for testing at scale
                 // Creating the parent business entity that will contain our service.
                 BusinessEntity myBusEntity = new BusinessEntity();
                 Name myBusName = new Name();
@@ -92,11 +100,14 @@ public class UddiRelatedBusinesses {
                 // Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
                 sb = new SaveBusiness();
                 sb.getBusinessEntity().add(myBusEntity);
-                sb.setAuthInfo(rootAuthToken.getAuthInfo());
+                sb.setAuthInfo(UDDIAuthToken.getAuthInfo());
                 bd = publish.saveBusiness(sb);
                 String myBusKey2 = bd.getBusinessEntity().get(0).getBusinessKey();
                 System.out.println("myBusiness key:  " + myBusKey2);
 
+                //ROOT creates half of the relationship
+                
+                //create a business relationship (publisher assertion)
                 Holder<List<PublisherAssertion>> x = new Holder<List<PublisherAssertion>>();
                 PublisherAssertion pa = new PublisherAssertion();
                 pa.setFromKey(myBusKey2);
@@ -110,7 +121,9 @@ public class UddiRelatedBusinesses {
                 x.value.add(pa);
                 publish.setPublisherAssertions(rootAuthToken.getAuthInfo(), x);
 
-
+                //now "UDDI" the user, creates the other half. It has to be mirrored exactly
+                
+                
                 x = new Holder<List<PublisherAssertion>>();
                 pa = new PublisherAssertion();
                 pa.setFromKey(myBusKey1);
@@ -122,8 +135,17 @@ public class UddiRelatedBusinesses {
                 pa.getKeyedReference().setTModelKey("uddi:uddi.org:relationships");
                 x.value = new ArrayList<PublisherAssertion>();
                 x.value.add(pa);
-                publish.setPublisherAssertions(rootAuthToken.getAuthInfo(), x);
-
+                publish.setPublisherAssertions(UDDIAuthToken.getAuthInfo(), x);
+                
+                /*
+                 * Here's some notes:
+                 * You can use
+                 * List<AssertionStatusItem> assertionStatusReport = publish.getAssertionStatusReport(UDDIAuthToken.getAuthInfo(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+                 * to determine if there's any assertions/relationships requests that are pending
+                 * this should have one item it in, the relationship that's incomplete
+                 * 
+                 * There's also publish.deletePublisherAssertions();
+                 */
 
             }
         } catch (Exception e) {

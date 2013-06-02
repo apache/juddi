@@ -2,28 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.Endpoint;
 import javax.xml.ws.Holder;
-import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
-
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.custody_v3.KeyBag;
 import org.uddi.custody_v3.TransferEntities;
 import org.uddi.custody_v3.TransferToken;
-import org.uddi.sub_v3.DeleteSubscription;
-import org.uddi.sub_v3.Subscription;
-import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -31,7 +22,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- *
+ * This provides an example of how to transfer custody of a business from one user to another on the same UDDI node. All child objects are also transfer
  * @author Alex
  */
 public class UddiCustodyTransfer {
@@ -68,7 +59,6 @@ public class UddiCustodyTransfer {
     public static void main(String args[]) throws Exception {
         UddiCustodyTransfer sp = new UddiCustodyTransfer();
         sp.Transfer();
-        //sp.publish();
     }
 
     private void Transfer() throws Exception {
@@ -102,39 +92,42 @@ public class UddiCustodyTransfer {
         myBusName.setValue("UDDI's Business" + " " + xcal.toString());
         myBusEntity.getName().add(myBusName);
         myBusEntity.setBusinessServices(new BusinessServices());
-        myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("UDDI"));
+        myBusEntity.getBusinessServices().getBusinessService().add(CreateBusinessService("UDDI"));
         SaveBusiness sb = new SaveBusiness();
         sb.getBusinessEntity().add(myBusEntity);
         sb.setAuthInfo(uddiAuthToken.getAuthInfo());
         BusinessDetail bd = publish.saveBusiness(sb);
 
         String keyUddiBiz = bd.getBusinessEntity().get(0).getBusinessKey();
-//        String keyUddiBizSvc = bd.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getServiceKey();
 
-
-
+        //create a business for the ROOT user
         myBusEntity = new BusinessEntity();
         myBusName = new Name();
         myBusName.setLang("en");
         myBusName.setValue("Root's Business" + " " + xcal.toString());
         myBusEntity.getName().add(myBusName);
         myBusEntity.setBusinessServices(new BusinessServices());
-        myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("root"));
+        myBusEntity.getBusinessServices().getBusinessService().add(CreateBusinessService("root"));
         sb = new SaveBusiness();
         sb.getBusinessEntity().add(myBusEntity);
         sb.setAuthInfo(rootAuthToken.getAuthInfo());
         bd = publish.saveBusiness(sb);
 
         String keyRootBiz = bd.getBusinessEntity().get(0).getBusinessKey();
-        //      String keyRootBizSvc = bd.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getServiceKey();
+
+        
+        //Create a transfer token from ROOT to UDDI
         KeyBag kb = new KeyBag();
         kb.getKey().add(keyRootBiz);
-
         Holder<String> nodeidOUT = new Holder<String>();
         Holder<XMLGregorianCalendar> expiresOUT = new Holder<XMLGregorianCalendar>();
         Holder<byte[]> tokenOUT = new Holder<byte[]>();
         custodyTransferPortType.getTransferToken(rootAuthToken.getAuthInfo(), kb, nodeidOUT, expiresOUT, tokenOUT);
 
+        //The magic part happens here, the user ROOT needs to give the user UDDI the token information out of band
+        //in practice, all values must match exactly
+        
+        //UDDI now accepts the transfer
         TransferEntities te = new TransferEntities();
         te.setAuthInfo(uddiAuthToken.getAuthInfo());
         te.setKeyBag(kb);
@@ -143,7 +136,6 @@ public class UddiCustodyTransfer {
         tt.setNodeID(nodeidOUT.value);
         tt.setOpaqueToken(tokenOUT.value);
         te.setTransferToken(tt);
-
         custodyTransferPortType.transferEntities(te);
 
         //confirm the transfer
@@ -171,14 +163,14 @@ public class UddiCustodyTransfer {
         System.out.println("Transfer " + (ok ? "success" : " failed"));
     }
 
-    private BusinessService CreateBusiness(String root) {
+    private BusinessService CreateBusinessService(String user) {
         BusinessService bs = new BusinessService();
         bs.getName().add(new Name());
-        bs.getName().get(0).setValue(root + "'s callback endpoint");
+        bs.getName().get(0).setValue(user + "'s callback endpoint");
         bs.setBindingTemplates(new BindingTemplates());
         BindingTemplate bt = new BindingTemplate();
         bt.setAccessPoint(new AccessPoint());
-        bt.getAccessPoint().setValue("http://localhost:9999/" + root);
+        bt.getAccessPoint().setValue("http://localhost:9999/" + user);
         bt.getAccessPoint().setUseType("endPoint");
         bs.getBindingTemplates().getBindingTemplate().add(bt);
         return bs;

@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
-import javax.xml.bind.JAXB;
-import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
@@ -16,24 +15,23 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- *
+ * This class shows you how to find an endpoint by searching through all services
  * @author Alex
  */
-public class UddiKeyGenerator {
+public class UddiFindBinding {
 
     private static UDDISecurityPortType security = null;
     private static JUDDIApiPortType juddiApi = null;
     private static UDDIPublicationPortType publish = null;
     private static UDDIInquiryPortType inquiry = null;
 
-    public UddiKeyGenerator() {
+    public UddiFindBinding() {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
             UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
-            UDDIClientContainer.addClient(clerkManager);
-            // a ClerkManager can be a client to multiple UDDI nodes, so 
+            UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
             Transport transport = clerkManager.getTransport("default");
@@ -47,44 +45,45 @@ public class UddiKeyGenerator {
         }
     }
 
-    public void find() {
+    public void publish() {
         try {
             // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
             // and can save other publishers).
             GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("uddi");
-            getAuthTokenRoot.setCred("uddi");
+            getAuthTokenRoot.setUserID("root");
+            getAuthTokenRoot.setCred("root");
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("uddi AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-            SaveTModel st = new SaveTModel();
-           /*st.setAuthInfo(rootAuthToken.getAuthInfo());
-            st.getTModel().add(UDDIClerk.createKeyGenator("uddi:bea.com:keygenerator", "uddi:bea.com:keygenerator", "en"));
-            publish.saveTModel(st);
+            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
 
-            st = new SaveTModel();
-            st.setAuthInfo(rootAuthToken.getAuthInfo());
-            st.getTModel().add(UDDIClerk.createKeyGenator("uddi:bea.com:servicebus.default:keygenerator", "bea.com:servicebus.default", "en"));
-            publish.saveTModel(st);
-*/
-            st = new SaveTModel();
-            TModel m = new TModel();
-            m.setTModelKey("uddi:bea.com:servicebus.default.proxytest2");
-            m.setName(new Name("name", "lang"));
-            st.setAuthInfo(rootAuthToken.getAuthInfo());
-            st.getTModel().add(m);
-            publish.saveTModel(st);
+            FindService fs = new FindService();
+            fs.getName().add(new Name());
+            fs.getName().get(0).setValue("%");
+            fs.setFindQualifiers(new FindQualifiers());
+            fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
 
+            ServiceList findService = inquiry.findService(fs);
+            System.out.println(findService.getServiceInfos().getServiceInfo().size());
+            GetServiceDetail gs = new GetServiceDetail();
+            for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
+                gs.getServiceKey().add(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey());
+            }
 
-
+            ServiceDetail serviceDetail = inquiry.getServiceDetail(gs);
+            for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
+                System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size());
+                for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
+                    System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String args[]) {
-        UddiKeyGenerator sp = new UddiKeyGenerator();
-        sp.find();
+        UddiFindBinding sp = new UddiFindBinding();
+        sp.publish();
     }
 }

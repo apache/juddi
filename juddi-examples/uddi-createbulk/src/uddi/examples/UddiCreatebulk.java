@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
@@ -18,13 +18,13 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- *
- * @author Alex
+ * This class was used to identify performance issues when a given node has a large number of UDDI entities.
+ * It may not work on some commercial UDDI nodes due to licensing restrictions (some limit the number of business, services, etc)
+ * @author Alex O'Ree
  */
 public class UddiCreatebulk {
 
     private static UDDISecurityPortType security = null;
-    private static JUDDIApiPortType juddiApi = null;
     private static UDDIPublicationPortType publish = null;
 
     public UddiCreatebulk() {
@@ -39,7 +39,6 @@ public class UddiCreatebulk {
             Transport transport = clerkManager.getTransport("default");
             // Now you create a reference to the UDDI API
             security = transport.getUDDISecurityService();
-            juddiApi = transport.getJUDDIApiService();
             publish = transport.getUDDIPublishService();
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,8 +170,6 @@ public class UddiCreatebulk {
                         x.printStackTrace();
                     }
                 }
-                // Now you have a publisher saved who in turn published a business and service via 
-                // the jUDDI API!
             }
         } catch (Exception e) {
             e.printStackTrace();

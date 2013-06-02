@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package uddi.createbulk;
+package uddi.examples;
 
 import java.io.File;
 import java.net.URL;
@@ -34,6 +34,8 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
+ * This class shows how to perform a WSDL2UDDI import manually. More
+ * specifically, this is WSDL2UDDI without using annotations.
  *
  * @author Alex O'Ree
  */
@@ -74,10 +76,11 @@ public class WsdlImport {
         //step two, identify the key used for all your stuff
         //you must have a key generator created already
         //here, we are assuming that you don't have one
+        //NOTE: these are some of the publically available WSDLs that were used to test WSDL2UDDI
         URL url = new URL("http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL");
         //http://www.bccs.uni.no/~pve002/wsdls/ebi-mafft.wsdl");
         //http://www.webservicex.net/GenericNAICS.asmx?WSDL");
-//http://www.webservicex.net/stockquote.asmx?WSDL");
+        //http://www.webservicex.net/stockquote.asmx?WSDL");
         //http://www.webservicex.com/globalweather.asmx?WSDL");
         //http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
         String domain = url.getHost();
@@ -134,7 +137,8 @@ public class WsdlImport {
             tms.getTModel().add(tmodels[i]);
         }
 
-        //publish.saveTModel(stm);
+        //important, you'll need to save your new tModels, or else saving the business/service may fail
+        publish.saveTModel(stm);
 
 
 
@@ -153,45 +157,17 @@ public class WsdlImport {
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey(businessServices.getBusinessService().get(0).getBusinessKey());
         be.getName().add(new Name());
+        //TODO, use some relevant here
         be.getName().get(0).setValue(domain);
         be.getName().get(0).setLang("en");
         be.setBusinessServices(businessServices);
         sb.getBusinessEntity().add(be);
         PrintUDDI<SaveBusiness> sbp = new PrintUDDI<SaveBusiness>();
         System.out.println("Request " + sbp.print(sb));
-        // publish.saveBusiness(sb);
+        publish.saveBusiness(sb);
 
         //and we're done
-
         //Be sure to report any problems to the jUDDI JIRA bug tracker at 
         //https://issues.apache.org/jira/browse/JUDDI
-    }
-
-    private static void StripKeys(BusinessServices businessServices) {
-
-        for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-            businessServices.getBusinessService().get(i).setBusinessKey(null);
-            for (int k = 0; k < businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
-                businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).setBindingKey(null);
-            }
-        }
-    }
-
-    private void someting() throws Exception {
-        URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-        String domain = url.getHost();
-        ReadWSDL rw = new ReadWSDL();
-        Definition wsdlDefinition = rw.readWSDL(url);
-        properties.put("keyDomain", domain);
-        properties.put("businessName", domain);
-        properties.put("serverName", url.getHost());
-        properties.put("serverPort", url.getPort());
-        wsdlURL = wsdlDefinition.getDocumentBaseURI();
-        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-        BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
-        Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
-        Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
-        Map allBindings = wsdlDefinition.getAllBindings();
-        Set<TModel> createWSDLBindingTModels = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings);
     }
 }
