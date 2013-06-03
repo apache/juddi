@@ -878,7 +878,7 @@
   <xs:complexType name="node">
     <xs:sequence>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="managerName" type="xs:string"/>
+      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
       <xs:element minOccurs="0" name="description" type="xs:string"/>
       <xs:element minOccurs="0" name="custodyTransferUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="inquiryUrl" type="xs:string"/>
