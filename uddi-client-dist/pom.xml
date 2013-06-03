@@ -42,6 +42,12 @@
 		</dependency>
 		<dependency>
             <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck</artifactId>
+            <type>test-jar</type>
+            <version>${project.parent.version}</version>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
             <artifactId>juddi-gui-war</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
@@ -66,11 +72,24 @@
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck</artifactId>
 			<version>${project.parent.version}</version>
+			<type>test-jar</type>
 			<classifier>sources</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
 		<!-- javadoc archives -->
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
@@ -90,6 +109,19 @@
 			<version>${project.parent.version}</version>
 			<classifier>javadoc</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>javadoc</classifier>
+            <type>test-jar</type>
+        </dependency>
 		<!-- documentation -->
 
 	</dependencies>

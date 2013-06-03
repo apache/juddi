@@ -27,16 +27,19 @@
             <includes>
                 <include>org.apache.juddi:juddi-client:jar</include>
                 <include>org.apache.juddi:uddi-tck:jar</include>
+                <include>org.apache.juddi:uddi-tck:test-jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-tck:test-jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:sources</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
                 <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-tck:test-jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-tck-base:jar:javadoc</exclude>
                 <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
             </excludes>
@@ -65,9 +68,11 @@
 		<!-- The source archives JARs -->
 		<dependencySet>
 			<outputDirectory>src</outputDirectory>
+			<scope>test</scope>
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck:jar:sources</include>
+				<include>org.apache.juddi:uddi-tck:test-jar:sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
 			</includes>
@@ -97,9 +102,12 @@
          
         <dependencySet>
             <outputDirectory>javadoc</outputDirectory>
+            <scope>test</scope>
             <includes>
                 <include>org.apache.juddi:juddi-client:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
+                <include>org.apache.juddi:uddi-tck:jar:javadoc</include>
+                <include>org.apache.juddi:uddi-tck:test-jar:javadoc</include>
                 <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
             </includes>
             <useProjectArtifact>false</useProjectArtifact>
