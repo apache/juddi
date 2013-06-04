@@ -81,8 +81,8 @@
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck</artifactId>
 			<version>${project.parent.version}</version>
-			<type>test-jar</type>
-			<classifier>sources</classifier>
+			<type>jar</type>
+			<classifier>test-sources</classifier>
 		</dependency>
 		<dependency>
             <groupId>org.apache.juddi</groupId>
@@ -119,8 +119,8 @@
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-tck</artifactId>
             <version>${project.parent.version}</version>
-            <classifier>javadoc</classifier>
-            <type>test-jar</type>
+            <classifier>test-javadoc</classifier>
+            <type>jar</type>
         </dependency>
 		<!-- documentation -->
 
