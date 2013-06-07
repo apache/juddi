@@ -122,6 +122,70 @@ public class UDDIInquiryJAXRS {
         return null;
     }
 
+    
+    
+    
+    
+    @GET
+    @Path("/XML/opInfo/{id}")
+    @Produces("application/json")
+    public org.uddi.api_v3.OperationalInfo getOpInfoJSON(@PathParam("id") String id) throws WebApplicationException {
+        return getOpInfoDetail(id);
+    }
+
+    @GET
+    @Path("/XML/opInfo/{id}")
+    @Produces("application/xml")
+    public org.uddi.api_v3.OperationalInfo getOpInfoXML(@PathParam("id") String id) throws WebApplicationException {
+        return getOpInfoDetail(id);
+    }
+
+    private OperationalInfo getOpInfoDetail(String id) {
+       GetOperationalInfo req = new GetOperationalInfo();
+       req.getEntityKey().add(id);
+        try {
+            OperationalInfos operationalInfo = inquiry.getOperationalInfo(req);
+            return operationalInfo.getOperationalInfo().get(0);
+        } catch (DispositionReportFaultMessage ex) {
+            HandleException(ex);
+        }
+        return null;
+    }
+    
+    
+    
+    
+    
+    
+    @GET
+    @Path("/XML/bindingDetail/{id}")
+    @Produces("application/json")
+    public org.uddi.api_v3.BindingTemplate getBindingDetailJSON(@PathParam("id") String id) throws WebApplicationException {
+        return getBindingDetail(id);
+    }
+
+    @GET
+    @Path("/XML/bindingDetail/{id}")
+    @Produces("application/xml")
+    public org.uddi.api_v3.BindingTemplate getBindingDetailXML(@PathParam("id") String id) throws WebApplicationException {
+        return getBindingDetail(id);
+    }
+
+    private BindingTemplate getBindingDetail(String id) {
+       GetBindingDetail req = new GetBindingDetail();
+       req.getBindingKey().add(id);
+        try {
+            BindingDetail bindingDetail = inquiry.getBindingDetail(null);
+            return bindingDetail.getBindingTemplate().get(0);
+        } catch (DispositionReportFaultMessage ex) {
+            HandleException(ex);
+        }
+        return null;
+    }
+    
+    
+    
+
     private static void HandleException(DispositionReportFaultMessage ex) throws WebApplicationException {
         if (ex == null) {
             throw new WebApplicationException(500);
