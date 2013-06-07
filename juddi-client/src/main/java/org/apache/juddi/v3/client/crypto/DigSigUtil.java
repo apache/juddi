@@ -35,7 +35,6 @@ import java.security.cert.CertPathValidatorResult;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.PKIXBuilderParameters;
 import java.security.cert.PKIXCertPathValidatorResult;
 import java.security.cert.PKIXParameters;
 import java.security.cert.TrustAnchor;
@@ -65,6 +64,7 @@ import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
+import javax.xml.crypto.dsig.keyinfo.X509IssuerSerial;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.transform.dom.DOMResult;
@@ -160,7 +160,7 @@ public final class DigSigUtil {
      * any value can be used.
      *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
-    public final static String SIGNATURE_OPTION_CERT_INCLUSION_THUMBPRINT = "THUMBPRINT";
+    //public final static String SIGNATURE_OPTION_CERT_INCLUSION_THUMBPRINT = "THUMBPRINT";
     /*
      * Include the signer's serial of the public key.
      * 
@@ -205,7 +205,8 @@ public final class DigSigUtil {
      * any value can be used.
      *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
-    public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
+    
+    //public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
     /**
      * Default value DigestMethod.SHA1 =
@@ -403,14 +404,21 @@ public final class DigSigUtil {
                                                 + "\n-----END CERTIFICATE-----";
                                         //System.out.println("X509 Public key: " + c);
                                         InputStream is = new ByteArrayInputStream(c.getBytes());
-                                        return (X509Certificate) cf.generateCertificate(is);
+                                        X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
+
+                                        logger.info("embedded certificate found, X509 public key " + cert.getSubjectDN().toString());
+                                        return cert;
 
                                     }
 
                                     //if we have a 
                                     //TODO other parsing items, lots of other potentials here
                                 }
-                                return FindCert(X509Data.getChildNodes());
+                                X509Certificate cert = FindCert(X509Data.getChildNodes());
+                                if (cert != null) {
+                                    logger.info("certificate loaded from local trust store, X509 public key " + cert.getSubjectDN().toString());
+                                    return cert;
+                                }
                             }
 
                         }
@@ -459,7 +467,7 @@ public final class DigSigUtil {
             X509Certificate signingcert = getSigningCertificatePublicKey(obj, docElement);
 
             if (signingcert != null && signingcert instanceof X509Certificate) {
-                logger.info("verifying signature based on embedded X509 public key " + signingcert.getSubjectDN().toString());
+                logger.info("verifying signature based on X509 public key " + signingcert.getSubjectDN().toString());
                 if (map.containsKey(CHECK_TIMESTAMPS)) {
                     signingcert.checkValidity();
                 }
@@ -711,34 +719,36 @@ public final class DigSigUtil {
 
         List<Object> x509Content = null;//new ArrayList<Object>();
         List<X509Data> data = new ArrayList<X509Data>();
-        /*if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN)) {
-         * x509Content = new ArrayList<Object>();
-         * //    x509Content.add(cert.getSubjectDN().getName());
-         * //  x509Content.add(cert);
-         * x509Content.add(cert.getSubjectDN().getName());
-         * X509Data xd = kif.newX509Data(x509Content);
-         * data.add(xd);
-         * }
-         * if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SERIAL)) {
-         * x509Content = new ArrayList<Object>();
-         * x509Content.add(cert.getSerialNumber());
-         * X509Data xd = kif.newX509Data(x509Content);
-         * data.add(xd);
-         * }
-         * if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL)) {
-         * x509Content = new ArrayList<Object>();
-         * x509Content.add(cert.getSubjectX500Principal().getName());
-         * X509Data xd = kif.newX509Data(x509Content);
-         * data.add(xd);
-         * }*/
-        if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_BASE64))//just include it
-        {
+        if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN)) {
+            x509Content = new ArrayList<Object>();
+
+            x509Content.add(cert.getSubjectDN().getName());
+            //  x509Content.add(cert);
+            //x509Content.add(cert.getSubjectDN().getName());
+            X509Data xd = kif.newX509Data(x509Content);
+            data.add(xd);
+        }
+
+      //  if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL)) {
+       // }
+        if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_BASE64)) {
             x509Content = new ArrayList<Object>();
             x509Content.add(cert);
             //x509Content.add(cert.getSubjectX500Principal().getName());
             X509Data xd = kif.newX509Data(x509Content);
             data.add(xd);
         }
+        if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_SERIAL)) {
+            x509Content = new ArrayList<Object>();
+
+            X509IssuerSerial issuer = kif.newX509IssuerSerial(cert.getIssuerX500Principal().getName(), cert.getSerialNumber());
+
+            x509Content.add(issuer);
+            X509Data xd = kif.newX509Data(x509Content);
+            data.add(xd);
+        }
+
+        //  
         //x509Content.add(cert);
 
 
@@ -768,8 +778,36 @@ public final class DigSigUtil {
      * @return null or the public key of a signing certificate
      */
     private X509Certificate FindCert(NodeList childNodes) {
+        try {
+            for (int x = 0; x < childNodes.getLength(); x++) {
+                if (childNodes.item(x).getLocalName().equalsIgnoreCase("X509SubjectName")) {
 
-        //TODO implement
+                    String dn = childNodes.item(x).getTextContent().trim();
+                    return FindCertByDN(new X500Principal(dn));
+
+                }
+                if (childNodes.item(x).getLocalName().equalsIgnoreCase("X509IssuerSerial")) {
+                    String X509IssuerName = null;
+                    String X509SerialNumber = null;
+                    for (int k = 0; k < childNodes.item(x).getChildNodes().getLength(); k++) {
+                        if (childNodes.item(x).getChildNodes().item(x).getLocalName().equalsIgnoreCase("X509IssuerName")) {
+                            X509IssuerName = childNodes.item(x).getTextContent().trim();
+                        }
+                        if (childNodes.item(x).getChildNodes().item(x).getLocalName().equalsIgnoreCase("X509SerialNumber")) {
+                            X509SerialNumber = childNodes.item(x).getTextContent().trim();
+                        }
+
+                    }
+                    if (X509IssuerName != null && X509SerialNumber != null) {
+                        return FindCertByIssuer(X509IssuerName, X509SerialNumber);
+                    }
+
+
+                }
+            }
+        } catch (Exception ex) {
+            logger.warn("error caught searching for a certificate", ex);
+        }
         return null;
     }
 
@@ -803,5 +841,20 @@ public final class DigSigUtil {
         } finally {
             crlStream.close();
         }
+    }
+
+    private X509Certificate FindCertByIssuer(String X509IssuerName, String X509SerialNumber) throws Exception {
+        KeyStore ks = GetTrustStore();
+        Enumeration<String> aliases = ks.aliases();
+        while (aliases.hasMoreElements()) {
+            String nextElement = aliases.nextElement();
+            Certificate certificate = ks.getCertificate(nextElement);
+            X509Certificate x = (X509Certificate) certificate;
+            if (x.getIssuerDN().getName().equals(X509IssuerName)
+                    && x.getSerialNumber().toString().equalsIgnoreCase(X509SerialNumber)) {
+                return x;
+            }
+        }
+        return null;
     }
 }
