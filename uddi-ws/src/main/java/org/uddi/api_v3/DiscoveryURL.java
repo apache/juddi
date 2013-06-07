@@ -57,6 +57,15 @@ public class DiscoveryURL implements Serializable{
     @XmlAttribute
     protected String useType;
 
+    public DiscoveryURL(String useType, String value) {
+        this.useType = useType;
+        this.value = value;
+    }
+    
+     public DiscoveryURL() {
+     
+    }
+
     /**
      * Gets the value of the value property.
      * 

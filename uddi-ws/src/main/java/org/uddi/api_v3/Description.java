@@ -57,6 +57,15 @@ public class Description implements Serializable{
     @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
     protected String lang;
 
+    public Description(String value, String lang) {
+        this.value = value;
+        this.lang=lang;
+    }
+    
+    public Description() {
+     
+    }
+
     /**
      * Gets the value of the value property.
      * 
