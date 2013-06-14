@@ -25,18 +25,21 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * UDDI Inquiry functions via a JAX-RS REST API. It's basically a wrapper for
- * the REST fans to access UDDI from a URL pattern
+ * the REST fans to access UDDI from a URL pattern This class will ONLY deploy
+ * using the Apache CXF WS stack for REST (JAX-RS)
  *
  * @author Alex O'Ree
  */
 @Path("/")
 @Produces("application/xml")
+@org.apache.cxf.jaxrs.model.wadl.Description("This service provides access to UDDI data via a REST interface")
 public class UDDIInquiryJAXRS {
 
     private static org.apache.juddi.api.impl.UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
     private static Log log = LogFactory.getLog(UDDIInquiryJAXRS.class);
 
     /**
+     * Returns the details of a business entity in JSON
      *
      * @param id
      * @return
@@ -44,13 +47,22 @@ public class UDDIInquiryJAXRS {
     @GET
     @Path("/JSON/businessDetail/{id}")
     @Produces("application/json")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a business entity in JSON")
     public org.uddi.api_v3.BusinessEntity getBusinessDetailJSON(@PathParam("id") String id) throws WebApplicationException {
         return getBusinessDetail(id);
     }
 
+    /**
+     * Returns the details of a business entity in XML
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/businessDetail/{id}")
     @Produces("application/xml")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a business entity in XML")
     public org.uddi.api_v3.BusinessEntity getBusinessDetailXML(@PathParam("id") String id) throws WebApplicationException {
         return getBusinessDetail(id);
     }
@@ -68,16 +80,32 @@ public class UDDIInquiryJAXRS {
         return null;
     }
 
+    /**
+     * Returns the details of a tModel entity in XML
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/tModelDetail/{id}")
     @Produces("application/xml")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a tModel entity in XML")
     public org.uddi.api_v3.TModel getTModelDetailXML(@PathParam("id") String id) throws WebApplicationException {
         return getTModelDetail(id);
     }
 
+    /**
+     * Returns the details of a tModel entity in JSON
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/JSON/tModelDetail/{id}")
     @Produces("application/json")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a tModel entity in JSON")
     public org.uddi.api_v3.TModel getTModelDetailJSON(@PathParam("id") String id) throws WebApplicationException {
         return getTModelDetail(id);
     }
@@ -95,16 +123,32 @@ public class UDDIInquiryJAXRS {
         return null;
     }
 
+    /**
+     * Returns the details of a service entity in JSON
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/serviceDetail/{id}")
     @Produces("application/json")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a service entity in JSON")
     public org.uddi.api_v3.BusinessService getServiceDetailJSON(@PathParam("id") String id) throws WebApplicationException {
         return getServiceDetail(id);
     }
 
+    /**
+     * Returns the details of a service entity in XML
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/serviceDetail/{id}")
     @Produces("application/xml")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a service entity in XML")
     public org.uddi.api_v3.BusinessService getServiceDetailXML(@PathParam("id") String id) throws WebApplicationException {
         return getServiceDetail(id);
     }
@@ -122,27 +166,39 @@ public class UDDIInquiryJAXRS {
         return null;
     }
 
-    
-    
-    
-    
+    /**
+     * Returns the operational details of a given entity in JSON
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/opInfo/{id}")
     @Produces("application/json")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the operational details of a given entity in JSON")
     public org.uddi.api_v3.OperationalInfo getOpInfoJSON(@PathParam("id") String id) throws WebApplicationException {
         return getOpInfoDetail(id);
     }
 
+    /**
+     * Returns the operational details of a given entity in XML
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/opInfo/{id}")
     @Produces("application/xml")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the operational details of a given entity in XML")
     public org.uddi.api_v3.OperationalInfo getOpInfoXML(@PathParam("id") String id) throws WebApplicationException {
         return getOpInfoDetail(id);
     }
 
     private OperationalInfo getOpInfoDetail(String id) {
-       GetOperationalInfo req = new GetOperationalInfo();
-       req.getEntityKey().add(id);
+        GetOperationalInfo req = new GetOperationalInfo();
+        req.getEntityKey().add(id);
         try {
             OperationalInfos operationalInfo = inquiry.getOperationalInfo(req);
             return operationalInfo.getOperationalInfo().get(0);
@@ -151,29 +207,40 @@ public class UDDIInquiryJAXRS {
         }
         return null;
     }
-    
-    
-    
-    
-    
-    
+
+    /**
+     * Returns the binding details of a given entity in JSON
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/bindingDetail/{id}")
     @Produces("application/json")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the binding details of a given entity in JSON")
     public org.uddi.api_v3.BindingTemplate getBindingDetailJSON(@PathParam("id") String id) throws WebApplicationException {
         return getBindingDetail(id);
     }
 
+    /**
+     * Returns the binding details of a given entity in XML
+     *
+     * @param id
+     * @return
+     * @throws WebApplicationException
+     */
     @GET
     @Path("/XML/bindingDetail/{id}")
     @Produces("application/xml")
+    @org.apache.cxf.jaxrs.model.wadl.Description("Returns the binding details of a given entity in XML")
     public org.uddi.api_v3.BindingTemplate getBindingDetailXML(@PathParam("id") String id) throws WebApplicationException {
         return getBindingDetail(id);
     }
 
     private BindingTemplate getBindingDetail(String id) {
-       GetBindingDetail req = new GetBindingDetail();
-       req.getBindingKey().add(id);
+        GetBindingDetail req = new GetBindingDetail();
+        req.getBindingKey().add(id);
         try {
             BindingDetail bindingDetail = inquiry.getBindingDetail(null);
             return bindingDetail.getBindingTemplate().get(0);
@@ -182,9 +249,6 @@ public class UDDIInquiryJAXRS {
         }
         return null;
     }
-    
-    
-    
 
     private static void HandleException(DispositionReportFaultMessage ex) throws WebApplicationException {
         if (ex == null) {
