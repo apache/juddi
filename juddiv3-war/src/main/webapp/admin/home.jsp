@@ -22,17 +22,17 @@
         <div class="span4">
             <h2>Configure jUDDI</h2>
             <p><%=ResourceLoader.GetResource(session, "index.browse")%></p>
-            <p><a class="btn" href="businessBrowse.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <p><a class="btn" href="configure.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
             <h2>Status and Statistics</h2>
             <p><%=ResourceLoader.GetResource(session, "index.search")%></p>
-            <p><a class="btn" href="search.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <p><a class="btn" href="stats.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
             <h2>Administration</h2>
             <p><%=ResourceLoader.GetResource(session, "index.learn")%></p>
-            <p><a class="btn" href="http://uddi.org/pubs/uddi_v3.htm"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
+            <p><a class="btn" href="admin.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
 
     </div>

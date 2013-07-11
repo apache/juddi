@@ -28,7 +28,6 @@
 					<instructions>
 						<Export-Package>org.apache.juddi, org.apache.juddi.api,
 							org.apache.juddi.api.impl,
-							org.apache.juddi.api.impl.rest,
 							org.apache.juddi.api.util,
 							org.apache.juddi.config, org.apache.juddi.config,
 							org.apache.juddi.cryptor, org.apache.juddi.keygen,

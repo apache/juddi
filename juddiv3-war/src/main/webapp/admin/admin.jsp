@@ -23,17 +23,19 @@
 
         <div class="span12">
             Here will be a number of administrative actions available from the jUDDI API, such as:
-<pre>adminDelete_tmodel
-delete_ClientSubscriptionInfo
-delete_publisher
-get_allPublisherDetail
-get_publisherDetail
-invoke_SyncSubscription
-save_Clerk
-save_ClientSubscriptionInfo
-save_Node
-save_publisher
-View/Delete all pending Transfer Tokens</pre>
+            <select>
+                <option>adminDelete_tmodel</option>
+                <option>delete_ClientSubscriptionInfo</option>
+                <option>delete_publisher</option>
+                <option>get_allPublisherDetail</option>
+                <option>get_publisherDetail</option>
+                <option>invoke_SyncSubscription</option>
+                <option>save_Clerk</option>
+                <option>save_ClientSubscriptionInfo</option>
+                <option>save_Node</option>
+                <option>save_publisher</option>
+                <option>View/Delete all pending Transfer Tokens</option>
+            </select>
         </div>
 
     </div>

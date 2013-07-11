@@ -122,6 +122,7 @@ public interface JUDDIApiPortType extends Remote{
 
 
     /**
+     * This will delete the tmodel definition, all existing instances will remain
      * @param body
      * @throws DispositionReportFaultMessage, RemoteException
      */

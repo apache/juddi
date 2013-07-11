@@ -122,20 +122,7 @@
 
 
                                 </li>
-                                <li class="dropdown" ><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-search icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.discover")%><b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.businesses.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.businesses")%></a></li>
-                                        <li><a href="serviceBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.services.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.services")%></a></li>
-                                        <li><a href="tmodelBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.tmodels.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.tmodels")%></a></li>
-                                        <%//                                        <li><a href="publisherBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publishers.tooltip")">ResourceLoader.GetResource(session, "navbar.publishers")</a></li>
-%>
-                                        <li class="divider"> </li>
-
-                                        <li><a href="search.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.search.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.search")%></a></li>
-
-
-                                    </ul>
-                                </li>
+                                
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-pencil icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.create")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="businessEditor2.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.business.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.business")%></a></li>

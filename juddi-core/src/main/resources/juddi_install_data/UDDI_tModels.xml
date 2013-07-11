@@ -926,6 +926,22 @@
             <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	 <tModel tModelKey="uddi:uddi.org:wadl:types">
+        <name>uddi-org:wadl:types</name>
+        <description xml:lang="en">WADL Type Category System</description>
+        <overviewDoc>
+            <overviewURL>
+                http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
+            <keyedReference keyName="uddi-org:types:unchecked" keyValue="unchecked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	
     <!-- 2. XML Namespace tModel  -->
     <tModel tModelKey="uddi:uddi.org:xml:namespace">
         <name>uddi-org:xml:namespace</name>

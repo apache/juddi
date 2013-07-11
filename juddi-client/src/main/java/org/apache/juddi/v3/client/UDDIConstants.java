@@ -14,6 +14,9 @@ import org.uddi.api_v3.TModel;
  */
 public interface UDDIConstants {
 
+    public static final int MAX_xml_lang_length = 26;
+    public static final int MAX_description_length = 255;
+    public static final int MAX_discoveryURL_length = 4096;
     /**
      * andAllKeys: this changes the behavior for identifierBag to AND keys
      * rather than OR them. This is already the default for categoryBag and
@@ -637,6 +640,4 @@ public interface UDDIConstants {
      * A tModel that represents the SOAP 1.2 protocol
      */
     public static String PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
-
-    
 }
