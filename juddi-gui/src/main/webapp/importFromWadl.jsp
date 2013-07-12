@@ -245,8 +245,8 @@
 
                             <Br><br>
                             <div id="preview"></div>
-                            <a class="btn btn-info" onclick="javascript:save(true);"><i class="icon-eye-open icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.preview")%></a>
-                            <a class="btn btn-primary" onclick="javascript:save(false);"><i class="icon-save icon-large"></i>  <%=ResourceLoader.GetResource(session, "actions.save")%></a>
+                            <a class="btn btn-info" onclick="preview(true);"><i class="icon-eye-open icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.preview")%></a>
+                            <a class="btn btn-primary" onclick="preview(false);"><i class="icon-save icon-large"></i>  <%=ResourceLoader.GetResource(session, "actions.save")%></a>
                         </div>
                     </div>
                 </div>

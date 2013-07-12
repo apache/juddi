@@ -1,8 +1,13 @@
 <%-- 
-    Document   : importFromWsdl
-    Created on : May 11, 2013, 3:26:42 PM
+    Document   : importFromWadl
+    Created on : July 11, 2013, 3:26:42 PM
     Author     : Alex O'Ree
 --%>
+<%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
+<%@page import="org.uddi.api_v3.BusinessService"%>
+<%@page import="org.apache.juddi.v3.client.mappings.wadl.Application"%>
+<%@page import="org.apache.juddi.v3.client.mapping.WADL2UDDI"%>
+<%@page import="java.io.File"%>
 <%@page import="org.apache.juddi.v3.client.config.TokenResolver"%>
 <%@page import="org.uddi.api_v3.Name"%>
 <%@page import="org.uddi.api_v3.BusinessEntity"%>
@@ -48,24 +53,25 @@
                     String domain = url.getHost();
                     //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
 
-                    ReadWSDL rw = new ReadWSDL();
-                    rw.setIgnoreSSLErrors(ignoreSSL);
-                    Definition wsdlDefinition = rw.readWSDL(url, username, password);
+                    Application app = WADL2UDDI.ParseWadl(url, username, password, ignoreSSL);
+
+                    List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+                    URL baseurl = urls.get(0);
+
+                    //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
                     Properties properties = new Properties();
-                    properties.put("keyDomain", keydomain);
-                    properties.put("businessName", businessname);
+                    properties.put("keyDomain", domain);
+                    properties.put("businessName", domain);
                     properties.put("serverName", url.getHost());
                     properties.put("serverPort", url.getPort());
-                    String wsdlURL = wsdlDefinition.getDocumentBaseURI();
-                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-                    BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
-                    @SuppressWarnings("unchecked")
-                    Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
-                    Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
-                    Map allBindings = wsdlDefinition.getAllBindings();
-                    Set<TModel> bindingTmodels = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings);
+                    //wsdlURL = wsdlDefinition.getDocumentBaseURI();
+                    WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+
+                    BusinessService businessServices = wadl2UDDI.createBusinessService(new QName(url.getHost(), "Servicename"), app);
+
+
+                    Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(uri, app);
                     List<TModel> tmodels = new ArrayList<TModel>();
-                    tmodels.addAll(bindingTmodels);
                     tmodels.addAll(portTypeTModels);
 
                     boolean createKeyGen = false;
@@ -73,33 +79,31 @@
                     if (x.getTmodelDetails(keygen.getTModelKey()) == null) {
                         createKeyGen = true;
                     }
-                    out.write("<i class=\"icon-thumbs-up icon-large\"></i> WSDL successfully parsed! This will create " + portTypeTModels.size()
-                            + " portType tmodel(s), " + bindingTmodels.size()
-                            + " binding tModel(s), " + allBindings.size() +
-                            ((createKeyGen==true) ? "one tModel Key Generator, " : "")
-                            + " binding(s), and " + businessServices.getBusinessService().size() + " service(s) attached to the business with "
+                    out.write("<i class=\"icon-thumbs-up icon-large\"></i> WADL successfully parsed! This will create " + portTypeTModels.size()
+                            + "tModels, " + ((createKeyGen == true) ? "one tModel Key Generator, " : "")
+                            + "1 binding, and 1 service(s) attached to the business with "
                             + "the key " + StringEscapeUtils.escapeHtml(businessname) + " .<br>");
                     out.write("Services:<br><ul>");
-                    for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-                        out.write("<li>Key:"
-                                + StringEscapeUtils.escapeHtml(businessServices.getBusinessService().get(i).getServiceKey())
-                                + " <br>Name: "
-                                + StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessServices.getBusinessService().get(i).getName())));
-                        if (businessServices.getBusinessService().get(i).getBindingTemplates() != null) {
-                            out.write("<br>Binding Templates:<ul>");
-                            for (int k = 0; k < businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
-                                out.write("<li>Key: " + StringEscapeUtils.escapeHtml(businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey())
-                                        + "<br>Access Point: ");
-                                if (businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint() != null) {
-                                    out.write(StringEscapeUtils.escapeHtml(
-                                            businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue()));
-                                }
-                                out.write("</li>");
+
+                    out.write("<li>Key:"
+                            + StringEscapeUtils.escapeHtml(businessServices.getServiceKey())
+                            + " <br>Name: "
+                            + StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessServices.getName())));
+                    if (businessServices.getBindingTemplates() != null) {
+                        out.write("<br>Binding Templates:<ul>");
+                        for (int k = 0; k < businessServices.getBindingTemplates().getBindingTemplate().size(); k++) {
+                            out.write("<li>Key: " + StringEscapeUtils.escapeHtml(businessServices.getBindingTemplates().getBindingTemplate().get(k).getBindingKey())
+                                    + "<br>Access Point: ");
+                            if (businessServices.getBindingTemplates().getBindingTemplate().get(k).getAccessPoint() != null) {
+                                out.write(StringEscapeUtils.escapeHtml(
+                                        businessServices.getBindingTemplates().getBindingTemplate().get(k).getAccessPoint().getValue()));
                             }
-                            out.write("</ul>");
+                            out.write("</li>");
                         }
-                        out.write("</li>");
+                        out.write("</ul>");
                     }
+                    out.write("</li>");
+
                     out.write("</ul>");
 
                     out.write("tModels<br><ul>");
@@ -112,19 +116,20 @@
                     }
                     out.write("</ul>");
 
+                            
                     if (method.equalsIgnoreCase("save")) {
-                        
+
                         //forgot the key generator
 
                         StringBuilder result = new StringBuilder();
-                        if (createKeyGen)
-                                                       {
-                            result.append("Saving tModel " + StringEscapeUtils.escapeHtml( keygen.getName().getValue())  + "..." +x.SaveTModel(keygen)).append("<br>");
+                        if (createKeyGen) {
+                            result.append("Saving tModel " + StringEscapeUtils.escapeHtml(keygen.getName().getValue()) + "..." + x.SaveTModel(keygen)).append("<br>");
                         }
                         for (int i = 0; i < tmodels.size(); i++) {
-                            result.append("Saving tModel " + StringEscapeUtils.escapeHtml( tmodels.get(i).getName().getValue())  + "..." + x.SaveTModel(tmodels.get(i))).append("<br>");
+                            result.append("Saving tModel " + StringEscapeUtils.escapeHtml(tmodels.get(i).getName().getValue()) + "..." + x.SaveTModel(tmodels.get(i))).append("<br>");
                         }
 
+                        //this needs work
                         BusinessEntity biz = x.GetBusinessDetails(businessname);
                         if (biz != null) {
                             if (biz.getBusinessServices() == null) {
@@ -133,16 +138,19 @@
 
                         } else {
                             biz = new BusinessEntity();
-                            biz.setBusinessKey( TokenResolver.replaceTokens("uddi:${keyDomain}:business_${businessName}", properties).toLowerCase() );
+                            biz.setBusinessKey(TokenResolver.replaceTokens("uddi:${keyDomain}:business_${businessName}", properties).toLowerCase());
                             biz.getName().add(new Name(businessname, "en"));
                         }
                         if (biz.getBusinessServices() == null) {
                             biz.setBusinessServices(new BusinessServices());
                         }
-                        for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-                            biz.getBusinessServices().getBusinessService().add(businessServices.getBusinessService().get(i));
-                        }
-                        result.append("Saving business " + StringEscapeUtils.escapeHtml( biz.getName().get(0).getValue())  + "..." + x.SaveBusinessDetails(biz));
+
+                        biz.getBusinessServices().getBusinessService().add(businessServices);
+
+         //               PrintUDDI<BusinessEntity> sbp = new PrintUDDI<BusinessEntity>();
+           //             result.append("<br>" + sbp.print(biz) + "<br>");
+                                    
+                        result.append("Saving business " + StringEscapeUtils.escapeHtml(biz.getName().get(0).getValue()) + "..." + x.SaveBusinessDetails(biz));
                         out.write(result.toString());
                     }
 

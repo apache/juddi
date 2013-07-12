@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,6 +35,17 @@ import javax.xml.namespace.QName;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.Property;
@@ -59,6 +71,7 @@ import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
 import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 /**
  * This class is incomplete
@@ -335,6 +348,72 @@ public class WADL2UDDI {
 
     public static Application ParseWadl(URL file) {
         Application unmarshal = JAXB.unmarshal(file, Application.class);
+        return unmarshal;
+    }
+    
+    public static Application ParseWadl(URL weburl, String username, String password, boolean ignoreSSLErrors){
+            DefaultHttpClient httpclient = null;
+            Application unmarshal=null;
+        try {
+            String url = weburl.toString();
+            if (!url.toLowerCase().startsWith("http")) {
+                return ParseWadl(weburl);
+            }
+            
+            boolean usessl = false;
+            int port = 80;
+            if (url.toLowerCase().startsWith("https://")) {
+                port = 443;
+                usessl = true;
+            }
+
+            if (weburl.getPort() > 0) {
+                port = weburl.getPort();
+            }
+
+            if (ignoreSSLErrors && usessl) {
+                SchemeRegistry schemeRegistry = new SchemeRegistry();
+                schemeRegistry.register(new Scheme("https", port, new MockSSLSocketFactory()));
+                ClientConnectionManager cm = new BasicClientConnectionManager(schemeRegistry);
+                httpclient = new DefaultHttpClient(cm);
+            } else {
+                httpclient = new DefaultHttpClient();
+            }
+
+            if (username != null && username.length() > 0
+                    && password != null && password.length() > 0) {
+
+
+                httpclient.getCredentialsProvider().setCredentials(
+                        new AuthScope(weburl.getHost(), port),
+                        new UsernamePasswordCredentials(username, password));
+            }
+            HttpGet httpGet = new HttpGet(url);
+            try {
+
+                HttpResponse response1 = httpclient.execute(httpGet);
+                //System.out.println(response1.getStatusLine());
+                // HttpEntity entity1 = response1.getEntity();
+                // do something useful with the response body
+                // and ensure it is fully consumed
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                String handleResponse = responseHandler.handleResponse(response1);
+                StringReader sr = new StringReader(handleResponse);
+                unmarshal = JAXB.unmarshal(sr, Application.class);
+                
+
+            } finally {
+                httpGet.releaseConnection();
+
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            if (httpclient != null) {
+                httpclient.getConnectionManager().shutdown();
+            }
+        }
         return unmarshal;
     }
 

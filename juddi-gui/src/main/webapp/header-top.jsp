@@ -141,6 +141,7 @@
                                         <li><a href="businessEditor2.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.business.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.business")%></a></li>
                                         <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.service.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.service")%></a></li>
                                         <li><a href="importFromWsdl.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport")%></a></li>
+                                        <li><a href="importFromWadl.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.tooltip.wadl")%>"><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.wadl")%></a></li>
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
                                     </ul>
