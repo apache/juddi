@@ -106,4 +106,19 @@ public class DefaultCryptor implements Cryptor
     encs = Base64.encodeBase64(encs);
     return new String(encs);
   }
+
+  
+    public String decrypt(String str)   throws  NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException,
+            IllegalBlockSizeException,
+            BadPaddingException{
+         byte[] encs = crypt(Cipher.DECRYPT_MODE,Base64.decodeBase64(str.getBytes()));
+        return new String(encs);
+    }
+    
+    
+    
+  
 }

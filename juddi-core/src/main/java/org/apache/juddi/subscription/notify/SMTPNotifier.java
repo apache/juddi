@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
-
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.mail.Address;
 import javax.mail.Message.RecipientType;
 import javax.mail.PasswordAuthentication;
@@ -13,13 +18,13 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.apache.juddi.model.BindingTemplate;
 import org.apache.juddi.v3.client.Release;
@@ -28,6 +33,10 @@ import org.uddi.api_v3.Result;
 import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
+/**
+ * This class sends Email alerts when a specific subscription is tripped
+ * @author probably Kurt Stam
+ */
 public class SMTPNotifier implements Notifier {
 	
 	Log log = LogFactory.getLog(this.getClass());
@@ -94,7 +103,26 @@ public class SMTPNotifier implements Notifier {
 			notificationEmailAddress = accessPointUrl.substring(accessPointUrl.indexOf(":")+1);
 			if (Boolean.getBoolean(getEMailProperties().getProperty("mail.smtp.starttls.enable"))) {
 				final String username = getEMailProperties().getProperty("mail.smtp.username");
-				final String password = getEMailProperties().getProperty("mail.smtp.password");
+                                String pwd = getEMailProperties().getProperty("mail.smtp.password");
+                                if (getEMailProperties().getProperty("mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, "false").equalsIgnoreCase("true"))
+                                {
+                                    try {
+                                        pwd = CryptorFactory.getCryptor().decrypt(pwd);
+                                    } catch (NoSuchPaddingException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    } catch (NoSuchAlgorithmException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    } catch (InvalidAlgorithmParameterException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    } catch (InvalidKeyException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    } catch (IllegalBlockSizeException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    } catch (BadPaddingException ex) {
+                                        log.error("Unable to decrypt settings",ex);
+                                    }
+                                }
+                                final String password = pwd;
 				session = Session.getInstance(getEMailProperties(), new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
 						return new PasswordAuthentication(username, password);

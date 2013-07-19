@@ -52,5 +52,10 @@ public class AES128Cryptor extends  AESCryptorAbstract {
         return super.encrypt(str);
     }
 
+    @Override
+    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        return super.decrypt(str);
+    }
+
 
 }

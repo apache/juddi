@@ -10,39 +10,24 @@ import org.apache.juddi.v3.auth.MD5XMLDocAuthenticator;
  * @author various
  */
 public interface Property {
-    public final static String JDDU_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
+    
     public final static String JUDDI_ROOT_PUBLISHER = "juddi.root.publisher";
     public final static String JUDDI_LOAD_INSTALL_DATA = "juddi.load.install.data";
     public final static String JUDDI_PERSISTENCEUNIT_NAME = "juddi.persistenceunit.name";
-    public final static String JUDDI_AUTHENTICATOR = "juddi.authenticator";
-    /**
-     * @see LdapSimpleAuthenticator
-     */
-    public final static String JUDDI_AUTHENTICATOR_URL = "juddi.authenticator.url";
-    /**
-     * @see LdapSimpleAuthenticator
-     */
-    public final static String JUDDI_AUTHENTICATOR_INITIAL_CONTEXT = "juddi.authenticator.initialcontext";
-    /**
-     * @see LdapSimpleAuthenticator
-     */
-    public final static String JUDDI_AUTHENTICATOR_STYLE = "juddi.authenticator.style";
-    /**
-     * @see LdapExpandedAuthenticator
-     */
-    public final static String JUDDI_AUTHENTICATOR_LDAP_EXPANDED_STR= "juddi.authenticator.ldapexp";
     public final static String JUDDI_CONFIGURATION_RELOAD_DELAY = "juddi.configuration.reload.delay";
-    public final static String JUDDI_LOCALE = "juddi.locale";
-    public final static String JUDDI_OPERATOR_EMAIL_ADDRESS = "juddi.operatorEmailAddress";
-    public final static String JUDDI_MAX_LENGTH = "juddi.maxNameLength";
-    public final static String JUDDI_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
+    //public final static String JUDDI_LOCALE = "juddi.locale";
+    
+    //public final static String JUDDI_OPERATOR_EMAIL_ADDRESS = "juddi.operatorEmailAddress";
+    
+    //public final static String JUDDI_MAX_LENGTH = "juddi.maxNameLength";
+    //public final static String JUDDI_MAX_NAME_ELEMENTS = "juddi.maxNameElementsAllowed";
     public final static String JUDDI_MAX_BUSINESSES_PER_PUBLISHER = "juddi.maxBusinessesPerPublisher";
     public final static String JUDDI_MAX_SERVICES_PER_BUSINESS = "juddi.maxServicesPerBusiness";
     public final static String JUDDI_MAX_BINDINGS_PER_SERVICE = "juddi.maxBindingsPerService";
     public final static String JUDDI_MAX_TMODELS_PER_PUBLISHER = "juddi.maxTModelsPerPublisher";
     public final static String JUDDI_CRYPTOR = "juddi.cryptor";
     public final static String JUDDI_KEYGENERATOR = "juddi.keygenerator";
-    public final static String JUDDI_SECURITY_DOMAIN = "juddi.securityDomain";
+    //public final static String JUDDI_SECURITY_DOMAIN = "juddi.securityDomain";
     public final static String JUDDI_USERSFILE = "juddi.usersfile";
     public final static String JUDDI_MAX_ROWS = "juddi.maxRows";
     public final static String JUDDI_MAX_IN_CLAUSE = "juddi.maxInClause";
@@ -52,22 +37,47 @@ public interface Property {
     /**
      * identifies whether or not authentication is required for the Inquiry endpoint
      */
-    public final static String JUDDI_AUTHENTICATE_INQUIRY = "juddi.authenticate.Inquiry";
+    public final static String JUDDI_AUTHENTICATE_INQUIRY = "juddi.auth.Inquiry";
     public final static String JUDDI_AUTH_TOKEN_EXPIRATION = "juddi.auth.token.Expiration";
     public final static String JUDDI_AUTH_TOKEN_TIMEOUT = "juddi.auth.token.Timeout";
+    
+    public final static String JUDDI_AUTHENTICATOR = "juddi.auth.authenticator.class";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_URL = "juddi.auth.authenticator.url";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_INITIAL_CONTEXT = "juddi.auth.authenticator.initialcontext";
+    /**
+     * @see LdapSimpleAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_STYLE = "juddi.auth.authenticator.style";
+    /**
+     * @see LdapExpandedAuthenticator
+     */
+    public final static String JUDDI_AUTHENTICATOR_LDAP_EXPANDED_STR= "juddi.auth.authenticator.ldapexp";
+    
+    
+    
     public final static String JUDDI_ENFORCE_REFERENTIAL_INTEGRITY = "juddi.validation.enforceReferentialIntegrity";
     public final static String JUDDI_SUBSCRIPTION_EXPIRATION_DAYS = "juddi.subscription.expiration.days";
+    public final static String JUDDI_SUBSCRIPTION_NOTIFICATION = "juddi.subscription.notification";
+    public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES = "juddi.subscription.chunkexpiration.minutes";
+    public final static String JUDDI_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
+    
     public final static String JUDDI_NOTIFICATION_START_BUFFER = "juddi.notification.start.buffer";
     public final static String JUDDI_NOTIFICATION_INTERVAL = "juddi.notification.interval";
     public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME = "juddi.notification.acceptable.lagtime";
     public final static String JUDDI_NOTIFICATION_MAX_TRIES = "juddi.notification.max.tries";
     public final static String JUDDI_NOTIFICATION_LIST_RESET_INTERVAL = "juddi.notification.list.reset.interval";
-    public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES = "juddi.subscription.chunkexpiration.minutes";
+    
     public final static String JUDDI_JNDI_REGISTRATION = "juddi.jndi.registration";
     public final static String JUDDI_RMI_PORT = "juddi.rmi.port";
     public final static String JUDDI_RMI_REGISTRATION = "juddi.rmi.registration";
     public final static String JUDDI_RMI_REGISTRY_PORT = "juddi.rmi.registry.port";
-    public final static String JUDDI_SUBSCRIPTION_NOTIFICATION = "juddi.subscription.notification";
+    
     public final static String JUDDI_EMAIL_PREFIX = "juddi.mail.smtp.prefix";
     public final static String JUDDI_EMAIL_FROM   = "juddi.mail.smtp.from";
     public final static String DEFAULT_JUDDI_EMAIL_PREFIX = "juddi.";
@@ -92,7 +102,11 @@ public interface Property {
     public final static String DEFAULT_SCHEMA = "hibernate.default_schema";
     public final static String HIBERNATE_DIALECT = "hibernate.dialect";
     /**
-     * @since 3.2
+     * @since 3.3 FUTURE USE
      */
     public final static String JUDDI_ACCESS_CONTROL_PROVIDER = "juddi.accessControlProvider";
+    /**
+     * @since 3.2, used for Apache Commons Configuration XML config file
+     */
+    public static final String ENCRYPTED_ATTRIBUTE="[@encrypted]";
 }

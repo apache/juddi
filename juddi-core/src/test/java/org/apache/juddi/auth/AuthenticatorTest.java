@@ -16,17 +16,24 @@ package org.apache.juddi.auth;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.security.InvalidKeyException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
+import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.Property;
 import org.apache.juddi.cryptor.AES128Cryptor;
+import org.apache.juddi.cryptor.AES256Cryptor;
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
+import org.apache.juddi.cryptor.DefaultCryptor;
 import org.apache.juddi.cryptor.TripleDESCrytor;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
@@ -219,6 +226,8 @@ public class AuthenticatorTest
                         String encrypt = auth.encrypt("test");
                         Assert.assertNotNull(encrypt);
                         Assert.assertNotSame(encrypt, "test");
+                        String test=auth.decrypt(encrypt);
+                        Assert.assertEquals(test, "test");
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");
@@ -235,9 +244,88 @@ public class AuthenticatorTest
                         String encrypt = auth.encrypt("test");
                         Assert.assertNotNull(encrypt);
                         Assert.assertNotSame(encrypt, "test");
+                        String test=auth.decrypt(encrypt);
+                        Assert.assertEquals(test, "test");
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");
 		}
 	}
+        
+        
+        @Test
+	public void testDefaultCryptor() 
+	{
+            System.out.println("testDefaultCryptor");
+		try {
+			Cryptor auth = new DefaultCryptor();
+                        String encrypt = auth.encrypt("test");
+                        Assert.assertNotNull(encrypt);
+                        Assert.assertNotSame(encrypt, "test");
+                        String test=auth.decrypt(encrypt);
+                        Assert.assertEquals(test, "test");
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
+        
+        @Test
+	public void testAES256Cryptor() 
+	{
+                System.out.println("testAES256Cryptor");
+		try {
+			Cryptor auth = new AES256Cryptor();
+                        String encrypt = auth.encrypt("test");
+                        Assert.assertNotNull(encrypt);
+                        Assert.assertNotSame(encrypt, "test");
+                        String test=auth.decrypt(encrypt);
+                        Assert.assertEquals(test, "test");
+                }
+                catch (InvalidKeyException e)
+                {
+                    logger.error("Hey, you're probably using the Oracle JRE without the Unlimited Strength Java Crypto Extensions installed. AES256 won't work until you download and install it", e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
+         @Test
+	public void testDecryptFromConfigXML() 
+	{
+                System.out.println("testDecryptFromConfigXML");
+		try {
+                    Configuration config =AppConfig.getConfiguration();
+                    
+			Cryptor auth = new AES128Cryptor();
+                        String encrypt = auth.encrypt("test");
+                        Assert.assertNotNull(encrypt);
+                        Assert.assertNotSame(encrypt, "test");
+                        
+                        //add to the config
+                        config.addProperty("testDecryptFromConfigXML", encrypt);
+                        config.addProperty("testDecryptFromConfigXML"+ Property.ENCRYPTED_ATTRIBUTE, "true");
+                        
+                        //retrieve it
+                        String pwd = config.getString("testDecryptFromConfigXML");
+                        
+                        //test for encryption
+                        if (config.getBoolean("testDecryptFromConfigXML" + Property.ENCRYPTED_ATTRIBUTE, false))
+                        {
+                            String test=auth.decrypt(pwd);
+                            Assert.assertEquals(test, "test");
+                        }
+                        else
+                        {
+                            Assert.fail("config reports that the setting is not encrypted");
+                       }
+                }
+                catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
 }

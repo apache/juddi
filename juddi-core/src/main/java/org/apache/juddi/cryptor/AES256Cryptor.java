@@ -27,13 +27,14 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-
-/** AES 256 bit encryption.
- * <h1> Requires Unlimited Strength Java Cryptographic Extensions</h1>
+/**
+ * AES 256 bit encryption. <h1> Requires Unlimited Strength Java Cryptographic
+ * Extensions</h1>
+ *
  * @author Alex O'Ree
  */
-public class AES256Cryptor extends  AESCryptorAbstract {
-  
+public class AES256Cryptor extends AESCryptorAbstract {
+
     /**
      * Constructor for DefaultCryptor.
      */
@@ -41,10 +42,9 @@ public class AES256Cryptor extends  AESCryptorAbstract {
             throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException {
         super();
     }
-    
+
     @Override
-    protected String getKey()
-    {
+    protected String getKey() {
         return "ef057ce3abd9dd9a161a2888c9d7025f104a42eceda5947b083186e7190fcc46";
     }
 
@@ -53,5 +53,8 @@ public class AES256Cryptor extends  AESCryptorAbstract {
         return super.encrypt(str);
     }
 
-
+    @Override
+    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        return super.decrypt(str);
+    }
 }

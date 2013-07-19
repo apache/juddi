@@ -138,8 +138,8 @@ public class ValidateSubscription extends ValidateUDDIApi {
         //If not specified, the number of entities sent is not limited, unless by node policy.
         try {
             if (subscription.getMaxEntities() == null
-                    || subscription.getMaxEntities().intValue() > AppConfig.getConfiguration().getInt(Property.JDDU_SUBSCRIPTION_MAXENTITIES, 1000)) {
-                subscription.setMaxEntities(AppConfig.getConfiguration().getInt(Property.JDDU_SUBSCRIPTION_MAXENTITIES, 1000));
+                    || subscription.getMaxEntities().intValue() > AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_MAXENTITIES, 1000)) {
+                subscription.setMaxEntities(AppConfig.getConfiguration().getInt(Property.JUDDI_SUBSCRIPTION_MAXENTITIES, 1000));
             }
         } catch (ConfigurationException x) {
             subscription.setMaxEntities(1000);

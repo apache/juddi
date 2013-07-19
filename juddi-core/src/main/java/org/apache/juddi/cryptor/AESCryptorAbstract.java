@@ -91,6 +91,26 @@ public abstract class AESCryptorAbstract implements Cryptor {
         byte[] encrypted = cipher.doFinal(cleartext.getBytes());
         return asHex(encrypted);
     }
+    
+      /**
+     * Encrypt the string
+     */
+    public String decrypt(String str)
+            throws NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidAlgorithmParameterException,
+            InvalidKeyException,
+            IllegalBlockSizeException,
+            BadPaddingException {
+        byte[] raw = hexToBytes(getKey()); //
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] original = cipher.doFinal(hexToBytes(str));
+        
+        return new String(original);
+    }
 
     private static String asHex(byte buf[]) {
         //return new String(buf);

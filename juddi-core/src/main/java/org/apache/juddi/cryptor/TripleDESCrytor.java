@@ -90,4 +90,18 @@ public class TripleDESCrytor implements Cryptor {
         }
         return null;
     }
+
+    @Override
+    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        String encryptedString = str;
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] encryptedText = Base64.decodeBase64(str.getBytes());
+            byte[] plainTest = cipher.doFinal(encryptedText);
+            encryptedString = new String(plainTest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return encryptedString;
+    }
 }

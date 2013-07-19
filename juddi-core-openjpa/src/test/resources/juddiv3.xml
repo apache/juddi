@@ -76,9 +76,6 @@
 			<maxentities>1000</maxentities>
 		</subscription>
 
-		<!-- jUDDI Authentication module to use-->
-		<authenticator>org.apache.juddi.v3.auth.JUDDIAuthenticator</authenticator>
-
 		<!-- jUDDI UUIDGen implementation to use-->
 		<uuidgen>org.apache.juddi.uuidgen.DefaultUUIDGen</uuidgen>
 
@@ -88,10 +85,6 @@
 		<!-- jUDDI Key Generator to use-->
 		<keygenerator>org.apache.juddi.keygen.DefaultKeyGenerator</keygenerator>
 
-		<!-- Specifies whether the inquiry API requires authentication, all other APIs require authN-->
-		<authenticate>
-			<Inquiry>false</Inquiry>
-		</authenticate>
 		<notification>
 			<!-- Specifies the interval at which the notification timer triggers-->
 			<interval>5000</interval>
@@ -100,11 +93,27 @@
 				<buffer>0</buffer>
 			</start>
 		</notification>
-
+		<!-- All Authentication related settings -->
 		<auth>
+			<!-- Specifies whether the inquiry API requires authentication, all other APIs require authN-->
+			<Inquiry>false</Inquiry>
+			<!-- jUDDI Authentication module to use-->
+
+			<authenticator>
+				<class>org.apache.juddi.v3.auth.JUDDIAuthenticator</class>
+				<!-- other settings
+				url
+				initialcontext
+				style
+				ldapexp
+				-->
+			</authenticator>
+
 			<token>
-				<!-- As of 3.1.5 Duration of time for tokens to expire-->
+				<!-- Time in minutes to expire tokes after inactivity-->
 				<Timeout>15</Timeout>
+				<!-- As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity -->
+				<Expiration>15</Expiration>
 			</token>
 		</auth>
 
