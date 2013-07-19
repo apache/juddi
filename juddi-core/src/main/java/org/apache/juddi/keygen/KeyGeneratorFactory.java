@@ -17,6 +17,8 @@
 
 package org.apache.juddi.keygen;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +38,7 @@ public abstract class KeyGeneratorFactory {
 	private static Log log = LogFactory.getLog(KeyGeneratorFactory.class);
 
 	// Key Generator default implementation
-	private static final String DEFAULT_IMPL = "org.apache.juddi.keygen.DefaultKeyGenerator";
+	public static final String DEFAULT_IMPL = "org.apache.juddi.keygen.DefaultKeyGenerator";
 
 	// the shared Key Generator instance
 	private static KeyGenerator keyGenerator = null;
@@ -68,17 +70,23 @@ public abstract class KeyGeneratorFactory {
 			return keyGenerator;
 	
 		// grab class name of the Cryptor implementation to create
-		String className = DEFAULT_IMPL;
-		try {
-			// grab class name of the Authenticator implementation to create
-			className = AppConfig.getConfiguration().getString(Property.JUDDI_KEYGENERATOR, DEFAULT_IMPL);
-		}
-		catch(ConfigurationException ce) {
-			log.error("Configuration exception occurred retrieving: " + Property.JUDDI_KEYGENERATOR);
-		}
-		
-		// write the Cryptor implementation name to the log
-		log.debug("Key Generator Implementation = " + className);
+		String className = System.getProperty(Property.JUDDI_KEYGENERATOR);
+                if (className==null){
+                    try {
+                            // grab class name of the Authenticator implementation to create
+                            className = AppConfig.getConfiguration().getString(Property.JUDDI_KEYGENERATOR, DEFAULT_IMPL);
+                    }
+                    catch(ConfigurationException ce) {
+                            log.error("Configuration exception occurred retrieving: " + Property.JUDDI_KEYGENERATOR);
+                    }
+                }
+                try {
+                    // write the Cryptor implementation name to the log
+                    log.debug("Configuration Key Generator Implementation = " + AppConfig.getConfiguration().getString(Property.JUDDI_KEYGENERATOR));
+                } catch (ConfigurationException ex) {
+                }
+                log.debug("SysProp Key Generator Implementation = " + System.getProperty(Property.JUDDI_KEYGENERATOR));
+                log.debug("Using Key Generator Implementation = " + className);
 	
 		Class<?> keygenClass = null;
 		try {

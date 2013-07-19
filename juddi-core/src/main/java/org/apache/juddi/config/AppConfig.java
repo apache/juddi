@@ -29,6 +29,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +50,7 @@ import org.uddi.api_v3.KeyedReference;
  */
 public class AppConfig 
 {
-	private final static String JUDDI_PROPERTIES = "juddiv3.properties";
+	private final static String JUDDI_PROPERTIES = "juddiv3.xml";
 	private Log log = LogFactory.getLog(AppConfig.class);
 	private Configuration config;
 	private static AppConfig instance=null;
@@ -74,13 +75,18 @@ public class AppConfig
 		CompositeConfiguration compositeConfig = new CompositeConfiguration();
 		compositeConfig.addConfiguration(new SystemConfiguration());
 		//Properties from file
-		PropertiesConfiguration propConfig = null;
-	    final String filename = System.getProperty("juddi.propertiesFile");
+                //changed 7-19-2013 AO for JUDDI-627
+		XMLConfiguration propConfig = null;
+	        final String filename = System.getProperty("juddi.propertiesFile");
 		if (filename != null) {
-			propConfig = new PropertiesConfiguration(filename);
+                  propConfig = new XMLConfiguration (filename); 
+		//	propConfig = new PropertiesConfiguration(filename);
 		} else {
-			propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+			//propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
+                    propConfig = new XMLConfiguration(JUDDI_PROPERTIES);
 		}
+                //Hey! this may break things
+                propConfig.setAutoSave(true);
 		URL url = ClassUtil.getResource(JUDDI_PROPERTIES, this.getClass()); 
 		log.info("Reading from properties file:  " + url);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);

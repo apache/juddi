@@ -176,6 +176,7 @@ public class Install {
 	protected static boolean alreadyInstalled(Configuration config) throws ConfigurationException {
 		
 		String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
+                log.info("Checking if jUDDI is seeded by searching for root publisher " + rootPublisherStr);
 		org.apache.juddi.model.Publisher publisher = null;
 		int numberOfTries=0;
 		while (numberOfTries++ < 100) {
