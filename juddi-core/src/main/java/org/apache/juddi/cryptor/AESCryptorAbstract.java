@@ -63,12 +63,12 @@ public abstract class AESCryptorAbstract implements Cryptor {
      */
     public AESCryptorAbstract()
             throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException {
-        //byte[] raw =//skey.getEncoded();
-          //      hexToBytes(getKey()); //
-        //SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        byte[] raw =//skey.getEncoded();
+                hexToBytes(getKey()); //
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         // Instantiate the cipher
-        //Cipher cipher = Cipher.getInstance("AES");
-        //cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
     }
 
     /**

@@ -459,7 +459,10 @@ public class AuthenticatorTest
                         {
                             Assert.fail("config reports that the setting is not encrypted");
                        }
-                }
+                } catch (InvalidKeyException e)
+                {
+                    logger.error("Hey, you're probably using the Oracle JRE without the Unlimited Strength Java Crypto Extensions installed. AES256 won't work until you download and install it", e);
+		}
                 catch (Exception e) {
 			logger.error(e.getMessage(),e);
 			Assert.fail("unexpected");
