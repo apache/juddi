@@ -4,8 +4,10 @@
  */
 package uddi.examples;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This call is a simple test class that shows how to encrypt stuff in Java using AES
@@ -64,9 +66,27 @@ public class AES {
         return raw;
     }
     //default key
-    private final static String something2 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
+   // private final static String something2 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
     
-    public static void main(String[] args){
-        System.out.println(GEN(128));
+    public static void main(String[] args) throws Exception{
+        //ee4bd3eefe38c3d996a89589de5b9698
+        String key = GEN(128);
+        System.out.println(key);
+        
+        byte[] raw = hexToBytes(key); //
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        byte[] encrypted = cipher.doFinal("password".getBytes());
+        String enc = (asHex(encrypted));
+        System.out.println(enc);
+        
+         skeySpec = new SecretKeySpec(hexToBytes(key), "AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] original = cipher.doFinal(hexToBytes(enc));
+        
+        System.out.println( new String(original));
+        
     }
 }

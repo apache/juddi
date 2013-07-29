@@ -56,26 +56,25 @@ public abstract class AESCryptorAbstract implements Cryptor {
         return raw;
     }
 
-    protected  String getKey() {
-        return null;
-    }
-
+    protected abstract String getKey();
+        
     /**
      * Constructor for DefaultCryptor.
      */
     public AESCryptorAbstract()
             throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException {
-        byte[] raw =//skey.getEncoded();
-                hexToBytes(getKey()); //
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        //byte[] raw =//skey.getEncoded();
+          //      hexToBytes(getKey()); //
+        //SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         // Instantiate the cipher
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+        //Cipher cipher = Cipher.getInstance("AES");
+        //cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
     }
 
     /**
      * Encrypt the string
      */
+    @Override
     public String encrypt(String cleartext)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,
@@ -95,6 +94,7 @@ public abstract class AESCryptorAbstract implements Cryptor {
       /**
      * Encrypt the string
      */
+    @Override
     public String decrypt(String str)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException,

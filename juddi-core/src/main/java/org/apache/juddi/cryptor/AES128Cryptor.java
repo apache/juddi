@@ -44,7 +44,7 @@ public class AES128Cryptor extends  AESCryptorAbstract {
     @Override
     protected String getKey()
     {
-        return "ee4bd3eefe38c3d996a89589de5b9698";
+        return "72d93747ba0162f2f2985f5cb3e24b30";
     }
 
     @Override

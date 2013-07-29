@@ -44,13 +44,20 @@ import org.uddi.api_v3.KeyedReference;
 
 /**
  * Handles the application level configuration for jUDDI. By default it first
- * looks at system properties
+ * looks at system properties (juddi.propertiesFile)
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class AppConfig 
 {
-	private final static String JUDDI_PROPERTIES = "juddiv3.xml";
+        /**
+         * This system property's value should be a path to a configuration file
+         */
+        public static final String JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY="juddi.propertiesFile";
+        /**
+         * The default configuration file name for juddi
+         */
+	public static final String JUDDI_PROPERTIES = "juddiv3.xml";
 	private Log log = LogFactory.getLog(AppConfig.class);
 	private Configuration config;
 	private static AppConfig instance=null;
@@ -77,7 +84,7 @@ public class AppConfig
 		//Properties from file
                 //changed 7-19-2013 AO for JUDDI-627
 		XMLConfiguration propConfig = null;
-	        final String filename = System.getProperty("juddi.propertiesFile");
+	        final String filename = System.getProperty(JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY);
 		if (filename != null) {
                   propConfig = new XMLConfiguration (filename); 
 		//	propConfig = new PropertiesConfiguration(filename);

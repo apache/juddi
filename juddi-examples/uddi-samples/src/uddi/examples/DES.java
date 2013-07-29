@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package uddi.examples;
 
 import java.security.InvalidAlgorithmParameterException;
@@ -20,33 +19,28 @@ import javax.crypto.spec.DESedeKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * This call is a simple test class that shows how to encrypt stuff in Java using 3DES
+ * This call is a simple test class that shows how to encrypt stuff in Java
+ * using 3DES
+ *
  * @author Alex O'Ree
  */
 public class DES {
-  private static final String UNICODE_FORMAT = "UTF8";
+
+    private static final String UNICODE_FORMAT = "UTF8";
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-    private KeySpec ks;
-    private SecretKeyFactory skf;
-    private Cipher cipher;
-    byte[] arrayBytes;
-    private String myEncryptionKey;
-    private String myEncryptionScheme;
-    SecretKey key;
+    static private KeySpec ks;
+    static private SecretKeyFactory skf;
+    static private Cipher cipher;
+    static byte[] arrayBytes;
+    static private String myEncryptionKey;
+    static private String myEncryptionScheme;
+    static SecretKey key;
 
     public DES() throws Exception {
-        myEncryptionKey = "rioTEBCe/RAHRs6tTyYxDqettnVbZA6z";
-        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
-        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
-        ks = new DESedeKeySpec(arrayBytes);
-        skf = SecretKeyFactory.getInstance(myEncryptionScheme);
-        cipher = Cipher.getInstance(myEncryptionScheme);
-        key = skf.generateSecret(ks);
     }
 
-    
     public String encrypt(String clear) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        String encryptedString = null;
+         String encryptedString = null;
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] plainText = clear.getBytes(UNICODE_FORMAT);
@@ -57,19 +51,42 @@ public class DES {
         }
         return encryptedString;
     }
-    
-    public static void main(String[] args) throws Exception{
+
+    public String decrypt(String str) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        String encryptedString = null;
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] encryptedText = Base64.decodeBase64(str.getBytes());
+            byte[] clear = cipher.doFinal(encryptedText);
+            encryptedString = new String(Base64.encodeBase64(clear));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return encryptedString;
+    }
+
+    public static void main(String[] args) throws Exception {
         DES des = new DES();
-          /*KeyGenerator kgen;
+        KeyGenerator kgen;
         try {
             kgen = KeyGenerator.getInstance(DESEDE_ENCRYPTION_SCHEME);
             kgen.init(168);
             SecretKey skey = kgen.generateKey();
             byte[] raw = skey.getEncoded();
-             System.out.println(new String(Base64.encodeBase64(raw)));
+            myEncryptionKey = new String(Base64.encodeBase64(raw));
+            myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
+            arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
+            ks = new DESedeKeySpec(arrayBytes);
+            skf = SecretKeyFactory.getInstance(myEncryptionScheme);
+            cipher = Cipher.getInstance(myEncryptionScheme);
+            key = skf.generateSecret(ks);
+
+            System.out.println(new String(Base64.encodeBase64(raw)));
+            System.out.println(des.encrypt("password"));
+            System.out.println(des.decrypt(des.encrypt("password")));
         } catch (Exception ex) {
             ex.printStackTrace();;
-        }*/
-        System.out.println(des.encrypt("test"));
+        }
+
     }
 }

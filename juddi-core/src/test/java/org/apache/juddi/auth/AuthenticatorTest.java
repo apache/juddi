@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.auth;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.security.InvalidKeyException;
@@ -293,9 +294,9 @@ public class AuthenticatorTest
 	}
         
          @Test
-	public void testDecryptFromConfigXML() 
+	public void testDecryptFromConfigXML_InMemory() 
 	{
-                System.out.println("testDecryptFromConfigXML");
+                System.out.println("testDecryptFromConfigXML_InMemory");
 		try {
                     Configuration config =AppConfig.getConfiguration();
                     
@@ -310,7 +311,7 @@ public class AuthenticatorTest
                         
                         //retrieve it
                         String pwd = config.getString("testDecryptFromConfigXML");
-                        
+                        Assert.assertNotNull(pwd);
                         //test for encryption
                         if (config.getBoolean("testDecryptFromConfigXML" + Property.ENCRYPTED_ATTRIBUTE, false))
                         {
@@ -327,5 +328,142 @@ public class AuthenticatorTest
 			Assert.fail("unexpected");
 		}
 	}
+         
+        @Test
+	public void testDecryptFromConfigXML_Disk_Default() 
+	{
+                System.out.println("testDecryptFromConfigXML_Disk_Default");
+		try {
+                    File f = new File(".");
+                    System.out.println("Current working dir is " + f.getAbsolutePath());
+                    System.setProperty(AppConfig.JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY,f.getAbsolutePath() + "/src/test/resources/juddiv3-enc-default.xml");
+                    AppConfig.reloadConfig();
+                    Configuration config =AppConfig.getConfiguration();
+                    
+			Cryptor auth = new DefaultCryptor();
+                        
+                        //retrieve it
+                        String pwd = config.getString("juddi.mail.smtp.password");
+                        Assert.assertNotNull(pwd);
+                        //test for encryption
+                        if (config.getBoolean("juddi.mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, false))
+                        {
+                            String test=auth.decrypt(pwd);
+                            Assert.assertEquals(test, "password");
+                        }
+                        else
+                        {
+                            Assert.fail("config reports that the setting is not encrypted");
+                       }
+                }
+                catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
         
+        
+        @Test
+	public void testDecryptFromConfigXML_Disk_3DES() 
+	{
+                System.out.println("testDecryptFromConfigXML_Disk_3DES");
+		try {
+                    File f = new File(".");
+                    System.out.println("Current working dir is " + f.getAbsolutePath());
+                    System.setProperty(AppConfig.JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY, f.getAbsolutePath() +"/src/test/resources/juddiv3-enc-3des.xml");
+                    AppConfig.reloadConfig();
+                    Configuration config =AppConfig.getConfiguration();
+                    
+			Cryptor auth = new TripleDESCrytor();
+                        
+                        //retrieve it
+                        String pwd = config.getString("juddi.mail.smtp.password");
+                        Assert.assertNotNull(pwd);
+                        //test for encryption
+                        if (config.getBoolean("juddi.mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, false))
+                        {
+                            String test=auth.decrypt(pwd);
+                            Assert.assertEquals(test, "password");
+                        }
+                        else
+                        {
+                            Assert.fail("config reports that the setting is not encrypted");
+                       }
+                }
+                catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+        
+        
+         @Test
+	public void testDecryptFromConfigXML_Disk_AES128() 
+	{
+                System.out.println("testDecryptFromConfigXML_Disk_AES128");
+		try {
+                    File f = new File(".");
+                    System.out.println("Current working dir is " + f.getAbsolutePath());
+                    
+                    System.setProperty(AppConfig.JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY, f.getAbsolutePath() +"/src/test/resources/juddiv3-enc-aes128.xml");
+                    AppConfig.reloadConfig();
+                    Configuration config =AppConfig.getConfiguration();
+                    
+			Cryptor auth = new AES128Cryptor();
+                        
+                        //retrieve it
+                        String pwd = config.getString("juddi.mail.smtp.password");
+                        Assert.assertNotNull(pwd);
+                        //test for encryption
+                        if (config.getBoolean("juddi.mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, false))
+                        {
+                            String test=auth.decrypt(pwd);
+                            Assert.assertEquals(test, "password");
+                        }
+                        else
+                        {
+                            Assert.fail("config reports that the setting is not encrypted");
+                       }
+                }
+                catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+         
+         
+         
+         @Test
+	public void testDecryptFromConfigXML_Disk_AES256() 
+	{
+                System.out.println("testDecryptFromConfigXML_Disk_AES256");
+		try {
+                    File f = new File(".");
+                    System.out.println("Current working dir is " + f.getAbsolutePath());
+                    System.setProperty(AppConfig.JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY, f.getAbsolutePath() + "/src/test/resources/juddiv3-enc-aes256.xml");
+                    AppConfig.reloadConfig();
+                    Configuration config =AppConfig.getConfiguration();
+                    
+			Cryptor auth = new AES256Cryptor();
+                        
+                        //retrieve it
+                        String pwd = config.getString("juddi.mail.smtp.password");
+                        Assert.assertNotNull(pwd);
+                        //test for encryption
+                        if (config.getBoolean("juddi.mail.smtp.password" + Property.ENCRYPTED_ATTRIBUTE, false))
+                        {
+                            String test=auth.decrypt(pwd);
+                            Assert.assertEquals(test, "password");
+                        }
+                        else
+                        {
+                            Assert.fail("config reports that the setting is not encrypted");
+                       }
+                }
+                catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			Assert.fail("unexpected");
+		}
+	}
+
 }
