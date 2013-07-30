@@ -1687,7 +1687,10 @@ public class UddiHub {
                     fb.setName(n);
                     break;
                 case tmodel:
-
+                    fb.setCategoryBag(new CategoryBag());
+                    KeyedReference kr2 = new KeyedReference();
+                    kr2.setTModelKey(parameters);
+                    fb.getCategoryBag().getKeyedReference().add(kr2);
                     //TODO
                     break;
                 case uid:

@@ -59,6 +59,9 @@
                 <li><a href="#identifiers" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.identifiers")%></a></li>
 
                 <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
+                <li><a href="#Instances" >Instances</a></li>
+                
+                
             </ul>
             <script type="text/javascript">
                 $(function () {
@@ -83,6 +86,10 @@
                 });
 
                 $('#myTab a[href=#signatures]').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                   $('#myTab a[href=#Instances]').click(function (e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
@@ -305,6 +312,109 @@
                         }
                     %>
                 </div>
+				     <div class="tab-pane " id="Instances">
+                    <b>Instances</b> - Use this to search for other entities in this registery that reference this tModel<Br>
+					<select id="relatedSearches" onchange="search()">
+						<option></option>
+						<option value="business">Find businesses</option>
+						<option value="bindingTemplate">Find binding</option>
+						<option value="service">Find services</option>
+		<!--				<option value="tModel">Find tModels</option>-->
+					</select>
+                   <script type="text/javascript">
+					
+					  var offset=0;
+        var maxrecords=20;
+        function search()
+        {
+			var val = $("#relatedSearches").val();
+         
+            var selection = "tmodel";
+            
+            var searchfor = $("#relatedSearches").val();
+            
+            var searchcontent = "<%
+			if (bd.getTModelKey()!=null)
+				out.write(StringEscapeUtils.escapeJavaScript(bd.getTModelKey()));
+			%>";
+            
+            var url='ajax/search.jsp';
+            
+            var postbackdata = new Array();
+           
+            postbackdata.push({
+                name:"selection", 
+                value: selection
+            });
+            
+            postbackdata.push({
+                name:"searchcontent", 
+                value: searchcontent
+            });
+            
+            //postbackdata.push({
+                //name:"lang", 
+                //value: $("#lang").val()
+            //});
+            
+            
+            /*$.each($('input:checkbox'), function(index,item){
+                var itemname = item.name;
+                if (item.checked)
+                {
+                    postbackdata.push({
+                        name:"findqualifier", 
+                        value: itemname
+                    });
+                }
+            });
+            */
+            
+            postbackdata.push({
+                name:"searchfor", 
+                value: searchfor
+            });
+            
+            postbackdata.push({
+                name:"nonce", 
+                value: $("#nonce").val()
+            });
+            
+            var request=   $.ajax({
+                url: url,
+                type:"POST",
+                //  dataType: "html", 
+                cache: false, 
+                //  processData: false,f
+                data: postbackdata
+            });
+                
+                
+            request.done(function(msg) {
+                window.console && console.log('postback done '  + url);                
+        
+                $("#InstancesContainer").html(msg);
+                
+        
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                window.console && console.log('postback failed ' + url);                                
+                $("#InstancesContainer").html(jqXHR.responseText  + textStatus);
+                //$(".alert").alert();
+                
+        
+            });
+                                    
+        }
+		
+				   </script>
+                    <div id="InstancesContainer" style="border-width: 2px; border-style: solid;" >
+                        <%
+                           
+                        %>
+                    </div>
+                </div>
                 <div><br>
                     <%
                         if (bd.getSignature().isEmpty()) {
@@ -333,6 +443,10 @@
 
 
                 </div>
+                    
+                    
+               
+                    
             </div>
             <script src="js/tmodeledit.js"></script>
             <script src="js/businessEditor.js"></script>

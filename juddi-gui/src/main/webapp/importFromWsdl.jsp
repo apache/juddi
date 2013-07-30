@@ -1,5 +1,5 @@
 <%-- 
-    Document   : importFromWadl
+    Document   : importFromWsdl
     Created on : July 11, 2013, 6:52:05 PM
     Author     : Alex O'Ree
 --%>
@@ -16,14 +16,14 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well" >
-        <h1><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.wadl")%></h1>
+        <h1><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport")%></h1>
 
     </div>
 
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12" >
-            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.wadl")%>
+            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content")%>
             <Br>
             <br>
 
@@ -31,13 +31,13 @@
                 <div class="accordion-group">
                     <div class="accordion-heading">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">
-                            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step1.wadl")%>
+                            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step1")%>
                         </a>
                     </div>
                     <div id="collapse1" class="accordion-body collapse in">
                         <div class="accordion-inner">
-                            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step1a.wadl")%><br>
-                            <input type="text" id="wsdlurl" placeholder="http://localhost:8080/services/myService?wadl" style="width:100%" ><br>
+                            <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step1a")%><br>
+                            <input type="text" id="wsdlurl" placeholder="http://localhost:8080/services/myService?wsdl" style="width:100%" ><br>
                             <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step1b")%><br>
                             <%
                                 if (!request.isSecure()) {
@@ -102,7 +102,7 @@
                     function save(preview)
                     {
                         var postbackdata = new Array();
-                        var url='ajax/importFromWadl.jsp';
+                        var url='ajax/importFromWsdl.jsp';
                         postbackdata.push({
                             name:"nonce", 
                             value: $("#nonce").val()
