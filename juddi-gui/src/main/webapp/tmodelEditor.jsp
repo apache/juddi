@@ -60,42 +60,42 @@
 
                 <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
                 <li><a href="#Instances" >Instances</a></li>
-                
-                
+
+
             </ul>
             <script type="text/javascript">
-                $(function () {
+                $(function() {
                     $('#myTab').tab;//('show');
                 })
-                $('#myTab a[href=#general]').click(function (e) {
+                $('#myTab a[href=#general]').click(function(e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                $('#myTab a[href=#discovery]').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-                
-                $('#myTab a[href=#categories]').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-                $('#myTab a[href=#identifiers]').click(function (e) {
+                $('#myTab a[href=#discovery]').click(function(e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
 
-                $('#myTab a[href=#signatures]').click(function (e) {
+                $('#myTab a[href=#categories]').click(function(e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                   $('#myTab a[href=#Instances]').click(function (e) {
+                $('#myTab a[href=#identifiers]').click(function(e) {
                     e.preventDefault();
                     $(this).tab('show');
                 });
-                    
-                var currentDescriptionEntries=<%=bd.getDescription().size()%>;
-                var currentOverviewDocs=<%=bd.getOverviewDoc().size()%>;
+
+                $('#myTab a[href=#signatures]').click(function(e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                $('#myTab a[href=#Instances]').click(function(e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+
+                var currentDescriptionEntries =<%=bd.getDescription().size()%>;
+                var currentOverviewDocs =<%=bd.getOverviewDoc().size()%>;
                 <%
                     int currentDescriptionSpecific = 0;
                     for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
@@ -111,9 +111,9 @@
                         currentident = bd.getIdentifierBag().getKeyedReference().size();
                     }
                 %>
-                    var currentcatkeyref =<%=currentcatkeyref%>;
-                    var currentDescriptionSpecific=<%=currentDescriptionSpecific%>;
-                    var currentident=<%=currentident%>;
+                var currentcatkeyref =<%=currentcatkeyref%>;
+                var currentDescriptionSpecific =<%=currentDescriptionSpecific%>;
+                var currentident =<%=currentident%>;
             </script>
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
@@ -190,35 +190,35 @@
 
                 <div class="tab-pane " id="discovery">
                     <a href="javascript:AddOverviewDocument();"><i class="icon-plus-sign icon-large"></i></a><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.overview")%> - <%=ResourceLoader.GetResource(session, "pages.editor.tabnav.overview.description")%>
-                    <%
-                        out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
-                        for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
-                            out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + "\" style=\"border-width:1px; border-style:solid\">");
-                            out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
-                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                    + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
-                            out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ":&nbsp;</div>"
-                                    + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getUseType()) + "</div>");
+                        <%
+                            out.write("<div id=\"" + PostBackConstants.OVERVIEW + "\" style=\"border-width:2px; border-style:solid\">");
+                            for (int i = 0; i < bd.getOverviewDoc().size(); i++) {
+                                out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + "\" style=\"border-width:1px; border-style:solid\">");
+                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getValue()) + "</div>");
+                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.type") + ":&nbsp;</div>"
+                                        + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.TYPE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getOverviewURL().getUseType()) + "</div>");
 
-                    %>
+                        %>
 
                     <a href="javascript:AddDescriptionSpecific('<%=PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION%>');"><i class="icon-plus-sign icon-large"></i></a> <%=ResourceLoader.GetResource(session, "items.description.add")%>
-                    <%
-                            out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + "\" style=\"border-width:1px; border-style:dotted\">");
-                            for (int k = 0; k < bd.getOverviewDoc().get(i).getDescription().size(); k++) {
-                                out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
-                                out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-trash\"></i></a></div>");
-                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getValue()) + "</div>");
-                                out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
-                                        + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getLang()) + "</div>");
-                                out.write("</div>"); //end of this instance of overview doc description
+                        <%
+                                out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + "\" style=\"border-width:1px; border-style:dotted\">");
+                                for (int k = 0; k < bd.getOverviewDoc().get(i).getDescription().size(); k++) {
+                                    out.write("<div id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "\" style=\"border-width:1px; border-style:solid\">");
+                                    out.write("<div style=\"float:left;height:100%\"><a href=\"javascript:Remove('" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + "');\"><i class=\"icon-trash\"></i></a></div>");
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getValue()) + "</div>");
+                                    out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.OVERVIEW + i + PostBackConstants.DESCRIPTION + k + PostBackConstants.LANG + "\">" + StringEscapeUtils.escapeHtml(bd.getOverviewDoc().get(i).getDescription().get(k).getLang()) + "</div>");
+                                    out.write("</div>"); //end of this instance of overview doc description
+                                }
+                                out.write("</div>");//end description
+                                out.write("</div>");//end this block
                             }
-                            out.write("</div>");//end description
-                            out.write("</div>");//end this block
-                        }
-                        out.write("</div>");//end of overview
-                    %>
+                            out.write("</div>");//end of overview
+%>
 
                 </div>
 
@@ -291,9 +291,9 @@
                                 out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
                         %>
                         <script type="text/javascript">
-                            $.get("ajax/validateSignature.jsp?type=tmodel&id=<%=StringEscapeUtils.escapeJavaScript(bd.getTModelKey())%>", function(data){
+                            $.get("ajax/validateSignature.jsp?type=tmodel&id=<%=StringEscapeUtils.escapeJavaScript(bd.getTModelKey())%>", function(data) {
                                 $("#digsig<%=k%>").html(data);
-                                if (data.indexOf("invalid") !== -1 )
+                                if (data.indexOf("invalid") !== -1)
                                 {
                                     $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
                                 }
@@ -301,7 +301,7 @@
                                 {
                                     $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
                                 }
-                            } )
+                            })
                         </script>
                         <%
                                 out.write("</td></tr>");
@@ -312,106 +312,111 @@
                         }
                     %>
                 </div>
-				     <div class="tab-pane " id="Instances">
+                <div class="tab-pane " id="Instances">
                     <b>Instances</b> - Use this to search for other entities in this registery that reference this tModel<Br>
-					<select id="relatedSearches" onchange="search()">
-						<option></option>
-						<option value="business">Find businesses</option>
-						<option value="bindingTemplate">Find binding</option>
-						<option value="service">Find services</option>
-		<!--				<option value="tModel">Find tModels</option>-->
-					</select>
-                   <script type="text/javascript">
-					
-					  var offset=0;
-        var maxrecords=20;
-        function search()
-        {
-			var val = $("#relatedSearches").val();
-         
-            var selection = "tmodel";
-            
-            var searchfor = $("#relatedSearches").val();
-            
-            var searchcontent = "<%
-			if (bd.getTModelKey()!=null)
-				out.write(StringEscapeUtils.escapeJavaScript(bd.getTModelKey()));
-			%>";
-            
-            var url='ajax/search.jsp';
-            
-            var postbackdata = new Array();
-           
-            postbackdata.push({
-                name:"selection", 
-                value: selection
-            });
-            
-            postbackdata.push({
-                name:"searchcontent", 
-                value: searchcontent
-            });
-            
-            //postbackdata.push({
-                //name:"lang", 
-                //value: $("#lang").val()
-            //});
-            
-            
-            /*$.each($('input:checkbox'), function(index,item){
-                var itemname = item.name;
-                if (item.checked)
-                {
-                    postbackdata.push({
-                        name:"findqualifier", 
-                        value: itemname
-                    });
-                }
-            });
-            */
-            
-            postbackdata.push({
-                name:"searchfor", 
-                value: searchfor
-            });
-            
-            postbackdata.push({
-                name:"nonce", 
-                value: $("#nonce").val()
-            });
-            
-            var request=   $.ajax({
-                url: url,
-                type:"POST",
-                //  dataType: "html", 
-                cache: false, 
-                //  processData: false,f
-                data: postbackdata
-            });
-                
-                
-            request.done(function(msg) {
-                window.console && console.log('postback done '  + url);                
-        
-                $("#InstancesContainer").html(msg);
-                
-        
-            });
+                    <select id="relatedSearches" onchange="search()">
+                        <option></option>
+                        <option value="business">Find businesses</option>
+                        <option value="bindingTemplate">Find binding</option>
+                        <option value="service">Find services</option>
+                        <!--				<option value="tModel">Find tModels</option>-->
+                    </select>
+                    <script type="text/javascript">
 
-            request.fail(function(jqXHR, textStatus) {
-                window.console && console.log('postback failed ' + url);                                
-                $("#InstancesContainer").html(jqXHR.responseText  + textStatus);
-                //$(".alert").alert();
-                
-        
-            });
-                                    
-        }
-		
-				   </script>
+                            var offset = 0;
+                            var maxrecords = 20;
+                            function search()
+                            {
+                                var val = $("#relatedSearches").val();
+
+                                var selection = "tmodel";
+
+                                var searchfor = $("#relatedSearches").val();
+                                if (searchfor == "" || searchfor == null)
+                                {
+                                    $("#InstancesContainer").html("");
+                                    return;
+                                }
+                                var searchcontent = "<%
+                 if (bd.getTModelKey() != null) {
+                     out.write(StringEscapeUtils.escapeJavaScript(bd.getTModelKey()));
+                 }
+                        %>";
+
+                                var url = 'ajax/search.jsp';
+
+                                var postbackdata = new Array();
+
+                                postbackdata.push({
+                                    name: "selection",
+                                    value: selection
+                                });
+
+                                postbackdata.push({
+                                    name: "searchcontent",
+                                    value: searchcontent
+                                });
+
+                                //postbackdata.push({
+                                //name:"lang", 
+                                //value: $("#lang").val()
+                                //});
+
+
+                                /*$.each($('input:checkbox'), function(index,item){
+                                 var itemname = item.name;
+                                 if (item.checked)
+                                 {
+                                 postbackdata.push({
+                                 name:"findqualifier", 
+                                 value: itemname
+                                 });
+                                 }
+                                 });
+                                 */
+
+                                postbackdata.push({
+                                    name: "searchfor",
+                                    value: searchfor
+                                });
+
+                                postbackdata.push({
+                                    name: "nonce",
+                                    value: $("#nonce").val()
+                                });
+
+                                var request = $.ajax({
+                                    url: url,
+                                    type: "POST",
+                                    //  dataType: "html", 
+                                    cache: false,
+                                    //  processData: false,f
+                                    data: postbackdata
+                                });
+
+
+                                request.done(function(msg) {
+                                    window.console && console.log('postback done ' + url);
+
+                                    $("#InstancesContainer").html(msg);
+
+
+                                });
+
+                                request.fail(function(jqXHR, textStatus) {
+                                    window.console && console.log('postback failed ' + url);
+                                    $("#InstancesContainer").html(jqXHR.responseText + textStatus);
+                                    //$(".alert").alert();
+
+
+                                });
+
+                            }
+
+                    </script>
                     <div id="InstancesContainer" style="border-width: 2px; border-style: solid;" >
                         <%
-                           
+
                         %>
                     </div>
                 </div>
@@ -443,28 +448,28 @@
 
 
                 </div>
-                    
-                    
-               
-                    
+
+
+
+
             </div>
             <script src="js/tmodeledit.js"></script>
             <script src="js/businessEditor.js"></script>
             <script type="text/javascript">
-                Reedit();
+                            Reedit();
                 <%
                     if (!newitem) {
                 %>
-                
-                    function ViewAsXML()
-                    {
-                        $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel", function(data){
-                            window.console && console.log('asXml success');                
-                            $("#viewAsXmlContent").html(safe_tags_replace(data));
-                            $( "#viewAsXml" ).modal('show');
-                        });
-                       
-                    }
+
+                            function ViewAsXML()
+                            {
+                                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel", function(data) {
+                                    window.console && console.log('asXml success');
+                                    $("#viewAsXmlContent").html(safe_tags_replace(data));
+                                    $("#viewAsXml").modal('show');
+                                });
+
+                            }
                 <%
                     }
                 %>

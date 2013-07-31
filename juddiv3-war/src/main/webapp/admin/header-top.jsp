@@ -109,35 +109,10 @@
                         <a class="brand" href="home.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li class="dropdown"><a href="home.jsp" data-toggle="dropdown" class="dropdowb-town"><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%><b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
-                                        <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
-                                        <li><a href="transfer.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.transfer.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.transfer")%></a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
-                                        <li><a href="editSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
-                                        <li><a href="subscriptionFeed.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></a></li>
-                                    </ul>
+                                <li><a href="home.jsp" ><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="status.jsp" ><i class="icon-compass icon-large"></i>Status<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="admin.jsp" ><i class="icon-cogs icon-large"></i>Admin<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
 
-
-                                </li>
-                                
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-pencil icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.create")%><b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="businessEditor2.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.business.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.business")%></a></li>
-                                        <li><a href="businessBrowse.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.service.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.service")%></a></li>
-                                        <li><a href="importFromWsdl.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport")%></a></li>
-                                        <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
-                                        <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
-                                    </ul>
-                                </li>
-
-                                <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-cog icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.settings")%><b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="settings.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.settings.config.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.settings.config")%></a></li>
-                                    </ul>
-                                </li>
 
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-question-sign icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>
                                     <ul class="dropdown-menu">

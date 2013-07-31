@@ -16,9 +16,13 @@
  */
 package org.apache.juddi.config;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -61,6 +65,18 @@ public class AppConfig
 	private Log log = LogFactory.getLog(AppConfig.class);
 	private Configuration config;
 	private static AppConfig instance=null;
+        private static URL loadedFrom=null;
+        
+        /**
+         * Enables an administrator to identify the physical location of the configuration file from which it was loaded.<br>
+         * Always call via the singleton function AppConfig.getInstance().getConfigFileURL()
+         * @since 3.2
+         * @return, may return null if no config file was found
+         */
+        public static  URL getConfigFileURL()
+        {
+            return loadedFrom;
+        }
 	
 	/**
 	 * Constructor (note Singleton pattern).
@@ -87,15 +103,25 @@ public class AppConfig
 	        final String filename = System.getProperty(JUDDI_CONFIGURATION_FILE_SYSTEM_PROPERTY);
 		if (filename != null) {
                   propConfig = new XMLConfiguration (filename); 
-		//	propConfig = new PropertiesConfiguration(filename);
+                    try {
+                        loadedFrom = new File(filename).toURI().toURL();
+                    //	propConfig = new PropertiesConfiguration(filename);
+                    } catch (MalformedURLException ex) {
+                      try {
+                          loadedFrom = new URL("file://" + filename);
+                      } catch (MalformedURLException ex1) {
+                          log.warn("unable to get an absolute path to " + filename + ". This may be ignorable if everything works properly.", ex1);
+                      }
+                    }
 		} else {
 			//propConfig = new PropertiesConfiguration(JUDDI_PROPERTIES);
                     propConfig = new XMLConfiguration(JUDDI_PROPERTIES);
+                    loadedFrom = ClassUtil.getResource(JUDDI_PROPERTIES, this.getClass()); 
 		}
                 //Hey! this may break things
                 propConfig.setAutoSave(true);
-		URL url = ClassUtil.getResource(JUDDI_PROPERTIES, this.getClass()); 
-		log.info("Reading from properties file:  " + url);
+		
+		log.info("Reading from properties file:  " + loadedFrom);
 		long refreshDelay = propConfig.getLong(Property.JUDDI_CONFIGURATION_RELOAD_DELAY, 1000l);
 		log.debug("Setting refreshDelay to " + refreshDelay);
 		FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();

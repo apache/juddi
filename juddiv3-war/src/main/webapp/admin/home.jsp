@@ -21,17 +21,17 @@
 
         <div class="span4">
             <h2>Configure jUDDI</h2>
-            <p><%=ResourceLoader.GetResource(session, "index.browse")%></p>
+            <p><% //=ResourceLoader.GetResource(session, "index.config")%>Configure jUDDI</p>
             <p><a class="btn" href="configure.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
             <h2>Status and Statistics</h2>
-            <p><%=ResourceLoader.GetResource(session, "index.search")%></p>
+            <p><% //=ResourceLoader.GetResource(session, "index.search")%>Find out how busy jUDDI is.</p>
             <p><a class="btn" href="stats.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
         <div class="span4">
             <h2>Administration</h2>
-            <p><%=ResourceLoader.GetResource(session, "index.learn")%></p>
+            <p><%//=ResourceLoader.GetResource(session, "index.learn")%>Administration options, such as deleting entities.</p>
             <p><a class="btn" href="admin.jsp"><%=ResourceLoader.GetResource(session, "viewdetails")%> &raquo;</a></p>
         </div>
 
