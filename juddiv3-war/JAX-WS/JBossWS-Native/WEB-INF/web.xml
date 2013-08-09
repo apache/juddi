@@ -21,6 +21,11 @@
 	<description>
 		jUDDI is Java-based implementation of an UDDI version 3.0 registry.
     </description>
+	<listener>
+		 <!-- this class setups the encryption key for the session-->
+    <listener-class>org.apache.juddi.webconsole.StartupServlet</listener-class>
+    
+  </listener>
 	<servlet>
 		<servlet-name>RegistryServlet</servlet-name>
 		<display-name>Registry Servlet</display-name>
@@ -125,6 +130,29 @@
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
+        <security-constraint>
+              <display-name>jUDDI Admin content</display-name>
+              <web-resource-collection>
+                  <web-resource-name>admin</web-resource-name>
+                  <url-pattern>/admin/*</url-pattern>
 
+
+              </web-resource-collection>
+              <auth-constraint>
+                  <role-name>uddiadmin</role-name>
+              </auth-constraint>
+              <!-- uncomment to require SSL <user-data-constraint>
+                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+              </user-data-constraint>
+              -->
+          </security-constraint>
+            <login-config> 
+                    <auth-method>BASIC</auth-method> 
+                    <!-- you should consider NOT using BASIC is favor of something more secure, see your web app servers documentation for details -->
+                    <realm-name>Apache jUDDI - Make sure you're using HTTPS!</realm-name> 
+              </login-config> 
+          <security-role>
+              <role-name>uddiadmin</role-name>
+          </security-role>
 </web-app>
     

@@ -25,7 +25,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
         try {
             //URL resource = sce.getServletContext().getResource("/META-INF/config.properties");
             Properties p = new Properties();
-            InputStream is = sce.getServletContext().getResourceAsStream("/META-INF/config.properties");
+            InputStream is = sce.getServletContext().getResourceAsStream("/WEB-INF/config.properties");
             p.load(is);
             p.remove("key");
             String key = AES.GEN(256);
@@ -33,7 +33,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
                 key = AES.GEN(128);
             }
             p.put("key", key);
-            fos = new FileOutputStream(sce.getServletContext().getRealPath("/META-INF/config.properties"));
+            fos = new FileOutputStream(sce.getServletContext().getRealPath("/WEB-INF/config.properties"));
 
             p.store(fos, "No comments");
             fos.flush();

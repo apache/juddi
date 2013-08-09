@@ -4,8 +4,8 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
 <%@page import="org.apache.juddi.webconsole.CrossSiteRequestForgeryException"%>
-<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     //this is to catch someone that bookmarked a page after selecting a language
@@ -31,14 +31,14 @@
             //reject it
             session.removeAttribute("nonce");
             response.sendRedirect("index.jsp");
-            UddiHub.log.warn( "CSRF Test failed, no nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
+            UddiAdminHub.log.warn( "CSRF Test failed, no nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
             throw new CrossSiteRequestForgeryException();
         } else {
 
             String noncestr = (String) session.getAttribute("nonce");
             if (noncestr == null) {
                 //no session variable to test against, reject it
-                UddiHub.log.warn( "CSRF Test failed, no session guid." + request.getRemoteAddr() + request.getRemoteUser());
+                UddiAdminHub.log.warn( "CSRF Test failed, no session guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
                 throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
             }
@@ -53,10 +53,10 @@
                 // current = UUID.randomUUID();
                 //session.removeAttribute("nonce");
                 // session.setAttribute("nonce", current.toString());
-                UddiHub.log.info( "CSRF Test passed.");
+                UddiAdminHub.log.info( "CSRF Test passed.");
             } else {
                 //mismatch, reject it
-                UddiHub.log.warn( "CSRF Test failed, session did not match nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
+                UddiAdminHub.log.warn( "CSRF Test failed, session did not match nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
                 session.removeAttribute("nonce");
                 throw new CrossSiteRequestForgeryException("Cross Site Request Forgery");
             }

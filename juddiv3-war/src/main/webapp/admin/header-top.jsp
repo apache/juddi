@@ -20,7 +20,7 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -95,7 +95,7 @@
             <div class="alert" style="display:none; position: fixed; top:45px; width:80%; left: 10%; z-index: 1000; opacity: 1.0; background-color: #FFD530; color:black " id="resultBar">
             </div>
             <%
-                UddiHub hub = UddiHub.getInstance(application, session);
+                UddiAdminHub hub = UddiAdminHub.getInstance(application, session);
             %>
 
             <div class="navbar navbar-inverse navbar-fixed-top">
@@ -110,7 +110,8 @@
                         <div class="nav-collapse collapse">
                             <ul class="nav">
                                 <li><a href="home.jsp" ><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
-                                <li><a href="status.jsp" ><i class="icon-compass icon-large"></i>Status<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="stats.jsp" ><i class="icon-camera icon-large"></i>Status<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="configure.jsp" ><i class="icon-cog icon-large"></i>Configure<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
                                 <li><a href="admin.jsp" ><i class="icon-cogs icon-large"></i>Admin<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
 
 

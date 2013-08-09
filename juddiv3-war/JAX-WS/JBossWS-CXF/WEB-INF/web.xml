@@ -24,6 +24,11 @@
     <param-name>log4jConfigLocation</param-name>
     <param-value>/WEB-INF/classes/log4j.properties</param-value>
   </context-param>
+  <listener>
+		 <!-- this class setups the encryption key for the session-->
+    <listener-class>org.apache.juddi.webconsole.StartupServlet</listener-class>
+    
+  </listener>
   <servlet>
     <servlet-name>RegistryServlet</servlet-name>
     <display-name>Registry Servlet</display-name>
@@ -114,5 +119,30 @@
     <servlet-name>JUDDIApiWS</servlet-name>
     <url-pattern>/services/juddi-api/*</url-pattern>
   </servlet-mapping>
+  
+  <security-constraint>
+      <display-name>jUDDI Admin content</display-name>
+      <web-resource-collection>
+          <web-resource-name>admin</web-resource-name>
+          <url-pattern>/admin/*</url-pattern>
+          
+          
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>uddiadmin</role-name>
+      </auth-constraint>
+      <!-- uncomment to require SSL <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+      -->
+  </security-constraint>
+    <login-config> 
+	<auth-method>BASIC</auth-method> 
+	<!-- you should consider NOT using BASIC is favor of something more secure, see your web app servers documentation for details -->
+	<realm-name>Apache jUDDI - Make sure you're using HTTPS!</realm-name> 
+  </login-config> 
+  <security-role>
+      <role-name>uddiadmin</role-name>
+  </security-role>
 </web-app>
   

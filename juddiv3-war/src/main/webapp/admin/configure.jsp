@@ -16,7 +16,7 @@
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well">
         <h1>Configure jUDDI</h1>
-
+        Just click to edit each field, then click save when you are done. (Not all fields can be modified)
     </div>
 
     <!-- Example row of columns -->

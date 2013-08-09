@@ -4,11 +4,11 @@
     Author     : Alex O'Ree
 --%>
 
-<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
+<%@page import="org.apache.juddi.webconsole.hub.UddiAdminHub"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    UddiHub hub = UddiHub.getInstance(application, session);
-    UddiHub.reset(session);
+    UddiAdminHub hub = UddiAdminHub.getInstance(application, session);
+    UddiAdminHub.reset(session);
     hub.die();
     session.removeAttribute("username");
     session.removeAttribute("password");

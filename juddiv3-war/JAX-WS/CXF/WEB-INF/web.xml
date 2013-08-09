@@ -37,6 +37,9 @@
     <listener-class>
       org.springframework.web.context.ContextLoaderListener
 		</listener-class>
+		 <!-- this class setups the encryption key for the session-->
+    <listener-class>org.apache.juddi.webconsole.StartupServlet</listener-class>
+    
   </listener>
 
   <servlet>
@@ -83,6 +86,30 @@
       <res-auth>Container</res-auth>
       <res-sharing-scope>Shareable</res-sharing-scope>
   </resource-ref>
-
+  <security-constraint>
+      <display-name>jUDDI Admin content</display-name>
+      <web-resource-collection>
+          <web-resource-name>admin</web-resource-name>
+          <url-pattern>/admin/*</url-pattern>
+          
+          
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>uddiadmin</role-name>
+      </auth-constraint>
+      <!-- uncomment to require SSL <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+      -->
+  </security-constraint>
+    <login-config> 
+	<auth-method>BASIC</auth-method> 
+	<!-- you should consider NOT using BASIC is favor of something more secure, see your web app servers documentation for details -->
+	<realm-name>Apache jUDDI - Make sure you're using HTTPS!</realm-name> 
+  </login-config> 
+  <security-role>
+      <role-name>uddiadmin</role-name>
+  </security-role>
+  
 
 </web-app>
