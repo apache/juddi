@@ -43,7 +43,7 @@
                     }
                 %>
             </table>
-            <a class="btn btn-primary " href="javascript:saveSettings();"><i class="icon-large icon-save"></i><%=ResourceLoader.GetResource(session, "actions.save")%></a>
+            <a class="btn btn-primary " href="javascript:saveSettings();"><i class="icon-large icon-save"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
             <script type="text/javascript">
                 
                 Reedit();
