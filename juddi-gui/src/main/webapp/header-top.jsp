@@ -144,6 +144,7 @@
                                         <li><a href="importFromWadl.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.tooltip.wadl")%>"><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.wadl")%></a></li>
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
+                                        <li><a href="advanced.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.advanced")%>"><%=ResourceLoader.GetResource(session, "navbar.advanced")%></a></li>
                                     </ul>
                                 </li>
 

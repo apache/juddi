@@ -19,6 +19,7 @@ package org.apache.juddi.webconsole.hub;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -50,11 +51,16 @@ import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
+import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.custody;
+import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.inquiry;
+import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.publish;
+import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.subscription;
 import org.apache.juddi.webconsole.hub.builders.Builders;
 import org.apache.juddi.webconsole.hub.builders.Printers;
 import org.apache.juddi.webconsole.resources.ResourceLoader;
 import org.uddi.api_v3.*;
 import org.uddi.custody_v3.DiscardTransferToken;
+import org.uddi.custody_v3.GetTransferToken;
 import org.uddi.custody_v3.TransferEntities;
 import org.uddi.custody_v3.TransferToken;
 import org.uddi.sub_v3.*;
@@ -902,8 +908,9 @@ public class UddiHub {
 
     /**
      * returns a bootstrap html stylizies an error message with a warning icon
+     *
      * @param HandleException, any string representing an error message
-     * @return 
+     * @return
      */
     public static String ToErrorAlert(String HandleException) {
         return "<div class=\"alert alert-error\"><i class=\"icon-warning-sign icon-large\"></i>&nbsp;" + HandleException + "</div>";
@@ -1065,15 +1072,15 @@ public class UddiHub {
     private String HandleException(Exception ex) {
         if (ex instanceof DispositionReportFaultMessage) {
             DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-            log.error( null, ex);
+            log.error(null, ex);
             return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
         if (ex instanceof RemoteException) {
             RemoteException f = (RemoteException) ex;
-            log.error( null, ex);
+            log.error(null, ex);
             return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
-        log.error( null, ex);
+        log.error(null, ex);
         return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
                 ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
         //+ "</h3></div>";
@@ -1417,7 +1424,12 @@ public class UddiHub {
                     if (findBusiness.getBindingTemplate().get(i).getDescription().isEmpty()) {
                         sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey()));
                     } else {
-                        sb.append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findBusiness.getBindingTemplate().get(i).getDescription())));
+                        String t = StringEscapeUtils.escapeHtml(Printers.ListToDescString(findBusiness.getBindingTemplate().get(i).getDescription()));
+                        if (t == null || t.trim().length() == 0) {
+                            sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey()));
+                        } else {
+                            sb.append(t);
+                        }
                     }
                     sb.append("</a>");
                     sb.append("</td></tr>");
@@ -2901,6 +2913,7 @@ public class UddiHub {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
+                        r.setAuthInfo(GetToken());
                         custody.discardTransferToken(r);
                     }
                 } else {
@@ -2937,6 +2950,7 @@ public class UddiHub {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
+                        te.setAuthInfo(GetToken());
                         custody.transferEntities(te);
                     }
                 } else {
@@ -2973,5 +2987,640 @@ public class UddiHub {
         }
         return null;
     }
-   
+
+    /**
+     *
+     * @param request
+     * @param service
+     * @param method
+     * @return
+     * @see UDDIRequestsAsXML
+     */
+    public String SendAdvancedQuery(Object request, String service, String method) {
+        if (service.equalsIgnoreCase(UDDIRequestsAsXML.inquiry)) {
+            return SendAdvancedQueryInquiry(method, request);
+        }
+        if (service.equalsIgnoreCase(UDDIRequestsAsXML.publish)) {
+            return SendAdvancedQueryPublish(method, request);
+        }
+        if (service.equalsIgnoreCase(UDDIRequestsAsXML.custody)) {
+            return SendAdvancedQueryCustody(method, request);
+        }
+        if (service.equalsIgnoreCase(UDDIRequestsAsXML.subscription)) {
+            return SendAdvancedQuerySubscription(method, request);
+        }
+        return "Unknown error";
+    }
+
+    private String SendAdvancedQueryInquiry(String method, Object request) {
+        Object response = null;
+        try {
+            if (method.equalsIgnoreCase("findBinding")) {
+                ((FindBinding) request).setAuthInfo(GetToken());
+                try {
+                    response = inquiry.findBinding((FindBinding) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((FindBinding) request).setAuthInfo(GetToken());
+                            response = inquiry.findBinding((FindBinding) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("findBusiness")) {
+                ((FindBusiness) request).setAuthInfo(GetToken());
+                try {
+                    response = inquiry.findBusiness((FindBusiness) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((FindBusiness) request).setAuthInfo(GetToken());
+                            response = inquiry.findBusiness((FindBusiness) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("findService")) {
+                ((FindService) request).setAuthInfo(GetToken());
+                try {
+                    response = inquiry.findService((FindService) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((FindService) request).setAuthInfo(GetToken());
+                            response = inquiry.findService((FindService) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("findRelatedBusines")) {
+                ((FindRelatedBusinesses) request).setAuthInfo(GetToken());
+                try {
+                    response = inquiry.findRelatedBusinesses((FindRelatedBusinesses) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((FindRelatedBusinesses) request).setAuthInfo(GetToken());
+                            response = inquiry.findRelatedBusinesses((FindRelatedBusinesses) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("findTModel")) {
+                ((FindTModel) request).setAuthInfo(GetToken());
+
+                try {
+                    response = inquiry.findTModel((FindTModel) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((FindTModel) request).setAuthInfo(GetToken());
+                            response = inquiry.findTModel((FindTModel) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getBindingDetail")) {
+                ((GetBindingDetail) request).setAuthInfo(GetToken());
+                try {
+                    response = inquiry.getBindingDetail((GetBindingDetail) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((GetBindingDetail) request).setAuthInfo(GetToken());
+                            response = inquiry.getBindingDetail((GetBindingDetail) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getBusinessDetail")) {
+                ((GetBusinessDetail) request).setAuthInfo(GetToken());
+
+                try {
+                    response = inquiry.getBusinessDetail((GetBusinessDetail) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((GetBusinessDetail) request).setAuthInfo(GetToken());
+                            response = inquiry.getBusinessDetail((GetBusinessDetail) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getServiceDetail")) {
+                ((GetServiceDetail) request).setAuthInfo(GetToken());
+
+                try {
+                    response = inquiry.getServiceDetail((GetServiceDetail) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((GetServiceDetail) request).setAuthInfo(GetToken());
+                            response = inquiry.getServiceDetail((GetServiceDetail) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getOperationalInfo")) {
+                ((GetOperationalInfo) request).setAuthInfo(GetToken());
+                response = inquiry.getOperationalInfo((GetOperationalInfo) request);
+                try {
+                    response = inquiry.findBinding((FindBinding) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            response = inquiry.findBinding((FindBinding) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getTModelDetail")) {
+                ((GetTModelDetail) request).setAuthInfo(GetToken());
+                response = inquiry.getTModelDetail((GetTModelDetail) request);
+                try {
+                    response = inquiry.findBinding((FindBinding) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            response = inquiry.findBinding((FindBinding) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (response == null) {
+                return "The operation completed without error";
+            }
+            StringWriter sw = new StringWriter();
+            JAXB.marshal(response, sw);
+            return sw.toString();
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+    }
+
+    private String SendAdvancedQueryPublish(String method, Object request) {
+        Object response = null;
+        try {
+            if (method.equalsIgnoreCase("addPublisherAssertions")) {
+                ((AddPublisherAssertions) request).setAuthInfo(GetToken());
+                try {
+                    publish.addPublisherAssertions((AddPublisherAssertions) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((AddPublisherAssertions) request).setAuthInfo(GetToken());
+                            publish.addPublisherAssertions((AddPublisherAssertions) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("deleteBinding")) {
+                try {
+                    ((DeleteBinding) request).setAuthInfo(GetToken());
+                    publish.deleteBinding((DeleteBinding) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteBinding) request).setAuthInfo(GetToken());
+                            publish.deleteBinding((DeleteBinding) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("deleteBusiness")) {
+                try {
+                    ((DeleteBusiness) request).setAuthInfo(GetToken());
+                    publish.deleteBusiness((DeleteBusiness) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteBusiness) request).setAuthInfo(GetToken());
+                            publish.deleteBusiness((DeleteBusiness) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("deletePublisherAssertions")) {
+                try {
+                    ((DeletePublisherAssertions) request).setAuthInfo(GetToken());
+                    publish.deletePublisherAssertions((DeletePublisherAssertions) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteBusiness) request).setAuthInfo(GetToken());
+                            publish.deletePublisherAssertions((DeletePublisherAssertions) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("deleteService")) {
+                try {
+                    ((DeleteService) request).setAuthInfo(GetToken());
+                    publish.deleteService((DeleteService) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteBusiness) request).setAuthInfo(GetToken());
+                            publish.deleteService((DeleteService) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("deleteTModel")) {
+                try {
+                    ((DeleteTModel) request).setAuthInfo(GetToken());
+                    publish.deleteTModel((DeleteTModel) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteTModel) request).setAuthInfo(GetToken());
+                            publish.deleteTModel((DeleteTModel) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("getAssertionStatusReport")) {
+                CompletionStatus stat = ((GetAssertionStatusReport) request).getCompletionStatus();
+                try {
+                    response = publish.getAssertionStatusReport(GetToken(), stat);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            response = publish.getAssertionStatusReport(GetToken(), stat);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (method.equalsIgnoreCase("getPublisherAssertions")) {
+                try {
+                    response = publish.getPublisherAssertions(GetToken());
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            response = publish.getPublisherAssertions(GetToken());
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("getRegisteredInfo")) {
+                try {
+                    ((GetRegisteredInfo) request).setAuthInfo(GetToken());
+                    response = publish.getRegisteredInfo((GetRegisteredInfo) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((GetRegisteredInfo) request).setAuthInfo(GetToken());
+                            publish.getRegisteredInfo((GetRegisteredInfo) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("saveBinding")) {
+                try {
+                    ((SaveBinding) request).setAuthInfo(GetToken());
+                    response = publish.saveBinding((SaveBinding) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((SaveBinding) request).setAuthInfo(GetToken());
+                            publish.saveBinding((SaveBinding) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("saveBusiness")) {
+                try {
+                    ((SaveBusiness) request).setAuthInfo(GetToken());
+                    response = publish.saveBusiness((SaveBusiness) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((SaveBusiness) request).setAuthInfo(GetToken());
+                            publish.saveBusiness((SaveBusiness) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("saveTModel")) {
+                try {
+                    ((SaveTModel) request).setAuthInfo(GetToken());
+                    response = publish.saveTModel((SaveTModel) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((SaveTModel) request).setAuthInfo(GetToken());
+                            publish.saveTModel((SaveTModel) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("saveService")) {
+                try {
+                    ((SaveService) request).setAuthInfo(GetToken());
+                    response = publish.saveService((SaveService) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((SaveService) request).setAuthInfo(GetToken());
+                            publish.saveService((SaveService) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("setPublisherAssertions")) {
+                Holder<List<PublisherAssertion>> list = new Holder<List<PublisherAssertion>>();
+                list.value = ((SetPublisherAssertions) request).getPublisherAssertion();
+                try {
+                    publish.setPublisherAssertions(GetToken(), list);
+                    response = list.value;
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((SetPublisherAssertions) request).setAuthInfo(GetToken());
+                            publish.setPublisherAssertions(GetToken(), list);
+                            response = list.value;
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+
+            }
+            if (response == null) {
+                return "The operation completed without error";
+            }
+            StringWriter sw = new StringWriter();
+            JAXB.marshal(response, sw);
+            return sw.toString();
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+    }
+
+    private String SendAdvancedQueryCustody(String method, Object request) {
+        Object response = null;
+        try {
+
+            if (method.equalsIgnoreCase("discardTransferToken")) {
+                try {
+                    ((DiscardTransferToken) request).setAuthInfo(GetToken());
+                    custody.discardTransferToken((DiscardTransferToken) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DiscardTransferToken) request).setAuthInfo(GetToken());
+                            custody.discardTransferToken((DiscardTransferToken) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("getTransferToken")) {
+                GetTransferToken r = ((GetTransferToken) request);
+                TransferToken tt = new TransferToken();
+                Holder<String> node = new Holder<String>();
+                Holder<XMLGregorianCalendar> xcal = new Holder<XMLGregorianCalendar>();
+                Holder<byte[]> token = new Holder<byte[]>();
+                try {
+                    custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, token);
+                    tt.setNodeID(node.value);
+                    tt.setOpaqueToken(token.value);
+                    tt.setExpirationTime(xcal.value);
+                    response = tt;
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, token);
+                            tt.setNodeID(node.value);
+                            tt.setOpaqueToken(token.value);
+                            tt.setExpirationTime(xcal.value);
+                            response = tt;
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("transferEntities")) {
+                try {
+                    ((TransferEntities) request).setAuthInfo(GetToken());
+                    custody.transferEntities((TransferEntities) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((TransferEntities) request).setAuthInfo(GetToken());
+                            custody.transferEntities((TransferEntities) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+
+            if (response == null) {
+                return "The operation completed without error";
+            }
+            StringWriter sw = new StringWriter();
+            JAXB.marshal(response, sw);
+            return sw.toString();
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+    }
+
+    private String SendAdvancedQuerySubscription(String method, Object request) {
+        Object response = null;
+        try {
+            if (method.equalsIgnoreCase("deleteSubscription")) {
+                try {
+                    ((DeleteSubscription) request).setAuthInfo(GetToken());
+                    subscription.deleteSubscription((DeleteSubscription) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((DeleteSubscription) request).setAuthInfo(GetToken());
+                            subscription.deleteSubscription((DeleteSubscription) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("getSubscriptionResults")) {
+                try {
+                    ((GetSubscriptionResults) request).setAuthInfo(GetToken());
+                    response = subscription.getSubscriptionResults((GetSubscriptionResults) request);
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            ((GetSubscriptionResults) request).setAuthInfo(GetToken());
+                            subscription.getSubscriptionResults((GetSubscriptionResults) request);
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("getSubscriptions")) {
+                try {
+
+                    response = subscription.getSubscriptions(GetToken());
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+
+                            response = subscription.getSubscriptions(GetToken());
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (method.equalsIgnoreCase("saveSubscription")) {
+                SaveSubscription ss = (SaveSubscription) request;
+                Holder<List<Subscription>> h = new Holder<List<Subscription>>(ss.getSubscription());
+                try {
+
+                    subscription.saveSubscription(GetToken(), h);
+                    response = h.value;
+                } catch (Exception ex) {
+                    if (ex instanceof DispositionReportFaultMessage) {
+                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
+                            token = null;
+                            subscription.saveSubscription(GetToken(), h);
+                            response = h.value;
+                        }
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
+            if (response == null) {
+                return "The operation completed without error";
+            }
+            StringWriter sw = new StringWriter();
+            JAXB.marshal(response, sw);
+            return sw.toString();
+        } catch (Exception ex) {
+            return HandleException(ex);
+        }
+    }
 }
