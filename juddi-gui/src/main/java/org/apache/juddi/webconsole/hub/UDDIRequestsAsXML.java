@@ -294,6 +294,7 @@ public class UDDIRequestsAsXML {
         if (method.equalsIgnoreCase("setPublisherAssertions")) {
             return JAXB.unmarshal(sr, SetPublisherAssertions.class);
         }
+        return null;
     }
 
     private static Object getObjectCustody(String method, String content) {
