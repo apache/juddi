@@ -109,10 +109,10 @@
                         <a class="brand" href="home.jsp" style="padding-left:19px; padding-top:0px; padding-bottom:0px"><img src="img/logo2.png"></a>
                         <div class="nav-collapse collapse">
                             <ul class="nav">
-                                <li><a href="home.jsp" ><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
-                                <li><a href="stats.jsp" ><i class="icon-camera icon-large"></i>Status<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
-                                <li><a href="configure.jsp" ><i class="icon-cog icon-large"></i>Configure<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
-                                <li><a href="admin.jsp" ><i class="icon-cogs icon-large"></i>Admin<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="home.jsp" ><i class="icon-home icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="stats.jsp" ><i class="icon-camera icon-large"></i> Status<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="configure.jsp" ><i class="icon-cog icon-large"></i> Configure<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
+                                <li><a href="admin.jsp" ><i class="icon-cogs icon-large"></i> Admin<%//=ResourceLoader.GetResource(session, "navbar.home")%></a></li>
 
 
                                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdowb-town"><i class="icon-question-sign icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.help")%> <b class="caret"></b></a>

@@ -53,7 +53,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="uddi.xml" />
+    <Content Include="uddi.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,7 +17,7 @@
 	</parent>
 	<artifactId>juddiv3-war</artifactId>
 	<packaging>war</packaging>
-	<name>jUDDI war construction</name>
+	<name>jUDDI Services WAR</name>
 	<url>http://juddi.apache.org</url>
 
 	<dependencies>

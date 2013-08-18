@@ -16,7 +16,7 @@
 	</parent>
 	<artifactId>juddi-gui-war</artifactId>
 	<packaging>war</packaging>
-	<name>jUDDI GUI war construction</name>
+	<name>jUDDI GUI WAR construction</name>
 	<url>http://juddi.apache.org</url>
 	<dependencies>
 		<dependency>
