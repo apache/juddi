@@ -3,5 +3,5 @@ rem java -cp ../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddiv3/
 
 rem java -cp ../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddi-gui/WEB-INF/lib;../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddi-gui/WEB-INF/lib/*;../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/lib/* org.apache.juddi.v3.auth.CrytorUtil org.apache.juddi.cryptor.DefaultCryptor
 
-cd ../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddiv3/WEB-INF/lib
-java -cp .;./* org.apache.juddi.v3.auth.CrytorUtil
+rem cd ../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddiv3/WEB-INF/lib
+java -cp ../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddiv3/WEB-INF/lib;../juddi-tomcat/target/tomcat/apache-tomcat-6.0.26/webapps/juddiv3/WEB-INF/lib/* org.apache.juddi.v3.auth.CrytorUtil %*

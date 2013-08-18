@@ -77,6 +77,11 @@
                               use="required" />
                         <xsd:attribute type="xsd:string" name="password"
                               use="required" />
+                        <xsd:attribute type="xsd:boolean" name="isPasswordEncrypted"
+                              use="optional" default="false"  />
+                        <xsd:attribute type="xsd:string" name="cryptoProvider"
+                             use="optional"  />
+                        
                         <xsd:attribute type="xsd:string" name="businessKey"
                               use="optional" />
                         <xsd:attribute type="xsd:string" name="businessName"

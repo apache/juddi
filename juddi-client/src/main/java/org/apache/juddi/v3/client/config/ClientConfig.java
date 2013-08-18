@@ -125,6 +125,8 @@ public class ClientConfig
 				uddiClerk.setUDDINode(uddiNode);
 				uddiClerk.setPublisher(config.getString("client.clerks.clerk(" + i + ")[@publisher]"));
 				uddiClerk.setPassword( config.getString("client.clerks.clerk(" + i + ")[@password]"));
+                                uddiClerk.setIsPasswordEncrypted(config.getBoolean("client.clerks.clerk(" + i + ")[@isPasswordEncrypted]",false) );
+                                uddiClerk.setCryptoProvider(config.getString("client.clerks.clerk(" + i + ")[@cryptoProvider]"));
 				
 				String clerkBusinessKey = config.getString("client.clerks.clerk(" + i + ")[@businessKey]");
 				String clerkBusinessName = config.getString("client.clerks.clerk(" + i + ")[@businessName]");
@@ -207,6 +209,7 @@ public class ClientConfig
 				}
 				uddiNode.setProperties(properties);
 			}
+
 			uddiNode.setHomeJUDDI(              config.getBoolean("client.nodes.node(" + i +")[@isHomeJUDDI]",false));
 			uddiNode.setName(                   TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").name"),properties));
 			uddiNode.setClientName(             TokenResolver.replaceTokens(config.getString("client[@name]"),properties));

@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.wsdl.Definition;
 import javax.xml.ws.Holder;
@@ -41,6 +43,7 @@ import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.crypto.CryptorFactory;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
@@ -92,6 +95,8 @@ public class UDDIClerk implements Serializable {
     protected String password;
     private Date tokenBirthDate;
     private String authToken;
+    private String cryptoProvider;
+    private boolean isencrypted=false;
     private String[] classWithAnnotations;
     private WSDL[] wsdls;
     private String managerName;
@@ -706,7 +711,25 @@ public class UDDIClerk implements Serializable {
             tokenBirthDate = new Date();
             GetAuthToken getAuthToken = new GetAuthToken();
             getAuthToken.setUserID(getPublisher());
-            getAuthToken.setCred(getPassword());
+            if (isencrypted )
+            {
+                if (cryptoProvider==null)
+                    log.fatal("Credentials are encrypted but no cryptoProvider was defined in the config file!");
+                else
+                {
+                    try {
+                        getAuthToken.setCred(CryptorFactory.getCryptor(this.cryptoProvider).decrypt(getPassword()));
+                    } catch (Exception ex) {
+                        log.fatal("Unable to decrypt credentials! sending it as is", ex);
+                        getAuthToken.setCred(getPassword());
+                    }
+                }
+            }
+            else
+            {
+                log.warn("Hey, I couldn't help but notice that your credentials aren't encrypted. Please consider doing so");
+                getAuthToken.setCred(getPassword());
+            }
             authToken = getUDDINode().getTransport().getUDDISecurityService(endpointURL).getAuthToken(getAuthToken).getAuthInfo();
         }
         return authToken;
@@ -797,6 +820,23 @@ public class UDDIClerk implements Serializable {
         this.wsdls = wsdls;
     }
 
+   public void setCryptoProvider(String clazz) {
+        this.cryptoProvider = clazz;
+    }
+
+   public void setIsPasswordEncrypted(boolean option) {
+        this.isencrypted = option;
+    }
+
+   public String getCryptoProvider() {
+       return  this.cryptoProvider ;
+    }
+
+   public boolean setIsPasswordEncrypted() {
+        return this.isencrypted ;
+    }
+
+   
     public class WSDL {
 
         private String businessKey;

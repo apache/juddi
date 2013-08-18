@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
+    <reloadDelay>5000</reloadDelay>
+    <client name="second-client">
+        <nodes>
+            <node isHomeJUDDI="true">
+                <name>default</name> 
+                <description>Local jUDDI node</description>
+                <properties>
+                    <property name="serverName" value="localhost" />
+                    <property name="serverPort" value="8880" />
+                </properties>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+            </node>
+            <node>
+                <name>med</name>
+                <description>jUDDI node in other Department</description>
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+                <inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
+                <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
+                <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
+                <subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
+                <subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+                <juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+            </node>
+        </nodes>
+		
+        <clerks registerOnStartup="false">
+            <!-- root -->
+            <clerk name="default" node="default" publisher="root" password="7d3e79ca453f4ebfd36e22afe029c3a2"
+                          isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"
+            />
+            <!-- password -->
+            <clerk name="medroot" node="med"     publisher="root" password="18604180541d172f9827e08c998db568"
+                      isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"
+            /> 
+            <xregister>
+                <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+            </xregister>
+        </clerks>
+	  
+    </client>
+</uddi>
