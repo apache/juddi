@@ -46,10 +46,17 @@
     <Compile Include="org.apache.juddi.v3.client.config\BackgroundRegistration.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\ClientConfig.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\Properties.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\Property.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\TokenResolver.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\uddi-client-ext.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\uddi-client.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\UDDIClerk.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\UDDIKeyConvention.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\UDDINode.cs" />
+    <Compile Include="org.apache.juddi.v3.client.config\XmlConfiguration.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\XRegistration.cs" />
-    <Compile Include="org.apache.juddi.v3.client.transport\WS_Transport.cs" />
+    <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
+    <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\Log.cs" />
     <Compile Include="org.apache.juddi.v3.client\LogFactory.cs" />
@@ -58,7 +65,9 @@
     <Compile Include="org.apache.juddi.v3.client.config\UDDIClient.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\UDDIClientContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="bindings\bindings.cs" />
+    <Compile Include="bindings\bindings.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="org.apache.juddi.v3.client\UDDIConstants.cs" />
     <Compile Include="org.apache.juddi.v3.client\UDDIService.cs" />
   </ItemGroup>

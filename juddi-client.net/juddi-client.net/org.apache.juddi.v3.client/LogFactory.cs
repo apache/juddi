@@ -8,12 +8,12 @@ namespace org.apache.juddi.v3.client.log
     {
         public static Log getLog(String name)
         {
-            return new EventLogger(name);
+            return new ConsoleLogger(name);
         }
 
         public static Log getLog(Type type)
         {
-            return new EventLogger(type.Name);
+            return new ConsoleLogger(type.Name);
         }
     }
 }

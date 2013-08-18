@@ -5,6 +5,7 @@ using System.Text;
 using org.apache.juddi.v3.client.config;
 using System.Threading;
 using org.apache.juddi.v3.client.transport;
+using System.Configuration;
 
 namespace org.apache.juddi.v3.client
 {
@@ -292,20 +293,13 @@ namespace org.apache.juddi.v3.client
          */
         public Transport getTransport(String nodeName)
         {
-            /*try {
+            try {
                 String clazz = clientConfig.getHomeNode().getProxyTransport();
                 String managerName = clientConfig.getClientName();
-                Class<?> transportClass = ClassUtil.forName(clazz, UDDIClient.class);
-                if (transportClass!=null) {
-                    Transport transport = (Transport) 
-                            transportClass.getConstructor(String.class,String.class).newInstance(managerName,nodeName);
-                    return transport;
-                } else {
-                    throw new ConfigurationException ("ProxyTransport was not defined in the " + clientConfig.getConfigurationFile());
-                }
+                return new AspNetTransport(managerName, nodeName, this.getClientConfig());
             } catch (Exception e) {
                 throw new ConfigurationException (e.Message,e);
-            }*/
+            }
             return null;
         }
 

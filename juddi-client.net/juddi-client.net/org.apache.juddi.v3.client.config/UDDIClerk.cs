@@ -168,7 +168,7 @@ namespace org.apache.juddi.v3.client.config
 
                 //List<org.uddi.apiv3.subscription> subscriptions = new List<org.uddi.apiv3.subscription>();
                 //subscriptions.Add(subscription);
-                ss.subscription = new uddi.apiv3.subscription[1];
+                ss.subscription = new subscription[1];
                 ss.subscription[0] = subscription;
                 //holder.value = subscriptions;
                 using (UDDI_Subscription_SoapBinding sub = getUDDINode().getTransport().getUDDISubscriptionService(node.subscriptionUrl))
@@ -214,7 +214,7 @@ namespace org.apache.juddi.v3.client.config
                 String authToken = getAuthToken(node.securityUrl);
                 save_tModel saveTModel = new save_tModel();
                 saveTModel.authInfo = (authToken);
-                saveTModel.tModel = new uddi.apiv3.tModel[1];
+                saveTModel.tModel = new tModel[1];
                 saveTModel.tModel[0] = (tModel);
                 using (UDDI_Publication_SoapBinding pub = getUDDINode().getTransport().getUDDIPublishService(node.publishUrl))
                 {
@@ -256,7 +256,7 @@ namespace org.apache.juddi.v3.client.config
                 String authToken = getAuthToken(node.securityUrl);
                 save_binding saveBinding = new save_binding();
                 saveBinding.authInfo = (authToken);
-                saveBinding.bindingTemplate = new uddi.apiv3.bindingTemplate[1];
+                saveBinding.bindingTemplate = new bindingTemplate[1];
                 saveBinding.bindingTemplate[0] = (binding);
 
                 org.uddi.apiv3.bindingDetail bindingDetail = null;
@@ -303,7 +303,7 @@ namespace org.apache.juddi.v3.client.config
                 String authToken = getAuthToken(node.securityUrl);
                 save_service saveService = new save_service();
                 saveService.authInfo = (authToken);
-                saveService.businessService = new uddi.apiv3.businessService[1];
+                saveService.businessService = new businessService[1];
                 saveService.businessService[0] = (service);
                 org.uddi.apiv3.serviceDetail serviceDetail = null;
                 using (UDDI_Publication_SoapBinding pub = getUDDINode().getTransport().getUDDIPublishService(node.publishUrl))
@@ -344,7 +344,7 @@ namespace org.apache.juddi.v3.client.config
                 String authToken = getAuthToken(node.securityUrl);
                 save_business saveBusiness = new save_business();
                 saveBusiness.authInfo = (authToken);
-                saveBusiness.businessEntity = new uddi.apiv3.businessEntity[1];
+                saveBusiness.businessEntity = new businessEntity[1];
                 saveBusiness.businessEntity[0] = business;
                 using (UDDI_Publication_SoapBinding pub = getUDDINode().getTransport().getUDDIPublishService(node.publishUrl))
                 {
@@ -521,6 +521,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
 //                DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, null, null);
             }
@@ -551,6 +552,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, null, null);
             }
@@ -580,6 +582,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
             }
@@ -609,6 +612,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
             }
@@ -644,6 +648,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
             }
@@ -673,6 +678,7 @@ namespace org.apache.juddi.v3.client.config
             }
             catch (Exception dr)
             {
+                log.error("", dr);
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
             }

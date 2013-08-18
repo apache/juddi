@@ -14,7 +14,7 @@ namespace org.apache.juddi.v3.client.log
         }
         public void info(string msg, Exception ex)
         {
-            log.WriteEntry(msg + ex.Message, EventLogEntryType.Information);
+            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
         }
 
         public void info(string msg)
@@ -24,7 +24,7 @@ namespace org.apache.juddi.v3.client.log
 
         public void warn(string msg, Exception ex)
         {
-            log.WriteEntry(msg + ex.Message, EventLogEntryType.Warning);
+            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
         }
 
         public void warn(string msg)
@@ -34,7 +34,7 @@ namespace org.apache.juddi.v3.client.log
 
         public void error(string msg, Exception ex)
         {
-            log.WriteEntry(msg + ex.Message, EventLogEntryType.Error);
+            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
         }
 
         public void error(string msg)
@@ -45,7 +45,7 @@ namespace org.apache.juddi.v3.client.log
 
         public void debug(string msg, Exception ex)
         {
-            log.WriteEntry(msg + ex.Message, EventLogEntryType.Information);
+            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
         }
 
         public void debug(string msg)
@@ -56,6 +56,12 @@ namespace org.apache.juddi.v3.client.log
         public bool isDebugEnabled()
         {
             return true;
+        }
+
+
+        public void debug(object msg)
+        {
+            log.WriteEntry(msg.ToString(), EventLogEntryType.Information);
         }
     }
 }

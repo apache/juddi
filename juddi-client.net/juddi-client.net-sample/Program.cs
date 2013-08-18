@@ -1,4 +1,6 @@
 ﻿using org.apache.juddi.v3.client;
+using org.apache.juddi.v3.client.config;
+using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,14 @@ namespace juddi_client.net_sample
     {
         static void Main(string[] args)
         {
-            org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = new org.uddi.apiv3.UDDI_Inquiry_SoapBinding(
+            UDDIClient clerkManager = new UDDIClient("uddi.xml");
+            UDDIClientContainer.addClient(clerkManager);
+            Transport transport = clerkManager.getTransport("default");
 
-                "http://uddi-jbossoverlord.rhcloud.com/services/inquiry");
+            org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
+            org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+            ClientConfig cfg = new ClientConfig("uddi.xml");
+            
             find_business fb = new find_business();
             fb.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
             fb.name = new name[1];
@@ -23,6 +30,7 @@ namespace juddi_client.net_sample
             {
                 Console.WriteLine(bl.businessInfos[i].name[0].Value);
             }
+            Console.Read();
 
         }
     }
