@@ -1139,4 +1139,204 @@
             <keyedReference keyName="uddi-org:types:categorization" keyValue="categorization" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+    
+    
+    
+    
+    
+    
+    <tModel tModelKey="urn:wsdm.org:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:keygenerator</name>
+        <description>Key Generator for WSDM.org tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:metric:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:metric:keygenerator</name>
+        <description>Key Generator for WSDM.org Metric tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:identity:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:identity:keygenerator</name>
+        <description>Key Generator for WSDM.org Identity tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:keygenerator" xmlns="urn:uddi-org:api_v3">
+        <name>urn:wsdm.org:qos:keygenerator</name>
+        <description>Key Generator for WSDM.org Quality of Service tModels </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#protocolKeyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:keyGenerator" keyValue="keyGenerator" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:metric:requestcount">
+        <name>RequestCount</name>
+        <description xml:lang="en">The number of requests to a given service. (number of requests)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:metric:replycount">
+        <name>ReplyCount</name>
+        <description xml:lang="en">The number of replies from a given service. (number of replies)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+     <tModel tModelKey="urn:wsdm.org:metric:faultcount">
+        <name>FaultCount</name>
+        <description xml:lang="en">The number of faults from a given service. (number of faults)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:identity:resourceId">
+        <name>ResourceId</name>
+        <description xml:lang="en">This is the unique identity by which the resource (service) is known to the management system.  It is useful for further queries. (resource identification in URI format)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="urn:wsdm.org:metric:lastupdatetime">
+        <name>LastUpdateTime</name>
+        <description xml:lang="en">Represents the last time this metric was updated. (time value)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    
+    <tModel tModelKey="urn:wsdm.org:qos:responsetime_average">
+        <name>ResponseTime_Average</name>
+        <description xml:lang="en">Average response time of the service. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:throughput_count">
+        <name>Throughput_count</name>
+        <description xml:lang="en">Throughput count. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:throughput_bytes">
+        <name>Throughput_bytes</name>
+        <description xml:lang="en">Throughput bytes. (numeric value or symbolic rating)</description>
+       <overviewDoc> 
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reliability">
+        <name>Reliability</name>
+        <description xml:lang="en">Reliability or the measure of. (numeric value or symbolic rating)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reportingperiodstart">
+        <name>ReportingPeriodStart</name>
+        <description xml:lang="en">The beginning on the reporting time period used for the information above. (dateTime)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:reportingperiodend">
+        <name>ReportingPeriodEnd</name>
+        <description xml:lang="en">The end of the reporting time period used for the information above. (dateTime)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+    <tModel tModelKey="urn:wsdm.org:qos:updateinterval">
+        <name>UpdateInterval</name>
+        <description xml:lang="en">How often is this information updated in UDDI (it is not assumed to be realtime). (duration)</description>
+       <overviewDoc>
+            <overviewURL>
+                https://www.oasis-open.org/committees/download.php/6227/uddi-spec-tc-tn-QoS-metrics-20040224.doc
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
 </save_tModel>
