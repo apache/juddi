@@ -19,19 +19,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace org.apache.juddi.v3.client.config
+namespace org.apache.juddi.v3.client.crypto
 {
-    public partial class uddi
+    internal sealed class AES128Cryptor : AESCryptor
     {
-        Properties p = new Properties();
-        public  Properties getProperties()
+        protected internal override int GetKeySize()
         {
-            return p;
+            return 128;
         }
 
-        public void setProperties(Properties props)
+        protected internal override byte[] GetKey()
         {
-            p = props;
+            return Convert.FromBase64String("oT5ljhVnMVQMnV2E7BOj7Q==");
+
+        }
+
+        protected internal override byte[] GetIV()
+        {
+            return Convert.FromBase64String("xtMa34fpJ9bCdpODQn8GmQ==");
         }
     }
 }

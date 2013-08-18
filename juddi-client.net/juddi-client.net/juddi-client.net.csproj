@@ -55,6 +55,12 @@
     <Compile Include="org.apache.juddi.v3.client.config\UDDINode.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\XmlConfiguration.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\XRegistration.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\AES128Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\AES256Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\AESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\CryptorFactory.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\TripleDESCryptor.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />

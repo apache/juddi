@@ -1,4 +1,21 @@
-﻿
+﻿/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+using org.apache.juddi.v3.client.crypto;
 using org.apache.juddi.v3.client.log;
 using org.uddi.apiv3;
 using System;
@@ -22,6 +39,8 @@ namespace org.apache.juddi.v3.client.config
         private String[] classWithAnnotations;
         private WSDL[] wsdls;
         private String managerName;
+        private bool isEncrypted = false;
+        private string cryptoProvider;
         private Dictionary<String, Properties> services = new Dictionary<String, Properties>();
 
         public UDDIClerk()
@@ -655,7 +674,7 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
-        /**
+         /**
          * Looks up the BusinessEntiry in the registry, will return null if is not
          * found.
          *
@@ -709,7 +728,7 @@ namespace org.apache.juddi.v3.client.config
             }
         }
         */
-        private String getAuthToken(String endpointURL)
+        public String getAuthToken(String endpointURL)
         {
             //if the token is older then 10 minutes discard it, and create a new one.
             if ((authToken != null && !"".Equals(authToken)) && (tokenBirthDate != null && DateTime.Now > tokenBirthDate.AddMilliseconds(600000)))
@@ -727,7 +746,26 @@ namespace org.apache.juddi.v3.client.config
                 tokenBirthDate = new DateTime();
                 get_authToken getAuthToken = new get_authToken();
                 getAuthToken.userID=(getPublisher());
-                getAuthToken.cred=(getPassword());
+                if (isEncrypted)
+                {
+                    if (String.IsNullOrEmpty(cryptoProvider))
+                    {
+                        log.error("Credentials are encrypted but no cryptoProvider was defined in the config file!");
+                    }else
+                        try
+                        {
+                            getAuthToken.cred=(CryptorFactory.getCryptor(this.cryptoProvider).decrypt(getPassword()));
+                        }
+                        catch (Exception ex)
+                        {
+                            log.error("Unable to decrypt credentials! sending it as is", ex);
+                            getAuthToken.cred=(getPassword());
+                        }
+                }
+                else
+                {
+                    getAuthToken.cred = (getPassword());
+                }
                 using (UDDI_Security_SoapBinding sec = getUDDINode().getTransport().getUDDISecurityService(endpointURL))
                 {
                     authToken = getUDDINode().getTransport().getUDDISecurityService(endpointURL).get_authToken(getAuthToken).authInfo;
@@ -951,6 +989,28 @@ namespace org.apache.juddi.v3.client.config
         internal void saveNode(apiv3.node node)
         {
             throw new NotImplementedException();
+        }
+
+        public void setCryptoProvider(string p)
+        {
+
+            this.cryptoProvider = p;
+        }
+
+        public void setPasswordEncrypted(bool p)
+        {
+            this.isEncrypted = p;
+        }
+
+        public string getCryptoProvider()
+        {
+
+            return this.cryptoProvider;
+        }
+
+        public bool getPasswordEncrypted()
+        {
+            return this.isEncrypted;
         }
     }
 }

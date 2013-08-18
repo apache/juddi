@@ -499,11 +499,19 @@ namespace org.apache.juddi.v3.client.config {
         
         private string passwordField;
         
+        private bool isPasswordEncryptedField;
+        
+        private string cryptoProviderField;
+        
         private string businessKeyField;
         
         private string businessNameField;
         
         private string keyDomainField;
+        
+        public uddiClientClerksClerk() {
+            this.isPasswordEncryptedField = false;
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("wsdl", IsNullable=true)]
@@ -568,6 +576,29 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.passwordField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool isPasswordEncrypted {
+            get {
+                return this.isPasswordEncryptedField;
+            }
+            set {
+                this.isPasswordEncryptedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string cryptoProvider {
+            get {
+                return this.cryptoProviderField;
+            }
+            set {
+                this.cryptoProviderField = value;
             }
         }
         

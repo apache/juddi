@@ -14,24 +14,30 @@
  * limitations under the License.
  *
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace org.apache.juddi.v3.client.config
+namespace org.apache.juddi.v3.client.crypto
 {
-    public partial class uddi
+    internal sealed class AES256Cryptor : AESCryptor
     {
-        Properties p = new Properties();
-        public  Properties getProperties()
+
+        protected internal override int GetKeySize()
         {
-            return p;
+            return 256;
         }
 
-        public void setProperties(Properties props)
+        protected internal override byte[] GetKey()
         {
-            p = props;
+            return Convert.FromBase64String("K48QmIsRr0xQD+WOwyg+fJWGS8K1M82V8XKn+/IzPo0=");
+        }
+
+        protected internal override byte[] GetIV()
+        {
+            return Convert.FromBase64String("Ro80zsaX0a4PLtyXuFKq6Q==");
         }
     }
 }
