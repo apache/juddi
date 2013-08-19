@@ -43,6 +43,31 @@
 		       <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
 		   </xregister>
 	   </clerks>
+	   <signature>
+			<!-- signing stuff -->
+			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
+			<signingKeyStoreType>JKS</signingKeyStoreType>
+			<signingKeyStoreFilePassword 
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
+			<signingKeyPassword
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
+			<signingKeyAlias>my special key</signingKeyAlias>
+			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
+			<signatureMethod>RSA_SHA1</signatureMethod>
+			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
+			<!-- validation stuff -->
+			<trustStorePath>truststore.jks</trustStorePath>
+			<trustStoreType>JKS</trustStoreType>
+			<trustStorePassword
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+			
+			<checkTimestamps>true</checkTimestamps>
+			<checkTrust>true</checkTrust>
+			<checkRevocationCRL>true</checkRevocationCRL>
+		</signature>
 	  
 	</client>
 </uddi>

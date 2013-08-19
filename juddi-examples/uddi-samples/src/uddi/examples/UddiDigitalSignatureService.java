@@ -16,6 +16,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class shows you how to digitally sign a service and verify the signature
+ *
  * @author Alex O'Ree
  */
 public class UddiDigitalSignatureService {
@@ -23,6 +24,7 @@ public class UddiDigitalSignatureService {
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
     private static UDDIPublicationPortType publish = null;
+    private static UDDIClient clerkManager = null;
 
     /**
      * This sets up the ws proxies using uddi.xml in META-INF
@@ -31,7 +33,7 @@ public class UddiDigitalSignatureService {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+            clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
             UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
@@ -46,32 +48,43 @@ public class UddiDigitalSignatureService {
         }
     }
 
-
     /**
      * Main entry point
      *
      * @param args
      */
     public static void main(String args[]) {
-        
+
         UddiDigitalSignatureService sp = new UddiDigitalSignatureService();
         sp.Fire(args);
     }
 
     public void Fire(String[] args) {
         try {
-            org.apache.juddi.v3.client.crypto.DigSigUtil ds = new DigSigUtil();
+
+            org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+
+            //option 1), set everything manually
+            ds = new DigSigUtil();
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "keystore.jks");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "password");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "selfsigned");
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
-            String token = GetAuthKey("root", "root");
-           
+
+            //option 2), load it from the juddi config file
+            ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+
+            //login
+            String token = null;
+            //option, load from juddi config
+            token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
+                    clerkManager.getClerk("default").getPassword());
+
             //TODO replace this with something more useful
-            String key="uddi:juddi.apache.org:da314f49-b84f-4ede-a434-0b0178632f10";
+            String key = "uddi:juddi.apache.org:da314f49-b84f-4ede-a434-0b0178632f10";
             BusinessService be = null;
-            be = GetServiceDetails( key);
+            be = GetServiceDetails(key);
             be.getSignature().clear();
             //DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("signing");
@@ -85,8 +98,8 @@ public class UddiDigitalSignatureService {
             publish.saveService(sb);
             System.out.println("saved, fetching");
 
-            
-            be = GetServiceDetails( key);
+
+            be = GetServiceDetails(key);
             DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("verifing");
             AtomicReference<String> msg = new AtomicReference<String>();
@@ -103,8 +116,6 @@ public class UddiDigitalSignatureService {
         }
     }
 
-
-
     private BusinessService GetServiceDetails(String key) throws Exception {
         //   BusinessInfo get
         GetServiceDetail r = new GetServiceDetail();
@@ -112,7 +123,6 @@ public class UddiDigitalSignatureService {
         r.getServiceKey().add(key);
         return inquiry.getServiceDetail(r).getBusinessService().get(0);
     }
-
 
     /**
      * Gets a UDDI style auth token, otherwise, appends credentials to the ws
@@ -139,5 +149,4 @@ public class UddiDigitalSignatureService {
         }
         return null;
     }
-
 }

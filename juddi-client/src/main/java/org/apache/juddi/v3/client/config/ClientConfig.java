@@ -21,6 +21,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -30,6 +33,8 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.v3.client.crypto.CryptorFactory;
+import org.apache.juddi.v3.client.crypto.DigSigUtil;
 
 /**
  * Handles the client configuration of the uddi-client. By default it first
@@ -56,7 +61,7 @@ public class ClientConfig
 	 */
 	public ClientConfig(String configurationFile) throws ConfigurationException 
 	{
-		loadConfiguration(configurationFile, null);
+                loadConfiguration(configurationFile, null);
 	}
 	/**
 	 * Constructor (note Singleton pattern).
@@ -301,15 +306,68 @@ public class ClientConfig
 		return xBusinessRegistrations;
 	}
     
-    public Configuration getConfiguration() {
-    	return config;
-    }
-    
-    public String getClientName() {
-		return clientName;
-	}
-    
-    public String getConfigurationFile() {
-    	return configurationFile;
-    }
+        public Configuration getConfiguration() {
+            return config;
+        }
+
+        public String getClientName() {
+                    return clientName;
+            }
+
+        public String getConfigurationFile() {
+            return configurationFile;
+        }
+
+        /**
+         * Fetches all digital signature related properties for the digital signature utility.
+         * warning, this will decrypt all passwords
+         * @return
+         * @throws Exception 
+         */
+        public Properties getDigitalSignatureConfiguration() throws Exception{
+            Properties p = new Properties();
+            p.setProperty(DigSigUtil.CHECK_TIMESTAMPS, ((Boolean)(this.config.getBoolean("client.signature.checkTimestamps", true))).toString());
+            p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_CRL, ((Boolean)(this.config.getBoolean("client.signature.checkRevocationCRL", true))).toString());
+            p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP, ((Boolean)(this.config.getBoolean("client.signature.checkRevocationOCSP", true))).toString());
+            p.setProperty(DigSigUtil.CHECK_TRUST_CHAIN, ((Boolean)(this.config.getBoolean("client.signature.checkTrust", true))).toString());
+
+            p.setProperty(DigSigUtil.CANONICALIZATIONMETHOD, this.config.getString("client.signature.canonicalizationMethod", CanonicalizationMethod.EXCLUSIVE));
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, this.config.getString("client.signature.signingKeyAlias"));
+            p.setProperty(DigSigUtil.TRUSTSTORE_FILE, this.config.getString("client.signature.trustStorePath"));
+            p.setProperty(DigSigUtil.TRUSTSTORE_FILETYPE, this.config.getString("client.signature.trustStoreType"));
+            p.setProperty(DigSigUtil.SIGNATURE_METHOD, this.config.getString("client.signature.signatureMethod","RSA_SHA1"));
+            
+            if (this.config.getBoolean("client.signature.trustStorePassword[@isPasswordEncrypted]", false))
+            {
+                String enc = this.config.getString("client.signature.trustStorePassword");
+                String prov = this.config.getString("client.signature.trustStorePassword[@cryptoProvider]");
+                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, this.config.getString("client.signature.trustStorePassword"));
+
+            if (this.config.getBoolean("client.signature.signingKeyPassword[@isPasswordEncrypted]", false))
+            {
+                String enc = this.config.getString("client.signature.signingKeyPassword");
+                String prov = this.config.getString("client.signature.signingKeyPassword[@cryptoProvider]");
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.getString("client.signature.signingKeyPassword"));
+
+                    if (this.config.getBoolean("client.signature.signingKeyStoreFilePassword[@isPasswordEncrypted]", false))
+            {
+                String enc = this.config.getString("client.signature.signingKeyStoreFilePassword");
+                String prov = this.config.getString("client.signature.signingKeyStoreFilePassword[@cryptoProvider]");
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.getString("client.signature.signingKeyStoreFilePassword"));
+
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, this.config.getString("client.signature.signingKeyStoreType"));
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE, this.config.getString("client.signature.signingKeyStorePath"));
+
+
+            return p;
+        }
 }

@@ -18,7 +18,7 @@
                         <xsd:sequence>
                           <xsd:element type="xsd:string" name="name" />
                           <xsd:element type="xsd:string" name="description" />
-                       
+
                           <xsd:element name="properties" minOccurs="0">
                             <xsd:complexType>
                               <xsd:sequence>
@@ -55,7 +55,7 @@
 															use="optional" />
                       </xsd:complexType>
                     </xsd:element>
-                
+
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
@@ -81,7 +81,7 @@
                               use="optional" default="false"  />
                         <xsd:attribute type="xsd:string" name="cryptoProvider"
                              use="optional"  />
-                        
+
                         <xsd:attribute type="xsd:string" name="businessKey"
                               use="optional" />
                         <xsd:attribute type="xsd:string" name="businessName"
@@ -128,14 +128,69 @@
                         use="optional" />
                 </xsd:complexType>
               </xsd:element>
+              <xsd:element name="signature">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element type="xsd:string" name="signingKeyStorePath"></xsd:element>
+                    <xsd:element type="xsd:string" name="signingKeyStoreType"></xsd:element>
+                    <xsd:element  name="signingKeyStoreFilePassword">
+                      <xsd:complexType>
+                        <xsd:simpleContent>
+                          <xsd:extension base="xsd:string">
+                            <xsd:attribute type="xsd:boolean" name="isPasswordEncrypted"
+                                  use="optional" default="false"  />
+                            <xsd:attribute type="xsd:string" name="cryptoProvider"
+                                 use="optional"  />
+                          </xsd:extension>
+                        </xsd:simpleContent>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element  name="signingKeyPassword">
+                      <xsd:complexType>
+                        <xsd:simpleContent>
+                          <xsd:extension base="xsd:string">
+                            <xsd:attribute type="xsd:boolean" name="isPasswordEncrypted"
+                                  use="optional" default="false"  />
+                            <xsd:attribute type="xsd:string" name="cryptoProvider"
+                                 use="optional"  />
+                          </xsd:extension>
+                        </xsd:simpleContent>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element type="xsd:string" name="signingKeyAlias"></xsd:element>
+                    <xsd:element type="xsd:string" name="canonicalizationMethod"></xsd:element>
+                    <xsd:element type="xsd:string" name="signatureMethod"></xsd:element>
+                    <xsd:element type="xsd:string" name="XML_DIGSIG_NS" default="http://www.w3.org/2000/09/xmldsig#"></xsd:element>
+
+                    <xsd:element type="xsd:string" name="trustStorePath"></xsd:element>
+                    <xsd:element type="xsd:string" name="trustStoreType"></xsd:element>
+                    <xsd:element  name="trustStorePassword">
+                      <xsd:complexType>
+                        <xsd:simpleContent>
+                          <xsd:extension base="xsd:string">
+                            <xsd:attribute type="xsd:boolean" name="isPasswordEncrypted"
+                                  use="optional" default="false"  />
+                            <xsd:attribute type="xsd:string" name="cryptoProvider"
+                                 use="optional"  />
+                          </xsd:extension>
+                        </xsd:simpleContent>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element type="xsd:boolean" name="checkTimestamps" default="true"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="checkTrust" default="true"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="checkRevocationCRL" default="false"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="checkRevocationOCSP" default="false"></xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
             </xsd:sequence>
             <xsd:attribute type="xsd:string" name="name" />
           </xsd:complexType>
         </xsd:element>
 
-       
+
       </xsd:sequence>
-     
+
     </xsd:complexType>
   </xsd:element>
 

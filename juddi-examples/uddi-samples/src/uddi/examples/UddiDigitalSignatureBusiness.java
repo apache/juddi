@@ -23,6 +23,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class shows you how to digital sign a business
+ *
  * @author Alex O'ree
  */
 public class UddiDigitalSignatureBusiness {
@@ -30,6 +31,7 @@ public class UddiDigitalSignatureBusiness {
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
     private static UDDIPublicationPortType publish = null;
+    private static UDDIClient clerkManager = null;
 
     /**
      * This sets up the ws proxies using uddi.xml in META-INF
@@ -38,7 +40,7 @@ public class UddiDigitalSignatureBusiness {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+            clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
             UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
@@ -53,34 +55,39 @@ public class UddiDigitalSignatureBusiness {
         }
     }
 
-    private static void DisplayHelp() {
-        //TODO
-    }
-
     /**
      * Main entry point
      *
      * @param args
      */
     public static void main(String args[]) {
-        
+
         UddiDigitalSignatureBusiness sp = new UddiDigitalSignatureBusiness();
         sp.Fire(args);
     }
 
     public void Fire(String[] args) {
         try {
-        
-            org.apache.juddi.v3.client.crypto.DigSigUtil ds = new DigSigUtil();
+
+            org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+
+            //option 1), set everything manually
+            ds = new DigSigUtil();
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "keystore.jks");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "password");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "selfsigned");
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
-            
+
+            //option 2), load it from the juddi config file
+            ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+
             //login
-            String token = GetAuthKey("root", "root");
-            
+            String token = null;
+            //option, load from juddi config
+            token =  GetAuthKey(clerkManager.getClerk("default").getPublisher(), 
+                    clerkManager.getClerk("default").getPassword());
+
             //make a new business
             SaveBusiness sb = new SaveBusiness();
             sb.setAuthInfo(token);
@@ -91,16 +98,16 @@ public class UddiDigitalSignatureBusiness {
             sb.getBusinessEntity().add(ob);
             //save it
             BusinessDetail saveBusiness = publish.saveBusiness(sb);
-            
+
             System.out.println("business created with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
 
-            
+
             BusinessEntity be = saveBusiness.getBusinessEntity().get(0);
             //sign the copy returned from the UDDI node (it may have made changes)
             DigSigUtil.JAXB_ToStdOut(be);
-            
+
             //if it's already signed, remove all existing signatures
-            
+
             be.getSignature().clear();
             System.out.println("signing");
             BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
@@ -134,7 +141,6 @@ public class UddiDigitalSignatureBusiness {
         }
     }
 
-
     /**
      * Gets a UDDI style auth token, otherwise, appends credentials to the ws
      * proxies (not yet implemented)
@@ -160,5 +166,4 @@ public class UddiDigitalSignatureBusiness {
         }
         return null;
     }
-
 }

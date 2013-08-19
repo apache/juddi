@@ -796,18 +796,43 @@ public class UDDIClerk implements Serializable {
         this.uddiNode = uddiNode;
     }
 
+    /**
+     * This is the username
+     * @return 
+     */
     public String getPublisher() {
         return publisher;
     }
 
+    /**
+     * This is the username
+     * @param publisher 
+     */
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
+    /**
+     * If the password is encrypted, it will be decrypted if possible, otherwise
+     * the cipher text will be returned.
+     * @return 
+     */
     public String getPassword() {
+        if (isencrypted)
+        {
+            try {
+                return CryptorFactory.getCryptor(cryptoProvider).decrypt(password);
+            } catch (Exception ex) {
+                log.fatal("Unable to decrypt the password", ex);
+            }
+        }
         return password;
     }
 
+    /**
+     * Use with caution, don't forget to set the IsEncrypted and Crypto provider
+     * @param password 
+     */
     public void setPassword(String password) {
         this.password = password;
     }

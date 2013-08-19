@@ -61,6 +61,8 @@ namespace org.apache.juddi.v3.client.config {
         
         private uddiClientClerks clerksField;
         
+        private uddiClientSignature signatureField;
+        
         private string nameField;
         
         /// <remarks/>
@@ -81,6 +83,16 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.clerksField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientSignature signature {
+            get {
+                return this.signatureField;
+            }
+            set {
+                this.signatureField = value;
             }
         }
         
@@ -778,6 +790,362 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.toClerkField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientSignature {
+        
+        private string signingKeyStorePathField;
+        
+        private string signingKeyStoreTypeField;
+        
+        private uddiClientSignatureSigningKeyStoreFilePassword signingKeyStoreFilePasswordField;
+        
+        private uddiClientSignatureSigningKeyPassword signingKeyPasswordField;
+        
+        private string signingKeyAliasField;
+        
+        private string canonicalizationMethodField;
+        
+        private string signatureMethodField;
+        
+        private string xML_DIGSIG_NSField;
+        
+        private string trustStorePathField;
+        
+        private string trustStoreTypeField;
+        
+        private uddiClientSignatureTrustStorePassword trustStorePasswordField;
+        
+        private bool checkTimestampsField;
+        
+        private bool checkTrustField;
+        
+        private bool checkRevocationCRLField;
+        
+        private bool checkRevocationOCSPField;
+        
+        public uddiClientSignature() {
+            this.xML_DIGSIG_NSField = "http://www.w3.org/2000/09/xmldsig#";
+            this.checkTimestampsField = true;
+            this.checkTrustField = true;
+            this.checkRevocationCRLField = false;
+            this.checkRevocationOCSPField = false;
+        }
+        
+        /// <remarks/>
+        public string signingKeyStorePath {
+            get {
+                return this.signingKeyStorePathField;
+            }
+            set {
+                this.signingKeyStorePathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string signingKeyStoreType {
+            get {
+                return this.signingKeyStoreTypeField;
+            }
+            set {
+                this.signingKeyStoreTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientSignatureSigningKeyStoreFilePassword signingKeyStoreFilePassword {
+            get {
+                return this.signingKeyStoreFilePasswordField;
+            }
+            set {
+                this.signingKeyStoreFilePasswordField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientSignatureSigningKeyPassword signingKeyPassword {
+            get {
+                return this.signingKeyPasswordField;
+            }
+            set {
+                this.signingKeyPasswordField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string signingKeyAlias {
+            get {
+                return this.signingKeyAliasField;
+            }
+            set {
+                this.signingKeyAliasField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string canonicalizationMethod {
+            get {
+                return this.canonicalizationMethodField;
+            }
+            set {
+                this.canonicalizationMethodField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string signatureMethod {
+            get {
+                return this.signatureMethodField;
+            }
+            set {
+                this.signatureMethodField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string XML_DIGSIG_NS {
+            get {
+                return this.xML_DIGSIG_NSField;
+            }
+            set {
+                this.xML_DIGSIG_NSField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string trustStorePath {
+            get {
+                return this.trustStorePathField;
+            }
+            set {
+                this.trustStorePathField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string trustStoreType {
+            get {
+                return this.trustStoreTypeField;
+            }
+            set {
+                this.trustStoreTypeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientSignatureTrustStorePassword trustStorePassword {
+            get {
+                return this.trustStorePasswordField;
+            }
+            set {
+                this.trustStorePasswordField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool checkTimestamps {
+            get {
+                return this.checkTimestampsField;
+            }
+            set {
+                this.checkTimestampsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool checkTrust {
+            get {
+                return this.checkTrustField;
+            }
+            set {
+                this.checkTrustField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool checkRevocationCRL {
+            get {
+                return this.checkRevocationCRLField;
+            }
+            set {
+                this.checkRevocationCRLField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool checkRevocationOCSP {
+            get {
+                return this.checkRevocationOCSPField;
+            }
+            set {
+                this.checkRevocationOCSPField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientSignatureSigningKeyStoreFilePassword {
+        
+        private bool isPasswordEncryptedField;
+        
+        private string cryptoProviderField;
+        
+        private string valueField;
+        
+        public uddiClientSignatureSigningKeyStoreFilePassword() {
+            this.isPasswordEncryptedField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool isPasswordEncrypted {
+            get {
+                return this.isPasswordEncryptedField;
+            }
+            set {
+                this.isPasswordEncryptedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string cryptoProvider {
+            get {
+                return this.cryptoProviderField;
+            }
+            set {
+                this.cryptoProviderField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientSignatureSigningKeyPassword {
+        
+        private bool isPasswordEncryptedField;
+        
+        private string cryptoProviderField;
+        
+        private string valueField;
+        
+        public uddiClientSignatureSigningKeyPassword() {
+            this.isPasswordEncryptedField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool isPasswordEncrypted {
+            get {
+                return this.isPasswordEncryptedField;
+            }
+            set {
+                this.isPasswordEncryptedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string cryptoProvider {
+            get {
+                return this.cryptoProviderField;
+            }
+            set {
+                this.cryptoProviderField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientSignatureTrustStorePassword {
+        
+        private bool isPasswordEncryptedField;
+        
+        private string cryptoProviderField;
+        
+        private string valueField;
+        
+        public uddiClientSignatureTrustStorePassword() {
+            this.isPasswordEncryptedField = false;
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool isPasswordEncrypted {
+            get {
+                return this.isPasswordEncryptedField;
+            }
+            set {
+                this.isPasswordEncryptedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string cryptoProvider {
+            get {
+                return this.cryptoProviderField;
+            }
+            set {
+                this.cryptoProviderField = value;
             }
         }
         

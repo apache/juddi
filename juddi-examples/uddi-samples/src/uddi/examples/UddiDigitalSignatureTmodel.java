@@ -23,6 +23,7 @@ public class UddiDigitalSignatureTmodel {
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
     private static UDDIPublicationPortType publish = null;
+    private static UDDIClient clerkManager = null;
 
     /**
      * This sets up the ws proxies using uddi.xml in META-INF
@@ -31,7 +32,7 @@ public class UddiDigitalSignatureTmodel {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
-            UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
+            clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
             UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
@@ -46,9 +47,6 @@ public class UddiDigitalSignatureTmodel {
         }
     }
 
-    private static void DisplayHelp() {
-        //TODO
-    }
 
     /**
      * Main entry point
@@ -66,16 +64,26 @@ public class UddiDigitalSignatureTmodel {
 
     public void Fire(String[] args) {
         try {
-            org.apache.juddi.v3.client.crypto.DigSigUtil ds = new DigSigUtil();
+             org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+
+            //option 1), set everything manually
+            ds = new DigSigUtil();
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "keystore.jks");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "password");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "selfsigned");
-            
-            //obmit this statement if you don't need the certificate to be included.
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
-            String token = GetAuthKey("root", "root");
-            
+
+            //option 2), load it from the juddi config file
+            ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+
+            //login
+            String token = null;
+            //option, load from juddi config
+            token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
+                    clerkManager.getClerk("default").getPassword());
+
+           
             String key ="uddi:juddi.apache.org:23748881-bb2f-4896-8283-4a15be1d0bc1";
             
             

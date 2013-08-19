@@ -87,8 +87,18 @@ import sun.security.provider.certpath.OCSP.RevocationStatus;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree </a>
  */
-public final class DigSigUtil {
+public class DigSigUtil {
 
+    /**
+     * Expects a properties object containing the desired configuration
+     * @param config
+     * @throws CertificateException 
+     */
+    public DigSigUtil(Properties config) throws CertificateException {
+        cf = CertificateFactory.getInstance("X.509");
+        this.map = config;
+    }
+    
     public DigSigUtil() throws CertificateException {
         cf = CertificateFactory.getInstance("X.509");
     }
@@ -121,9 +131,9 @@ public final class DigSigUtil {
     public final static String SIGNATURE_KEYSTORE_FILE_PASSWORD = "filePassword";
     public final static String SIGNATURE_KEYSTORE_KEY_PASSWORD = "keyPassword";
     public final static String SIGNATURE_KEYSTORE_KEY_ALIAS = "keyAlias";
-    public final static String TRUSTSTORE_FILE = "keyStorePath";
-    public final static String TRUSTSTORE_FILETYPE = "keyStoreType";
-    public final static String TRUSTSTORE_FILE_PASSWORD = "filePassword";
+    public final static String TRUSTSTORE_FILE = "trustStorePath";
+    public final static String TRUSTSTORE_FILETYPE = "trustStoreType";
+    public final static String TRUSTSTORE_FILE_PASSWORD = "trustStorePassword";
     /**
      * default is CanonicalizationMethod.EXCLUSIVE
      *
@@ -468,10 +478,11 @@ public final class DigSigUtil {
 
             if (signingcert != null && signingcert instanceof X509Certificate) {
                 logger.info("verifying signature based on X509 public key " + signingcert.getSubjectDN().toString());
-                if (map.containsKey(CHECK_TIMESTAMPS)) {
+                if (map.containsKey(CHECK_TIMESTAMPS)&& Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {
                     signingcert.checkValidity();
                 }
-                if (map.containsKey(CHECK_REVOCATION_STATUS_OCSP)) {
+                if (map.containsKey(CHECK_REVOCATION_STATUS_OCSP)
+                        && Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_OCSP))) {
                     logger.info("verifying revocation status via OSCP for X509 public key " + signingcert.getSubjectDN().toString());
                     X500Principal issuerX500Principal = signingcert.getIssuerX500Principal();
                     logger.info("certificate " + signingcert.getSubjectDN().toString() + " was issued by " + issuerX500Principal.getName() + ", attempting to retrieve certificate");
@@ -486,7 +497,7 @@ public final class DigSigUtil {
                         throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
                     }
                 }
-                if (map.containsKey(CHECK_REVOCATION_STATUS_CRL)) {
+                if (map.containsKey(CHECK_REVOCATION_STATUS_CRL)&& Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
                     logger.info("verifying revokation status via CRL for X509 public key " + signingcert.getSubjectDN().toString());
 
                     Security.setProperty("ocsp.enable", "false");
@@ -505,7 +516,7 @@ public final class DigSigUtil {
                     logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString());
 
                 }
-                if (map.containsKey(CHECK_TRUST_CHAIN)) {
+                if (map.containsKey(CHECK_TRUST_CHAIN)&& Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {
                     logger.info("verifying trust chain X509 public key " + signingcert.getSubjectDN().toString());
                     PKIXParameters params = new PKIXParameters(GetTrustStore());
                     params.setRevocationEnabled(false);
