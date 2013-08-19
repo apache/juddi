@@ -56,6 +56,12 @@ public class DigSigUtilTest {
         ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
         ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
         ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
+        
+        ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
+        ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
+        ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
+        
+        
     }
 
     void SubjectDNOnly() throws CertificateException {
@@ -72,8 +78,9 @@ public class DigSigUtilTest {
 
     @Test
     public void testSignBusinessSubjectDNOnly() throws CertificateException {
+        
         SubjectDNOnly();
-        System.out.println("signing");
+        System.out.println("testSignBusinessSubjectDNOnly signing");
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey("uddi:juddi.apache.org:testkey");
         be.setDiscoveryURLs(new DiscoveryURLs());
@@ -98,8 +105,9 @@ public class DigSigUtilTest {
 
     @Test
     public void testSignBusinessSerialAndIssuerOnly() throws CertificateException {
+        System.out.println("testSignBusinessSerialAndIssuerOnly signing");
         SerialAndIssuerOnly();
-        System.out.println("signing");
+        
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey("uddi:juddi.apache.org:testkey");
         be.setDiscoveryURLs(new DiscoveryURLs());
@@ -127,7 +135,7 @@ public class DigSigUtilTest {
         Default();
 
 
-        System.out.println("signing");
+        System.out.println("testSignBusiness signing");
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey("uddi:juddi.apache.org:testkey");
         be.setDiscoveryURLs(new DiscoveryURLs());
@@ -152,7 +160,7 @@ public class DigSigUtilTest {
     @Test
     public void testSignService() throws CertificateException {
         Default();
-        System.out.println("signing");
+        System.out.println("testSignService signing");
         BusinessService be = new BusinessService();
         be.setBusinessKey("uddi:juddi.apache.org:testkey");
 
@@ -176,7 +184,7 @@ public class DigSigUtilTest {
     @Test
     public void testSignTmodel() throws CertificateException {
         Default();
-        System.out.println("signing");
+        System.out.println("testSignTmodel signing");
         TModel be = new TModel();
         be.setTModelKey("uddi:juddi.apache.org:testkey");
 
@@ -200,7 +208,7 @@ public class DigSigUtilTest {
     @Test
     public void testSignBinding() throws CertificateException {
         Default();
-        System.out.println("signing");
+        System.out.println("testSignBinding signing");
         BindingTemplate be = new BindingTemplate();
         be.setBindingKey("uddi:juddi.apache.org:testkey");
 
@@ -224,7 +232,7 @@ public class DigSigUtilTest {
     @Test
     public void testSignPublisherAssertion() throws CertificateException {
         Default();
-        System.out.println("signing");
+        System.out.println("testSignPublisherAssertion signing");
         PublisherAssertion be = new PublisherAssertion();
         be.setFromKey("uddi:juddi.apache.org:testkey");
         be.setToKey("uddi:juddi.apache.org:testkey");

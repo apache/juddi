@@ -583,7 +583,13 @@ public class DigSigUtil {
     }
 
     private KeyStore GetTrustStore() throws Exception {
-        KeyStore ks = KeyStore.getInstance(map.getProperty(TRUSTSTORE_FILETYPE));
+        String type=map.getProperty(TRUSTSTORE_FILETYPE);
+        if (type==null)
+            type="JKS";
+        KeyStore ks = KeyStore.getInstance(type);
+        String filename=map.getProperty(TRUSTSTORE_FILE);
+        if (filename==null)
+            return null;
         URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
         if (url == null) {
             try {
@@ -824,6 +830,7 @@ public class DigSigUtil {
 
     private X509Certificate FindCertByDN(X500Principal name) throws Exception {
         KeyStore ks = GetTrustStore();
+        if (ks==null) return null;
         Enumeration<String> aliases = ks.aliases();
         while (aliases.hasMoreElements()) {
             String nextElement = aliases.nextElement();
@@ -856,6 +863,7 @@ public class DigSigUtil {
 
     private X509Certificate FindCertByIssuer(String X509IssuerName, String X509SerialNumber) throws Exception {
         KeyStore ks = GetTrustStore();
+         if (ks==null) return null;
         Enumeration<String> aliases = ks.aliases();
         while (aliases.hasMoreElements()) {
             String nextElement = aliases.nextElement();

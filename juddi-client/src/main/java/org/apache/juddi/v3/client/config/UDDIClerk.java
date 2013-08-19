@@ -828,6 +828,15 @@ public class UDDIClerk implements Serializable {
         }
         return password;
     }
+    
+    /**
+     * If the password is encrypted, it cipher text is returned, otherwise
+     * the clear text will be returned.
+     * @return 
+     */
+    public String getRawPassword() {
+        return password;
+    }
 
     /**
      * Use with caution, don't forget to set the IsEncrypted and Crypto provider

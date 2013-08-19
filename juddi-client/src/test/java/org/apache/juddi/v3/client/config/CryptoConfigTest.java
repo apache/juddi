@@ -39,11 +39,11 @@ public class CryptoConfigTest {
         UDDIClerk c = clerkManager.getClerk("default");
         UDDIClerk c2 = clerkManager.getClerk("medroot");
         Assert.assertNotSame(c.getPassword(), c2.getPassword());
-        Assert.assertEquals("7d3e79ca453f4ebfd36e22afe029c3a2", c.getPassword());
-        Assert.assertEquals("root", CryptorFactory.getCryptor(c.getCryptoProvider()).decrypt(c.getPassword()));
+        Assert.assertEquals("root", CryptorFactory.getCryptor(c.getCryptoProvider()).decrypt(c.getRawPassword()));
+        Assert.assertEquals("root", c.getPassword());
 
-        Assert.assertEquals("18604180541d172f9827e08c998db568", c2.getPassword());
-        Assert.assertEquals("password", CryptorFactory.getCryptor(c2.getCryptoProvider()).decrypt(c2.getPassword()));
+        Assert.assertEquals("password", CryptorFactory.getCryptor(c2.getCryptoProvider()).decrypt(c2.getRawPassword()));
+        Assert.assertEquals("password", c2.getPassword());
 
 
     }

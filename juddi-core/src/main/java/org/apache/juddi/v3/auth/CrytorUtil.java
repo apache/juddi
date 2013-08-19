@@ -17,7 +17,7 @@ package org.apache.juddi.v3.auth;
 
 import org.apache.juddi.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
- 
+
 /**
  *
  * @author Alex O'Ree
@@ -25,21 +25,30 @@ import org.apache.juddi.cryptor.CryptorFactory;
  */
 public class CrytorUtil {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         if (args.length == 0) {
             PrintUsage();
             return;
         }
-        Cryptor cryptor = CryptorFactory.getCryptor(args[0]);
-        System.out.print("Password: ");
-        char[] readPassword = System.console().readPassword();
-        System.out.println("Cipher: " +  cryptor.encrypt(new String(readPassword)));
+        String impl = args[0];
+        if (args[0].equalsIgnoreCase("decrypt")) {
+            impl = args[1];
+            Cryptor cryptor = CryptorFactory.getCryptor(impl);
+            System.out.print("Cipher: ");
+            char[] readPassword = System.console().readPassword();
+            System.out.println("Clear: " + cryptor.decrypt(new String(readPassword)));
+        } else {
+            Cryptor cryptor = CryptorFactory.getCryptor(impl);
+            System.out.print("Password: ");
+            char[] readPassword = System.console().readPassword();
+            System.out.println("Cipher: " + cryptor.encrypt(new String(readPassword)));
+        }
     }
 
     private static void PrintUsage() {
         System.out.println("Encrypts a password using the specified crypto provider");
         System.out.println("Usage: java -cp (classpath) org.apache.juddi.v3.auth.CrytorUtil (CryptoProvider)");
-        
+
         System.out.println("Provided crypto providers:");
         System.out.println("\torg.apache.juddi.cryptor.DefaultCryptor - uses PBEWithMD5AndDES");
         System.out.println("\torg.apache.juddi.cryptor.TripleDESCrytor - uses TripleDES");
