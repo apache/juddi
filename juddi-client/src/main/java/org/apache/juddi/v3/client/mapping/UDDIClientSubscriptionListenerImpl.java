@@ -38,12 +38,15 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  * the UDDI registry when any change to a Service or BindingTemplate
  * call in to it.
  * 
+ * @deprecated Use SubscriptionCallbackListener instead
  * @author kstam
+ * @see SubscriptionCallbackListener
  *
  */
 @WebService(serviceName="UDDIClientSubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",
 			targetNamespace = "urn:uddi-org:v3_service")
+@Deprecated
 public class UDDIClientSubscriptionListenerImpl implements UDDISubscriptionListenerPortType {
 	
 	private static Log logger = LogFactory.getLog(UDDIClientSubscriptionListenerImpl.class);

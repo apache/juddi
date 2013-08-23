@@ -118,6 +118,11 @@ public class UDDIClerk implements Serializable {
     public String[] getClassWithAnnotations() {
         return classWithAnnotations;
     }
+    
+    public UDDINode getUDDINode()
+    {
+        return this.uddiNode;
+    }
 
     public void setClassWithAnnotations(String[] classWithAnnotations) {
         this.classWithAnnotations = classWithAnnotations;
@@ -699,7 +704,17 @@ public class UDDIClerk implements Serializable {
         }
     }
 
-    private String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
+    /**
+     * Gets an auth token from the uddi server using the uddi auth token
+     * 
+     * notes: changed to protected to have access from the subscription callback API 8/20/2013 AO
+     * @param endpointURL
+     * @return
+     * @throws TransportException
+     * @throws DispositionReportFaultMessage
+     * @throws RemoteException 
+     */
+    public String getAuthToken(String endpointURL) throws TransportException, DispositionReportFaultMessage, RemoteException {
         //if the token is older then 10 minutes discard it, and create a new one.
         if ((authToken != null && !"".equals(authToken)) && (tokenBirthDate != null && System.currentTimeMillis() > tokenBirthDate.getTime() + 600000)) {
             DiscardAuthToken discardAuthToken = new DiscardAuthToken();
@@ -779,11 +794,7 @@ public class UDDIClerk implements Serializable {
         apiClerk.setPublisher(publisher);
         return apiClerk;
     }
-
-    public UDDINode getUDDINode() {
-        return uddiNode;
-    }
-
+    
     public String getName() {
         return name;
     }

@@ -67,6 +67,24 @@ public interface Property {
     public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES = "juddi.subscription.chunkexpiration.minutes";
     public final static String JUDDI_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
     
+    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_TYPE="juddi.subscription.truststore.type";
+    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_FILE="juddi.subscription.truststore.filename";
+    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_PASSWORD="juddi.subscription.truststore.password";
+    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_ENCRYPTED="juddi.subscription.truststore.password[@isPasswordEncrypted]";
+    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_CRYPTOPROVIDER="juddi.subscription.truststore.password[@cryptoProvider]";
+    
+    
+    public final static String JUDDI_SUBSCRIPTION_KEYSTORE_TYPE="juddi.subscription.keystore.type";
+    public final static String JUDDI_SUBSCRIPTION_KEYSTORE_FILE="juddi.subscription.keystore.filename";
+    public final static String JUDDI_SUBSCRIPTION_KEYSTORE_PASSWORD="juddi.subscription.keystore.password";
+    public final static String JUDDI_SUBSCRIPTION_KEYALIAS="juddi.subscription.keystore.alias";
+    public final static String JUDDI_SUBSCRIPTION_KEYPASSWORD="juddi.subscription.keystore.keypassword";
+    public final static String JUDDI_SUBSCRIPTION_KEYPASSWORD_ENCRYPTED="juddi.subscription.keystore.keypassword[@isPasswordEncrypted]";
+    public final static String JUDDI_SUBSCRIPTION_KEYPASSWORD_CRYPTOPROVIDER="juddi.subscription.keypassword.password[@cryptoProvider]";
+    public final static String JUDDI_SUBSCRIPTION_KEYSTORE_ENCRYPTED="juddi.subscription.keystore.password[@isPasswordEncrypted]";
+    public final static String JUDDI_SUBSCRIPTION_KEYSTORE_CRYPTOPROVIDER="juddi.subscription.keystore.password[@cryptoProvider]";
+    
+    
     public final static String JUDDI_NOTIFICATION_START_BUFFER = "juddi.notification.start.buffer";
     public final static String JUDDI_NOTIFICATION_INTERVAL = "juddi.notification.interval";
     public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME = "juddi.notification.acceptable.lagtime";

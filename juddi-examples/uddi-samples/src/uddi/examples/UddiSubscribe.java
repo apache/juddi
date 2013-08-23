@@ -184,8 +184,10 @@ public class UddiSubscribe {
         Holder<List<Subscription>> subscription = new Holder<List<Subscription>>();
         subscription.value = new ArrayList<Subscription>();
         Subscription sub = new Subscription();
-        sub.setBindingKey(callbackBindingTemplate);
+        
         //this is required
+        sub.setBindingKey(callbackBindingTemplate);
+        
         sub.setBrief(true);
         sub.setNotificationInterval(df.newDuration(0));
         sub.setSubscriptionFilter(new SubscriptionFilter());

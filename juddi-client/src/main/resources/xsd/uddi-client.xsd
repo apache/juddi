@@ -183,6 +183,21 @@
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
+              <xsd:element name="subscriptionCallbacks">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element type="xsd:string" name="keyDomain"></xsd:element>
+                    <xsd:element type="xsd:string" name="listenUrl"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="autoRegisterBindingTemplate"></xsd:element>
+                    <xsd:element type="xsd:string" name="autoRegisterBusinessServiceKey"></xsd:element>
+                    <xsd:element type="xsd:string" name="signatureBehavior">
+                      <xsd:annotation><xsd:documentation>AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned</xsd:documentation></xsd:annotation>
+                    </xsd:element>
+                    
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+
             </xsd:sequence>
             <xsd:attribute type="xsd:string" name="name" />
           </xsd:complexType>

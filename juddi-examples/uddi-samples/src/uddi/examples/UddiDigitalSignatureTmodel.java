@@ -54,10 +54,6 @@ public class UddiDigitalSignatureTmodel {
      * @param args
      */
     public static void main(String args[]) {
-        if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
-            DisplayHelp();
-            return;
-        }
         UddiDigitalSignatureTmodel sp = new UddiDigitalSignatureTmodel();
         sp.Fire(args);
     }

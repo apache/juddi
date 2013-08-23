@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -318,6 +316,8 @@ public class ClientConfig
             return configurationFile;
         }
 
+        
+        
         /**
          * Fetches all digital signature related properties for the digital signature utility.
          * warning, this will decrypt all passwords

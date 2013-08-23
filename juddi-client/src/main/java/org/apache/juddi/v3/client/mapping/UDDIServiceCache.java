@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
@@ -90,7 +91,9 @@ public class UDDIServiceCache {
 			log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
 					+ " with endpoint " + url);
 			bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
-			endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
+                        endpoint = Endpoint.create(new SubscriptionCallbackListener());
+                        
+			//endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
 			endpoint.publish(serviceUrl.toExternalForm());
 			
 			WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
@@ -135,6 +138,10 @@ public class UDDIServiceCache {
 		serviceLocationMap.remove(serviceKey);
 	}
 	
+        /**
+         * Create a subscription for changes in any Service in the Registry
+         * @throws DatatypeConfigurationException 
+         */
 	public void registerSubscription() throws DatatypeConfigurationException {
 		
 		//Create a subscription for changes in any Service in the Registry
