@@ -1,8 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
@@ -12,14 +24,16 @@ import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- * This class was used to identify performance issues when a given node has a large number of UDDI entities.
- * It may not work on some commercial UDDI nodes due to licensing restrictions (some limit the number of business, services, etc)
+ * This class was used to identify performance issues when a given node has a
+ * large number of UDDI entities. It may not work on some commercial UDDI nodes
+ * due to licensing restrictions (some limit the number of business, services,
+ * etc)
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiCreatebulk {

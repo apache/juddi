@@ -1,16 +1,26 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
@@ -77,7 +87,7 @@ public class WadlImport {
         //you must have a key generator created already
         //here, we are assuming that you don't have one
         //NOTE: these are some of the publically available WSDLs that were used to test WSDL2UDDI
-        
+
         //publish.saveTModel(stm);
 
 
@@ -100,20 +110,20 @@ public class WadlImport {
 //        stm.setAuthInfo(rootAuthToken.getAuthInfo());
         stm.getTModel().add(keygen);
         System.out.println(tmodelPrinter.print(keygen));
-        
+
         properties.put("keyDomain", domain);
         properties.put("businessName", domain);
         properties.put("serverName", url.getHost());
         properties.put("serverPort", url.getPort());
         //wsdlURL = wsdlDefinition.getDocumentBaseURI();
         WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-        
+
         BusinessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
-        
-        
+
+
         Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
-        
-       // Set<TModel> createWSDLBindingTModels = wadl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings);
+
+        // Set<TModel> createWSDLBindingTModels = wadl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings);
         //When parsing a WSDL, there's really two things going on
         //1) convert a bunch of stuff (the portTypes) to tModels
         //2) convert the service definition to a BusinessService
@@ -130,8 +140,8 @@ public class WadlImport {
 
         //tmodels = createWSDLBindingTModels.toArray(new TModel[0]);
         //for (int i = 0; i < tmodels.length; i++) {
-         //   System.out.println(tmodelPrinter.print(tmodels[i]));
-         //   tms.getTModel().add(tmodels[i]);
+        //   System.out.println(tmodelPrinter.print(tmodels[i]));
+        //   tms.getTModel().add(tmodels[i]);
         //}
 
         //important, you'll need to save your new tModels, or else saving the business/service may fail
@@ -143,14 +153,14 @@ public class WadlImport {
         //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
 
         PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
-        
-            System.out.println(servicePrinter.print(businessServices));
-        
+
+        System.out.println(servicePrinter.print(businessServices));
+
 
 
 
         SaveBusiness sb = new SaveBusiness();
-      //  sb.setAuthInfo(rootAuthToken.getAuthInfo());
+        //  sb.setAuthInfo(rootAuthToken.getAuthInfo());
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey(businessServices.getBusinessKey());
         be.getName().add(new Name());

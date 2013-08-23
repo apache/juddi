@@ -1,10 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.crypto.DigSigUtil;
@@ -15,10 +28,11 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- * This class shows you how to digitally sign a tmodel and verify the signature
+ * This class shows you how to digital sign a business
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UddiDigitalSignatureTmodel {
+public class UddiDigitalSignatureBusiness {
 
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
@@ -28,7 +42,7 @@ public class UddiDigitalSignatureTmodel {
     /**
      * This sets up the ws proxies using uddi.xml in META-INF
      */
-    public UddiDigitalSignatureTmodel() {
+    public UddiDigitalSignatureBusiness() {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
@@ -47,20 +61,21 @@ public class UddiDigitalSignatureTmodel {
         }
     }
 
-
     /**
      * Main entry point
      *
      * @param args
      */
     public static void main(String args[]) {
-        UddiDigitalSignatureTmodel sp = new UddiDigitalSignatureTmodel();
+
+        UddiDigitalSignatureBusiness sp = new UddiDigitalSignatureBusiness();
         sp.Fire(args);
     }
 
     public void Fire(String[] args) {
         try {
-             org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+
+            org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
 
             //option 1), set everything manually
             ds = new DigSigUtil();
@@ -79,26 +94,43 @@ public class UddiDigitalSignatureTmodel {
             token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
                     clerkManager.getClerk("default").getPassword());
 
-           
-            String key ="uddi:juddi.apache.org:23748881-bb2f-4896-8283-4a15be1d0bc1";
-            
-            
-            TModel be = GetTmodelDetails(key);
+            //make a new business
+            SaveBusiness sb = new SaveBusiness();
+            sb.setAuthInfo(token);
+            BusinessEntity ob = new BusinessEntity();
+            Name name = new Name();
+            name.setValue("My Signed Business");
+            ob.getName().add(name);
+            sb.getBusinessEntity().add(ob);
+            //save it
+            BusinessDetail saveBusiness = publish.saveBusiness(sb);
+
+            System.out.println("business created with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+
+
+            BusinessEntity be = saveBusiness.getBusinessEntity().get(0);
+            //sign the copy returned from the UDDI node (it may have made changes)
+            DigSigUtil.JAXB_ToStdOut(be);
+
+            //if it's already signed, remove all existing signatures
+
             be.getSignature().clear();
-            //DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("signing");
-            TModel signUDDI_JAXBObject = ds.signUddiEntity(be);
+            BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
             DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
             System.out.println("signed, saving");
 
-            SaveTModel sb = new SaveTModel();
+            sb = new SaveBusiness();
             sb.setAuthInfo(token);
-            sb.getTModel().add(signUDDI_JAXBObject);
-            publish.saveTModel(sb);
+            sb.getBusinessEntity().add(signUDDI_JAXBObject);
+            publish.saveBusiness(sb);
             System.out.println("saved, fetching");
 
-
-            be = GetTmodelDetails(key);
+            //validate it again from the server, confirming that it was transformed correctly
+            GetBusinessDetail gb = new GetBusinessDetail();
+            gb.setAuthInfo(token);
+            gb.getBusinessKey().add(be.getBusinessKey());
+            be = inquiry.getBusinessDetail(gb).getBusinessEntity().get(0);
             DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("verifing");
             AtomicReference<String> msg = new AtomicReference<String>();
@@ -115,15 +147,6 @@ public class UddiDigitalSignatureTmodel {
         }
     }
 
-    
-    private TModel GetTmodelDetails(String key) throws Exception {
-        //   BusinessInfo get
-        GetTModelDetail r = new GetTModelDetail();
-        r.getTModelKey().add(key);
-        return inquiry.getTModelDetail(r).getTModel().get(0);
-    }
-
-    
     /**
      * Gets a UDDI style auth token, otherwise, appends credentials to the ws
      * proxies (not yet implemented)
@@ -149,7 +172,4 @@ public class UddiDigitalSignatureTmodel {
         }
         return null;
     }
-
-    
-
 }

@@ -1,8 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
@@ -22,8 +34,10 @@ import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
- * This provides an example of how to transfer custody of a business from one user to another on the same UDDI node. All child objects are also transfer
- * @author Alex
+ * This provides an example of how to transfer custody of a business from one
+ * user to another on the same UDDI node. All child objects are also transfer
+ *
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiCustodyTransfer {
 
@@ -115,7 +129,7 @@ public class UddiCustodyTransfer {
 
         String keyRootBiz = bd.getBusinessEntity().get(0).getBusinessKey();
 
-        
+
         //Create a transfer token from ROOT to UDDI
         KeyBag kb = new KeyBag();
         kb.getKey().add(keyRootBiz);
@@ -126,7 +140,7 @@ public class UddiCustodyTransfer {
 
         //The magic part happens here, the user ROOT needs to give the user UDDI the token information out of band
         //in practice, all values must match exactly
-        
+
         //UDDI now accepts the transfer
         TransferEntities te = new TransferEntities();
         te.setAuthInfo(uddiAuthToken.getAuthInfo());

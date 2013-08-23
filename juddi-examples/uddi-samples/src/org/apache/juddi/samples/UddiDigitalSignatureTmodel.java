@@ -1,8 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import java.util.concurrent.atomic.AtomicReference;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -15,11 +27,11 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
- * This class shows you how to digitally sign a service and verify the signature
+ * This class shows you how to digitally sign a tmodel and verify the signature
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UddiDigitalSignatureService {
+public class UddiDigitalSignatureTmodel {
 
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
@@ -29,7 +41,7 @@ public class UddiDigitalSignatureService {
     /**
      * This sets up the ws proxies using uddi.xml in META-INF
      */
-    public UddiDigitalSignatureService() {
+    public UddiDigitalSignatureTmodel() {
         try {
             // create a manager and read the config in the archive; 
             // you can use your config file name
@@ -54,14 +66,12 @@ public class UddiDigitalSignatureService {
      * @param args
      */
     public static void main(String args[]) {
-
-        UddiDigitalSignatureService sp = new UddiDigitalSignatureService();
+        UddiDigitalSignatureTmodel sp = new UddiDigitalSignatureTmodel();
         sp.Fire(args);
     }
 
     public void Fire(String[] args) {
         try {
-
             org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
 
             //option 1), set everything manually
@@ -81,25 +91,26 @@ public class UddiDigitalSignatureService {
             token = GetAuthKey(clerkManager.getClerk("default").getPublisher(),
                     clerkManager.getClerk("default").getPassword());
 
-            //TODO replace this with something more useful
-            String key = "uddi:juddi.apache.org:da314f49-b84f-4ede-a434-0b0178632f10";
-            BusinessService be = null;
-            be = GetServiceDetails(key);
+
+            String key = "uddi:juddi.apache.org:23748881-bb2f-4896-8283-4a15be1d0bc1";
+
+
+            TModel be = GetTmodelDetails(key);
             be.getSignature().clear();
             //DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("signing");
-            BusinessService signUDDI_JAXBObject = ds.signUddiEntity(be);
+            TModel signUDDI_JAXBObject = ds.signUddiEntity(be);
             DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
             System.out.println("signed, saving");
 
-            SaveService sb = new SaveService();
+            SaveTModel sb = new SaveTModel();
             sb.setAuthInfo(token);
-            sb.getBusinessService().add(signUDDI_JAXBObject);
-            publish.saveService(sb);
+            sb.getTModel().add(signUDDI_JAXBObject);
+            publish.saveTModel(sb);
             System.out.println("saved, fetching");
 
 
-            be = GetServiceDetails(key);
+            be = GetTmodelDetails(key);
             DigSigUtil.JAXB_ToStdOut(be);
             System.out.println("verifing");
             AtomicReference<String> msg = new AtomicReference<String>();
@@ -116,12 +127,11 @@ public class UddiDigitalSignatureService {
         }
     }
 
-    private BusinessService GetServiceDetails(String key) throws Exception {
+    private TModel GetTmodelDetails(String key) throws Exception {
         //   BusinessInfo get
-        GetServiceDetail r = new GetServiceDetail();
-        //GetBusinessDetail r = new GetBusinessDetail();
-        r.getServiceKey().add(key);
-        return inquiry.getServiceDetail(r).getBusinessService().get(0);
+        GetTModelDetail r = new GetTModelDetail();
+        r.getTModelKey().add(key);
+        return inquiry.getTModelDetail(r).getTModel().get(0);
     }
 
     /**

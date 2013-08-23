@@ -1,8 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
-package uddi.examples;
+package org.apache.juddi.samples;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -10,7 +22,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * This call is a simple test class that shows how to encrypt stuff in Java using AES
+ * This call is a simple test class that shows how to encrypt stuff in Java
+ * using AES
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES {
@@ -24,7 +38,6 @@ public class AES {
             byte[] raw = skey.getEncoded();
             return asHex(raw);
         } catch (Exception ex) {
-
         }
         return null;
     }
@@ -66,13 +79,13 @@ public class AES {
         return raw;
     }
     //default key
-   // private final static String something2 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
-    
-    public static void main(String[] args) throws Exception{
+    // private final static String something2 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
+
+    public static void main(String[] args) throws Exception {
         //ee4bd3eefe38c3d996a89589de5b9698
         String key = GEN(128);
         System.out.println(key);
-        
+
         byte[] raw = hexToBytes(key); //
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         // Instantiate the cipher
@@ -81,12 +94,12 @@ public class AES {
         byte[] encrypted = cipher.doFinal("password".getBytes());
         String enc = (asHex(encrypted));
         System.out.println(enc);
-        
-         skeySpec = new SecretKeySpec(hexToBytes(key), "AES");
+
+        skeySpec = new SecretKeySpec(hexToBytes(key), "AES");
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] original = cipher.doFinal(hexToBytes(enc));
-        
-        System.out.println( new String(original));
-        
+
+        System.out.println(new String(original));
+
     }
 }
