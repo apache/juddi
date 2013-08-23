@@ -14,9 +14,11 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -37,12 +39,53 @@ public class ReadWSDLTest {
         Assert.assertNotNull(definition);
     }
 
-    @Test
-    public void readFromURL() throws WSDLException, URISyntaxException, MalformedURLException, Exception {
+    private static boolean IsReachable(String url) {
+        System.out.println("Testing connectivity to " + url);
+        try {
+            //make a URL to a known source
+            URL url2 = new URL(url);
 
+            //open a connection to that source
+            HttpURLConnection urlConnect = (HttpURLConnection) url2.openConnection();
+
+            //trying to retrieve data from the source. If there
+            //is no connection, this line will fail
+            Object objData = urlConnect.getContent();
+            urlConnect.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("Connectivity failed " + e.getMessage());
+            return false;
+        }
+        System.out.println("Connectivity passed" );
+        return true;
+
+    }
+
+    /**
+     * normally, this test will work correctly if and only if you're connected
+     * to the big bad internet. if you happen to be offline, this test will
+     * fail.
+     */
+    @Test
+    public void readFromURL() throws MalformedURLException, Exception {
+        
+        boolean b = IsReachable("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
+        if (!b) {
+            System.out.println("Skipping test for a remote WSDL due to connectivity problems");
+        }
+
+
+        org.junit.Assume.assumeTrue(b);
         ReadWSDL readWSDL = new ReadWSDL();
-        Definition definition = readWSDL.readWSDL(new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl"));
-        Assert.assertNotNull(definition);
+        Definition definition = null;
+        try {
+            definition = readWSDL.readWSDL(new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl"));
+            Assert.assertNotNull(definition);
+        } catch (UnknownHostException ex) {
+        }
+
+
     }
 
     @Test

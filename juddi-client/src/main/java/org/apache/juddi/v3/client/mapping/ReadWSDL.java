@@ -33,7 +33,7 @@ import com.ibm.wsdl.factory.WSDLFactoryImpl;
 /**
  * A WSDL parser/reader
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- * Modified for supporting http based credentials by Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a> - Modified for supporting http based credentials
  */
 public class ReadWSDL {
 	
@@ -105,10 +105,18 @@ public class ReadWSDL {
 		return readWSDL(wsdlUrl, null, null);
 	}
 
+        /**
+         * It is optional to ignore SSL errors when attempting to parse a remote WSDL via https
+         * @return true if we are ignoring SSL errors
+         */
     public boolean isIgnoreSSLErrors() {
         return IgnoreSSLErrors;
     }
 
+    /**
+     * It is optional to ignore SSL errors when attempting to parse a remote WSDL via https
+     * @param IgnoreSSLErrors 
+     */
     public void setIgnoreSSLErrors(boolean IgnoreSSLErrors) {
         this.IgnoreSSLErrors = IgnoreSSLErrors;
     }
