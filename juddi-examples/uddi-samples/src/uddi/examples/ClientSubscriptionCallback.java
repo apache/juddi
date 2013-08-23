@@ -17,7 +17,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * this class is a very basic callback service for UDDI.
  * Fire it up with the EndPoint api
  * @see  Endpoint
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @WebService(serviceName="UDDISubscriptionListenerService", 
 			endpointInterface="org.uddi.v3_service.UDDISubscriptionListenerPortType",

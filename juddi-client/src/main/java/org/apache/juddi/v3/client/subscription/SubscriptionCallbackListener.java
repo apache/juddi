@@ -70,7 +70,7 @@ import org.uddi.v3_service.UDDIPublicationPortType;
            Thread.sleep(1000);
         SubscriptionCallbackListener.stop(c, "default", start.getBindingKey());
 </pre>
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @since 3.2
  */
 @WebService(name = "UDDI_SubscriptionListener_PortType", targetNamespace = "urn:uddi-org:v3_service")

@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * reinstantiates a AES key from the key bytes.</summary> The reinstantiated key
  * is used to initialize a AES cipher for encryption and decryption. source :
  * http://java.sun.com/developer/technicalArticles/Security/AES/AES_v1.html
- *@author Alex O'Ree
+ *@author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES {
 

@@ -41,7 +41,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * the REST fans to access UDDI from a URL pattern This class will ONLY deploy
  * using the Apache CXF WS stack for REST (JAX-RS)
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 @Path("/")
 @Produces("application/xml")

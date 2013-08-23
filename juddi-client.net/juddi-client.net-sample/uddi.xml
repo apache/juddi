@@ -1,70 +1,77 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<uddi xmlns="urn:juddi-apache-org:v3_client" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\juddi\trunkcur\juddi-client\src\main\resources\xsd\uddi-client.xsd">
-    <reloadDelay>5000</reloadDelay>
-    <client name="test-client">
-		<nodes>
-			<node isHomeJUDDI="true"> 
-			    <!-- required 'default' node -->
-				<name>default</name> 
-				<description>Main jUDDI node</description>
-				<properties>
-					<property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
-					<property name="serverPort" value="80" />
-				</properties>
-				<!-- JAX-WS Transport -->
-				<proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-				<custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
-				<inquiryUrl>http://${serverName}:${serverPort}/services/inquiry?wsdl</inquiryUrl>
-		        <publishUrl>http://${serverName}:${serverPort}/services/publish?wsdl</publishUrl>
-		        <securityUrl>http://${serverName}:${serverPort}/services/security?wsdl</securityUrl>
-				<subscriptionUrl>http://${serverName}:${serverPort}/services/subscription?wsdl</subscriptionUrl>
-				<subscriptionListenerUrl>http://${serverName}:${serverPort}/services/subscription-listener?wsdl</subscriptionListenerUrl>
-				<juddiApiUrl>http://${serverName}:${serverPort}/services/juddi-api?wsdl</juddiApiUrl>
-				<!-- In VM Transport Settings 
-				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
-				<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
-				<inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
-		        <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
-		        <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
-				<subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
-				<subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
-				<juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
-				-->
-				<!-- RMI Transport Settings 
-				<proxyTransport>org.apache.juddi.v3.client.transport.RMITransport</proxyTransport>
-				<custodyTransferUrl>/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
-				<inquiryUrl>/juddiv3/UDDIInquiryService</inquiryUrl>
-		        <publishUrl>/juddiv3/UDDIPublicationService</publishUrl>
-		        <securityUrl>/juddiv3/UDDISecurityService</securityUrl>
-				<subscriptionUrl>/juddiv3/UDDISubscriptionService</subscriptionUrl>
-				<subscriptionListenerUrl>/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
-				<juddiApiUrl>/juddiv3/JUDDIApiService</juddiApiUrl>
-				<javaNamingFactoryInitial>org.jnp.interfaces.NamingContextFactory</javaNamingFactoryInitial>
-				<javaNamingFactoryUrlPkgs>org.jboss.naming</javaNamingFactoryUrlPkgs>
-				<javaNamingProviderUrl>jnp://localhost:1099</javaNamingProviderUrl>
-				-->
-			</node>
-			<node>
-				<name>med</name>
-				<description>jUDDI node in other Department</description>
-				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-				<custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-				<inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-		        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
-		        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
-				<subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-				<subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-				<juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
-			</node>
-		</nodes> 
-		 
-		<clerks registerOnStartup="false">
-		   <clerk name="default" node="default" publisher="root" password="root"/>
-	       <clerk name="medroot" node="med"     publisher="root" password="root"/> 
-	       <xregister>
-		       <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-		   </xregister>
-	   </clerks>
-	  
-	</client>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:juddi-apache-org:v3_client ..\..\juddi-client\src\main\resources\xsd\uddi-client.xsd">
+  <reloadDelay>5000</reloadDelay>
+  <client name="test-client">
+    <nodes>
+      <node isHomeJUDDI="true">
+        <!-- required 'default' node -->
+        <name>default</name>
+        <description>Main jUDDI node</description>
+        <properties>
+          <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
+          <property name="serverPort" value="80" />
+        </properties>
+        <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/services/inquiry?wsdl</inquiryUrl>
+        <publishUrl>http://${serverName}:${serverPort}/services/publish?wsdl</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/services/security?wsdl</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/services/subscription?wsdl</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/services/subscription-listener?wsdl</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/services/juddi-api?wsdl</juddiApiUrl>
+        <factoryInitial>not used</factoryInitial>
+        <factoryURLPkgs>not used</factoryURLPkgs>
+        <factoryNamingProvider>not used</factoryNamingProvider>
+      </node>
+      <node>
+        <name>med</name>
+        <description>jUDDI node in other Department</description>
+        <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
+        <custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+        <inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
+        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
+        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
+        <subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
+        <subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+        <juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+        <factoryInitial>not used</factoryInitial>
+        <factoryURLPkgs>not used</factoryURLPkgs>
+        <factoryNamingProvider>not used</factoryNamingProvider>
+
+      </node>
+    </nodes>
+
+    <clerks registerOnStartup="false">
+      <clerk name="default" node="default" publisher="root" password="root"/>
+      <clerk name="medroot" node="med"     publisher="root" password="root"/>
+      <xregister>
+        <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+      </xregister>
+      
+    </clerks>
+    <signature>
+      <signingKeyStorePath>CURRENT-USER</signingKeyStorePath>
+      <signingKeyStoreType>WINDOWS</signingKeyStoreType>
+      <signingKeyStoreFilePassword>ignored</signingKeyStoreFilePassword>
+      <signingKeyPassword>ignored</signingKeyPassword>
+      <signingKeyAlias>SERIAL</signingKeyAlias>
+      <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
+      <signatureMethod>RSA_SHA1</signatureMethod>
+      <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
+      <trustStorePath>CURRENT-USER</trustStorePath>
+      <trustStoreType>WINDOWS</trustStoreType>
+      <trustStorePassword>ignored</trustStorePassword>
+      <checkTimestamps>true</checkTimestamps>
+      <checkTrust>true</checkTrust>
+      <checkRevocationCRL>true</checkRevocationCRL>
+      <checkRevocationOCSP>false</checkRevocationOCSP>
+    </signature>
+    <subscriptionCallbacks>
+      <keyDomain>uddi:org.apache.juddi</keyDomain>
+      <listenUrl>http://localhost:4444/callback</listenUrl>
+      <autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
+      <autoRegisterBusinessServiceKey>uddi:org.apache.juddi:callbackServices</autoRegisterBusinessServiceKey>
+      <signatureBehavior>DoNothing</signatureBehavior>
+    </subscriptionCallbacks>
+  </client>
 </uddi>

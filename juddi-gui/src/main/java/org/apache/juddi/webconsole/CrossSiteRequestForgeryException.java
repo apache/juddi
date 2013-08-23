@@ -18,7 +18,7 @@ package org.apache.juddi.webconsole;
 
 /**
  * Provides a very basic, no stack trace exception, useful for throwing at a browser without revealing any details 
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class CrossSiteRequestForgeryException extends Exception {
     //Parameterless Constructor

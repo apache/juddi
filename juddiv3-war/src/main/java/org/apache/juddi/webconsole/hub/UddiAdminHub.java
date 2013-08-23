@@ -70,7 +70,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * methods in the class trigger web service call outs. All callouts also support
  * expired UDDI tokens and will attempt to reauthenticate and retry the request.
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiAdminHub {
 

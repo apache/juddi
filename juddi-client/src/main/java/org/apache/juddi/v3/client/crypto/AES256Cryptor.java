@@ -31,7 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
  * AES 256 bit encryption. <h1> Requires Unlimited Strength Java Cryptographic
  * Extensions</h1>
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES256Cryptor extends AESCryptorAbstract {
 

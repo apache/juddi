@@ -16,7 +16,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
  * This class shows you how to digitally sign a tmodel and verify the signature
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiDigitalSignatureTmodel {
 

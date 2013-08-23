@@ -21,52 +21,68 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.log
 {
+    /// <summary>
+    /// Logs to the Windows system Event Log
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class EventLogger : Log
     {
         EventLog log;
-        public EventLogger(String name)
+        LogLevel level;
+        string name = "";
+        public EventLogger(String name, LogLevel level)
         {
-            log = new EventLog("Application","localhost",name);
+            this.level = level;
+            this.name = name;
+            log = new EventLog("Application", "localhost", name);
         }
         public void info(string msg, Exception ex)
         {
-            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
+            if (level.CompareTo(LogLevel.INFO) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
         }
 
         public void info(string msg)
         {
-            log.WriteEntry(msg, EventLogEntryType.Information);
+            if (level.CompareTo(LogLevel.INFO) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg, EventLogEntryType.Information);
         }
 
         public void warn(string msg, Exception ex)
         {
-            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
+            if (level.CompareTo(LogLevel.WARN) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
         }
 
         public void warn(string msg)
         {
-            log.WriteEntry(msg, EventLogEntryType.Warning);
+            if (level.CompareTo(LogLevel.WARN) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg, EventLogEntryType.Warning);
         }
 
         public void error(string msg, Exception ex)
         {
-            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
+            if (level.CompareTo(LogLevel.ERROR) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
         }
 
         public void error(string msg)
         {
-            log.WriteEntry(msg , EventLogEntryType.Error);
+            if (level.CompareTo(LogLevel.ERROR) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg, EventLogEntryType.Error);
         }
 
 
         public void debug(string msg, Exception ex)
         {
-            log.WriteEntry(msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
         }
 
         public void debug(string msg)
         {
-            log.WriteEntry(msg , EventLogEntryType.Information);
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg, EventLogEntryType.Information);
         }
 
         public bool isDebugEnabled()
@@ -77,7 +93,8 @@ namespace org.apache.juddi.v3.client.log
 
         public void debug(object msg)
         {
-            log.WriteEntry(msg.ToString(), EventLogEntryType.Information);
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString(), EventLogEntryType.Information);
         }
     }
 }

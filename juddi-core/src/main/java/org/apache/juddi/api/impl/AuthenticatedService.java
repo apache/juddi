@@ -37,7 +37,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 /**Although this class is abstract, it provides token validation
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * 
- * @author Alex O'Ree - modified to include token expiration validation
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a> - modified to include token expiration validation
  */
 public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;

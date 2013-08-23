@@ -10,7 +10,7 @@ import javax.xml.ws.Holder;
 /**
  * A simple program to illistrate how to pass by "reference" vs by "value" in Java. Or more accurately, how to persist changes on 
  * method parameters to the caller. Written mostly because I forget it frequently and use this as reference material.
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class testStrings {
         

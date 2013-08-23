@@ -58,7 +58,7 @@ import org.uddi.sub_v3.SaveSubscription;
 /**
  * This class generates XML as String objects for UDDI requests
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDIRequestsAsXML {
 

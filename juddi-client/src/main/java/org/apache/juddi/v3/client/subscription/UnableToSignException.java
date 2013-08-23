@@ -19,7 +19,7 @@ package org.apache.juddi.v3.client.subscription;
 /**
  * Thrown when the SubscriptionCallbackListener is configured to automatically signed
  * UDDI entities and cannot, usually due to configuration
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @since 3.2
  */
 public class UnableToSignException extends Exception {

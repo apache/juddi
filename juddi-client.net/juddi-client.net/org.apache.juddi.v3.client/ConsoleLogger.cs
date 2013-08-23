@@ -20,67 +20,91 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace org.apache.juddi.v3.client.log
 {
+    /// <summary>
+    /// Outputs log data to the console, if available.
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class ConsoleLogger : Log
     {
         private string name;
+        private LogLevel level;
 
-        public ConsoleLogger(string name)
+        public ConsoleLogger(string name, LogLevel level)
         {
-            // TODO: Complete member initialization
+            
             this.name = name;
+            this.level = level;
         }
         public void info(string msg, Exception ex)
         {
-            Console.WriteLine("INFO " + name + " " + msg + " " + LogHelper.HandleException(ex));
+            if (level.CompareTo(LogLevel.INFO) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void info(string msg)
         {
-            Console.WriteLine("INFO " + name + " " + msg );
+            if (level.CompareTo(LogLevel.INFO) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg);
         }
 
         public void warn(string msg, Exception ex)
         {
-         //   Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("WARN " + name + " " + msg + " " + LogHelper.HandleException(ex));
+            if (level.CompareTo(LogLevel.WARN) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void warn(string msg)
         {
-            Console.WriteLine("WARN " + name + " " + msg );
+            if (level.CompareTo(LogLevel.WARN) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg);
         }
 
         public void error(string msg, Exception ex)
         {
-            Console.WriteLine("ERROR " + name + " " + msg + " " + LogHelper.HandleException(ex));
+            if (level.CompareTo(LogLevel.ERROR) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void error(string msg)
         {
-            Console.WriteLine("ERROR " + name + " " + msg );
+            if (level.CompareTo(LogLevel.ERROR) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg);
         }
 
         public void debug(string msg, Exception ex)
         {
-            Console.WriteLine("DEBUG " + name + " " + msg + " " + LogHelper.HandleException(ex));
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void debug(string msg)
         {
-            Console.WriteLine("DEBUG " + name + " " + msg);
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg);
         }
 
         public bool isDebugEnabled()
         {
-            return true;
+            return (level.CompareTo(LogLevel.DEBUG) == 0);
         }
 
 
         public void debug(object msg)
         {
-            Console.WriteLine("DEBUG " + name + " " + msg.ToString());
+            if (level.CompareTo(LogLevel.DEBUG) <= 0)
+                if (Console.Out != null)
+                    Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString());
         }
     }
 }

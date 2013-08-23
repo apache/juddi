@@ -12,7 +12,7 @@ import javax.servlet.ServletContextEvent;
 /**
  * This startup servlet's job is to generate an encryption key which will be used for encrypting
  * cached user credentials in the http session object
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class StartupServlet implements javax.servlet.ServletContextListener {
 

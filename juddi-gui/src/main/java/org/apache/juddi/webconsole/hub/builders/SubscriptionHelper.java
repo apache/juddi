@@ -11,7 +11,7 @@ import org.uddi.sub_v3.Subscription;
 /**
  * Provides some basic helper functions for the edit Subscription page
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class SubscriptionHelper {
 

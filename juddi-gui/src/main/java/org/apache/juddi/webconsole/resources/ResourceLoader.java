@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
  * This a resource loader for specific locales for internationalization,
  * provides some basic caching to prevent round trip disk access
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class ResourceLoader {
 

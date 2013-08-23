@@ -127,7 +127,7 @@ import org.uddi.api_v3.TModelInstanceInfo;
         //https://issues.apache.org/jira/browse/JUDDI
 </pre>
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class WADL2UDDI {
 

@@ -18,7 +18,7 @@ package org.apache.juddi.v3.client.crypto;
  
 /**
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @see org.apache.juddi.cryptor.DefaultCryptor
  */
 public class CrytorUtil {

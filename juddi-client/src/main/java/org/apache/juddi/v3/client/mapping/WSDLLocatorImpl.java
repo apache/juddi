@@ -42,7 +42,7 @@ import org.xml.sax.InputSource;
  * Implementation of the interface {@link WSDLLocatorImpl}.
  *
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a> 
- * @author Alex O'Ree - Modified for supporting http based credentials 
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a> - Modified for supporting http based credentials 
  */
 public class WSDLLocatorImpl implements WSDLLocator {
     private Exception lastException=null;

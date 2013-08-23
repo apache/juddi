@@ -20,7 +20,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * This class was used to identify performance issues when a given node has a large number of UDDI entities.
  * It may not work on some commercial UDDI nodes due to licensing restrictions (some limit the number of business, services, etc)
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiCreatebulk {
 

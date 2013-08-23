@@ -18,7 +18,7 @@ package org.apache.juddi.validation;
 /**
  * Validation constants for various items, such as maximum string lengths
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class ValidationConstants {
 

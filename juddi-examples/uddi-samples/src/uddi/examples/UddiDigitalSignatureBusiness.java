@@ -24,7 +24,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * This class shows you how to digital sign a business
  *
- * @author Alex O'ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UddiDigitalSignatureBusiness {
 

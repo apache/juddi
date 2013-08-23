@@ -20,7 +20,7 @@ package org.apache.juddi.webconsole.hub;
  * This simple class enables use to pass rendered html data and paging
  * information back and forth from jsp context to java
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class PagableContainer {
 

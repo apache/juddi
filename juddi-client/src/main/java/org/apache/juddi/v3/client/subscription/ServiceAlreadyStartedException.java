@@ -18,7 +18,7 @@ package org.apache.juddi.v3.client.subscription;
 
 /**
  * throw when attempting to start the SubscriptionCallbackListener service more than once
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  *  @since 3.2
  */
 public class ServiceAlreadyStartedException extends Exception{

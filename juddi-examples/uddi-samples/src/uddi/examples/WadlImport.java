@@ -37,7 +37,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * This class shows how to perform a WSDL2UDDI import manually. More
  * specifically, this is WSDL2UDDI without using annotations.
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class WadlImport {
 

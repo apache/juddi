@@ -10,7 +10,7 @@ package org.apache.juddi.webconsole;
  * the rendering of a webpage or javascript and should thus be escaped sequences
  * of characters
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class PostBackConstants {
 

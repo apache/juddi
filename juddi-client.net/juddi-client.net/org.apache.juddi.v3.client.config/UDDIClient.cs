@@ -31,7 +31,7 @@ namespace org.apache.juddi.v3.client
 
         private static Log log = LogFactory.getLog(typeof(UDDIClient));
         private ClientConfig clientConfig = null;
-        private String CONFIG_FILE = "META-INF/uddi.xml";
+        private String CONFIG_FILE = "uddi.xml";
         private Properties properties = null;
 
         public UDDIClient()

@@ -29,7 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 /** AES 128 bit encryption
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES128Cryptor extends  AESCryptorAbstract {
   

@@ -15,22 +15,94 @@
  *
  */
 
+using org.apache.juddi.v3.client.config;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace org.apache.juddi.v3.client.log
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class LogFactory
     {
+        private static LogLevel level = LogLevel.WARN;
+        private static String target = "CONSOLE";
+        private static bool inited = false;
+        private static object thelock = new object();
+        private static string option = "";
+        private static void init()
+        {
+            lock (thelock)
+            {
+                if (inited)
+                    return;
+                level = LogLevel.WARN;
+
+                try
+                {
+                    String s = "WARN";
+                    s = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.level"];
+                    if (String.IsNullOrEmpty(s))
+                        s = "INFO";
+                    level = (LogLevel)Enum.Parse(typeof(LogLevel), s);
+                }
+                catch (Exception ex)
+                {
+                    level = LogLevel.WARN;
+                }
+
+                String target = "";
+                try
+                {
+                    target = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.targets"];
+                }
+                catch (Exception ex)
+                {
+                    level = LogLevel.WARN;
+                }
+                try
+                {
+                    option = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.logger.file"];
+                }
+                catch
+                {
+
+                }
+                inited = true;
+            }
+        }
         public static Log getLog(String name)
         {
-            return new ConsoleLogger(name);
+            init();
+            return getLogger(name);
+        }
+
+        private static Log getLogger(String name)
+        {
+            if (target.Equals("CONSOLE", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new ConsoleLogger(name, level);
+            }
+            else if (target.Equals("EVENTLOG", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new EventLogger(name, level);
+            }
+            else if (target.Equals("FILE", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new FileLogger(name, level, option);
+            }
+            else
+                return new ConsoleLogger(name, level);
         }
 
         public static Log getLog(Type type)
         {
-            return new ConsoleLogger(type.Name);
+            init();
+            return getLogger(type.Name);
+            //return new ConsoleLogger(type.Name, level);
         }
     }
 }

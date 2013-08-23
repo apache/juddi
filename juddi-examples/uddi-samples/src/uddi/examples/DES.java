@@ -22,7 +22,7 @@ import org.apache.commons.codec.binary.Base64;
  * This call is a simple test class that shows how to encrypt stuff in Java
  * using 3DES
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class DES {
 

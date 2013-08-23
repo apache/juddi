@@ -76,7 +76,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * including binding templates business/contact/useType business/contact/address
  * amd addressLine business/catgag, ident bag
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class API_140_NegativePublicationTest {
 

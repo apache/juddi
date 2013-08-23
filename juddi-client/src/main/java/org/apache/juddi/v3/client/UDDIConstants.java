@@ -10,7 +10,7 @@ import org.uddi.api_v3.TModel;
 /**
  * This file was borrowed from juddi-core's constants file with modifications
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public interface UDDIConstants {
 

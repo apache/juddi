@@ -50,7 +50,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * amqp.connectionfactory.qpidConnectionfactory
  * amqp.destination
  * amqp.destination.type amq.topic
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AMQPNotifier implements Notifier {
 

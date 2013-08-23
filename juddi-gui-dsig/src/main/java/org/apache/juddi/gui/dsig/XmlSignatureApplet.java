@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides a Java web applet that digitally signs UDDI xml
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class XmlSignatureApplet extends java.applet.Applet {
 

@@ -33,7 +33,7 @@ import org.apache.juddi.v3.error.UnknownUserException;
 
 /**
  * Uses MD5 hashes for passwords
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class MD5XMLDocAuthenticator extends XMLDocAuthenticator {
 	

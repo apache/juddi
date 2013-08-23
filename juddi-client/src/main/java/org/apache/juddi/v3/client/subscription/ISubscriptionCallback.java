@@ -21,7 +21,7 @@ import org.uddi.sub_v3.SubscriptionResultsList;
  * This is an interface for creating asynchronous callback clientsfor the
  * UDDI Subscription API.
  * @since 3.2
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @see SubscriptionCallbackListener
  */
 public interface ISubscriptionCallback {

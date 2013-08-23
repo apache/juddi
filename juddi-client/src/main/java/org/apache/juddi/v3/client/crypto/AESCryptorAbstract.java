@@ -30,7 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * AES bit encryption
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public abstract class AESCryptorAbstract implements Cryptor {
 

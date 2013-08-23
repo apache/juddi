@@ -42,7 +42,7 @@ import org.uddi.sub_v3.SubscriptionFilter;
  * This class provides functions for building UDDI entities from Http request
  * parameters
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class Builders {
 

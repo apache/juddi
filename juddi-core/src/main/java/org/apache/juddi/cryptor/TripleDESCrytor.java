@@ -31,7 +31,7 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Triple DES, 168 bit key
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class TripleDESCrytor implements Cryptor {
 

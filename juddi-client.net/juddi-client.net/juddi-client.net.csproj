@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Services" />
@@ -64,8 +65,10 @@
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />
+    <Compile Include="org.apache.juddi.v3.client\FileLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\Log.cs" />
     <Compile Include="org.apache.juddi.v3.client\LogFactory.cs" />
+    <Compile Include="org.apache.juddi.v3.client\LogLevel.cs" />
     <Compile Include="org.apache.juddi.v3.client\Release.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\Transport.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\UDDIClient.cs" />
@@ -80,7 +83,9 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="org.apache.juddi.v3.client.mapping\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

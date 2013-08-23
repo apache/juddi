@@ -25,7 +25,7 @@ import org.uddi.api_v3.*;
 /**
  * Provides very basic UDDI spec to String formats, mostly used for debugging
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class Printers {
 

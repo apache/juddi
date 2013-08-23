@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class CryptoConfigTest {
 

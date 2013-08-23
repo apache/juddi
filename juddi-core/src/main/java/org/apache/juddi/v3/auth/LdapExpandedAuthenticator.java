@@ -64,7 +64,7 @@ import org.apache.commons.configuration.ConfigurationException;
  * should contain exactly one instance of "%s", which is replaced by the requestor's username
  *
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class LdapExpandedAuthenticator implements Authenticator {
     private Log logger = LogFactory.getLog(this.getClass());

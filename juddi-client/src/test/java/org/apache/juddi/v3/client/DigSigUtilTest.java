@@ -35,7 +35,7 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 
 /**
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class DigSigUtilTest {
 

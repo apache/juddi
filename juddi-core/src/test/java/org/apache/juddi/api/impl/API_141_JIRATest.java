@@ -67,7 +67,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * registry and that the tests are either implied or derived requirements
  * defined in the UDDI spec that were missed in other test cases for Juddi.
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class API_141_JIRATest {
 

@@ -63,6 +63,8 @@ namespace org.apache.juddi.v3.client.config {
         
         private uddiClientSignature signatureField;
         
+        private uddiClientSubscriptionCallbacks subscriptionCallbacksField;
+        
         private string nameField;
         
         /// <remarks/>
@@ -93,6 +95,16 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.signatureField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientSubscriptionCallbacks subscriptionCallbacks {
+            get {
+                return this.subscriptionCallbacksField;
+            }
+            set {
+                this.subscriptionCallbacksField = value;
             }
         }
         
@@ -190,7 +202,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string custodyTransferUrl {
             get {
                 return this.custodyTransferUrlField;
@@ -201,7 +212,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string inquiryUrl {
             get {
                 return this.inquiryUrlField;
@@ -212,7 +222,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string publishUrl {
             get {
                 return this.publishUrlField;
@@ -223,7 +232,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string securityUrl {
             get {
                 return this.securityUrlField;
@@ -234,7 +242,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string subscriptionUrl {
             get {
                 return this.subscriptionUrlField;
@@ -245,7 +252,6 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
         public string subscriptionListenerUrl {
             get {
                 return this.subscriptionListenerUrlField;
@@ -256,7 +262,7 @@ namespace org.apache.juddi.v3.client.config {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI", IsNullable=true)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public string juddiApiUrl {
             get {
                 return this.juddiApiUrlField;
@@ -844,6 +850,8 @@ namespace org.apache.juddi.v3.client.config {
         private bool checkRevocationOCSPField;
         
         public uddiClientSignature() {
+            this.canonicalizationMethodField = "http://www.w3.org/2001/10/xml-exc-c14n#";
+            this.signatureMethodField = "RSA_SHA1";
             this.xML_DIGSIG_NSField = "http://www.w3.org/2000/09/xmldsig#";
             this.checkTimestampsField = true;
             this.checkTrustField = true;
@@ -1157,6 +1165,75 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.valueField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientSubscriptionCallbacks {
+        
+        private string keyDomainField;
+        
+        private string listenUrlField;
+        
+        private bool autoRegisterBindingTemplateField;
+        
+        private string autoRegisterBusinessServiceKeyField;
+        
+        private string signatureBehaviorField;
+        
+        /// <remarks/>
+        public string keyDomain {
+            get {
+                return this.keyDomainField;
+            }
+            set {
+                this.keyDomainField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string listenUrl {
+            get {
+                return this.listenUrlField;
+            }
+            set {
+                this.listenUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool autoRegisterBindingTemplate {
+            get {
+                return this.autoRegisterBindingTemplateField;
+            }
+            set {
+                this.autoRegisterBindingTemplateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string autoRegisterBusinessServiceKey {
+            get {
+                return this.autoRegisterBusinessServiceKeyField;
+            }
+            set {
+                this.autoRegisterBusinessServiceKeyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string signatureBehavior {
+            get {
+                return this.signatureBehaviorField;
+            }
+            set {
+                this.signatureBehaviorField = value;
             }
         }
     }

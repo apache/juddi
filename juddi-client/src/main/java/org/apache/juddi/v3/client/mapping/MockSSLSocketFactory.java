@@ -32,7 +32,7 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 /**
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class MockSSLSocketFactory extends SSLSocketFactory {
 

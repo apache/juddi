@@ -23,7 +23,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * 
+ * The release class is a utility for obtaining the 
  */
 public class Release {
 	

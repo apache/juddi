@@ -47,7 +47,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * A Simple UDDI Browser that dumps basic information to console
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class SimpleBrowse {
 

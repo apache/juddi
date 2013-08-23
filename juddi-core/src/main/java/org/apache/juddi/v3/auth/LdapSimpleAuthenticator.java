@@ -63,7 +63,7 @@ import org.apache.commons.configuration.ConfigurationException;
  *
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:gunnlaugursig@gmail.com">Gunnlaugur Sigurðsson</a>
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * 
  * 
  * @since 3.2, all values are now configurable

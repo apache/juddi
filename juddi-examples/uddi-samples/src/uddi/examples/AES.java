@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * This call is a simple test class that shows how to encrypt stuff in Java using AES
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES {
 

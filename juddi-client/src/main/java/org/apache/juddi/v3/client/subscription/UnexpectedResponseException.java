@@ -17,7 +17,7 @@ package org.apache.juddi.v3.client.subscription;
 
 /**
  *
- * @author Alex O'Ree
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @since 3.2
  */
 public class UnexpectedResponseException extends RuntimeException {

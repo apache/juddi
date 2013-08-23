@@ -39,13 +39,13 @@
                             </xsd:complexType>
                           </xsd:element>
                           <xsd:element type="xsd:string" name="proxyTransport" />
-                          <xsd:element type="xsd:anyURI" name="custodyTransferUrl" />
-                          <xsd:element type="xsd:anyURI" name="inquiryUrl" />
-                          <xsd:element type="xsd:anyURI" name="publishUrl" />
-                          <xsd:element type="xsd:anyURI" name="securityUrl" />
-                          <xsd:element type="xsd:anyURI" name="subscriptionUrl" />
-                          <xsd:element type="xsd:anyURI" name="subscriptionListenerUrl" />
-                          <xsd:element type="xsd:anyURI" name="juddiApiUrl"  nillable="true"/>
+                          <xsd:element type="xsd:string" name="custodyTransferUrl" />
+                          <xsd:element type="xsd:string" name="inquiryUrl" />
+                          <xsd:element type="xsd:string" name="publishUrl" />
+                          <xsd:element type="xsd:string" name="securityUrl" />
+                          <xsd:element type="xsd:string" name="subscriptionUrl" />
+                          <xsd:element type="xsd:string" name="subscriptionListenerUrl" />
+                          <xsd:element type="xsd:string" name="juddiApiUrl"  nillable="true"/>
                           <xsd:element type="xsd:string" name="factoryInitial"  nillable="true"/>
                           <xsd:element type="xsd:string" name="factoryURLPkgs"  nillable="true"/>
                           <xsd:element type="xsd:string" name="factoryNamingProvider"  nillable="true"/>
@@ -158,8 +158,15 @@
                       </xsd:complexType>
                     </xsd:element>
                     <xsd:element type="xsd:string" name="signingKeyAlias"></xsd:element>
-                    <xsd:element type="xsd:string" name="canonicalizationMethod"></xsd:element>
-                    <xsd:element type="xsd:string" name="signatureMethod"></xsd:element>
+                    
+                    <xsd:element type="xsd:string" name="canonicalizationMethod" default="http://www.w3.org/2001/10/xml-exc-c14n#">
+                      <xsd:annotation><xsd:documentation>default is http://www.w3.org/2001/10/xml-exc-c14n#
+                      </xsd:documentation></xsd:annotation>
+                    
+                    </xsd:element>
+                    <xsd:element type="xsd:string" name="signatureMethod" default="RSA_SHA1">
+                      <xsd:annotation><xsd:documentation>default is RSA_SHA1</xsd:documentation></xsd:annotation>
+                    </xsd:element>
                     <xsd:element type="xsd:string" name="XML_DIGSIG_NS" default="http://www.w3.org/2000/09/xmldsig#"></xsd:element>
 
                     <xsd:element type="xsd:string" name="trustStorePath"></xsd:element>
