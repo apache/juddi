@@ -20,6 +20,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.log
 {
+    /// <summary>
+    /// a simple interface which mimics the log4j API
+    /// </summary>
+    /// @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
     public interface Log
     {
         void info(string msg, Exception ex);
@@ -34,6 +38,11 @@ namespace org.apache.juddi.v3.client.log
         void debug(Object msg);
        
     }
+
+    /// <summary>
+    /// Provides some helper functions for Loggers, specifically exception to string handling
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public static class LogHelper
     {
        public static string HandleException(Exception ex)

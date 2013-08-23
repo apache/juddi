@@ -23,6 +23,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// 3DES Ciphers
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     internal sealed class TripleDESCryptor : Cryptor
     {
 

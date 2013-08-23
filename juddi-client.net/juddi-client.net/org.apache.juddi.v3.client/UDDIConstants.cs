@@ -22,8 +22,8 @@ namespace org.apache.juddi.v3.client
 {
     /// <summary>
     /// This file was borrowed from juddi-core's constants file with modifications
-    /// @author Alex O'Ree
     /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public static class UDDIConstants
     {
 

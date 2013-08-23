@@ -21,6 +21,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// AES128 Cipher
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     internal sealed class AES128Cryptor : AESCryptor
     {
         protected internal override int GetKeySize()

@@ -22,6 +22,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// AES256 Cipher
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     internal sealed class AES256Cryptor : AESCryptor
     {
 

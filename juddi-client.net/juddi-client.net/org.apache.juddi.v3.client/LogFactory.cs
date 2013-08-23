@@ -23,7 +23,8 @@ using System.Text;
 namespace org.apache.juddi.v3.client.log
 {
     /// <summary>
-    /// 
+    /// The LogFactor reads from the current configuration (.NET, not the Juddi-Client config xml)
+    /// and produces the appropriate logger
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class LogFactory
@@ -49,7 +50,7 @@ namespace org.apache.juddi.v3.client.log
                         s = "INFO";
                     level = (LogLevel)Enum.Parse(typeof(LogLevel), s);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     level = LogLevel.WARN;
                 }
@@ -59,7 +60,7 @@ namespace org.apache.juddi.v3.client.log
                 {
                     target = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.targets"];
                 }
-                catch (Exception ex)
+                catch 
                 {
                     level = LogLevel.WARN;
                 }

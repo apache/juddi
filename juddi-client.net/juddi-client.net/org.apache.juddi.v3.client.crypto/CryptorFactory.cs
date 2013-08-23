@@ -22,6 +22,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// loads the appropriate cipher
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class CryptorFactory
     {
         static Dictionary<String, Cryptor> cache = new Dictionary<string, Cryptor>();

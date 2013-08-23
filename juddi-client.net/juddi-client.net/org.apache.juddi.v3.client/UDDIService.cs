@@ -20,6 +20,10 @@ using System.Text;
 using org.uddi.apiv3;
 namespace juddi_dotnet
 {
+    /// <summary>
+    /// Mirrored from the Java Juddi-client
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class UDDIService
     {
         public static UDDI_Inquiry_SoapBinding getUDDIInquiryPort()

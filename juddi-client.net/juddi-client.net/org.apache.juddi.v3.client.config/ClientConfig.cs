@@ -25,10 +25,15 @@ using System.Xml;
 
 namespace org.apache.juddi.v3.client.config
 {
+    /// <summary>
+    /// This class handles the loading of configuration file data from disk, typically from either a caller
+    /// specified file, "uddi.xml" in the current directory, or from a System Environment variable "uddi.client.xml"
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class ClientConfig
     {
         private readonly static String UDDI_CONFIG_FILENAME_PROPERTY = "uddi.client.xml";
-        public readonly static String DEFAULT_UDDI_CONFIG = "META-INF/uddi.xml";
+        public readonly static String DEFAULT_UDDI_CONFIG = "uddi.xml";
         private Log log = LogFactory.getLog(typeof(ClientConfig));
         private uddi config = null;
         private Dictionary<String, UDDINode> uddiNodes = null;
@@ -123,7 +128,7 @@ namespace org.apache.juddi.v3.client.config
                     uddiClerk.setManagerName(clientName);
                     uddiClerk.setName(config.client.clerks.clerk[i].name);
                     String nodeRef = config.client.clerks.clerk[i].node;
-                    if (!uddiNodes.ContainsKey(nodeRef)) throw new ConfigurationException("Could not find Node with name=" + nodeRef);
+                    if (!uddiNodes.ContainsKey(nodeRef)) throw new ConfigurationErrorsException("Could not find Node with name=" + nodeRef);
                     UDDINode uddiNode = uddiNodes[nodeRef];
                     uddiClerk.setUDDInode(uddiNode);
                     uddiClerk.setPublisher(config.client.clerks.clerk[i].publisher);
@@ -161,7 +166,7 @@ namespace org.apache.juddi.v3.client.config
                                 if (keyDomain == null) keyDomain = clerkKeyDomain;
                                 if (keyDomain == null) keyDomain = uddiClerk.getUDDINode().getProperties().getString("keyDomain");
                                 if ((businessName == null && !uddiClerk.getUDDINode().getProperties().containsKey("businessName"))
-                                    || keyDomain == null && !uddiClerk.getUDDINode().getProperties().containsKey("keyDomain")) throw new ConfigurationException("Either the wsdl(" + wsdls[w]
+                                    || keyDomain == null && !uddiClerk.getUDDINode().getProperties().containsKey("keyDomain")) throw new ConfigurationErrorsException("Either the wsdl(" + wsdls[w]
                                          + ") or clerk (" + uddiClerk.getName() + ") elements require a businessKey, or businessName & keyDomain attributes");
                                 else
                                 {
@@ -173,7 +178,7 @@ namespace org.apache.juddi.v3.client.config
                             }
                             if (!businessKey.ToLower().StartsWith("uddi:") || !businessKey.Substring(5).Contains(":"))
                             {
-                                throw new ConfigurationException("The businessKey " + businessKey + " does not implement a valid UDDI v3 key format.");
+                                throw new ConfigurationErrorsException("The businessKey " + businessKey + " does not implement a valid UDDI v3 key format.");
                             }
                             wsdl.setBusinessKey(businessKey);
                             if (keyDomain == null)
@@ -265,12 +270,12 @@ namespace org.apache.juddi.v3.client.config
                 xRegistration.setEntityKey(config.client.clerks.xregister.business[i].bindingKey);
 
                 String fromClerkRef = config.client.clerks.xregister.business[i].fromClerk;
-                if (!clerks.ContainsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
+                if (!clerks.ContainsKey(fromClerkRef)) throw new ConfigurationErrorsException("Could not find fromClerk with name=" + fromClerkRef);
                 UDDIClerk fromClerk = clerks[(fromClerkRef)];
                 xRegistration.setFromClerk(fromClerk);
 
                 String toClerkRef = config.client.clerks.xregister.business[i].toClerk;
-                if (!clerks.ContainsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
+                if (!clerks.ContainsKey(toClerkRef)) throw new ConfigurationErrorsException("Could not find toClerk with name=" + toClerkRef);
                 UDDIClerk toClerk = clerks[(toClerkRef)];
                 xRegistration.setToClerk(toClerk);
                 log.debug(xRegistration);
@@ -299,12 +304,12 @@ namespace org.apache.juddi.v3.client.config
                 xRegistration.setEntityKey(config.client.clerks.xregister.servicebinding[i].bindingKey);
 
                 String fromClerkRef = config.client.clerks.xregister.servicebinding[i].fromClerk;
-                if (!clerks.ContainsKey(fromClerkRef)) throw new ConfigurationException("Could not find fromClerk with name=" + fromClerkRef);
+                if (!clerks.ContainsKey(fromClerkRef)) throw new ConfigurationErrorsException("Could not find fromClerk with name=" + fromClerkRef);
                 UDDIClerk fromClerk = clerks[(fromClerkRef)];
                 xRegistration.setFromClerk(fromClerk);
 
                 String toClerkRef = config.client.clerks.xregister.servicebinding[i].toClerk;
-                if (!clerks.ContainsKey(toClerkRef)) throw new ConfigurationException("Could not find toClerk with name=" + toClerkRef);
+                if (!clerks.ContainsKey(toClerkRef)) throw new ConfigurationErrorsException("Could not find toClerk with name=" + toClerkRef);
                 UDDIClerk toClerk = clerks[(toClerkRef)];
                 xRegistration.setToClerk(toClerk);
                 log.debug(xRegistration);
@@ -321,7 +326,7 @@ namespace org.apache.juddi.v3.client.config
 
         public UDDINode getHomeNode()
         {
-            if (uddiNodes == null) throw new ConfigurationException("The juddi client configuration " +
+            if (uddiNodes == null) throw new ConfigurationErrorsException("The juddi client configuration " +
                       "must contain at least one node element.");
             if (uddiNodes.Values.Count == 1)
             {
@@ -336,14 +341,14 @@ namespace org.apache.juddi.v3.client.config
                     return uddiNode;
                 }
             }
-            throw new ConfigurationException("One of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
+            throw new ConfigurationErrorsException("One of the node elements in the client configuration needs to a 'isHomeJUDDI=\"true\"' attribute.");
         }
 
         public UDDINode getUDDINode(String nodeName)
         {
             if (!uddiNodes.ContainsKey(nodeName))
             {
-                throw new ConfigurationException("Node '" + nodeName
+                throw new ConfigurationErrorsException("Node '" + nodeName
                         + "' cannot be found in the config '" + getClientName() + "'");
             }
             return uddiNodes[nodeName];

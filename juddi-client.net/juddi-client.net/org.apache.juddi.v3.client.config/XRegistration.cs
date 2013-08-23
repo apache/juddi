@@ -23,6 +23,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.config
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class XRegistration
     {
 

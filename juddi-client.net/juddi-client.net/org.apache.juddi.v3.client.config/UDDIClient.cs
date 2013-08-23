@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2001-2008 The Apache Software Foundation.
+ * Copyright 2001-2013 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,10 @@ using System.Configuration;
 
 namespace org.apache.juddi.v3.client
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class UDDIClient
     {
 
@@ -120,7 +124,7 @@ namespace org.apache.juddi.v3.client
                 EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
                 embeddedRegistry.start();
             } catch (Exception e) {
-                throw new ConfigurationException(e.Message,e);
+                throw new ConfigurationErrorsException(e.Message,e);
             }*/
         }
 
@@ -133,7 +137,7 @@ namespace org.apache.juddi.v3.client
                 EmbeddedRegistry embeddedRegistry = (EmbeddedRegistry) clazz.newInstance();
                 embeddedRegistry.stop();
             } catch (Exception e) {
-                throw new ConfigurationException(e.Message,e);
+                throw new ConfigurationErrorsException(e.Message,e);
             }*/
         }
 
@@ -315,9 +319,8 @@ namespace org.apache.juddi.v3.client
                 String managerName = clientConfig.getClientName();
                 return new AspNetTransport(managerName, nodeName, this.getClientConfig());
             } catch (Exception e) {
-                throw new ConfigurationException (e.Message,e);
+                throw new ConfigurationErrorsException(e.Message,e);
             }
-            return null;
         }
 
         public UDDIClerk getClerk(String clerkName)

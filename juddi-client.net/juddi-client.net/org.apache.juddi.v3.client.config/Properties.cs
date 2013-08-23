@@ -23,8 +23,9 @@ using System.Text;
 namespace org.apache.juddi.v3.client.config
 {
     /// <summary>
-    /// This class behaves similiary to Apache Commons Config class
+    /// This class behaves similiary to Java Properties class and was created to simply the port
     /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class Properties
     {
         Log log = LogFactory.getLog("Properties");

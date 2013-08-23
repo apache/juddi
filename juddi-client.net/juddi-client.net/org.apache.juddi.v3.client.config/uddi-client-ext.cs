@@ -19,8 +19,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+/// extends the generated uddi-client codebase, which is generated via the xsd tool from juddi-client.xsd in the Java project
+///<author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
 namespace org.apache.juddi.v3.client.config
 {
+
     public partial class uddi
     {
         Properties p = new Properties();

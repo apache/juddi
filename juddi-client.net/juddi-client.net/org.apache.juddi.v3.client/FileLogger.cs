@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +22,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.log
 {
+    /// <summary>
+    /// A simple file logger
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class FileLogger : Log
     {
         private string name;
@@ -48,25 +68,25 @@ namespace org.apache.juddi.v3.client.log
         public void warn(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.WARN) <= 0)
-                WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
+                WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void warn(string msg)
         {
             if (level.CompareTo(LogLevel.WARN) <= 0)
-                WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg, EventLogEntryType.Warning);
+                WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg);
         }
 
         public void error(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
-                WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
+                WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
         }
 
         public void error(string msg)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
-                WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg, EventLogEntryType.Error);
+                WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg);
         }
 
 

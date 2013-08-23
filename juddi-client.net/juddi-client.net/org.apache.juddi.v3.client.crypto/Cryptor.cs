@@ -21,25 +21,28 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// The Crpytor interface, used for encrypting and decrypted credentials
+    /// </summary>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public interface Cryptor
     {
-        /**
-   * Encrypt the string, if unable to encrypt, return null
-   */
+
+
+
+        /// <summary>
+        /// Encrypt the string, if unable to encrypt, return null
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>encrypted string</returns>
         String encrypt(String str);
-        /**
-         * decrypts the string
-          * @param str
-          * @return, if the password can be decrypted, the decrypted value is returned, otherwise the original value is returned<br>
-          * In the event that decryption fails, the error message must be logged.
-         * @throws NoSuchPaddingException
-         * @throws NoSuchAlgorithmException
-         * @throws InvalidAlgorithmParameterException
-         * @throws InvalidKeyException
-         * @throws IllegalBlockSizeException
-         * @throws BadPaddingException 
-         */
-         String decrypt(String str);
+        /// <summary>
+        /// decrypts the string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>if the password can be decrypted, the decrypted value is returned, otherwise the original value is returned<br>
+        ///In the event that decryption fails, the error message must be logged.</returns>
+        String decrypt(String str);
 
     }
 }

@@ -14,12 +14,10 @@
  * limitations under the License.
  *
  */
-using juddi_dotnet.org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.log;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Text;
 
 namespace org.apache.juddi.v3.client
 {
@@ -39,7 +37,7 @@ namespace org.apache.juddi.v3.client
                 }
                 else
                 {
-                    throw new ConfigurationException("No client by name " + clientName + " was found. " +
+                    throw new ConfigurationErrorsException("No client by name " + clientName + " was found. " +
                             " Please check your client uddi.xml files, and make sure this client was started");
                 }
             }
@@ -90,7 +88,7 @@ namespace org.apache.juddi.v3.client
             }
             else
             {
-                throw new ConfigurationException("Could not remove UDDIClient for name " + clientName);
+                throw new ConfigurationErrorsException("Could not remove UDDIClient for name " + clientName);
             }
         }
 

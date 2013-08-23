@@ -26,6 +26,10 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.config
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// 
     public class UDDIClerk
     {
 
@@ -595,7 +599,7 @@ namespace org.apache.juddi.v3.client.config
                 businessService[] businessServiceList = sd.businessService;
                 if (businessServiceList.Length == 0)
                 {
-                    throw new ConfigurationException("Could not find Service with key=" + serviceKey);
+                    throw new ConfigurationErrorsException("Could not find Service with key=" + serviceKey);
                 }
                 return businessServiceList[0];
             }
@@ -625,7 +629,7 @@ namespace org.apache.juddi.v3.client.config
                 bindingTemplate[] bindingTemplateList = bd.bindingTemplate;
                 if (bindingTemplateList.Length == 0)
                 {
-                    throw new ConfigurationException("Could not find ServiceBinding with key=" + bindingKey);
+                    throw new ConfigurationErrorsException("Could not find ServiceBinding with key=" + bindingKey);
                 }
                 return bindingTemplateList[0];
             }

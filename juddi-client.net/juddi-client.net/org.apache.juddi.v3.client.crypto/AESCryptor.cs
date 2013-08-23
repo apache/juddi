@@ -23,6 +23,12 @@ using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
 {
+    /// <summary>
+    /// An abstract class for AES functions
+    /// </summary>
+    /// <see cref="AES128"/>
+    /// <see cref="AES256"/>
+    /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     internal  abstract class AESCryptor : Cryptor
     {
 
