@@ -25,11 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXB;
 import javax.xml.namespace.QName;
 import org.apache.commons.configuration.ConfigurationException;
@@ -53,28 +50,82 @@ import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.mappings.wadl.Application;
 import org.apache.juddi.v3.client.mappings.wadl.Doc;
-import org.apache.juddi.v3.client.mappings.wadl.Resource;
 import org.apache.juddi.v3.client.mappings.wadl.Resources;
 import org.uddi.api_v3.AccessPoint;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessService;
-import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
-import org.uddi.api_v3.OverviewDoc;
-import org.uddi.api_v3.OverviewURL;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
 
 /**
- * This class is incomplete
+ * This class converts a WADL document, web application description language into a
+ * structure that more or less works within the UDDI data structures.<br><br>
+ * <h1>Example Usage Scenario</h1>
+ * <pre>
+        Application app = WADL2UDDI.ParseWadl(new File("A path to your file.wadl"));
+        List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+        URL url = urls.get(0);
+        String domain = url.getHost();
+        TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
+        //save the keygen
+        SaveTModel stm = new SaveTModel();
+        stm.setAuthInfo(rootAuthToken.getAuthInfo());
+        stm.getTModel().add(keygen);
+        
+        properties.put("keyDomain", domain);
+        properties.put("businessName", domain);
+        properties.put("serverName", url.getHost());
+        properties.put("serverPort", url.getPort());
+        WADL2UDDI wadl2UDDI = new WADL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+       
+        BusinessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
+        Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(wsdlURL, app);
+        
+        //Since the service depends on the tModel, we have to save the tModels first
+        SaveTModel tms = new SaveTModel();
+
+        TModel[] tmodels = portTypeTModels.toArray(new TModel[0]);
+        for (int i = 0; i < tmodels.length; i++) {
+            System.out.println(tmodelPrinter.print(tmodels[i]));
+            tms.getTModel().add(tmodels[i]);
+        }
+
+
+        //important, you'll need to save your new tModels, or else saving the business/service may fail
+        publish.saveTModel(stm);
+
+        //finaly, we're ready to save all of the services defined in the WSDL
+        //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
+
+        PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
+        System.out.println(servicePrinter.print(businessServices));
+        
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(rootAuthToken.getAuthInfo());
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(businessServices.getBusinessKey());
+        be.getName().add(new Name());
+        //TODO, use some relevant here
+        be.getName().get(0).setValue(domain);
+        be.getName().get(0).setLang("en");
+        be.setBusinessServices(new BusinessServices());
+        be.getBusinessServices().getBusinessService().add(businessServices);
+        sb.getBusinessEntity().add(be);
+        PrintUDDI<SaveBusiness> sbp = new PrintUDDI<SaveBusiness>();
+        System.out.println("Request " + sbp.print(sb));
+        publish.saveBusiness(sb);
+
+        //and we're done
+        //Be sure to report any problems to the jUDDI JIRA bug tracker at 
+        //https://issues.apache.org/jira/browse/JUDDI
+</pre>
  *
  * @author Alex O'Ree
  */
