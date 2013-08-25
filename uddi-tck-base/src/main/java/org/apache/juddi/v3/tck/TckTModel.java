@@ -37,7 +37,10 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  */
 public class TckTModel 
 {
-	final static String JOE_PUBLISHER_TMODEL_XML      = "uddi_data/joepublisher/tModelKeyGen.xml";
+    final static String JOE_PUBLISHER_TMODEL_XML      = "uddi_data/joepublisher/tModelKeyGen.xml";
+    public static String JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3      = "uddi_data/joepublisher/FindTmodelTest.xml";
+    public static String JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY="uddi:uddi.joepublisher.com:tmodelone";
+    
     final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:uddi.joepublisher.com:keygenerator";
     final static String MARY_PUBLISHER_TMODEL_XML     = "uddi_data/marypublisher/tModelKeyGen.xml";
     final static String MARY_PUBLISHER_TMODEL_KEY     = "uddi:uddi.marypublisher.com:keygenerator";
@@ -71,6 +74,11 @@ public class TckTModel
 		this.inquiry = inquiry;
 	}
 	
+        /**
+         * saves a tmodel using the tModelXml parameter as a file path
+         * @param authInfo
+         * @param tModelXml this is a relative file path
+         */
 	public void saveTModels(String authInfo, String tModelXml) {
 		
 		// Add tModels

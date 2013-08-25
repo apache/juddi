@@ -61,7 +61,9 @@
     <Compile Include="org.apache.juddi.v3.client.crypto\AESCryptor.cs" />
     <Compile Include="org.apache.juddi.v3.client.crypto\Cryptor.cs" />
     <Compile Include="org.apache.juddi.v3.client.crypto\CryptorFactory.cs" />
+    <Compile Include="org.apache.juddi.v3.client.crypto\DigSigUtil.cs" />
     <Compile Include="org.apache.juddi.v3.client.crypto\TripleDESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\WSDL2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />
@@ -83,9 +85,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="org.apache.juddi.v3.client.mapping\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

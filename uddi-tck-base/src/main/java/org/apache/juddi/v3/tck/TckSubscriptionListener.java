@@ -43,19 +43,48 @@ public class TckSubscriptionListener
 	public static String LISTENER_HTTP_SERVICE_XML    = "uddi_data/subscriptionnotifier/listenerService.xml";
 	public static String LISTENER_SMTP_SERVICE_XML    = "uddi_data/subscriptionnotifier/listenerServiceSMTP.xml";
 	public static String LISTENER_RMI_SERVICE_XML     = "uddi_data/subscriptionnotifier/listenerServiceRMI.xml";
-    public static String LISTENER_SERVICE_KEY         = "uddi:uddi.joepublisher.com:listenerone";
+        public static String LISTENER_SERVICE_KEY         = "uddi:uddi.joepublisher.com:listenerone";
 
-	/** note that the subscription1.xml contains the binding template for the UDDI server to call back into */
+	
+       /**
+        * find service http
+        * note that the subscription1.xml contains the binding template for the UDDI server to call back into
+        */
 	public static String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
+        /**
+         * find business http
+         * note that the subscription1.xml contains the binding template for the UDDI server to call back into
+         */
+        public static String SUBSCRIPTION2_XML = "uddi_data/subscriptionnotifier/subscription2.xml";
+        /**
+         * find business smtp
+         */
+        public static String SUBSCRIPTION2_SMTP_XML = "uddi_data/subscriptionnotifier/subscription2SMTP.xml";
+        /**
+         * find service smtp
+         */
 	public static String SUBSCRIPTION_SMTP_XML = "uddi_data/subscriptionnotifier/subscription1SMTP.xml";
-    public static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
-    public static String SUBSCRIPTION_SMTP_KEY = "uddi:uddi.joepublisher.com:subscriptiononesmtp";
-    
-    private Log logger = LogFactory.getLog(this.getClass());
-	private UDDIPublicationPortType publication = null;
-    private UDDISubscriptionPortType subscription = null;
-    private SaveService ss = null;
-    
+        
+        /**
+         * find tmodel http
+         * note that the subscription1.xml contains the binding template for the UDDI server to call back into
+         */
+        public static String SUBSCRIPTION3_XML = "uddi_data/subscriptionnotifier/subscription3.xml";
+        /**
+         * find tmodel smtp
+         */
+        public static String SUBSCRIPTION3_SMTP_XML = "uddi_data/subscriptionnotifier/subscription3SMTP.xml";
+        
+        
+        
+        public static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
+        public static String SUBSCRIPTION_SMTP_KEY = "uddi:uddi.joepublisher.com:subscriptiononesmtp";
+
+        private Log logger = LogFactory.getLog(this.getClass());
+        private UDDIPublicationPortType publication = null;
+        private UDDISubscriptionPortType subscription = null;
+        private SaveService ss = null;
+
 	public TckSubscriptionListener(
 			UDDISubscriptionPortType subscription,
 			UDDIPublicationPortType publication) {

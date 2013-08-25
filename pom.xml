@@ -275,6 +275,7 @@
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
 		<module>juddi-examples</module>
+		<!-- this may fail on windows -->
 		<module>juddi-gui-dsig</module>
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>

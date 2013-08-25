@@ -27,7 +27,7 @@ using System.Configuration;
 namespace org.apache.juddi.v3.client
 {
     /// <summary>
-    /// 
+    /// This is the entry point for most functions provide by the juddi-client.
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class UDDIClient
