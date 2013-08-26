@@ -120,9 +120,7 @@ public class TckFindEntity
 			System.out.println(result.getBusinessEntity().size());
 		} catch (Exception e) {
 			try {
-				System.out.println(e.getMessage());
-				System.out.println(e.getCause());
-				e.printStackTrace();
+				System.out.println("(Expected) Error message = " + e.getMessage());
 				DispositionReport report = DispositionReportFaultMessage.getDispositionReport(e);
 				assertNotNull(report);
 				assertTrue(report.countainsErrorCode(DispositionReport.E_INVALID_KEY_PASSED));
