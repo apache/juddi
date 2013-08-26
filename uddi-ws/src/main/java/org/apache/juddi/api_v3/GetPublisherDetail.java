@@ -34,13 +34,14 @@ import javax.xml.bind.annotation.XmlType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "get_publisher_detail", propOrder = {
+@XmlType(name = "get_publisherDetail", propOrder = {
     "authInfo",
     "publisherId"
 })
 public class GetPublisherDetail implements Serializable{
 	@XmlTransient
 	private static final long serialVersionUID = -4050432824854226040L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> publisherId;

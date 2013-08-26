@@ -69,7 +69,7 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_publisher", action = "save_publisher")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "publisherDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
     public PublisherDetail savePublisher(
         @WebParam(name = "save_publisher", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         SavePublisher body)
@@ -82,7 +82,6 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "delete_publisher", action = "delete_publisher")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deletePublisher(
         @WebParam(name = "delete_publisher", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         DeletePublisher body)
@@ -113,7 +112,6 @@ public interface JUDDIApiPortType extends Remote{
      */
     @WebMethod(operationName = "get_allPublisherDetail", action = "get_allPublisherDetail")
     @WebResult(name = "publisherDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public PublisherDetail getAllPublisherDetail(
         @WebParam(name = "get_allPublisherDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         GetAllPublisherDetail body)
@@ -127,7 +125,6 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "adminDelete_tmodel", action = "adminDelete_tmodel")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void adminDeleteTModel(
         @WebParam(name = "adminDelete_tmodel", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         DeleteTModel body)
@@ -139,7 +136,7 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_ClientSubscriptionInfo", action = "save_ClientSubscriptionInfo")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "clientSubscriptionInfoDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
     public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(
 		@WebParam(name = "save_ClientSubscriptionInfo", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         SaveClientSubscriptionInfo body)
@@ -147,7 +144,6 @@ public interface JUDDIApiPortType extends Remote{
     ;
     
     @WebMethod(operationName = "delete_ClientSubscriptionInfo", action = "delete_ClientSubscriptionInfo")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public void deleteClientSubscriptionInfo(
 		@WebParam(name = "delete_ClientSubscriptionInfo", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         DeleteClientSubscriptionInfo body)
@@ -159,7 +155,7 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_Clerk", action = "save_Clerk")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "clerkDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
     public ClerkDetail saveClerk(
 		@WebParam(name = "save_Clerk", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         SaveClerk body)
@@ -171,7 +167,7 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "save_Node", action = "save_Node")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "nodeDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
     public NodeDetail saveNode(
 		@WebParam(name = "save_Node", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         SaveNode body)
@@ -183,7 +179,7 @@ public interface JUDDIApiPortType extends Remote{
      * @throws DispositionReportFaultMessage, RemoteException
      */
     @WebMethod(operationName = "invoke_SyncSubscription", action = "invoke_SyncSubscription")
-    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    @WebResult(name = "syncSubcriptionDetail", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
     public SyncSubscriptionDetail  invokeSyncSubscription(
 		@WebParam(name = "invoke_SyncSubscription", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
         SyncSubscription body)

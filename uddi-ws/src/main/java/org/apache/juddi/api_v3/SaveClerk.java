@@ -43,6 +43,7 @@ public class SaveClerk implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = 2909722102936229047L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<Clerk> clerk;

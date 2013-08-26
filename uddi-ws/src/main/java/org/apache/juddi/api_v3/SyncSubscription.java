@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -44,6 +45,7 @@ public class SyncSubscription implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = -8839314757295513399L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	private String authInfo;
 	private List<GetSubscriptionResults> list;
 	

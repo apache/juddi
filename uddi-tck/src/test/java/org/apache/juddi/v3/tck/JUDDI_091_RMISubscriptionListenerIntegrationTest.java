@@ -15,6 +15,7 @@ package org.apache.juddi.v3.tck;
  * limitations under the License.
  */
 
+import java.net.URI;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Random;
@@ -32,8 +33,6 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
-
-import com.sun.xml.stream.xerces.util.URI;
 
 /**
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>

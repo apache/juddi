@@ -43,6 +43,7 @@ public class DeleteClientSubscriptionInfo implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = 8973820996268358139L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> subscriptionKey;

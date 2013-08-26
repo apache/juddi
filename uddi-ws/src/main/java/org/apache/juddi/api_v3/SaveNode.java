@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "save_noodeInfo", propOrder = {
+@XmlType(name = "save_nodeInfo", propOrder = {
 	"authInfo",
     "node"
 })
@@ -43,6 +43,7 @@ public class SaveNode implements Serializable{
 
 	@XmlTransient
 	private static final long serialVersionUID = -6248775964378910950L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<Node> node;

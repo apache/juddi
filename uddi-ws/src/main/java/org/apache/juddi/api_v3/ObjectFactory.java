@@ -44,30 +44,62 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 	
+	private final static QName _SaveClerk_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_clerk");
+	private final static QName _SaveNode_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_node");
     private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
     private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
+    private final static QName _SaveClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_clientSubscriptionInfo");
+    private final static QName _DeleteClientSubscriptionInfo_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_clientSubscriptionInfo");
+    
     private final static QName _Publisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisher");
    
+    private final static QName _ClerkDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "clerkDetail");
+    private final static QName _NodeDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "nodeDetail");
     private final static QName _PublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "publisherDetail");
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _GetAllPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_allPublisherDetail");
     private final static QName _SyncSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscription");
-    private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "sync_subscriptionDetail");
-    
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.apache.juddi.api_v3
-     * 
-     */
+    private final static QName _ClientSubscriptionInfoDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "clientSubscriptionInfoDetail");
+    private final static QName _SyncSubscriptionDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "syncSubscriptionDetail");
+
+//    
+//    /**
+//     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.apache.juddi.api_v3
+//     * 
+//     */
     public ObjectFactory() {
     }
 
-
+    /**
+     * Create an instance of {@link SaveClerk }
+     * 
+     */
+    public SaveClerk createSaveClerk() {
+        return new SaveClerk();
+    }
+    
+    /**
+     * Create an instance of {@link SaveNode }
+     * 
+     */
+    public SaveNode createSaveNode() {
+        return new SaveNode();
+    }
+    
     /**
      * Create an instance of {@link SavePublisher }
      * 
      */
     public SavePublisher createSavePublisher() {
         return new SavePublisher();
+    }
+    
+    /**
+     * Create an instance of {@link SaveClientSubscriptionInfo }
+     * 
+     */
+    public SaveClientSubscriptionInfo createSaveClientSubscriptionInfo() {
+        return new SaveClientSubscriptionInfo();
     }
 
     /**
@@ -76,6 +108,14 @@ public class ObjectFactory {
      */
     public DeletePublisher createDeletePublisher() {
         return new DeletePublisher();
+    }
+    
+    /**
+     * Create an instance of {@link DeleteClientSubscriptionInfo }
+     * 
+     */
+    public DeleteClientSubscriptionInfo createDeleteClientSubscriptionInfo() {
+        return new DeleteClientSubscriptionInfo();
     }
 
     /**
@@ -87,7 +127,14 @@ public class ObjectFactory {
     }
     
  
-
+    /**
+     * Create an instance of {@link ClerkDetail }
+     * 
+     */
+    public ClerkDetail createClerkDetail() {
+        return new ClerkDetail();
+    }
+    
     /**
      * Create an instance of {@link PublisherDetail }
      * 
@@ -127,8 +174,33 @@ public class ObjectFactory {
     public SyncSubscriptionDetail createSyncSubscriptionDetail() {
         return new SyncSubscriptionDetail();
     }
+    
+    /**
+     * Create an instance of {@link ClientSubscriptionInfoDetail }
+     * 
+     */
+    public ClientSubscriptionInfoDetail createClientSubscriptionInfoDetail() {
+        return new ClientSubscriptionInfoDetail();
+    }
 
     
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_clerk")
+    public JAXBElement<SaveClerk> createSaveClerk(SaveClerk value) {
+        return new JAXBElement<SaveClerk>(_SaveClerk_QNAME, SaveClerk.class, null, value);
+    }
+    
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_node")
+    public JAXBElement<SaveNode> createSaveNode(SaveNode value) {
+        return new JAXBElement<SaveNode>(_SaveNode_QNAME, SaveNode.class, null, value);
+    }
     
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
@@ -140,12 +212,30 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "save_clientSubscriptionInfo")
+    public JAXBElement<SaveClientSubscriptionInfo> createSaveClientSubscriptionInfo(SaveClientSubscriptionInfo value) {
+        return new JAXBElement<SaveClientSubscriptionInfo>(_SaveClientSubscriptionInfo_QNAME, SaveClientSubscriptionInfo.class, null, value);
+    }
+    
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link DeletePublisher }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "delete_publisher")
     public JAXBElement<DeletePublisher> createDeletePublisher(DeletePublisher value) {
         return new JAXBElement<DeletePublisher>(_DeletePublisher_QNAME, DeletePublisher.class, null, value);
+    }
+    
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SavePublisher }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "delete_clientSubscriptionInfo")
+    public JAXBElement<DeleteClientSubscriptionInfo> createDeleteClientSubscriptionInfo(DeleteClientSubscriptionInfo value) {
+        return new JAXBElement<DeleteClientSubscriptionInfo>(_DeleteClientSubscriptionInfo_QNAME, DeleteClientSubscriptionInfo.class, null, value);
     }
 
     /**
@@ -157,15 +247,24 @@ public class ObjectFactory {
         return new JAXBElement<Publisher>(_Publisher_QNAME, Publisher.class, null, value);
     }
     
-//    /**
-//     * Create an instance of {@link JAXBElement }{@code <}{@link RMIInfo }{@code >}}
-//     * 
-//     */
-//    @XmlElementDecl(name = "rmiInfo")
-//    public JAXBElement<RMIInfo> createRMIInfo(RMIInfo value) {
-//        return new JAXBElement<RMIInfo>(_RMIInfo_QNAME, RMIInfo.class, null, value);
-//    }
-
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "clerkDetail")
+    public JAXBElement<ClerkDetail> createClerkDetail(ClerkDetail value) {
+        return new JAXBElement<ClerkDetail>(_ClerkDetail_QNAME, ClerkDetail.class, null, value);
+    }
+    
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "nodeDetail")
+    public JAXBElement<NodeDetail> createNodeDetail(NodeDetail value) {
+        return new JAXBElement<NodeDetail>(_NodeDetail_QNAME, NodeDetail.class, null, value);
+    }
+    
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
      * 
@@ -173,6 +272,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "publisherDetail")
     public JAXBElement<PublisherDetail> createPublisherDetail(PublisherDetail value) {
         return new JAXBElement<PublisherDetail>(_PublisherDetail_QNAME, PublisherDetail.class, null, value);
+    }
+    
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link PublisherDetail }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "clientSubscriptionInfoDetail")
+    public JAXBElement<ClientSubscriptionInfoDetail> createClientSubscriptionInfoDetail(ClientSubscriptionInfoDetail value) {
+        return new JAXBElement<ClientSubscriptionInfoDetail>(_ClientSubscriptionInfoDetail_QNAME, ClientSubscriptionInfoDetail.class, null, value);
     }
     
     /**
@@ -203,11 +311,20 @@ public class ObjectFactory {
     }
     
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscriptionDetail }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscription }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "sync_subscriptionDetail")
-    public JAXBElement<SyncSubscriptionDetail> createGetAllPublisherDetail(SyncSubscriptionDetail value) {
+    public JAXBElement<SyncSubscriptionDetail> createSyncSubscription(SyncSubscriptionDetail value) {
         return new JAXBElement<SyncSubscriptionDetail>(_SyncSubscriptionDetail_QNAME, SyncSubscriptionDetail.class, null, value);
-    }   
+    }
+    
+//    /**
+//     * Create an instance of {@link JAXBElement }{@code <}{@link SyncSubscriptionDetail }{@code >}}
+//     * 
+//     */
+//    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "sync_subscriptionDetail")
+//    public JAXBElement<SyncSubscriptionDetail> createGetAllSyncSubsriptionDetail(SyncSubscriptionDetail value) {
+//        return new JAXBElement<SyncSubscriptionDetail>(_SyncSubscriptionDetail_QNAME, SyncSubscriptionDetail.class, null, value);
+//    }   
 }

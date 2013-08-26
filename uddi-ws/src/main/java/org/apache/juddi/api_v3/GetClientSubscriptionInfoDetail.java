@@ -42,6 +42,7 @@ public class GetClientSubscriptionInfoDetail implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = 9207888446436156047L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<String> clientSubscriptionKey;

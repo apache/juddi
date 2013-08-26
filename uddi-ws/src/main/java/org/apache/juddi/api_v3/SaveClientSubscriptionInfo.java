@@ -43,6 +43,7 @@ public class SaveClientSubscriptionInfo implements Serializable{
 	
 	@XmlTransient
 	private static final long serialVersionUID = 6885792665298161949L;
+	@XmlElement(namespace = "urn:uddi-org:api_v3")
 	protected String authInfo;
     @XmlElement(required = true)
     protected List<ClientSubscriptionInfo> clientSubscriptionInfo;
