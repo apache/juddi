@@ -221,7 +221,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 	
 	
       
-	@Test
+	//@Test
 	public void joePublisherUpdateBusiness_HTTP_FIND_BUSINESS() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -266,7 +266,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		}
 	}
 	
-        @Test
+       // @Test
 	public void joePublisherUpdateBusiness_SMTP_FIND_BUSINESS() {
 		try {
                     mailServer = SimpleSmtpServer.start(smtpPort);
@@ -324,7 +324,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
         
         
         //tmodel tests
-        @Test
+      //  @Test
 	public void joePublisherUpdateBusiness_HTTP_FIND_TMODEL() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -373,7 +373,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		}
 	}
 	
-        @Test
+     //   @Test
 	public void joePublisherUpdateBusiness_SMTP_FIND_TMODEL() {
 		try {
                     mailServer = SimpleSmtpServer.start(smtpPort);
