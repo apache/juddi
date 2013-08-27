@@ -17,11 +17,11 @@
         <extension>woff</extension>
         <mime-type>application/x-font-woff</mime-type>
     </mime-mapping>    
-    <error-page>
-        <!-- <description>Missing login</description> -->
+    <!--<error-page>
+         <description>Missing login</description> 
         <error-code>401</error-code>
         <location>/error.jsp</location>
-    </error-page>
+    </error-page>-->
     <error-page>
         <!-- <description>Forbidden directory listing</description> -->
         <error-code>403</error-code>
