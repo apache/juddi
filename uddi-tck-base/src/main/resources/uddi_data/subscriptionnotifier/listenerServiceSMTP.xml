@@ -19,8 +19,8 @@
      businessKey="uddi:uddi.joepublisher.com:businessone" serviceKey="uddi:uddi.joepublisher.com:listeneronesmtp">
   <name xml:lang="en">Listener Two SMTP</name>
   <name xml:lang="es">Listener Dos SMTP </name>
-  <description xml:lang="en">This is the description of listener two rmi.</description>
-  <description xml:lang="es">Ésta es la descripción del listener dos rmi.</description>
+  <description xml:lang="en">This is the description of listener two SMTP.</description>
+  <description xml:lang="es">Ésta es la descripción del listener dos SMTP.</description>
   <bindingTemplates>
 	<bindingTemplate xmlns="urn:uddi-org:api_v3" bindingKey="uddi:uddi.joepublisher.com:bindinglistenersmtp">
 	  <description xml:lang="en">This is the endpoint for the SMTP subscription listener</description>

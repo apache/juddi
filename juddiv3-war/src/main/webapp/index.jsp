@@ -27,9 +27,13 @@
         jUDDI is an open source implementation of <a href="http://oasis-open.org">OASIS</a>'s <a href="http://oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">Universal Discovery Description and Integration (UDDI)</a>.
         You've reached the deployment page for jUDDI's web services.<br>
         
-        <h4><a href="/juddi-gui">View the jUDDI User Interface (fully featured end user web app)</a></h4>
-        <h4><a href="/pluto/portal/jUDDI">View the jUDDI Portal (older with limited features)</a></h4>
-        <h4><a href="admin">View the jUDDI Administration Interface (authentication required)</a></h4>
+		Looking for the old jUDDI Portal/Porlets? We've completely rewritten it. 
+		
+        <h4><a href="/juddi-gui">View the jUDDI User Interface</a> - This is a nearly complete UDDIv3 end user web application.</h4>
+        
+        <h4><a href="admin">View the jUDDI Administration Interface</a> - This is for administrators to use to reconfigure jUDDI, check the status, and perform administrative actions.</h4>
+		
+		
         Here's some useful links to learn more about the UDDI and jUDDI.
         <ul>
             <li><a href="services">View the service listing on this UDDI node</a></li>
@@ -43,7 +47,7 @@
             <li><a href="http://www.nabble.com/jUDDI-f218.html">jUDDI's Mailing lists</a></li>
 			
         </ul>
-
+		
         <div class="install">
             <h4>jUDDI Installation Status</h4>
             <div class="content">

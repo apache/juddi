@@ -16,14 +16,14 @@
  *
  */
 -->
-<subscription xmlns="urn:uddi-org:sub_v3">
+<subscription xmlns="urn:uddi-org:sub_v3" brief="false">
   <subscriptionKey>uddi:uddi.joepublisher.com:subscriptionone</subscriptionKey>
   <subscriptionFilter>
     <find_business xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">
       <findQualifiers>
-        <findQualifier>exactMatch</findQualifier>
+        <findQualifier>approximateMatch</findQualifier>
       </findQualifiers>
-      <name xml:lang="en">Listener One</name>
+      <name xml:lang="en">%</name>
     </find_business>
   </subscriptionFilter>
   <bindingKey xmlns="urn:uddi-org:api_v3">uddi:uddi.joepublisher.com:bindinglistener</bindingKey>

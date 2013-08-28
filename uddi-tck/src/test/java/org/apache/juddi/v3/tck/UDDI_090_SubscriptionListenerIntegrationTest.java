@@ -266,7 +266,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		}
 	}
 	
-       // @Test
+        //@Test
 	public void joePublisherUpdateBusiness_SMTP_FIND_BUSINESS() {
 		try {
                     mailServer = SimpleSmtpServer.start(smtpPort);
@@ -324,7 +324,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
         
         
         //tmodel tests
-      //  @Test
+        //@Test
 	public void joePublisherUpdateBusiness_HTTP_FIND_TMODEL() {
 		try {
 			tckTModel.saveJoePublisherTmodel(authInfoJoe);
@@ -355,7 +355,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			if (UDDISubscriptionListenerImpl.notificationCount == 0) {
 				Assert.fail("No Notification was sent");
 			}
-			if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+			if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">tModel One</name>")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
 			
@@ -373,7 +373,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 		}
 	}
 	
-     //   @Test
+        //@Test
 	public void joePublisherUpdateBusiness_SMTP_FIND_TMODEL() {
 		try {
                     mailServer = SimpleSmtpServer.start(smtpPort);
@@ -408,7 +408,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest
 			SmtpMessage email = (SmtpMessage)emailIter.next();
 			System.out.println("Subject:" + email.getHeaderValue("Subject"));
 			System.out.println("Body:" + email.getBody());
-			if (!email.getBody().contains("Service One")) {
+			if (!email.getBody().contains("tModel One")) {
 				Assert.fail("Notification does not contain the correct service");
 			}
 			

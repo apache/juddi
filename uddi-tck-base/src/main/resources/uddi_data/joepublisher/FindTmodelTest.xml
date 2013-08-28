@@ -15,7 +15,10 @@
  * limitations under the License.
  *
  */ -->
-<tModel tModelKey="uddi:uddi.joepublisher.com:tmodelone" xmlns="urn:uddi-org:api_v3">
+ <save_tModel xmlns="urn:uddi-org:api_v3">
+ <tModel tModelKey="uddi:uddi.joepublisher.com:tmodelone" >
   <name>tModel One</name>
   <description>This is a test of find_tmodel for subscriptions</description>
 </tModel>
+
+ </save_tModel>
