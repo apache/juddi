@@ -14,14 +14,22 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -33,7 +41,6 @@ import javax.xml.ws.Endpoint;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
@@ -47,7 +54,7 @@ import org.uddi.sub_v3.SubscriptionFilter;
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
-public class UDDIServiceCache {
+public class UDDIServiceCache implements UDDIServiceCacheMBean {
 	
 	private Endpoint endpoint = null;
 	private String bindingKey = null;
@@ -59,6 +66,7 @@ public class UDDIServiceCache {
 	URL serviceUrl = null;
 	private ConcurrentHashMap<String, Topology> serviceLocationMap = new ConcurrentHashMap<String, Topology>();
 	private static List<String> endpoints = new ArrayList<String>();
+	private ObjectName mbeanName = null;
 	
 	public UDDIClerk getClerk() {
 		return clerk;
@@ -74,8 +82,14 @@ public class UDDIServiceCache {
 		this.urlLocalizer = urlLocalizer;
 		this.properties = properties;
 		this.subscriptionKey = UDDIKeyConvention.getSubscriptionKey(properties);
-		
+		if (clerk!=null) {
+			mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + clerk.getManagerName() + "-" + clerk.getName());
+		} else {
+			mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + this);
+		}
+		getServer().registerMBean(this, mbeanName);
 		init();
+		
 	}
 
 	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException, Exception {
@@ -171,6 +185,61 @@ public class UDDIServiceCache {
 	public void unRegisterSubscription() {
 		clerk.unRegisterSubscription(subscriptionKey);
 	}
+
+	@Override
+	public int getServiceCacheSize() {
+		return serviceLocationMap.size();
+	}
+
+	@Override
+	public Set<String> getCacheEntries() {
+		return serviceLocationMap.keySet();
+	}
+
+	@Override
+	public void resetCache() {
+		serviceLocationMap.clear();
+	}
+	
+	protected void registerMBean() {
+        MBeanServer mbeanServer = null;
+        
+        mbeanServer = getServer();
+        if (mbeanServer == null) {
+            try {
+//                mbeanServer = MBeanServerLocator.locateJBoss();
+            } catch (IllegalStateException ise) {
+                // If we can't find a JBoss MBeanServer, just return
+                // Needed for unit tests
+                return;
+            }            
+        }
+        
+        try {
+        	if (! mbeanServer.isRegistered(mbeanName))
+        		mbeanServer.registerMBean(this, mbeanName);
+        } catch (InstanceAlreadyExistsException e) {
+            log.warn("", e);
+        } catch (MBeanRegistrationException e) {
+            log.warn("", e);
+        } catch (NotCompliantMBeanException e) {
+            log.warn("", e);
+        }   
+    }
+	
+	private MBeanServer getServer() {
+        MBeanServer mbserver = null;
+        ArrayList<MBeanServer> mbservers = MBeanServerFactory.findMBeanServer(null);
+        if (mbservers.size() > 0) {
+            mbserver = (MBeanServer) mbservers.get(0);
+        }
+        if (mbserver != null && log.isDebugEnabled()) {
+        	log.debug("Found MBean server");
+        } else {
+        	mbserver = ManagementFactory.getPlatformMBeanServer();
+        }
+        return mbserver;
+    }
 	
 	
 }

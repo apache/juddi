@@ -18,6 +18,7 @@ package org.apache.juddi.v3.client.config;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -31,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.embed.EmbeddedRegistry;
+import org.apache.juddi.v3.client.mapping.ServiceLocator;
+import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.transport.InVMTransport;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
@@ -43,11 +46,35 @@ public class UDDIClient {
     private ClientConfig clientConfig = null;
     private String CONFIG_FILE = "META-INF/uddi.xml";
     private Properties properties = null;
+    private static Map<String,ServiceLocator> serviceLocators = new HashMap<String,ServiceLocator>();
 	
     public UDDIClient() throws ConfigurationException {
     	super();
 		clientConfig = new ClientConfig(CONFIG_FILE, properties);
 		UDDIClientContainer.addClient(this);
+    }
+    
+    /**
+     * Uses the client config, and looks for a clerk called "default"
+     * @return
+     * @throws ConfigurationException
+     */
+    public synchronized ServiceLocator getServiceLocator() throws ConfigurationException {
+    	return getServiceLocator(null);
+    }
+    /**
+     * @param clerkName - if null defaults to "default"
+     * @return
+     * @throws ConfigurationException
+     */
+    public synchronized ServiceLocator getServiceLocator(String clerkName) throws ConfigurationException 
+    {
+    	UDDIClerk clerk = getClerk(clerkName);
+    	if (! serviceLocators.containsKey(clerk.getName())) {
+    		ServiceLocator serviceLocator = new ServiceLocator(clerk, new URLLocalizerDefaultImpl(), properties);
+    	    serviceLocators.put(clerk.getName(), serviceLocator);
+    	}
+    	return serviceLocators.get(clerk.getName());
     }
 	/**
 	 * Manages the clerks. Initiates reading the client configuration from the uddi.xml.

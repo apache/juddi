@@ -50,18 +50,22 @@ public class ServiceLocator {
 	private UDDIServiceCache serviceCache = null;
 	private SelectionPolicy selectionPolicy = null;
 	
-	public ServiceLocator(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ClassNotFoundException, IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException, Exception {
+	public ServiceLocator(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException	{
 		super();
 
-		this.clerk = clerk;
-		this.properties = properties;
-		
-		serviceCache = new UDDIServiceCache(clerk, urlLocalizer, properties);
-		String policy = properties.getProperty("juddi.client.selection.policy", "org.apache.juddi.v3.client.mapping.PolicyLocalFirst");
-		@SuppressWarnings("unchecked")
-		Class<? extends SelectionPolicy> selectionPolicyClass = (Class<? extends SelectionPolicy>)
-			ClassUtil.forName(policy, this.getClass());
-		selectionPolicy =  selectionPolicyClass.getConstructor(Properties.class).newInstance(properties);
+		try {
+			this.clerk = clerk;
+			this.properties = properties;
+			
+			serviceCache = new UDDIServiceCache(clerk, urlLocalizer, properties);
+			String policy = properties.getProperty("juddi.client.selection.policy", "org.apache.juddi.v3.client.mapping.PolicyLocalFirst");
+			@SuppressWarnings("unchecked")
+			Class<? extends SelectionPolicy> selectionPolicyClass = (Class<? extends SelectionPolicy>)
+				ClassUtil.forName(policy, this.getClass());
+			selectionPolicy =  selectionPolicyClass.getConstructor(Properties.class).newInstance(properties);
+		} catch (Exception e) {
+			throw new ConfigurationException(e.getMessage(),e);
+		}
 	}
 	
 	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
