@@ -336,7 +336,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         }
     }
 
-    @Test
+    //@Test
     public void joePublisherUpdateBusiness_SMTP_FIND_BUSINESS() {
         logger.info("joePublisherUpdateBusiness_SMTP_FIND_BUSINESS");
         try {
