@@ -15,6 +15,10 @@ public interface Property {
     public final static String JUDDI_LOAD_INSTALL_DATA = "juddi.load.install.data";
     public final static String JUDDI_PERSISTENCEUNIT_NAME = "juddi.persistenceunit.name";
     public final static String JUDDI_CONFIGURATION_RELOAD_DELAY = "juddi.configuration.reload.delay";
+    
+    /**
+     * This is not used in the code base
+     */
     //public final static String JUDDI_LOCALE = "juddi.locale";
     
     //public final static String JUDDI_OPERATOR_EMAIL_ADDRESS = "juddi.operatorEmailAddress";
@@ -27,8 +31,11 @@ public interface Property {
     public final static String JUDDI_MAX_TMODELS_PER_PUBLISHER = "juddi.maxTModelsPerPublisher";
     public final static String JUDDI_CRYPTOR = "juddi.cryptor";
     public final static String JUDDI_KEYGENERATOR = "juddi.keygenerator";
-    //public final static String JUDDI_SECURITY_DOMAIN = "juddi.securityDomain";
-    public final static String JUDDI_USERSFILE = "juddi.usersfile";
+    /**
+     * used by the Jboss authenticator
+     */
+    public final static String JUDDI_SECURITY_DOMAIN = "juddi.auth.securityDomain";
+    public final static String JUDDI_USERSFILE = "juddi.auth.usersfile";
     public final static String JUDDI_MAX_ROWS = "juddi.maxRows";
     public final static String JUDDI_MAX_IN_CLAUSE = "juddi.maxInClause";
     public final static String JUDDI_ROOT_PARTITION = "juddi.rootPartition";
@@ -67,7 +74,9 @@ public interface Property {
     public final static String JUDDI_SUBSCRIPTION_CHUNKEXPIRATION_MINUTES = "juddi.subscription.chunkexpiration.minutes";
     public final static String JUDDI_SUBSCRIPTION_MAXENTITIES="juddi.subscription.maxentities";
     
-    public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_TYPE="juddi.subscription.truststore.type";
+    /*
+     * These are not yet used
+    public final static Strin   g JUDDI_SUBSCRIPTION_TRUSTSTORE_TYPE="juddi.subscription.truststore.type";
     public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_FILE="juddi.subscription.truststore.filename";
     public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_PASSWORD="juddi.subscription.truststore.password";
     public final static String JUDDI_SUBSCRIPTION_TRUSTSTORE_ENCRYPTED="juddi.subscription.truststore.password[@isPasswordEncrypted]";
@@ -83,7 +92,7 @@ public interface Property {
     public final static String JUDDI_SUBSCRIPTION_KEYPASSWORD_CRYPTOPROVIDER="juddi.subscription.keypassword.password[@cryptoProvider]";
     public final static String JUDDI_SUBSCRIPTION_KEYSTORE_ENCRYPTED="juddi.subscription.keystore.password[@isPasswordEncrypted]";
     public final static String JUDDI_SUBSCRIPTION_KEYSTORE_CRYPTOPROVIDER="juddi.subscription.keystore.password[@cryptoProvider]";
-    
+    */
     
     public final static String JUDDI_NOTIFICATION_START_BUFFER = "juddi.notification.start.buffer";
     public final static String JUDDI_NOTIFICATION_INTERVAL = "juddi.notification.interval";

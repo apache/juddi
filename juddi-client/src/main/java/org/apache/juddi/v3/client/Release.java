@@ -23,17 +23,31 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 /**
- * The release class is a utility for obtaining the 
+ * The release class is a utility for obtaining the version number
  */
 public class Release {
 	
 	private static final String UDDI_VERSION = "3.0";
 	private static final String JAR_NAME = "juddi-client";
 	private static String registryVersion = null;
-   
+        public static final String UNKNOWN = "unknown";
 	private Release () {
 	}
 
+        /**
+         * Returns the version of this jUDDI-Client jar as defined in the manifest.
+         * Calls getRegistryVersion()
+         * @return 
+         * @since 3.2
+         */
+        public static String getjUDDIClientVersion() {
+            return getRegistryVersion();
+        }
+        /**
+         * Returns the version of this jUDDI-Client jar as defined in the manifest.
+         * This function is poorly named, but left in place for backward compatibility
+         * @return 
+         */
 	public static String getRegistryVersion() {
 		if (registryVersion == null) {
 			registryVersion = getVersionFromManifest(JAR_NAME);
@@ -71,6 +85,6 @@ public class Release {
          } catch (IOException e1) {
             // Silently ignore wrong manifests on classpath?
          }
-         return "unknown";
+         return UNKNOWN;
 	}
 }

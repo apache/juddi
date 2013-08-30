@@ -14,8 +14,6 @@
  */
 package org.apache.juddi.v3.tck;
 
-import java.net.Inet4Address;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -37,6 +35,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.*;
+import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -770,6 +769,28 @@ public class UDDI_141_JIRAIntegrationTest {
 
     }
 
+    
+    
+    
+    private void removeAllExistingSubscriptions(String authinfo) {
+        List<Subscription> subscriptions;
+        try {
+            subscriptions = subscription.getSubscriptions(authinfo);
+
+            DeleteSubscription ds = new DeleteSubscription();
+            ds.setAuthInfo(authinfo);
+            for (int i = 0; i < subscriptions.size(); i++) {
+                ds.getSubscriptionKey().add(subscriptions.get(i).getSubscriptionKey());
+            }
+            if (!subscriptions.isEmpty()) {
+                logger.info("Purging " + subscriptions.size() + " old subscriptions");
+                subscription.deleteSubscription(ds);
+            }
+        } catch (Exception ex) {
+            logger.warn("error clearing subscriptions", ex);
+        }
+    }
+
     /**
      *  //testing upper case subscription callbacks
      *
@@ -777,10 +798,13 @@ public class UDDI_141_JIRAIntegrationTest {
      */
     @Test
     public void JIRA_597() throws Exception {
+        
         System.out.println("JIRA_597");
+        
         int port = 4444;
         String localhostname = java.net.InetAddress.getLocalHost().getHostName();
         UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+        removeAllExistingSubscriptions(authInfoJoe);
         UDDISubscriptionListenerImpl.notifcationMap.clear();
         UDDISubscriptionListenerImpl.notificationCount = 0;
         Endpoint ep = null;
@@ -864,6 +888,8 @@ public class UDDI_141_JIRAIntegrationTest {
             Thread.sleep(1000);
             maxwait = maxwait - 1000;
         }
+        removeAllExistingSubscriptions(authInfoJoe);
+        ep.stop();
         if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
             Assert.fail("no callbacks were recieved.");
         }
@@ -872,7 +898,9 @@ public class UDDI_141_JIRAIntegrationTest {
     }
 
     /**
-     * testing callbacks with underfined transport type
+     * testing callbacks with undefined transport type with a uppercase path
+     * this also tests the case of one user subscribing to a specific entity
+     * via GetBusinessDetail subscription filter
      *
      * @throws Exception
      */
@@ -880,10 +908,12 @@ public class UDDI_141_JIRAIntegrationTest {
     public void JIRA_596() throws Exception {
         System.out.println("JIRA_596");
         int port = 4444;
-        String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+        String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
+        removeAllExistingSubscriptions(authInfoJoe);
         UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
         UDDISubscriptionListenerImpl.notifcationMap.clear();
         UDDISubscriptionListenerImpl.notificationCount = 0;
+        
         Endpoint ep = null;
         boolean ok = false;
         do {
@@ -908,17 +938,16 @@ public class UDDI_141_JIRAIntegrationTest {
         bt.setAccessPoint(new AccessPoint());
         bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
         bt.getAccessPoint().setUseType("endPoint");
-        //Added per Kurt
+        //obmitted as part of the jira test case
         /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
          instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
          bt.setTModelInstanceDetails(new TModelInstanceDetails());
          bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
          */
         bs.getBindingTemplates().getBindingTemplate().add(bt);
-
-        bs.getBindingTemplates().getBindingTemplate().add(bt);
         be.getBusinessServices().getBusinessService().add(bs);
         sb.getBusinessEntity().add(be);
+        logger.info("setting up joe's callback business");
         BusinessDetail saveBusiness = publication.saveBusiness(sb);
 
         //ok Joe's callback is setup
@@ -930,6 +959,7 @@ public class UDDI_141_JIRAIntegrationTest {
         be.getName().add(new Name());
         be.getName().get(0).setValue("Sam's business");
         sb.getBusinessEntity().add(be);
+        logger.info("saving sam's business");
         BusinessDetail saveBusiness1 = publication.saveBusiness(sb);
 
         //ok Joe now needs to subscribe for Sam's business
@@ -948,6 +978,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         s.setNotificationInterval(df.newDuration(5000));
         list.value.add(s);
+        logger.info("subscribing joe's to updates for sam's business");
         subscription.saveSubscription(authInfoJoe, list);
 
         //ok have sam change his business around.
@@ -956,7 +987,9 @@ public class UDDI_141_JIRAIntegrationTest {
         be = saveBusiness1.getBusinessEntity().get(0);
         be.getName().get(0).setLang("en");
         sb.getBusinessEntity().add(be);
+        logger.info("altering sam's business");
         publication.saveBusiness(sb);
+        logger.info("Waiting...");
         int maxwait = 30000;
         while (maxwait > 0) {
             if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
@@ -965,10 +998,14 @@ public class UDDI_141_JIRAIntegrationTest {
             Thread.sleep(1000);
             maxwait = maxwait - 1000;
         }
+        removeAllExistingSubscriptions(authInfoJoe);
+        ep.stop();
         if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
+            logger.error("no callbacks were recieved");
             Assert.fail("no callbacks were recieved.");
         }
-
+        logger.info("callback response was " + UDDISubscriptionListenerImpl.notifcationMap.get(0));
+        logger.info("PASS");
 
     }
 

@@ -16,7 +16,7 @@
  *
  */
 -->
-<subscription xmlns="urn:uddi-org:sub_v3" brief="false">
+<subscription xmlns="urn:uddi-org:sub_v3" brief="true">
   <subscriptionKey>uddi:uddi.joepublisher.com:subscriptionone</subscriptionKey>
   <subscriptionFilter>
     <find_business xmlns="urn:uddi-org:api_v3" xmlns:xml="http://www.w3.org/XML/1998/namespace">

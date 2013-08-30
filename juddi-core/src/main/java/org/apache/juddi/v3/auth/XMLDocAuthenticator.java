@@ -19,6 +19,7 @@ package org.apache.juddi.v3.auth;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -96,9 +97,17 @@ public class XMLDocAuthenticator implements Authenticator
 	 */
 	public synchronized void readUserFile() throws JAXBException, IOException, ConfigurationException
 	{
+            
 		userTable = new HashMap<String, User> ();
-		String usersFileName = getFilename();
-		log.info("Reading jUDDI Users File: " + usersFileName + "...");
+                String usersFileName = getFilename();
+                if (usersFileName==null || usersFileName.length()==0)
+                    throw new ConfigurationException("usersFileName value is null!");
+		//log.info("Reading jUDDI Users File: " + usersFileName + "...");
+                URL resource = ClassUtil.getResource(usersFileName, this.getClass());
+                if (resource!=null)
+                    log.info("Reading jUDDI Users File: " + usersFileName + "...from " + resource.toExternalForm());
+                else
+                    log.info("Reading jUDDI Users File: " + usersFileName + "...");
 		InputStream stream = ClassUtil.getResource(usersFileName, this.getClass()).openStream();
 		JAXBContext jaxbContext=JAXBContext.newInstance(JuddiUsers.class);
 		Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();

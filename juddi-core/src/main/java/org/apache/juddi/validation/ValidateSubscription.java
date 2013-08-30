@@ -315,7 +315,7 @@ public class ValidateSubscription extends ValidateUDDIApi {
         }
         Object obj = em.find(org.apache.juddi.model.BindingTemplate.class, bindingKey);
         if (obj==null) {
-            throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.BindingDoesntExist"));
+            throw new ValueNotAllowedException(new ErrorMessage("errors.subscription.BindingDoesntExist",bindingKey));
         }
     }
 }

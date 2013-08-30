@@ -97,9 +97,22 @@
 		<auth>
 			<!-- Specifies whether the inquiry API requires authentication, all other APIs require authN-->
 			<Inquiry>false</Inquiry>
-			<!-- jUDDI Authentication module to use-->
 
+			<!-- When using file based authentication, this is the filename to use
+			<usersfile>juddi-users.xml</usersfile> -->
+			<!-- jUDDI Authentication module to use-->
 			<authenticator>
+				<!-- build in Authenticators:
+				org.apache.juddi.v3.auth.JUDDIAuthenticator - no authentication
+				LDAP Based
+				org.apache.juddi.v3.auth.LdapSimpleAuthenticator - use LDAP
+				org.apache.juddi.v3.auth.LdapExpandedAuthenticator - use LDAP
+				
+				File based, see usersfile
+				org.apache.juddi.v3.auth.XMLDocAuthenticator - XML doc, clear text
+				org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator - XML doc, encrypted
+				org.apache.juddi.v3.auth.MD5XMLDocAuthenticator - XML doc, Hashed
+				-->
 				<class>org.apache.juddi.v3.auth.JUDDIAuthenticator</class>
 				<!-- other settings
 				url
