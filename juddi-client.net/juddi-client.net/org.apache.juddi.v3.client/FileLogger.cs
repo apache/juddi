@@ -113,5 +113,7 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString());
         }
+
+    
     }
 }

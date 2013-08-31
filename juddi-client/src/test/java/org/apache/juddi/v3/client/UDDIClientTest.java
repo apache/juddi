@@ -130,6 +130,14 @@ public class UDDIClientTest {
     	 
      }
      
+     
+     @Test
+     public void testReleaseVersion()
+     {
+         String v = Release.getjUDDIClientVersion();
+         //Assert.assertNotSame(v, Release.UNKNOWN);
+         //Apparently maven attaches the version info to the manifest after the tests are ran
+     }
    
 	
 }

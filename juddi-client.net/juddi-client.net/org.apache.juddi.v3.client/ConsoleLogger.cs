@@ -103,5 +103,7 @@ namespace org.apache.juddi.v3.client.log
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString());
         }
+
+       
     }
 }

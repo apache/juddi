@@ -65,6 +65,8 @@ namespace org.apache.juddi.v3.client.config {
         
         private uddiClientSubscriptionCallbacks subscriptionCallbacksField;
         
+        private uddiClientXtoWsdl xtoWsdlField;
+        
         private string nameField;
         
         /// <remarks/>
@@ -105,6 +107,16 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.subscriptionCallbacksField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public uddiClientXtoWsdl XtoWsdl {
+            get {
+                return this.xtoWsdlField;
+            }
+            set {
+                this.xtoWsdlField = value;
             }
         }
         
@@ -1234,6 +1246,27 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.signatureBehaviorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:juddi-apache-org:v3_client")]
+    public partial class uddiClientXtoWsdl {
+        
+        private bool ignoreSSLErrorsField;
+        
+        /// <remarks/>
+        public bool IgnoreSSLErrors {
+            get {
+                return this.ignoreSSLErrorsField;
+            }
+            set {
+                this.ignoreSSLErrorsField = value;
             }
         }
     }

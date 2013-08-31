@@ -27,7 +27,7 @@ namespace org.apache.juddi.v3.client.log
     /// and produces the appropriate logger
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public class LogFactory
+    public class LogFactory :IDisposable
     {
         private static LogLevel level = LogLevel.WARN;
         private static String target = "CONSOLE";
@@ -104,6 +104,11 @@ namespace org.apache.juddi.v3.client.log
             init();
             return getLogger(type.Name);
             //return new ConsoleLogger(type.Name, level);
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

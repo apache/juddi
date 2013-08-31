@@ -9,6 +9,11 @@
                 <properties>
                     <property name="serverName" value="localhost" />
                     <property name="serverPort" value="8880" />
+					<!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
                 </properties>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
@@ -72,5 +77,16 @@
 			<checkTrust>true</checkTrust>
 			<checkRevocationCRL>true</checkRevocationCRL>
 		</signature>
+		<subscriptionCallbacks>
+			<keyDomain>uddi:somebusiness</keyDomain>
+			<listenUrl>http://MyHostname:4444/callback</listenUrl>
+			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
+			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+			<signatureBehavior>DoNothing</signatureBehavior>
+			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
+		</subscriptionCallbacks>
+		<XtoWsdl>
+			<IgnoreSSLErrors>false</IgnoreSSLErrors>
+		</XtoWsdl>
     </client>
 </uddi>

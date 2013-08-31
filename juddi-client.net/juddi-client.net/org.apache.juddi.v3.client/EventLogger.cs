@@ -94,5 +94,10 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString(), EventLogEntryType.Information);
         }
+
+        public void Dispose()
+        {
+            this.log.Dispose();
+        }
     }
 }

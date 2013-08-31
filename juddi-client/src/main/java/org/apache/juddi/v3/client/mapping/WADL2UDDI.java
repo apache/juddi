@@ -402,6 +402,19 @@ public class WADL2UDDI {
         return unmarshal;
     }
     
+    /**
+     * Parses a web accessible WADL file
+     * @param weburl
+     * @param username
+     * @param password
+     * @param ignoreSSLErrors if true, SSL errors are ignored
+     * @return a non-null "Application" object, represeting a WADL's application root XML element
+     * Sample code:<br>
+     * <pre>
+     * Application app = WADL2UDDI.ParseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", 
+     *      clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
+     * </pre>
+     */
     public static Application ParseWadl(URL weburl, String username, String password, boolean ignoreSSLErrors){
             DefaultHttpClient httpclient = null;
             Application unmarshal=null;

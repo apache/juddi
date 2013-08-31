@@ -30,7 +30,7 @@ namespace org.apache.juddi.v3.client
     /// This is the entry point for most functions provide by the juddi-client.
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public class UDDIClient
+    public class UDDIClient: IDisposable
     {
 
         private static Log log = LogFactory.getLog(typeof(UDDIClient));
@@ -357,5 +357,7 @@ namespace org.apache.juddi.v3.client
             }
         }
 
+
+       
     }
 }

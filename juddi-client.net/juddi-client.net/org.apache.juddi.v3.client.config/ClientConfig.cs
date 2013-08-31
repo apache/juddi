@@ -364,6 +364,16 @@ namespace org.apache.juddi.v3.client.config
             return xServiceBindingRegistrations;
         }
 
+        /**
+        * Used for WADL/WSDL to WSDL
+        * @return 
+        */
+        public bool getX_To_Wsdl_Ignore_SSL_Errors()
+        {
+            return this.config.client.XtoWsdl.IgnoreSSLErrors;
+        }
+
+
         public HashSet<XRegistration> getXBusinessRegistrations()
         {
             return xBusinessRegistrations;

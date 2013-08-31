@@ -10,6 +10,11 @@
         <properties>
           <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
           <property name="serverPort" value="80" />
+		  <!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
         <custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
@@ -42,8 +47,8 @@
     </nodes>
 
     <clerks registerOnStartup="false">
-      <clerk name="default" node="default" publisher="root" password="root"/>
-      <clerk name="medroot" node="med"     publisher="root" password="root"/>
+      <clerk name="default" node="default" publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
+      <clerk name="medroot" node="med"     publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
       <xregister>
         <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
       </xregister>
@@ -73,5 +78,8 @@
       <autoRegisterBusinessServiceKey>uddi:org.apache.juddi:callbackServices</autoRegisterBusinessServiceKey>
       <signatureBehavior>DoNothing</signatureBehavior>
     </subscriptionCallbacks>
+    <XtoWsdl>
+      <IgnoreSSLErrors>false</IgnoreSSLErrors>
+    </XtoWsdl>
   </client>
 </uddi>

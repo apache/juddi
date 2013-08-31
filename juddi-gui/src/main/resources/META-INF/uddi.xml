@@ -10,6 +10,11 @@
                 <properties>
                     <property name="serverName" value="localhost"/>
                     <property name="serverPort" value="8080"/>
+					<!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
                 </properties>
                 <description>Main jUDDI node</description>
                 <!-- JAX-WS Transport -->
@@ -23,5 +28,41 @@
                 <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
             </node>
         </nodes>
+		<signature>
+			<!-- signing stuff -->
+			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
+			<signingKeyStoreType>JKS</signingKeyStoreType>
+			<signingKeyStoreFilePassword 
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
+			<signingKeyPassword
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
+			<signingKeyAlias>my special key</signingKeyAlias>
+			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
+			<signatureMethod>RSA_SHA1</signatureMethod>
+			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
+			<!-- validation stuff -->
+			<trustStorePath>truststore.jks</trustStorePath>
+			<trustStoreType>JKS</trustStoreType>
+			<trustStorePassword
+				isPasswordEncrypted="false" 
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+			
+			<checkTimestamps>true</checkTimestamps>
+			<checkTrust>true</checkTrust>
+			<checkRevocationCRL>true</checkRevocationCRL>
+		</signature>
+		<subscriptionCallbacks>
+			<keyDomain>uddi:somebusiness</keyDomain>
+			<listenUrl>http://MyHostname:4444/callback</listenUrl>
+			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
+			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+			<signatureBehavior>DoNothing</signatureBehavior>
+			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
+		</subscriptionCallbacks>
+		<XtoWsdl>
+			<IgnoreSSLErrors>false</IgnoreSSLErrors>
+		</XtoWsdl>
     </client>
 </uddi>

@@ -1367,11 +1367,9 @@ public class UddiHub {
             fb.setAuthInfo(GetToken());
             if (fq != null) {
                 fb.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
-                if (fq != null) {
                     for (int i = 0; i < fq.length; i++) {
                         fb.getFindQualifiers().getFindQualifier().add(fq[i]);
                     }
-                }
             }
             BindingDetail findBusiness = null;
             switch (criteria) {
@@ -1422,11 +1420,11 @@ public class UddiHub {
                             append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey())).
                             append("\">");
                     if (findBusiness.getBindingTemplate().get(i).getDescription().isEmpty()) {
-                        sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey()));
+                        sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getBindingKey()));
                     } else {
                         String t = StringEscapeUtils.escapeHtml(Printers.ListToDescString(findBusiness.getBindingTemplate().get(i).getDescription()));
                         if (t == null || t.trim().length() == 0) {
-                            sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getServiceKey()));
+                            sb.append(StringEscapeUtils.escapeHtml(findBusiness.getBindingTemplate().get(i).getBindingKey()));
                         } else {
                             sb.append(t);
                         }

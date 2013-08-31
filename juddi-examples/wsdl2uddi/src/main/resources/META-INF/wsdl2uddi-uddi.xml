@@ -10,6 +10,11 @@
                 <properties>
                     <property name="serverName" value="localhost"/>
                     <property name="serverPort" value="8080"/>
+					<!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
                 </properties>
 				<description>Main jUDDI node</description>
 				<!-- JAX-WS Transport -->
@@ -24,7 +29,7 @@
 			</node>
 		</nodes>
 		<clerks registerOnStartup="false">
-           <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher">
+           <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher" isPasswordEncrypted="false" cryptoProvider="">
               <wsdl businessKey="uddi:uddi.joepublisher.com:business-for-wsdl">wsdl/helloworld.wsdl</wsdl>
            </clerk>
         </clerks>

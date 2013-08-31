@@ -99,6 +99,9 @@ public class WadlImport {
 
         //in either case, we're going to have to parse the WSDL
 
+        
+        //Application app = WADL2UDDI.ParseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
+        
         Application app = WADL2UDDI.ParseWadl(new File("diggo.wadl"));
         List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
         URL url = urls.get(0);

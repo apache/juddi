@@ -204,7 +204,13 @@
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
-
+              <xsd:element name="XtoWsdl">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="IgnoreSSLErrors" type="xsd:boolean"></xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
             </xsd:sequence>
             <xsd:attribute type="xsd:string" name="name" />
           </xsd:complexType>

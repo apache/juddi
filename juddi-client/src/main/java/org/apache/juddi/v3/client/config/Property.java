@@ -29,7 +29,7 @@ public class Property
 
 	public final static String DEFAULT_UDDI_PROXY_TRANSPORT     = "org.uddi.api_v3.client.transport.JAXWSTransport";
 	
-	//Properties that can be set in the uddi.xml
+	//Properties that can be set in the uddi.xml under a specific Node element
 	public static final String LANG                             = "lang";
 	public static final String BUSINESS_KEY                     = "businessKey";
 	public static final String KEY_DOMAIN                       = "keyDomain";
@@ -43,6 +43,12 @@ public class Property
 	public static final String BINDING_CATEGORY_BAG             = "bindingCategoryBag";
 	public static final String BASIC_AUTH_USERNAME              = "basicAuthUsername";
 	public static final String BASIC_AUTH_PASSWORD              = "basicAuthPassword";
+        public static final String BASIC_AUTH_PASSWORD_IS_ENC       = "basicAuthPasswordIsEncrypted";
+        public static final String BASIC_AUTH_PASSWORD_CP           = "basicAuthPasswordCryptoProvider";
+        
+        public final static String JUDDI_CRYPTOR_PREFIX = "client.clerks.clerk.";
+        public final static String JUDDI_CRYPTOR_POSTFIX = ".[@isPasswordEncrypted]";
+        
 	
 	//Default Values
 	public static final String DEFAULT_LANG                     = "en";
@@ -59,7 +65,6 @@ public class Property
         
         
         public final static String DEFAULT_CRYPTOR = "org.apache.juddi.v3.client.crypto.DefaultCryptor";
-        public final static String JUDDI_CRYPTOR_PREFIX = "client.clerks.clerk.";
-        public final static String JUDDI_CRYPTOR_POSTFIX = ".[@isPasswordEncrypted]";
+        
 
 }

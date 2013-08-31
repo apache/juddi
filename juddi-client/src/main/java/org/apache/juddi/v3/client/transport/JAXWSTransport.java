@@ -18,15 +18,21 @@ package org.apache.juddi.v3.client.transport;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.JUDDIApiService;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.crypto.CryptorFactory;
+import org.apache.juddi.v3.client.mapping.WADL2UDDI;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -37,6 +43,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
 public class JAXWSTransport extends Transport {
+            private static Log logger = LogFactory.getLog(WADL2UDDI.class);
 	
 	String nodeName = null;
 	String clientName = null;
@@ -223,20 +230,39 @@ public class JAXWSTransport extends Transport {
 	private void setCredentials(Map<String, Object> requestContext) throws ConfigurationException {
 		UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 		Properties properties = client.getClientConfig().getUDDINode(nodeName).getProperties();
-		if (properties!=null) {
-    		String username = null;
-    		String password = null;
-    		if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {
-    			username = properties.getProperty(Property.BASIC_AUTH_USERNAME);
-    		}
-    		if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {
-    			password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);
-    		}
-    		if (username!=null && password!=null) {
-    			requestContext.put(BindingProvider.USERNAME_PROPERTY, username);
-    			requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
-    		}
-		}
+                if (properties!=null) {
+                    String username = null;
+                    String password = null;
+                    if (properties.containsKey(Property.BASIC_AUTH_USERNAME)) {
+                            username = properties.getProperty(Property.BASIC_AUTH_USERNAME);
+                    }
+                    if (properties.containsKey(Property.BASIC_AUTH_PASSWORD)) {
+                            password = properties.getProperty(Property.BASIC_AUTH_PASSWORD);
+                    }
+                    String cipher=null;
+                    boolean isEncrypted=false;
+                    if (properties.containsKey(Property.BASIC_AUTH_PASSWORD_CP)) {
+                            cipher = properties.getProperty(Property.BASIC_AUTH_PASSWORD_CP);
+                    }
+                    if (properties.containsKey(Property.BASIC_AUTH_PASSWORD_IS_ENC)) {
+                            isEncrypted = Boolean.parseBoolean(properties.getProperty(Property.BASIC_AUTH_PASSWORD_IS_ENC));
+                    }
+                    if (username!=null && password!=null) {
+                            requestContext.put(BindingProvider.USERNAME_PROPERTY, username);
+                            if (isEncrypted)
+                            {
+                                try {
+                                    requestContext.put(BindingProvider.PASSWORD_PROPERTY, CryptorFactory.getCryptor(cipher).decrypt(password));
+                                } catch (Exception ex) {
+                                    logger.error("Unable to decrypt password!", ex);
+                                }
+                            }
+                            else
+                            {
+                                requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+                            }
+                    }
+                }
 	}
 
 }

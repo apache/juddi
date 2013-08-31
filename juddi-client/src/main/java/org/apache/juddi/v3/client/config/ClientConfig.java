@@ -315,6 +315,15 @@ public class ClientConfig
         public String getConfigurationFile() {
             return configurationFile;
         }
+        
+        /**
+         * Used for WADL/WSDL to WSDL
+         * @return 
+         */
+        public boolean isX_To_Wsdl_Ignore_SSL_Errors()
+        {
+            return this.config.getBoolean("client.XtoWsdl.IgnoreSSLErrors", false);
+        }
 
         
         
