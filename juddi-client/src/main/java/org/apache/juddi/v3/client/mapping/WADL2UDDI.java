@@ -408,7 +408,7 @@ public class WADL2UDDI {
      * @param username
      * @param password
      * @param ignoreSSLErrors if true, SSL errors are ignored
-     * @return a non-null "Application" object, represeting a WADL's application root XML element
+     * @return a non-null "Application" object, represeting a WADL's application root XML 
      * Sample code:<br>
      * <pre>
      * Application app = WADL2UDDI.ParseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", 

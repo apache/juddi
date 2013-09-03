@@ -14,8 +14,15 @@
 		<server>
 			<baseurl>http://localhost:8080/juddiv3</baseurl>
 		</server>
+		<!-- The node Id must be unique when setup in a cluster of UDDI servers implementing the replication API
+			don't worry, jUDDI doesn't implement it right now, but it may come in the future -->
+		<nodeId>uddi:juddi.apache.org:node1</nodeId>
 		<root>
+			<!-- this is the 'root' username, or owner of the node -->
 			<publisher>root</publisher>
+			<!-- The key of the root business that all of the UDDI services are registered in, as defined in the install_data -->
+			<businessId>uddi:juddi.apache.org:businesses-asf</businessId>
+			<partition>uddi:juddi.apache.org</partition>
 		</root>
 		<seed>
 			<always>false</always>

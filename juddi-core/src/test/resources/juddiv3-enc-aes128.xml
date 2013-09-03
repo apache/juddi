@@ -14,6 +14,9 @@
 		<server>
 			<baseurl>http://localhost:8080/juddiv3</baseurl>
 		</server>
+		<!-- The node Id must be unique when setup in a cluster of UDDI servers implementing the replication API
+			don't worry, jUDDI doesn't implement it right now, but it may come in the future -->
+		<nodeId>uddi:juddi.apache.org:node1</nodeId>
 		<root>
 			<publisher>root</publisher>
 		</root>

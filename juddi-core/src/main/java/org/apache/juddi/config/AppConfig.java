@@ -211,6 +211,8 @@ public class AppConfig
 			else
 				throw new ConfigurationException("A node business entity was not found.  Please make sure that the application is properly installed.");
 			result.setProperty(Property.JUDDI_NODE_ID, nodeId);
+                        
+                        //result.setProperty(Property.JUDDI_NODE_ROOT_BUSINESS, nodeId);
 			
 			tx.commit();
 			return result;

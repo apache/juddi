@@ -38,7 +38,17 @@ public interface Property {
     public final static String JUDDI_USERSFILE = "juddi.auth.usersfile";
     public final static String JUDDI_MAX_ROWS = "juddi.maxRows";
     public final static String JUDDI_MAX_IN_CLAUSE = "juddi.maxInClause";
-    public final static String JUDDI_ROOT_PARTITION = "juddi.rootPartition";
+    public final static String JUDDI_ROOT_PARTITION = "juddi.root.partition";
+    /**
+     * This is the business id that all of the UDDI services on this node will be attached too
+     * (generally as defined in the install_data)
+     * JUDDI-645
+     */
+    public final static String JUDDI_NODE_ROOT_BUSINESS = "juddi.root.businessId";
+    /**
+     * this is the unique identifier of this uddi service provide, primarily used for clustered setups with the replication api
+     * JUDDI-645
+     */
     public final static String JUDDI_NODE_ID = "juddi.nodeId";
     public final static String JUDDI_TRANSFER_EXPIRATION_DAYS = "juddi.transfer.expiration.days";
     /**
@@ -67,7 +77,12 @@ public interface Property {
     public final static String JUDDI_AUTHENTICATOR_LDAP_EXPANDED_STR= "juddi.auth.authenticator.ldapexp";
     
     
-    
+    /**
+     * if enabled, tmodels must exist before using them
+     * binding templates must exist before a subscription can be made
+     * access point hosting redirector/binding template must exist before it can be made
+     * @since 3.1.5
+     */
     public final static String JUDDI_ENFORCE_REFERENTIAL_INTEGRITY = "juddi.validation.enforceReferentialIntegrity";
     public final static String JUDDI_SUBSCRIPTION_EXPIRATION_DAYS = "juddi.subscription.expiration.days";
     public final static String JUDDI_SUBSCRIPTION_NOTIFICATION = "juddi.subscription.notification";

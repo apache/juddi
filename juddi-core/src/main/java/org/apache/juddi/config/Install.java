@@ -98,15 +98,17 @@ public class Install {
 			org.uddi.api_v3.BusinessEntity rootBusinessEntity = (org.uddi.api_v3.BusinessEntity)buildInstallEntity(fileRootBusinessEntity, "org.uddi.api_v3",config);
 			
 			String rootPartition = getRootPartition(rootTModelKeyGen);
-			String nodeId = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
-			
+                        //JUDDI-645
+			String nodeId = config.getString(Property.JUDDI_NODE_ID,getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition) );
+                                //getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
+			String rootbizkey = getNodeId(rootBusinessEntity.getBusinessKey(), rootPartition);
 			String fileRootPublisher = rootPublisherStr + FILE_PUBLISHER;
 			if (!alreadyInstalled) {
 				log.info("Loading the root Publisher from file " + fileRootPublisher);
 			
 				rootPublisher = installPublisher(em, fileRootPublisher, config);
 				installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
-				rootBusinessEntity.setBusinessKey(nodeId);
+				rootBusinessEntity.setBusinessKey(rootbizkey);
 				installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
 			} else {
 				log.debug("juddi.seed.always reapplies all seed files except for the root data.");
@@ -271,7 +273,10 @@ public class Install {
 		modelBusinessEntity.setCreated(now);
 		modelBusinessEntity.setModified(now);
 		modelBusinessEntity.setModifiedIncludingChildren(now);
-		modelBusinessEntity.setNodeId(modelBusinessEntity.getEntityKey());
+                //JUDDI-645
+		//modelBusinessEntity.setNodeId(modelBusinessEntity.getEntityKey());
+                modelBusinessEntity.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
+
 		
 		for (org.apache.juddi.model.BusinessService service : modelBusinessEntity.getBusinessServices()) {
 			service.setAuthorizedName(rootPublisher.getAuthorizedName());
@@ -279,7 +284,9 @@ public class Install {
 			service.setCreated(now);
 			service.setModified(now);
 			service.setModifiedIncludingChildren(now);
-			service.setNodeId(modelBusinessEntity.getEntityKey());
+                        //JUDDI-645
+                        service.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
+			//service.setNodeId(modelBusinessEntity.getEntityKey());
 			
 			for (org.apache.juddi.model.BindingTemplate binding : service.getBindingTemplates()) {
 				binding.setAuthorizedName(rootPublisher.getAuthorizedName());
@@ -287,7 +294,10 @@ public class Install {
 				binding.setCreated(now);
 				binding.setModified(now);
 				binding.setModifiedIncludingChildren(now);
-				binding.setNodeId(modelBusinessEntity.getEntityKey());
+				//binding.setNodeId(modelBusinessEntity.getEntityKey());
+                                binding.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
+                                //JUDDI-645
+                                
 			}
 		}
 		
@@ -362,7 +372,7 @@ public class Install {
 		String parentKey = businessService.getBusinessKey();
 		if (parentKey != null && parentKey.length()> 0) {
 			if (!parentKey.equalsIgnoreCase(parent.getBusinessKey()))
-				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey));
+				throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ParentBusinessNotFound", parentKey + " " + businessService.getBusinessKey() + " " + businessService.getBusinessKey().length() + " " + parentKey.length()));
 		}
 		
 		// Retrieve the service's passed key

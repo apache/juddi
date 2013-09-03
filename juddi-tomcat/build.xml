@@ -15,6 +15,7 @@
 	<target name="copy-resources" depends="unzip-tomcat">
 		<copy file="${basedir}/catalina.sh" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
 		<copy file="${basedir}/catalina.bat" todir="${basedir}/target/tomcat/apache-tomcat-${apache.tomcat.version}/bin" overwrite="true"/>
+                <copy file="${basedir}/tomcat-users.xml" todir="${conf.dir}" overwrite="true"/>
 		<copy file="${basedir}/context.xml" todir="${webapps.dir}/juddiv3/META-INF" overwrite="true"/>
 		<copy file="${basedir}/server.xml" todir="${conf.dir}" overwrite="true"/>
 		<copy file="${basedir}/keystore.jks" todir="${conf.dir}" overwrite="true"/>

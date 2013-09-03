@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page session="false" %>
 <%@ page import="java.util.List,
          org.apache.juddi.config.Install,
@@ -26,14 +27,14 @@
         <h2><em>Welcome</em> to Apache jUDDI!</h2>
         jUDDI is an open source implementation of <a href="http://oasis-open.org">OASIS</a>'s <a href="http://oasis-open.org/committees/uddi-spec/doc/tcspecs.htm#uddiv3">Universal Discovery Description and Integration (UDDI)</a>.
         You've reached the deployment page for jUDDI's web services.<br>
-        
-		Looking for the old jUDDI Portal/Porlets? We've completely rewritten it. 
-		
+
+        Looking for the old jUDDI Portal/Porlets? We've completely rewritten it. 
+
         <h4><a href="/juddi-gui">View the jUDDI User Interface</a> - This is a nearly complete UDDIv3 end user web application.</h4>
-        
+
         <h4><a href="admin">View the jUDDI Administration Interface</a> - This is for administrators to use to reconfigure jUDDI, check the status, and perform administrative actions.</h4>
-		
-		
+
+
         Here's some useful links to learn more about the UDDI and jUDDI.
         <ul>
             <li><a href="services">View the service listing on this UDDI node</a></li>
@@ -45,9 +46,9 @@
             <li><a href="http://juddi.apache.org/issue-tracking.html" >jUDDI's Issue Tracker (report a bug)</a></li>
             <li><a href="http://svn.apache.org/viewvc/juddi/" >jUDDI's Source Code</a></li>
             <li><a href="http://www.nabble.com/jUDDI-f218.html">jUDDI's Mailing lists</a></li>
-			
+
         </ul>
-		
+
         <div class="install">
             <h4>jUDDI Installation Status</h4>
             <div class="content">
@@ -55,13 +56,15 @@
                     // This will tirgger the install process...
                     String rootPartition = AppConfig.getConfiguration().getString(Property.JUDDI_ROOT_PARTITION);
                     String nodeId = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+                    String rootBusiness = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ROOT_BUSINESS);
                     String nodeName = "";
                     String nodeDescription = "";
-
-                    BusinessEntity be = Install.getNodeBusinessEntity(nodeId);
-
-                    if (be != null) {
-                        Name n = (Name) be.getName().get(0);
+                    BusinessEntity be = null;
+                    boolean ok = true;
+                    String error = "";
+                    try {
+                        be = Install.getNodeBusinessEntity(rootBusiness);
+                        Name n = be.getName().get(0);
                         if (n != null) {
                             nodeName = n.getValue();
                         }
@@ -73,29 +76,58 @@
                                 nodeDescription = d.getValue();
                             }
                         }
+                    } catch (Exception ex) {
+                        ok = false;
+                        error = ex.getMessage();
+
                     }
+                    if (ok) {
+
                 %>
                 <div>jUDDI has been successfully installed!</div>
-                <p />
-                <h4>Node Information</h4>
+
+                <h3>Node Information</h3>
                 <table>
                     <tr>
                         <td><b>Root Partition:</b></td>
-                        <td><%= rootPartition%></td>
+                        <td><%= StringEscapeUtils.escapeHtml(rootPartition)%></td>
                     </tr>
+
                     <tr>
                         <td><b>Node Id:</b></td>
-                        <td><%= nodeId%></td>
+                        <td><%=StringEscapeUtils.escapeHtml(nodeId)%></td>
                     </tr>
                     <tr>
-                        <td><b>Name:</b></td>
-                        <td><%= nodeName%></td>
+                        <td><b>Root Business Key:</b></td>
+                        <td><%= StringEscapeUtils.escapeHtml(rootBusiness)%></td>
                     </tr>
                     <tr>
-                        <td><b>Description:</b></td>
-                        <td><%= nodeDescription%></td>
+                        <td><b>Root Business Name:</b></td>
+                        <td><%= StringEscapeUtils.escapeHtml(nodeName)%></td>
                     </tr>
+                    <tr>
+                        <td><b>Root Business Description:</b></td>
+                        <td><%=StringEscapeUtils.escapeHtml(nodeDescription)%></td>
+                    </tr>
+
                 </table>
+                <%
+                } else {
+                %>
+                <h2>jUDDI has NOT installed correctly!</h2>
+                <p />
+                <h3>Error Information</h3>
+                <p>
+                    <%=StringEscapeUtils.escapeHtml(error)%><br>
+                    Suggestion: Check the juddiv3.xml config file for the following settings (in Xpath notation) and ensure that they either match the defaults, or the install data.
+                </p>
+                <ul>
+                    <li>config/juddi/nodeId, default = uddi:juddi.apache.org:node1</li>
+                    <li>config/juddi/rootBusinessId, default = uddi:juddi.apache.org:businesses-asf</li>
+                </ul>
+
+                <%                    }
+                %>
             </div>
         </div>
 
