@@ -135,6 +135,8 @@
             <outputDirectory>examples</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
+				<exclude>**/dist/**</exclude>
+				<exclude>**/build/**</exclude>
                 <exclude>**/.settings/**</exclude>
                 <exclude>**/.classpath</exclude>
                 <exclude>**/.project</exclude>
