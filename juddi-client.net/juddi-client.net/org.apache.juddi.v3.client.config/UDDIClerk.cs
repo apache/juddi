@@ -30,7 +30,7 @@ namespace org.apache.juddi.v3.client.config
     /// 
     /// </summary>
     /// 
-    public class UDDIClerk
+    public class UDDIClerk: IDisposable
     {
 
         private Log log = LogFactory.getLog(typeof(UDDIClerk));
@@ -1015,6 +1015,11 @@ namespace org.apache.juddi.v3.client.config
         public bool getPasswordEncrypted()
         {
             return this.isEncrypted;
+        }
+
+        public void Dispose()
+        {
+            uddinode.Dispose();
         }
     }
 }

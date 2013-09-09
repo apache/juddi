@@ -24,7 +24,7 @@ using System.Text;
 namespace org.apache.juddi.v3.client.transport
 {
 
-    public class AspNetTransport : Transport
+    public class AspNetTransport : Transport, IDisposable
     {//AspNetTransport 
         String nodeName = null;
         String clientName = null;
@@ -149,6 +149,17 @@ namespace org.apache.juddi.v3.client.transport
         public override UDDI_CustodyTransfer_SoapBinding getUDDICustodyTransferService()
         {
             return this.custodyTransferService;
+        }
+
+        public void Dispose()
+        {
+            inquiryService.Dispose();
+            securityService.Dispose();
+            publishService.Dispose();
+            subscriptionService.Dispose();
+            subscriptionListenerService.Dispose();
+            custodyTransferService.Dispose();
+            publisherService.Dispose();
         }
     }
 }

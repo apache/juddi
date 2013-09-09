@@ -25,7 +25,7 @@ namespace org.apache.juddi.v3.client.config
     /// Represents a specific UDDI server, which is the set of services defined by the specification
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public class UDDINode
+    public class UDDINode : IDisposable
     {
         private Properties properties;
         private Transport transport;
@@ -272,6 +272,14 @@ namespace org.apache.juddi.v3.client.config
                 p.setProperty(uddiClientNodeProperty[i].name, uddiClientNodeProperty[i].value);
             }
             this.properties = p;
+        }
+
+        public void Dispose()
+        {
+            if (transport is IDisposable)
+            {
+                ((IDisposable)transport).Dispose();
+            }
         }
     }
 }
