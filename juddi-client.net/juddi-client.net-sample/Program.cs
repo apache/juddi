@@ -29,30 +29,51 @@ namespace juddi_client.net_sample
     {
         static void Main(string[] args)
         {
-           
-            UDDIClient clerkManager = new UDDIClient("uddi.xml");
-            UDDIClientContainer.addClient(clerkManager);
-            Transport transport = clerkManager.getTransport("default");
-
-            org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
-            org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
-          //  ClientConfig cfg = new ClientConfig("uddi.xml");
-
-            UDDIClerk clerk = clerkManager.getClerk("default");
-            
-           
-            find_business fb = new find_business();
-            fb.authInfo = clerk.getAuthToken(security.Url);
-            fb.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
-            fb.name = new name[1];
-            fb.name[0] = new name(UDDIConstants.WILDCARD, "en");
-            businessList bl = inquiry.find_business(fb);
-            for (int i = 0; i < bl.businessInfos.Length; i++)
+            UDDIClient clerkManager=null;
+            Transport transport = null;
+            UDDIClerk clerk = null;
+            try
             {
-                Console.WriteLine(bl.businessInfos[i].name[0].Value);
-            }
-            Console.Read();
+                clerkManager = new UDDIClient("uddi.xml");
+                UDDIClientContainer.addClient(clerkManager);
 
+                transport = clerkManager.getTransport("default");
+
+                org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
+                org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+
+                clerk = clerkManager.getClerk("default");
+
+
+                find_business fb = new find_business();
+                fb.authInfo = clerk.getAuthToken(security.Url);
+                fb.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
+                fb.name = new name[1];
+                fb.name[0] = new name(UDDIConstants.WILDCARD, "en");
+                businessList bl = inquiry.find_business(fb);
+                for (int i = 0; i < bl.businessInfos.Length; i++)
+                {
+                    Console.WriteLine(bl.businessInfos[i].name[0].Value);
+                }
+                Console.Read();
+            }
+            catch (Exception ex)
+            {
+                while (ex != null)
+                {
+                    System.Console.WriteLine("Error! " + ex.Message);
+                    ex = ex.InnerException;
+                }
+            }
+            finally
+            {
+                if (transport != null && transport is IDisposable)
+                {
+                    ((IDisposable)transport).Dispose();
+                }
+                if (clerk != null)
+                    clerk.Dispose();
+            }
         }
     }
 }
