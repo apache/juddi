@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net", "juddi-c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-sample", "juddi-client.net-sample\juddi-client.net-sample.csproj", "{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net.test", "juddi-client.net.test\juddi-client.net.test.csproj", "{0AD62F71-EC84-4133-87FA-C27083F4D884}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FEB955BD-38E3-4816-94D3-EBF62F4CBB82}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
@@ -26,10 +24,6 @@ Global
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
