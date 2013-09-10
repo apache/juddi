@@ -55,7 +55,7 @@ namespace juddi_client.net_sample
                 {
                     Console.WriteLine(bl.businessInfos[i].name[0].Value);
                 }
-                Console.Read();
+               
             }
             catch (Exception ex)
             {
@@ -74,6 +74,8 @@ namespace juddi_client.net_sample
                 if (clerk != null)
                     clerk.Dispose();
             }
+            Console.WriteLine("Press any key to exit");
+            Console.Read();
         }
     }
 }
