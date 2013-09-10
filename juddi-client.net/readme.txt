@@ -9,3 +9,5 @@ Goals
 -Use WCF behaviors and annotations to add the necessary hooks
 
 It is not yet complete!
+
+Mono users, make sure you use juddi-client.net-mono.sln when building!

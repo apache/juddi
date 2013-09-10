@@ -2689,7 +2689,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        [System.Xml.Serialization.XmlAnyElementAttribute(Name="Any")]
+        [System.Xml.Serialization.XmlAnyElementAttribute(Name = "Any")]
         public System.Xml.XmlNode[] Any
         {
             get
@@ -5454,10 +5454,10 @@ namespace org.uddi.apiv3
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("bindingKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI")]
-        [System.Xml.Serialization.XmlElementAttribute("businessKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI")]
-        [System.Xml.Serialization.XmlElementAttribute("serviceKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI")]
-        [System.Xml.Serialization.XmlElementAttribute("tModelKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI")]
+        [System.Xml.Serialization.XmlElementAttribute("bindingKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI", ElementName = "bindingKey")]
+        [System.Xml.Serialization.XmlElementAttribute("businessKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI", ElementName = "businessKey")]
+        [System.Xml.Serialization.XmlElementAttribute("serviceKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI", ElementName = "serviceKey")]
+        [System.Xml.Serialization.XmlElementAttribute("tModelKey", typeof(string), Namespace = "urn:uddi-org:api_v3", DataType = "anyURI", ElementName = "tModelKey")]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
         public string[] Items
         {
@@ -5496,18 +5496,22 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("urn:uddi-org:api_v3:bindingKey")]
+        //[System.Xml.Serialization.XmlEnumAttribute("bindingKey")]
         bindingKey,
 
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("urn:uddi-org:api_v3:businessKey")]
+        //[System.Xml.Serialization.XmlEnumAttribute("businessKey")]
         businessKey,
 
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("urn:uddi-org:api_v3:serviceKey")]
+        //[System.Xml.Serialization.XmlEnumAttribute("serviceKey")]
         serviceKey,
 
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("urn:uddi-org:api_v3:tModelKey")]
+        //        [System.Xml.Serialization.XmlEnumAttribute("tModelKey")]
         tModelKey,
     }
 
