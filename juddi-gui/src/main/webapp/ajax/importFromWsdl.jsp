@@ -75,13 +75,13 @@
                     }
                     out.write("<i class=\"icon-thumbs-up icon-large\"></i> WSDL successfully parsed! This will create " + portTypeTModels.size()
                             + " portType tmodel(s), " + bindingTmodels.size()
-                            + " binding tModel(s), " + allBindings.size() +
+                            + " binding tModel(s), " + allBindings.size() +" binding(s), " +
                             ((createKeyGen==true) ? "one tModel Key Generator, " : "")
-                            + " binding(s), and " + businessServices.getBusinessService().size() + " service(s) attached to the business with "
+                            + " and " + businessServices.getBusinessService().size() + " service(s) attached to the business with "
                             + "the key " + StringEscapeUtils.escapeHtml(businessname) + " .<br>");
                     out.write("Services:<br><ul>");
                     for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-                        out.write("<li>Key:"
+                        out.write("<li>Key: "
                                 + StringEscapeUtils.escapeHtml(businessServices.getBusinessService().get(i).getServiceKey())
                                 + " <br>Name: "
                                 + StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessServices.getBusinessService().get(i).getName())));
@@ -104,7 +104,7 @@
 
                     out.write("tModels<br><ul>");
                     for (int i = 0; i < tmodels.size(); i++) {
-                        out.write("<li>Key:"
+                        out.write("<li>Key: "
                                 + StringEscapeUtils.escapeHtml(tmodels.get(i).getTModelKey())
                                 + " Name: "
                                 + StringEscapeUtils.escapeHtml(tmodels.get(i).getName().getValue())
@@ -140,9 +140,10 @@
                             biz.setBusinessServices(new BusinessServices());
                         }
                         for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
+                            businessServices.getBusinessService().get(i).setBusinessKey(biz.getBusinessKey());
                             biz.getBusinessServices().getBusinessService().add(businessServices.getBusinessService().get(i));
                         }
-                        result.append("Saving business " + StringEscapeUtils.escapeHtml( biz.getName().get(0).getValue())  + "..." + x.SaveBusinessDetails(biz));
+                        result.append("Saving business " + StringEscapeUtils.escapeHtml( biz.getName().get(0).getValue())  + " along with our imported service(s)..." + x.SaveBusinessDetails(biz));
                         out.write(result.toString());
                     }
 

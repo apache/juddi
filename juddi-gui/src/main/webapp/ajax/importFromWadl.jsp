@@ -79,13 +79,14 @@
                     if (x.getTmodelDetails(keygen.getTModelKey()) == null) {
                         createKeyGen = true;
                     }
-                    out.write("<i class=\"icon-thumbs-up icon-large\"></i> WADL successfully parsed! This will create " + portTypeTModels.size()
+                    out.write("<i class=\"icon-thumbs-up icon-large\"></i> WADL successfully parsed! This will create " 
+                            + portTypeTModels.size()
                             + "tModels, " + ((createKeyGen == true) ? "one tModel Key Generator, " : "")
                             + "1 binding, and 1 service(s) attached to the business with "
                             + "the key " + StringEscapeUtils.escapeHtml(businessname) + " .<br>");
                     out.write("Services:<br><ul>");
 
-                    out.write("<li>Key:"
+                    out.write("<li>Key: "
                             + StringEscapeUtils.escapeHtml(businessServices.getServiceKey())
                             + " <br>Name: "
                             + StringEscapeUtils.escapeHtml(Printers.ListNamesToString(businessServices.getName())));
@@ -147,6 +148,9 @@
 
                         biz.getBusinessServices().getBusinessService().add(businessServices);
 
+                          for (int i = 0; i < biz.getBusinessServices().getBusinessService().size(); i++) {
+                            biz.getBusinessServices().getBusinessService().get(i).setBusinessKey(biz.getBusinessKey());
+                        }
          //               PrintUDDI<BusinessEntity> sbp = new PrintUDDI<BusinessEntity>();
            //             result.append("<br>" + sbp.print(biz) + "<br>");
                                     
