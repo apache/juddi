@@ -59,7 +59,6 @@ namespace org.apache.juddi.v3.client.transport
 
         public AspNetTransport(string managerName, string nodeName, config.ClientConfig clientConfig)
         {
-            // TODO: Complete member initialization
             this.managerName = managerName;
             this.nodeName = nodeName;
             this.clientConfig = clientConfig;

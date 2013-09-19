@@ -121,8 +121,35 @@ namespace org.uddi.apiv3
             this.Url = url;
         }
     }
-}
 
+
+
+    /**
+     * Provides a basic enumeration of the predefinied useType values for UDDI service/bindingTemplates/accessPoints/useType
+     * @author unknown
+     */
+    public enum AccessPointType
+    {
+        /**
+             *  endPoint: designates that the accessPoint points to the actual service endpoint, i.e. the network address at which the Web service can be invoked,
+             */
+        endPoint,
+        /**
+         *  bindingTemplate: designates that the accessPoint contains a bindingKey that points to a different bindingTemplate entry. The value in providing this facility is seen when a business or entity wants to expose a service description (e.g. advertise that they have a service available that suits a specific purpose) that is actually a service that is described in a separate bindingTemplate record. This might occur when many service descriptions could benefit from a single service description,
+         */
+        bindingTemplate,
+        /**
+         * hostingRedirector: designates that the accessPoint can only be determined by querying another UDDI registry.  This might occur when a service is remotely hosted.
+         */
+        hostingDirector,
+        /**
+         * wsdlDeployment: designates that the accessPoint points to a remotely hosted WSDL document that already contains the necessary binding information, including the actual service endpoint.
+         *  The bindingTemplate of a Web service making use of indirection via a hostingRedirector Web service contains the bindingKey of the hosting redirector service’s bindingTemplate.  The hosting redirector’s bindingTemplate contains the accessPoint of the Hosting Redirector Web service
+         */
+        wsdlDeployment
+    }
+
+}
 
 namespace org.apache.juddi.apiv3
 {

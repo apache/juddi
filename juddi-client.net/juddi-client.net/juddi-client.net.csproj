@@ -45,6 +45,9 @@
     <Compile Include="bindings\events.cs" />
     <Compile Include="bindings\ext.cs" />
     <Compile Include="bindings\JUDDIApiService.cs" />
+    <Compile Include="org.apache.juddi.v3.client.annotations\AnnotationProcessor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.annotations\UDDIService.cs" />
+    <Compile Include="org.apache.juddi.v3.client.annotations\UDDIServiceBinding.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\BackgroundRegistration.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\ClientConfig.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\Properties.cs" />

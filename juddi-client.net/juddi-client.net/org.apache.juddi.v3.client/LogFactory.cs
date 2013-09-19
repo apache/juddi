@@ -108,7 +108,7 @@ namespace org.apache.juddi.v3.client.log
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

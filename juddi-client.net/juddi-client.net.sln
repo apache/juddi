@@ -10,6 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FEB955
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfServiceLifeCycle", "example\WcfServiceLifeCycle\WcfServiceLifeCycle.csproj", "{072F737E-86E5-4B8E-A7FB-864A3ABB0D9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspnetServiceLifeCycle", "example\AspnetServiceLifeCycle\AspnetServiceLifeCycle.csproj", "{53F50B81-088B-4593-9F1C-F3D3F499F28C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,14 @@ Global
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{072F737E-86E5-4B8E-A7FB-864A3ABB0D9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{072F737E-86E5-4B8E-A7FB-864A3ABB0D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{072F737E-86E5-4B8E-A7FB-864A3ABB0D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{072F737E-86E5-4B8E-A7FB-864A3ABB0D9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

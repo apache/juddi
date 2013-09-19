@@ -29,7 +29,7 @@ namespace org.apache.juddi.v3.client.config
         public static String replaceTokens(String s, Properties properties)
         {
 
-            if (properties == null || s == null) return s;
+            if (properties == null || String.IsNullOrEmpty(s)) return s;
             s = s.Replace("\\n", " ").Replace("\\r", "").Replace(" ", "");
             /* pattern that is multi-line (?m), and looks for a pattern of
              * ${token}, in a 'reluctant' manner, by using the ? to 
@@ -42,6 +42,10 @@ namespace org.apache.juddi.v3.client.config
             while (temp != null)
             {
                 String token = matcher.Value;
+                if (token.Length < 3)
+                {
+                    return s;
+                }
                 token = token.Substring(2, token.Length - 1);
                 String replacement = properties.getString(token);
                 if (replacement != null)

@@ -22,6 +22,7 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace org.apache.juddi.v3.client.config
 {
@@ -110,6 +111,13 @@ namespace org.apache.juddi.v3.client.config
                 config.getProperties().setProperty(it.Key.ToString(), it.Value.ToString());
             }
             readConfig(properties);
+        }
+
+        public void SaveConfiguration()
+        {
+            if (this.config == null)
+                throw new Exception("Config is not loaded, cannot save");
+            XmlConfiguration.SaveXmlConfiguration(this.configurationFile, this.config);
         }
 
         private Dictionary<String, UDDIClerk> readClerkConfig(uddi config, Dictionary<String, UDDINode> uddiNodes)
@@ -260,7 +268,7 @@ namespace org.apache.juddi.v3.client.config
                 log.warn("XRegistration cannot continue, no clerks are defined!");
                 return xRegistrations;
             }
-            if (config.client.clerks.xregister.business == null)
+            if (config.client.clerks.xregister==null || config.client.clerks.xregister.business == null)
                 return xRegistrations;
             if (config.client.clerks.xregister.business.Length > 0)
                 log.info("XRegistration " + config.client.clerks.xregister.business.Length + " business Keys");
@@ -294,7 +302,7 @@ namespace org.apache.juddi.v3.client.config
                 log.warn("XRegistration cannot continue, no clerks are defined!");
                 return xRegistrations;
             }
-            if (config.client.clerks.xregister.servicebinding == null)
+            if (config.client.clerks.xregister==null || config.client.clerks.xregister.servicebinding == null)
                 return xRegistrations;
             if (config.client.clerks.xregister.servicebinding.Length > 0)
                 log.info("XRegistration " + config.client.clerks.xregister.servicebinding.Length + " serviceBinding Keys");
@@ -378,10 +386,14 @@ namespace org.apache.juddi.v3.client.config
         {
             return xBusinessRegistrations;
         }
-
-        /* public Configuration getConfiguration() {
-             return config;
-         }*/
+        /// <summary>
+        /// gives access to the raw configuration xml structure
+        /// </summary>
+        /// <returns></returns>
+        public uddi getConfiguration()
+        {
+            return this.config;
+        }
 
         public String getClientName()
         {

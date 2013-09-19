@@ -23,6 +23,7 @@ using org.apache.juddi.v3.client.config;
 using System.Threading;
 using org.apache.juddi.v3.client.transport;
 using System.Configuration;
+using org.uddi.apiv3;
 
 namespace org.apache.juddi.v3.client
 {
@@ -176,7 +177,8 @@ namespace org.apache.juddi.v3.client
 						//homeClerk.saveClerk(clerk);
 					}
 				} else {
-					log.error("The client config needs to have one homeJUDDI node and found " + numberOfHomeJUDDIs);
+		
+			log.error("The client config needs to have one homeJUDDI node and found " + numberOfHomeJUDDIs);
 				}
 			} else {
 				log.debug("No home clerk found.");
@@ -204,24 +206,31 @@ namespace org.apache.juddi.v3.client
             }
             log.debug("Cross registration completed");
         }
-        /**
-         * Registers services to UDDI using a clerk, and the uddi.xml
-         * configuration.
-         */
+     
+        /// <summary>
+        /// Registers services to UDDI using a clerk, and the uddi.xml configuration.
+        /// For .NET users, the class names must be AssemblyQualifiedNames
+        /// </summary>
+        /// <pre>
+        /// Type objType = typeof(System.Array);
+        /// Console.WriteLine ("Qualified assembly name:\n   {0}.", objType.AssemblyQualifiedName.ToString()); 
+        /// </pre>
         public void registerAnnotatedServices()
         {
             Dictionary<String, UDDIClerk> uddiClerks = clientConfig.getUDDIClerks();
             if (uddiClerks.Count > 0)
             {
-                /*AnnotationProcessor ap = new AnnotationProcessor();
-                for (UDDIClerk uddiClerk : uddiClerks.values()) {
-                    Collection<BusinessService> services = ap.readServiceAnnotations(
-                            uddiClerk.getClassWithAnnotations(),uddiClerk.getUDDINode().getProperties());
-                    for (BusinessService businessService : services) {
-                        log.info("Node=" + uddiClerk.getUDDINode().getApiNode().getName());
-                        uddiClerk.register(businessService, uddiClerk.getUDDINode().getApiNode());
+                AnnotationProcessor ap = new AnnotationProcessor();
+                Dictionary<string, UDDIClerk>.Enumerator it=uddiClerks.GetEnumerator();
+                while (it.MoveNext()){
+                    UDDIClerk c=it.Current.Value;
+                    List<businessService> services = ap.readServiceAnnotations(
+                            c.getClassWithAnnotations(),c.getUDDINode().getProperties());
+                    foreach (businessService businessService in services) {
+                        log.info("Node=" + c.getUDDINode().getApiNode().name);
+                        c.register(businessService, c.getUDDINode().getApiNode());
                     }
-                }*/
+                }
             }
         }
         /**
@@ -234,14 +243,18 @@ namespace org.apache.juddi.v3.client
             Dictionary<String, UDDIClerk> clerks = clientConfig.getUDDIClerks();
             if (clerks.Count > 0)
             {
-                /*AnnotationProcessor ap = new AnnotationProcessor();
-                for (UDDIClerk clerk : clerks.values()) {
-                    Collection<BusinessService> services = ap.readServiceAnnotations(
-                            clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
-                    for (BusinessService businessService : services) {
-                        clerk.unRegisterService(businessService.getServiceKey(),clerk.getUDDINode().getApiNode());
+                AnnotationProcessor ap = new AnnotationProcessor();
+                Dictionary<string, UDDIClerk>.Enumerator it = clerks.GetEnumerator();
+                while (it.MoveNext())
+                {
+                    UDDIClerk c = it.Current.Value;
+                    List<businessService> services = ap.readServiceAnnotations(
+                            c.getClassWithAnnotations(), c.getUDDINode().getProperties());
+                    foreach (businessService businessService in services)
+                    {
+                        c.unRegisterService(businessService.serviceKey, c.getUDDINode().getApiNode());
                     }
-                }*/
+                }
             }
         }
 
@@ -259,29 +272,31 @@ namespace org.apache.juddi.v3.client
             Dictionary<String, UDDIClerk> clerks = clientConfig.getUDDIClerks();
             if (clerks.Count > 0)
             {
-                /*AnnotationProcessor ap = new AnnotationProcessor();
-                for (UDDIClerk clerk : clerks.values()) {
-                    Collection<BusinessService> services = ap.readServiceAnnotations(
-                            clerk.getClassWithAnnotations(),clerk.getUDDINode().getProperties());
-                    for (BusinessService businessService : services) {
-                        if (businessService.getBindingTemplates() != null) {
-                            List<BindingTemplate> bindingTemplates = businessService.getBindingTemplates().getBindingTemplate();
-                            for (BindingTemplate bindingTemplate : bindingTemplates) {
-                                clerk.unRegisterBinding(bindingTemplate.getBindingKey(), clerk.getUDDINode().getApiNode());
+                AnnotationProcessor ap = new AnnotationProcessor();
+                Dictionary<string, UDDIClerk>.Enumerator it = clerks.GetEnumerator();
+                while (it.MoveNext())
+                {
+                       UDDIClerk c = it.Current.Value;
+                    List<businessService> services = ap.readServiceAnnotations(
+                           c.getClassWithAnnotations(),c.getUDDINode().getProperties());
+                    foreach (businessService businessService in services) {
+                        if (businessService.bindingTemplates != null) {
+                            foreach (bindingTemplate bindingTemplate in businessService.bindingTemplates) {
+                                c.unRegisterBinding(bindingTemplate.bindingKey, c.getUDDINode().getApiNode());
                             }
                         }
                         if (removeServiceWithNoBindingTemplates) {
                             try {
-                                BusinessService existingService = clerk.findService(businessService.getServiceKey(), clerk.getUDDINode().getApiNode());
-                                if (existingService.getBindingTemplates()==null || existingService.getBindingTemplates().getBindingTemplate().size()==0) {
-                                    clerk.unRegisterService(businessService.getServiceKey(),clerk.getUDDINode().getApiNode());
+                                businessService existingService = c.findService(businessService.serviceKey, c.getUDDINode().getApiNode());
+                                if (existingService.bindingTemplates==null || existingService.bindingTemplates.Length==0) {
+                                    c.unRegisterService(businessService.serviceKey,c.getUDDINode().getApiNode());
                                 }
                             } catch (Exception e) {
                                 log.error(e.Message,e);
                             }
                         }
                     }
-                }*/
+                }
             }
 
         }

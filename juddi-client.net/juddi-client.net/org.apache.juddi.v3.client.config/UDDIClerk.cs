@@ -30,7 +30,7 @@ namespace org.apache.juddi.v3.client.config
     /// 
     /// </summary>
     /// 
-    public class UDDIClerk: IDisposable
+    public class UDDIClerk : IDisposable
     {
 
         private Log log = LogFactory.getLog(typeof(UDDIClerk));
@@ -49,8 +49,6 @@ namespace org.apache.juddi.v3.client.config
 
         public UDDIClerk()
         {
-
-            // TODO Auto-generated constructor stub
         }
 
         public UDDIClerk(org.apache.juddi.apiv3.clerk clerk)
@@ -311,10 +309,13 @@ namespace org.apache.juddi.v3.client.config
             return register(service, this.getUDDINode().getApiNode());
         }
 
-        /**
-         * Register a service.
-         *
-         */
+
+        /// <summary>
+        /// Register a service.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public org.uddi.apiv3.businessService register(org.uddi.apiv3.businessService service, org.apache.juddi.apiv3.node node)
         {
 
@@ -333,12 +334,8 @@ namespace org.apache.juddi.v3.client.config
                 {
                     serviceDetail = pub.save_service(saveService);
                 }
-
                 businessService = serviceDetail.businessService[0];
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Registering service " + service.name[0].Value + " completed.");
-                }
+                log.debug("Registering service " + service.name[0].Value + " completed.");
             }
             catch (Exception e)
             {
@@ -404,7 +401,7 @@ namespace org.apache.juddi.v3.client.config
             {
                 String authToken = getAuthToken(node.securityUrl);
                 delete_business deleteBusiness = new delete_business();
-                deleteBusiness.authInfo=(authToken);
+                deleteBusiness.authInfo = (authToken);
                 deleteBusiness.businessKey = new string[1];
                 deleteBusiness.businessKey[0] = (businessKey);
                 using (UDDI_Publication_SoapBinding pub = getUDDINode().getTransport().getUDDIPublishService(node.publishUrl))
@@ -436,15 +433,15 @@ namespace org.apache.juddi.v3.client.config
             {
                 String authToken = getAuthToken(node.securityUrl);
                 delete_service deleteService = new delete_service();
-                deleteService.authInfo=(authToken);
-                deleteService.serviceKey = new string[]{serviceKey};
+                deleteService.authInfo = (authToken);
+                deleteService.serviceKey = new string[] { serviceKey };
                 getUDDINode().getTransport().getUDDIPublishService(node.publishUrl).delete_service(deleteService);
             }
             catch (Exception e)
             {
                 log.error("Unable to register service " + serviceKey
                         + " ." + e.Message, e);
-            }   
+            }
         }
 
         public void unRegisterBinding(String bindingKey)
@@ -465,8 +462,8 @@ namespace org.apache.juddi.v3.client.config
             {
                 String authToken = getAuthToken(node.securityUrl);
                 delete_binding deleteBinding = new delete_binding();
-                deleteBinding.authInfo=(authToken);
-                deleteBinding.bindingKey = new string[]{bindingKey};
+                deleteBinding.authInfo = (authToken);
+                deleteBinding.bindingKey = new string[] { bindingKey };
                 getUDDINode().getTransport().getUDDIPublishService(node.publishUrl).delete_binding(deleteBinding);
             }
             catch (Exception e)
@@ -494,8 +491,8 @@ namespace org.apache.juddi.v3.client.config
             {
                 String authToken = getAuthToken(node.securityUrl);
                 org.uddi.apiv3.delete_tModel deleteTModel = new org.uddi.apiv3.delete_tModel();
-                deleteTModel.authInfo=(authToken);
-                deleteTModel.tModelKey=new string[]{tModelKey};
+                deleteTModel.authInfo = (authToken);
+                deleteTModel.tModelKey = new string[] { tModelKey };
                 getUDDINode().getTransport().getUDDIPublishService(node.publishUrl).delete_tModel(deleteTModel);
             }
             catch (Exception e)
@@ -517,8 +514,8 @@ namespace org.apache.juddi.v3.client.config
             {
                 String authToken = getAuthToken(node.securityUrl);
                 delete_subscription deleteSubscription = new delete_subscription();
-                deleteSubscription.authInfo=(authToken);
-                deleteSubscription.subscriptionKey = new string[]{subscriptionKey};
+                deleteSubscription.authInfo = (authToken);
+                deleteSubscription.subscriptionKey = new string[] { subscriptionKey };
                 getUDDINode().getTransport().getUDDISubscriptionService(node.securityUrl).delete_subscription(deleteSubscription);
             }
             catch (Exception e)
@@ -536,7 +533,7 @@ namespace org.apache.juddi.v3.client.config
         public tModelList findTModel(find_tModel findTModel, org.apache.juddi.apiv3.node node)
         {
 
-            findTModel.authInfo=(getAuthToken(node.securityUrl));
+            findTModel.authInfo = (getAuthToken(node.securityUrl));
             try
             {
                 tModelList tModelList = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).find_tModel(findTModel);
@@ -545,17 +542,17 @@ namespace org.apache.juddi.v3.client.config
             catch (Exception dr)
             {
                 log.error("", dr);
-//                DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+                //                DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, null, null);
             }
-            
+
             return null;
         }
 
         public tModelDetail getTModelDetail(String tModelKey)
         {
             get_tModelDetail getTModelDetail = new get_tModelDetail();
-            getTModelDetail.tModelKey = new string[]{tModelKey};
+            getTModelDetail.tModelKey = new string[] { tModelKey };
             return this.getTModelDetail(getTModelDetail);
         }
 
@@ -567,7 +564,7 @@ namespace org.apache.juddi.v3.client.config
         public tModelDetail getTModelDetail(get_tModelDetail getTModelDetail, org.apache.juddi.apiv3.node node)
         {
 
-            getTModelDetail.authInfo=(getAuthToken(node.securityUrl));
+            getTModelDetail.authInfo = (getAuthToken(node.securityUrl));
             try
             {
                 tModelDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).get_tModelDetail(getTModelDetail);
@@ -579,7 +576,7 @@ namespace org.apache.juddi.v3.client.config
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, null, null);
             }
-            
+
             return null;
         }
 
@@ -591,8 +588,8 @@ namespace org.apache.juddi.v3.client.config
         public businessService findService(String serviceKey, org.apache.juddi.apiv3.node node)
         {
             get_serviceDetail getServiceDetail = new get_serviceDetail();
-            getServiceDetail.serviceKey=new string[]{serviceKey};
-            getServiceDetail.authInfo=(getAuthToken(node.securityUrl));
+            getServiceDetail.serviceKey = new string[] { serviceKey };
+            getServiceDetail.authInfo = (getAuthToken(node.securityUrl));
             try
             {
                 serviceDetail sd = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).get_serviceDetail(getServiceDetail);
@@ -609,7 +606,7 @@ namespace org.apache.juddi.v3.client.config
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, serviceKey);
             }
-            
+
             return null;
         }
 
@@ -621,8 +618,8 @@ namespace org.apache.juddi.v3.client.config
         public bindingTemplate findServiceBinding(String bindingKey, org.apache.juddi.apiv3.node node)
         {
             get_bindingDetail getBindingDetail = new get_bindingDetail();
-            getBindingDetail.bindingKey = new string[]{bindingKey};
-            getBindingDetail.authInfo=(getAuthToken(node.securityUrl));
+            getBindingDetail.bindingKey = new string[] { bindingKey };
+            getBindingDetail.authInfo = (getAuthToken(node.securityUrl));
             try
             {
                 bindingDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).get_bindingDetail(getBindingDetail);
@@ -639,7 +636,7 @@ namespace org.apache.juddi.v3.client.config
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, bindingKey);
             }
-            
+
             return null;
         }
 
@@ -662,8 +659,8 @@ namespace org.apache.juddi.v3.client.config
         public businessEntity findBusiness(String businessKey, org.apache.juddi.apiv3.node node)
         {
             get_businessDetail getBusinessDetail = new get_businessDetail();
-            getBusinessDetail.businessKey = new string[]{businessKey};
-            getBusinessDetail.authInfo=(node.securityUrl);
+            getBusinessDetail.businessKey = new string[] { businessKey };
+            getBusinessDetail.authInfo = (node.securityUrl);
             try
             {
                 businessDetail bd = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).get_businessDetail(getBusinessDetail);
@@ -678,22 +675,22 @@ namespace org.apache.juddi.v3.client.config
             return null;
         }
 
-         /**
-         * Looks up the BusinessEntiry in the registry, will return null if is not
-         * found.
-         *
-         * @param businessKey - the key we are looking for
-         * @param node - the node which is going to be queried
-         * @return businessEntity is found, or null if not found.
-         * @throws RemoteException
-         * @throws TransportException
-         * @throws ConfigurationException
-         */
+        /**
+        * Looks up the BusinessEntiry in the registry, will return null if is not
+        * found.
+        *
+        * @param businessKey - the key we are looking for
+        * @param node - the node which is going to be queried
+        * @return businessEntity is found, or null if not found.
+        * @throws RemoteException
+        * @throws TransportException
+        * @throws ConfigurationException
+        */
         public relatedBusinessesList findRelatedBusinesses(String businessKey, org.apache.juddi.apiv3.node node)
         {
             find_relatedBusinesses findRelatedBusinesses = new find_relatedBusinesses();
-            findRelatedBusinesses.Item=(businessKey);
-            findRelatedBusinesses.authInfo=(node.securityUrl);
+            findRelatedBusinesses.Item = (businessKey);
+            findRelatedBusinesses.authInfo = (node.securityUrl);
             try
             {
                 relatedBusinessesList rbl = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).find_relatedBusinesses(findRelatedBusinesses);
@@ -705,7 +702,7 @@ namespace org.apache.juddi.v3.client.config
                 //DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
                 //checkForErrorInDispositionReport(report, DispositionReport.E_INVALID_KEY_PASSED, businessKey);
             }
-            
+
             return null;
         }
         /*
@@ -738,7 +735,7 @@ namespace org.apache.juddi.v3.client.config
             if ((authToken != null && !"".Equals(authToken)) && (tokenBirthDate != null && DateTime.Now > tokenBirthDate.AddMilliseconds(600000)))
             {
                 discard_authToken discardAuthToken = new discard_authToken();
-                discardAuthToken.authInfo=(authToken);
+                discardAuthToken.authInfo = (authToken);
                 using (UDDI_Security_SoapBinding sec = getUDDINode().getTransport().getUDDISecurityService(endpointURL))
                 {
                     getUDDINode().getTransport().getUDDISecurityService(endpointURL).discard_authToken(discardAuthToken);
@@ -749,21 +746,22 @@ namespace org.apache.juddi.v3.client.config
             {
                 tokenBirthDate = new DateTime();
                 get_authToken getAuthToken = new get_authToken();
-                getAuthToken.userID=(getPublisher());
+                getAuthToken.userID = (getPublisher());
                 if (isEncrypted)
                 {
                     if (String.IsNullOrEmpty(cryptoProvider))
                     {
                         log.error("Credentials are encrypted but no cryptoProvider was defined in the config file!");
-                    }else
+                    }
+                    else
                         try
                         {
-                            getAuthToken.cred=(CryptorFactory.getCryptor(this.cryptoProvider).decrypt(getPassword()));
+                            getAuthToken.cred = (CryptorFactory.getCryptor(this.cryptoProvider).decrypt(getPassword()));
                         }
                         catch (Exception ex)
                         {
                             log.error("Unable to decrypt credentials! sending it as is", ex);
-                            getAuthToken.cred=(getPassword());
+                            getAuthToken.cred = (getPassword());
                         }
                 }
                 else
@@ -786,8 +784,8 @@ namespace org.apache.juddi.v3.client.config
             {
                 log.info("Sending node " + node.name + " info to jUDDI " + getUDDINode().getName());
                 org.apache.juddi.apiv3.save_noodeInfo savenode = new org.apache.juddi.apiv3.save_noodeInfo();
-                savenode.authInfo=(getAuthToken(node.securityUrl));
-                savenode.node=new apiv3.node[]{node};
+                savenode.authInfo = (getAuthToken(node.securityUrl));
+                savenode.node = new apiv3.node[] { node };
                 using (org.apache.juddi.apiv3.JUDDIApiService juddi = getUDDINode().getTransport().getJUDDIApiService(node.juddiApiUrl))
                 {
                     nodeDetail = juddi.save_Node(savenode);
@@ -798,7 +796,7 @@ namespace org.apache.juddi.v3.client.config
                 log.error("Unable to save node " + node.name
                         + " ." + e.Message, e);
             }
-            
+
             return nodeDetail;
         }
 
@@ -961,22 +959,22 @@ namespace org.apache.juddi.v3.client.config
             }
             tModel tm = new tModel();
             tm.name = new name();
-            tm.name.Value=(DescriptiveName);
-            tm.name.lang=(DescriptiveNameLanguage);
+            tm.name.Value = (DescriptiveName);
+            tm.name.lang = (DescriptiveNameLanguage);
             tm.categoryBag = new categoryBag();
             keyedReference kr = new keyedReference();
-            kr.tModelKey=(UDDIConstants.KEY_GENERATOR_TMODEL);
-            kr.keyName=(UDDIConstants.KEY_GENERATOR);
-            kr.keyValue=(UDDIConstants.KEY_GENERATOR_VALUE);
+            kr.tModelKey = (UDDIConstants.KEY_GENERATOR_TMODEL);
+            kr.keyName = (UDDIConstants.KEY_GENERATOR);
+            kr.keyValue = (UDDIConstants.KEY_GENERATOR_VALUE);
             tm.categoryBag.Items = new object[] { kr };
             overviewDoc
                 overviewDoc = new overviewDoc();
             overviewURL overviewUrl = new overviewURL();
-            overviewUrl.useType=("text");
-            overviewUrl.Value=("http://uddi.org/pubs/uddi_v3.htm#keyGen");
-            overviewDoc.Items= new object[]{overviewUrl};
-            tm.overviewDoc = new overviewDoc[]{overviewDoc};
-            tm.tModelKey=(partitionName.ToLower());
+            overviewUrl.useType = ("text");
+            overviewUrl.Value = ("http://uddi.org/pubs/uddi_v3.htm#keyGen");
+            overviewDoc.Items = new object[] { overviewUrl };
+            tm.overviewDoc = new overviewDoc[] { overviewDoc };
+            tm.tModelKey = (partitionName.ToLower());
             return tm;
         }
 

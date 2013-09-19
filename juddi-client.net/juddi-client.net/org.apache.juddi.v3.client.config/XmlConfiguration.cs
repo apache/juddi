@@ -46,5 +46,24 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
+        public static void SaveXmlConfiguration(string filename, uddi config)
+        {
+           
+            using (StringWriter sr = new StringWriter())
+            {
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(uddi));
+                    xs.Serialize(sr, config);
+                    File.WriteAllText(filename, sr.ToString());
+                }
+                catch (Exception ex)
+                {
+                    LogFactory.getLog(typeof(XmlConfiguration)).error("Error saving config file from " + filename + " ", ex);
+                    throw ex;
+                }
+            }
+        }
+
     }
 }
