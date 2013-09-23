@@ -95,7 +95,8 @@ namespace org.apache.juddi.v3.client.config
                         }
                         else
                         {
-                            List<bindingTemplate> l = service.bindingTemplates.ToList();
+                            List<bindingTemplate> l = new List<bindingTemplate>();
+                            l.AddRange(service.bindingTemplates);
                             l.Add(bindingTemplate);
                             service.bindingTemplates = l.ToArray();
                         }
@@ -174,7 +175,8 @@ namespace org.apache.juddi.v3.client.config
                         {
                             bindingTemplate.tModelInstanceDetails = (new tModelInstanceInfo[] { instanceInfo });
                         }
-                        List<tModelInstanceInfo> l = bindingTemplate.tModelInstanceDetails.ToList();
+                        List<tModelInstanceInfo> l = new List<tModelInstanceInfo>();
+                        l.AddRange(bindingTemplate.tModelInstanceDetails);
                         l.Add(instanceInfo);
                         bindingTemplate.tModelInstanceDetails = l.ToArray();
 
