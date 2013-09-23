@@ -5,7 +5,7 @@ using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 using System.Threading;
 

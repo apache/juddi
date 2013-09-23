@@ -16,7 +16,7 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
 
 /// extends the generated uddi-client codebase, which is generated via the xsd tool from juddi-client.xsd in the Java project
