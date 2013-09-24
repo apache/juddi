@@ -267,6 +267,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         logger.info("joePublisherUpdateBusiness_HTTP_FIND_BUSINESS");
         try {
             removeAllExistingSubscriptions(authInfoJoe);
+            Thread.sleep(5000);
             UDDISubscriptionListenerImpl.notifcationMap.clear();
             UDDISubscriptionListenerImpl.notificationCount = 0;
             tckTModel.saveJoePublisherTmodel(authInfoJoe);
