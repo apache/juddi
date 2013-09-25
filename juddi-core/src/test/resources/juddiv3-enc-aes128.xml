@@ -95,6 +95,11 @@
 			<start>
 				<buffer>0</buffer>
 			</start>
+			<acceptableLagtime>1000</acceptableLagtime>
+			<maxTries>3</maxTries>
+			<!-- 10 minutes -->
+			<maxTriesResetInterval>600000</maxTriesResetInterval>
+			<sendAuthTokenWithResultList>false</sendAuthTokenWithResultList>
 		</notification>
 		<!-- All Authentication related settings -->
 		<auth>

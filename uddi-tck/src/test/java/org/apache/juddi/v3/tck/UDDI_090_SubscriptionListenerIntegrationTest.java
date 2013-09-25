@@ -509,4 +509,10 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
             mailServer.stop();
         }
     }
+    
+    
+    //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, then the node SHOULD provide a chunkToken with results.  
+    
+    
+    //TODO  If no more results are pending, the value of the chunkToken MUST be "0".
 }

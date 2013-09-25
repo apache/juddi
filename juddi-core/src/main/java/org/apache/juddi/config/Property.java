@@ -1,5 +1,6 @@
 package org.apache.juddi.config;
 
+import org.apache.juddi.subscription.SubscriptionNotifier;
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
 import org.apache.juddi.v3.auth.LdapExpandedAuthenticator;
 import org.apache.juddi.v3.auth.LdapSimpleAuthenticator;
@@ -111,10 +112,23 @@ public interface Property {
     
     public final static String JUDDI_NOTIFICATION_START_BUFFER = "juddi.notification.start.buffer";
     public final static String JUDDI_NOTIFICATION_INTERVAL = "juddi.notification.interval";
-    public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME = "juddi.notification.acceptable.lagtime";
-    public final static String JUDDI_NOTIFICATION_MAX_TRIES = "juddi.notification.max.tries";
-    public final static String JUDDI_NOTIFICATION_LIST_RESET_INTERVAL = "juddi.notification.list.reset.interval";
-    
+    /**
+     * default value = 1000
+     * @see SubscriptionNotifier
+     */
+    public final static String JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME = "juddi.notification.acceptableLagtime";
+    /**
+     * maximum delivery count
+     * @see SubscriptionNotifier
+     */
+    public final static String JUDDI_NOTIFICATION_MAX_TRIES = "juddi.notification.maxTries";
+    public final static String JUDDI_NOTIFICATION_LIST_RESET_INTERVAL = "juddi.notification.maxTriesResetInterval";
+    /**
+     * send an auth token with the result set? default is false
+     * @see SubscriptionNotifier
+     * @since 3.2
+     */
+    public final static String JUDDI_NOTIFICATION_SENDAUTHTOKEN="juddi.notification.sendAuthTokenWithResultList";
     public final static String JUDDI_JNDI_REGISTRATION = "juddi.jndi.registration";
     public final static String JUDDI_RMI_PORT = "juddi.rmi.port";
     public final static String JUDDI_RMI_REGISTRATION = "juddi.rmi.registration";

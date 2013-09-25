@@ -70,6 +70,10 @@ public class SubscriptionNotifier extends TimerTask {
 	private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
 	private int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);
 	private long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour
+        /**
+         * @since 3.2
+         */
+        private boolean sendToken = AppConfig.getConfiguration().getBoolean(Property.JUDDI_NOTIFICATION_SENDAUTHTOKEN, false); 
 	private UDDISubscriptionImpl subscriptionImpl = new UDDISubscriptionImpl();
 	private Boolean alwaysNotify = false;
 	private Date desiredDate = null;
@@ -83,6 +87,10 @@ public class SubscriptionNotifier extends TimerTask {
 	private static Map<String,Integer> badNotifications= new ConcurrentHashMap<String,Integer>();
 	private static Date lastBadNotificationReset = new Date();
 	
+        /**
+         * default constructor
+         * @throws ConfigurationException 
+         */
 	public SubscriptionNotifier() throws ConfigurationException {
 		super();
 		timer = new Timer(true);
@@ -152,6 +160,7 @@ public class SubscriptionNotifier extends TimerTask {
 						GetSubscriptionResults getSubscriptionResults = 
 							buildGetSubscriptionResults(subscription, notificationDate);
 						if (getSubscriptionResults!=null) {
+                                                    //TODO chunking
 							getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 							UddiEntityPublisher publisher = new UddiEntityPublisher();
 							publisher.setAuthorizedName(subscription.getAuthorizedName());
@@ -200,7 +209,7 @@ public class SubscriptionNotifier extends TimerTask {
 		long lagTime = System.currentTimeMillis() - scheduleExecutionTime;
 		if (lagTime <= acceptableLagTime || acceptableLagTime < 0) {
 			return true;
-		} else {
+	 	} else {
 			log.debug("NotificationTimer is lagging " + lagTime + " milli seconds behind. A lag time "
 					+ "which exceeds an acceptable lagtime of " + acceptableLagTime + "ms indicates "
 					+ "that the registry server is under load or was in sleep mode. We are therefore skipping this notification "
@@ -324,19 +333,22 @@ public class SubscriptionNotifier extends TimerTask {
 //				resultList.getServiceList().setServiceInfos(null);
 //			}
 			body.setSubscriptionResultsList(resultList);
-			String authorizedName = modelSubscription.getAuthorizedName();
-			UDDISecurityImpl security = new UDDISecurityImpl();
-			
-			if (authorizedName != null) { // add a security token if needed
-				try {
-					//obtain a token for this publisher
-					org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);
-					body.setAuthInfo(token.getAuthInfo());
-				} catch (DispositionReportFaultMessage e) {
-					body.setAuthInfo("Failed to generate token, please contact UDDI admin");
-					log.error(e.getMessage(),e);
-				}
-			}
+                        if (sendToken)
+                        {
+                            String authorizedName = modelSubscription.getAuthorizedName();
+                            UDDISecurityImpl security = new UDDISecurityImpl();
+
+                            if (authorizedName != null) { // add a security token if needed
+                                    try {
+                                            //obtain a token for this publisher
+                                            org.uddi.api_v3.AuthToken token = security.getAuthToken(authorizedName);
+                                            body.setAuthInfo(token.getAuthInfo());
+                                    } catch (DispositionReportFaultMessage e) {
+                                            body.setAuthInfo("Failed to generate token, please contact UDDI admin");
+                                            log.error(e.getMessage(),e);
+                                    }
+                            }
+                        }
 			
 			if (bindingTemplate!=null) {
 				if (AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType()) ||
@@ -362,19 +374,18 @@ public class SubscriptionNotifier extends TimerTask {
 							if (badNotifications.containsKey(resultList.getSubscription().getSubscriptionKey()))
 								badNotifications.remove(resultList.getSubscription().getSubscriptionKey());
 						}
-					} catch (WebServiceException e) {
-						if (e.getCause() instanceof IOException) {
+                                        }
+                                        catch (Exception e) {
+                                                if (e.getCause() instanceof IOException) {
 							addBadNotificationToList(subscriptionKey, bindingTemplate.getAccessPointUrl());
 							//we could not notify so compensate the transaction above
 							modelSubscription.setLastNotified(lastNotifiedDate);
 							tx.begin();
 							em.persist(modelSubscription);
 							tx.commit();
-						} else {
-							log.warn("Unexpected WebServiceException " + e.getMessage() + e.getCause());
+						//} else {
+							//log.warn("Unexpected WebServiceException " + e.getMessage() + e.getCause());
 						}
-						
-					} catch (Exception e) {
 						log.warn("Unexpected notification exception:" + e.getMessage() + e.getCause());
 					}
 				} else {
