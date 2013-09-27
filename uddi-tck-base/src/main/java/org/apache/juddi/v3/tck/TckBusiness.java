@@ -285,7 +285,7 @@ public class TckBusiness
         }
         
         public void saveBusiness(String authInfo, String businessXML, String businessKey) {
-            saveBusiness(authInfo, businessXML, businessKey, false);
+            saveBusiness(authInfo, businessXML, businessKey, true);
         }
 	public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
 		try {
@@ -294,8 +294,8 @@ public class TckBusiness
 
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
 			sb.getBusinessEntity().add(beIn);
-			
-			publication.saveBusiness(sb);
+                    BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                    logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
 	
 			// Now get the entity and check the values
 			GetBusinessDetail gb = new GetBusinessDetail();
