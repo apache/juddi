@@ -288,11 +288,14 @@ public class TckBusiness
             saveBusiness(authInfo, businessXML, businessKey, true);
         }
 	public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
+            logger.info("attempting to save business " + businessKey + " from " + businessXML);
 		try {
 			SaveBusiness sb = new SaveBusiness();
 			sb.setAuthInfo(authInfo);
 
 			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
+                        if (beIn==null)
+                            throw new Exception("Unload to load source xml document from " + businessXML);
 			sb.getBusinessEntity().add(beIn);
                     BusinessDetail saveBusiness = publication.saveBusiness(sb);
                     logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
