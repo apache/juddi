@@ -299,6 +299,7 @@ public class TckBusiness
 			sb.getBusinessEntity().add(beIn);
                     BusinessDetail saveBusiness = publication.saveBusiness(sb);
                     logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                    JAXB.marshal(saveBusiness, System.out);
 	
 			// Now get the entity and check the values
 			GetBusinessDetail gb = new GetBusinessDetail();
