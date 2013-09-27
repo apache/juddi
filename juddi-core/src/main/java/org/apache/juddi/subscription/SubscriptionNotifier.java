@@ -160,17 +160,32 @@ public class SubscriptionNotifier extends TimerTask {
 						GetSubscriptionResults getSubscriptionResults = 
 							buildGetSubscriptionResults(subscription, notificationDate);
 						if (getSubscriptionResults!=null) {
-                                                    //TODO chunking
 							getSubscriptionResults.setSubscriptionKey(subscription.getSubscriptionKey());
 							UddiEntityPublisher publisher = new UddiEntityPublisher();
 							publisher.setAuthorizedName(subscription.getAuthorizedName());
 							SubscriptionResultsList resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+                                                        String token = resultList.getChunkToken();
 							if (resultListContainsChanges(resultList)) {
 								log.debug("We have a change and need to notify " + subscription.getSubscriptionKey());
+                                                                resultList.setChunkToken(null);
+                                                               //Note that the chunkToken is not returned with this structure for this API.  
 								notify(getSubscriptionResults,resultList, notificationDate);
 							} else {
 								log.debug("No changes where recorded, no need to notify.");
 							}
+                                                        while (!token.equalsIgnoreCase("0"))
+                                                        {
+                                                            resultList = subscriptionImpl.getSubscriptionResults(getSubscriptionResults, publisher);
+                                                            if (resultListContainsChanges(resultList)) {
+                                                                    log.debug("We have a change and need to notify " + subscription.getSubscriptionKey());
+                                                                    resultList.setChunkToken(null);
+                                                                   //Note that the chunkToken is not returned with this structure for this API.  
+                                                                    notify(getSubscriptionResults,resultList, notificationDate);
+                                                            } else {
+                                                                    log.debug("No changes where recorded, no need to notify.");
+                                                            }
+                                                        }
+                                                            
 						}
 					} catch (Exception e) {
 						log.error("Could not obtain subscriptionResult for subscriptionKey " 

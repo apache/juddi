@@ -175,6 +175,8 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 			if (logger.isDebugEnabled()) logger.debug("filter=" + modelSubscription.getSubscriptionFilter());
 			
 			SubscriptionResultsList result = new SubscriptionResultsList();
+                        result.setChunkToken("0");
+                        //chunkToken:  Optional element used to retrieve subsequent groups of data when the first invocation of this API indicates more data is available.  This occurs when a chunkToken is returned whose value is not "0" in the validValuesList structure described in the next section.  To retrieve the next chunk of data, the chunkToken returned should be used as an argument to the next invocation of this API.
 			result.setCoveragePeriod(body.getCoveragePeriod());
 	
 			// The subscription structure is required output for the results

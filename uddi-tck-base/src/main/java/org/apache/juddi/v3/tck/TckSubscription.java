@@ -198,14 +198,15 @@ public class TckSubscription
 			
 			String chunkToken = "";
 			int iterations = 0;
-			while (chunkToken != null) {
+                        //JUDDI-655
+			while (chunkToken != null && !chunkToken.equalsIgnoreCase("0")) {
 				iterations++;
-				
+                                
 				getSubResultsIn.setChunkToken(chunkToken);
 				SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
 				if (result == null)
 					Assert.fail("Null result from getSubscriptionResults operation");
-				
+				Assert.assertNotNull("Chunk token should either be not null or '0'",result.getChunkToken());
 				TModelList tmodelList = result.getTModelList();
 				if (tmodelList == null)
 					Assert.fail("No result from getSubscriptionResults operation on chunk attempt " + iterations);
@@ -247,14 +248,14 @@ public class TckSubscription
 			
 			String chunkToken = "";
 			int iterations = 0;
-			while (chunkToken != null) {
+			while (chunkToken != null && !chunkToken.equalsIgnoreCase("0")) {
 				iterations++;
 				
 				getSubResultsIn.setChunkToken(chunkToken);
 				SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
 				if (result == null)
 					Assert.fail("Null result from getSubscriptionResults operation");
-				
+				Assert.assertNotNull("Chunk token should either be not null or '0'",result.getChunkToken());
 				TModelDetail tmodelDetail = result.getTModelDetail();
 				if (tmodelDetail == null)
 					Assert.fail("No result from getSubscriptionResults operation on chunk attempt " + iterations);
