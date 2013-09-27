@@ -267,6 +267,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         logger.info("joePublisherUpdateBusiness_HTTP_FIND_BUSINESS");
         try {
             removeAllExistingSubscriptions(authInfoJoe);
+            DumpAllBusinesses();
             Thread.sleep(5000);
             UDDISubscriptionListenerImpl.notifcationMap.clear();
             UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -274,14 +275,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
             tckBusiness.saveJoePublisherBusiness(authInfoJoe);
             tckBusinessService.saveJoePublisherService(authInfoJoe);
             //Saving the Listener Service
+            logger.info("Saving Joe's callback endpoint ********** ");
             tckSubscriptionListener.saveService(authInfoJoe, "uddi_data/subscriptionnotifier/listenerService.xml", httpPort);
             //Saving the Subscription
+            logger.info("Saving Joe's subscription********** ");
             tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, "uddi_data/subscriptionnotifier/subscription2.xml");
             //Changing the service we subscribed to "JoePublisherService"
-            Thread.sleep(1000);
+            DumpAllBusinesses();
+            Thread.sleep(2000);
             logger.info("Saving Mary's Business ********** ");
             tckBusiness.saveMaryPublisherBusiness(authInfoMary);
-
+            DumpAllBusinesses();
             //waiting up to 100 seconds for the listener to notice the change.
             String test = "";
             for (int i = 0; i < 200; i++) {
@@ -294,11 +298,11 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                     System.out.print(test);
                 }
             }
+            DumpAllBusinesses();
             if (UDDISubscriptionListenerImpl.notificationCount == 0) {
                 Assert.fail("No Notification was sent");
             }
             if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("uddi:uddi.marypublisher.com:marybusinessone")) {
-                DumpAllBusinesses();
                 Assert.fail("Notification does not contain the correct service");
             }
 
@@ -316,7 +320,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
     }
 
     private static void DumpAllBusinesses() {
-
+        logger.warn("Dumping the business/service list for debugging");
         FindService fs = new FindService();
         fs.setFindQualifiers(new FindQualifiers());
         fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
