@@ -1,19 +1,12 @@
 package org.apache.juddi.v3.client;
 
-import org.uddi.api_v3.CategoryBag;
-import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.Name;
-import org.uddi.api_v3.OverviewDoc;
-import org.uddi.api_v3.OverviewURL;
-import org.uddi.api_v3.TModel;
-
 /**
  * This file was borrowed from juddi-core's constants file with modifications
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public interface UDDIConstants {
-
+ 
     public static final int MAX_xml_lang_length = 26;
     public static final int MAX_description_length = 255;
     public static final int MAX_discoveryURL_length = 4096;
