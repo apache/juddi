@@ -21,6 +21,15 @@ using System;
 namespace org.uddi.apiv3
 {
 
+    public partial class keyedReference
+    {
+        public keyedReference(String key, String name, String value)
+        {
+            this.tModelKey = key;
+            this.keyName = name;
+            this.keyValue = value;
+        }
+    }
     public partial class name
     {
         public name()

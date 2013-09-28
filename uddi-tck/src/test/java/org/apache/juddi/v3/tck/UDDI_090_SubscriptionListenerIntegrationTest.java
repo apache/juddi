@@ -262,7 +262,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         }
     }
 
-    @Test
+ //   @Test
     public void joePublisherUpdateBusiness_HTTP_FIND_BUSINESS() {
         logger.info("joePublisherUpdateBusiness_HTTP_FIND_BUSINESS");
         try {
@@ -282,21 +282,30 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
             tckSubscriptionListener.saveNotifierSubscription(authInfoJoe, "uddi_data/subscriptionnotifier/subscription2.xml");
             //Changing the service we subscribed to "JoePublisherService"
             DumpAllBusinesses();
+            logger.info("Clearing the inbox********** ");
+            UDDISubscriptionListenerImpl.notifcationMap.clear();
+            UDDISubscriptionListenerImpl.notificationCount = 0;
             Thread.sleep(2000);
             logger.info("Saving Mary's Business ********** ");
             tckBusiness.saveMaryPublisherBusiness(authInfoMary);
             DumpAllBusinesses();
-            //waiting up to 100 seconds for the listener to notice the change.
+            //waiting up to 10 seconds for the listener to notice the change.
             String test = "";
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 20; i++) {
                 Thread.sleep(500);
                 System.out.print(".");
                 if (UDDISubscriptionListenerImpl.notificationCount > 0) {
-                    logger.info("Received Notification");
-                    break;
+                    //logger.info("Received Notification");
+                    //break;
                 } else {
                     System.out.print(test);
                 }
+            }
+            logger.info("RX " + UDDISubscriptionListenerImpl.notificationCount + " notifications");
+            Iterator<String> it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+            while (it.hasNext())
+            {
+                logger.info("Notification: " + it.next());
             }
             DumpAllBusinesses();
             if (UDDISubscriptionListenerImpl.notificationCount == 0) {
@@ -331,7 +340,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 logger.warn("NO SERVICES RETURNED!");
             } else {
                 for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                    logger.warn(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue() + " "
+                    logger.warn(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue() + " lang="
+                            + findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getLang() + " "
                             + findService.getServiceInfos().getServiceInfo().get(i).getServiceKey() + " "
                             + findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey());
                 }

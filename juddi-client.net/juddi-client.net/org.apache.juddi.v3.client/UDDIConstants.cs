@@ -652,5 +652,9 @@ namespace org.apache.juddi.v3.client
         public static String PROTOCOL_SOAP12 = "uddi:uddi.org:protocol:soap12";
 
 
+
+        public static  int MAX_xml_lang_length = 26;
+        public static int MAX_description_length = 255;
+        public static int MAX_discoveryURL_length = 4096;
     }
 }
