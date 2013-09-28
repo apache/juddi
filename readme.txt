@@ -33,4 +33,4 @@ juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat
 juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh
 
 To build the .NET components of jUDDI
-TBD
+TBD 
