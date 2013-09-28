@@ -36,7 +36,6 @@ import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeletePublisherAssertions;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
-import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.GetRegisteredInfo;
 import org.uddi.api_v3.InfoSelection;
 import org.uddi.api_v3.PublisherAssertion;
@@ -565,6 +564,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
 
+                log.info("Inbound save business request for key " + body.getBusinessEntity().get(0).getBusinessKey());
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
