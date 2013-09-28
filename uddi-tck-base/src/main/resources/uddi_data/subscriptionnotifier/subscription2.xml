@@ -23,7 +23,7 @@
       <findQualifiers>
         <findQualifier>approximateMatch</findQualifier>
       </findQualifiers>
-      <name xml:lang="en">%</name>
+      <name >%</name>
     </find_business>
   </subscriptionFilter>
   <bindingKey xmlns="urn:uddi-org:api_v3">uddi:uddi.joepublisher.com:bindinglistener</bindingKey>
