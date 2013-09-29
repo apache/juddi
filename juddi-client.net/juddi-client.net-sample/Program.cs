@@ -1,4 +1,5 @@
-﻿/*
+﻿using net.java.dev.wadl;
+/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +17,7 @@
  */
 using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
+using org.apache.juddi.v3.client.mapping;
 using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;
@@ -29,7 +31,7 @@ namespace juddi_client.net_sample
     {
         static void Main(string[] args)
         {
-            UDDIClient clerkManager=null;
+            UDDIClient clerkManager = null;
             Transport transport = null;
             UDDIClerk clerk = null;
             try
@@ -41,6 +43,7 @@ namespace juddi_client.net_sample
 
                 org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
                 org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+                org.uddi.apiv3.UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
 
                 clerk = clerkManager.getClerk("default");
 
@@ -55,7 +58,76 @@ namespace juddi_client.net_sample
                 {
                     Console.WriteLine(bl.businessInfos[i].name[0].Value);
                 }
-               
+
+
+                //Wadl Import example
+
+                application app = WADL2UDDI.ParseWadl("sample.wadl");
+                List<Uri> urls = WADL2UDDI.GetBaseAddresses(app);
+                Uri url = urls[0];
+                String domain = url.Host;
+
+                tModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
+                //save the keygen
+                save_tModel stm = new save_tModel();
+                stm.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                stm.tModel = new tModel[] { keygen };
+
+                publish.save_tModel(stm);
+                Properties properties = new Properties();
+
+                properties.put("keyDomain", domain);
+                properties.put("businessName", domain);
+                properties.put("serverName", url.Host);
+                properties.put("serverPort", url.Port.ToString());
+                //wsdlURL = wsdlDefinition.getDocumentBaseURI();
+                WADL2UDDI wadl2UDDI = new WADL2UDDI(clerk, properties);
+
+                businessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
+
+
+                HashSet<tModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(url.ToString(), app);
+
+                //When parsing a WSDL, there's really two things going on
+                //1) convert a bunch of stuff (the portTypes) to tModels
+                //2) convert the service definition to a BusinessService
+
+                //Since the service depends on the tModel, we have to save the tModels first
+                save_tModel tms = new save_tModel();
+                tms.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                HashSet<tModel>.Enumerator it = portTypeTModels.GetEnumerator();
+                List<tModel> ts = new List<tModel>();
+                while (it.MoveNext())
+                {
+                    ts.Add(it.Current);
+                }
+                tModel[] tmodels = ts.ToArray();
+
+                tms.tModel = tmodels;
+                if (tms.tModel.Length > 0)
+                    //important, you'll need to save your new tModels, or else saving the business/service may fail
+                    publish.save_tModel(tms);
+
+
+
+                //finaly, we're ready to save all of the services defined in the WSDL
+                //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
+
+
+
+
+                save_business sb = new save_business();
+                //  sb.setAuthInfo(rootAuthToken.getAuthInfo());
+                businessEntity be = new businessEntity();
+                be.businessKey = (businessServices.businessKey);
+                //TODO, use some relevant here
+                be.name = new name[] { new name(domain, "en") };
+
+
+                be.businessServices = new businessService[] { businessServices };
+                sb.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                sb.businessEntity = new businessEntity[] { be };
+                publish.save_business(sb);
             }
             catch (Exception ex)
             {
@@ -74,6 +146,9 @@ namespace juddi_client.net_sample
                 if (clerk != null)
                     clerk.Dispose();
             }
+
+
+
             Console.WriteLine("Press any key to exit");
             Console.Read();
         }

@@ -1,4 +1,5 @@
-﻿/*
+﻿using org.apache.juddi.v3.client.mapping;
+/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,18 +72,6 @@ namespace org.apache.juddi.v3.client.config
             return serviceKey;
         }
 
-        /*public static String getBindingKey(Properties properties, QName serviceName, String portName, URL bindingUrl) {
-		
-            String bindingKey = null;
-            try {
-                URI bindingURI = bindingUrl.toURI();
-                bindingKey =  getBindingKey(properties, serviceName, portName, bindingURI);
-            } catch (URISyntaxException e) {
-			
-            }
-            return bindingKey;
-		
-        }*/
 
 
 
@@ -94,26 +83,34 @@ namespace org.apache.juddi.v3.client.config
          * @param serviceName
          * @param portName
          * @return the bindingKey
-	
-        public static String getBindingKey(Properties properties, QName serviceName, String portName, URI bindingUrl) {
+    */
+
+        public static String getBindingKey(Properties properties, QName serviceName, String portName, Uri bindingUrl)
+        {
             Properties tempProperties = new Properties();
             tempProperties.putAll(properties);
             tempProperties.put("serviceName", serviceName.getLocalPart());
             tempProperties.put("portName", portName);
-            int port = bindingUrl.getPort();
-            if (port==-1) {
-                if ("http".equals(bindingUrl.getScheme())) {
+            int port = bindingUrl.Port;
+            if (port < 0)
+            {
+                if ("http".Equals(bindingUrl.Scheme, StringComparison.CurrentCultureIgnoreCase))
+                {
                     port = 80;
-                } else if ("https".equals(bindingUrl.getScheme())) {
+                }
+                else if ("https".Equals(bindingUrl.Scheme))
+                {
                     port = 443;
                 }
             }
-            tempProperties.put("serverPort", String.valueOf(port));
+            if (!tempProperties.containsKey("serverPort"))
+                tempProperties.put("serverPort", port.ToString());
+
             //Constructing the binding Key
             String keyFormat = properties.getProperty(Property.BINDING_KEY_FORMAT, DEFAULT_BINDING_KEY_FORMAT);
-            String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).toLowerCase();
+            String bindingKey = TokenResolver.replaceTokens(keyFormat, tempProperties).ToLower();
             return bindingKey;
-        } */
+        }
     }
 
 }

@@ -38,26 +38,28 @@ namespace org.apache.juddi.v3.client.config
             //Pattern pattern = Pattern.compile("(?m)\\$\\{.*?\\}");
             //Matcher matcher = pattern.matcher(s);
             Match matcher = System.Text.RegularExpressions.Regex.Match(s, "(?m)\\$\\{.*?\\}");
-            Match temp = matcher.NextMatch();
-            while (temp != null)
+            //Match temp = matcher.NextMatch();
+            //while (temp != null && matcher.Success)
+            foreach (Match m in Regex.Matches(s, "(?m)\\$\\{.*?\\}"))
             {
-                String token = matcher.Value;
+                String token = m.Value;
                 if (token.Length < 3)
                 {
                     return s;
                 }
-                token = token.Substring(2, token.Length - 1);
+                token = token.Substring(2,token.Length - 3);
                 String replacement = properties.getString(token);
                 if (replacement != null)
                 {
                     log.debug("Found token " + token + " and replacement value " + replacement);
-                    s = s.Replace("\\$\\{" + token + "\\}", replacement);
+                    s = s.Replace("${" + token + "}", replacement);
                 }
                 else
                 {
                     log.error("Found token " + token + " but could not obtain its value. Data: " + s);
                 }
-                temp = matcher.NextMatch();
+              //  temp = matcher.NextMatch();
+                
 
             }
             log.debug("Data after token replacement: " + s);

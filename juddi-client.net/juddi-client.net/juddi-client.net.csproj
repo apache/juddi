@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-	    <Reference Include="System.Core" />
+    <Reference Include="System.Core" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -68,6 +68,8 @@
     <Compile Include="org.apache.juddi.v3.client.crypto\CryptorFactory.cs" />
     <Compile Include="org.apache.juddi.v3.client.crypto\DigSigUtil.cs" />
     <Compile Include="org.apache.juddi.v3.client.crypto\TripleDESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\wadl.cs" />
+    <Compile Include="org.apache.juddi.v3.client.mapping\WADL2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\WSDL2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />

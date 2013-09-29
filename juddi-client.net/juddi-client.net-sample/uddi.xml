@@ -47,7 +47,7 @@
     </nodes>
 
     <clerks registerOnStartup="false">
-      <clerk name="default" node="default" publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
+      <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
       <clerk name="medroot" node="med"     publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
       <xregister>
         <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>

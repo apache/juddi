@@ -133,7 +133,7 @@ namespace org.apache.juddi.v3.client.config
 
         public string getProperty(string name, string defaultvalue)
         {
-            if (!map.ContainsKey(name)) return null;
+            if (!map.ContainsKey(name)) return defaultvalue;
             String s = map[name] as String;
             if (s == null)
                 return defaultvalue;
