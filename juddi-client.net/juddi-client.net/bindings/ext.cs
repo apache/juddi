@@ -21,6 +21,25 @@ using System;
 namespace org.uddi.apiv3
 {
 
+    public partial class overviewURL
+    {
+        
+        public overviewURL(String value, String usetype)
+        {
+            this.Value = value;
+            this.useType = useType;
+        }
+    }
+
+    public partial class description
+    {
+        public description() { }
+        public description(String value, String lang)
+        {
+            this.lang = lang;
+            this.Value = value;
+        }
+    }
     public partial class keyedReference
     {
         public keyedReference(String key, String name, String value)

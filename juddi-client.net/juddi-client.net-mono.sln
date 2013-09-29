@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net", "juddi-client.net\juddi-client.net-mono.csproj", "{C3D005CD-6C26-49FD-A4D8-08699B66AF6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-mono", "juddi-client.net\juddi-client.net-mono.csproj", "{C3D005CD-6C26-49FD-A4D8-08699B66AF6F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-sample", "juddi-client.net-sample\juddi-client.net-sample.csproj", "{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}"
 EndProject
@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FEB955
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-mono-test", "juddi-client.net-mono-test\juddi-client.net-mono-test.csproj", "{51AA5A04-E92F-42FF-8752-F551F582E9A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51AA5A04-E92F-42FF-8752-F551F582E9A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51AA5A04-E92F-42FF-8752-F551F582E9A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51AA5A04-E92F-42FF-8752-F551F582E9A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51AA5A04-E92F-42FF-8752-F551F582E9A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
