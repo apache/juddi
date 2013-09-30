@@ -27,19 +27,26 @@ namespace org.apache.juddi.v3.client.crypto
     /// 3DES Ciphers
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    internal sealed class TripleDESCryptor : Cryptor
+    public sealed class TripleDESCryptor : Cryptor
     {
 
+        /**
+         * TripleDESCryptoServiceProvider
+        Legal min key size = 128
+        Legal max key size = 192
+        Legal min block size = 64
+        Legal max block size = 64
+         * */
         public string encrypt(string toEncrypt)
         {
             byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
 
             // Get the key from config file
 
-
+            //192 64 s6RDEWiv+mQ= iFGC3Nx1XvUCfDbHTKg8BEPIlJ+oLM7l
             TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.IV = Convert.FromBase64String("/MM3sV9v3dQ=");
-            tdes.Key = Convert.FromBase64String("P4KBZkrUbFfXKyuOGVqpGA==");
+            tdes.IV = Convert.FromBase64String("s6RDEWiv+mQ=");
+            tdes.Key = Convert.FromBase64String("iFGC3Nx1XvUCfDbHTKg8BEPIlJ+oLM7l");
 
             ICryptoTransform cTransform = tdes.CreateEncryptor();
             //transform the specified region of bytes array to resultArray
@@ -55,10 +62,10 @@ namespace org.apache.juddi.v3.client.crypto
         public string decrypt(string str)
         {
             //get the byte code of the string
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(str);
+            byte[] toEncryptArray =  Convert.FromBase64String(str);
             TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.IV = Convert.FromBase64String("/MM3sV9v3dQ=");
-            tdes.Key = Convert.FromBase64String("P4KBZkrUbFfXKyuOGVqpGA==");
+            tdes.IV = Convert.FromBase64String("s6RDEWiv+mQ=");
+            tdes.Key = Convert.FromBase64String("iFGC3Nx1XvUCfDbHTKg8BEPIlJ+oLM7l");
 
 
             ICryptoTransform cTransform = tdes.CreateDecryptor();

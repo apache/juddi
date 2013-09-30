@@ -32,6 +32,11 @@ namespace org.apache.juddi.v3.client.crypto
             return 128;
         }
 
+        protected internal override int GetBlockSize()
+        {
+            return 128;
+        }
+
         protected internal override byte[] GetKey()
         {
             return Convert.FromBase64String("oT5ljhVnMVQMnV2E7BOj7Q==");

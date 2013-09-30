@@ -30,6 +30,17 @@ namespace org.apache.juddi.v3.client.crypto
     {
         static Dictionary<String, Cryptor> cache = new Dictionary<string, Cryptor>();
 
+        public static readonly string AES128 = "AES128Cryptor";
+        public static readonly string AES256 = "AES256Cryptor";
+        public static readonly string TripleDES = "TripleDESCryptor";
+        /// <summary>
+        /// known implementations
+        /// org.apache.juddi.v3.client.crypto.AES128Cryptor
+        /// org.apache.juddi.v3.client.crypto.AES256Cryptor
+        /// org.apache.juddi.v3.client.crypto.TripleDESCryptor
+        /// </summary>
+        /// <param name="clazz"></param>
+        /// <returns></returns>
         public static Cryptor getCryptor(string clazz)
         {
             if (cache.ContainsKey(clazz))

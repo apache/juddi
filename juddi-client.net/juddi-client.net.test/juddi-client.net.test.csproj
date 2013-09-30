@@ -56,13 +56,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SerializationTests.cs" />
+    <Compile Include="CryptoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializationTests.cs" />
+    <Compile Include="WADL2UDDITests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\example\AspnetServiceLifeCycle\AspnetServiceLifeCycle.csproj">
+      <Project>{53f50b81-088b-4593-9f1c-f3d3f499f28c}</Project>
+      <Name>AspnetServiceLifeCycle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\example\WcfServiceLifeCycle\WcfServiceLifeCycle.csproj">
+      <Project>{072f737e-86e5-4b8e-a7fb-864a3abb0d9a}</Project>
+      <Name>WcfServiceLifeCycle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\juddi-client.net-sample\juddi-client.net-sample.csproj">
+      <Project>{7fa52b63-f70a-4ec7-8390-cc7c1c9c6b84}</Project>
+      <Name>juddi-client.net-sample</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\juddi-client.net\juddi-client.net.csproj">
+      <Project>{c3d005cd-6c26-49fd-a4d8-08699b66af6f}</Project>
+      <Name>juddi-client.net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

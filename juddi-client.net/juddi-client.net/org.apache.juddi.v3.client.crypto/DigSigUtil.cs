@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using System.Text;
 
-namespace org.apache.juddi.client.org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.crypto
 {
     /// <summary>
     /// A utility class for signing and verifying JAXB Objects, such as UDDI  entities.   

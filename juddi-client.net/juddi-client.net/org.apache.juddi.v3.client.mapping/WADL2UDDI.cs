@@ -32,11 +32,11 @@ namespace org.apache.juddi.v3.client.mapping
             {
                 if (!properties.containsKey("keyDomain"))
                 {
-                    throw new ConfigurationException("Property keyDomain is a required property when using WADL2UDDI.");
+                    throw new ConfigurationErrorsException("Property keyDomain is a required property when using WADL2UDDI.");
                 }
                 if (!properties.containsKey("businessKey") && !properties.containsKey("businessName"))
                 {
-                    throw new ConfigurationException("Either property businessKey, or businessName, is a required property when using WADL2UDDI.");
+                    throw new ConfigurationErrorsException("Either property businessKey, or businessName, is a required property when using WADL2UDDI.");
                 }
                 if (!properties.containsKey("nodeName"))
                 {
@@ -47,7 +47,7 @@ namespace org.apache.juddi.v3.client.mapping
                     }
                     else
                     {
-                        throw new ConfigurationException("Property nodeName is not defined and is a required property when using WADL2UDDI.");
+                        throw new ConfigurationErrorsException("Property nodeName is not defined and is a required property when using WADL2UDDI.");
                     }
                 }
             }

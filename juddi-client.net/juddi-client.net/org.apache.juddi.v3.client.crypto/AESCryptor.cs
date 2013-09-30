@@ -29,13 +29,13 @@ namespace org.apache.juddi.v3.client.crypto
     /// <see cref="AES128"/>
     /// <see cref="AES256"/>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    internal  abstract class AESCryptor : Cryptor
+    public  abstract class AESCryptor : Cryptor
     {
 
         protected internal abstract int GetKeySize();
         protected internal abstract byte[] GetKey();
         protected internal abstract byte[] GetIV();
-
+        protected internal abstract int GetBlockSize();
         public string encrypt(string str)
         {
           
@@ -55,7 +55,7 @@ namespace org.apache.juddi.v3.client.crypto
         }
 
         
-        internal static byte[] EncryptStringToBytes(string plainText, byte[] key, byte[] iv)
+        internal byte[] EncryptStringToBytes(string plainText, byte[] key, byte[] iv)
         {
             // Check arguments.
             if (plainText == null || plainText.Length <= 0)
@@ -71,11 +71,14 @@ namespace org.apache.juddi.v3.client.crypto
                 throw new ArgumentNullException("key");
             }
 
+
             byte[] encrypted;
             // Create an RijndaelManaged object
             // with the specified key and IV.
             using (var rijAlg = new RijndaelManaged())
             {
+                rijAlg.BlockSize = this.GetBlockSize();
+                rijAlg.KeySize = this.GetKeySize();
                 rijAlg.Key = key;
                 rijAlg.IV = iv;
 
@@ -103,7 +106,7 @@ namespace org.apache.juddi.v3.client.crypto
 
         }
 
-        internal static string DecryptStringFromBytes(byte[] cipherText, byte[] key, byte[] iv)
+        internal  string DecryptStringFromBytes(byte[] cipherText, byte[] key, byte[] iv)
         {
             // Check arguments.
             if (cipherText == null || cipherText.Length <= 0)
@@ -121,6 +124,8 @@ namespace org.apache.juddi.v3.client.crypto
             // with the specified key and IV.
             using (var rijAlg = new RijndaelManaged())
             {
+                rijAlg.BlockSize = this.GetBlockSize();
+                rijAlg.KeySize = this.GetKeySize();
                 rijAlg.Key = key;
                 rijAlg.IV = iv;
 

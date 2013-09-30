@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Security.Cryptography;
 using System.Text;
 
 namespace org.apache.juddi.v3.client.crypto
@@ -26,7 +26,7 @@ namespace org.apache.juddi.v3.client.crypto
     /// AES256 Cipher
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    internal sealed class AES256Cryptor : AESCryptor
+    public sealed class AES256Cryptor : AESCryptor
     {
 
         protected internal override int GetKeySize()
@@ -34,14 +34,58 @@ namespace org.apache.juddi.v3.client.crypto
             return 256;
         }
 
+        protected internal override int GetBlockSize()
+        {
+            return 256;
+        }
+
+        public String generateKey()
+        {
+
+           /* AesManaged
+        Legal min key size = 128
+        Legal max key size = 256
+        Legal min block size = 128
+        Legal max block size = 128*/
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.KeySize = 256;
+                rijAlg.BlockSize = 256;
+                rijAlg.GenerateKey();
+                rijAlg.GenerateIV();
+                return rijAlg.KeySize + " " + rijAlg.BlockSize + " " + Convert.ToBase64String(rijAlg.IV, Base64FormattingOptions.None) + " " + 
+                    Convert.ToBase64String(rijAlg.Key, Base64FormattingOptions.None);
+            }
+
+        }
         protected internal override byte[] GetKey()
         {
-            return Convert.FromBase64String("K48QmIsRr0xQD+WOwyg+fJWGS8K1M82V8XKn+/IzPo0=");
+            //256 256 
+            
+            //
+            //OI3xpA3ju175rBFDbgNek9fvQOXMhLNpktgm4+mDvvQ=
+            //tK47Y1FE1JragvCmanbzsA== 
+            //yEt6Jn1rEnFFmWduUEu7fxki31k3/TPOzhzHXrKhd4U=
+
+            //256 
+            //gAyHDYd4hwYru2ofV41KEw== 
+            //2LsXyePZKqYRyxks/9mXiiMewNo5Ai8KDz8FNSi/OvU=
+
+
+            //zR5gURV+ZeJ9pzYIymEwkg==
+            //xgFJ6zCSBB7OAWo3v2y5H1JO4VYlRyxA5Z4gIOOBUzY=
+
+            //9jjQB84Xx1fA5D0vS8EWqA==
+            //RLzwr0D+wnoOPcl4lHPPILPN1TLaH89u0la2+GFWIFY=
+
+            //auWb4YCYAuZQ/joSieu8bg==
+            //VlfjcIggVX5QlvwAKzKmaI92q1ADZgop5RRsQUW8sXQ=
+            return Convert.FromBase64String("OI3xpA3ju175rBFDbgNek9fvQOXMhLNpktgm4+mDvvQ=");
         }
 
         protected internal override byte[] GetIV()
         {
-            return Convert.FromBase64String("Ro80zsaX0a4PLtyXuFKq6Q==");
+            return Convert.FromBase64String("19BWwWbtICJkI04WpBkMBkURJTTRB0gIyUyiVgXcaCw= ");
         }
     }
 }
