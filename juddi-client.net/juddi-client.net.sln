@@ -1,11 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-# SharpDevelop 4.3
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FEB955BD-38E3-4816-94D3-EBF62F4CBB82}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net", "juddi-client.net\juddi-client.net.csproj", "{C3D005CD-6C26-49FD-A4D8-08699B66AF6F}"
 EndProject
@@ -39,10 +35,10 @@ Global
 		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53F50B81-088B-4593-9F1C-F3D3F499F28C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
