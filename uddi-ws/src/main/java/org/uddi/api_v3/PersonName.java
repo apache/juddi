@@ -58,6 +58,23 @@ public class PersonName implements Serializable{
     protected String lang;
 
     /**
+     * default
+     */
+    public PersonName()
+    {}
+    
+    /**
+     * convenience wrapper
+     * @since 3.2
+     * @param Value
+     * @param Lang 
+     */
+    public PersonName(String Value, String Lang)
+    {
+        this.value = Value;
+        this.lang = Lang;
+    }
+    /**
      * Gets the value of the value property.
      * 
      * @return

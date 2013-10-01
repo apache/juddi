@@ -707,7 +707,7 @@ public class UDDIClerk implements Serializable {
     /**
      * Gets an auth token from the uddi server using the uddi auth token
      * 
-     * notes: changed to protected to have access from the subscription callback API 8/20/2013 AO
+     * notes: changed to public to have access from the subscription callback API 8/20/2013 AO
      * @param endpointURL
      * @return
      * @throws TransportException
@@ -915,14 +915,14 @@ public class UDDIClerk implements Serializable {
 
     /**
      *A helper class to create a tModel key generator.<br>
-     * Why would I want a key generator? In UDDIv3, you're support to specify what you want the keys (unique identifiers) to be, however there's
+     * Why would I want a key generator? In UDDIv3, you're suppose to specify what you want the keys (unique identifiers) to be, however there's
      * a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
      * Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
-     * should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method.<br><br>
+     * should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method. <br><br>
      * In addition, no changes are made to the UDDI server. You'll have to do that one using code similar to this:
      * <pre>
      * UDDIClerk clerk = ...
-     * TModel keygen = UDDIClerk.createKeyGenator("mydomain.com", "my domain", "en");
+     * TModel keygen = UDDIClerk.createKeyGenator("uddi:mydomain.com:keygenerator", "my domain", "en");
      * clerk.register(keygen);
      * 
      * @param partitionName think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
@@ -941,11 +941,13 @@ public class UDDIClerk implements Serializable {
             throw new IllegalArgumentException();
         }
         if (!partitionName.startsWith("uddi:")) {
-            throw new IllegalArgumentException("partitionName must have a 'uddi:' prefix");
+            //throw new IllegalArgumentException("partitionName must have a 'uddi:' prefix");
+            partitionName = "uddi:" + partitionName;
 
         }
         if (!partitionName.endsWith(":keygenerator")) {
-            throw new IllegalArgumentException("partitionName must have a ':keyGenerator' postfix");
+            //throw new IllegalArgumentException("partitionName must have a ':keygenerator' postfix");
+            partitionName =  partitionName + ":keygenerator";
         }
         TModel tm = new TModel();
         tm.setName(new Name());
