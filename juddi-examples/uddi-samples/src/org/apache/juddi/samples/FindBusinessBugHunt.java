@@ -170,7 +170,7 @@ public class FindBusinessBugHunt {
         org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
         fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
         fb.setFindQualifiers(fq);
-        fb.getName().add((new Name(UDDIConstants.WILDCARD, "")));
+        fb.getName().add((new Name(UDDIConstants.WILDCARD, null)));
         return inquiry.findBusiness(fb);
     }
 

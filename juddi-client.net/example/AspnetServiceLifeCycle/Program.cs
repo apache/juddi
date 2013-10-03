@@ -32,6 +32,9 @@ namespace AspnetServiceLifeCycle
     {
         static void Main(string[] args)
         {
+            //Normally, this coder snippet would be executed by some kind of web service life cycle listener
+            //such as global.asax
+            //a web service contructor
             Type t = typeof(HelloImpl);
             Console.Out.WriteLine(t.AssemblyQualifiedName);
             UDDIClient clerkManager = null;
@@ -49,6 +52,8 @@ namespace AspnetServiceLifeCycle
             clerk = clerkManager.getClerk("default");
             clerkManager.registerAnnotatedServices();
             HelloImpl x = new HelloImpl();
+
+            //this is more of an "onShutdown" event
             clerkManager.unRegisterAnnotatedServices();
             Thread.Sleep(15000);
 
