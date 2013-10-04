@@ -302,7 +302,7 @@ namespace juddi_client.net_mono_test
         [Test]
         public void xr_subscriptionFilterws()
         {
-
+            Console.Out.WriteLine("xr_subscriptionFilterws");
             subscriptionFilter r = new subscriptionFilter();
             UDDIClient clerkManager = null;
             Transport transport = null;

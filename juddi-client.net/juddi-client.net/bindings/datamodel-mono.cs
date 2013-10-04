@@ -2764,7 +2764,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlNode[] Any
         {
             get
@@ -2913,7 +2913,7 @@ namespace org.uddi.apiv3
         private string algorithmField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        //[System.Xml.Serialization.XmlAnyElementAttribute()]
         [System.Xml.Serialization.XmlElementAttribute("XPath", typeof(string))]
         public object[] Items
         {
@@ -2971,7 +2971,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlNode[] Any
         {
             get
@@ -3059,7 +3059,7 @@ namespace org.uddi.apiv3
         private string idField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+        //[System.Xml.Serialization.XmlAnyElementAttribute()]
         [System.Xml.Serialization.XmlElementAttribute("KeyName", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("KeyValue", typeof(KeyValueType))]
         [System.Xml.Serialization.XmlElementAttribute("MgmtData", typeof(string))]
@@ -3138,7 +3138,7 @@ namespace org.uddi.apiv3
         private string[] textField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+       // [System.Xml.Serialization.XmlAnyElementAttribute()]
         [System.Xml.Serialization.XmlElementAttribute("DSAKeyValue", typeof(DSAKeyValueType))]
         [System.Xml.Serialization.XmlElementAttribute("RSAKeyValue", typeof(RSAKeyValueType))]
         public object Item
@@ -3346,7 +3346,7 @@ namespace org.uddi.apiv3
         private ItemsChoiceType1[] itemsElementNameField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         [System.Xml.Serialization.XmlElementAttribute("PGPKeyID", typeof(byte[]), DataType = "base64Binary")]
         [System.Xml.Serialization.XmlElementAttribute("PGPKeyPacket", typeof(byte[]), DataType = "base64Binary")]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemsElementName")]
@@ -3482,7 +3482,7 @@ namespace org.uddi.apiv3
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlElement Any
         {
             get
@@ -3510,7 +3510,7 @@ namespace org.uddi.apiv3
         private ItemsChoiceType[] itemsElementNameField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         [System.Xml.Serialization.XmlElementAttribute("X509CRL", typeof(byte[]), DataType = "base64Binary")]
         [System.Xml.Serialization.XmlElementAttribute("X509Certificate", typeof(byte[]), DataType = "base64Binary")]
         [System.Xml.Serialization.XmlElementAttribute("X509IssuerSerial", typeof(X509IssuerSerialType))]
@@ -3665,7 +3665,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlNode[] Any
         {
             get
@@ -5549,7 +5549,7 @@ namespace org.uddi.apiv3
         private string idField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlElement[] Items
         {
             get
@@ -6066,7 +6066,7 @@ namespace org.uddi.apiv3
         private System.Xml.XmlElement[] anyField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
+      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlElement[] Any
         {
             get
