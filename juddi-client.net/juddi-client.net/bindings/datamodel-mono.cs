@@ -2764,7 +2764,7 @@ namespace org.uddi.apiv3
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-      //  [System.Xml.Serialization.XmlAnyElementAttribute()]
+        [System.Xml.Serialization.XmlAnyElementAttribute()]
         public System.Xml.XmlNode[] Any
         {
             get
