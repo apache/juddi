@@ -3,7 +3,7 @@ if "%NUNIT_HOME%"=="" (
 	set NUNIT_HOME=C:\juddi\NUnit-2.6.1
 	echo WARN - NUNIT_HOME is not defined, using default value, which is probably wrong
 )
-if not exist %NUNIT_HOME%   (
+if not exist "%NUNIT_HOME%"   (
 	echo The path %NUNIT_HOME% does not exist, download Nunit and setup the environment variable
 	goto exit
 )
@@ -31,5 +31,9 @@ call shutdown.bat
 cd ..\..\..\..\..
 echo Exit code %exitcode%
 exit /b %exitcode%
+goto ok
 
 :exit
+exit /b 1
+
+:ok
