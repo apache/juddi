@@ -52,9 +52,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\juddi-client.net\juddi-client.net.csproj">
+    <ProjectReference Include="..\juddi-client.net\juddi-client.net-mono.csproj">
       <Project>{c3d005cd-6c26-49fd-a4d8-08699b66af6f}</Project>
-      <Name>juddi-client.net</Name>
+      <Name>juddi-client.net-mono</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

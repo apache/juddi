@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspnetServiceLifeCycle", "e
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net.test", "juddi-client.net.test\juddi-client.net.test.csproj", "{0AD62F71-EC84-4133-87FA-C27083F4D884}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-integration.test", "juddi-client.net-integration.test\juddi-client.net-integration.test.csproj", "{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AD62F71-EC84-4133-87FA-C27083F4D884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

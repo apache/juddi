@@ -52,16 +52,16 @@
     <None Include="sample.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\juddi-client.net\juddi-client.net.csproj">
-      <Project>{c3d005cd-6c26-49fd-a4d8-08699b66af6f}</Project>
-      <Name>juddi-client.net</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="uddi.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\juddi-client.net\juddi-client.net.csproj">
+      <Project>{c3d005cd-6c26-49fd-a4d8-08699b66af6f}</Project>
+      <Name>juddi-client.net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
