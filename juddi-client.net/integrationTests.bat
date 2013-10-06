@@ -28,6 +28,10 @@ echo Exit code captured as %exitcode%
 cd ..
 cd juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\
 call shutdown.bat
+ping 192.0.2.2 -n 1 -w 1000 > nul
+call shutdown.bat
+ping 192.0.2.2 -n 1 -w 1000 > nul
+call shutdown.bat
 cd ..\..\..\..\..
 echo Exit code %exitcode%
 exit /b %exitcode%
