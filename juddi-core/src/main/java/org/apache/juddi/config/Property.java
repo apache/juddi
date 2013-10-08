@@ -137,7 +137,7 @@ public interface Property {
     public final static String JUDDI_EMAIL_PREFIX = "juddi.mail.smtp.prefix";
     public final static String JUDDI_EMAIL_FROM   = "juddi.mail.smtp.from";
     public final static String DEFAULT_JUDDI_EMAIL_PREFIX = "juddi.";
-    public final static String DEFAULT_CRYPTOR = "org.apache.juddi.cryptor.DefaultCryptor";
+    public final static String DEFAULT_CRYPTOR = "org.apache.juddi.v3.client.cryptor.DefaultCryptor";
     public final static String DEFAULT_USERSFILE = "juddi-users.properties";
     public final static String DEFAULT_XML_USERSFILE = "juddi-users.xml";
     /**

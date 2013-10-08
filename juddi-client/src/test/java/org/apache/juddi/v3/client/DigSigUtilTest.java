@@ -18,8 +18,10 @@ package org.apache.juddi.v3.client;
 import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.xml.crypto.dsig.CanonicalizationMethod;
-import org.apache.juddi.v3.client.crypto.DigSigUtil;
+
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.BindingTemplate;
@@ -39,7 +41,7 @@ import org.w3._2000._09.xmldsig_.SignatureType;
  */
 public class DigSigUtilTest {
 
-    org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+    org.apache.juddi.v3.client.cryptor.DigSigUtil ds = null;
 
     public DigSigUtilTest() throws Exception {
         Default();

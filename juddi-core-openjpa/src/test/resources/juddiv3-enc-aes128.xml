@@ -87,7 +87,7 @@
 		<uuidgen>org.apache.juddi.uuidgen.DefaultUUIDGen</uuidgen>
 
 		<!-- jUDDI Cryptor implementation to use-->
-		<cryptor>org.apache.juddi.cryptor.DefaultCryptor</cryptor>
+		<cryptor>org.apache.juddi.v3.client.cryptor.DefaultCryptor</cryptor>
 
 		<!-- jUDDI Key Generator to use-->
 		<keygenerator>org.apache.juddi.keygen.DefaultKeyGenerator</keygenerator>

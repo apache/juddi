@@ -15,7 +15,7 @@
  */
 package org.apache.juddi.v3.client.config;
 
-import org.apache.juddi.v3.client.crypto.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.junit.Assert;
 import org.junit.Test;

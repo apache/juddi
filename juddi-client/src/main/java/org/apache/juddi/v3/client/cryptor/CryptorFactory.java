@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.v3.client.crypto;
+package org.apache.juddi.v3.client.cryptor;
 
 import java.util.HashMap;
 import java.util.Map;

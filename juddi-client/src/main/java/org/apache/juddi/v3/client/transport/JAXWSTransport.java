@@ -31,7 +31,7 @@ import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.crypto.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.apache.juddi.v3.client.mapping.WADL2UDDI;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;

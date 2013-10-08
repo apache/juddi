@@ -42,11 +42,11 @@
         <clerks registerOnStartup="false">
             <!-- root -->
             <clerk name="default" node="default" publisher="root" password="7d3e79ca453f4ebfd36e22afe029c3a2"
-                          isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"
+                          isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor"
             />
             <!-- password -->
             <clerk name="medroot" node="med"     publisher="root" password="18604180541d172f9827e08c998db568"
-                      isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"
+                      isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor"
             /> 
             <xregister>
                 <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>

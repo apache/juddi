@@ -30,12 +30,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.API_010_PublisherTest;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.cryptor.AES128Cryptor;
-import org.apache.juddi.cryptor.AES256Cryptor;
-import org.apache.juddi.cryptor.Cryptor;
+import org.apache.juddi.v3.client.cryptor.AES128Cryptor;
+import org.apache.juddi.v3.client.cryptor.AES256Cryptor;
+import org.apache.juddi.v3.client.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
-import org.apache.juddi.cryptor.DefaultCryptor;
-import org.apache.juddi.cryptor.TripleDESCrytor;
+import org.apache.juddi.v3.client.cryptor.DefaultCryptor;
+import org.apache.juddi.v3.client.cryptor.TripleDESCrytor;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator;
 import org.apache.juddi.v3.auth.JUDDIAuthenticator;
@@ -188,7 +188,7 @@ public class AuthenticatorTest
                 
 	{
             System.out.println("testBadCryptedXMLDocAuthenticator");
-		Authenticator auth = new CryptedXMLDocAuthenticator();
+ 		Authenticator auth = new CryptedXMLDocAuthenticator();
 		auth.authenticate("anou_mana","badpass");
 	}
         

@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
-import org.apache.juddi.cryptor.Cryptor;
+import org.apache.juddi.v3.client.cryptor.Cryptor;
 import org.apache.juddi.cryptor.CryptorFactory;
 import org.apache.juddi.v3.error.AuthenticationException;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -104,6 +104,10 @@ public class CryptedXMLDocAuthenticator extends XMLDocAuthenticator {
 			logger.error("Bad Padding Exception in crypting the password", e);
 			throw new FatalErrorException(new ErrorMessage(
 					"errors.auth.cryptor.BadPadding", e.getMessage()));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new FatalErrorException(new ErrorMessage(
+					"errors.auth.cryptor.BlockSize", e.getMessage()));
 		}
 	}
 	/**

@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXB;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -55,8 +56,10 @@ import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import netscape.javascript.JSObject;
-import org.apache.juddi.v3.client.crypto.DigSigUtil;
+
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
@@ -351,7 +354,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
         if (j != null) {
             try {
                 //sign it
-                org.apache.juddi.v3.client.crypto.DigSigUtil ds = new DigSigUtil();
+                org.apache.juddi.v3.client.cryptor.DigSigUtil ds = new DigSigUtil();
                 ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
                 PrivateKey key = (PrivateKey) keyStore.getKey((String) jList1.getSelectedValue(), null);
 

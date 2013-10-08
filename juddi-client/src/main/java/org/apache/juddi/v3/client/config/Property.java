@@ -64,7 +64,7 @@ public class Property
 	}
         
         
-        public final static String DEFAULT_CRYPTOR = "org.apache.juddi.v3.client.crypto.DefaultCryptor";
+        public final static String DEFAULT_CRYPTOR = "org.apache.juddi.v3.client.cryptor.DefaultCryptor";
         
 
 }

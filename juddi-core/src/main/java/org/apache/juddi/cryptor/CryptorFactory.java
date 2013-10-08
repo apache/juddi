@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.v3.client.cryptor.Cryptor;
 
 /**
  * Used to create the org.apache.juddi.cryptor.Cryptor implementation

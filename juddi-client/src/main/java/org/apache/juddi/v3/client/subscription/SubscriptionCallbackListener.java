@@ -20,15 +20,17 @@ import java.rmi.RemoteException;
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.ws.Endpoint;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.crypto.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;

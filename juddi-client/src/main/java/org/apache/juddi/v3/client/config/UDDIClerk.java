@@ -43,7 +43,7 @@ import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.client.UDDIConstants;
-import org.apache.juddi.v3.client.crypto.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.WSDL2UDDI;

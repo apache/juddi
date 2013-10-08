@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -31,8 +32,8 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.crypto.CryptorFactory;
-import org.apache.juddi.v3.client.crypto.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.CryptorFactory;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 
 /**
  * Handles the client configuration of the uddi-client. By default it first

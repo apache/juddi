@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.juddi.cryptor;
+package org.apache.juddi.v3.client.cryptor;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;

@@ -89,7 +89,7 @@ public class SMTPNotifier implements Notifier {
 		return properties;
 	}
 	
-	public SMTPNotifier(BindingTemplate bindingTemplate) throws URISyntaxException, ConfigurationException {
+	public SMTPNotifier(BindingTemplate bindingTemplate) throws URISyntaxException, Exception {
 		super();
 		if (!AccessPointType.END_POINT.toString().equalsIgnoreCase(bindingTemplate.getAccessPointType())) {
 			log.error("smtp enpoints only support AccessPointType " + AccessPointType.END_POINT);
