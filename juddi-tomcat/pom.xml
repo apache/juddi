@@ -86,6 +86,28 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>copy-wars</id>
+						<phase>package<!-- or any other valid maven phase --></phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<stripVersion>true</stripVersion>
+							<includeGroupIds>org.apache.juddi</includeGroupIds>
+							<includeArtifactIds>juddiv3-war,juddi-gui-war</includeArtifactIds>
+							<outputDirectory>
+								${project.build.directory}
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
 				<version>2.1</version>
 			</plugin>
@@ -111,8 +133,8 @@
 								<property name="dependency.commons-discovery.jar" value="${maven.dependency.commons-discovery.commons-discovery.jar.path}" />
 								<property name="dependency.derby.jar" value="${maven.dependency.org.apache.derby.derby.jar.path}" />
 								<property name="dependency.tomcat.zip" value="${maven.dependency.org.apache.juddi.bootstrap.apache-tomcat.zip.path}" />
-								<property name="dependency.juddiv3.war" value="${basedir}/../juddiv3-war/target/juddiv3.war" />
-								<property name="dependency.juddi-gui.war" value="${basedir}/../juddi-gui/target/juddi-gui.war" />
+								<property name="dependency.juddiv3.war" value="${project.build.directory}/juddiv3-war.war" />
+								<property name="dependency.juddi-gui.war" value="${project.build.directory}/juddi-gui-war.war" />
 								<property name="dependency.jaxws.jar" value="${maven.dependency.org.apache.geronimo.specs.geronimo-jaxws_2.2_spec.jar.path}" />
 								<ant antfile="${basedir}/build.xml">
 									<property name="dependency.tomcat.zip" value="${dependency.tomcat.zip}" />
