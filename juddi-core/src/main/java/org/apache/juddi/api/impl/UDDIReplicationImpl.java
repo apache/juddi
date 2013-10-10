@@ -45,7 +45,7 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
 
         public UDDIReplicationImpl() {
             super();
-            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIReplicationImpl.class);
         }
 
 

@@ -55,7 +55,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 
         public UDDISecurityImpl() {
             super();
-            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);
         }
 	
 	public void discardAuthToken(DiscardAuthToken body)

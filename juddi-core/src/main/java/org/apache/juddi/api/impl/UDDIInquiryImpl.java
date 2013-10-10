@@ -76,7 +76,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
         
     public UDDIInquiryImpl() {
         super();
-        serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+        serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIInquiryImpl.class);
     }
 	
     public BindingDetail findBinding(FindBinding body)

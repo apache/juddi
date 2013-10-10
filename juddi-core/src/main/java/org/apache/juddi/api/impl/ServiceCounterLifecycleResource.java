@@ -18,9 +18,9 @@ public class ServiceCounterLifecycleResource {
     static Map<String, UDDIServiceCounter> serviceCounters = 
             new HashMap<String, UDDIServiceCounter>();
     
-    static Map implForQuery = new HashMap<String, List<String>>();
+    static Map<String, List<String>> implForQuery = new HashMap<String, List<String>>();
     
-    public static String getObjectName(Class klass) {
+    public static String getObjectName(Class<?> klass) {
         StringBuffer objectName = new StringBuffer("portType=" + klass.toString());
         return objectName.toString();
     }
@@ -29,20 +29,20 @@ public class ServiceCounterLifecycleResource {
         synchronized (implForQuery) {
             if (implForQuery.isEmpty()) {
                 implForQuery = new HashMap<String, List<String>>();
-                implForQuery.put(UDDICustodyTransferImpl.class, CustodyTransferQuery.getQueries());
-                implForQuery.put(UDDIInquiryImpl.class, InquiryQuery.getQueries());
-                implForQuery.put(UDDIPublicationImpl.class, PublicationQuery.getQueries());
-                implForQuery.put(UDDIReplicationImpl.class, ReplicationQuery.getQueries());
-                implForQuery.put(UDDISecurityImpl.class, SecurityQuery.getQueries());
-                implForQuery.put(UDDISubscriptionImpl.class, SubscriptionQuery.getQueries());
-                implForQuery.put(UDDISubscriptionListenerImpl.class, SubscriptionListenerQuery.getQueries());
-                implForQuery.put(UDDIValueSetCachingImpl.class, ValueSetCachingQuery.getQueries());
-                implForQuery.put(UDDIValueSetValidationImpl.class, ValueSetValidationQuery.getQueries());
+                implForQuery.put(UDDICustodyTransferImpl.class.getName(), CustodyTransferQuery.getQueries());
+                implForQuery.put(UDDIInquiryImpl.class.getName(), InquiryQuery.getQueries());
+                implForQuery.put(UDDIPublicationImpl.class.getName(), PublicationQuery.getQueries());
+                implForQuery.put(UDDIReplicationImpl.class.getName(), ReplicationQuery.getQueries());
+                implForQuery.put(UDDISecurityImpl.class.getName(), SecurityQuery.getQueries());
+                implForQuery.put(UDDISubscriptionImpl.class.getName(), SubscriptionQuery.getQueries());
+                implForQuery.put(UDDISubscriptionListenerImpl.class.getName(), SubscriptionListenerQuery.getQueries());
+                implForQuery.put(UDDIValueSetCachingImpl.class.getName(), ValueSetCachingQuery.getQueries());
+                implForQuery.put(UDDIValueSetValidationImpl.class.getName(), ValueSetValidationQuery.getQueries());
             }
         }
     }
     
-    public static UDDIServiceCounter getServiceCounter(Class klass) { 
+    public static UDDIServiceCounter getServiceCounter(Class<?> klass) { 
         if (implForQuery.isEmpty()) {
             initQuery();
         }
@@ -52,7 +52,7 @@ public class ServiceCounterLifecycleResource {
             UDDIServiceCounter serviceCounter = serviceCounters.get(objectName);
             if (serviceCounter == null) {
                 UDDIServiceCounter uddiServiceCounter = new UDDIServiceCounter();
-                uddiServiceCounter.initList(klass, (List<String>)implForQuery.get(klass));
+                uddiServiceCounter.initList(klass, (List<String>)implForQuery.get(klass.getName()));
                 uddiServiceCounter.registerMBean();                
                 serviceCounters.put(objectName, uddiServiceCounter);
                 return uddiServiceCounter;

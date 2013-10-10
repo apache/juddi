@@ -86,7 +86,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
     
         public UDDIPublicationImpl() {
             super();
-            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(this.getClass());
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
         }
 	
 	public void addPublisherAssertions(AddPublisherAssertions body)

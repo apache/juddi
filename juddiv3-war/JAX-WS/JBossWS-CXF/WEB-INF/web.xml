@@ -32,7 +32,7 @@
   <servlet>
     <servlet-name>RegistryServlet</servlet-name>
     <display-name>Registry Servlet</display-name>
-    <servlet-class>org.apache.juddi.RegistryServlet</servlet-class>
+    <servlet-class>org.apache.juddi.servlets.RegistryServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>

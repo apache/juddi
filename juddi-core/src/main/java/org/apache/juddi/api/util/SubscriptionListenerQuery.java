@@ -31,12 +31,12 @@ public enum SubscriptionListenerQuery implements UDDIQuery {
             }
     }
 
-    public static List getQueries() {
+    public static List<String> getQueries() {
         if (_subscriptionListenerQueries == null) {
             initSubscriptionListenerQueries();
         }
         
-        List list = new ArrayList<String>(_subscriptionListenerQueries.keySet());
+        List<String> list = new ArrayList<String>(_subscriptionListenerQueries.keySet());
         return list;
     }
     

@@ -10,7 +10,7 @@
 				<description>Main jUDDI node</description>
 				<properties>
 					<property name="serverName" value="localhost" />
-					<property name="serverPort" value="8880" />
+					<property name="serverPort" value="8080" />
 					<!-- for UDDI nodes that use HTTP u/p, using the following 
 					<property name="basicAuthUsername" value="root" />
 					<property name="basicAuthPassword" value="password" />
@@ -32,6 +32,7 @@
 				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
 				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
 				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
+				
 				<!-- AXIS JAX-WS Transport 
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/UDDICustodyTransferService</custodyTransferUrl>
@@ -42,7 +43,16 @@
                 <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/UDDISubscriptionListenerService</subscriptionListenerUrl>
                 <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/JUDDIApiService</juddiApiUrl>
 		-->
-                
+                <!-- EAP JAX-WS Transport 
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/UDDIInquiryService</inquiryUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/UDDIPublicationService</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/UDDISecurityService</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/UDDISubscriptionService</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/JUDDIApiService</juddiApiUrl>
+                -->
 				<!-- In VM Transport Settings 
 				<proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
 				<custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
