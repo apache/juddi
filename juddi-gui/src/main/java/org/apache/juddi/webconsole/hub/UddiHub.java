@@ -2211,7 +2211,7 @@ public class UddiHub {
      * @return null if theres an error
      */
     public List<OperationalInfo> GetOperationalInfo(String id) {
-        if (id == null) {
+        if (id == null || id.equalsIgnoreCase("null")) {
             return null;
         }
         GetOperationalInfo goi = new GetOperationalInfo();

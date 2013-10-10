@@ -68,8 +68,9 @@
 
                      %>" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
-                        out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
-
+                        if (newitem) {
+                            out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
+                        }
                         if (bd.getContacts()
                                 == null) {
                             bd.setContacts(new Contacts());
@@ -83,13 +84,13 @@
                     %></div><br>
 
                 <script type="text/javascript">
-                    var currentNameEntries=<%= bd.getName().size() - 1%>;
-                    var currentDisco=<%= bd.getContacts().getContact().size() - 1%>;
-                    var currentDescriptionEntries=<%= bd.getDescription().size() - 1%>;
-                    var currentContacts=<%= bd.getContacts().getContact().size() - 1%>;
-                    var currentcatkeyref=<%=bd.getCategoryBag().getKeyedReference().size()%>;
-                    var currentcatkeyrefgrp=<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
-                    var currentident=<%=bd.getIdentifierBag().getKeyedReference().size()%>;
+                    var currentNameEntries =<%= bd.getName().size() - 1%>;
+                    var currentDisco =<%= bd.getContacts().getContact().size() - 1%>;
+                    var currentDescriptionEntries =<%= bd.getDescription().size() - 1%>;
+                    var currentContacts =<%= bd.getContacts().getContact().size() - 1%>;
+                    var currentcatkeyref =<%=bd.getCategoryBag().getKeyedReference().size()%>;
+                    var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
+                    var currentident =<%=bd.getIdentifierBag().getKeyedReference().size()%>;
                 </script>
 
                 <ul class="nav nav-tabs" id="myTab">
@@ -107,51 +108,51 @@
                     <li><a href="#relations" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.relatedbusinesses")%></a></li>
                 </ul>
                 <script>
-                    $(function () {
+                    $(function() {
                         $('#myTab').tab;//('show');
                     })
-                    $('#myTab a[href=#general]').click(function (e) {
+                    $('#myTab a[href=#general]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#discovery]').click(function (e) {
+                    $('#myTab a[href=#discovery]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#contacts]').click(function (e) {
+                    $('#myTab a[href=#contacts]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#categories]').click(function (e) {
+                    $('#myTab a[href=#categories]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#identifiers]').click(function (e) {
+                    $('#myTab a[href=#identifiers]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#services]').click(function (e) {
+                    $('#myTab a[href=#services]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#signatures]').click(function (e) {
+                    $('#myTab a[href=#signatures]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#opinfo]').click(function (e) {
+                    $('#myTab a[href=#opinfo]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#relations]').click(function (e) {
+                    $('#myTab a[href=#relations]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    
+
                 </script>
                 <div class="tab-content">
                     <div class="tab-pane active" id="general">
                         <a href="javascript:AddName();"><i class="icon-plus-sign icon-large"></i></a> <b><%=ResourceLoader.GetResource(session, "items.name")%></b> - 
-                        <%=ResourceLoader.GetResource(session, "items.business.name.description")%>
+                            <%=ResourceLoader.GetResource(session, "items.business.name.description")%>
 
                         <div id="nameContainer" style="border-width: 2px; border-style: solid;" >
                             <%
@@ -468,7 +469,6 @@
                                 out.write(Integer.toString(bd.getBusinessServices().getBusinessService().size()));
                             } else {
                                 out.write("0");
-                            }
                         %> <%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist2")%>
                         <%if (!newitem) {
                         %>
@@ -482,10 +482,10 @@
                                 <th><%=ResourceLoader.GetResource(session, "items.name")%> </th>
                                 <th><%=ResourceLoader.GetResource(session, "items.key")%></th>
                                 <th><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></th></tr>
-                            <%
-                                if (bd.getBusinessServices() != null) {
-                                    for (int i = 0; i < bd.getBusinessServices().getBusinessService().size(); i++) {
-                            %><tr>
+                                    <%
+                                        if (bd.getBusinessServices() != null) {
+                                            for (int i = 0; i < bd.getBusinessServices().getBusinessService().size(); i++) {
+                                    %><tr>
                                 <td><%
                                     if (!bd.getBusinessServices().getBusinessService().get(i).getName().isEmpty()) {
                                         out.write(bd.getBusinessServices().getBusinessService().get(i).getName().get(0).getValue());
@@ -534,9 +534,9 @@
                                     out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
                             %>
                             <script type="text/javascript">
-                                $.get("ajax/validateSignature.jsp?type=business&id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data){
+                                $.get("ajax/validateSignature.jsp?type=business&id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data) {
                                     $("#digsig<%=k%>").html(data);
-                                    if (data.indexOf("invalid") !== -1 )
+                                    if (data.indexOf("invalid") !== -1)
                                     {
                                         $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
                                     }
@@ -544,7 +544,7 @@
                                     {
                                         $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
                                     }
-                                } )
+                                })
                             </script>
                             <%
                                     out.write("</td></tr>");
@@ -558,9 +558,9 @@
 
                     <div class="tab-pane" id="opinfo">
                         <script type="text/javascript">
-                            $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data){
+                            $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data) {
                                 $("#opinfodiv").html(data);
-                            } )
+                            })
                         </script>
                         <div id="opinfodiv"></div>
 
@@ -577,21 +577,21 @@
                                 value: "key"});
                             data2.push({
                                 name: "nonce",
-                                value:"<%=(String) session.getAttribute("nonce")%>"});
-                            data2.push({    
-                                name: "searchfor", 
+                                value: "<%=(String) session.getAttribute("nonce")%>"});
+                            data2.push({
+                                name: "searchfor",
                                 value: "RelatedBusiness"
                             });
                             data2.push({
-                                name:"searchcontent",
-                                value:"<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>"
+                                name: "searchcontent",
+                                value: "<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>"
                             });
-                            
-                            $.ajax({url:"ajax/search.jsp", type:"post", data:data2, 
-                                success: function (x){
+
+                            $.ajax({url: "ajax/search.jsp", type: "post", data: data2,
+                                success: function(x) {
                                     $("#relationresults").html(x);
                                 }});
-                            
+
                         </script>
                         <a href="assertions.jsp?fromkey=<%=URLEncoder.encode(bizid, "UTF-8")%>"> <i class="icon-plus-sign icon-large"></i>
                             <%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></a><br>
@@ -631,16 +631,16 @@
                         if (!newitem) {
 
                     %>
-                        function ViewAsXML()
-                        {
-                            $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data){
-                                window.console && console.log('asXml success');                
-                  
-                                $("#viewAsXmlContent").html(safe_tags_replace(data));
-                                $( "#viewAsXml" ).modal('show');
-                            });
-                       
-                        }
+                    function ViewAsXML()
+                    {
+                        $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business", function(data) {
+                            window.console && console.log('asXml success');
+
+                            $("#viewAsXmlContent").html(safe_tags_replace(data));
+                            $("#viewAsXml").modal('show');
+                        });
+
+                    }
                     <%
                         }
                     %>
