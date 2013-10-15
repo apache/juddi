@@ -1,0 +1,8 @@
+<jboss-web>
+    <context-root>juddiv3</context-root>
+
+    <resource-ref>
+        <res-ref-name>jdbc/juddidb</res-ref-name>
+        <jndi-name>java:jboss/datasources/ExampleDS</jndi-name>
+    </resource-ref>
+</jboss-web>

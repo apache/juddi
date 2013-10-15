@@ -451,7 +451,7 @@
                                     <directory>JPA/OpenJPA-JBossAs7Up</directory>
                                 </resource>
                                 <resource>
-                                    <directory>JAX-WS/JBossWS-CXF</directory>
+                                    <directory>JAX-WS/CXF</directory>
                                 </resource>
                             </webResources>
                         </configuration>
@@ -467,6 +467,10 @@
                         <exclusion>
                             <groupId>junit</groupId>
                             <artifactId>junit</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.openjpa</groupId>
+                            <artifactId>openjpa</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>
