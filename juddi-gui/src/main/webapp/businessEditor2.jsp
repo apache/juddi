@@ -71,8 +71,7 @@
                         if (newitem) {
                             out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
                         }
-                        if (bd.getContacts()
-                                == null) {
+                        if (bd.getContacts() == null) {
                             bd.setContacts(new Contacts());
                         }
                         if (bd.getCategoryBag() == null) {
@@ -197,8 +196,7 @@
                         <b><%=ResourceLoader.GetResource(session, "items.discoveryurl")%></b>- <%=ResourceLoader.GetResource(session, "items.discoveryurl.description")%>
                         <div id="discoContainer" style="border-width: 2px; border-style: solid;" >
                             <%
-                                if (bd.getDiscoveryURLs()
-                                        != null) {
+                                if (bd.getDiscoveryURLs() != null) {
                                     for (int i = 0; i < bd.getDiscoveryURLs().getDiscoveryURL().size(); i++) {
 
                                         out.write("<div id=\"disco" + i + "\" style=\"border-width:1px; border-style:solid\">");
@@ -469,6 +467,7 @@
                                 out.write(Integer.toString(bd.getBusinessServices().getBusinessService().size()));
                             } else {
                                 out.write("0");
+                            }
                         %> <%=ResourceLoader.GetResource(session, "pages.businesseditor.businesslist2")%>
                         <%if (!newitem) {
                         %>

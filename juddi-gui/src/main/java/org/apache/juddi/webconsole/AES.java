@@ -82,8 +82,9 @@ public class AES {
         return raw;
     }
     //default key
-    private final static String something2 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
+    private final static String something128 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
 
+    private final static String something256 ="72d93747ba0162f2f2985f5cb3e24b30";
     /**
      * generates an AES based off of the selected key size
      * @param keysize
@@ -209,7 +210,7 @@ public class AES {
             return key;
         } else {
             log.debug( "default encryption key loaded.");
-            return something2;
+            return something128;
         }
     }
 

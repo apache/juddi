@@ -47,6 +47,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.config.ClientConfig;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
@@ -174,6 +175,8 @@ public class UddiHub {
     public Properties GetRawConfiguration() {
         return properties;
     }
+    
+    
 
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
@@ -187,7 +190,12 @@ public class UddiHub {
         p.load(in);
         in.close();
         properties = p;
-        style = (AuthStyle) AuthStyle.valueOf((String) p.get("authtype"));
+        try {
+            style = AuthStyle.valueOf((String) p.get("authtype"));
+        } catch (Exception ex) {
+            log.info("UDDI_AUTH is not defined in the config");
+            style = AuthStyle.UDDI_AUTH;
+        }
         try {
 
             String clazz = UDDIClientContainer.getUDDIClient(null).
@@ -202,33 +210,7 @@ public class UddiHub {
                 subscription = transport.getUDDISubscriptionService();
                 publish = transport.getUDDIPublishService();
                 custody = transport.getUDDICustodyTransferService();
-                //  juddi = transport.getJUDDIApiService();
 
-                BindingProvider bp = null;
-                Map<String, Object> context = null;
-                bp = (BindingProvider) inquiry;
-                context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("inquiryurl"));
-                bp = (BindingProvider) publish;
-                context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("publishurl"));
-                bp = (BindingProvider) custody;
-                context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("custodyurl"));
-
-
-                bp = (BindingProvider) security;
-                context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("securityurl"));
-
-                bp = (BindingProvider) subscription;
-                context = bp.getRequestContext();
-                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("subscriptionurl"));
-
-
-                /*bp = (BindingProvider) juddi;
-                 context = bp.getRequestContext();
-                 context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, properties.getProperty("juddipapi"));*/
             }
         } catch (Exception ex) {
             HandleException(ex);
@@ -236,6 +218,19 @@ public class UddiHub {
     }
     private HttpSession session;
 
+    
+    public Properties GetDigitalSignatureConfig()
+    {
+        try{
+        return UDDIClientContainer.getUDDIClient(null).getClientConfig().getDigitalSignatureConfiguration();
+        }
+        catch (Exception ex){
+            log.error("error fetching uddi.xml", ex);
+        }
+        return new Properties();
+    }
+    
+    
     private String GetToken() {
         if (style != AuthStyle.UDDI_AUTH) {
             BindingProvider bp = null;
@@ -1367,9 +1362,9 @@ public class UddiHub {
             fb.setAuthInfo(GetToken());
             if (fq != null) {
                 fb.setFindQualifiers(new org.uddi.api_v3.FindQualifiers());
-                    for (int i = 0; i < fq.length; i++) {
-                        fb.getFindQualifiers().getFindQualifier().add(fq[i]);
-                    }
+                for (int i = 0; i < fq.length; i++) {
+                    fb.getFindQualifiers().getFindQualifier().add(fq[i]);
+                }
             }
             BindingDetail findBusiness = null;
             switch (criteria) {

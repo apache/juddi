@@ -185,6 +185,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
             keyStore = KeyStore.getInstance("Windows-MY");
             keyStore.load(null, null);
         } catch (Exception ex) {
+            ex.printStackTrace();
             //JOptionPane.showMessageDialog(this, ex.getMessage());
         }
         //firefox keystore
@@ -200,6 +201,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
                 keyStore.load(null, "password".toCharArray());
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace();
             }
         }
         //MacOS with Safari possibly others
@@ -210,6 +212,7 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
             } catch (Exception ex) {
                 //JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace();
             }
         }
         try {

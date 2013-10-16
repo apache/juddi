@@ -29,7 +29,7 @@
             </node>
         </nodes>
 		<signature>
-			<!-- signing stuff -->
+			<!-- signing stuff, not used by juddi-gui -->
 			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
 			<signingKeyStoreType>JKS</signingKeyStoreType>
 			<signingKeyStoreFilePassword 
@@ -39,10 +39,14 @@
 				isPasswordEncrypted="false" 
 				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
 			<signingKeyAlias>my special key</signingKeyAlias>
+                        
 			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
 			<signatureMethod>RSA_SHA1</signatureMethod>
 			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
-			<!-- validation stuff -->
+			
+                        <!-- validation stuff 
+                        This part is used by juddi-gui whenever someone views an entity that is signed
+                        -->
 			<trustStorePath>truststore.jks</trustStorePath>
 			<trustStoreType>JKS</trustStoreType>
 			<trustStorePassword
@@ -53,6 +57,7 @@
 			<checkTrust>true</checkTrust>
 			<checkRevocationCRL>true</checkRevocationCRL>
 		</signature>
+                <!-- not used by juddi-gui-->
 		<subscriptionCallbacks>
 			<keyDomain>uddi:somebusiness</keyDomain>
 			<listenUrl>http://MyHostname:4444/callback</listenUrl>
@@ -61,8 +66,10 @@
 			<signatureBehavior>DoNothing</signatureBehavior>
 			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
 		</subscriptionCallbacks>
+                <!-- juddi-gui, used in the Create, Import from Wadl/Wsdl -->
 		<XtoWsdl>
 			<IgnoreSSLErrors>false</IgnoreSSLErrors>
 		</XtoWsdl>
+                
     </client>
 </uddi>

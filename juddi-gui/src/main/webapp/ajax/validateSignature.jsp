@@ -8,7 +8,7 @@
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Properties"%>
 <%@page import="java.util.concurrent.atomic.AtomicReference"%>
-<%@page import="org.apache.juddi.v3.client.crypto.DigSigUtil"%>
+<%@page import="org.apache.juddi.v3.client.cryptor.DigSigUtil"%>
 <%@page import="org.apache.juddi.jaxb.JAXBMarshaller"%>
 <%@page import="org.apache.juddi.jaxb.EntityCreator"%>
 <%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
@@ -32,17 +32,9 @@
             j = x.GettModelDetailsAsObject(id);
         }
         if (j != null) {
-            org.apache.juddi.v3.client.crypto.DigSigUtil dsig = new DigSigUtil();
             UddiHub hub = UddiHub.getInstance(application, session);
-            Properties config2 = hub.GetRawConfiguration();
-            Set<Entry<Object, Object>> it = config2.entrySet();
-            Iterator it2 = it.iterator();
-            while (it2.hasNext()) {
-                Object j2 = it2.next();
-                Entry<Object, Object> item = (Entry<Object, Object>) j2;
-                dsig.put((String) item.getKey(), (String) item.getValue());
-            }
-
+            
+            org.apache.juddi.v3.client.cryptor.DigSigUtil dsig = new DigSigUtil(hub.GetDigitalSignatureConfig());
 
             AtomicReference<String> msg = new AtomicReference<String>();
             // dsig.put(DigSigUtil., value);
