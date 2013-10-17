@@ -33,4 +33,13 @@ juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.bat
 juddi-tomcat\target\tomcat\apache-tomcat-6.0.26\bin\startup.sh
 
 To build the .NET components of jUDDI
-TBD 
+cd juddi-client.net
+mono users use: xbuild juddi-client.net-mono.sln
+.net users user: msbuild juddi-client.net.sln
+
+To test the .NET components of jUDDI using nunit
+nunit-console.exe juddi-client.net.test\bin\Debug\juddi-client.net.test.dll
+
+To run the integration tests on the .NET components of jUDDI using nunit
+catalina run (start the jUDDI tomcat server)
+nunit-console.exe juddi-client.net-integration.test\bin\Debug\juddi-client.net-integration.test.dll

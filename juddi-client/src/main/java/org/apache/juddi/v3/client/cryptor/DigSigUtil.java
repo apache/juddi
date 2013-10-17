@@ -91,14 +91,15 @@ public class DigSigUtil {
 
     /**
      * Expects a properties object containing the desired configuration
+     *
      * @param config
-     * @throws CertificateException 
+     * @throws CertificateException
      */
     public DigSigUtil(Properties config) throws CertificateException {
         cf = CertificateFactory.getInstance("X.509");
         this.map = config;
     }
-    
+
     public DigSigUtil() throws CertificateException {
         cf = CertificateFactory.getInstance("X.509");
     }
@@ -215,7 +216,6 @@ public class DigSigUtil {
      * any value can be used.
      *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
-    
     //public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
     /**
@@ -478,7 +478,7 @@ public class DigSigUtil {
 
             if (signingcert != null && signingcert instanceof X509Certificate) {
                 logger.info("verifying signature based on X509 public key " + signingcert.getSubjectDN().toString());
-                if (map.containsKey(CHECK_TIMESTAMPS)&& Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {
+                if (map.containsKey(CHECK_TIMESTAMPS) && Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {
                     signingcert.checkValidity();
                 }
                 if (map.containsKey(CHECK_REVOCATION_STATUS_OCSP)
@@ -497,7 +497,7 @@ public class DigSigUtil {
                         throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
                     }
                 }
-                if (map.containsKey(CHECK_REVOCATION_STATUS_CRL)&& Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
+                if (map.containsKey(CHECK_REVOCATION_STATUS_CRL) && Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
                     logger.info("verifying revokation status via CRL for X509 public key " + signingcert.getSubjectDN().toString());
 
                     Security.setProperty("ocsp.enable", "false");
@@ -516,7 +516,7 @@ public class DigSigUtil {
                     logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString());
 
                 }
-                if (map.containsKey(CHECK_TRUST_CHAIN)&& Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {
+                if (map.containsKey(CHECK_TRUST_CHAIN) && Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {
                     logger.info("verifying trust chain X509 public key " + signingcert.getSubjectDN().toString());
                     PKIXParameters params = new PKIXParameters(GetTrustStore());
                     params.setRevocationEnabled(false);
@@ -583,13 +583,15 @@ public class DigSigUtil {
     }
 
     private KeyStore GetTrustStore() throws Exception {
-        String type=map.getProperty(TRUSTSTORE_FILETYPE);
-        if (type==null)
-            type="JKS";
+        String type = map.getProperty(TRUSTSTORE_FILETYPE);
+        if (type == null) {
+            type = "JKS";
+        }
         KeyStore ks = KeyStore.getInstance(type);
-        String filename=map.getProperty(TRUSTSTORE_FILE);
-        if (filename==null)
+        String filename = map.getProperty(TRUSTSTORE_FILE);
+        if (filename == null) {
             return null;
+        }
         URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
         if (url == null) {
             try {
@@ -603,13 +605,36 @@ public class DigSigUtil {
             } catch (Exception x) {
             }
         }
-        if (!map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
-            ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
-        } else {
-            //Windows only
-            ks.load(null, null);
-        }
+        try {
+            if (!map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
+                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+            } else {
+                //Windows only
+                ks.load(null, null);
+            }
+        } catch (Exception ex) {
+            logger.error("Unable to load user specified trust store! attempting to load the default", ex);
+            URL cacerts = null;
+            try {
+                cacerts = new File(System.getenv("JAVA_HOME") + File.pathSeparator + "lib" + File.pathSeparator + "security" + File.pathSeparator + "cacerts").toURI().toURL();
+            } catch (Exception c) {
+                logger.debug("unable to load default jre truststore", c);
+            }
+            try {
+                cacerts = new File(System.getenv("JAVA_HOME") + File.pathSeparator + "jre" + File.pathSeparator + "lib" + File.pathSeparator + "security" + File.pathSeparator + "cacerts").toURI().toURL();
+            } catch (Exception c) {
+                logger.debug("unable to load default jdk/jre truststore", c);
+            }
+            if (cacerts != null) {
+                try {
+                    logger.info("Attempting to load trust store from " + cacerts.toString());
+                    ks.load(cacerts.openStream(), "changeit".toCharArray());
+                } catch (Exception c) {
+                    logger.warn("error loading default truststore", c);
+                }
+            }
 
+        }
         return ks;
     }
 
@@ -746,8 +771,8 @@ public class DigSigUtil {
             data.add(xd);
         }
 
-      //  if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL)) {
-       // }
+        //  if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL)) {
+        // }
         if (map.containsKey(SIGNATURE_OPTION_CERT_INCLUSION_BASE64)) {
             x509Content = new ArrayList<Object>();
             x509Content.add(cert);
@@ -830,7 +855,9 @@ public class DigSigUtil {
 
     private X509Certificate FindCertByDN(X500Principal name) throws Exception {
         KeyStore ks = GetTrustStore();
-        if (ks==null) return null;
+        if (ks == null) {
+            return null;
+        }
         Enumeration<String> aliases = ks.aliases();
         while (aliases.hasMoreElements()) {
             String nextElement = aliases.nextElement();
@@ -863,7 +890,9 @@ public class DigSigUtil {
 
     private X509Certificate FindCertByIssuer(String X509IssuerName, String X509SerialNumber) throws Exception {
         KeyStore ks = GetTrustStore();
-         if (ks==null) return null;
+        if (ks == null) {
+            return null;
+        }
         Enumeration<String> aliases = ks.aliases();
         while (aliases.hasMoreElements()) {
             String nextElement = aliases.nextElement();

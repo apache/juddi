@@ -8,7 +8,6 @@
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Properties"%>
-<%@page import="org.apache.juddi.v3.client.crypto.DigSigUtil"%>
 <%@page import="java.io.StringReader"%>
 <%@page import="javax.xml.bind.JAXB"%>
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
