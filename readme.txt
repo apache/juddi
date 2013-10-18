@@ -43,3 +43,7 @@ nunit-console.exe juddi-client.net.test\bin\Debug\juddi-client.net.test.dll
 To run the integration tests on the .NET components of jUDDI using nunit
 catalina run (start the jUDDI tomcat server)
 nunit-console.exe juddi-client.net-integration.test\bin\Debug\juddi-client.net-integration.test.dll
+
+
+UPGRADING
+Note: one or more of the database columns names have changed.
