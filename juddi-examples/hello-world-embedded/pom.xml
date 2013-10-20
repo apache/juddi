@@ -7,7 +7,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>hello-world-embedded</artifactId>
-	<name>jUDDI Example Hello World</name>
+	<name>jUDDI Example Hello World Embedded jUDDI</name>
 	<description>Demonstrates the steps taken to publish a service using the jUDDI API directly</description>
 
 
@@ -22,6 +22,16 @@
 			<artifactId>juddi-client</artifactId>
 			<version>3.2.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>juddi-core</artifactId>
+			<version>3.2.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.5.3.0_1</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>

@@ -18,7 +18,6 @@ package org.apache.juddi.example.helloworld;
 
 import org.uddi.api_v3.*;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
@@ -27,9 +26,9 @@ public class HelloWorld {
 
 	public HelloWorld() {
         try {
-        	// create a client and read the config in the archive; 
+        	// create a client & server and read the config in the archive; 
         	// you can use your config file name
-        	UDDIClient uddiClient = new UDDIClient("META-INF/hello-world-uddi.xml");
+        	UDDIClient uddiClient = new UDDIClient("META-INF/embedded-uddi.xml");
         	// a UddiClient can be a client to multiple UDDI nodes, so 
         	// supply the nodeName (defined in your uddi.xml.
         	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
