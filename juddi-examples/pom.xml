@@ -29,6 +29,7 @@
     <modules>
        <module>create-partition</module>
        <module>hello-world</module>
+       <module>hello-world-embedded</module>
        <module>simple-browse</module>
        <module>simple-publish</module>
        <module>uddi-annotations</module>

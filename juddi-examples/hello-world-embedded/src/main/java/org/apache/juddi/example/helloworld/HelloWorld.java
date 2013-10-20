@@ -18,6 +18,7 @@ package org.apache.juddi.example.helloworld;
 
 import org.uddi.api_v3.*;
 import org.apache.juddi.v3.client.config.UDDIClient;
+import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 
