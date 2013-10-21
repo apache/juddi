@@ -358,7 +358,7 @@
         primary key (id)
     ) ENGINE=InnoDB;
 
-    create table j3_signature_transform_data_value (
+    create table j3_signature_transform_data_val (
         id bigint not null auto_increment,
         content_bytes longblob,
         content_type varchar(255),
@@ -813,7 +813,7 @@
         foreign key (reference_key) 
         references j3_reference (id);
 
-    alter table j3_signature_transform_data_value 
+    alter table j3_signature_transform_data_val 
         add index FK3242526C7B88B2A4 (signature_transform_key), 
         add constraint FK3242526C7B88B2A4 
         foreign key (signature_transform_key) 

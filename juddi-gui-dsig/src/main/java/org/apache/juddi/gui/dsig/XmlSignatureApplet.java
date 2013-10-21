@@ -24,10 +24,7 @@ import java.security.Key;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Security;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +53,9 @@ import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import netscape.javascript.JSObject;
+
+//import netscape.javascript.JSObject;
 
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.uddi.api_v3.BindingTemplate;
@@ -154,7 +152,11 @@ public class XmlSignatureApplet extends java.applet.Applet {
 
     }
 
-    
+    /**
+     * this converts a xml document to a string for writing back to the browser
+     * @param doc
+     * @return 
+     */
     public String getStringFromDoc(org.w3c.dom.Document doc) {
         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
         LSSerializer lsSerializer = domImplementation.createLSSerializer();
@@ -243,6 +245,9 @@ public class XmlSignatureApplet extends java.applet.Applet {
         }
     }
     
+    /**
+     * XML digital signature namespace
+     */
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
 
     private void signDOM(Node node, PrivateKey privateKey, Certificate origCert) {
