@@ -49,10 +49,7 @@
 						</goals>
 						<phase>package</phase>
 						<configuration>
-						    <archiveDirectory>${project.build.directory}</archiveDirectory>
-						    <includes>
-                                <include>*.jar</include>
-                            </includes>
+						  <archive>${project.build.directory}/${artifactId}-${version}-jar-with-dependencies.jar</archive>
 							<keystore>src/main/keystore/signing-jar.keystore</keystore>
 							<alias>applet</alias>
 							<storepass>applet</storepass>
