@@ -448,7 +448,7 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>JPA/OpenJPA-JBossAs7Up</directory>
+                                    <directory>JPA/OpenJPA-JBossAS7Up</directory>
                                 </resource>
                                 <resource>
                                     <directory>JAX-WS/CXF</directory>
