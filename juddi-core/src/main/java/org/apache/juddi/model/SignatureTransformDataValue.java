@@ -30,7 +30,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="j3_signature_transform_data_val")
+@Table(name="j3_signature_transform_data_v")
 public class SignatureTransformDataValue implements java.io.Serializable {
     private static final long serialVersionUID = -2233157941119408702L;
     

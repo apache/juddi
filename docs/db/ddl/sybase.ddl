@@ -358,7 +358,7 @@
         primary key (id)
     );
 
-    create table j3_signature_transform_data_val (
+    create table j3_signature_transform_data_v (
         id numeric(19,0) identity not null,
         content_bytes image null,
         content_type varchar(255) null,
@@ -759,7 +759,7 @@
         foreign key (reference_key) 
         references j3_reference;
 
-    alter table j3_signature_transform_data_val 
+    alter table j3_signature_transform_data_v 
         add constraint FK3242526C7B88B2A4 
         foreign key (signature_transform_key) 
         references j3_signature_transform;
