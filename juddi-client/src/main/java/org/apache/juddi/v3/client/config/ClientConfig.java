@@ -18,6 +18,7 @@ package org.apache.juddi.v3.client.config;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -70,6 +71,27 @@ public class ClientConfig
 	{
 		loadConfiguration(configurationFile, properties);
 	}
+        
+        /**
+         * Attempts to save any changes made to the configuration back to disk
+         * @throws ConfigurationException 
+         */
+        public void saveConfig() throws ConfigurationException
+        {
+            
+            XMLConfiguration saveConfiguration = new XMLConfiguration(configurationFile);
+            Configuration cc = new CompositeConfiguration(saveConfiguration);
+            Iterator<String> keys = this.config.getKeys();
+            while (keys.hasNext()){
+                String key = keys.next();
+                if (key.startsWith("client"))
+                {
+                    cc.setProperty(key, config.getProperty(key));
+                }
+            }
+            saveConfiguration.save();
+        }
+        
 	protected void readConfig(Properties properties) throws ConfigurationException {
 		uddiNodes = readNodeConfig(config, properties);
 		uddiClerks = readClerkConfig(config, uddiNodes);

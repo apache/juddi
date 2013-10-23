@@ -2,7 +2,7 @@
 
 <uddi>
     <reloadDelay>5000</reloadDelay>
-    <client name="example-client">
+    <client name="juddigui">
         <nodes>
             <node>
                 <!-- required 'default' node -->
@@ -26,6 +26,20 @@
                 <subscriptionUrl>http://localhost:8080/juddiv3/services/subscription</subscriptionUrl>
                 <subscriptionListenerUrl>http://localhost:8080/juddiv3/services/subscription-listener</subscriptionListenerUrl>
                 <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
+				
+				<!-- 
+				Jboss users, note that the url is typically different, here's an example for Jboss EAP 6.x
+				<custodyTransferUrl>http://localhost:8080/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
+				<inquiryUrl>http://localhost:8080/juddiv3/UDDIInquiryService</inquiryUrl>
+				<publishUrl>http://localhost:8080/juddiv3/UDDIPublicationService</publishUrl>
+				<securityUrl>http://localhost:8080/juddiv3/UDDISecurityService</securityUrl>
+				<subscriptionUrl>http://localhost:8080/juddiv3/UDDISubscriptionService</subscriptionUrl>
+				<subscriptionListenerUrl>http://localhost:8080/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
+				<juddiApiUrl>http://localhost:8080/juddiv3/UDDIApiService</juddiApiUrl>
+				
+				-->
+				
+				
             </node>
         </nodes>
 		<signature>

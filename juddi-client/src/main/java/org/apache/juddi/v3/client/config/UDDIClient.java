@@ -325,7 +325,7 @@ public class UDDIClient {
     public ClientConfig getClientConfig() {
         return clientConfig;
     }
-
+    
     public String getName() {
         return clientConfig.getClientName();
     }

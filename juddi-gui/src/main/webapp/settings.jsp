@@ -4,6 +4,8 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.v3.client.config.ClientConfig"%>
+<%@page import="org.apache.commons.configuration.Configuration"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Set"%>
@@ -22,83 +24,115 @@
         <div class="span12">
             <h2><%=ResourceLoader.GetResource(session, "navbar.settings")%></h2>
             <p><%=ResourceLoader.GetResource(session, "items.settings.description")%></p>
+            <%
+                UddiHub x = UddiHub.getInstance(application, session);
 
+
+            %>
+            Loading from <%=StringEscapeUtils.escapeHtml(x.GetJuddiClientConfig().getConfigurationFile())%><br>
+            Loading from <%=StringEscapeUtils.escapeHtml(x.GetRawConfigurationPath())%>
             <table class="table table-hover">
                 <tr><th>Key</th><th>Value</th></tr>
-                <%
+                        <%
 
-                    UddiHub x = UddiHub.getInstance(application, session);
-                    Properties p = x.GetRawConfiguration();
-                    Set<Entry<Object, Object>> set = p.entrySet();
-                    Iterator<Entry<Object, Object>> it = set.iterator();
-                    while (it.hasNext()) {
-                        out.write("<tr><td>");
-                        Entry<Object, Object> item = (Entry<Object, Object>) it.next();
-                        String key = (String) item.getKey();
-                        String value = (String) item.getValue();
-                        out.write(StringEscapeUtils.escapeHtml(key));
-                        out.write("</td><td><div class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
-                        out.write(StringEscapeUtils.escapeHtml(value));
-                        out.write("</div></td></tr>");
-                    }
-                %>
+
+                            Properties p = x.GetRawConfiguration();
+                            Set<Entry<Object, Object>> set = p.entrySet();
+                            Iterator<Entry<Object, Object>> it = set.iterator();
+                            while (it.hasNext()) {
+                                out.write("<tr><td>");
+                                Entry<Object, Object> item = (Entry<Object, Object>) it.next();
+                                String key = (String) item.getKey();
+                                String value = (String) item.getValue();
+                                out.write(StringEscapeUtils.escapeHtml(key));
+                                out.write("</td><td><div ");
+                                if (!key.equalsIgnoreCase("key")) {
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
+                                }
+                                out.write(">");
+
+                                out.write(StringEscapeUtils.escapeHtml(value));
+                                out.write("</div></td></tr>");
+                            }
+                            try {
+                                ClientConfig cfg = x.GetJuddiClientConfig();
+                                Iterator<String> it2 = cfg.getConfiguration().getKeys();
+                                while (it2.hasNext()) {
+                                    out.write("<tr><td>");
+                                    String key = it2.next();
+
+                                    String value = cfg.getConfiguration().getString(key);
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    if (key.startsWith("client")) {
+                                        out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
+                                    }
+                                    out.write(">");
+                                    out.write(StringEscapeUtils.escapeHtml(value));
+                                    out.write("</div></td></tr>");
+
+                                }
+                            } catch (Exception ex) {
+                                x.log.error(ex);
+                            }
+                        %>
             </table>
             <a class="btn btn-primary " href="javascript:saveSettings();"><i class="icon-large icon-save"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
             <script type="text/javascript">
-                
+
                 Reedit();
                 function saveSettings()
                 {
-                    var url='ajax/settings.jsp';
+                    var url = 'ajax/settings.jsp';
                     var postbackdata = new Array();
                     $("div.edit").each(function()
                     {
-                        var id=$(this).attr("id");
-                        var value=$(this).text();
+                        var id = $(this).attr("id");
+                        var value = $(this).text();
                         postbackdata.push({
-                            name: id, 
+                            name: id,
                             value: value
                         });
-                    }); 
+                    });
                     postbackdata.push({
-                        name:"nonce", 
+                        name: "nonce",
                         value: $("#nonce").val()
                     });
                     $("div.noedit").each(function()
                     {
-                        var id=$(this).attr("id");
-                        var value=$(this).text();
+                        var id = $(this).attr("id");
+                        var value = $(this).text();
                         postbackdata.push({
-                            name: id, 
+                            name: id,
                             value: value
                         });
-                    }); 
-    
-    
-                    var request=   $.ajax({
+                    });
+
+
+                    var request = $.ajax({
                         url: url,
-                        type:"POST",
+                        type: "POST",
                         //  data" + i18n_type + ": "html", 
-                        cache: false, 
+                        cache: false,
                         //  processData: false,f
                         data: postbackdata
                     });
-                
-                
+
+
                     request.done(function(msg) {
-                        window.console && console.log('postback done '  + url);                
-        
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                        window.console && console.log('postback done ' + url);
+
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + msg);
                         $("#resultBar").show();
-        
+
                     });
 
                     request.fail(function(jqXHR, textStatus) {
-                        window.console && console.log('postback failed ' + url);                                
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' +jqXHR.responseText );
+                        window.console && console.log('postback failed ' + url);
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText);
                         //$(".alert").alert();
                         $("#resultBar").show();
-        
+
                     });
                 }
             </script>

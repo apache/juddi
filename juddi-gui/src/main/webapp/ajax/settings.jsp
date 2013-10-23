@@ -10,7 +10,7 @@
 <%@page import="java.util.Enumeration"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
-<%
+<%    
     if (!request.getRemoteHost().equalsIgnoreCase("localhost") && !request.getRemoteHost().equalsIgnoreCase("127.0.0.1")) {
         response.setStatus(403);
     }
@@ -24,8 +24,26 @@
         while (it.hasMoreElements()) {
             String key = (String) it.nextElement();
             String value = request.getParameter(key);
-            p.setProperty(key, value);
+            if (key.equals("authtype")) {
+                p.setProperty(key, value);
+            }
+            else if (key.startsWith("client"))
+            {
+                //its part of the juddi client config file
+                x.GetJuddiClientConfig().getConfiguration().setProperty(key, value);
+                //this just sets the runtime config
+                
+            }
         }
+        try{
+            x.GetJuddiClientConfig().saveConfig();
+        }
+        catch (Exception ex)
+        {
+            response.setStatus(500);
+            out.write("Error saving Juddi Client Config" + ex.getMessage());
+        }
+        //attempt to save the properties file
         try {
             FileOutputStream fos = new FileOutputStream(new File(x.GetRawConfigurationPath()));
             String msg = "Edited at " + System.currentTimeMillis() + " by " + request.getRemoteUser();
@@ -36,8 +54,8 @@
             fos.close();
         } catch (Exception ex) {
             response.setStatus(500);
-            out.write("Error saving configuration " + ex.getMessage());
+            out.write("Error saving config.properties (authmode only) " + ex.getMessage());
         }
-
+        
     }
 %>

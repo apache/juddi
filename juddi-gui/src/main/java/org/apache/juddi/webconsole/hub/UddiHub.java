@@ -42,6 +42,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -175,8 +177,6 @@ public class UddiHub {
     public Properties GetRawConfiguration() {
         return properties;
     }
-    
-    
 
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
@@ -218,19 +218,30 @@ public class UddiHub {
     }
     private HttpSession session;
 
-    
-    public Properties GetDigitalSignatureConfig()
-    {
-        try{
-        return UDDIClientContainer.getUDDIClient(null).getClientConfig().getDigitalSignatureConfiguration();
-        }
-        catch (Exception ex){
+    /**
+     * gets a reference to the current juddi client config file. this is a live instance
+     * changes can be stored to disk, usually
+     * @return
+     * @throws ConfigurationException g
+     */
+    public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
+        return UDDIClientContainer.getUDDIClient(null).
+                getClientConfig();
+    }
+
+    /**
+     * returns all of the current properties defining digital signatures
+     * @return 
+     */
+    public Properties GetDigitalSignatureConfig() {
+        try {
+            return UDDIClientContainer.getUDDIClient(null).getClientConfig().getDigitalSignatureConfiguration();
+        } catch (Exception ex) {
             log.error("error fetching uddi.xml", ex);
         }
         return new Properties();
     }
-    
-    
+
     private String GetToken() {
         if (style != AuthStyle.UDDI_AUTH) {
             BindingProvider bp = null;
