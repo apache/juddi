@@ -420,10 +420,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         }
 
 
-        //TODO optionally unregister the binding template
-        //delete binding templates matching this endpoint?
-        //or maintain a list of binding templates that i've registered
-        //TODO optionally kill the subscription
+        //TODO optionally kill the subscription?
         //get all subscriptions from the uddi node, 
         //loop through and deduce which ones are pointed at this endpoint
         //then remove them

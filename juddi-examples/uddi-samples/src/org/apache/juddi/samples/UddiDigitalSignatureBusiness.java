@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.crypto.DigSigUtil;
+import org.apache.juddi.v3.client.cryptor.DigSigUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -75,7 +75,7 @@ public class UddiDigitalSignatureBusiness {
     public void Fire(String[] args) {
         try {
 
-            org.apache.juddi.v3.client.crypto.DigSigUtil ds = null;
+            DigSigUtil ds = null;
 
             //option 1), set everything manually
             ds = new DigSigUtil();

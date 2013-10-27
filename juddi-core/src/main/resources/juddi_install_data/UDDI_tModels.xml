@@ -1339,4 +1339,18 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	<tModel tModelKey="urn:uddi:uddi.org:version">
+        <name>Service Interface Version</name>
+        <description xml:lang="en">When using this tModel as a tModelInstance, it can be used to describe a version associated with either a service interface, a bindingTemplate service instance.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ibm.com/developerworks/webservices/library/ws-version/
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
 </save_tModel>

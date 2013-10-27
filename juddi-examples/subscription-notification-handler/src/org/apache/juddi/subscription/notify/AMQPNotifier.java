@@ -46,6 +46,11 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
  * AMQP Notifier
+ * 
+ * This is designed to enable users to setup AMQP based alerts for UDDI subscriptions
+ * 
+ * This class is incomplete, but it at least offers a quick example of how it could be done
+ * 
  * amqp.java.naming.factory.initial
  * amqp.connectionfactory.qpidConnectionfactory
  * amqp.destination
