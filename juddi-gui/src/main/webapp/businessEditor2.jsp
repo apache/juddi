@@ -68,7 +68,7 @@
 
                      %>" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
-                        if (newitem) {
+                        if (!newitem) {
                             out.write(StringEscapeUtils.escapeHtml(bd.getBusinessKey()));
                         }
                         if (bd.getContacts() == null) {
