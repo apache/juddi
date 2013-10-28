@@ -49,7 +49,8 @@
                       isPasswordEncrypted="true" cryptoProvider="org.apache.juddi.v3.client.cryptor.AES128Cryptor"
             /> 
             <xregister>
-                <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+                <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" 
+                         fromClerk="default" toClerk="medroot"/>
             </xregister>
         </clerks>
 		<signature>
@@ -73,7 +74,7 @@
 				isPasswordEncrypted="false" 
 				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
 			
-			<checkTimestamps>true</checkTimestamps>
+                            <checkTimestamps>true</checkTimestamps>
 			<checkTrust>true</checkTrust>
 			<checkRevocationCRL>true</checkRevocationCRL>
 		</signature>

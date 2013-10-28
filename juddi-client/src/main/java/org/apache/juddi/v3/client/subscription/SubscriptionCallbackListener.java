@@ -90,7 +90,14 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 })
 public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType {
 
- 
+    /**
+     * used for unit tests, may return null if the endpoint isn't started yet
+     * @return 
+     */
+    protected static SubscriptionCallbackListener getInstance()
+    {
+        return instance;
+    }
     private static final Log log = LogFactory.getLog(SubscriptionCallbackListener.class);
     private static List<ISubscriptionCallback> callbacks = new ArrayList<ISubscriptionCallback>();
     private static SubscriptionCallbackListener instance = null;
