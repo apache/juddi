@@ -15,6 +15,7 @@
  */
 package org.apache.juddi.v3.client.subscription;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.v3.client.config.UDDIClerk;
@@ -89,6 +90,7 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
             BindingTemplate start1 = SubscriptionCallbackListener.start(c, "default");
         } catch (ServiceAlreadyStartedException x) {
             SubscriptionCallbackListener.stop(c, "default", null);
+            c.stop();
             throw x;
         }
 
@@ -109,9 +111,156 @@ public class SubscriptionCallbackTest implements ISubscriptionCallback {
         SubscriptionCallbackListener.registerCallback(this);
 
         SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
         Assert.assertTrue(Test4_NotifyEndpointStopped_);
 
 
+    }
+
+    @Test
+    public void Test5_RegisterNullCallback() throws ConfigurationException {
+        log.info("Test5_RegisterNullCallback");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback1.xml");
+        SubscriptionCallbackListener.registerCallback(null);
+
+        SubscriptionCallbackListener.unRegisterCallback(null);
+
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test6_UnRegisterUnRegisteredCallback() throws ConfigurationException, ServiceAlreadyStartedException {
+        log.info("Test6_UnRegisterUnRegisteredCallback");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback1.xml");
+
+        SubscriptionCallbackListener.unregisterAllCallbacks();
+
+        SubscriptionCallbackListener.unRegisterCallback(new ISubscriptionCallback() {
+            @Override
+            public void HandleCallback(SubscriptionResultsList body) {
+            }
+
+            @Override
+            public void NotifyEndpointStopped() {
+            }
+        });
+
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test7_NullCallbackAddress() throws Exception {
+        log.info("Test7_NullCallbackAddress");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback2.xml");
+        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        Assert.assertNotNull(start);
+        Assert.assertNotNull(SubscriptionCallbackListener.getCallbackURL());
+        Assert.assertNotNull(start.getAccessPoint());
+        Assert.assertNotNull(start.getAccessPoint().getValue());
+        log.log(Level.INFO, "AP url: {0} EP url: {1}", new Object[]{start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL()});
+        Assert.assertEquals(start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL());
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test8_InvalidCallbackAddress() throws Exception {
+        log.info("Test8_InvalidCallbackAddress");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback3.xml");
+        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        Assert.assertNotNull(start);
+        Assert.assertNotNull(SubscriptionCallbackListener.getCallbackURL());
+        Assert.assertNotNull(start.getAccessPoint());
+        Assert.assertNotNull(start.getAccessPoint().getValue());
+        log.log(Level.INFO, "AP url: {0} EP url: {1}", new Object[]{start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL()});
+        Assert.assertEquals(start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL());
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test9_FaultyImplementator1() throws Exception {
+        log.info("Test9_FaultyImplementator1");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback1.xml");
+        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        Assert.assertNotNull(start);
+        Assert.assertNotNull(SubscriptionCallbackListener.getCallbackURL());
+        Assert.assertNotNull(start.getAccessPoint());
+        Assert.assertNotNull(start.getAccessPoint().getValue());
+        log.log(Level.INFO, "AP url: {0} EP url: {1}", new Object[]{start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL()});
+        Assert.assertEquals(start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL());
+
+        SubscriptionCallbackListener.registerCallback(new ISubscriptionCallback() {
+            @Override
+            public void HandleCallback(SubscriptionResultsList body) {
+                log.info("bogus callback received");
+            }
+
+            @Override
+            public void NotifyEndpointStopped() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        SubscriptionCallbackListener.getInstance().notifySubscriptionListener(new NotifySubscriptionListener());
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test10_FaultyImplementator1() throws Exception {
+        log.info("Test10_FaultyImplementator1");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback1.xml");
+        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        Assert.assertNotNull(start);
+        Assert.assertNotNull(SubscriptionCallbackListener.getCallbackURL());
+        Assert.assertNotNull(start.getAccessPoint());
+        Assert.assertNotNull(start.getAccessPoint().getValue());
+        log.log(Level.INFO, "AP url: {0} EP url: {1}", new Object[]{start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL()});
+        Assert.assertEquals(start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL());
+
+        SubscriptionCallbackListener.registerCallback(new ISubscriptionCallback() {
+            @Override
+            public void HandleCallback(SubscriptionResultsList body) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void NotifyEndpointStopped() {
+                log.info("bogus callback received");
+
+            }
+        });
+        SubscriptionCallbackListener.getInstance().notifySubscriptionListener(new NotifySubscriptionListener());
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+    }
+
+    @Test
+    public void Test11_DoubleStop() throws Exception {
+        log.info("Test11_DoubleStop");
+
+        UDDIClient c = new UDDIClient("META-INF/uddi-subcallback1.xml");
+        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+        Assert.assertNotNull(start);
+        Assert.assertNotNull(SubscriptionCallbackListener.getCallbackURL());
+        Assert.assertNotNull(start.getAccessPoint());
+        Assert.assertNotNull(start.getAccessPoint().getValue());
+        log.log(Level.INFO, "AP url: {0} EP url: {1}", new Object[]{start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL()});
+        Assert.assertEquals(start.getAccessPoint().getValue(), SubscriptionCallbackListener.getCallbackURL());
+
+
+        SubscriptionCallbackListener.stop(c, "default", null);
+        SubscriptionCallbackListener.stop(c, "default", null);
+        c.stop();
+        c.stop();
     }
 
     @Override

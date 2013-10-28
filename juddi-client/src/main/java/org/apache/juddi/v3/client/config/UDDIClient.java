@@ -119,7 +119,9 @@ public class UDDIClient {
     public void stop() throws ConfigurationException {
         log.info("Stopping UDDI Client " + clientConfig.getClientName());
         releaseResources();
-        UDDIClientContainer.removeClerkManager(getName());
+        //fix for when someone runs UDDIClient.stop more than once
+        if (UDDIClientContainer.contains(getName()))
+            UDDIClientContainer.removeClerkManager(getName());
 
         //If running in embedded mode
         if (InVMTransport.class.getCanonicalName().equals(getClientConfig().getHomeNode().getProxyTransport())) {

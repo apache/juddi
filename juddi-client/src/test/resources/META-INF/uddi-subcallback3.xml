@@ -53,7 +53,7 @@
         </signature>
         <subscriptionCallbacks>
             <keyDomain>uddi:somebusiness</keyDomain>
-            <listenUrl></listenUrl>
+            <listenUrl>asdasd://somebackprotocol:123122221/something</listenUrl>
             <autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
             <autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
             <signatureBehavior>DoNothing</signatureBehavior>

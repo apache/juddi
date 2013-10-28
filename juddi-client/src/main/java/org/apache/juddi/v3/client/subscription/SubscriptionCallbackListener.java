@@ -15,11 +15,15 @@
  */
 package org.apache.juddi.v3.client.subscription;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -53,25 +57,27 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 
 /**
- * WebService which implements the UDDI v3 SubscriptionListener API. This service will be called by
- * the UDDI registry when any change to a Service or BindingTemplate
- * call in to it.
+ * WebService which implements the UDDI v3 SubscriptionListener API. This
+ * service will be called by the UDDI registry when any change to a Service or
+ * BindingTemplate call in to it.
  * <h1>Usage scenario</h1>
- * Use this call for when you need to be notified from a UDDI server that either a UDDI entity
- * was created, changed, or deleted via the UDDI Subscription web service. This class will 
- * start up an embedded Jetty server (built into the JRE). You can then register your code
- * to be notified of any inbound messages received from the UDDI server asynchronously. Here's some sample code.
-<pre>
-        UDDIClient c = new UDDIClient("META-INF/uddiclient.xml");
-        UDDIClerk clerk = c.getClerk("default");
-        TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
-        clerk.register(createKeyGenator);
-        BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
-        //keep alive 
-        while(running)
-           Thread.sleep(1000);
-        SubscriptionCallbackListener.stop(c, "default", start.getBindingKey());
-</pre>
+ * Use this call for when you need to be notified from a UDDI server that either
+ * a UDDI entity was created, changed, or deleted via the UDDI Subscription web
+ * service. This class will start up an embedded Jetty server (built into the
+ * JRE). You can then register your code to be notified of any inbound messages
+ * received from the UDDI server asynchronously. Here's some sample code.
+ * <pre>
+ * UDDIClient c = new UDDIClient("META-INF/uddiclient.xml");
+ * UDDIClerk clerk = c.getClerk("default");
+ * TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
+ * clerk.register(createKeyGenator);
+ * BindingTemplate start = SubscriptionCallbackListener.start(c, "default");
+ * //keep alive
+ * while(running)
+ * Thread.sleep(1000);
+ * SubscriptionCallbackListener.stop(c, "default", start.getBindingKey());
+ * </pre>
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @since 3.2
  */
@@ -88,14 +94,23 @@ import org.uddi.v3_service.UDDIPublicationPortType;
     org.uddi.policy_v3.ObjectFactory.class,
     org.uddi.policy_v3_instanceparms.ObjectFactory.class
 })
-public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType {
+public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISubscriptionListenerPortType, Runnable {
+
+    /**
+     * adds a shutdown hook to trap and warn about leaving the server running on
+     * exit
+     */
+    public SubscriptionCallbackListener() {
+        Runtime runtime = Runtime.getRuntime();
+        runtime.addShutdownHook(new Thread(this));
+    }
 
     /**
      * used for unit tests, may return null if the endpoint isn't started yet
-     * @return 
+     *
+     * @return
      */
-    protected static SubscriptionCallbackListener getInstance()
-    {
+    protected static SubscriptionCallbackListener getInstance() {
         return instance;
     }
     private static final Log log = LogFactory.getLog(SubscriptionCallbackListener.class);
@@ -122,24 +137,56 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
      */
     public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name, String endpoint,
             String keydomain, boolean autoregister, String serviceKey,
-            SignatureBehavior behavior) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, RemoteException, UnexpectedException, RegistrationAbortedException, UnableToSignException {
+            SignatureBehavior behavior) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, RemoteException, UnexpectedException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
 
 
         if (instance == null) {
             instance = new SubscriptionCallbackListener();
         }
-        if (ep == null) {
-            ep = Endpoint.publish(endpoint, instance);
-        } else {
-            if (ep.isPublished()) {
-                throw new ServiceAlreadyStartedException();
-            }
+
+        if (ep !=null && ep.isPublished()) {
+            throw new ServiceAlreadyStartedException();
         }
 
 
+        URL url = null;
+        try {
+            url = new URL(endpoint);
+        } catch (Exception ex) {
+            log.warn("Callback endpoint couldn't be parsed, generating a random one: " + ex.getMessage());
+            url = new URL("http://" + GetHostname() + ":" + GetRandomPort(4000) + "/" + UUID.randomUUID().toString());
+        }
+        endpoint = url.toString();
+        //if (endpoint == null || endpoint.equals("")) {
+        //    endpoint = "http://" + GetHostname() + ":" + GetRandomPort(url.getPort()) + "/" + UUID.randomUUID().toString();
+
+        int attempts = 5;
+        if (ep == null) {
+            while ((ep == null || !ep.isPublished()) && attempts > 0) {
+                try {
+                    ep = Endpoint.publish(endpoint, instance);
+                    callback = endpoint;
+                } catch (Exception be) {
+                    log.info("trouble starting callback at " + endpoint + ", trying again with a random port: " + be.getMessage());
+                    log.debug(be);
+                    attempts--;
+                    //if (be instanceof java.net.BindException) {
+                    url = new URL("http://" + url.getHost() + ":" + GetRandomPort(url.getPort()) + "/" + url.getPath());
+                    endpoint = url.toString();
+
+                }
+            }
+        }
+        if (ep == null || !ep.isPublished()) {
+            log.warn("Unable to start callback endpoint, aborting");
+            throw new SecurityException("unable to start endpoint, view previous errors for reason");
+        }
+
+        log.info("Endpoint started at " + callback);
+
         BindingTemplate bt = new BindingTemplate();
         bt.setAccessPoint(new AccessPoint());
-        bt.getAccessPoint().setValue(endpoint);
+        bt.getAccessPoint().setValue(callback);
         bt.getAccessPoint().setUseType("endPoint");
         TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
         instanceInfo.setTModelKey("uddi:uddi.org:transport:http");
@@ -166,7 +213,8 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
      *
      * @param client
      * @param cfg_node_name - this is the uddi/client@name
-     * @return a bindingtemplate populated with the relevant information for most UDDI servers for asynchronous callbacks.
+     * @return a bindingtemplate populated with the relevant information for
+     * most UDDI servers for asynchronous callbacks.
      * @throws ServiceAlreadyStartedException
      * @throws SecurityException
      * @throws ConfigurationException
@@ -175,7 +223,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
      * @throws UnexpectedException
      * @throws RemoteException
      */
-    public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException {
+    public static synchronized BindingTemplate start(UDDIClient client, String cfg_node_name) throws ServiceAlreadyStartedException, SecurityException, ConfigurationException, TransportException, DispositionReportFaultMessage, UnexpectedException, RemoteException, RegistrationAbortedException, UnableToSignException, MalformedURLException {
 
         boolean reg = (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false));
         String endpoint = client.getClientConfig().getConfiguration().getString(PROPERTY_LISTENURL);
@@ -183,37 +231,75 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         String key = client.getClientConfig().getConfiguration().getString(PROPERTY_AUTOREG_SERVICE_KEY);
         String sbs = client.getClientConfig().getConfiguration().getString(PROPERTY_SIGNATURE_BEHAVIOR);
         SignatureBehavior sb = SignatureBehavior.DoNothing;
-        sb = SignatureBehavior.valueOf(sbs);
+        try {
+            sb = SignatureBehavior.valueOf(sbs);
+        } catch (Exception ex) {
+            log.warn("Unable to parse config setting for SignatureBehavior, defaulting to DoNothing", ex);
+        }
 
         return start(client, cfg_node_name, endpoint, kd, reg, key, sb);
+    }
+    private static String callback = null;
+
+    /**
+     * gets the current callback url, may be null if the endpoint isn't started
+     * yet
+     *
+     * @return
+     */
+    public static String getCallbackURL() {
+        return callback;
+
     }
 
     /**
      * Registers an implementation of ISubscriptionCallback for subscription
-     * callbacks from a UDDI server. 
+     * callbacks from a UDDI server.
      *
-     * @param callback
+     *
+     * @param callback if null, no action is taken
      */
     public static synchronized void registerCallback(ISubscriptionCallback callback) {
-        if (!callbacks.contains(callback)) {
-            callbacks.add(callback);
+        if (callback != null) {
+            if (!callbacks.contains(callback)) {
+                callbacks.add(callback);
+            }
         }
     }
 
     /**
      * unregisters a ISubscriptionCallback for callbacks
      *
-     * @param callback
+     * @param callback if null, no action is taken
      */
     public static synchronized void unRegisterCallback(ISubscriptionCallback callback) {
-        if (callbacks.contains(callback)) {
-            callbacks.remove(callback);
+        if (callback != null) {
+            if (callbacks.contains(callback)) {
+                callbacks.remove(callback);
+            }
         }
     }
+    /**
+     * config parameter
+     */
     public static final String PROPERTY_LISTENURL = "client.subscriptionCallbacks.listenUrl";
+    /**
+     * config parameter
+     */
     public static final String PROPERTY_KEYDOMAIN = "client.subscriptionCallbacks.keyDomain";
+    /**
+     * config parameter true/false
+     */
     public static final String PROPERTY_AUTOREG_BT = "client.subscriptionCallbacks.autoRegisterBindingTemplate";
+    /**
+     * config parameter business key
+     */
     public static final String PROPERTY_AUTOREG_SERVICE_KEY = "client.subscriptionCallbacks.autoRegisterBusinessServiceKey";
+    /**
+     * config parameter
+     *
+     * @see SignatureBehavior
+     */
     public static final String PROPERTY_SIGNATURE_BEHAVIOR = "client.subscriptionCallbacks.signatureBehavior";
 
     /**
@@ -284,7 +370,35 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         return false;
     }
 
- 
+    private static int GetRandomPort(int oldport) {
+        if (oldport <= 0) {
+            oldport = 4000;
+        }
+        return oldport + new Random().nextInt(99);
+
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        run();
+        super.finalize();
+
+    }
+
+    /**
+     * shutdown hook
+     */
+    @Override
+    public void run() {
+        if (ep != null && !ep.isPublished()) {
+            log.fatal("Hey, someone should tell the developer to call SubscriptionCallbackListern.stop(...) before ending the program. Stopping endpoint at " + callback);
+            unregisterAllCallbacks();
+            ep.stop();
+            ep = null;
+            callback = null;
+        }
+
+    }
 
     /**
      * This defines how the automatic subscription binding template is suppose
@@ -388,28 +502,42 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
         return saveBinding.getBindingTemplate().get(0);
     }
 
-    /**
-     * This effectively stops the endpoint address and notifies all
-     * ISubscriptionCallback clients that the endpoint as been stopped. After it
-     * has been stopped, call ISubscriptionCallback are removed from the
-     * callback list.
-     * If unable to remove an auto registered binding template, no exception will be thrown
-     */
-    public static synchronized void stop(UDDIClient client, String cfg_node_name, String bindingKey) throws ConfigurationException {
-        //stop the service
-        if (ep != null && ep.isPublished()) {
-            log.warn("Stopping jUDDI Subscription callback endpoint");
-            ep.stop();
-            ep = null;
-        }
+    protected static synchronized void unregisterAllCallbacks() {
         if (callbacks != null) {
             log.info("Notifying all subscribing classes, count=" + callbacks.size());
             for (int i = 0; i < callbacks.size(); i++) {
-                callbacks.get(i).NotifyEndpointStopped();
+                if (callbacks.get(i) != null) {
+                    try {
+                        callbacks.get(i).NotifyEndpointStopped();
+                    } catch (Exception ex) {
+                        log.warn("Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer", ex);
+                    }
+                }
             }
             callbacks.clear();
         }
 
+    }
+
+    /**
+     * This effectively stops the endpoint address and notifies all
+     * ISubscriptionCallback clients that the endpoint as been stopped. After it
+     * has been stopped, call ISubscriptionCallback are removed from the
+     * callback list. If unable to remove an auto registered binding template,
+     * no exception will be thrown
+     */
+    public static synchronized void stop(UDDIClient client, String cfg_node_name, String bindingKey) throws ConfigurationException {
+        //stop the service
+        if (ep != null && ep.isPublished()) {
+            log.warn("Stopping jUDDI Subscription callback endpoint at " + callback);
+            ep.stop();
+            if (ep.isPublished()) {
+                log.fatal("Unable to stop the endpoint. the port may be locked until this java process terminates");
+            }
+            ep = null;
+            callback = null;
+        }
+        unregisterAllCallbacks();
         if (client.getClientConfig().getConfiguration().getBoolean(PROPERTY_AUTOREG_BT, false) && bindingKey != null) {
             log.info("Attempting to unregister the binding");
             try {
@@ -444,7 +572,11 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
     @Override
     public DispositionReport notifySubscriptionListener(NotifySubscriptionListener body) throws DispositionReportFaultMessage, RemoteException {
         for (int i = 0; i < callbacks.size(); i++) {
-            callbacks.get(i).HandleCallback(body.getSubscriptionResultsList());
+            try {
+                callbacks.get(i).HandleCallback(body.getSubscriptionResultsList());
+            } catch (Exception ex) {
+                log.warn("Your implementation on ISubscriptionCallback is faulty and threw an error, contact the developer", ex);
+            }
         }
         DispositionReport r = new DispositionReport();
         r.getResult().add(new Result());

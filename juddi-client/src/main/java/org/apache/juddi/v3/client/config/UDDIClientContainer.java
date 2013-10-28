@@ -70,5 +70,14 @@ public class UDDIClientContainer {
 			throw new ConfigurationException("Could not remove UDDIClient for name " + clientName);
 		}
 	}
+
+        /**
+         * return true if the client exists in the current client collection
+         * @param name
+         * @return 
+         */
+    public static boolean contains(String name) {
+        return 	(clients.containsKey(name)) ;
+    }
 	
 }
