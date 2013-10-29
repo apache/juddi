@@ -12,7 +12,7 @@
 
     <!-- Main hero unit for a primary marketing message or call to action -->
     <div class="well" >
-        <h1><%=ResourceLoader.GetResource(session, "navbar.search")%></h1>
+        <h1><%=ResourceLoader.GetResource(session, "navbar.services")%></h1>
     </div>
 
     <!-- Example row of columns -->
