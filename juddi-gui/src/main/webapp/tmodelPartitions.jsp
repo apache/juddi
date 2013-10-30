@@ -23,10 +23,10 @@
                 <%=ResourceLoader.GetResource(session, "pages.tmodelpart.content")%>
                 <br><br>
                 <div class="alert alert-info">
-                <i class="icon-info-sign  icon-large"></i><%=ResourceLoader.GetResource(session, "pages.tmodelpart.juddinote")%></div>
+                <i class="icon-info-sign  icon-large"></i> <%=ResourceLoader.GetResource(session, "pages.tmodelpart.juddinote")%></div>
                 <br><Br>
                 <table class="table">
-                    <tr><td><%=ResourceLoader.GetResource(session, "pages.tmodelpart.key")%></td><td><input type="text" value="uddi:www.mycompany.com:keyGenerator" id="keyGeneratorKey"  style="width:100%"></td></tr>
+                    <tr><td><%=ResourceLoader.GetResource(session, "pages.tmodelpart.key")%></td><td><input type="text" value="uddi:www.mycompany.com:keygenerator" id="keyGeneratorKey"  style="width:100%"></td></tr>
                     <tr><td><%=ResourceLoader.GetResource(session, "pages.thmodepart.name")%></td><td><input type="text" value="My business's key generator" id="keyGeneratorName" style="width:100%"></td></tr>
                     <tr><td><%=ResourceLoader.GetResource(session, "items.lang")%></td><td><input type="text" value="<%=ResourceLoader.GetResource(session, "language")%>" id="keyGeneratorLang" style="width:100%"></td></tr>
                 </table>

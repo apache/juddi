@@ -45,7 +45,7 @@
   <description xml:lang="en">This is a UDDI v3 registry node as implemented by Apache jUDDI.</description>
   <discoveryURLs>
     <!-- This discovery URL should point to the home installation URL of jUDDI -->
-    <discoveryURL useType="home">${juddi.server.baseurl}/juddiv3</discoveryURL>
+    <discoveryURL useType="homepage">${juddi.server.baseurl}</discoveryURL>
   </discoveryURLs>
   <categoryBag>
     <keyedReference tModelKey="uddi:uddi.org:categorization:nodes" keyValue="node" />

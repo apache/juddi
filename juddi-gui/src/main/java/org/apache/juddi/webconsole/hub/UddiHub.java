@@ -42,7 +42,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -54,10 +53,6 @@ import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
-import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.custody;
-import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.inquiry;
-import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.publish;
-import static org.apache.juddi.webconsole.hub.UDDIRequestsAsXML.subscription;
 import org.apache.juddi.webconsole.hub.builders.Builders;
 import org.apache.juddi.webconsole.hub.builders.Printers;
 import org.apache.juddi.webconsole.resources.ResourceLoader;
@@ -100,7 +95,7 @@ public class UddiHub {
      */
     public static final Log log = LogFactory.getLog(LOGGER_NAME);
     private DatatypeFactory df;
-    
+
     private UddiHub() throws DatatypeConfigurationException {
         df = DatatypeFactory.newInstance();
     }
@@ -127,7 +122,7 @@ public class UddiHub {
         } catch (Exception ex) {
             HandleException(ex);
         }
-        
+
         token = null;
         inquiry = null;
         publish = null;
@@ -153,7 +148,7 @@ public class UddiHub {
             _session.setAttribute("hub", hub);
             return hub;
         }
-        
+
         return (UddiHub) j;
     }
     String locale = "en";
@@ -177,7 +172,7 @@ public class UddiHub {
     public Properties GetRawConfiguration() {
         return properties;
     }
-    
+
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
         if (prop == null) {
@@ -197,20 +192,20 @@ public class UddiHub {
             style = AuthStyle.UDDI_AUTH;
         }
         try {
-            
+
             String clazz = UDDIClientContainer.getUDDIClient(null).
                     getClientConfig().getUDDINode("default").getProxyTransport();
             Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
             if (transportClass != null) {
                 transport = (Transport) transportClass.
                         getConstructor(String.class).newInstance("default");
-                
+
                 security = transport.getUDDISecurityService();
                 inquiry = transport.getUDDIInquiryService();
                 subscription = transport.getUDDISubscriptionService();
                 publish = transport.getUDDIPublishService();
                 custody = transport.getUDDICustodyTransferService();
-                
+
             }
         } catch (Exception ex) {
             HandleException(ex);
@@ -244,7 +239,7 @@ public class UddiHub {
         }
         return new Properties();
     }
-    
+
     private String GetToken() {
         if (style != AuthStyle.UDDI_AUTH) {
             BindingProvider bp = null;
@@ -253,31 +248,31 @@ public class UddiHub {
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
-            
+
             bp = (BindingProvider) publish;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
-            
+
             bp = (BindingProvider) custody;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
-            
+
             bp = (BindingProvider) subscription;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             context.put(BindingProvider.USERNAME_PROPERTY, session.getAttribute("username"));
             context.put(BindingProvider.PASSWORD_PROPERTY, session.getAttribute(AES.Decrypt("password", (String) properties.get("key"))));
 
@@ -293,29 +288,29 @@ public class UddiHub {
             }
             BindingProvider bp = null;
             Map<String, Object> context = null;
-            
+
             bp = (BindingProvider) inquiry;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             bp = (BindingProvider) publish;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
-            
+
+
             bp = (BindingProvider) custody;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
+
             bp = (BindingProvider) subscription;
             context = bp.getRequestContext();
             context.remove(BindingProvider.USERNAME_PROPERTY);
             context.remove(BindingProvider.PASSWORD_PROPERTY);
-            
-            
+
+
             GetAuthToken req = new GetAuthToken();
             try {
                 if (security == null) {
@@ -372,7 +367,7 @@ public class UddiHub {
         ret.offset = offset;
         ret.displaycount = 0;
         ret.totalrecords = 0;
-        
+
         try {
             FindBusiness fb = new FindBusiness();
             fb.setMaxRows(maxrecords);
@@ -380,7 +375,7 @@ public class UddiHub {
             fb.setAuthInfo(GetToken());
             org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
             fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-            
+
             fb.setFindQualifiers(fq);
             Name searchname = new Name();
             searchname.setLang(lang);
@@ -408,11 +403,11 @@ public class UddiHub {
                 ret.totalrecords = findBusiness.getListDescription().getActualCount();
                 ret.renderedHtml = Printers.BusinessListAsTable(findBusiness, session, isChooser);
             }
-            
+
         } catch (Exception ex) {
             ret.renderedHtml = (HandleException(ex));
         }
-        
+
         return ret;
     }
 
@@ -429,10 +424,10 @@ public class UddiHub {
      * @return
      */
     public String GetMyTransferableKeys(boolean businesses, boolean tModels) {
-        
+
         StringBuilder sb = new StringBuilder();
-        
-        
+
+
         RegisteredInfo findBusiness = null;
         try {
             GetRegisteredInfo r = new GetRegisteredInfo();
@@ -441,7 +436,7 @@ public class UddiHub {
                 return ToErrorAlert(ResourceLoader.GetResource(session, "errors.notsignedin"));
             }
             r.setInfoSelection(InfoSelection.ALL);
-            
+
             try {
                 findBusiness = publish.getRegisteredInfo(r);
             } catch (Exception ex) {
@@ -456,15 +451,15 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
         } catch (Exception ex) {
             return ToErrorAlert(HandleException(ex));
         }
-        
-        
+
+
         if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
             return (ResourceLoader.GetResource(session, "errors.nodatareturned"));
-            
+
         } else {
             if (findBusiness.getBusinessInfos() != null && businesses) {
                 sb.append("<select id=\"businesslist\" multiple=\"multiple\" size=\"10\">");
@@ -492,10 +487,10 @@ public class UddiHub {
                 }
                 sb.append("</select>");
             }
-            
+
             return sb.toString();
         }
-        
+
     }
 
     /**
@@ -540,7 +535,7 @@ public class UddiHub {
                     } else {
                         sb.append(ResourceLoader.GetResource(session, "items.signed.not")).append("<Br>");
                     }
-                    
+
                     sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), (String) session.getAttribute("locale"))).append("<Br>");
                 }
             } else {
@@ -614,7 +609,7 @@ public class UddiHub {
         if (serviceid == null || serviceid.length() == 0) {
             return null;
         }
-        
+
         try {
             GetServiceDetail gbd = new GetServiceDetail();
             gbd.setAuthInfo(GetToken());
@@ -634,12 +629,12 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             if (get == null || get.getBusinessService().isEmpty()) {
                 return null;
             }
             return get.getBusinessService().get(0);
-            
+
         } catch (Exception ex) {
             HandleException(ex);
         }
@@ -671,7 +666,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             return ResourceLoader.GetResource(session, "actions.saved");
         } catch (Exception ex) {
             return HandleException(ex);
@@ -718,35 +713,35 @@ public class UddiHub {
      * @return a localized Saved or an error message
      */
     public String SaveServiceDetails(HttpServletRequest request) {
-        
+
         BusinessService be = new BusinessService();
         be.setBusinessKey(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
         be.setServiceKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
-        
+
         if (be.getServiceKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
             be.setServiceKey(null);
         }
         if (be.getBusinessKey() == null || be.getBusinessKey().length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
-        
+
         be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit")));
         BindingTemplates bt = new BindingTemplates();
         bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit")));
         if (!bt.getBindingTemplate().isEmpty()) {
             be.setBindingTemplates(bt);
         }
-        
+
         be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
-        
+
         CategoryBag cb = new CategoryBag();
         cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
         cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
-        
+
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
-        
+
         return SaveServiceDetails(be);
     }
 
@@ -806,7 +801,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             return ResourceLoader.GetResource(session, "actions.saved");
         } catch (Exception ex) {
             return HandleException(ex);
@@ -824,9 +819,9 @@ public class UddiHub {
      * @return
      */
     public String SaveBusinessDetails(HttpServletRequest request) {
-        
-        
-        
+
+
+
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey(request.getParameter(PostBackConstants.BUSINESSKEY).trim());
         if (be.getBusinessKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit"))) {
@@ -841,16 +836,16 @@ public class UddiHub {
             }
         }
         be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit")));
-        
-        
+
+
         be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit")));
-        
+
         be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
         be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL));
         CategoryBag cb = new CategoryBag();
         cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
         cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
-        
+
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
@@ -874,11 +869,11 @@ public class UddiHub {
         try {
             GetBusinessDetail gbd = new GetBusinessDetail();
             gbd.setAuthInfo(GetToken());
-            
+
             gbd.getBusinessKey().add(bizid);
-            
+
             BusinessDetail businessDetail = null;
-            
+
             try {
                 businessDetail = inquiry.getBusinessDetail(gbd);
             } catch (Exception ex) {
@@ -912,7 +907,7 @@ public class UddiHub {
                 sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
             }
         } catch (Exception ex) {
-            
+
             sb.append(HandleException(ex));
         }
         return sb.toString();
@@ -928,13 +923,13 @@ public class UddiHub {
         if (bizid == null || bizid.isEmpty()) {
             return null;
         }
-        
+
         try {
             GetBusinessDetail gbd = new GetBusinessDetail();
             gbd.setAuthInfo(GetToken());
-            
+
             gbd.getBusinessKey().add(bizid);
-            
+
             BusinessDetail businessDetail = null;
             try {
                 businessDetail = inquiry.getBusinessDetail(gbd);
@@ -957,7 +952,7 @@ public class UddiHub {
             HandleException(ex);
         }
         return null;
-        
+
     }
 
     /**
@@ -1013,7 +1008,7 @@ public class UddiHub {
         ret.offset = offset;
         ret.totalrecords = 0;
         try {
-            
+
             FindService fs = new FindService();
             fs.setAuthInfo(GetToken());
             fs.setMaxRows(maxrecords);
@@ -1043,7 +1038,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             if (findService == null || findService.getServiceInfos() == null) {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
@@ -1058,7 +1053,7 @@ public class UddiHub {
             ret.renderedHtml = HandleException(ex);
         }
         return ret;
-        
+
     }
 
     /**
@@ -1076,13 +1071,13 @@ public class UddiHub {
         try {
             if (!partitionName.startsWith("uddi:")) {
                 return ResourceLoader.GetResource(session, "errors.tmodel.prefix");
-                
+
             }
             if (!partitionName.endsWith(":keyGenerator")) {
                 return ResourceLoader.GetResource(session, "errors.tmodel.postfix");
             }
-            
-            
+
+
             SaveTModel st = new SaveTModel();
             st.setAuthInfo(GetToken());
             TModel tm = new TModel();
@@ -1183,7 +1178,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             ret.offset = offset;
             ret.displaycount = findTModel.getListDescription().getIncludeCount();
             ret.totalrecords = findTModel.getListDescription().getActualCount();
@@ -1215,14 +1210,14 @@ public class UddiHub {
             if (id == null || id.length() == 0) {
                 return null;
             }
-            
+
             GetTModelDetail req = new GetTModelDetail();
             req.setAuthInfo(GetToken());
             req.getTModelKey().add(id);
             TModelDetail tModelDetail = null;
             try {
                 tModelDetail = inquiry.getTModelDetail(req);
-                
+
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
@@ -1230,17 +1225,17 @@ public class UddiHub {
                         token = null;
                         req.setAuthInfo(GetToken());
                         tModelDetail = inquiry.getTModelDetail(req);
-                        
+
                     }
                 } else {
                     throw ex;
                 }
             }
-            
+
             if (tModelDetail != null && !tModelDetail.getTModel().isEmpty()) {
                 return tModelDetail.getTModel().get(0);
             }
-            
+
         } catch (Exception ex) {
             HandleException(ex);
         }
@@ -1326,7 +1321,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             return tModelDetail.getTModel().get(0);
         } catch (Exception ex) {
             HandleException(ex);
@@ -1406,7 +1401,7 @@ public class UddiHub {
                 return FindBusiness(criteria, parameters, lang, findqualifier);
             case RelatedBusiness:
                 return FindRelatedBusiness(criteria, parameters, lang, findqualifier);
-            
+
             case Service:
                 return FindService(criteria, parameters, lang, findqualifier);
             case tModel:
@@ -1414,7 +1409,7 @@ public class UddiHub {
         }
         return ResourceLoader.GetResource(session, "items.unknown");
     }
-    
+
     private String FindBindingTemplateToHtml(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {
             FindBinding fb = new FindBinding();
@@ -1444,9 +1439,9 @@ public class UddiHub {
                     findBusiness = new BindingDetail();
                     BindingTemplate bt = GetBindingDetailsAsObject(parameters);
                     findBusiness.getBindingTemplate().add(bt);
-                    
+
                     break;
-                
+
             }
             if (findBusiness == null) {
                 try {
@@ -1463,7 +1458,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (findBusiness != null && findBusiness.getBindingTemplate() != null) {
                 StringBuilder sb = new StringBuilder();
@@ -1495,7 +1490,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String FindBusiness(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {
             FindBusiness fb = new FindBusiness();
@@ -1530,16 +1525,16 @@ public class UddiHub {
                     BusinessEntity t = GetBusinessDetails(parameters);
                     findBusiness = new BusinessList();
                     findBusiness.setBusinessInfos(new BusinessInfos());
-                    
+
                     BusinessInfo bd = new BusinessInfo();
                     bd.setBusinessKey(t.getBusinessKey());
                     bd.getName().addAll(t.getName());
                     findBusiness.getBusinessInfos().getBusinessInfo().add(bd);
                     break;
-                
+
             }
             if (findBusiness == null) {
-                
+
                 try {
                     findBusiness = inquiry.findBusiness(fb);
                 } catch (Exception ex) {
@@ -1580,7 +1575,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String FindRelatedBusiness(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {
             FindRelatedBusinesses fb = new FindRelatedBusinesses();
@@ -1597,7 +1592,7 @@ public class UddiHub {
                 case uid:
                     break;
             }
-            
+
             try {
                 findBusiness = inquiry.findRelatedBusinesses(fb);
             } catch (Exception ex) {
@@ -1612,8 +1607,8 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
-            
+
+
             if (findBusiness != null && findBusiness.getRelatedBusinessInfos() != null) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<table class=\"table\">");
@@ -1639,7 +1634,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String FindService(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {
             FindService fb = new FindService();
@@ -1681,7 +1676,7 @@ public class UddiHub {
                         findBusiness.getServiceInfos().getServiceInfo().add(si);
                     }
                     break;
-                
+
             }
             if (findBusiness == null) {
                 try {
@@ -1698,7 +1693,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (findBusiness.getServiceInfos() != null) {
                 StringBuilder sb = new StringBuilder();
@@ -1725,7 +1720,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String FindtModels(CriteriaType criteria, String parameters, String lang, String[] fq) {
         try {
             FindTModel fb = new FindTModel();
@@ -1767,9 +1762,9 @@ public class UddiHub {
                     tmi.setTModelKey(tmodelDetails.getTModelKey());
                     tmi.getDescription().addAll(tmodelDetails.getDescription());
                     findBusiness.getTModelInfos().getTModelInfo().add(tmi);
-                    
+
                     break;
-                
+
             }
             if (findBusiness == null) {
                 try {
@@ -1786,7 +1781,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (findBusiness.getTModelInfos() != null) {
                 StringBuilder sb = new StringBuilder();
@@ -1971,7 +1966,7 @@ public class UddiHub {
         try {
             SaveTModel sb = new SaveTModel();
             sb.setAuthInfo(GetToken());
-            
+
             sb.getTModel().add(be);
             JAXB.marshal(be, System.out);
             try {
@@ -2002,7 +1997,7 @@ public class UddiHub {
      * @return
      */
     public String SaveTModel(HttpServletRequest request) {
-        
+
         TModel be = new TModel();
         be.setTModelKey(request.getParameter(PostBackConstants.SERVICEKEY).trim());
         if (be.getTModelKey() != null && (be.getTModelKey().equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")))
@@ -2018,7 +2013,7 @@ public class UddiHub {
         if (t != null && !t.equalsIgnoreCase(ResourceLoader.GetResource(session, "items.clicktoedit")) && t.length() > 0) {
             be.getName().setLang(t);
         }
-        
+
         t = request.getParameter(PostBackConstants.TMODEL_DELETED);
         if (t != null) {
             if (t.equalsIgnoreCase("checked")) {
@@ -2039,15 +2034,15 @@ public class UddiHub {
         CategoryBag cb = new CategoryBag();
         cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
         cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
-        
+
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
         be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF));
-        
+
         JAXB.marshal(be, System.out);
         return SaveTModel(be);
-        
+
     }
 
     /**
@@ -2064,7 +2059,7 @@ public class UddiHub {
         for (int i = 0; i < sig.getKeyInfo().getContent().size(); i++) {
             //sb.append("Signature #").append((i + 1)).append(": ");
             JAXBElement get = (JAXBElement) sig.getKeyInfo().getContent().get(i);
-            
+
             if (get.getValue() instanceof org.w3._2000._09.xmldsig_.X509DataType) {
                 X509DataType xd = (X509DataType) get.getValue();
                 for (int k = 0; k < xd.getX509IssuerSerialOrX509SKIOrX509SubjectName().size(); k++) {
@@ -2102,7 +2097,7 @@ public class UddiHub {
         }
         for (int i = 0; i < sig.getKeyInfo().getContent().size(); i++) {
             JAXBElement get = (JAXBElement) sig.getKeyInfo().getContent().get(i);
-            
+
             if (get.getValue() instanceof org.w3._2000._09.xmldsig_.X509DataType) {
                 X509DataType xd = (X509DataType) get.getValue();
                 for (int k = 0; k < xd.getX509IssuerSerialOrX509SKIOrX509SubjectName().size(); k++) {
@@ -2117,7 +2112,7 @@ public class UddiHub {
                                 //this is the most supportable way to do this
                                 BASE64Encoder encoder = new BASE64Encoder();
                                 return encoder.encodeBuffer(cert.getEncoded());
-                                
+
                             } catch (Exception ex) {
                                 return HandleException(ex);
                             }
@@ -2167,7 +2162,7 @@ public class UddiHub {
                     return SignatureToBase64(GettModelDetailsAsObject.getSignature().get(index));
                 }
                 break;
-            
+
         }
         return ResourceLoader.GetResource(session, "errors.unknownentity");
     }
@@ -2289,7 +2284,7 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             return operationalInfo.getOperationalInfo();
         } catch (Exception ex) {
             HandleException(ex);
@@ -2305,7 +2300,7 @@ public class UddiHub {
      */
     public String GetOperationalInfo(List<OperationalInfo> info) {
         StringBuilder sb = new StringBuilder();
-        
+
         if (info != null) {
             sb.append("<table class=\"table table-hover\">");
             for (int i = 0; i < info.size(); i++) {
@@ -2406,13 +2401,13 @@ public class UddiHub {
      */
     public List<AssertionStatusItem> GetPublisherAssertions(AtomicReference<String> msg) {
         List<AssertionStatusItem> out = new ArrayList<AssertionStatusItem>();
-        
+
         if (GetToken() == null) {
             msg.set(ResourceLoader.GetResource(session, "errors.notsignedin"));
             return null;
         }
         List<AssertionStatusItem> STATUS_COMPLETE = null;
-        
+
         try {
             try {
                 STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
@@ -2443,7 +2438,7 @@ public class UddiHub {
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
                         STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
-                        
+
                     }
                 } else {
                     throw ex;
@@ -2459,14 +2454,14 @@ public class UddiHub {
         try {
             try {
                 STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
-                
+
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
                         STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
-                        
+
                     }
                 } else {
                     throw ex;
@@ -2478,8 +2473,8 @@ public class UddiHub {
         if (STATUS_TO_KEY_INCOMPLETE != null) {
             out.addAll(STATUS_TO_KEY_INCOMPLETE);
         }
-        
-        
+
+
         return out;
         //return publisherAssertions;
     }
@@ -2551,7 +2546,7 @@ public class UddiHub {
         try {
             try {
                 publish.addPublisherAssertions(r);
-                
+
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
@@ -2589,13 +2584,13 @@ public class UddiHub {
         try {
             try {
                 subscriptions = subscription.getSubscriptions(GetToken());
-                
+
             } catch (Exception ex) {
                 if (ex instanceof DispositionReportFaultMessage) {
                     DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                     if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                         token = null;
-                        
+
                         subscriptions = subscription.getSubscriptions(GetToken());
                     }
                 } else {
@@ -2605,27 +2600,27 @@ public class UddiHub {
         } catch (Exception ex) {
             return HandleException(ex);
         }
-        
-        
-        
+
+
+
         GregorianCalendar gcal = new GregorianCalendar();
         gcal.setTimeInMillis(System.currentTimeMillis());
-        
+
         GetSubscriptionResults r = new GetSubscriptionResults();
         r.setAuthInfo(GetToken());
         r.setCoveragePeriod(new CoveragePeriod());
         r.getCoveragePeriod().setEndPoint(df.newXMLGregorianCalendar(gcal));
-        
+
         r.getCoveragePeriod().setStartPoint(lastRefresh);
         StringBuilder sb = new StringBuilder();
         for (int k = 0; k < subscriptions.size(); k++) {
-            
+
             r.setSubscriptionKey(subscriptions.get(k).getSubscriptionKey());
             SubscriptionResultsList subscriptionResults = null;
             try {
                 try {
                     subscriptionResults = subscription.getSubscriptionResults(r);
-                    
+
                 } catch (Exception ex) {
                     if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
@@ -2641,7 +2636,7 @@ public class UddiHub {
             } catch (Exception ex) {
                 return HandleException(ex);
             }
-            
+
             if (subscriptionResults != null) {
                 //    subscriptionResults.getAssertionStatusReport().
                 if (subscriptionResults.getAssertionStatusReport() != null) {
@@ -2710,7 +2705,7 @@ public class UddiHub {
                     for (int i = 0; i < subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().size(); i++) {
                         sb.append("<tr><td>");
                         sb.append(StringEscapeUtils.escapeHtml(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getServiceKey()));
-                        
+
                         sb.append("</td><td>");
                         sb.append(StringEscapeUtils.escapeHtml(Printers.ListNamesToString(subscriptionResults.getServiceList().getServiceInfos().getServiceInfo().get(i).getName())));
                         sb.append("</td></tr>");
@@ -2742,7 +2737,7 @@ public class UddiHub {
                     }
                     sb.append("</table>");
                 }
-                
+
             }
         }
         return sb.toString();
@@ -2766,7 +2761,7 @@ public class UddiHub {
         ret.offset = offset;
         ret.totalrecords = 0;
         try {
-            
+
             FindService fs = new FindService();
             fs.setAuthInfo(GetToken());
             fs.setMaxRows(maxrecords);
@@ -2796,14 +2791,14 @@ public class UddiHub {
                     throw ex;
                 }
             }
-            
+
             if (findService == null || findService.getServiceInfos() == null) {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
             }
             ret.displaycount = findService.getListDescription().getIncludeCount();
             ret.totalrecords = findService.getListDescription().getActualCount();
-            
+
             GetServiceDetail gs = new GetServiceDetail();
             gs.setAuthInfo(GetToken());
             for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
@@ -2828,9 +2823,9 @@ public class UddiHub {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");
                 return ret;
             }
-            
-            
-            
+
+
+
             StringBuilder sb = new StringBuilder();
             sb.append("<table class=\"table\"><tr><th>").
                     append("</th><th>").
@@ -2842,7 +2837,7 @@ public class UddiHub {
                     append("</th><th>").
                     append(ResourceLoader.GetResource(session, "items.accesspoint.value")).
                     append("</th></tr>");
-            
+
             for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
                 //   System.out.println(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size());
                 if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {
@@ -2874,7 +2869,7 @@ public class UddiHub {
                     }
                 }
             }
-            
+
             sb.append("</table>");
             ret.renderedHtml = sb.toString();
             return ret;
@@ -2882,7 +2877,7 @@ public class UddiHub {
             ret.renderedHtml = HandleException(ex);
         }
         return ret;
-        
+
     }
 
     /**
@@ -2930,7 +2925,7 @@ public class UddiHub {
             }
         } catch (Exception ex) {
             return HandleException(ex);
-            
+
         }
         return null;//"Success";
     }
@@ -2958,7 +2953,7 @@ public class UddiHub {
         DiscardTransferToken r = new DiscardTransferToken();
         r.setAuthInfo(GetToken());
         r.setTransferToken(JAXB.unmarshal(new StringReader(tokenxml), TransferToken.class));
-        
+
         try {
             try {
                 custody.discardTransferToken(r);
@@ -2996,7 +2991,7 @@ public class UddiHub {
             te.setTransferToken(JAXB.unmarshal(sr, TransferToken.class));
             sr = new StringReader(keyBagXML.trim());
             te.setKeyBag(JAXB.unmarshal(sr, org.uddi.custody_v3.KeyBag.class));
-            
+
             try {
                 custody.transferEntities(te);
             } catch (Exception ex) {
@@ -3065,7 +3060,7 @@ public class UddiHub {
         }
         return "Unknown error";
     }
-    
+
     private String SendAdvancedQueryInquiry(String method, Object request) {
         Object response = null;
         try {
@@ -3102,7 +3097,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("findService")) {
                 ((FindService) request).setAuthInfo(GetToken());
@@ -3120,7 +3115,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("findRelatedBusines")) {
                 ((FindRelatedBusinesses) request).setAuthInfo(GetToken());
@@ -3138,11 +3133,11 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("findTModel")) {
                 ((FindTModel) request).setAuthInfo(GetToken());
-                
+
                 try {
                     response = inquiry.findTModel((FindTModel) request);
                 } catch (Exception ex) {
@@ -3157,7 +3152,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getBindingDetail")) {
                 ((GetBindingDetail) request).setAuthInfo(GetToken());
@@ -3175,11 +3170,11 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getBusinessDetail")) {
                 ((GetBusinessDetail) request).setAuthInfo(GetToken());
-                
+
                 try {
                     response = inquiry.getBusinessDetail((GetBusinessDetail) request);
                 } catch (Exception ex) {
@@ -3194,11 +3189,11 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getServiceDetail")) {
                 ((GetServiceDetail) request).setAuthInfo(GetToken());
-                
+
                 try {
                     response = inquiry.getServiceDetail((GetServiceDetail) request);
                 } catch (Exception ex) {
@@ -3213,7 +3208,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getOperationalInfo")) {
                 ((GetOperationalInfo) request).setAuthInfo(GetToken());
@@ -3231,7 +3226,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getTModelDetail")) {
                 ((GetTModelDetail) request).setAuthInfo(GetToken());
@@ -3260,7 +3255,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String SendAdvancedQueryPublish(String method, Object request) {
         Object response = null;
         try {
@@ -3381,7 +3376,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (method.equalsIgnoreCase("getPublisherAssertions")) {
                 try {
@@ -3502,7 +3497,7 @@ public class UddiHub {
                         throw ex;
                     }
                 }
-                
+
             }
             if (response == null) {
                 return "The operation completed without error";
@@ -3514,11 +3509,11 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String SendAdvancedQueryCustody(String method, Object request) {
         Object response = null;
         try {
-            
+
             if (method.equalsIgnoreCase("discardTransferToken")) {
                 try {
                     ((DiscardTransferToken) request).setAuthInfo(GetToken());
@@ -3581,7 +3576,7 @@ public class UddiHub {
                     }
                 }
             }
-            
+
             if (response == null) {
                 return "The operation completed without error";
             }
@@ -3592,7 +3587,7 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
-    
+
     private String SendAdvancedQuerySubscription(String method, Object request) {
         Object response = null;
         try {
@@ -3632,14 +3627,14 @@ public class UddiHub {
             }
             if (method.equalsIgnoreCase("getSubscriptions")) {
                 try {
-                    
+
                     response = subscription.getSubscriptions(GetToken());
                 } catch (Exception ex) {
                     if (ex instanceof DispositionReportFaultMessage) {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                             token = null;
-                            
+
                             response = subscription.getSubscriptions(GetToken());
                         }
                     } else {
@@ -3651,7 +3646,7 @@ public class UddiHub {
                 SaveSubscription ss = (SaveSubscription) request;
                 Holder<List<Subscription>> h = new Holder<List<Subscription>>(ss.getSubscription());
                 try {
-                    
+
                     subscription.saveSubscription(GetToken(), h);
                     response = h.value;
                 } catch (Exception ex) {
