@@ -69,7 +69,8 @@
                     tmodels.addAll(portTypeTModels);
 
                     boolean createKeyGen = false;
-                    TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, (String) session.getAttribute("locale"));
+                    TModel keygen = UDDIClerk.createKeyGenator("uddi:" + keydomain + ":keygenerator", 
+                            keydomain + " Key Generator Partition", (String) session.getAttribute("locale"));
                     if (x.getTmodelDetails(keygen.getTModelKey()) == null) {
                         createKeyGen = true;
                     }

@@ -39,6 +39,7 @@ import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.GetAuthToken;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveBusiness;
+import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -94,14 +95,14 @@ public class WsdlImport {
         //http://www.webservicex.net/stockquote.asmx?WSDL");
         //http://www.webservicex.com/globalweather.asmx?WSDL");
         //http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-        String domain = url.getHost();
+        String domain = "my.key.domain";
         PrintUDDI<TModel> tmodelPrinter = new PrintUDDI<TModel>();
         TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
         //save the keygen
         SaveTModel stm = new SaveTModel();
         stm.setAuthInfo(rootAuthToken.getAuthInfo());
         stm.getTModel().add(keygen);
-        System.out.println(tmodelPrinter.print(keygen));
+        //System.out.println(tmodelPrinter.print(keygen));
         //publish.saveTModel(stm);
 
 
@@ -149,19 +150,27 @@ public class WsdlImport {
         }
 
         //important, you'll need to save your new tModels, or else saving the business/service may fail
-        publish.saveTModel(stm);
+        System.out.println(new PrintUDDI<SaveTModel>().print(tms));
+        //publish.saveTModel(stm);
 
 
 
         //finaly, we're ready to save all of the services defined in the WSDL
         //again, we're creating a new business, if you have one already, look it up using the Inquiry getBusinessDetails
 
-        PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
+        SaveService ss = new  SaveService();
+        
+        
+        //PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
         for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-            System.out.println(servicePrinter.print(businessServices.getBusinessService().get(i)));
+            ss.getBusinessService().add(businessServices.getBusinessService().get(i));
+            //System.out.println(servicePrinter.print(businessServices.getBusinessService().get(i)));
         }
 
+        
+        System.out.println(new PrintUDDI<SaveService>().print(ss));
 
+        /*
 
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(rootAuthToken.getAuthInfo());
@@ -176,7 +185,7 @@ public class WsdlImport {
         PrintUDDI<SaveBusiness> sbp = new PrintUDDI<SaveBusiness>();
         System.out.println("Request " + sbp.print(sb));
         publish.saveBusiness(sb);
-
+*/
         //and we're done
         //Be sure to report any problems to the jUDDI JIRA bug tracker at 
         //https://issues.apache.org/jira/browse/JUDDI

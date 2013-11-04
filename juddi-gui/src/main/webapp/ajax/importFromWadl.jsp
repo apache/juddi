@@ -50,7 +50,7 @@
                 try {
                     URL url = new URL(uri);
                     //"http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-                    String domain = url.getHost();
+                    //String domain = url.getHost();
                     //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
 
                     Application app = WADL2UDDI.ParseWadl(url, username, password, ignoreSSL);
@@ -60,8 +60,8 @@
 
                     //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
                     Properties properties = new Properties();
-                    properties.put("keyDomain", domain);
-                    properties.put("businessName", domain);
+                    properties.put("keyDomain", keydomain);
+                    properties.put("businessName", businessname);
                     properties.put("serverName", url.getHost());
                     properties.put("serverPort", url.getPort());
                     //wsdlURL = wsdlDefinition.getDocumentBaseURI();
@@ -75,7 +75,8 @@
                     tmodels.addAll(portTypeTModels);
 
                     boolean createKeyGen = false;
-                    TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, (String) session.getAttribute("locale"));
+                    TModel keygen = UDDIClerk.createKeyGenator("uddi:" + keydomain + ":keygenerator", 
+                            keydomain + " Key Generator Partition", (String) session.getAttribute("locale"));
                     if (x.getTmodelDetails(keygen.getTModelKey()) == null) {
                         createKeyGen = true;
                     }

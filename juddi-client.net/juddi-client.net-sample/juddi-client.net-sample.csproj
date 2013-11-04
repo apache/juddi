@@ -40,8 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encryption.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WadlImport.cs" />
+    <Compile Include="WsdlImport.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="uddi.xml">

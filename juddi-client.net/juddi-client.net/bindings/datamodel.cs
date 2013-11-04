@@ -1112,7 +1112,9 @@ namespace org.uddi.apiv3
 
         private object[] itemsField;
 
-        /// <remarks/>
+        /// <summary>
+        /// keyedReference  keyedReferenceGroup
+        /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("keyedReference", typeof(keyedReference))]
         [System.Xml.Serialization.XmlElementAttribute("keyedReferenceGroup", typeof(keyedReferenceGroup))]
         public object[] Items
@@ -2155,7 +2157,10 @@ namespace org.uddi.apiv3
             }
         }
 
-        /// <remarks/>
+        /// <summary>
+        /// 
+        /// accessPoint or hostingRedirector
+        /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("accessPoint", typeof(accessPoint))]
         [System.Xml.Serialization.XmlElementAttribute("hostingRedirector", typeof(hostingRedirector))]
         public object Item
@@ -2440,7 +2445,9 @@ namespace org.uddi.apiv3
             }
         }
 
-        /// <remarks/>
+       /// <summary>
+        /// instanceParms or overviewDoc
+       /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("instanceParms", typeof(string))]
         [System.Xml.Serialization.XmlElementAttribute("overviewDoc", typeof(overviewDoc))]
         public object[] Items

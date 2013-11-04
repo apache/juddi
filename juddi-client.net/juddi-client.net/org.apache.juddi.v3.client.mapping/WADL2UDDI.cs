@@ -435,6 +435,11 @@ namespace org.apache.juddi.v3.client.mapping
             return unmarshal;
         }
 
+        /// <summary>
+        /// will parse a file from the disk and parse it, returns null if an error occurs and logs it
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static application ParseWadl(String file)
         {
             try
@@ -451,13 +456,36 @@ namespace org.apache.juddi.v3.client.mapping
             return null;
         }
 
+        /// <summary>
+        /// will download a file from the network/internet and parse it, returns null if an error occurs and logs it
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public static application ParseWadl(Uri file)
         {
-            return ParseWadl(file.ToString());
+            if (file.OriginalString.StartsWith("http"))
+            {
+                try
+                {
+                    WebClient c = new WebClient();
+                    String content = c.DownloadString(file);
+                    StringReader sr = new StringReader(content);
+                    XmlSerializer xs = new XmlSerializer(typeof(application));
+                    c.Dispose();
+                    return (application)xs.Deserialize(sr);
+                }
+                catch (Exception ex)
+                {
+                    log.error("error parsing file", ex);
+                }
+                return null;
+            }
+            else
+                return ParseWadl(file.ToString());
         }
 
 
-       
+
 
         private string getDescription(List<doc> doc)
         {

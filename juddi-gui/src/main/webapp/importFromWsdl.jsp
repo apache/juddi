@@ -57,126 +57,132 @@
                     </div>
                 </div>
                 <script type="text/javascript">
-                 
+
                     //by James Padolsey
                     //http://james.padolsey.com/javascript/parsing-urls-with-the-dom/
                     function parseURL(url) {
-                        var a =  document.createElement('a');
+                        var a = document.createElement('a');
                         a.href = url;
                         return {
                             source: url,
-                            protocol: a.protocol.replace(':',''),
+                            protocol: a.protocol.replace(':', ''),
                             host: a.hostname,
                             port: a.port,
                             query: a.search,
-                            params: (function(){
+                            params: (function() {
                                 var ret = {},
-                                seg = a.search.replace(/^\?/,'').split('&'),
-                                len = seg.length, i = 0, s;
-                                for (;i<len;i++) {
-                                    if (!seg[i]) { continue; }
+                                        seg = a.search.replace(/^\?/, '').split('&'),
+                                        len = seg.length, i = 0, s;
+                                for (; i < len; i++) {
+                                    if (!seg[i]) {
+                                        continue;
+                                    }
                                     s = seg[i].split('=');
                                     ret[s[0]] = s[1];
                                 }
                                 return ret;
                             })(),
-                            file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
-                            hash: a.hash.replace('#',''),
-                            path: a.pathname.replace(/^([^\/])/,'/$1'),
-                            relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
-                            segments: a.pathname.replace(/^\//,'').split('/')
+                            file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ''])[1],
+                            hash: a.hash.replace('#', ''),
+                            path: a.pathname.replace(/^([^\/])/, '/$1'),
+                            relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
+                            segments: a.pathname.replace(/^\//, '').split('/')
                         };
                     }
-                    
+
                     //after is entered, fetch the wsdl, parse the key domain
-                    
+                    var trigger1_triggered = false;
                     //considerations, if its an ip address? what about localhost
                     function trigger1()
                     {
-                        var l = parseURL($("#wsdlurl").val());
-                        $("#keydomain").val(l.host);
-                        $("#collapse1").collapse('hide');
-                        $("#collapse2").collapse('show');
+                        if (!trigger1_triggered)
+                        {
+                            var l = parseURL($("#wsdlurl").val());
+                            $("#keydomain").val(l.host);
+                            $("#collapse1").collapse('hide');
+                            $("#collapse2").collapse('show');
+                            trigger1_triggered = true;
+                        }
                     }
-                    
+
                     function save(preview)
                     {
                         var postbackdata = new Array();
-                        var url='ajax/importFromWsdl.jsp';
+                        var url = 'ajax/importFromWsdl.jsp';
                         postbackdata.push({
-                            name:"nonce", 
+                            name: "nonce",
                             value: $("#nonce").val()
                         });
-                        if (preview){
+                        if (preview) {
                             postbackdata.push({
-                                name:"formaction", 
+                                name: "formaction",
                                 value: "preview"
                             });
                         }
                         else
                         {
                             postbackdata.push({
-                                name:"formaction", 
+                                name: "formaction",
                                 value: "save"
                             });
                         }
                         postbackdata.push({
-                            name:"wsdlusername", 
+                            name: "wsdlusername",
                             value: $("#wsdlusername").val()
                         });
                         postbackdata.push({
-                            name:"wsdlpassword", 
+                            name: "wsdlpassword",
                             value: $("#wsdlpassword").val()
                         });
                         postbackdata.push({
-                            name:"wsdlurl", 
+                            name: "wsdlurl",
                             value: $("#wsdlurl").val()
                         });
-                        if($('#wsdlignoressl').is(':checked')) {
+                        if ($('#wsdlignoressl').is(':checked')) {
                             postbackdata.push({
-                                name:"ignoressl", 
+                                name: "ignoressl",
                                 value: true
                             });
                         }
                         else
                         {
                             postbackdata.push({
-                                name:"ignoressl", 
+                                name: "ignoressl",
                                 value: false
-                            }); 
+                            });
                         }
                         postbackdata.push({
-                            name:"businessname", 
+                            name: "businessname",
                             value: $("#businessname").val()
                         });
-                        
+
                         postbackdata.push({
-                            name:"keydomain", 
+                            name: "keydomain",
                             value: $("#keydomain").val()
                         });
-                        
-                        
-                        
-                        
-                        var request=   $.ajax({
+
+
+
+
+                        var request = $.ajax({
                             url: url,
-                            type:"POST",
+                            type: "POST",
                             //  dataType: "html", 
-                            cache: false, 
+                            cache: false,
                             //  processData: false,f
                             data: postbackdata
                         });
-                
-                
+
+
                         request.done(function(msg) {
-                            window.console && console.log('postback done '  + url);                
+                            window.console && console.log('postback done ' + url);
                             $("#preview").html(msg);
                         });
 
                         request.fail(function(jqXHR, textStatus) {
-                            window.console && console.log('postback failed ' + url);                                
+                            window.console && console.log('postback failed ' + url);
                             $("#preview").html(jqXHR + textStatus);
-       
+
                         });
                     }
 
@@ -209,23 +215,23 @@
                             <a href="javascript:loadBusinessModel();"><i class="icon-list-alt icon-large"></i> <%=ResourceLoader.GetResource(session, "items.picker")%></a>
 
                             <script type="text/javascript">
-                                function loadBusinessModel()
+                    function loadBusinessModel()
+                    {
+                        reloadBusinessModal();
+                        $.dialogBusiness.confirm({
+                            callback: function(success, result) {
+                                if (success)
                                 {
-                                    reloadBusinessModal();
-                                    $.dialogBusiness.confirm({
-                                        callback: function(success, result) {
-                                            if (success)
-                                            {
-                                                for (var i=0;i<result.length;i++){
-                                                    $("#businessname").val(result[i]);
-                                                    //if ($("#keylist option[value='"+result[i]+"']").length == 0)
-                                                    //$("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                }
-                                                
-                                            }
-                                        }
-                                    });
+                                    for (var i = 0; i < result.length; i++) {
+                                        $("#businessname").val(result[i]);
+                                        //if ($("#keylist option[value='"+result[i]+"']").length == 0)
+                                        //$("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
+                                    }
+
                                 }
+                            }
+                        });
+                    }
                             </script>
                             <input type="text" id="businessname" placeholder="Business Key or a new Business Name">
                         </div>

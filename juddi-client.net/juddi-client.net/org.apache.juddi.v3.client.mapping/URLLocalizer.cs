@@ -16,33 +16,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 
-namespace org.apache.juddi.jaxb
+namespace org.apache.juddi.v3.client.mapping
 {
-    public  class PrintUDDI<T>
+    public class URLLocalizer
     {
-        public  String print(Object j)
+        internal string rewrite(Uri serviceUrl)
         {
-            try
-            {
-                XmlSerializer xs = new XmlSerializer(typeof(T));
-                StringWriter sw = new StringWriter();
-                xs.Serialize(sw, j);
-                return sw.ToString();
-            }
-            catch (Exception ex)
-            {
-                String err = "";
-                while (ex != null)
-                {
-                    err += ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine;
-                    ex = ex.InnerException;
-                }
-                return err;
-            }
+            return serviceUrl.AbsoluteUri;
         }
     }
 }
