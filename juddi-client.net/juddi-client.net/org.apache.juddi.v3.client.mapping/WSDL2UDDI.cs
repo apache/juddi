@@ -95,37 +95,210 @@ namespace org.apache.juddi.v3.client.mapping
             this.lang = properties.getProperty(Property.LANG, Property.DEFAULT_LANG);
 
         }
-        public businessService[] registerBusinessServices(ReadWSDL wsdlDefinition)
+        public businessService[] registerBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
-            return null;
-            /*
-                    businessService[] businessServices = new businessService[]();
-
-        for (Object serviceName : wsdlDefinition.getAllServices().keySet()) {
-            QName serviceQName = (QName) serviceName;
-            Service service = wsdlDefinition.getService(serviceQName);
+            List< businessService> businessServices = new List<businessService>();
+            Dictionary<apache.juddi.v3.client.mapping.QName, org.xmlsoap.schemas.easyWsdl.tService>.Enumerator it= wsdlDefinition.getAllServices().GetEnumerator();
+        while (it.MoveNext()) {
+            QName serviceQName = (QName) it.Current.Key;
+            org.xmlsoap.schemas.easyWsdl.tService service = wsdlDefinition.getService(serviceQName);
             businessService businessService = null;
             //add service
             Uri serviceUrl = null;
-            if (service.getPorts() != null && service.getPorts().size() > 0) {
-                for (Object portName : service.getPorts().keySet()) {
-                    businessService = registerBusinessService(serviceQName, (String) portName, serviceUrl, wsdlDefinition).getBusinessService();
+            if (service.port != null && service.port.Count > 0) {
+              HashSet<org.xmlsoap.schemas.easyWsdl.tPort>.Enumerator it2=  service.port.GetEnumerator();
+                while (it2.MoveNext())
+                {
+                //for (Object portName : service.getPorts().keySet()) {
+                    businessService = registerBusinessService(serviceQName, (String) it2.Current.name, serviceUrl, wsdlDefinition).getBusinessService();
                 }
             }
             if (businessService != null) {
-                businessServices.getBusinessService().add(businessService);
+                businessServices.Add(businessService);
             }
-             
         }
 
-        return businessServices;*/
+        return businessServices.ToArray();
 
         }
-        public bool registerBusinessService(QName serviceQName, String portName, Uri serviceUrl, object wsdlDefinition) { return false; }
+        public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, Uri serviceUrl,
+            org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
+        {
 
-        public String[] unRegisterBusinessServices(object wsdlDefinition) { return null; }
-        public String unRegisterBusinessService(QName serviceName, String portName, Uri serviceUrl) { return null; }
-        public String getKeyDomainURI() { return null; }
+
+            String genericWSDLURL = serviceUrl.ToString();     //TODO maybe point to repository version
+            ServiceRegistrationResponse response = new ServiceRegistrationResponse();
+            String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceQName.getLocalPart());
+            businessService businessService = lookupService(serviceKey);
+            if (businessService == null)
+            {
+                List<tModel> tModels = new List<tModel>();
+                // Create the PortType tModels
+                Dictionary
+                    <QName, org.xmlsoap.schemas.easyWsdl.tPortType> portTypes = (Dictionary<QName, org.xmlsoap.schemas.easyWsdl.tPortType>)wsdlDefinition.getAllPortTypes();
+
+                tModels.AddRange(createWSDLPortTypeTModels(genericWSDLURL, portTypes));
+                // Create the Binding tModels
+                Dictionary<QName, org.xmlsoap.schemas.easyWsdl.tBinding> bindings = (Dictionary<QName, org.xmlsoap.schemas.easyWsdl.tBinding>)wsdlDefinition.getAllBindings();
+                tModels.AddRange(createWSDLBindingTModels(genericWSDLURL, bindings));
+                // Register these tModels
+                foreach (tModel tModel in tModels)
+                {
+                    clerk.register(tModel);
+                }
+                // Service
+                businessService = createBusinessService(serviceQName, wsdlDefinition);
+                // Register this Service
+                clerk.register(businessService);
+            }
+            //Add the BindingTemplate to this Service
+            bindingTemplate binding = createWSDLBinding(serviceQName, portName, serviceUrl, wsdlDefinition);
+            // Register BindingTemplate
+            if (binding.Item != null)
+            {
+                clerk.register(binding);
+                if (businessService.bindingTemplates == null)
+                {
+                    businessService.bindingTemplates = new bindingTemplate[] { binding };
+                }
+                else
+                {
+                    List<bindingTemplate> bts = new List<bindingTemplate>();
+
+                    for (int i = 0; i < businessService.bindingTemplates.Length; i++)
+                        bts.Add(businessService.bindingTemplates[i]);
+                    bts.Add(binding);
+                    businessService.bindingTemplates = bts.ToArray();
+                }
+
+                response.setBindingKey(binding.bindingKey);
+            }
+            response.setBusinessService(businessService);
+            return response;
+
+
+        }
+
+        /**
+    * Perform a lookup by serviceKey, and will return null if not found.
+    *
+    * @param serviceKey
+    * @return
+    * @throws RemoteException
+    * @throws ConfigurationException
+    * @throws TransportException
+    */
+        private businessService lookupService(string serviceKey)
+        {
+            //Checking if this serviceKey already exist
+            businessService service = clerk.findService(serviceKey);
+            return service;
+        }
+
+        public String[] unRegisterBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
+        {
+            String[] businessServices = new String[wsdlDefinition.getAllServices().Count];
+            int i = 0;
+            Dictionary<apache.juddi.v3.client.mapping.QName, org.xmlsoap.schemas.easyWsdl.tService>.Enumerator it = wsdlDefinition.getAllServices().GetEnumerator();
+            while (it.MoveNext())
+            {
+
+                QName serviceQName = it.Current.Key;
+                org.xmlsoap.schemas.easyWsdl.tService service = it.Current.Value;
+                //unregister service
+                Uri serviceUrl = null;
+                if (service.port != null && service.port.Count > 0)
+                {
+                    HashSet<org.xmlsoap.schemas.easyWsdl.tPort>.Enumerator it2 = service.port.GetEnumerator();
+                    while (it2.MoveNext())
+                    {
+                        //construct the accessURL
+                        serviceUrl = new Uri(getBindingURL((org.xmlsoap.schemas.easyWsdl.tPort)service.getPort(it2.Current.name)));
+                        businessServices[i++] = unRegisterBusinessService(serviceQName, (String)it2.Current.name, serviceUrl);
+                    }
+                }
+            }
+            return businessServices;
+        }
+
+        private string getBindingURL(xmlsoap.schemas.easyWsdl.tPort tPort)
+        {
+            String bindingUrl = null;
+            if (tPort.Any != null)
+            {
+                HashSet<XmlElement>.Enumerator it = tPort.Any.GetEnumerator();
+                while (it.MoveNext())
+                {
+                    String location = null;
+                    if (it.Current.LocalName.Equals("address", StringComparison.CurrentCultureIgnoreCase) &&
+                                   it.Current.NamespaceURI.Equals("http://schemas.xmlsoap.org/wsdl/soap/", StringComparison.CurrentCultureIgnoreCase))
+                    {
+
+                        location = it.Current.GetAttribute("location");
+                    }
+                    else
+                        if (it.Current.LocalName.Equals("address", StringComparison.CurrentCultureIgnoreCase) &&
+                        it.Current.NamespaceURI.Equals("http://schemas.xmlsoap.org/wsdl/http/", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            location = it.Current.GetAttribute("location");
+                        }
+                        else
+
+                            if (it.Current.LocalName.Equals("address", StringComparison.CurrentCultureIgnoreCase) &&
+                        it.Current.NamespaceURI.Equals("http://schemas.xmlsoap.org/wsdl/soap12/", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                location = it.Current.GetAttribute("location");
+                            }
+
+                    Uri locationURI = new Uri(location);
+                    if (locationURI != null)
+                    {
+                        bindingUrl = urlLocalizer.rewrite(locationURI);
+                        break;
+                    }
+                }
+            }
+            return bindingUrl;
+        }
+        public String unRegisterBusinessService(QName serviceName, String portName, Uri serviceUrl)
+        {
+            String serviceKey = UDDIKeyConvention.getServiceKey(properties, serviceName.getLocalPart());
+            businessService service = lookupService(serviceKey);
+            bool isRemoveServiceIfNoTemplates = true;
+            String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceName, portName, serviceUrl);
+            //check if this bindingKey is in the service's binding templates
+            foreach (bindingTemplate bindingTemplate in service.bindingTemplates)
+            {
+                if (bindingKey.Equals(bindingTemplate.bindingKey))
+                {
+                    clerk.unRegisterBinding(bindingKey);
+                    //if this is the last binding for this service, and 
+                    if (service.bindingTemplates.Length == 1 && isRemoveServiceIfNoTemplates)
+                    {
+                        clerk.unRegisterService(serviceKey);
+                        if (bindingTemplate.tModelInstanceDetails != null)
+                        {
+                            for (int i = 0; i < bindingTemplate.tModelInstanceDetails.Length; i++)
+                            {
+                                //foreach (tModelInstanceInfo tmi in bindingTemplate.tModelInstanceDetails)) {
+                                String tModelKey = bindingTemplate.tModelInstanceDetails[i].tModelKey;
+                                tModelDetail tModelDetail = clerk.getTModelDetail(tModelKey);
+                                //delete all tModels assuming they are the portType and Binding tModels.
+                                if (tModelDetail.tModel != null && tModelDetail.tModel.Length > 0)
+                                {
+                                    for (int k = 0; k < tModelDetail.tModel.Length; k++)
+                                    {
+                                        clerk.unRegisterTModel(tModelDetail.tModel[k].tModelKey);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return serviceKey;
+        }
+        public String getKeyDomainURI() { return keyDomainURI; }
         public void setKeyDomain(String keyDomainURI) { }
         public String getLang() { return lang; }
         String lang = "en";
@@ -149,7 +322,7 @@ namespace org.apache.juddi.v3.client.mapping
                 lang = value;
             }
         }
-        
+
         /**
     * <h3>2.4.1 wsdl:portType -> uddi:tModel</h3>
     *
@@ -201,7 +374,7 @@ namespace org.apache.juddi.v3.client.mapping
     * @return set of WSDL PortType tModels
     * @throws WSDLException
     */
-       
+
         protected static keyedReference newKeyedReference(String tModelKey, String keyName, String value)
         {
             keyedReference typesReference = new keyedReference();
@@ -218,7 +391,32 @@ namespace org.apache.juddi.v3.client.mapping
            */
         public static find_tModel createFindBindingTModelForPortType(String portType, String ns)
         {
-            return null;
+
+            find_tModel findTModel = new find_tModel();
+            categoryBag categoryBag = new categoryBag();
+            List<keyedReference> items = new List<keyedReference>();
+            if (ns != null && ns.Length != 0)
+            {
+                keyedReference namespaceReference = newKeyedReference(
+                        "uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", ns);
+                items.Add(namespaceReference);
+            }
+            keyedReference bindingReference = newKeyedReference(
+                    "uddi:uddi.org:wsdl:types", "uddi-org:wsdl:types", "binding");
+            items.Add(bindingReference);
+
+            keyedReference portTypeReference = newKeyedReference(
+                    "uddi:uddi.org:wsdl:porttypereference", "uddi-org:wsdl:portTypeReference", portType);
+            items.Add(portTypeReference);
+
+            categoryBag.Items = (object[])items.ToArray();
+            findTModel.categoryBag = (categoryBag);
+
+            if (log.isDebugEnabled())
+            {
+                log.debug(new PrintUDDI<find_tModel>().print(findTModel));
+            }
+            return findTModel;
         }
         /**
  * Builds a finder to find the portType tModels for a portType.
@@ -378,7 +576,7 @@ namespace org.apache.juddi.v3.client.mapping
             keyedReference localNameReference = newKeyedReference(
                     "uddi:uddi.org:xml:localname", "uddi-org:xml:localName", serviceQName.getLocalPart());
             cbitems.Add(localNameReference);
-            categoryBag.Items = (object[]) cbitems.ToArray();
+            categoryBag.Items = (object[])cbitems.ToArray();
             service.categoryBag = categoryBag;
 
             return service;
@@ -396,7 +594,7 @@ namespace org.apache.juddi.v3.client.mapping
                 accessPoint accessPoint = new accessPoint();
                 accessPoint.useType = (AccessPointType.endPoint.ToString());
                 accessPoint.Value = (urlLocalizer.rewrite(serviceUrl));
-                bindingTemplate.Item =   (accessPoint) ;
+                bindingTemplate.Item = (accessPoint);
                 // Set Binding Key
                 String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
                 bindingTemplate.bindingKey = (bindingKey);
@@ -406,7 +604,7 @@ namespace org.apache.juddi.v3.client.mapping
             if (service != null)
             {
                 List<tModelInstanceInfo> tii = new List<tModelInstanceInfo>();
-                
+
 
                 org.xmlsoap.schemas.easyWsdl.tPort port = service.getPort(portName);
                 if (port != null)
@@ -446,7 +644,7 @@ namespace org.apache.juddi.v3.client.mapping
                                         accessPoint accessPoint = new accessPoint();
                                         accessPoint.useType = (AccessPointType.endPoint.ToString());
                                         accessPoint.Value = (urlLocalizer.rewrite(locationURI));
-                                        bindingTemplate.Item =  (accessPoint) ;
+                                        bindingTemplate.Item = (accessPoint);
                                         // Set Binding Key
                                         String bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, locationURI);
                                         bindingTemplate.bindingKey = (bindingKey);
@@ -461,61 +659,61 @@ namespace org.apache.juddi.v3.client.mapping
                         }
 
                     }
-                  XmlQualifiedName bx=  port.binding;
-                 org.xmlsoap.schemas.easyWsdl.tBinding  bindingelement= wsdlDefinition.getBinding(bx);
-                  // Set the Binding Description
+                    XmlQualifiedName bx = port.binding;
+                    org.xmlsoap.schemas.easyWsdl.tBinding bindingelement = wsdlDefinition.getBinding(bx);
+                    // Set the Binding Description
                     String bindingDescription = "";
                     // Override with the service description from the WSDL if present
 
-                    if (bindingelement != null && bindingelement.documentation!=null
-                        && bindingelement.documentation.Any!=null)
+                    if (bindingelement != null && bindingelement.documentation != null
+                        && bindingelement.documentation.Any != null)
                     {
                         HashSet<XmlNode>.Enumerator it = bindingelement.documentation.Any.GetEnumerator();
                         while (it.MoveNext())
                         {
-                            bindingDescription+= it.Current.Value;
+                            bindingDescription += it.Current.Value;
                         }
                     }
                     if (String.IsNullOrEmpty(bindingDescription))
                         bindingDescription = properties.getProperty(Property.BINDING_DESCRIPTION, Property.DEFAULT_BINDING_DESCRIPTION); ;
 
                     description description = new description();
-                    description.lang=(lang);
-                    description.Value=(bindingDescription);
-                    bindingTemplate.description = new description[]{(description)};
+                    description.lang = (lang);
+                    description.Value = (bindingDescription);
+                    bindingTemplate.description = new description[] { (description) };
 
-                   
+
                     // reference wsdl:binding tModel
                     tModelInstanceInfo tModelInstanceInfoBinding = new tModelInstanceInfo();
-                    tModelInstanceInfoBinding.tModelKey=(keyDomainURI + bindingelement.name);
+                    tModelInstanceInfoBinding.tModelKey = (keyDomainURI + bindingelement.name);
                     instanceDetails instanceDetails = new instanceDetails();
-                    instanceDetails.Items=new object[]{(portName)};
+                    instanceDetails.Items = new object[] { (portName) };
                     tModelInstanceInfoBinding.instanceDetails = (instanceDetails);
                     description descriptionB = new description();
-                    descriptionB.lang=(lang);
-                    descriptionB.Value=("The wsdl:binding that this wsdl:port implements. " + bindingDescription
+                    descriptionB.lang = (lang);
+                    descriptionB.Value = ("The wsdl:binding that this wsdl:port implements. " + bindingDescription
                             + " The instanceParms specifies the port local name.");
-                    tModelInstanceInfoBinding.description =new uddi.apiv3.description[]{ description};
+                    tModelInstanceInfoBinding.description = new uddi.apiv3.description[] { description };
                     tii.Add(tModelInstanceInfoBinding);
 
 
                     // reference wsdl:portType tModel
                     org.xmlsoap.schemas.easyWsdl.tPortType portType = wsdlDefinition.getPortType(bindingelement.type);
                     tModelInstanceInfo tModelInstanceInfoPortType = new tModelInstanceInfo();
-                    tModelInstanceInfoPortType.tModelKey=(keyDomainURI + portType.name);
+                    tModelInstanceInfoPortType.tModelKey = (keyDomainURI + portType.name);
                     String portTypeDescription = "";
-                    if (portType.documentation!=null && portType.documentation.Any!=null)
+                    if (portType.documentation != null && portType.documentation.Any != null)
                     {
                         HashSet<XmlNode>.Enumerator it = portType.documentation.Any.GetEnumerator();
                         while (it.MoveNext())
                         {
-                           portTypeDescription+= it.Current.Value;
+                            portTypeDescription += it.Current.Value;
                         }
                     }
                     description descriptionPT = new description();
-                    descriptionPT.lang=(lang);
-                    descriptionPT.Value=("The wsdl:portType that this wsdl:port implements." + portTypeDescription);
-                    tModelInstanceInfoPortType.description= new description[]{(descriptionPT)};
+                    descriptionPT.lang = (lang);
+                    descriptionPT.Value = ("The wsdl:portType that this wsdl:port implements." + portTypeDescription);
+                    tModelInstanceInfoPortType.description = new description[] { (descriptionPT) };
                     tii.Add(tModelInstanceInfoPortType);
 
                     bindingTemplate.tModelInstanceDetails = tii.ToArray();
@@ -635,7 +833,7 @@ namespace org.apache.juddi.v3.client.mapping
 
                 categoryBag.Items = (object[])cbitems.ToArray();
                 tModel.categoryBag = categoryBag;
-                
+
                 tModels.Add(tModel);
 
 
@@ -847,7 +1045,8 @@ namespace org.apache.juddi.v3.client.mapping
                         // category system and a keyValue of the tModelKey of the HTTP Transport tModel.
 
 
-                        if (String.IsNullOrEmpty(xe.GetAttribute("transport"))){
+                        if (String.IsNullOrEmpty(xe.GetAttribute("transport")))
+                        {
                             // TODO If the value of the transport attribute is anything else, 
                             // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
                             // of the Transport Categorization category system and a keyValue of the tModelKey of 
@@ -857,8 +1056,8 @@ namespace org.apache.juddi.v3.client.mapping
                         else
                         {
                             String attr = xe.GetAttribute("transport");
-                            
-                            if (attr!=null && attr.Equals("http://schemas.xmlsoap.org/soap/http"))
+
+                            if (attr != null && attr.Equals("http://schemas.xmlsoap.org/soap/http"))
                             {
                                 keyedReference httpTransport = newKeyedReference(
                                        "uddi:uddi.org:wsdl:categorization:transport", "uddi-org:http", "uddi:uddi.org:transport:http");
