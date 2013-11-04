@@ -49,12 +49,18 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * 
  * This is designed to enable users to setup AMQP based alerts for UDDI subscriptions
  * 
- * This class is incomplete, but it at least offers a quick example of how it could be done
+ * This class is partically complete, but it is largely untested and lacks any kind of 
  * 
- * amqp.java.naming.factory.initial
+ * the following settings need to be added to the juddiv3.xml file
+ * amqp.java.naming.factory.initial=org.apache.qpid.jndi.PropertiesFileInitialContextFactory
  * amqp.connectionfactory.qpidConnectionfactory
- * amqp.destination
- * amqp.destination.type amq.topic
+ * amqp.destination=(some topic or queue name)
+ * amqp.destination.type=topic
+ * 
+ * usage
+ * create a service/bindingtemplate/accessPoint where the value is amqp://url_to_qpid/amqp The useType must be "endPoint".
+ * create a subscription where the binding template reference points to this endpoint.
+ * trigger the subscription and wait for delivery.
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AMQPNotifier implements Notifier {
@@ -93,7 +99,8 @@ public class AMQPNotifier implements Notifier {
                 properties.put("connectionfactory.qpidConnectionfactory", destination);
                 properties.put("destination." +AppConfig.getConfiguration().getString("amqp.destination") ,
                         AppConfig.getConfiguration().getString("amqp.destination.type"));
-                properties.load(this.getClass().getResourceAsStream("hello.properties"));
+                //test only
+                //properties.load(this.getClass().getResourceAsStream("hello.properties"));
                 context = new InitialContext(properties);
 
                 ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("qpidConnectionfactory");
