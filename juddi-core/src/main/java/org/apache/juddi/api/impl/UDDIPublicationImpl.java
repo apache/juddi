@@ -564,7 +564,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
 
-                log.info("Inbound save business request for key " + body.getBusinessEntity().get(0).getBusinessKey());
+                log.debug("Inbound save business request for key " + body.getBusinessEntity().get(0).getBusinessKey());
 		EntityManager em = PersistenceManager.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
