@@ -74,7 +74,8 @@ import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 
 /**
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * This class implements the UDDI Publication Service
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> (and many others)
  */
 @WebService(serviceName="UDDIPublicationService", 
 			endpointInterface="org.uddi.v3_service.UDDIPublicationPortType",
@@ -89,6 +90,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
             serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIPublicationImpl.class);
         }
 	
+        
+        
 	public void addPublisherAssertions(AddPublisherAssertions body)
 			throws DispositionReportFaultMessage {
 	        long startTime = System.currentTimeMillis();
@@ -401,6 +404,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			businessKeysFound = FindBusinessByPublisherQuery.select(em, null, publisher, businessKeysFound);
 			
 			List<org.apache.juddi.model.PublisherAssertion> pubAssertionList = FindPublisherAssertionByBusinessQuery.select(em, businessKeysFound, null);
+                        if (pubAssertionList!=null)
 			for(org.apache.juddi.model.PublisherAssertion modelPubAssertion : pubAssertionList) {
 				org.uddi.api_v3.PublisherAssertion apiPubAssertion = new org.uddi.api_v3.PublisherAssertion();
 	

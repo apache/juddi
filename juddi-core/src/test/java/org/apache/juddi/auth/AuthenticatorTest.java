@@ -138,7 +138,7 @@ public class AuthenticatorTest
 	{
             System.out.println("testCreateJuddiUsersEncrypted");
 		try {
-			Cryptor cryptor = (Cryptor) CryptorFactory.getCryptor();
+			Cryptor cryptor = CryptorFactory.getCryptor();
 			JuddiUsers juddiUsers = new JuddiUsers();
 			juddiUsers.getUser().add(new User("anou_mana",cryptor.encrypt("password")));
 			juddiUsers.getUser().add(new User("bozo",cryptor.encrypt("clown")));

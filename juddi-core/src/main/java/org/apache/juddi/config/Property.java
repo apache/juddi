@@ -59,6 +59,12 @@ public interface Property {
     public final static String JUDDI_AUTH_TOKEN_EXPIRATION = "juddi.auth.token.Expiration";
     public final static String JUDDI_AUTH_TOKEN_TIMEOUT = "juddi.auth.token.Timeout";
     
+    /**
+     * when set, auth tokens can only be used from the IP address they were issued to.
+     * 
+     */
+    public final static String JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP = "juddi.auth.token.enforceSameIPRule";
+    
     public final static String JUDDI_AUTHENTICATOR = "juddi.auth.authenticator.class";
     /**
      * @see LdapSimpleAuthenticator

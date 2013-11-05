@@ -18,8 +18,12 @@
 package org.apache.juddi.api.impl;
 
 import java.util.Date;
+import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -44,6 +48,8 @@ public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_RETIRED = 0;
 	Log logger = LogFactory.getLog(this.getClass());
 	
+        @Resource
+        protected WebServiceContext ctx;
 	public UddiEntityPublisher getEntityPublisher(EntityManager em, String authInfo) throws DispositionReportFaultMessage {
 		
 		if (authInfo == null || authInfo.length() == 0)
@@ -90,7 +96,43 @@ public abstract class AuthenticatedService {
 
 		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
 			throw new AuthTokenExpiredException(new ErrorMessage("errors.auth.AuthTokenExpired"));
-		
+		if (ctx !=null){
+                    try{
+                        boolean check=true;
+                        try{
+                            check=AppConfig.getConfiguration().getBoolean(Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP, true);
+                        }
+                        catch (ConfigurationException ex){
+                            logger.warn("Error loading config property " + Property.JUDDI_AUTH_TOKEN_ENFORCE_SAME_IP + 
+                                    " Enforcing Same IP for Auth Tokens will be enabled by default", ex);
+                        }
+                        if (check){
+                            MessageContext mc = ctx.getMessageContext();
+                            HttpServletRequest req = null;
+                            if (mc!=null){
+                                req=(HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST); 
+                            }
+                            if (req!=null &&
+                                    modelAuthToken.getIPAddress()!=null &&
+                                    modelAuthToken.getIPAddress()!=null &&
+                                    !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr()))
+                            {
+                                modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+                                logger.error("Security Alert - Attempt to use issued auth token from a different IP address, user " +
+                                        modelAuthToken.getAuthorizedName() + ", issued IP " + modelAuthToken.getIPAddress() + 
+                                        ", attempted use from " + req.getRemoteAddr() + ", forcing reauthentication.");
+                                throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
+                                //invalidate the token, someone's intercepted it or it was reused on another ip
+                            }
+                        }
+                    }
+                    catch (Exception ex){
+                        if (ex instanceof AuthTokenRequiredException)
+                            throw (AuthTokenRequiredException)ex;
+                        logger.error("unexpected error caught looking up requestor's ip address", ex);
+                    }
+                    
+                }
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
 		

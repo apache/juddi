@@ -125,9 +125,11 @@
 				org.apache.juddi.v3.auth.XMLDocAuthenticator - XML doc, clear text
 				org.apache.juddi.v3.auth.CryptedXMLDocAuthenticator - XML doc, encrypted
 				org.apache.juddi.v3.auth.MD5XMLDocAuthenticator - XML doc, Hashed
+                                
+                                See also, the Jboss Authenticator
 				-->
 				<class>org.apache.juddi.v3.auth.JUDDIAuthenticator</class>
-				<!-- other settings
+				<!-- other settings (mostly used by Ldap based auth mods
 				url
 				initialcontext
 				style
@@ -140,6 +142,8 @@
 				<Timeout>15</Timeout>
 				<!-- As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity -->
 				<Expiration>15</Expiration>
+                                <!-- As of 3.2, when set to true, tokens can only be used from the same IP address they were issued to -->
+                                <enforceSameIPRule>true</enforceSameIPRule>
 			</token>
 		</auth>
 

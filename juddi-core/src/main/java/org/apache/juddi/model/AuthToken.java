@@ -31,6 +31,7 @@ public class AuthToken implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1147567747533293480L;
 	private String authToken;
+        private String ipaddress;
 	private String authorizedName;
 	private Date created;
 	private Date lastUsed;
@@ -101,6 +102,18 @@ public class AuthToken implements java.io.Serializable {
 	}
 	public void setTokenState(int tokenState) {
 		this.tokenState = tokenState;
+	}
+
+        /**
+         * @since 3.2
+         * @return 
+         */
+	@Column(name = "ipaddress", nullable = true, length = 51)
+	public String getIPAddress() {
+		return this.ipaddress;
+	}
+	public void setIPAddress(String ip) {
+		this.ipaddress=ip;
 	}
 
 }

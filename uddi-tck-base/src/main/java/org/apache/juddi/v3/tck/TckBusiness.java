@@ -113,7 +113,7 @@ public class TckBusiness
         }
         
 	public void saveJoePublisherBusiness(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, true);
+		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, false);
     }
 	
 	public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
@@ -285,7 +285,7 @@ public class TckBusiness
         }
         
         public void saveBusiness(String authInfo, String businessXML, String businessKey) {
-            saveBusiness(authInfo, businessXML, businessKey, true);
+            saveBusiness(authInfo, businessXML, businessKey, false);
         }
 	public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
             logger.info("attempting to save business " + businessKey + " from " + businessXML);

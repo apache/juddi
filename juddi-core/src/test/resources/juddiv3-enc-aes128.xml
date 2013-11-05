@@ -135,7 +135,9 @@
 				<Timeout>15</Timeout>
 				<!-- As of 3.1.5 Duration of time for tokens to expire, regardless of inactivity -->
 				<Expiration>15</Expiration>
-			</token>
+                                <!-- As of 3.2, when set to true, tokens can only be used from the same IP address they were issued to -->
+                                <enforceSameIPRule>true</enforceSameIPRule>
+                        </token>
 		</auth>
 
 

@@ -23,6 +23,9 @@ import java.util.UUID;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -43,7 +46,11 @@ import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.UnknownUserException;
 
 /**
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * This class implements the UDDI Security Service and basically handles all authentication requests
+ * for jUDDI. These authentication requests are routed to the appropriately configured
+ * authenticator for validation, then persisted in the database until they either
+ * expire or are discarded.
+ * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> (and many others)
  */
 @WebService(serviceName="UDDISecurityService", 
 			endpointInterface="org.uddi.v3_service.UDDISecurityPortType",
@@ -55,6 +62,16 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 
         public UDDISecurityImpl() {
             super();
+            serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);
+        }
+        
+        /**
+         * used for unit tests only
+         * @param ctx 
+         */
+        protected UDDISecurityImpl(WebServiceContext ctx) {
+            super();
+            this.ctx = ctx;
             serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDISecurityImpl.class);
         }
 	
@@ -129,7 +146,17 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 				modelAuthToken.setAuthorizedName(publisherId);
 				modelAuthToken.setNumberOfUses(0);
 				modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
-
+                                if (ctx !=null){
+                                    try{
+                                        MessageContext mc = ctx.getMessageContext();
+                                        HttpServletRequest req = (HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST); 
+                                        modelAuthToken.setIPAddress(req.getRemoteAddr());
+                                        //System.out.println("Client IP = " + req.getRemoteAddr());
+                                    }
+                                    catch (Exception ex){
+                                        logger.warn("unexpected erorr fetching requestor's ip address. Assiocation of auth token to IP will not be possible", ex);
+                                    }
+                                }
 				em.persist(modelAuthToken);
 			}
 
