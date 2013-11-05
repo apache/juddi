@@ -24,6 +24,7 @@
         last_used datetime not null,
         number_of_uses integer not null,
         token_state integer not null,
+		ipaddress varchar(51),
         primary key (auth_token)
     ) ENGINE=InnoDB;
 

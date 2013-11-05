@@ -24,6 +24,7 @@
         last_used timestamp not null,
         number_of_uses number(10,0) not null,
         token_state number(10,0) not null,
+		ipaddress varchar2(51),
         primary key (auth_token)
     );
 
