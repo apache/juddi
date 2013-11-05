@@ -89,6 +89,7 @@
     </head>
 
     <body>
+        <%@include file="user/banner.jsp" %>        
         <form id="uddiform">
             <%@include  file="csrf.jsp" %>
             <input type="hidden" name="nonce" id="nonce" value="<%=StringEscapeUtils.escapeHtml((String) session.getAttribute("nonce"))%>" />
@@ -97,6 +98,7 @@
             <%
                 UddiHub hub = UddiHub.getInstance(application, session);
             %>
+            
 
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <div class="navbar-inner">

@@ -186,7 +186,7 @@ public class UddiHub {
         in.close();
         properties = p;
         try {
-            style = AuthStyle.valueOf((String) p.get("authtype"));
+            style = AuthStyle.valueOf((String) p.get(PROP_AUTH_TYPE));
         } catch (Exception ex) {
             log.info("UDDI_AUTH is not defined in the config");
             style = AuthStyle.UDDI_AUTH;
@@ -3672,4 +3672,8 @@ public class UddiHub {
             return HandleException(ex);
         }
     }
+    
+    public static final String PROP_AUTH_TYPE="config.props.authtype";
+    public static final String PROP_PREFIX="config.props.";
+    
 }

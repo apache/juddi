@@ -29,10 +29,11 @@
 
 
             %>
-            Loading from <%=StringEscapeUtils.escapeHtml(x.GetJuddiClientConfig().getConfigurationFile())%><br>
-            Loading from <%=StringEscapeUtils.escapeHtml(x.GetRawConfigurationPath())%>
+            <%=ResourceLoader.GetResource(session, "pages.settings.loading")%> <%=StringEscapeUtils.escapeHtml(x.GetJuddiClientConfig().getConfigurationFile())%><br>
+            <%=ResourceLoader.GetResource(session, "pages.settings.loading")%> <%=StringEscapeUtils.escapeHtml(x.GetRawConfigurationPath())%>
             <table class="table table-hover">
-                <tr><th>Key</th><th>Value</th></tr>
+                <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.value")%></th></tr>
                         <%
 
 

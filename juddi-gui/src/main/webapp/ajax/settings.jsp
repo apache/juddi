@@ -12,9 +12,11 @@
 <%@include  file="../csrf.jsp" %>
 <%    
     if (!request.getRemoteHost().equalsIgnoreCase("localhost") && !request.getRemoteHost().equalsIgnoreCase("127.0.0.1")) {
+        out.write("This is only accessible from the server hosting juddi-gui. sorry!")
         response.setStatus(403);
     }
-    if (!request.isUserInRole("manager")) {
+    if (!request.isUserInRole("uddiadmin")) {
+        out.write("Sorry, you need to have the 'uddiadmin' admin role to access this page.")
         response.setStatus(403);
     }
     if (request.getMethod().equalsIgnoreCase("post")) {
@@ -24,7 +26,7 @@
         while (it.hasMoreElements()) {
             String key = (String) it.nextElement();
             String value = request.getParameter(key);
-            if (key.equals("authtype")) {
+            if (key.startsWith(UddiHub.PROP_PREFIX)) {
                 p.setProperty(key, value);
             }
             else if (key.startsWith("client"))
@@ -50,7 +52,7 @@
             if (request.getUserPrincipal() != null) {
                 msg += " " + request.getUserPrincipal().toString();
             }
-            p.store(fos, "Edited at " + System.currentTimeMillis() + " by " + request.getRemoteUser() + request.getUserPrincipal().getName());
+            p.store(fos, msg);
             fos.close();
         } catch (Exception ex) {
             response.setStatus(500);
