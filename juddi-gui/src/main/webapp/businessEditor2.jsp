@@ -57,6 +57,7 @@
                 %>
                 <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b>-
                 <%=ResourceLoader.GetResource(session, "pages.businesskey.description")%>
+                <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
                 <br>
                 <div style="border-width: 2px; border-style: solid;" class="<%
 
@@ -702,9 +703,13 @@
             <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
         </div>
     </div>
+        
+        
+        
     <%
         }
     %>
+    <%@include file="keyHelpModal.jsp" %>
     <%@include file="tmodelChooser.jsp" %>
     <!-- container div is in header bottom-->
     <%@include file="header-bottom.jsp" %>

@@ -123,6 +123,7 @@
                         }
                     %>
                     <%= ResourceLoader.GetResource(session, "items.tmodel.key.description")%>
+                    <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
 
                     <div style="border-width: 2px; border-style: solid;" <%
                         if (!newitem) {
@@ -522,3 +523,4 @@
     %>
     <%@include file="tmodelChooser.jsp" %>
     <%@include file="header-bottom.jsp" %>
+    <%@include file="keyHelpModal.jsp" %>

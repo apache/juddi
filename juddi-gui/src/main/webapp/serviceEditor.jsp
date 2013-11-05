@@ -93,7 +93,7 @@
 
                 <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b>-
                 <%=ResourceLoader.GetResource(session, "pages.businesskey.description")%>
-
+                <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
                 <br>
                 <div style="border-width: 2px; border-style: solid;" class="noedit" id="<%=PostBackConstants.BUSINESSKEY%>">
                     <%
@@ -727,3 +727,4 @@
 <!-- container div is in header bottom-->
 <%@include file="tmodelChooser.jsp" %>
 <%@include file="header-bottom.jsp" %>
+<%@include file="keyHelpModal.jsp" %>

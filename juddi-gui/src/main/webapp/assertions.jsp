@@ -247,15 +247,17 @@
             <h3><%=ResourceLoader.GetResource(session, "items.publisherassertion.add")%></h3>
         </div>
         <div class="modal-body" id="addPublisherAssertionContent">
-            <div style="float:left;width:25%">From Key : </div><div id="fromkey" class="edit"><%
+            <%=ResourceLoader.GetResource(session, "items.publisherassertion.add.description")%>
+            <div style="float:left;width:25%">
+                <%=ResourceLoader.GetResource(session, "items.publisherassertion.add.fromkey")%> : </div><div id="fromkey" class="edit"><%
                 if (fromkey != null) {
                     out.write(StringEscapeUtils.escapeHtml(fromkey));
                 }
                 %></div>
-            <div style="float:left;width:25%">To Key : </div><div id="tokey" class="edit"></div>
-            <div style="float:left;width:25%">tModel Key : </div><div id="tmodelkey" class="edit">uddi:uddi.org:relationships</div>
-            <div style="float:left;width:25%">Key Name : </div><div id="keyname" class="edit">Subsidiary</div>
-            <div style="float:left;width:25%">Key Value : </div><div id="keyvalue" class="edit">parent-child</div>
+            <div style="float:left;width:25%"><%=ResourceLoader.GetResource(session, "items.publisherassertion.add.tokey")%> : </div><div id="tokey" class="edit"></div>
+            <div style="float:left;width:25%"><%=ResourceLoader.GetResource(session, "items.tmodel.key")%> : </div><div id="tmodelkey" class="edit">uddi:uddi.org:relationships</div>
+            <div style="float:left;width:25%"><%=ResourceLoader.GetResource(session, "items.publisherassertion.add.keyname")%> : </div><div id="keyname" class="edit">Subsidiary</div>
+            <div style="float:left;width:25%"><%=ResourceLoader.GetResource(session, "items.publisherassertion.add.keyvalue")%> : </div><div id="keyvalue" class="edit">parent-child</div>
             <div id="saveresult" style="color:red"></div>
         </div>
         <script type="text/javascript">
