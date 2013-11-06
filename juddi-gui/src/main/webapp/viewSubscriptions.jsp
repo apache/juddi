@@ -171,9 +171,5 @@
                        
         }
                    
-        function closeXmlPop(modaldiv)
-        {
-            $('#' + modaldiv).modal('hide');
-        }
     </script>
     <%@include file="header-bottom.jsp" %>

@@ -160,7 +160,7 @@
                                     out.write("<div id=\"" + PostBackConstants.NAME + i + "\" style=\"border-width:1px; border-style:solid\" >");
                                     out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                                     out.write("<div style=\"float:left\"> " + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) + "</div>");
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + (bd.getName().get(i).getValue()!=null ? StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) : "") + "</div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + "&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">");
                                     if (bd.getName().get(i).getLang() != null) {
@@ -523,7 +523,10 @@
                                 out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                         %>
                         <table class="table table-hover">
-                            <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
+                             <tr><th>#</th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
+                            <th></th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
 
                             <%
                                 for (int k = 0; k < bd.getSignature().size(); k++) {
@@ -685,10 +688,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        function closeXmlPop(modaldiv)
-        {
-            $('#' + modaldiv).modal('hide');
-        }
+       
     </script>
     <div class="modal hide fade container" id="addSubscriptionModal">
         <div class="modal-header">

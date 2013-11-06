@@ -59,7 +59,7 @@
                 <li><a href="#identifiers" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.identifiers")%></a></li>
 
                 <li><a href="#signatures"  id="sigtagheader"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.signatures")%></a></li>
-                <li><a href="#Instances" >Instances</a></li>
+                <li><a href="#Instances" ><%=ResourceLoader.GetResource(session, "pages.editor.tmodel.instances")%></a></li>
 
 
             </ul>
@@ -186,7 +186,7 @@
                         if (bd.isDeleted()) {
                             out.write("checked=checked");
                         }
-                           %>> Is this tModel Deleted? (not available for future use).<br>
+                           %>> <%=ResourceLoader.GetResource(session, "pages.editor.tmodel.deleted")%><br>
                 </div>
 
                 <div class="tab-pane " id="discovery">
@@ -276,12 +276,15 @@
 
                     <%
                         if (bd.getSignature().isEmpty()) {
-                            out.write("This item is not digitally signed.");
+                            out.write(ResourceLoader.GetResource(session, "items.signed.not"));
                         } else {
-                            out.write("This item is digitally signed " + bd.getSignature().size());
+                            out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                     %>
                     <table class="table table-hover">
-                        <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
+                         <tr><th>#</th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
+                            <th></th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
 
                         <%
                             for (int k = 0; k < bd.getSignature().size(); k++) {
@@ -314,13 +317,13 @@
                     %>
                 </div>
                 <div class="tab-pane " id="Instances">
-                    <b>Instances</b> - Use this to search for other entities in this registery that reference this tModel<Br>
+                    <b><%=ResourceLoader.GetResource(session, "pages.editor.tmodel.instances")%></b> - 
+                    <%=ResourceLoader.GetResource(session, "pages.editor.tmodel.instances.content")%><Br>
                     <select id="relatedSearches" onchange="search()">
                         <option></option>
-                        <option value="business">Find businesses</option>
-                        <option value="bindingTemplate">Find binding</option>
-                        <option value="service">Find services</option>
-                        <!--				<option value="tModel">Find tModels</option>-->
+                        <option value="business"> <%=ResourceLoader.GetResource(session, "pages.editor.tmodel.search.business")%></option>
+                        <option value="bindingTemplate"> <%=ResourceLoader.GetResource(session, "pages.editor.tmodel.search.binding")%></option>
+                        <option value="service"> <%=ResourceLoader.GetResource(session, "pages.editor.tmodel.search.services")%></option>
                     </select>
                     <script type="text/javascript">
 
@@ -357,24 +360,6 @@
                                     name: "searchcontent",
                                     value: searchcontent
                                 });
-
-                                //postbackdata.push({
-                                //name:"lang", 
-                                //value: $("#lang").val()
-                                //});
-
-
-                                /*$.each($('input:checkbox'), function(index,item){
-                                 var itemname = item.name;
-                                 if (item.checked)
-                                 {
-                                 postbackdata.push({
-                                 name:"findqualifier", 
-                                 value: itemname
-                                 });
-                                 }
-                                 });
-                                 */
 
                                 postbackdata.push({
                                     name: "searchfor",
@@ -416,9 +401,6 @@
 
                     </script>
                     <div id="InstancesContainer" style="border-width: 2px; border-style: solid;" >
-                        <%
-
-                        %>
                     </div>
                 </div>
                 <div><br>
@@ -507,12 +489,7 @@
 
 
         </div>
-        <script type="text/javascript">
-            function closeXmlPop(modaldiv)
-            {
-                $('#' + modaldiv).modal('hide');
-            }
-        </script>
+      
         <div class="modal-footer">
             <a href="ajax/toXML.jsp?id=<%=URLEncoder.encode(bd.getTModelKey(), "UTF-8")%>&type=tmodel" class="btn btn-primary" target="_blank">Popout</a> 
             <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>

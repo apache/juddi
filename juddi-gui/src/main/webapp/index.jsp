@@ -46,7 +46,7 @@
                 //this is in ms, Maxvalue represents something like 70 years
                 cookie.setMaxAge(Integer.MAX_VALUE);
                 //cookie.setDomain("/UDDIBrowser");
-                cookie.setPath("/UDDIBrowser");
+                cookie.setPath("/juddi-gui");
                 response.addCookie(cookie);
             }
             response.sendRedirect("home.jsp");
@@ -56,9 +56,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Welcome to jUDDI</title>
-        <meta charset="utf-8">
         <title>Welcome to Apache jUDDI</title>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Apache jUDDI">
         <meta name="author" content="Apache Software Foundation">
@@ -103,12 +102,8 @@
                     <br>
                     <input type="checkbox" name="setcookie" checked> Remember my decision<br>
                     <button type="submit" value="Go" class="btn btn-primary">Go</button>
-
-                </form><br>
-                <b>We welcome help internationalizing jUDDI!</b><br>
-                <script type="text/javascript">
-                
-                </script>
+                </form>
+                <b>We welcome help internationalizing jUDDI!</b>
                 <noscript>Your browser does not support JavaScript! Functionality will be so severely reduced, that you might as well give up, sorry!</noscript>
             </div>
         </div>

@@ -199,10 +199,7 @@
                         }
                         
                         
-                        function closeXmlPop(div)
-                        {
-                                $("#" + div).modal("hide");
-                        }
+                      
                         
                         
                         function acceptToken()

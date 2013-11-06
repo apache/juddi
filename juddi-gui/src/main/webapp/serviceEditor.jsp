@@ -585,7 +585,10 @@
                             out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                     %>
                     <table class="table table-hover">
-                        <tr><th>#</th><th>Signed by</th><th></th><th>Signature Status</th></tr>
+                        <tr><th>#</th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
+                            <th></th>
+                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
 
                         <%
                             for (int k = 0; k < bd.getSignature().size(); k++) {
@@ -706,12 +709,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%> </h3>
     </div>
-    <script type="text/javascript">
-        function closeXmlPop(modaldiv)
-        {
-            $('#' + modaldiv).modal('hide');
-        }
-    </script>
+   
     <div class="modal-body" id="viewAsXmlContent">
 
 

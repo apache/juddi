@@ -55,6 +55,8 @@ function pageupBusiness()
 //offset, maxrecords, keyword
 function RenderBusinessListBySearch(keyword1, offset1, maxrecords1)
 {
+    if (keyword1 === "%")
+        keyword1 = "%25";
     var lang = $("#lang").text();
     $("#businesslist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({

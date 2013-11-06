@@ -53,6 +53,8 @@ function pageupService()
 
 function RenderServiceListBySearch(keyword, offset, maxrecords)
 {
+    if (keyword1 === "%")
+        keyword1 = "%25";
     var lang = $("#lang").text();
     $("#serviceBrowserListing").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({

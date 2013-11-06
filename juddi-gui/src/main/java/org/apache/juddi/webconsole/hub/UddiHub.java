@@ -18,6 +18,7 @@ package org.apache.juddi.webconsole.hub;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
@@ -80,7 +81,7 @@ import sun.misc.BASE64Encoder;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UddiHub {
+public class UddiHub implements Serializable{
 
     /**
      * The logger name
@@ -971,25 +972,15 @@ public class UddiHub {
     public enum AuthStyle {
 
         /**
-         * Http Basic
+         * Http 
          */
-        HTTP_BASIC,
-        /**
-         * Http Digest
-         */
-        HTTP_DIGEST,
-        /**
-         * HTTP NTLM
-         */
-        HTTP_NTLM,
+        HTTP,
+        
         /**
          * UDDI Authentication via the Security API
          */
-        UDDI_AUTH,
-        /**
-         * HTTP Client Certificate Authentication
-         */
-        HTTP_CLIENT_CERT
+        UDDI_AUTH
+        
     }
 
     /**
@@ -3674,6 +3665,39 @@ public class UddiHub {
     }
     
     public static final String PROP_AUTH_TYPE="config.props.authtype";
+    public static final String PROP_AUTO_LOGOUT="config.props.enableAutomaticLogouts";
+    public static final String PROP_AUTO_LOGOUT_TIMER="config.props.enableAutomaticLogouts.duration";
     public static final String PROP_PREFIX="config.props.";
     
+    /**
+     * returns true if automatic logouts are configured
+     * @return 
+     */
+    public boolean isAutoLogoutEnabled(){
+        String val=properties.getProperty(PROP_AUTO_LOGOUT);
+        if (val==null)
+            return false;
+        try{
+            return Boolean.parseBoolean(val);
+        }catch (Exception ex){
+            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT + " in config.properties, defaulting to false",ex);
+        }
+        return false;
+    }
+    
+    /**
+     * defaults to 15 minutes if not defined
+     * @return 
+     */
+    public long GetAutoLogoutDuration(){
+        String val=properties.getProperty(PROP_AUTO_LOGOUT_TIMER);
+        if (val==null)
+            return 15 * 60 * 1000;
+        try{
+            return Long.parseLong(val);
+        }catch (Exception ex){
+            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT_TIMER + " in config.properties, defaulting to 15 minutes",ex);
+        }
+        return 15 * 60 * 1000;
+    }
 }

@@ -90,6 +90,7 @@
 
     <body>
         <%@include file="user/banner.jsp" %>        
+        <%@include file="autoLogoutModal.jsp" %>        
         <form id="uddiform">
             <%@include  file="csrf.jsp" %>
             <input type="hidden" name="nonce" id="nonce" value="<%=StringEscapeUtils.escapeHtml((String) session.getAttribute("nonce"))%>" />

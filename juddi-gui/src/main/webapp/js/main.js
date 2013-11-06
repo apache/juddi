@@ -15,7 +15,7 @@
  *
  */
 
-var loggedin=false;
+var loggedin = false;
 
 var tagsToReplace = {
     '&': '&amp;',
@@ -34,26 +34,26 @@ function safe_tags_replace(str) {
 function escapeJquerySelector(str)
 {
     if (str)
-        return str.replace(/([ #;?&,.+*~\':"!^$[\]()=>|\/@])/g,'\\$1');
+        return str.replace(/([ #;?&,.+*~\':"!^$[\]()=>|\/@])/g, '\\$1');
     return str;
 }
 
-  
+
 function Reedit()
 {
-    window.console && console.log('Reedit');                
-    $('.edit').editable(function(value, settings) { 
-                
+    window.console && console.log('Reedit');
+    $('.edit').editable(function(value, settings) {
+
         window.console && console.log(this);
         window.console && console.log(value);
         window.console && console.log(settings);
         //replace tags with escaped characters to prevent XSS
         return(safe_tags_replace(value));
-    }, { 
-        type    : 'text',
-        submit  : 'OK'
+    }, {
+        type: 'text',
+        submit: 'OK'
     });
- 
+
 }
 
 Reedit();
@@ -61,29 +61,29 @@ Reedit();
 
 function Login()
 {
-    
+
     $("#loginbutton").addClass("disabled");
     $("#loginbutton").text(i18n_loading);
-    
+
     var form = $("#uddiform");
     var d = form.serializeArray();
-    var request=   $.ajax({
+    var request = $.ajax({
         url: 'ajax/loginpost.jsp',
-        type:"POST",
+        type: "POST",
         //  dataType: "html", 
-        cache: false, 
+        cache: false,
         //  processData: false,f
         data: d
     });
-                  
+
     request.done(function(msg) {
-        window.console && console.log('postback done ');                
+        window.console && console.log('postback done ');
         $("#loginbutton").text(i18n_login);
         RefreshLoginPage();
     });
 
     request.fail(function(jqXHR, textStatus) {
-        window.console && console.log('postback failed ');                                
+        window.console && console.log('postback failed ');
         //TODO handle expired nonce values?
         RefreshLoginPage();
         $("#loginbutton").text(i18n_login);
@@ -92,7 +92,7 @@ function Login()
 
 function logout()
 {
-    
+
     $.get('logout.jsp', function(data) {
         window.location = "index.jsp";
     });
@@ -114,24 +114,24 @@ function jqSelector(str)
 
 function ShowServicesByBusinessKey(bizid)
 {
-    window.console && console.log('fetching service list for business ' + bizid);                
-    var request=   $.ajax({
+    window.console && console.log('fetching service list for business ' + bizid);
+    var request = $.ajax({
         url: 'ajax/servicelist.jsp?id=' + bizid,
-        type:"GET",
+        type: "GET",
         cache: false
     });
-                  
+
     request.done(function(msg) {
-        window.console && console.log(msg);                
-        window.console && console.log('postback done to div ' + bizid);                
+        window.console && console.log(msg);
+        window.console && console.log('postback done to div ' + bizid);
         $("#" + jqSelector(bizid)).html(msg);
-    //refresh();
+        //refresh();
     });
 
     request.fail(function(jqXHR, textStatus) {
-        window.console && console.log('postback failed ');                                
+        window.console && console.log('postback failed ');
         $("#" + jqSelector(bizid)).html("An error occured! " + jqXHR.responseText + textStatus);
-    //refresh();
+        //refresh();
     });
 
 }
@@ -155,4 +155,9 @@ function GetServiceDetails(svcid)
 function hideAlert()
 {
     $("#resultBar").hide();
+}
+
+function closeXmlPop(modaldiv)
+{
+    $('#' + modaldiv).modal('hide');
 }

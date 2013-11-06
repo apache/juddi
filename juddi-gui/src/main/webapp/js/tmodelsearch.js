@@ -63,6 +63,8 @@ var selectedItem=null;
 //offset, maxrecords, keyword
 function RenderTmodelListBySearch(keyword1, offset1, maxrecords1, isForChooser)
 {
+    if (keyword1 === "%")
+        keyword1 = "%25";
     var lang = $("#lang").text();
     $("#tmodellist").html("<img src=\"img/bigrollergreen.gif\" title=\"Loading\"/>");
     var request=   $.ajax({
