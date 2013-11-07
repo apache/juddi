@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package  org.apache.juddi.webconsole;
+package org.apache.juddi.webconsole;
 
 import java.io.*;
 import java.net.URI;
@@ -26,13 +26,13 @@ import javax.crypto.spec.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 /**
  * <summary> This program uses a AES key, retrieves its raw bytes, and then
  * reinstantiates a AES key from the key bytes.</summary> The reinstantiated key
  * is used to initialize a AES cipher for encryption and decryption. source :
  * http://java.sun.com/developer/technicalArticles/Security/AES/AES_v1.html
- *@author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ *
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class AES {
 
@@ -81,14 +81,13 @@ public class AES {
         }
         return raw;
     }
-    //default key
-    private final static String something128 = "dde284c781d60ca0b56c4b23eec85217951dc99869402abd42c7dcc9080d60aa";
-
-    private final static String something256 ="72d93747ba0162f2f2985f5cb3e24b30";
+  
     /**
      * generates an AES based off of the selected key size
+     *
      * @param keysize
-     * @return may return null if the key is not of a supported size by the current jdk
+     * @return may return null if the key is not of a supported size by the
+     * current jdk
      */
     public static String GEN(int keysize) {
         KeyGenerator kgen;
@@ -114,110 +113,6 @@ public class AES {
         return GEN(256);
     }
 
-    /**
-     * uses a variety of mechanisms to load a resource, should be jdk and os independent
-     * @param FileName
-     * @return 
-     */
-    URI getUrl(String FileName) {
-        URL url = null;
-        if (url == null) {
-            try {
-                url = Thread.currentThread().getContextClassLoader().getResource(FileName);
-                log.debug( "8 file loaded  from " + url.toString());
-            } catch (Exception ex) {
-                log.debug( "not found", ex);
-            }
-        }
-        if (url == null) {
-            try {
-                url = Thread.currentThread().getContextClassLoader().getResource("/" + FileName);
-                log.debug( "7 file loaded  from " + url.toString());
-            } catch (Exception ex) {
-                log.debug( "not found", ex);
-            }
-        }
-
-        if (url == null) {
-            try {
-                url = new URL(FileName);
-                log.debug( "1 file loaded  from " + url.toString());
-            } catch (Exception ex) {
-                log.debug( "not found", ex);
-            }
-        }
-
-        if (url == null) {
-            try {
-                url = this.getClass().getClassLoader().getResource(FileName);
-                log.debug( "3 file loaded  from " + url.toString());
-            } catch (Exception ex) {
-                log.debug( "not found", ex);
-            }
-        }
-        if (url == null) {
-            try {
-                url = this.getClass().getClassLoader().getResource("/" + FileName);
-                log.debug( "3 file loaded  from " + url.toString());
-            } catch (Exception ex) {
-                log.debug( "not found", ex);
-            }
-        }
-        try {
-            return url.toURI();
-        } catch (URISyntaxException ex) {
-            log.debug( null, ex);
-        }
-        return null;
-    }
-
-    /**
-     * used to read our key file
-     * @param file
-     * @return 
-     */
-    private static String ReadAllText(File file) {
-        try {
-            FileInputStream stream = new FileInputStream(file);
-            int size = 1024;
-            byte chars[] = new byte[size];
-            int k = stream.read(chars);
-            StringBuilder str = new StringBuilder();
-            while (k > 0) {
-
-                for (int i = 0; i < k; i++) {
-                    str.append((char) chars[i]);
-                }
-                k = stream.read(chars);
-            }
-            stream.close();
-            return str.toString();
-        } catch (Exception e) {
-            return "";
-        }
-
-    }
-
-    private static String LoadKey() {
-        String key = null;
-        try {
-            File f = new File(new AES().getUrl("/META-INF/aes.key"));
-            key = ReadAllText(f);
-        } catch (Exception e) {
-        }
-        if (key != null) {
-            log.debug( "key loaded from file");
-            return key;
-        } else {
-            log.debug( "default encryption key loaded.");
-            return something128;
-        }
-    }
-
-    public static String EN(String cleartext) throws Exception {
-        return EN(cleartext, LoadKey());
-    }
-
     static String EN(String cleartext, String key) throws Exception {
         byte[] raw =//skey.getEncoded();
                 hexToBytes(key); //
@@ -229,10 +124,7 @@ public class AES {
         return asHex(encrypted);
     }
 
-    static String DE(String ciphertext) throws Exception {
-        return DE(ciphertext, LoadKey());
-    }
-
+    
     static String DE(String ciphertext, String key) throws Exception {
         byte[] raw =//skey.getEncoded();
                 hexToBytes(key); //
@@ -255,25 +147,25 @@ public class AES {
             String x = EN(src, key);
             String y = DE(x, key);
             //if the sample text is encryptable and decryptable, and it was actually encrypted
-            if (x.equals(src) && !x.equals(y)) {
+            if (y.equals(src) && !x.equals(y)) {
                 return true;
             }
             return false;
         } catch (Exception ex) {
-            log.warn( null, ex);
+            log.info("Key validation failed!", ex);
             return false;
         }
     }
 
     /**
-     * encrypts a password using AES  Requires the Unlimited Strength Crypto
+     * encrypts a password using AES Requires the Unlimited Strength Crypto
      * Extensions
      *
      * @param clear
      * @return
      */
     public static String Encrypt(String clear, String key) {
-        if ((clear==null || clear.length()==0)) {
+        if ((clear == null || clear.length() == 0)) {
             return "";
         }
         try {
@@ -294,7 +186,7 @@ public class AES {
      * @return
      */
     public static String Decrypt(String cipher, String key) {
-        if ((cipher==null || cipher.length()==0)) {
+        if ((cipher == null || cipher.length() == 0)) {
             return "";
         }
         try {
@@ -305,7 +197,4 @@ public class AES {
         return cipher;
 
     }
-
- 
- 
 }

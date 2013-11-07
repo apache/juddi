@@ -29,16 +29,16 @@ import org.uddi.api_v3.*;
  */
 public class Printers {
 
-    public static String TModelInfoToString(TModelInstanceDetails info) {
+    private static String TModelInfoToString(TModelInstanceDetails info) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < info.getTModelInstanceInfo().size(); i++) {
             sb.append(info.getTModelInstanceInfo().get(i).getTModelKey());
         }
-        return sb.toString();
+        return StringEscapeUtils.escapeHtml(sb.toString());
     }
 
     /**
-     * Converts category bags of tmodels to a readable string
+     * Converts category bags of tmodels to a readable string used from hub
      *
      * @param categoryBag
      * @return
@@ -46,147 +46,126 @@ public class Printers {
     public static String CatBagToString(CategoryBag categoryBag, String locale) {
         StringBuilder sb = new StringBuilder();
         if (categoryBag == null) {
-            return "no data";
+            return ResourceLoader.GetResource(locale, "errors.nodatareturned");
         }
         for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
             sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i), locale));
         }
         for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
-            sb.append("Key Ref Grp: TModelKey=");
+            sb.append(ResourceLoader.GetResource(locale, "items.keyrefgroup")).
+                    append(" " + ": ").append(ResourceLoader.GetResource(locale, "items.tmodel.key")).
+                    append("=").
+                    append(categoryBag.getKeyedReferenceGroup().get(i).getTModelKey());
             for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
                 sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k), locale));
             }
         }
-        return sb.toString();
+        return StringEscapeUtils.escapeHtml(sb.toString());
     }
 
-    public static String KeyedReferenceToString(KeyedReference item, String locale) {
+    private static String KeyedReferenceToString(KeyedReference item, String locale) {
+        //TODO i18n
         StringBuilder sb = new StringBuilder();
-        sb.append("Key Ref: Name=").append(item.getKeyName()).append(" Value=").append(item.getKeyValue()).append(" tModel=").append(item.getTModelKey()).append(System.getProperty("line.separator"));
-        return sb.toString();
+        sb.append(ResourceLoader.GetResource(locale, "items.keyrefgroup")).
+                append(": ").
+                append(ResourceLoader.GetResource(locale, "items.name")).
+                append("=").
+                append(item.getKeyName()).
+                append(" ").
+                append(ResourceLoader.GetResource(locale, "items.value")).
+                append("=").
+                append(item.getKeyValue()).
+                append(" ").
+                append(ResourceLoader.GetResource(locale, "items.tmodel")).
+                append("=").
+                append(item.getTModelKey()).
+                append(System.getProperty("<br>"));
+        return StringEscapeUtils.escapeHtml(sb.toString());
     }
 
     /**
      * This function is useful for translating UDDI's somewhat complex data
-     * format to something that is more useful.
+     * format to something that is more useful. used from hub
      *
      * @param bindingTemplates
      */
     public static String PrintBindingTemplates(BindingTemplates bindingTemplates, String locale) {
         if (bindingTemplates == null) {
-            return "No binding templates";
+            return ResourceLoader.GetResource(locale, "errors.nobindingtemplates");
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
-            sb.append("Binding Key: ").append(bindingTemplates.getBindingTemplate().get(i).getBindingKey()).append("<Br>");
-            sb.append("Description: ").append(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription())).append("<Br>");
-            sb.append("CatBag: ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(), locale)).append("<Br>");
-            sb.append("tModels: ").append(Printers.TModelInfoToString(bindingTemplates.getBindingTemplate().get(i).getTModelInstanceDetails())).append("<Br>");
+            sb.append(ResourceLoader.GetResource(locale, "items.bindingtemplate.key")).
+                    append(": ").
+                    append(StringEscapeUtils.escapeHtml(bindingTemplates.getBindingTemplate().get(i).getBindingKey())).
+                    append("<Br>");
+            sb.append(ResourceLoader.GetResource(locale, "items.description")).
+                    append(": ").
+                    append(ListToDescString(bindingTemplates.getBindingTemplate().get(i).getDescription())).
+                    append("<Br>");
+            sb.append(ResourceLoader.GetResource(locale, "pages.editor.tabnav.categories")).
+                    append(": ").append(CatBagToString(bindingTemplates.getBindingTemplate().get(i).getCategoryBag(), locale)).
+                    append("<Br>");
+            sb.append(ResourceLoader.GetResource(locale, "items.tmodel")).
+                    append(": ").append(TModelInfoToString(bindingTemplates.getBindingTemplate().get(i).getTModelInstanceDetails())).
+                    append("<Br>");
             if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
-                sb.append("Access Point: ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue()).append(" type ").append(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType()).append("<Br>");
+                sb.append(ResourceLoader.GetResource(locale, "items.accesspoint")).
+                        append(": ").
+                        append(StringEscapeUtils.escapeHtml(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue())).
+                        append(" ").
+                        append(ResourceLoader.GetResource(locale, "items.type")).
+                        append(" ").
+                        append(StringEscapeUtils.escapeHtml(bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType())).
+                        append("<Br>");
             }
             if (bindingTemplates.getBindingTemplate().get(i).getHostingRedirector() != null) {
-                sb.append("Hosting Director: ").append(bindingTemplates.getBindingTemplate().get(i).getHostingRedirector().getBindingKey()).append("<br>");
+                sb.append(ResourceLoader.GetResource(locale, "items.hostingredirector")).
+                        append(": ").
+                        append(bindingTemplates.getBindingTemplate().get(i).getHostingRedirector().getBindingKey()).
+                        append("<br>");
             }
         }
-        return sb.toString();
+        return (sb.toString());
     }
 
+    /**
+     * Description to space separated string
+     *
+     * @param name
+     * @return
+     */
     public static String ListToDescString(List<Description> name) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < name.size(); i++) {
             sb.append(name.get(i).getValue()).append(" ");
         }
-        return sb.toString();
+        return StringEscapeUtils.escapeHtml(sb.toString());
     }
 
+    /**
+     * Name to space separated string
+     *
+     * @param name
+     * @return
+     */
     public static String ListNamesToString(List<Name> name) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < name.size(); i++) {
             sb.append(name.get(i).getValue()).append(" ");
         }
-        return sb.toString();
+        return StringEscapeUtils.escapeHtml(sb.toString());
     }
 
-    public static String ListDiscoToString(DiscoveryURLs info) {
-        StringBuilder sb = new StringBuilder();
-        if (info == null) {
-            return "";
-        }
-        for (int i = 0; i < info.getDiscoveryURL().size(); i++) {
-            sb.append("Type: ").append(StringEscapeUtils.escapeHtml(info.getDiscoveryURL().get(i).getValue())).append(" ").append(StringEscapeUtils.escapeHtml(info.getDiscoveryURL().get(i).getValue()));
-        }
-        return sb.toString();
-    }
-
+   
     /**
-     * converts contacts to a simple string output
+     * used from Hub at tModelListAsHtml(..)
+     *
+     * @param findTModel
+     * @param session
+     * @param isChooser
+     * @return
      */
-    public static String PrintContacts(Contacts contacts, String locale) {
-        if (contacts == null) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < contacts.getContact().size(); i++) {
-            sb.append("Contact ").append(i).append(" type:").append(contacts.getContact().get(i).getUseType()).append("<br>");
-            for (int k = 0; k < contacts.getContact().get(i).getPersonName().size(); k++) {
-                sb.append("Name: ").append(contacts.getContact().get(i).getPersonName().get(k).getValue()).append("<br>");
-            }
-            for (int k = 0; k < contacts.getContact().get(i).getEmail().size(); k++) {
-                sb.append("Email: ").append(contacts.getContact().get(i).getEmail().get(k).getValue()).append("<br>");
-            }
-            for (int k = 0; k < contacts.getContact().get(i).getAddress().size(); k++) {
-                sb.append("Address sort code ").append(contacts.getContact().get(i).getAddress().get(k).getSortCode()).append("<br>");
-                sb.append("Address use type ").append(contacts.getContact().get(i).getAddress().get(k).getUseType()).append("<br>");
-                sb.append("Address tmodel key ").append(contacts.getContact().get(i).getAddress().get(k).getTModelKey()).append("<br>");
-                for (int x = 0; x < contacts.getContact().get(i).getAddress().get(k).getAddressLine().size(); x++) {
-                    sb.append("Address line value ").append(contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getValue()).append("<br>");
-                    sb.append("Address line key name ").append(contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyName()).append("<br>");
-                    sb.append("Address line key value ").append(contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyValue()).append("<br>");
-                }
-            }
-            for (int k = 0; k < contacts.getContact().get(i).getDescription().size(); k++) {
-                sb.append("Desc: ").append(contacts.getContact().get(i).getDescription().get(k).getValue()).append("<br>");
-            }
-            for (int k = 0; k < contacts.getContact().get(i).getPhone().size(); k++) {
-                sb.append("Phone: ").append(contacts.getContact().get(i).getPhone().get(k).getValue()).append("<br>");
-            }
-        }
-        return sb.toString();
-    }
-
-    public static String ListIdentBagToString(IdentifierBag info, String locale) {
-        StringBuilder sb = new StringBuilder();
-        if (info == null) {
-            return "";
-        }
-        for (int i = 0; i < info.getKeyedReference().size(); i++) {
-            sb.append(KeyedReferenceToString(info.getKeyedReference().get(i), locale));
-        }
-        return sb.toString();
-    }
-
-    public static String PublisherAssertionsToHtml(List<PublisherAssertion> list, String locale) {
-        if (list == null || list.isEmpty()) {
-            return "No input";
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table class=\"table\">");
-        for (int i = 0; i < list.size(); i++) {
-            sb.append("<tr><td>");
-            sb.append(StringEscapeUtils.escapeHtml(list.get(i).getToKey()));
-            sb.append("</td><td>");
-            sb.append(StringEscapeUtils.escapeHtml(list.get(i).getFromKey()));
-            sb.append("</td><td>");
-            sb.append(list.get(i).getSignature().isEmpty());
-            sb.append("</td><td>");
-            sb.append(StringEscapeUtils.escapeHtml(Printers.KeyedReferenceToString(list.get(i).getKeyedReference(), locale)));
-            sb.append("</td></tr>");
-        }
-        sb.append("</table>");
-        return sb.toString();
-    }
-
     public static String PrintTModelListAsHtml(TModelList findTModel, HttpSession session, boolean isChooser) {
 
         StringBuilder sb = new StringBuilder();
@@ -231,42 +210,14 @@ public class Printers {
         return sb.toString();
     }
 
-    @Deprecated
-    private static String PrintTModelListAsHtmlModel(TModelList findTModel, HttpSession session) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("<table class=\"table table-hover\"><tr><th>");
-
-        sb.append("</th><th>");
-
-        sb.append(ResourceLoader.GetResource(session, "items.key"))
-                .append("</th><th>")
-                .append(ResourceLoader.GetResource(session, "items.name"))
-                .append("</th><th>")
-                .append(ResourceLoader.GetResource(session, "items.description"))
-                .append("</th></tr>");
-        for (int i = 0; i < findTModel.getTModelInfos().getTModelInfo().size(); i++) {
-            sb.append("<tr><td>");
-
-            sb.append("<input class=\"modalableTmodel\" type=checkbox id=\"")
-                    .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()))
-                    .append("\"></td><td>");
-
-            sb.append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getTModelKey()));
-            sb.append("</td><td>")
-                    .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getValue()));
-            if (findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang() != null) {
-                sb.append(", ")
-                        .append(StringEscapeUtils.escapeHtml(findTModel.getTModelInfos().getTModelInfo().get(i).getName().getLang()));
-            }
-            sb.append("</td><td>")
-                    .append(StringEscapeUtils.escapeHtml(Printers.ListToDescString(findTModel.getTModelInfos().getTModelInfo().get(i).getDescription())))
-                    .append("</td></tr>");
-        }
-        sb.append("</table>");
-        return sb.toString();
-    }
-
+    /**
+     * used from hub
+     *
+     * @param findBusiness
+     * @param session
+     * @param isChooser
+     * @return
+     */
     public static String BusinessListAsTable(BusinessList findBusiness, HttpSession session, boolean isChooser) {
         StringBuilder sb = new StringBuilder();
         sb.append("<table class=\"table table-hover\"<tr><th>");
@@ -298,7 +249,7 @@ public class Printers {
             if (findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos() == null) {
                 sb.append("0");
             } else {
-                sb.append("Show ").append(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size());
+                sb.append(ResourceLoader.GetResource(session, "actions.show")).append(" ").append(findBusiness.getBusinessInfos().getBusinessInfo().get(i).getServiceInfos().getServiceInfo().size());
             }
             sb.append("</a>");
             if (!isChooser) {
@@ -317,11 +268,12 @@ public class Printers {
     }
 
     /**
-     * service list as html
+     * service list as html, used
+     *
      * @param findService
      * @param chooser
      * @param session
-     * @return 
+     * @return
      */
     public static String ServiceListAsHtml(ServiceList findService, boolean chooser, HttpSession session) {
         StringBuilder sb = new StringBuilder();
@@ -349,9 +301,9 @@ public class Printers {
                     append(StringEscapeUtils.escapeHtml(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()))
                     .append("\">");
             sb.append(Printers.ListNamesToString(findService.getServiceInfos().getServiceInfo().get(i).getName())).append("<i class=\"icon-edit icon-large\"></i<</a></td><td>");
-           
+
             sb.append((findService.getServiceInfos().getServiceInfo().get(i).getServiceKey())).append("</td><td>");
-             sb.append("<a href=\"businessEditor2.jsp?id=")
+            sb.append("<a href=\"businessEditor2.jsp?id=")
                     .append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))
                     .append("\">");
             sb.append(StringEscapeUtils.escapeHtml((findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey())))

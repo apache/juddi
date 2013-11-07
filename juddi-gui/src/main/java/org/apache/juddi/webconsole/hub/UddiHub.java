@@ -147,6 +147,7 @@ public class UddiHub implements Serializable{
         if (j == null) {
             UddiHub hub = new UddiHub(application, _session);
             _session.setAttribute("hub", hub);
+            hub.locale =(String) _session.getAttribute("locale");
             return hub;
         }
 
@@ -324,7 +325,7 @@ public class UddiHub implements Serializable{
                     && session.getAttribute("password") != null) {
                 req.setUserID((String) session.getAttribute("username"));
                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
-                log.info("fetching auth token for " + req.getUserID() + " security enable is " + ((security == null) ? "null" : "active"));
+                log.info("AUDIT: fetching auth token for " + req.getUserID() + " security enable is " + ((security == null) ? "null" : "active"));
                 try {
                     AuthToken authToken = security.getAuthToken(req);
                     token = authToken.getAuthInfo();
@@ -496,10 +497,11 @@ public class UddiHub implements Serializable{
 
     /**
      * Performs Inquiry Find_service API
-     *
+     * used from servicedetails.jsp
      * @param serviceid
      * @return
      */
+    
     public String GetServiceDetailAsHtml(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput");
@@ -537,7 +539,7 @@ public class UddiHub implements Serializable{
                         sb.append(ResourceLoader.GetResource(session, "items.signed.not")).append("<Br>");
                     }
 
-                    sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), (String) session.getAttribute("locale"))).append("<Br>");
+                    sb.append(Printers.PrintBindingTemplates(get.getBusinessService().get(i).getBindingTemplates(), locale)).append("<Br>");
                 }
             } else {
                 sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
@@ -726,18 +728,18 @@ public class UddiHub implements Serializable{
             return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
 
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
         BindingTemplates bt = new BindingTemplates();
-        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit")));
+        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
         if (!bt.getBindingTemplate().isEmpty()) {
             be.setBindingTemplates(bt);
         }
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
 
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
@@ -836,21 +838,21 @@ public class UddiHub implements Serializable{
                 be.setBusinessServices(GetBusinessDetails.getBusinessServices());
             }
         }
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
 
 
-        be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
-        be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL,locale));
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
-        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF));
+        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF,locale));
         return SaveBusinessDetails(be);
     }
 
@@ -861,59 +863,7 @@ public class UddiHub implements Serializable{
      * @return
      * @throws Exception
      */
-    @Deprecated
-    private String GetBusinessDetailsAsHtml(String bizid) throws Exception {
-        if (bizid == null || bizid.isEmpty()) {
-            return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
-        }
-        StringBuilder sb = new StringBuilder();
-        try {
-            GetBusinessDetail gbd = new GetBusinessDetail();
-            gbd.setAuthInfo(GetToken());
-
-            gbd.getBusinessKey().add(bizid);
-
-            BusinessDetail businessDetail = null;
-
-            try {
-                businessDetail = inquiry.getBusinessDetail(gbd);
-            } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        gbd.setAuthInfo(GetToken());
-                        businessDetail = inquiry.getBusinessDetail(gbd);
-                    }
-                } else {
-                    throw ex;
-                }
-            }
-            if (businessDetail != null) {
-                for (int i = 0; i < businessDetail.getBusinessEntity().size(); i++) {
-                    sb.append("Business Detail - key: ").append(businessDetail.getBusinessEntity().get(i).getBusinessKey()).append("<br>");
-                    sb.append(ResourceLoader.GetResource(session, "items.name"));
-                    sb.append(": ").append(Printers.ListNamesToString(businessDetail.getBusinessEntity().get(i).getName())).append("<br>");
-                    sb.append(ResourceLoader.GetResource(session, "items.description"));
-                    sb.append(": ").append(Printers.ListToDescString(businessDetail.getBusinessEntity().get(i).getDescription())).append("<br>");
-                    sb.append(ResourceLoader.GetResource(session, "items.discoveryurl"));
-                    sb.append(": ").append(Printers.ListDiscoToString(businessDetail.getBusinessEntity().get(i).getDiscoveryURLs())).append("<br>");
-                    sb.append(ResourceLoader.GetResource(session, "items.identifiers"));
-                    sb.append(": ").append(Printers.ListIdentBagToString(businessDetail.getBusinessEntity().get(i).getIdentifierBag(), (String) session.getAttribute("locale"))).append("<br>");
-                    sb.append(ResourceLoader.GetResource(session, "items.keyrefcats"));
-                    sb.append(": ").append(Printers.CatBagToString(businessDetail.getBusinessEntity().get(i).getCategoryBag(), (String) session.getAttribute("locale"))).append("<br>");
-                    Printers.PrintContacts(businessDetail.getBusinessEntity().get(i).getContacts(), (String) session.getAttribute("locale"));
-                }
-            } else {
-                sb.append(ResourceLoader.GetResource(session, "errors.nodatareturned"));
-            }
-        } catch (Exception ex) {
-
-            sb.append(HandleException(ex));
-        }
-        return sb.toString();
-    }
-
+  
     /**
      * Gets a business's details used for the businessEditor
      *
@@ -1774,7 +1724,7 @@ public class UddiHub implements Serializable{
                 }
 
             }
-            if (findBusiness.getTModelInfos() != null) {
+            if (findBusiness!=null && findBusiness.getTModelInfos() != null) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<table class=\"table\">");
                 for (int i = 0; i < findBusiness.getTModelInfos().getTModelInfo().size(); i++) {
@@ -1979,7 +1929,7 @@ public class UddiHub implements Serializable{
             return HandleException(ex);
         }
     }
-
+    
     /**
      * This rebuild a tmodel from the http request, such as from the tmodel
      * editor page
@@ -2016,22 +1966,19 @@ public class UddiHub implements Serializable{
         }
 
 
-        //TODO signature
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit")));
-        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit")));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
 
-//            be.setDiscoveryURLs(BuildDisco(MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL));
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
-        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF));
+        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF,locale));
 
-        JAXB.marshal(be, System.out);
         return SaveTModel(be);
 
     }
@@ -3237,7 +3184,7 @@ public class UddiHub implements Serializable{
                 }
             }
             if (response == null) {
-                return "The operation completed without error";
+                return ResourceLoader.GetResource(session, "actions.success");
             }
             StringWriter sw = new StringWriter();
             JAXB.marshal(response, sw);
@@ -3664,9 +3611,21 @@ public class UddiHub implements Serializable{
         }
     }
     
+    /**
+     * 
+     */
     public static final String PROP_AUTH_TYPE="config.props.authtype";
+    /**
+     * 
+     */
     public static final String PROP_AUTO_LOGOUT="config.props.enableAutomaticLogouts";
+    /**
+     * 
+     */
     public static final String PROP_AUTO_LOGOUT_TIMER="config.props.enableAutomaticLogouts.duration";
+    /**
+     * 
+     */
     public static final String PROP_PREFIX="config.props.";
     
     /**

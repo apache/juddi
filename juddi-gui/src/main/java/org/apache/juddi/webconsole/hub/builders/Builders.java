@@ -19,7 +19,6 @@ package org.apache.juddi.webconsole.hub.builders;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -76,7 +75,7 @@ public class Builders {
      * @param prefix
      * @return
      */
-    public static List<PersonName> BuildContactPersonNames(Map map, String prefix, String cte) {
+    public static List<PersonName> BuildContactPersonNames(Map map, String prefix, String cte, String locale) {
         List<PersonName> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -100,7 +99,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -113,7 +112,7 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static List<OverviewDoc> BuildOverviewDocs(Map map, String prefix, String cte) {
+    public static List<OverviewDoc> BuildOverviewDocs(Map map, String prefix, String cte, String locale) {
         List<OverviewDoc> ret = new ArrayList<OverviewDoc>();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -130,12 +129,12 @@ public class Builders {
                     pn.getOverviewURL().setValue(t[0]);
                     t = (String[]) map.get(prefix + index + PostBackConstants.TYPE);
                     pn.getOverviewURL().setUseType(t[0]);
-                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte));
+                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte,locale));
                     ret.add(pn);
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -147,7 +146,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static List<Phone> BuildPhone(Map map, String prefix) {
+    public static List<Phone> BuildPhone(Map map, String prefix, String locale) {
         List<Phone> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -167,7 +166,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -180,15 +179,15 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static Contact BuildSingleContact(Map m, String prefix, String cte) {
+    public static Contact BuildSingleContact(Map m, String prefix, String cte, String locale) {
         Contact c = new Contact();
         String[] t = (String[]) m.get(prefix + PostBackConstants.TYPE);
         c.setUseType(t[0]);
-        c.getPersonName().addAll(BuildContactPersonNames(MapFilter(m, prefix + PostBackConstants.NAME), prefix + PostBackConstants.NAME, cte));
-        c.getDescription().addAll(BuildDescription(MapFilter(m, prefix + PostBackConstants.DESCRIPTION), prefix + PostBackConstants.DESCRIPTION, cte));
-        c.getEmail().addAll(BuildEmail(MapFilter(m, prefix + PostBackConstants.EMAIL), prefix + PostBackConstants.EMAIL));
-        c.getPhone().addAll(BuildPhone(MapFilter(m, prefix + PostBackConstants.PHONE), prefix + PostBackConstants.PHONE));
-        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS, cte));
+        c.getPersonName().addAll(BuildContactPersonNames(MapFilter(m, prefix + PostBackConstants.NAME), prefix + PostBackConstants.NAME, cte, locale));
+        c.getDescription().addAll(BuildDescription(MapFilter(m, prefix + PostBackConstants.DESCRIPTION), prefix + PostBackConstants.DESCRIPTION, cte, locale));
+        c.getEmail().addAll(BuildEmail(MapFilter(m, prefix + PostBackConstants.EMAIL), prefix + PostBackConstants.EMAIL, locale));
+        c.getPhone().addAll(BuildPhone(MapFilter(m, prefix + PostBackConstants.PHONE), prefix + PostBackConstants.PHONE, locale));
+        c.getAddress().addAll(BuildAddress(MapFilter(m, prefix + PostBackConstants.ADDRESS), prefix + PostBackConstants.ADDRESS, cte, locale));
         return c;
     }
 
@@ -199,7 +198,7 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static List<Name> BuildNames(Map map, String prefix, String cte) {
+    public static List<Name> BuildNames(Map map, String prefix, String cte, String locale) {
         List<Name> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -223,7 +222,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -235,7 +234,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static CategoryBag BuildCatBag(Map map, String prefix) {
+    public static CategoryBag BuildCatBag(Map map, String prefix, String locale) {
         CategoryBag ret = new CategoryBag();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -257,7 +256,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -269,9 +268,9 @@ public class Builders {
  * @param prefix
  * @return 
  */
-    public static IdentifierBag BuildIdentBag(Map map, String prefix) {
+    public static IdentifierBag BuildIdentBag(Map map, String prefix, String locale) {
         IdentifierBag ret = new IdentifierBag();
-        ret.getKeyedReference().addAll(BuildKeyedReference(map, prefix));
+        ret.getKeyedReference().addAll(BuildKeyedReference(map, prefix, locale));
         if (ret.getKeyedReference().isEmpty()) {
             return null;
         }
@@ -283,7 +282,7 @@ public class Builders {
  * @param prefix
  * @return 
  */
-    public static DiscoveryURLs BuildDisco(Map map, String prefix) {
+    public static DiscoveryURLs BuildDisco(Map map, String prefix, String locale) {
         DiscoveryURLs list = new DiscoveryURLs();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -303,7 +302,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         if (list.getDiscoveryURL().isEmpty()) {
@@ -319,7 +318,7 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static List<Address> BuildAddress(Map map, String prefix, String cte) {
+    public static List<Address> BuildAddress(Map map, String prefix, String cte, String locale) {
         List<Address> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -355,12 +354,12 @@ public class Builders {
                     } else {
                         pn.setTModelKey(t[0]);
                     }
-                    pn.getAddressLine().addAll(BuildAddressLine(MapFilter(map, prefix + index + PostBackConstants.ADDRESSLINE), prefix + index + PostBackConstants.ADDRESSLINE));
+                    pn.getAddressLine().addAll(BuildAddressLine(MapFilter(map, prefix + index + PostBackConstants.ADDRESSLINE), prefix + index + PostBackConstants.ADDRESSLINE, locale));
                     ret.add(pn);
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -372,7 +371,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static List<KeyedReferenceGroup> BuildKeyedReferenceGroup(Map map, String prefix) {
+    public static List<KeyedReferenceGroup> BuildKeyedReferenceGroup(Map map, String prefix, String locale) {
         List<KeyedReferenceGroup> ret = new ArrayList<KeyedReferenceGroup>();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -387,7 +386,7 @@ public class Builders {
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.VALUE);
                     if (t != null) {
                         pn.setTModelKey(t[0]);
-                        pn.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.KEY_REF), prefix + index + PostBackConstants.KEY_REF));
+                        pn.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.KEY_REF), prefix + index + PostBackConstants.KEY_REF, locale));
                         ret.add(pn);
                     } else {
                         UddiHub.log.warn("Unexpected null from BuildKeyedReferenceGroup " + filteredkey + " " + prefix + " " + key);
@@ -395,7 +394,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -407,7 +406,7 @@ public class Builders {
      * @param map
      * @return
      */
-    public static Contacts BuildContacts(Map map, String cte) {
+    public static Contacts BuildContacts(Map map, String cte, String locale) {
         Contacts cb = new Contacts();
         Map contactdata = MapFilter(map, PostBackConstants.CONTACT_PREFIX);
         Iterator it = contactdata.keySet().iterator();
@@ -419,11 +418,11 @@ public class Builders {
             if (match.find()) {
                 String index = key.substring(0, match.start());
                 if (!processedIndexes.contains(index)) {
-                    cb.getContact().add(BuildSingleContact(MapFilter(contactdata, PostBackConstants.CONTACT_PREFIX + index), PostBackConstants.CONTACT_PREFIX + index, cte));
+                    cb.getContact().add(BuildSingleContact(MapFilter(contactdata, PostBackConstants.CONTACT_PREFIX + index), PostBackConstants.CONTACT_PREFIX + index, cte, locale));
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         if (cb.getContact().isEmpty()) {
@@ -438,7 +437,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static List<Email> BuildEmail(Map map, String prefix) {
+    public static List<Email> BuildEmail(Map map, String prefix, String locale) {
         List<Email> list = new ArrayList<Email>();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -458,7 +457,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return list;
@@ -471,7 +470,7 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static List<Description> BuildDescription(Map map, String prefix, String cte) {
+    public static List<Description> BuildDescription(Map map, String prefix, String cte, String locale) {
         List<Description> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -495,7 +494,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -507,7 +506,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static List<KeyedReference> BuildKeyedReference(Map map, String prefix) {
+    public static List<KeyedReference> BuildKeyedReference(Map map, String prefix, String locale) {
         List<KeyedReference> ret = new ArrayList<KeyedReference>();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -531,7 +530,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -543,7 +542,7 @@ public class Builders {
      * @param prefix
      * @return 
      */
-    public static List<AddressLine> BuildAddressLine(Map map, String prefix) {
+    public static List<AddressLine> BuildAddressLine(Map map, String prefix, String locale) {
         List<AddressLine> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -565,7 +564,7 @@ public class Builders {
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -578,7 +577,7 @@ public class Builders {
      * @param cte
      * @return 
      */
-    public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix, String cte) {
+    public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix, String cte, String locale) {
         List<BindingTemplate> ret = new ArrayList();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -613,28 +612,28 @@ public class Builders {
                     if (ap.getValue() != null) {
                         pn.setAccessPoint(ap);
                     }
-                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte));
+                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte, locale));
                     CategoryBag cb = new CategoryBag();
-                    cb.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF), prefix + index + PostBackConstants.CATBAG_KEY_REF));
-                    cb.getKeyedReferenceGroup().addAll(BuildKeyedReferenceGroup(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP), prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP));
+                    cb.getKeyedReference().addAll(BuildKeyedReference(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF), prefix + index + PostBackConstants.CATBAG_KEY_REF, locale));
+                    cb.getKeyedReferenceGroup().addAll(BuildKeyedReferenceGroup(MapFilter(map, prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP), prefix + index + PostBackConstants.CATBAG_KEY_REF_GRP, locale));
                     if (cb.getKeyedReference().isEmpty() && cb.getKeyedReferenceGroup().isEmpty()) {
                         cb = null;
                     }
 
                     pn.setCategoryBag(cb);
-                    pn.setTModelInstanceDetails(BuildTmodelInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.TMODELINSTANCE), prefix + index + PostBackConstants.TMODELINSTANCE, cte));
+                    pn.setTModelInstanceDetails(BuildTmodelInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.TMODELINSTANCE), prefix + index + PostBackConstants.TMODELINSTANCE, cte, locale));
 
                     ret.add(pn);
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
     }
 
-    private static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix, String cte) {
+    private static TModelInstanceDetails BuildTmodelInstanceDetails(Map map, String prefix, String cte, String locale) {
         TModelInstanceDetails ret = new TModelInstanceDetails();
 
         Iterator it = map.keySet().iterator();
@@ -650,15 +649,15 @@ public class Builders {
                     String[] t = (String[]) map.get(prefix + index + PostBackConstants.KEYNAME);
                     tmi.setTModelKey(t[0]);
 
-                    tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte));
+                    tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte, locale));
 
-                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte));
+                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte,locale));
 
                     ret.getTModelInstanceInfo().add(tmi);
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         if (ret.getTModelInstanceInfo().isEmpty()) {
@@ -667,7 +666,7 @@ public class Builders {
         return ret;
     }
 
-    private static InstanceDetails BuildInstanceDetails(Map map, String prefix, String cte) {
+    private static InstanceDetails BuildInstanceDetails(Map map, String prefix, String cte, String locale) {
         InstanceDetails ret = new InstanceDetails();
         Iterator it = map.keySet().iterator();
         List<String> processedIndexes = new ArrayList<String>();
@@ -683,12 +682,12 @@ public class Builders {
                     //pn.setValue(t[0]);
                     ret.setInstanceParms(t[0]);
 
-                    ret.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte));
-                    ret.getOverviewDoc().addAll(BuildOverviewDocs(MapFilter(map, prefix + index + PostBackConstants.OVERVIEW), prefix + index + PostBackConstants.OVERVIEW, cte));
+                    ret.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte, locale));
+                    ret.getOverviewDoc().addAll(BuildOverviewDocs(MapFilter(map, prefix + index + PostBackConstants.OVERVIEW), prefix + index + PostBackConstants.OVERVIEW, cte, locale));
                     processedIndexes.add(index);
                 }
             } else {
-                throw new IllegalArgumentException("Invalid form data posted");
+                throw new IllegalArgumentException(ResourceLoader.GetResource(locale, "errors.invaliddata"));
             }
         }
         return ret;
@@ -714,7 +713,7 @@ public class Builders {
                 return null;
             }
             if (alertType.equalsIgnoreCase("specificItem")) {
-                sub = BuildClientSubscriptionSpecificItem(map, outmsg);
+                sub = BuildClientSubscriptionSpecificItem(map, outmsg, (String)session.getAttribute("locale"));
             } else if (alertType.equalsIgnoreCase("searchResults")) {
                 sub = BuildClientSubscriptionSearchResults(map, outmsg);
             } else {
@@ -750,7 +749,7 @@ public class Builders {
 
     }
 
-    private static Subscription BuildClientSubscriptionSpecificItem(Map map, AtomicReference<String> outmsg) {
+    private static Subscription BuildClientSubscriptionSpecificItem(Map map, AtomicReference<String> outmsg, String locale) {
         try {
             Subscription sub = new Subscription();
             String alertCritera = ((String[]) map.get("alertCriteraSingleItem"))[0];
@@ -812,7 +811,7 @@ public class Builders {
             return sub;
         } catch (Exception ex) {
             UddiHub.log.warn(null, ex);
-            outmsg.set("error parsing");
+            outmsg.set((ResourceLoader.GetResource(locale, "errors.invaliddata")));
             return null;
         }
     }

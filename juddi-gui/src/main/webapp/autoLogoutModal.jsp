@@ -9,17 +9,16 @@
 <%
     UddiHub internal_ = UddiHub.getInstance(application, session);
     if (internal_.isAutoLogoutEnabled()) {
-        
+
 %>
 <script type="text/javascript">
 
     var timer1, timer2;
     document.onkeypress = resetTimer;
     document.onmousemove = resetTimer;
-    var counterzxy=0;
     function resetTimer()
     {
-         window.console && console.log("time reset " + counterzxy++);
+
         $("#autologout").modal('hide');
         clearTimeout(timer1);
         clearTimeout(timer2);
@@ -36,6 +35,7 @@
 
     function alertUser()
     {
+        window.console && console.log("trigger automatic logout warning");
         $("#autologout").modal('hide');
         $("#autologout").modal('show');
         // document.getElementById('timeoutPopup').style.display = 'block';
@@ -43,6 +43,7 @@
 
     function logout()
     {
+        window.console && console.log("trigger automatic logout");
         window.location.href = 'logoutredir.jsp';
     }
 
