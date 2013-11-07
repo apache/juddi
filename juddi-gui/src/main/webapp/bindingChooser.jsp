@@ -38,7 +38,7 @@ this page is meant to be included via jsp:include
                 return(value);
             }, { 
                 type    : 'text',
-                submit  : 'OK'
+                submit  : i18n_ok
             });
             //only init the data when required reloadTmodelModal();
         </script>

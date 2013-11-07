@@ -621,10 +621,12 @@
                 %> | 
                 <a class="btn btn-danger " href="javascript:deleteBusiness();"><i class="icon-trash icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.delete")%></a> |
                 <a class="btn btn-success " href="signer.jsp?id=<%=URLEncoder.encode(bizid, "UTF-8")%>&type=business"><i class="icon-pencil icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.sign")%></a> |
-                <a class="btn btn-info " href="#" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
+                <a class="btn btn-info " href="editSubscription.jsp?bizid=<%=URLEncoder.encode(bizid, "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
                 <a class="btn btn-warning "  href="transfer.jsp?biz=<%=URLEncoder.encode(bizid, "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                 <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
+                
                 <%
+                        //TODO for 3.2.1 <a class="btn "  href="javascript:Copy();"><i class="icon-copy icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.copy")% ></a>
                     }
                 %>
 
@@ -690,21 +692,6 @@
     <script type="text/javascript">
        
     </script>
-    <div class="modal hide fade container" id="addSubscriptionModal">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Add a subscription</h3>
-        </div>
-        <div class="modal-body">
-            You can setup a subscription for this business to automatically alert you when there is a change
-        </div>
-        <div class="modal-footer">
-
-            <a href="javascript:closeXmlPop('viewAsXml');" class="btn"><%=ResourceLoader.GetResource(session, "modal.close")%></a>
-        </div>
-    </div>
-        
-        
         
     <%
         }

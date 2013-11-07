@@ -175,6 +175,9 @@ public class UddiHub implements Serializable{
         return properties;
     }
 
+    public String getLocale(){
+        return locale;
+    }
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
         URL prop = application.getResource("/META-INF/config.properties");
         if (prop == null) {

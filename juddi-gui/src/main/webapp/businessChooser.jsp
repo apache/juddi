@@ -38,7 +38,7 @@ this page is meant to be included via jsp:include
                 return(value);
             }, { 
                 type    : 'text',
-                submit  : 'OK'
+                submit  : i18n_ok
             });
             //only init the data when required reloadTmodelModal();
         </script>
@@ -49,11 +49,3 @@ this page is meant to be included via jsp:include
         <a href="javascript:$('#businessChooser').modal('hide');" class="btn btn-primary" data-dismiss="modal"><%=ResourceLoader.GetResource(session, "actions.select")%></a>
     </div>
 </div>
-<%
-//<a href="javascript:tModelCancel();" class="close" class="btn btn-danger">Cancel</a>
-//<a href="javascript:tModelModal();" class="btn" >Pick a tModel</a>
-
-
-//<a href="javascript:$('#businessChooser').modal();" class="btn btn-primary" data-dismiss="modal">< %=ResourceLoader.GetResource(session, "actions.select")% ></a>
-%>
-

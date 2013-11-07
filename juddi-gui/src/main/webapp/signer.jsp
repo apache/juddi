@@ -136,7 +136,7 @@
                     //display:none  <a class="btn" href="javascript:go();">Go</a>
             </script>
 
-            <textarea name="data" rows="15" cols="80" id="data" style="">Loading....</textarea>
+            <textarea name="data" rows="15" cols="80" id="data" style=""><%=ResourceLoader.GetResource(session, "items.loading")%>....</textarea>
         </div>
 
     </div>

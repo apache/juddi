@@ -34,7 +34,7 @@
     var i18n_lang="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.lang"))%>";
     var i18n_email="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.email"))%>";
     var i18n_type="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.type"))%>";
-    
+    var i18n_ok="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "actions.ok"))%>";
     var i18n_descriptionAdd="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.description.add"))%>";
     var i18n_description="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.description"))%>";
     var i18n_contactPrimary="<%=org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(ResourceLoader.GetResource(session, "items.contact.primary"))%>";

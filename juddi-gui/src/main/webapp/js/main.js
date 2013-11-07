@@ -51,7 +51,7 @@ function Reedit()
         return(safe_tags_replace(value));
     }, {
         type: 'text',
-        submit: 'OK'
+        submit: i18n_ok
     });
 
 }

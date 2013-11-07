@@ -196,7 +196,7 @@
                         <div class="accordion-inner">
                             <%=ResourceLoader.GetResource(session, "pages.serviceimport.content.step2a")%>
                             <br>
-                            <input type="text" id="keydomain" placeholder="autofilled from the URL">
+                            <input type="text" id="keydomain" placeholder="<%=ResourceLoader.GetResource(session, "items.import.autofill")%>">
                         </div>
                     </div>
                 </div>
@@ -232,7 +232,7 @@
                         });
                     }
                             </script>
-                            <input type="text" id="businessname" placeholder="Business Key or a new Business Name">
+                            <input type="text" id="businessname" placeholder="<%=ResourceLoader.GetResource(session, "items.import.bizname")%>">
                         </div>
                     </div>
                 </div>

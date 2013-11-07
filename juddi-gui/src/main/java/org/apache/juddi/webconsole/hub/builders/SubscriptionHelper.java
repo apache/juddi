@@ -79,7 +79,7 @@ public class SubscriptionHelper {
                 || sub.getSubscriptionFilter().getGetTModelDetail() != null);
     }
 
-    public static String isBindingSpecific(Subscription sub, String locale) {
+    public static String isBindingSpecific(Subscription sub) {
         if (sub == null) {
             return "";
         }
@@ -87,12 +87,12 @@ public class SubscriptionHelper {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetBindingDetail() != null && !sub.getSubscriptionFilter().getGetBindingDetail().getBindingKey().isEmpty()) {
-            return " " + ResourceLoader.GetResource(locale, "items.active")+" ";
+            return " active ";
         }
         return "";
     }
 
-    public static String isBusinessSpecific(Subscription sub, String locale) {
+    public static String isBusinessSpecific(Subscription sub) {
         if (sub == null) {
             return "";
         }
@@ -100,12 +100,12 @@ public class SubscriptionHelper {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetBusinessDetail() != null && !sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().isEmpty()) {
-            return " " + ResourceLoader.GetResource(locale, "items.active")+" ";
+            return " active ";
         }
         return "";
     }
 
-    public static String isServiceSpecific(Subscription sub, String locale) {
+    public static String isServiceSpecific(Subscription sub) {
         if (sub == null) {
             return "";
         }
@@ -113,12 +113,12 @@ public class SubscriptionHelper {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetServiceDetail() != null && !sub.getSubscriptionFilter().getGetServiceDetail().getServiceKey().isEmpty()) {
-            return " " + ResourceLoader.GetResource(locale, "items.active")+" ";
+            return " active ";
         }
         return "";
     }
 
-    public static String isTModelSpecific(Subscription sub, String locale) {
+    public static String isTModelSpecific(Subscription sub) {
         if (sub == null) {
             return "";
         }
@@ -126,12 +126,12 @@ public class SubscriptionHelper {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetTModelDetail() != null && !sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().isEmpty()) {
-            return " " + ResourceLoader.GetResource(locale, "items.active")+" ";
+            return " active ";
         }
         return "";
     }
 
-    public static String isPublisherAssertionSpecific(Subscription sub, String locale) {
+    public static String isPublisherAssertionSpecific(Subscription sub) {
         if (sub == null) {
             return "";
         }
@@ -139,7 +139,7 @@ public class SubscriptionHelper {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetAssertionStatusReport() != null && sub.getSubscriptionFilter().getGetAssertionStatusReport().getCompletionStatus() != null) {
-            return " " + ResourceLoader.GetResource(locale, "items.active")+" ";
+            return " active ";
         }
         return "";
     }

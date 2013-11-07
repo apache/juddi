@@ -54,15 +54,6 @@
             sub = x.GetSubscriptionDetails(request.getParameter("id"));
         }
         if (sub == null) {
-            if (request.getParameter("svcid") != null) {
-                //TODO handled a linked in subscription
-            }
-            if (request.getParameter("bizid") != null) {
-                //TODO handled a linked in subscription
-            }
-            if (request.getParameter("tid") != null) {
-                //TODO handled a linked in subscription
-            }
             sub = new Subscription();
             sub.setMaxEntities(50);
             sub.setBrief(false);
@@ -74,6 +65,19 @@
             sub.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
             sub.setSubscriptionFilter(new SubscriptionFilter());
             newitem = true;
+            if (request.getParameter("svcid") != null) {
+                sub.getSubscriptionFilter().setGetServiceDetail(new GetServiceDetail());
+                sub.getSubscriptionFilter().getGetServiceDetail().getServiceKey().add(request.getParameter("svcid"));
+            }
+            if (request.getParameter("bizid") != null) {
+                sub.getSubscriptionFilter().setGetBusinessDetail(new GetBusinessDetail());
+                sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().add(request.getParameter("bizid"));
+            }
+            if (request.getParameter("tid") != null) {
+                sub.getSubscriptionFilter().setGetTModelDetail(new GetTModelDetail());
+                sub.getSubscriptionFilter().getGetTModelDetail().getTModelKey().add(request.getParameter("tid"));
+            }
+
         }
 
     %>
@@ -111,29 +115,32 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                            function toggleType1(firstLoad)
-                            {
-                                //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
-                                setTimeout(function(){
-                                    if ($("#btn-specificitem").hasClass("active"))
+                                    function toggleType1(firstLoad)
                                     {
-                                        $("#basedonresults").hide();
-                                        $("#specific").show();
+                                        //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
+                                        setTimeout(function() {
+                                            if ($("#btn-specificitem").hasClass("active"))
+                                            {
+                                                $("#basedonresults").hide();
+                                                $("#specific").show();
+                                            }
+                                            else
+                                            {
+                                                $("#basedonresults").show();
+                                                $("#specific").hide();
+                                            }
+                                            if (firstLoad != true) {
+                                                $('#collapseOne').collapse('hide');
+                                                $('#collapseTwo').collapse('show');
+                                            }
+                                        }, 100);
+
+                                        return false;
                                     }
-                                    else
-                                    {
-                                        $("#basedonresults").show();
-                                        $("#specific").hide();
-                                    }
-                                    if (firstLoad!=true){
-                                        $('#collapseOne').collapse('hide');
-                                        $('#collapseTwo').collapse('show');}
-                                }, 100);
-                                
-                                return false;
-                            }
-                            $(document).ready(function(){ toggleType1(true);});
-                           
+                                    $(document).ready(function() {
+                                        toggleType1(true);
+                                    });
+
                         </script>
                     </div>
                 </div>
@@ -148,13 +155,18 @@
                     <div id="collapseTwo" class="accordion-body collapse">
                         <div class="accordion-inner">
                             <div id="specific">
-                                A specific item:<Br>
+                                <%=ResourceLoader.GetResource(session, "pages.subscription.specificitem")%>:<Br>
                                 <div class="btn-group" id="alertCriteraSingleItem" data-toggle="buttons-radio">
-                                    <button onclick="javascript:clearbox(); return false;" class="btn <%=SubscriptionHelper.isBindingSpecific(sub)%>" value="binding"><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></button>
-                                    <button onclick="javascript:clearbox(); return false;" class="btn <%=SubscriptionHelper.isBusinessSpecific(sub)%>" value="business"><%=ResourceLoader.GetResource(session, "items.business")%></button>
-                                    <button onclick="javascript:clearbox(); return false;" class="btn <%=SubscriptionHelper.isServiceSpecific(sub)%>" value="service"><%=ResourceLoader.GetResource(session, "items.service")%></button>
-                                    <button onclick="javascript:clearbox(); return false;" class="btn <%=SubscriptionHelper.isTModelSpecific(sub)%>" value="tmodel"><%=ResourceLoader.GetResource(session, "items.tmodel")%></button>
-                                    <button onclick="javascript:publisherAssertionPicker(); return false;" class="btn <%=SubscriptionHelper.isPublisherAssertionSpecific(sub)%>" value="publisherAssertion"><%=ResourceLoader.GetResource(session, "items.publisherassertion.status")%></button>
+                                    <button onclick="javascript:clearbox();
+                                        return false;" class="btn <%=SubscriptionHelper.isBindingSpecific(sub)%>" value="binding"><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></button>
+                                    <button onclick="javascript:clearbox();
+                                        return false;" class="btn <%=SubscriptionHelper.isBusinessSpecific(sub)%>" value="business"><%=ResourceLoader.GetResource(session, "items.business")%></button>
+                                    <button onclick="javascript:clearbox();
+                                        return false;" class="btn <%=SubscriptionHelper.isServiceSpecific(sub)%>" value="service"><%=ResourceLoader.GetResource(session, "items.service")%></button>
+                                    <button onclick="javascript:clearbox();
+                                        return false;" class="btn <%=SubscriptionHelper.isTModelSpecific(sub)%>" value="tmodel"><%=ResourceLoader.GetResource(session, "items.tmodel")%></button>
+                                    <button onclick="javascript:publisherAssertionPicker();
+                                        return false;" class="btn <%=SubscriptionHelper.isPublisherAssertionSpecific(sub)%>" value="publisherAssertion"><%=ResourceLoader.GetResource(session, "items.publisherassertion.status")%></button>
                                 </div><br><br>
                                 <div id="keylistcontainer">
                                     <a href="javascript:additem();" class="btn" ><%=ResourceLoader.GetResource(session, "actions.add")%></a>
@@ -172,87 +184,87 @@
                                             out.write("publisherAssertionPicker();");
                                         }
                                     %>
-                                        function publisherAssertionPicker()
+                                    function publisherAssertionPicker()
+                                    {
+                                        $("#keylistcontainer").hide();
+                                        $("#pubassertcontainer").show();
+                                        selectPublisherAssertionStatus();
+                                    }
+                                    function clearbox()
+                                    {
+                                        $("#keylist option").remove();
+                                        $("#keylistcontainer").show();
+                                        $("#pubassertcontainer").hide();
+                                        return false;
+                                    }
+                                    function additem()
+                                    {
+                                        var alertCriteraSingleItem = $("#alertCriteraSingleItem > button.btn.active").val();
+                                        if (alertCriteraSingleItem === "binding")
                                         {
-                                            $("#keylistcontainer").hide();
-                                            $("#pubassertcontainer").show();
-                                            selectPublisherAssertionStatus();
+                                            reloadBindingModal();
+                                            $.dialogBinding.confirm({
+                                                callback: function(success, result) {
+                                                    if (success)
+                                                    {
+                                                        for (var i = 0; i < result.length; i++)
+                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
+                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
+                                                    }
+                                                }
+                                            });
                                         }
-                                        function clearbox()
-                                        {
-                                            $("#keylist option").remove();
-                                            $("#keylistcontainer").show();
-                                            $("#pubassertcontainer").hide();
-                                            return false;
+                                        if (alertCriteraSingleItem === "business") {
+                                            reloadBusinessModal();
+                                            $.dialogBusiness.confirm({
+                                                callback: function(success, result) {
+                                                    if (success)
+                                                    {
+                                                        for (var i = 0; i < result.length; i++)
+                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
+                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
+                                                    }
+                                                }
+                                            });
                                         }
-                                        function additem()
-                                        {
-                                            var alertCriteraSingleItem = $("#alertCriteraSingleItem > button.btn.active").val();
-                                            if (alertCriteraSingleItem=="binding")
-                                            {
-                                                reloadBindingModal();
-                                                $.dialogBinding.confirm({
-                                                    callback: function(success, result) {
-                                                        if (success)
-                                                        {
-                                                            for (var i=0;i<result.length;i++)
-                                                                if ($("#keylist option[value='"+result[i]+"']").length == 0)
-                                                                    $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                            if (alertCriteraSingleItem=="business"){
-                                                reloadBusinessModal();
-                                                $.dialogBusiness.confirm({
-                                                    callback: function(success, result) {
-                                                        if (success)
-                                                        {
-                                                            for (var i=0;i<result.length;i++)
-                                                                if ($("#keylist option[value='"+result[i]+"']").length == 0)
-                                                                    $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                            if (alertCriteraSingleItem=="service"){
-                                                reloadServiceModal();
-    
-                                                $.dialogService.confirm({
-                                                    callback: function(success, result) {
-                                                        if (success)
-                                                        {
-                                                            for (var i=0;i<result.length;i++)
-                                                                if ($("#keylist option[value='"+result[i]+"']").length == 0)
-                                                                    $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                        }
-                                                    }
-                                                });
+                                        if (alertCriteraSingleItem === "service") {
+                                            reloadServiceModal();
 
-                                            }
-                                            if (alertCriteraSingleItem=="tmodel"){
-                                                reloadTmodelModal();
-                                                $.dialogTmodel.confirm({
-                                                    callback: function(success, result) {
-                                                        if (success)
-                                                        {
-                                                            for (var i=0;i<result.length;i++)
-                                                                if ($("#keylist option[value='"+result[i]+"']").length == 0)
-                                                                    $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                        }
+                                            $.dialogService.confirm({
+                                                callback: function(success, result) {
+                                                    if (success)
+                                                    {
+                                                        for (var i = 0; i < result.length; i++)
+                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
+                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
+
                                         }
-                                        function removeitem()
-                                        {
-                                            $("#keylist option:selected").remove();
+                                        if (alertCriteraSingleItem === "tmodel") {
+                                            reloadTmodelModal();
+                                            $.dialogTmodel.confirm({
+                                                callback: function(success, result) {
+                                                    if (success)
+                                                    {
+                                                        for (var i = 0; i < result.length; i++)
+                                                            if ($("#keylist option[value='" + result[i] + "']").length === 0)
+                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
+                                                    }
+                                                }
+                                            });
                                         }
+                                    }
+                                    function removeitem()
+                                    {
+                                        $("#keylist option:selected").remove();
+                                    }
                                 </script>
                                 <div id="pubassertcontainer" class="">
                                     <div style="float:left"><%=ResourceLoader.GetResource(session, "items.key")%>: &nbsp;</div>
                                     <div class="" id="itemKey"><%
-                                        if (!SubscriptionHelper.isPublisherAssertionSpecific(sub).equals("")) {
+                                        if (!SubscriptionHelper.isPublisherAssertionSpecific(sub).trim().equals("")) {
                                             out.write(StringEscapeUtils.escapeHtml(SubscriptionHelper.getItemKeySpecific(sub)));
                                         }
                                         %></div>
@@ -337,36 +349,37 @@
                                 <%=ResourceLoader.GetResource(session, "pages.subscription.step3.content")%>
                                 <b><%=UDDIConstants.TRANSPORT_HTTP%></b>.
                                 <input type="text" id="bindingKey" placeholder="<%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%>" style="width:360px">
-                                <button onClick="javascript:bindingModal('bindingKey', 'val'); return false;" class="btn "><%=ResourceLoader.GetResource(session, "actions.select")%></button>
+                                <button onClick="javascript:bindingModal('bindingKey', 'val');
+                                        return false;" class="btn "><%=ResourceLoader.GetResource(session, "actions.select")%></button>
                             </div>
                             <script type="text/javascript">
-                                function selectPublisherAssertionStatus()
-                                {
-                                    $("#assertionStatusChooser").modal('show');
-                                }
-                             
-                                function toggleTransport1()
-                                {
-                                    //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
-                                    setTimeout(function(){
-                                        if ($("#btn-manual").hasClass("active"))
-                                        {
-                                            $("#bindingKeyDiv").hide();
-                                            //$("#specific").show();
-                                        }
-                                        else
-                                        {
-                                            $("#bindingKeyDiv").show();
-                                            // $("#specific").hide();
-                                        }
-                                        
-                                    }, 100);
-                                
-                                   
-                                    // $("#bindingKeyDiv").show();
-                                    return false;
-                                }
-                                toggleTransport1();
+                                    function selectPublisherAssertionStatus()
+                                    {
+                                        $("#assertionStatusChooser").modal('show');
+                                    }
+
+                                    function toggleTransport1()
+                                    {
+                                        //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
+                                        setTimeout(function() {
+                                            if ($("#btn-manual").hasClass("active"))
+                                            {
+                                                $("#bindingKeyDiv").hide();
+                                                //$("#specific").show();
+                                            }
+                                            else
+                                            {
+                                                $("#bindingKeyDiv").show();
+                                                // $("#specific").hide();
+                                            }
+
+                                        }, 100);
+
+
+                                        // $("#bindingKeyDiv").show();
+                                        return false;
+                                    }
+                                    toggleTransport1();
                             </script>
                         </div>
                     </div>
@@ -401,7 +414,10 @@
                                         Date d = sub.getExpiresAfter().toGregorianCalendar().getTime();
                                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
                                         String dateStr = dateFormat.format(d);
-                                        //TODO DOES NOT WORK     out.write(dateStr);
+                                        //TODO DOES NOT WORK     
+                                        if (dateStr != null) {
+                                            out.write(StringEscapeUtils.escapeHtml(dateStr));
+                                        }
                                     }
                                        %>">
 
@@ -442,7 +458,7 @@
                                     showSeconds: true,
                                     template: 'modal',
                                     showSeconds: true,
-                                    showMeridian: false
+                                            showMeridian: false
                                 });
                             </script>
                             <br>
@@ -468,145 +484,145 @@
                     $("#bindingKey").resizable();
                     function saveSubscription()
                     {
-                        
+
                         var interval = $("#interval").val();
                         var maxRecords = $("#maxRecords").val();
                         var brief = $("#brief").val();
                         var datetimepicker2 = $("#datetimepicker2").val();
-                        
+
                         var subkey = $("#subkey").html();
 
                         var alertCriteraSingleItem = $("#alertCriteraSingleItem > button.btn.active").val();
                         var alertTransport = $("#alertTransport > button.btn.active").val();
                         var itemKey = $("#keylist option");
-                        var keys="";
-                        var first=true;
-                        $.each(itemKey, function(idx, value){
+                        var keys = "";
+                        var first = true;
+                        $.each(itemKey, function(idx, value) {
                             if (first)
                                 keys = value.value;
                             else
                                 keys = keys + "," + value.value;
-                            first=false;
+                            first = false;
                         });
                         var bindingKey = $("#bindingKey").val();
                         var alertType = $("#alertType > button.btn.active").val();
-                        
+
                         var alertCriteraMultipleItem = $("#alertCriteraMultipleItem > button.btn.active").val();
                         var searchcontent = $("#searchcontent").val();
                         var searchlang = $("#searchlang").val();
-                        
+
                         var postbackdata = new Array();
-                        var url='ajax/subscription.jsp';
+                        var url = 'ajax/subscription.jsp';
                         itemKey = $("#itemKey").html();
-                        
+
                         //  var tqs = new Array();
-                        $.each($('.fq input:checkbox'), function(index,item){
+                        $.each($('.fq input:checkbox'), function(index, item) {
                             var itemname = item.id;
                             if (item.checked)
                             {
                                 postbackdata.push({
-                                    name:"findqualifier", 
+                                    name: "findqualifier",
                                     value: itemname
                                 });
                             }
                         });
-                        
+
                         alertCriteraMultipleItem
                         postbackdata.push({
-                            name:"alertCriteraMultipleItem", 
+                            name: "alertCriteraMultipleItem",
                             value: alertCriteraMultipleItem
                         });
                         postbackdata.push({
-                            name:"searchcontent", 
+                            name: "searchcontent",
                             value: searchcontent
                         });
-                        
+
                         postbackdata.push({
-                            name:"searchlang", 
+                            name: "searchlang",
                             value: searchlang
                         });
-                        
-                        
+
+
                         postbackdata.push({
-                            name:"subkey", 
+                            name: "subkey",
                             value: subkey
                         });
-                        
+
                         postbackdata.push({
-                            name:"expires", 
+                            name: "expires",
                             value: datetimepicker2
                         });
-                        
+
                         postbackdata.push({
-                            name:"interval", 
+                            name: "interval",
                             value: interval
                         });
-                        
+
                         postbackdata.push({
-                            name:"brief", 
+                            name: "brief",
                             value: brief
                         });
-                        
+
                         postbackdata.push({
-                            name:"maxRecords", 
+                            name: "maxRecords",
                             value: maxRecords
                         });
-                        
-                        
+
+
                         postbackdata.push({
-                            name:"alertType", 
+                            name: "alertType",
                             value: alertType
                         });
                         postbackdata.push({
-                            name:"itemKey", 
+                            name: "itemKey",
                             value: keys
                         });
-                        
+
                         postbackdata.push({
-                            name:"assertionStatus", 
+                            name: "assertionStatus",
                             value: itemKey
                         });
                         postbackdata.push({
-                            name:"alertCriteraSingleItem", 
+                            name: "alertCriteraSingleItem",
                             value: alertCriteraSingleItem
                         });
                         postbackdata.push({
-                            name:"bindingKey", 
+                            name: "bindingKey",
                             value: bindingKey
                         });
                         postbackdata.push({
-                            name:"alertTransport", 
+                            name: "alertTransport",
                             value: alertTransport
                         });
                         postbackdata.push({
-                            name:"nonce", 
+                            name: "nonce",
                             value: $("#nonce").val()
                         });
-    
-            
-                        var request=   $.ajax({
+
+
+                        var request = $.ajax({
                             url: url,
-                            type:"POST",
+                            type: "POST",
                             //  dataType: "html", 
-                            cache: false, 
+                            cache: false,
                             //  processData: false,f
                             data: postbackdata
                         });
-                
-                
+
+
                         request.done(function(msg) {
-                            window.console && console.log('postback done '  + url);                
-        
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                            window.console && console.log('postback done ' + url);
+
+                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + msg);
                             $("#resultBar").show();
-        
+
                         });
 
                         request.fail(function(jqXHR, textStatus) {
-                            window.console && console.log('postback failed ' + url);                                
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
+                            window.console && console.log('postback failed ' + url);
+                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus);
                             $("#resultBar").show();
-        
+
                         });
                     }
                 </script>

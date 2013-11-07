@@ -257,8 +257,11 @@
                     <%=ResourceLoader.GetResource(session, "pages.transfer.accepttransfer.content")%>
                     <br>
 
-                    <%=ResourceLoader.GetResource(session, "items.token")%>: <textarea  id="accepttoken" placeholder="Token XML"></textarea> <br>
-                    <%=ResourceLoader.GetResource(session, "items.key")%>: <textarea  id="keybag" placeholder="Key Bag XML"></textarea> <br>
+                    <%=ResourceLoader.GetResource(session, "items.token")%>: <textarea  id="accepttoken" 
+                                 placeholder="<%=ResourceLoader.GetResource(session, "items.token.xml")%>"></textarea> <br>
+                                         
+                    <%=ResourceLoader.GetResource(session, "items.key")%>: <textarea  id="keybag" 
+                                 placeholder="<%=ResourceLoader.GetResource(session, "items.kegbag.xml")%>"></textarea> <br>
                     <a href="javascript:acceptToken();" class="btn btn-info btn-large" style="width:95%"><i class="icon-large icon-plus"></i> 
                       <%=ResourceLoader.GetResource(session, "actions.accept")%>  </a>
                 </div>

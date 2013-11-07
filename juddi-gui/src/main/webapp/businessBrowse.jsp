@@ -40,7 +40,7 @@
                     return(value);
                 }, { 
                     type    : 'text',
-                    submit  : 'OK'
+                    submit  : i18n_ok
                 });
             </script>
         </div>
