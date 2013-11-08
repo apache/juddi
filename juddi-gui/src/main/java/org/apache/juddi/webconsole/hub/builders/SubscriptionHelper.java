@@ -83,9 +83,7 @@ public class SubscriptionHelper {
         if (sub == null) {
             return "";
         }
-        if (sub.getSubscriptionKey() == null) {
-            return "";
-        }
+
         if (sub.getSubscriptionFilter().getGetBindingDetail() != null && !sub.getSubscriptionFilter().getGetBindingDetail().getBindingKey().isEmpty()) {
             return " active ";
         }
@@ -96,9 +94,7 @@ public class SubscriptionHelper {
         if (sub == null) {
             return "";
         }
-        if (sub.getSubscriptionKey() == null) {
-            return "";
-        }
+        
         if (sub.getSubscriptionFilter().getGetBusinessDetail() != null && !sub.getSubscriptionFilter().getGetBusinessDetail().getBusinessKey().isEmpty()) {
             return " active ";
         }
@@ -107,9 +103,6 @@ public class SubscriptionHelper {
 
     public static String isServiceSpecific(Subscription sub) {
         if (sub == null) {
-            return "";
-        }
-        if (sub.getSubscriptionKey() == null) {
             return "";
         }
         if (sub.getSubscriptionFilter().getGetServiceDetail() != null && !sub.getSubscriptionFilter().getGetServiceDetail().getServiceKey().isEmpty()) {
@@ -135,9 +128,7 @@ public class SubscriptionHelper {
         if (sub == null) {
             return "";
         }
-        if (sub.getSubscriptionKey() == null) {
-            return "";
-        }
+
         if (sub.getSubscriptionFilter().getGetAssertionStatusReport() != null && sub.getSubscriptionFilter().getGetAssertionStatusReport().getCompletionStatus() != null) {
             return " active ";
         }

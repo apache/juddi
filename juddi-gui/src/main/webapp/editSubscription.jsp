@@ -395,31 +395,32 @@
                     </div>
                     <div id="collapse4" class="accordion-body collapse">
                         <div class="accordion-inner">
-                            <div style="float:left"><%=ResourceLoader.GetResource(session, "items.maxrecords.callback")%>: &nbsp;</div>
+                            <div style="float:left"><%=ResourceLoader.GetResource(session, "items.maxrecords.callback")%>
+                                <a href="#" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.maxrecords.callback.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
                             <div class="edit" id="maxRecords"><%
                                 if (sub.getMaxEntities() != null) {
                                     sub.getMaxEntities().toString();
                                 }
                                 %></div>
-                            <div style="float:left"><%=ResourceLoader.GetResource(session, "items.subscriptionbrief")%>: &nbsp;</div>
+                            <div style="float:left"><%=ResourceLoader.GetResource(session, "items.subscriptionbrief")%>
+                                <a href="#" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.subscriptionbrief.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
                             <div> <input type="checkbox" id="brief" 
                                          <%
                                              out.write(sub.isBrief() ? "checked" : "");
                                          %> >
                             </div><br>
                             <%=ResourceLoader.GetResource(session, "items.expiration")%>: 
-                            <div id="datetimepicker2" class="input-append">
-                                <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" value="<%
+                            <div id="datetimepicker2" class="input-append date">
+                                        <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" value="<%
                                     if (sub.getExpiresAfter() != null) {
                                         Date d = sub.getExpiresAfter().toGregorianCalendar().getTime();
                                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
                                         String dateStr = dateFormat.format(d);
-                                        //TODO DOES NOT WORK     
                                         if (dateStr != null) {
                                             out.write(StringEscapeUtils.escapeHtml(dateStr));
                                         }
                                     }
-                                       %>">
+                                       %>"></input>
 
                                 <span class="add-on">
                                     <i data-time-icon="icon-time" data-date-icon="icon-calendar">
@@ -428,8 +429,10 @@
                             </div>
                             <script type="text/javascript">
                                 $(document).ready(function() {
+                                    $('.uddi_tooltips').tooltip();
+                                    
                                     $('#datetimepicker2').datetimepicker({
-                                        language: '<%=(String) session.getAttribute("locale")%>',
+                                        language: '<%=StringEscapeUtils.escapeJavaScript((String)session.getAttribute("locale"))%>',
                                         pick12HourFormat: true
                                     });
                                 });
@@ -527,7 +530,6 @@
                             }
                         });
 
-                        alertCriteraMultipleItem
                         postbackdata.push({
                             name: "alertCriteraMultipleItem",
                             value: alertCriteraMultipleItem
@@ -649,7 +651,7 @@
                 %>
 
             </select><br>
-            Explanation:<br>
+            <%=ResourceLoader.GetResource(session, "words.explanation")%><br>
             <ul>
                 <%
                     for (int i = 0; i < CompletionStatus.values().length; i++) {

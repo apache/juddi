@@ -53,7 +53,7 @@
                 // current = UUID.randomUUID();
                 //session.removeAttribute("nonce");
                 // session.setAttribute("nonce", current.toString());
-                UddiHub.log.info( "CSRF Test passed.");
+                UddiHub.log.debug("CSRF Test passed.");
             } else {
                 //mismatch, reject it
                 UddiHub.log.warn( "CSRF Test failed, session did not match nonce guid." + request.getRemoteAddr() + request.getRemoteUser());
