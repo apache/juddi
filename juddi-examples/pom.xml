@@ -36,5 +36,6 @@
        <module>wsdl2uddi-lifecyle</module>
     <module>subscription-notification-amqp</module>
     <module>more-uddi-samples</module>
+    <module>service-version</module>
   </modules>
 </project>

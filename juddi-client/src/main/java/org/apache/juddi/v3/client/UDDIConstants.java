@@ -6,7 +6,14 @@ package org.apache.juddi.v3.client;
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public interface UDDIConstants {
- 
+
+    /**
+     * identifies a tmodel instance info containing some version information of a service
+     * a juddi extension based on 
+     * http://www.ibm.com/developerworks/webservices/library/ws-version/
+     */
+     public static final String VERSION_TMODEL = "urn:uddi:uddi.org:version";
+     
     public static final int MAX_xml_lang_length = 26;
     public static final int MAX_description_length = 255;
     public static final int MAX_discoveryURL_length = 4096;

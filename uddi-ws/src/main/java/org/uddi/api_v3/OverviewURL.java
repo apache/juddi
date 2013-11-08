@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.uddi.api_v3;
 
 import java.io.Serializable;
@@ -27,12 +25,16 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
+ * The overviewURL appears as a child of the overviewDoc, which appears twice in
+ * the UDDI information model, once with tModel element and once with
+ * tModelInstanceInfo element. There are two conventions established, "text" and
+ * "wsdlInterface".
  * <p>Java class for overviewURL complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
+ * <p>The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name="overviewURL">
  *   &lt;simpleContent>
@@ -42,28 +44,44 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "overviewURL", propOrder = {
     "value"
 })
-public class OverviewURL implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = 7142971435321837783L;
-	@XmlValue
+public class OverviewURL implements Serializable {
+
+    /**
+     * default const
+     */
+    public OverviewURL() {
+    }
+
+    /**
+     * convenience const
+     *
+     * @param val
+     * @param type There are two conventions established, "text" and
+     * "wsdlInterface".
+     */
+    public OverviewURL(String val, String type) {
+        value = val;
+        useType = type;
+    }
+    @XmlTransient
+    private static final long serialVersionUID = 7142971435321837783L;
+    @XmlValue
     protected String value;
     @XmlAttribute
     protected String useType;
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getValue() {
         return value;
@@ -71,23 +89,20 @@ public class OverviewURL implements Serializable{
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setValue(String value) {
         this.value = value;
     }
 
     /**
-     * Gets the value of the useType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * Gets the value of the useType property. There are two conventions
+     * established, "text" and "wsdlInterface".
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getUseType() {
         if (useType == null) {
@@ -99,15 +114,13 @@ public class OverviewURL implements Serializable{
 
     /**
      * Sets the value of the useType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String } There are two conventions
+     * established, "text" and "wsdlInterface".
+     *
      */
     public void setUseType(String value) {
         this.useType = value;
     }
-
 }
 

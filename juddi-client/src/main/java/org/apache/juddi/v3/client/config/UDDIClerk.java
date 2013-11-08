@@ -21,13 +21,14 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 
 import javax.wsdl.Definition;
 import javax.xml.ws.Holder;
@@ -58,6 +59,7 @@ import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.DeleteService;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.Description;
 import org.uddi.api_v3.DiscardAuthToken;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.FindRelatedBusinesses;
@@ -67,6 +69,7 @@ import org.uddi.api_v3.GetBindingDetail;
 import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.GetServiceDetail;
 import org.uddi.api_v3.GetTModelDetail;
+import org.uddi.api_v3.InstanceDetails;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.OverviewDoc;
@@ -80,6 +83,7 @@ import org.uddi.api_v3.SaveTModel;
 import org.uddi.api_v3.ServiceDetail;
 import org.uddi.api_v3.TModel;
 import org.uddi.api_v3.TModelDetail;
+import org.uddi.api_v3.TModelInstanceInfo;
 import org.uddi.api_v3.TModelList;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
@@ -88,6 +92,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public class UDDIClerk implements Serializable {
 
     private static final long serialVersionUID = -8597375975981358134L;
+    
     private Log log = LogFactory.getLog(this.getClass());
     protected String name;
     protected UDDINode uddiNode;
@@ -371,6 +376,10 @@ public class UDDIClerk implements Serializable {
      */
     public BusinessEntity register(BusinessEntity business, Node node) {
 
+        if (business.getName().get(0)==null){
+            log.error("Unable to register business because no Name elements have been added.");
+            return null;
+        }
         BusinessEntity businessEntity = null;
         log.info("Registering business " + business.getName().get(0).getValue()
                 + " with key " + business.getBusinessKey());
@@ -967,5 +976,99 @@ public class UDDIClerk implements Serializable {
         tm.getOverviewDoc().add(overviewDoc);
         tm.setTModelKey(partitionName.toLowerCase());
         return tm;
+    }
+    
+    /**
+     * This is a convenience function that will build and return a TModelInstanceInfo
+     * as described in the following link that will enable you to tag web services
+     * registered in UDDI with some kind of version information.<Br><Br>
+     * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
+     * <Br><Br>
+     * 
+     * When using this tModel as a tModelInstance, it can be used to describe a 
+     * version associated with either a service interface, a bindingTemplate 
+     * service instance. Note: This is a jUDDI specific addon and may not be 
+     * present in other registries
+     * 
+     * @param version From the article, no specificity is provided on what to use as a value, but
+     * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
+     * Example 
+     * <ul>
+     * <li>6.1.2.3</li>
+     * <li>1.0</li>
+     * <li>0.1</li>
+     * </ul>
+     * @return TModelInstanceInfo populated as described in the article, plus some descriptive information
+     */
+    public static TModelInstanceInfo createServiceInterfaceVersion(String version, String lang) throws IllegalArgumentException {
+        if (version==null)
+            throw new IllegalArgumentException();
+        TModelInstanceInfo tt = new TModelInstanceInfo();
+        tt.setTModelKey(UDDIConstants.VERSION_TMODEL);
+        tt.setInstanceDetails(new InstanceDetails());
+        tt.getInstanceDetails().setInstanceParms(version);
+        
+        OverviewDoc doc = new OverviewDoc();
+        doc.setOverviewURL(new OverviewURL("http://www.ibm.com/developerworks/webservices/library/ws-version/", "text"));
+        doc.getDescription().add(new Description(
+                "Describes a version associated with either a service interface, a bindingTemplate service instance.", lang));
+        tt.getDescription().add(new Description("Describes a version associated with either a service interface, a bindingTemplate service instance.", lang));
+        tt.getInstanceDetails().getOverviewDoc().add(new OverviewDoc());
+        return tt;
+    }
+    
+    /**
+     * This is a convenience function that will filter a list of binding templates
+     * and return a list of bindings matching the specified version number.
+     * 
+     * This implements and expands upon service versioning described in the 
+     * following link and will enable you to tag web services
+     * registered in UDDI with some kind of version information.<Br><Br>
+     * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
+     * <Br><Br>
+     * @see createServiceInterfaceVersion for more information<Br><br>
+     * 
+     * This function operates using tModelInstances that are used to describe a 
+     * version associated with either a service interface, a bindingTemplate 
+     * service instance. Note: This is a jUDDI specific addon and may not be 
+     * present in other registries
+     * 
+     * @param version From the article, no specificity is provided on what to use as a value, but
+     * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
+     * Example 
+     * <ul>
+     * <li>6.1.2.3</li>
+     * <li>1.0</li>
+     * <li>0.1</li>
+     * </ul>
+     * @param version
+     * @param bindingTemplate
+     * @return a list if binding templates where the version equals ignoring case trimmed equals the version value
+     */
+    public static Set<BindingTemplate> getBindingByVersion(String version, List<BindingTemplate> bindingTemplate) throws IllegalArgumentException {
+        if (version == null) {
+            throw new IllegalArgumentException();
+        }
+        if (bindingTemplate == null) {
+            throw new IllegalArgumentException();
+        }
+        Set<BindingTemplate> ret = new HashSet<BindingTemplate>();
+        for (int i = 0; i < bindingTemplate.size(); i++) {
+            if (bindingTemplate.get(i).getTModelInstanceDetails() != null) {
+                for (int k = 0; k < bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().size(); k++) {
+                    if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getTModelKey().equalsIgnoreCase(UDDIConstants.VERSION_TMODEL)) {
+                        if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails() != null) {
+                            if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms() != null) {
+                                if (bindingTemplate.get(i).getTModelInstanceDetails().getTModelInstanceInfo().get(k).getInstanceDetails().getInstanceParms().trim().equalsIgnoreCase(version.trim())) {
+                                    ret.add(bindingTemplate.get(i));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ret;
     }
 }

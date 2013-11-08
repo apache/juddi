@@ -19,117 +19,117 @@ package org.apache.juddi.example.publish;
 import org.uddi.api_v3.*;
 import org.apache.juddi.api_v3.*;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 
 public class SimplePublish {
-	private static UDDISecurityPortType security = null;
-	
-	private static JUDDIApiPortType juddiApi = null;
-	private static UDDIPublicationPortType publish = null;
 
-	public SimplePublish() {
+    private static UDDISecurityPortType security = null;
+    private static JUDDIApiPortType juddiApi = null;
+    private static UDDIPublicationPortType publish = null;
+
+    public SimplePublish() {
         try {
-        	// create a client and read the config in the archive; 
-        	// you can use your config file name
-        	UDDIClient uddiClient = new UDDIClient("META-INF/simple-publish-uddi.xml");
-        	// a UddiClient can be a client to multiple UDDI nodes, so 
-        	// supply the nodeName (defined in your uddi.xml.
-        	// The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-        	Transport transport = uddiClient.getTransport("default");
-        	// Now you create a reference to the UDDI API
-        	security = transport.getUDDISecurityService();
-			juddiApi = transport.getJUDDIApiService();
-			publish = transport.getUDDIPublishService();	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-	}
+            // create a client and read the config in the archive; 
+            // you can use your config file name
+            UDDIClient uddiClient = new UDDIClient("META-INF/simple-publish-uddi.xml");
+            // a UddiClient can be a client to multiple UDDI nodes, so 
+            // supply the nodeName (defined in your uddi.xml.
+            // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
+            Transport transport = uddiClient.getTransport("default");
+            // Now you create a reference to the UDDI API
+            security = transport.getUDDISecurityService();
+            juddiApi = transport.getJUDDIApiService();
+            publish = transport.getUDDIPublishService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void publish() {
-		try {
-			// Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-			// and can save other publishers).
-			GetAuthToken getAuthTokenRoot = new GetAuthToken();
-			getAuthTokenRoot.setUserID("root");
-			getAuthTokenRoot.setCred("");
+    public void publish() {
+        try {
+            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
+            // and can save other publishers).
+            GetAuthToken getAuthTokenRoot = new GetAuthToken();
+            getAuthTokenRoot.setUserID("root");
+            getAuthTokenRoot.setCred("");
 
-			// Making API call that retrieves the authentication token for the 'root' user.
-			AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-			System.out.println ("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            // Making API call that retrieves the authentication token for the 'root' user.
+            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
+            System.out.println("root AUTHTOKEN = " + "******* never log auth tokens!");
 
-			// Creating a new publisher that we will use to publish our entities to.
-			Publisher p = new Publisher();
-			p.setAuthorizedName("my-publisher");
-			p.setPublisherName("My Publisher");
+            // Creating a new publisher that we will use to publish our entities to.
+            //START: Note, this step is optional and only applies to jUDDI UDDI Servers
+            Publisher p = new Publisher();
+            p.setAuthorizedName("my-publisher");
+            p.setPublisherName("My Publisher");
 
-			// Adding the publisher to the "save" structure, using the 'root' user authentication info and saving away. 
-			SavePublisher sp = new SavePublisher();
-			sp.getPublisher().add(p);
-			sp.setAuthInfo(rootAuthToken.getAuthInfo());
-			juddiApi.savePublisher(sp);
-			
-			// Our publisher is now saved, so now we want to retrieve its authentication token
-			GetAuthToken getAuthTokenMyPub = new GetAuthToken();
-			getAuthTokenMyPub.setUserID("my-publisher");
-			getAuthTokenMyPub.setCred("");
-			AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
-			System.out.println ("myPub AUTHTOKEN = " + myPubAuthToken.getAuthInfo());
-			
-			// Creating the parent business entity that will contain our service.
-			BusinessEntity myBusEntity = new BusinessEntity();
-			Name myBusName = new Name();
-			myBusName.setValue("My Business");
-			myBusEntity.getName().add(myBusName);
-			
-			// Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
-			SaveBusiness sb = new SaveBusiness();
-			sb.getBusinessEntity().add(myBusEntity);
-			sb.setAuthInfo(myPubAuthToken.getAuthInfo());
-			BusinessDetail bd = publish.saveBusiness(sb);
-			String myBusKey = bd.getBusinessEntity().get(0).getBusinessKey();
-			System.out.println("myBusiness key:  " + myBusKey);
-			
-			// Creating a service to save.  Only adding the minimum data: the parent business key retrieved from saving the business 
-			// above and a single name.
-			BusinessService myService = new BusinessService();
-			myService.setBusinessKey(myBusKey);
-			Name myServName = new Name();
-			myServName.setValue("My Service");
-			myService.getName().add(myServName);
-			
-			// Add binding templates, etc...
-			BindingTemplate myBindingTemplate = new BindingTemplate();
-			AccessPoint accessPoint = new AccessPoint();
-			accessPoint.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());
-			accessPoint.setValue("http://example.org/services/myservice?wsdl");
-			myBindingTemplate.setAccessPoint(accessPoint);
-			BindingTemplates myBindingTemplates = new BindingTemplates();
-			myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
-			myService.setBindingTemplates(myBindingTemplates);
-			
-			// Adding the service to the "save" structure, using our publisher's authentication info and saving away.
-			SaveService ss = new SaveService();
-			ss.getBusinessService().add(myService);
-			ss.setAuthInfo(myPubAuthToken.getAuthInfo());
-			ServiceDetail sd = publish.saveService(ss);
-			String myServKey = sd.getBusinessService().get(0).getServiceKey();
-			System.out.println("myService key:  " + myServKey);
-			
-			// Now you have a publisher saved who in turn published a business and service via 
-			// the jUDDI API!
-			
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}		
+            // Adding the publisher to the "save" structure, using the 'root' user authentication info and saving away. 
+            SavePublisher sp = new SavePublisher();
+            sp.getPublisher().add(p);
+            sp.setAuthInfo(rootAuthToken.getAuthInfo());
+            juddiApi.savePublisher(sp);
+            //END: Note, this step is optional and only applies to jUDDI UDDI Servers
 
-	public static void main (String args[]) {
-		SimplePublish sp = new SimplePublish();
-		sp.publish();	
-	}
+            // Our publisher is now saved, so now we want to retrieve its authentication token
+            GetAuthToken getAuthTokenMyPub = new GetAuthToken();
+            getAuthTokenMyPub.setUserID("my-publisher");
+            getAuthTokenMyPub.setCred("");
+            AuthToken myPubAuthToken = security.getAuthToken(getAuthTokenMyPub);
+            System.out.println("myPub AUTHTOKEN = " + "******* never log auth tokens!");
+
+            // Creating the parent business entity that will contain our service.
+            BusinessEntity myBusEntity = new BusinessEntity();
+            Name myBusName = new Name();
+            myBusName.setValue("My Business");
+            myBusEntity.getName().add(myBusName);
+
+            // Adding the business entity to the "save" structure, using our publisher's authentication info and saving away.
+            SaveBusiness sb = new SaveBusiness();
+            sb.getBusinessEntity().add(myBusEntity);
+            sb.setAuthInfo(myPubAuthToken.getAuthInfo());
+            BusinessDetail bd = publish.saveBusiness(sb);
+            String myBusKey = bd.getBusinessEntity().get(0).getBusinessKey();
+            System.out.println("myBusiness key:  " + myBusKey);
+
+            // Creating a service to save.  Only adding the minimum data: the parent business key retrieved from saving the business 
+            // above and a single name.
+            BusinessService myService = new BusinessService();
+            myService.setBusinessKey(myBusKey);
+            Name myServName = new Name();
+            myServName.setValue("My Service");
+            myService.getName().add(myServName);
+
+            // Add binding templates, etc...
+            BindingTemplate myBindingTemplate = new BindingTemplate();
+            AccessPoint accessPoint = new AccessPoint();
+            accessPoint.setUseType(AccessPointType.WSDL_DEPLOYMENT.toString());
+            accessPoint.setValue("http://example.org/services/myservice?wsdl");
+            myBindingTemplate.setAccessPoint(accessPoint);
+            BindingTemplates myBindingTemplates = new BindingTemplates();
+            myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
+            myService.setBindingTemplates(myBindingTemplates);
+
+            // Adding the service to the "save" structure, using our publisher's authentication info and saving away.
+            SaveService ss = new SaveService();
+            ss.getBusinessService().add(myService);
+            ss.setAuthInfo(myPubAuthToken.getAuthInfo());
+            ServiceDetail sd = publish.saveService(ss);
+            String myServKey = sd.getBusinessService().get(0).getServiceKey();
+            System.out.println("myService key:  " + myServKey);
+
+            // Now you have a publisher saved who in turn published a business and service via 
+            // the jUDDI API!
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String args[]) {
+        SimplePublish sp = new SimplePublish();
+        sp.publish();
+    }
 }
