@@ -2509,7 +2509,7 @@ namespace org.uddi.apiv3
         }
         /// <remarks/>
             [System.Xml.Serialization.XmlElementAttribute("overviewURL", typeof(overviewURL))]
-        public overviewURL[] Items
+        public overviewURL[] overviewURLs
         {
             get
             {

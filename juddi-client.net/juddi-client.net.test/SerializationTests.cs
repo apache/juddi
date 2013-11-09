@@ -246,7 +246,8 @@ namespace juddi_client.net_mono_test
             description d = new description("v", "en");
             overviewURL ol = new overviewURL("http://url", "website");
 
-            r.Items = new object[] { d, ol };
+            r.overviewURLs = new overviewURL[] { ol };
+            r.descriptions = new description[] { d };
             XmlSerializer xr = new XmlSerializer(typeof(overviewDoc));
             StringWriter sw = new StringWriter();
             xr.Serialize(sw, r);
