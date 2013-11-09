@@ -57,7 +57,7 @@ public abstract class CryptorFactory {
     }
 
     public static synchronized Cryptor getCryptor(String className) throws Exception {
-        return org.apache.juddi.cryptor.CryptorFactory.getCryptor(className);
+        return org.apache.juddi.v3.client.cryptor.CryptorFactory.getCryptor(className);
         
     }
 
