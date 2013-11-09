@@ -51,7 +51,7 @@ public class WADL2UDDITest {
     public void Test1() throws Exception {
         log.info("Test1 read from file");
 
-        Application app = WADL2UDDI.ParseWadl(new File("src/test/resources/wadl/cxf.wadl"));
+        Application app = WADL2UDDI.parseWadl(new File("src/test/resources/wadl/cxf.wadl"));
         Assert.assertNotNull(app);
         Assert.assertNotNull(app);
         List<URL> urls = WADL2UDDI.getBaseAddresses(app);

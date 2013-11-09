@@ -102,7 +102,7 @@ public class WadlImport {
         
         //Application app = WADL2UDDI.parseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
         
-        Application app = WADL2UDDI.ParseWadl(new File("diggo.wadl"));
+        Application app = WADL2UDDI.parseWadl(new File("diggo.wadl"));
         List<URL> urls = WADL2UDDI.getBaseAddresses(app);
         URL url = urls.get(0);
         String domain = url.getHost();
