@@ -24,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import org.apache.juddi.v3.client.config.UDDIClerk;
 
 /**
  * @author Anou Manavalan

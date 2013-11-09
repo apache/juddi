@@ -30,12 +30,14 @@ import org.apache.juddi.v3.client.cryptor.Cryptor;
  * org.apache.juddi.cryptor.DefaultCryptor if an implementation is not
  * specified.<Br>
  * <br>
+ * This class is a special instance that loads from the juddi server side config file.<br>
  *
- * @deprecated Use org.apache.juddi.v3.client.cryptor.CryptorFactor 
+ * Use org.apache.juddi.v3.client.cryptor.CryptorFactor for all client side actions
+ * @see org.apache.juddi.v3.client.cryptor.CryptorFactory
  * @author Steve Viens (sviens@apache.org)
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-@Deprecated
+
 public abstract class CryptorFactory {
 
     private static Log log = LogFactory.getLog(CryptorFactory.class);
@@ -55,26 +57,8 @@ public abstract class CryptorFactory {
     }
 
     public static synchronized Cryptor getCryptor(String className) throws Exception {
-        Class<?> cryptorClass = null;
-        try {
-            // Use Loader to locate & load the Cryptor implementation
-            cryptorClass = ClassUtil.forName(className, CryptorFactory.class);
-        } catch (ClassNotFoundException e) {
-            log.error("The specified Cryptor class '" + className + "' was not found in classpath.");
-            log.error(e);
-            throw e;
-        }
-
-        try {
-            // try to instantiate the Cryptor implementation
-            cryptor = (Cryptor) cryptorClass.newInstance();
-        } catch (Exception e) {
-            log.error("Exception while attempting to instantiate the implementation of Cryptor: " + cryptorClass.getName() + "\n" + e.getMessage());
-            log.error(e);
-            throw e;
-        }
-
-        return cryptor;
+        return org.apache.juddi.cryptor.CryptorFactory.getCryptor(className);
+        
     }
 
     /*

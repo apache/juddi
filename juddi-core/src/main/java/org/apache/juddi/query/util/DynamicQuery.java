@@ -28,21 +28,21 @@ import javax.persistence.EntityManager;
  * @author Steve Viens (steve@viens.net)
  */
 public class DynamicQuery {
-	public static String CLAUSE_WHERE = "where";
-	public static String CLAUSE_GROUPBY = "group by";
-	public static String CLAUSE_ORDERBY = "order by";
-	public static String CLAUSE_HAVING = "having";
-	public static String OPERATOR_OR = "or";
-	public static String OPERATOR_AND = "and";
-	public static String PREDICATE_EQUALS = "=";
-	public static String PREDICATE_NOTEQUALS = "<>";
-	public static String PREDICATE_LIKE = "like";
-	public static String PREDICATE_IN = "in";
-	public static String PREDICATE_GREATERTHAN = ">";
-	public static String PREDICATE_LESSTHAN = "<";
-	public static String SORT_ASC = "asc";
-	public static String SORT_DESC = "desc";
-	public static String WILDCARD = "%";
+	public static final String CLAUSE_WHERE = "where";
+	public static final String CLAUSE_GROUPBY = "group by";
+	public static final String CLAUSE_ORDERBY = "order by";
+	public static final String CLAUSE_HAVING = "having";
+	public static final String OPERATOR_OR = "or";
+	public static final String OPERATOR_AND = "and";
+	public static final String PREDICATE_EQUALS = "=";
+	public static final String PREDICATE_NOTEQUALS = "<>";
+	public static final String PREDICATE_LIKE = "like";
+	public static final String PREDICATE_IN = "in";
+	public static final String PREDICATE_GREATERTHAN = ">";
+	public static final String PREDICATE_LESSTHAN = "<";
+	public static final String SORT_ASC = "asc";
+	public static final String SORT_DESC = "desc";
+	public static final String WILDCARD = "%";
 	
 	private Vector<Object> values = null;
 	private StringBuffer sql = null;
