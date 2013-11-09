@@ -1,1 +1,1 @@
-juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m 
+juddi-client.net\juddi-client.net.sln /p:Configuration=Debug /p:Platform="Any CPU" /m  
