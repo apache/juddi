@@ -21,9 +21,19 @@ using System;
 namespace org.uddi.apiv3
 {
 
+ 
+  
+    public partial class accessPoint
+    {
+        public accessPoint(String value, String usetype)
+        {
+            this.Value = value;
+            this.useType = useType;
+        }
+    }
+
     public partial class overviewURL
     {
-        
         public overviewURL(String value, String usetype)
         {
             this.Value = value;
@@ -190,6 +200,25 @@ namespace org.apache.juddi.apiv3
         }
 
     }
+    public partial class node
+    {
+        public string getSecurityUrl()
+        {
+            return this.securityUrl;
+        }
+        public string getInquiryUrl()
+        {
+            return this.inquiryUrl;
+        }
+    }
+    
+    public partial class clerk
+    {
+        public node getNode()
+        {
+            return node;
+        }
 
+    }
 
 }

@@ -31,9 +31,9 @@ using System.Text;
 
 namespace org.apache.juddi.client.sample
 {
-    class Encryption
+    public class Encryption
     {
-        static void main(string[] args)
+        public static void main(string[] args)
         {
             AesManaged aes = new AesManaged();
             Console.WriteLine("AesManaged ");

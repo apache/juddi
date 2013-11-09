@@ -41,8 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Encryption.cs" />
+    <Compile Include="findendpoints.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceVersioning.cs" />
+    <Compile Include="SimpleInquiry.cs" />
     <Compile Include="WadlImport.cs" />
     <Compile Include="WsdlImport.cs" />
   </ItemGroup>

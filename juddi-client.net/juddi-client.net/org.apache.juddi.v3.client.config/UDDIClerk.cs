@@ -15,13 +15,15 @@
  *
  */
 
+using org.apache.juddi.apiv3;
 using org.apache.juddi.v3.client.crypto;
 using org.apache.juddi.v3.client.log;
+using org.apache.juddi.v3.client.mapping;
 using org.uddi.apiv3;
+using org.xmlsoap.schemas.easyWsdl;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-
 using System.Text;
 
 namespace org.apache.juddi.v3.client.config
@@ -972,7 +974,7 @@ namespace org.apache.juddi.v3.client.config
             overviewURL overviewUrl = new overviewURL();
             overviewUrl.useType = ("text");
             overviewUrl.Value = ("http://uddi.org/pubs/uddi_v3.htm#keyGen");
-            overviewDoc.Items = new object[] { overviewUrl };
+            overviewDoc.overviewURLs = new overviewURL[] { overviewUrl };
             tm.overviewDoc = new overviewDoc[] { overviewDoc };
             tm.tModelKey = (partitionName.ToLower());
             return tm;
@@ -1019,5 +1021,350 @@ namespace org.apache.juddi.v3.client.config
         {
             uddinode.Dispose();
         }
+
+
+        /**
+         * This is a convenience function that will build and return a TModelInstanceInfo
+         * as described in the following link that will enable you to tag web services
+         * registered in UDDI with some kind of version information.<Br><Br>
+         * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
+         * <Br><Br>
+         * 
+         * When using this tModel as a tModelInstance, it can be used to describe a 
+         * version associated with either a service interface, a bindingTemplate 
+         * service instance. Note: This is a jUDDI specific addon and may not be 
+         * present in other registries
+         * 
+         * @param version From the article, no specificity is provided on what to use as a value, but
+         * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
+         * Example 
+         * <ul>
+         * <li>6.1.2.3</li>
+         * <li>1.0</li>
+         * <li>0.1</li>
+         * </ul>
+         * @return TModelInstanceInfo populated as described in the article, plus some descriptive information
+         */
+        public static tModelInstanceInfo createServiceInterfaceVersion(String version, String lang)
+        {
+            if (version == null)
+                throw new ArgumentNullException();
+            tModelInstanceInfo tt = new tModelInstanceInfo();
+            tt.tModelKey = (UDDIConstants.VERSION_TMODEL);
+            tt.instanceDetails = new instanceDetails();
+
+
+            overviewDoc doc = new overviewDoc();
+            doc.overviewURLs = new overviewURL[] { (new overviewURL("http://www.ibm.com/developerworks/webservices/library/ws-version/", "text")) };
+            //,new description(
+            //"Describes a version associated with either a service interface, a bindingTemplate service instance.", lang)};
+            tt.description = new description[] { new description("Describes a version associated with either a service interface, a bindingTemplate service instance.", lang) };
+
+            tt.instanceDetails.Items = new object[] { doc };
+            tt.instanceDetails.instanceParms = version;
+
+            //tt.instanceDetails.Items = new object[] { doc };
+            return tt;
+        }
+
+        /**
+         * This is a convenience function that will filter a list of binding templates
+         * and return a list of bindings matching the specified version number.
+         * 
+         * This implements and expands upon service versioning described in the 
+         * following link and will enable you to tag web services
+         * registered in UDDI with some kind of version information.<Br><Br>
+         * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
+         * <Br><Br>
+         * @see createServiceInterfaceVersion for more information<Br><br>
+         * 
+         * This function operates using tModelInstances that are used to describe a 
+         * version associated with either a service interface, a bindingTemplate 
+         * service instance. Note: This is a jUDDI specific addon and may not be 
+         * present in other registries
+         * 
+         * @param version From the article, no specificity is provided on what to use as a value, but
+         * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
+         * Example 
+         * <ul>
+         * <li>6.1.2.3</li>
+         * <li>1.0</li>
+         * <li>0.1</li>
+         * </ul>
+         * @param version
+         * @param bindingTemplate
+         * @return a list if binding templates where the version equals ignoring case trimmed equals the version value
+         */
+        public static List<bindingTemplate> getBindingByVersion(String version, bindingTemplate[] bindingTemplate)
+        {
+            if (version == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (bindingTemplate == null)
+            {
+                throw new ArgumentNullException();
+            }
+            List<bindingTemplate> ret = new List<bindingTemplate>();
+            for (int i = 0; i < bindingTemplate.Length; i++)
+            {
+                if (bindingTemplate[i].tModelInstanceDetails != null)
+                {
+                    for (int k = 0; k < bindingTemplate[i].tModelInstanceDetails.Length; k++)
+                    {
+                        if (bindingTemplate[i].tModelInstanceDetails[k].tModelKey.Equals(UDDIConstants.VERSION_TMODEL))
+                        {
+                            if (bindingTemplate[i].tModelInstanceDetails[k].instanceDetails != null)
+                            {
+                                if (bindingTemplate[i].tModelInstanceDetails[k].instanceDetails.instanceParms != null)
+                                {
+                                    if ((bindingTemplate[i].tModelInstanceDetails[k].instanceDetails.instanceParms.Trim().Equals(version.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                                    {
+                                        ret.Add(bindingTemplate[i]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return ret;
+        }
+
+
+
+
+        /**
+         * JUDDI-700
+         * This implements the "find_endpoints" pattern as described in Alex O'Ree's
+         * Master's Thesis on UDDI. Basically, UDDI never provided a 'simple' way to 
+         * get a list of execution URLs for a web service. This function will resolve
+         * all AccessPoint and HostingRedictor indirections and provide to you a list
+         * of URLs that <i>should</i> be accessible for the given service.
+         * @param serviceKey
+         * @return 
+         */
+        public List<String> getEndpoints(String serviceKey)
+        {
+            List<String> items = new List<String>();
+            serviceDetail serviceDetail = null;
+            try
+            {
+                serviceDetail = this.getServiceDetail(serviceKey);
+            }
+            catch (Exception ex)
+            {
+                log.error("Unable to fetch the specified service's details", ex);
+            }
+            if (serviceDetail == null)
+            {
+                return items;
+            }
+            for (int i = 0; i < serviceDetail.businessService.Length; i++)
+            {
+                if (serviceDetail.businessService[i].bindingTemplates != null)
+                {
+                    for (int k = 0; k < serviceDetail.businessService[i].bindingTemplates.Length; k++)
+                    {
+                        try
+                        {
+                            items.AddRange(ParseBinding(serviceDetail.businessService[i].bindingTemplates[k]));
+                        }
+                        catch (Exception ex)
+                        {
+                            log.warn("error parsing binding", ex);
+                        }
+                    }
+                }
+            }
+            return items;
+        }
+
+        private List<String> GetBindingInfo(String value)
+        {
+            List<String> items = new List<String>();
+            if (value == null)
+            {
+                return items;
+            }
+
+            get_bindingDetail b = new get_bindingDetail();
+            b.authInfo = (getAuthToken(this.getApiClerk().getNode().getSecurityUrl()));
+            b.bindingKey = new string[] { (value) };
+            bindingDetail bindingDetail = getUDDINode().getTransport().getUDDIInquiryService(this.getApiClerk().getNode().getInquiryUrl()).get_bindingDetail(b);
+            if (bindingDetail.bindingTemplate != null)
+                for (int i = 0; i < bindingDetail.bindingTemplate.Length; i++)
+                {
+                    items.AddRange(ParseBinding(bindingDetail.bindingTemplate[i]));
+                }
+            return items;
+        }
+
+        private clerk getApiClerk()
+        {
+            clerk apiClerk = new clerk();
+            apiClerk.name = (name);
+            apiClerk.node = (uddinode.getApiNode());
+            apiClerk.password = (password);
+            apiClerk.publisher = (publisher);
+            return apiClerk;
+        }
+
+        private List<String> ParseBinding(bindingTemplate get)
+        {
+            List<String> items = new List<String>();
+            if (get == null || get.Item == null)
+            {
+                return items;
+            }
+            if (get.Item is hostingRedirector)
+            {
+                //hosting Redirector is the same as "reference this other binding template". It's actually deprecated so 
+                //don't expect to see this too often
+                items.AddRange(GetBindingInfo(((hostingRedirector)get.Item).bindingKey));
+            }
+            if (get.Item is accessPoint)
+            {
+                String usetype = ((accessPoint)get.Item).useType;
+                if (usetype == null)
+                {
+                    //this is unexpected, usetype is a required field
+                    items.Add(((accessPoint)get.Item).Value);
+                }
+                else if (usetype.Equals(AccessPointType.bindingTemplate.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //referencing another binding template
+                    items.AddRange(GetBindingInfo(((accessPoint)get.Item).Value));
+                }
+                else if (usetype.Equals(AccessPointType.hostingDirector.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //this one is a bit strange. the value should be a binding template
+
+                    items.AddRange(GetBindingInfo(((accessPoint)get.Item).Value));
+
+                }
+                else if (usetype.Equals(AccessPointType.wsdlDeployment.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    //fetch wsdl and parse
+                    items.AddRange(FetchWSDL(((accessPoint)get.Item).Value));
+                }
+                else if (usetype.Equals(AccessPointType.endPoint.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    items.Add(((accessPoint)get.Item).Value);
+                }
+                else
+                {
+                    //treat it has an extension or whatever
+                    items.Add(((accessPoint)get.Item).Value);
+                }
+
+            }
+
+            return items;
+        }
+
+
+        /**
+         * fetches a wsdl endpoint and parses for execution urls
+         * @param value
+         * @return 
+         */
+        private List<String> FetchWSDL(String value)
+        {
+            List<String> items = new List<String>();
+
+            if (value.StartsWith("http://") || value.StartsWith("https://"))
+            {
+                //here, we need an HTTP Get for WSDLs
+                org.apache.juddi.v3.client.mapping.ReadWSDL r = new ReadWSDL();
+                r.setIgnoreSSLErrors(true);
+                try
+                {
+                    tDefinitions wsdlDefinition = r.readWSDL(value);
+                    Properties properties = new Properties();
+
+
+                    properties.put("keyDomain", "domain");
+                    properties.put("businessName", "biz");
+                    properties.put("serverName", "localhost");
+                    properties.put("serverPort", "80");
+
+                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizer(), properties);
+                    businessService[] businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
+                    for (int i = 0; i < businessServices.Length; i++)
+                    {
+                        if (businessServices[i].bindingTemplates != null)
+                        {
+                            for (int k = 0; k < businessServices[i].bindingTemplates.Length; k++)
+                            {
+                                items.AddRange(ParseBinding(businessServices[i].bindingTemplates[k]));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.error("error fetching wsdl for parsing", ex);
+                }
+
+            }
+            return items;
+        }
+
+        /**
+         * Gets service details or NULL if it doesn't exist or an error occurred
+         * @param key
+         * @return
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException 
+         */
+        public serviceDetail getServiceDetail(String key)
+        {
+            get_serviceDetail getTModelDetail = new get_serviceDetail();
+            getTModelDetail.serviceKey = new string[] { key };
+            return getServiceDetail(getTModelDetail);
+        }
+
+        /**
+         * Gets service details or NULL if it doesn't exist or an error occurred
+         * @param getDetail
+         * @return
+         * @throws RemoteException
+         * @throws ConfigurationException
+         * @throws TransportException 
+         */
+        public serviceDetail getServiceDetail(get_serviceDetail getDetail)
+        {
+            return getServiceDetail(getDetail, this.getUDDINode().getApiNode());
+        }
+
+        /**
+         * Gets service details or NULL if it doesn't exist or an error occurred
+         * @param getDetail
+         * @param node
+         * @return
+         * @throws RemoteException
+         * @throws TransportException
+         * @throws ConfigurationException 
+         */
+        public serviceDetail getServiceDetail(get_serviceDetail getDetail, node node)
+        {
+
+            getDetail.authInfo = (getAuthToken(node.securityUrl));
+            try
+            {
+                serviceDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.inquiryUrl).get_serviceDetail(getDetail);
+                return tModelDetail;
+            }
+            catch (Exception dr)
+            {
+                //dispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+                log.error("error fetching service detail", dr);
+            }
+            return null;
+        }
+
     }
+
 }

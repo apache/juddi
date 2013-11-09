@@ -97,28 +97,31 @@ namespace org.apache.juddi.v3.client.mapping
         }
         public businessService[] registerBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
-            List< businessService> businessServices = new List<businessService>();
-            Dictionary<apache.juddi.v3.client.mapping.QName, org.xmlsoap.schemas.easyWsdl.tService>.Enumerator it= wsdlDefinition.getAllServices().GetEnumerator();
-        while (it.MoveNext()) {
-            QName serviceQName = (QName) it.Current.Key;
-            org.xmlsoap.schemas.easyWsdl.tService service = wsdlDefinition.getService(serviceQName);
-            businessService businessService = null;
-            //add service
-            Uri serviceUrl = null;
-            if (service.port != null && service.port.Count > 0) {
-              HashSet<org.xmlsoap.schemas.easyWsdl.tPort>.Enumerator it2=  service.port.GetEnumerator();
-                while (it2.MoveNext())
+            List<businessService> businessServices = new List<businessService>();
+            Dictionary<apache.juddi.v3.client.mapping.QName, org.xmlsoap.schemas.easyWsdl.tService>.Enumerator it = wsdlDefinition.getAllServices().GetEnumerator();
+            while (it.MoveNext())
+            {
+                QName serviceQName = (QName)it.Current.Key;
+                org.xmlsoap.schemas.easyWsdl.tService service = wsdlDefinition.getService(serviceQName);
+                businessService businessService = null;
+                //add service
+                Uri serviceUrl = null;
+                if (service.port != null && service.port.Count > 0)
                 {
-                //for (Object portName : service.getPorts().keySet()) {
-                    businessService = registerBusinessService(serviceQName, (String) it2.Current.name, serviceUrl, wsdlDefinition).getBusinessService();
+                    HashSet<org.xmlsoap.schemas.easyWsdl.tPort>.Enumerator it2 = service.port.GetEnumerator();
+                    while (it2.MoveNext())
+                    {
+                        //for (Object portName : service.getPorts().keySet()) {
+                        businessService = registerBusinessService(serviceQName, (String)it2.Current.name, serviceUrl, wsdlDefinition).getBusinessService();
+                    }
+                }
+                if (businessService != null)
+                {
+                    businessServices.Add(businessService);
                 }
             }
-            if (businessService != null) {
-                businessServices.Add(businessService);
-            }
-        }
 
-        return businessServices.ToArray();
+            return businessServices.ToArray();
 
         }
         public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, Uri serviceUrl,
@@ -807,7 +810,7 @@ namespace org.apache.juddi.v3.client.mapping
                 overviewURL.useType = (AccessPointType.wsdlDeployment.ToString());
                 overviewURL.Value = (wsdlURL);
                 overviewDoc overviewDoc = new overviewDoc();
-                overviewDoc.Items = new object[] { (overviewURL) };
+                overviewDoc.overviewURLs = new overviewURL[] { (overviewURL) };
                 tModel.overviewDoc = new overviewDoc[] { (overviewDoc) };
                 // Create the categoryBag, The tModel MUST contain a categoryBag
                 categoryBag categoryBag = new categoryBag();
@@ -987,7 +990,7 @@ namespace org.apache.juddi.v3.client.mapping
                 overviewURL.useType = (AccessPointType.wsdlDeployment.ToString());
                 overviewURL.Value = (wsdlURL);
                 overviewDoc overviewDoc = new overviewDoc();
-                overviewDoc.Items = new Object[] { (overviewURL) };
+                overviewDoc.overviewURLs = new overviewURL[] { (overviewURL) };
                 tModel.overviewDoc = new overviewDoc[] { (overviewDoc) };
                 // Set the categoryBag
                 categoryBag categoryBag = new categoryBag();
@@ -1099,13 +1102,19 @@ namespace org.apache.juddi.v3.client.mapping
     /// </summary>
     public class ReadWSDL
     {
+        bool ignoressl = false;
+        public bool ignoreSSLErrors
+        {
+            get { return ignoressl; }
+            set { ignoressl = value; }
+        }
 
-
-        public org.xmlsoap.schemas.easyWsdl.tDefinitions parse(String file)
+        public org.xmlsoap.schemas.easyWsdl.tDefinitions readWSDL(String file)
         {
             org.xmlsoap.schemas.easyWsdl.tDefinitions wsdl = getWsdl(file);
             return wsdl;
         }
+
 
         org.xmlsoap.schemas.easyWsdl.tDefinitions getWsdl(String url)
         {
@@ -1113,7 +1122,13 @@ namespace org.apache.juddi.v3.client.mapping
             //read it
             if (url.StartsWith("http", StringComparison.CurrentCultureIgnoreCase))
             {
+                if (url.StartsWith("https", StringComparison.CurrentCultureIgnoreCase) && ignoressl)
+                {
+                    ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+                }
                 WebClient c = new WebClient();
+                if (url.StartsWith("https", StringComparison.CurrentCultureIgnoreCase) && ignoressl)
+                    ServicePointManager.ServerCertificateValidationCallback = null;
                 String s = c.DownloadString(url);
                 StringReader sr = new StringReader(s);
                 XmlSerializer xs = new XmlSerializer(typeof(org.xmlsoap.schemas.tDefinitions));
@@ -1204,6 +1219,11 @@ namespace org.apache.juddi.v3.client.mapping
 
         }
 
+
+        public void setIgnoreSSLErrors(bool p)
+        {
+            ignoressl = p;
+        }
     }
 
 

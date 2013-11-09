@@ -32,7 +32,7 @@ namespace AspnetServiceLifeCycle
     {
         static void Main(string[] args)
         {
-            //Normally, this coder snippet would be executed by some kind of web service life cycle listener
+            //Normally, this code snippet would be executed by some kind of web service life cycle listener
             //such as global.asax
             //a web service contructor
             Type t = typeof(HelloImpl);

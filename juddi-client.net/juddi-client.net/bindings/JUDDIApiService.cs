@@ -1045,6 +1045,10 @@ namespace org.apache.juddi.apiv3
                 this.factoryNamingProviderField = value;
             }
         }
+
+
+
+        
     }
 
     /// <remarks/>

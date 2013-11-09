@@ -2418,7 +2418,9 @@ namespace org.uddi.apiv3
         }
     }
 
-    /// <remarks/>
+    /// <summary>
+    /// heavily modified to fix serialization problems
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -2445,10 +2447,10 @@ namespace org.uddi.apiv3
             }
         }
 
-       /// <summary>
-        /// instanceParms or overviewDoc
-       /// </summary>
-        [System.Xml.Serialization.XmlElementAttribute("instanceParms", typeof(string))]
+        /// <summary>
+        /// overviewDoc
+        /// </summary>
+
         [System.Xml.Serialization.XmlElementAttribute("overviewDoc", typeof(overviewDoc))]
         public object[] Items
         {
@@ -2461,9 +2463,24 @@ namespace org.uddi.apiv3
                 this.itemsField = value;
             }
         }
+        string param;
+        [System.Xml.Serialization.XmlElementAttribute("instanceParms", typeof(string))]
+        public string instanceParms
+        {
+            get
+            {
+                return this.param;
+            }
+            set
+            {
+                this.param = value;
+            }
+        }
     }
 
-    /// <remarks/>
+    /// <summary>
+    /// heavily modified to fix serialization problems
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -2472,12 +2489,26 @@ namespace org.uddi.apiv3
     public partial class overviewDoc
     {
 
-        private object[] itemsField;
-
-        /// <remarks/>
+        private overviewURL[] itemsField;
+        private description[] descfield;
+        /// <summary>
+        /// description or overviewURL
+        /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("description", typeof(description))]
+        public description[] descriptions
+        {
+            get
+            {
+                return this.descfield;
+            }
+            set
+            {
+                this.descfield = value;
+            }
+        }
+
         [System.Xml.Serialization.XmlElementAttribute("overviewURL", typeof(overviewURL))]
-        public object[] Items
+        public overviewURL[] overviewURLs
         {
             get
             {

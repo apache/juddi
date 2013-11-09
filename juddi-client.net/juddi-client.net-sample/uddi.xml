@@ -8,8 +8,14 @@
         <name>default</name>
         <description>Main jUDDI node</description>
         <properties>
+          <!-- for a live instance of jUDDI, use this url
           <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
-          <property name="serverPort" value="80" />
+          <property name="serverPort" value="80" />-->
+
+          <!-- for a dev instance of jUDDI, use this url -->
+          <property name="serverName" value="localhost" />
+          <property name="serverPort" value="8080" />
+          
 		  <!-- for UDDI nodes that use HTTP u/p, using the following 
 					<property name="basicAuthUsername" value="root" />
 					<property name="basicAuthPassword" value="password" />
@@ -17,13 +23,13 @@
 					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://${serverName}:${serverPort}/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://${serverName}:${serverPort}/services/publish?wsdl</publishUrl>
-        <securityUrl>http://${serverName}:${serverPort}/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://${serverName}:${serverPort}/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://${serverName}:${serverPort}/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://${serverName}:${serverPort}/services/juddi-api?wsdl</juddiApiUrl>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
         <factoryInitial>not used</factoryInitial>
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>

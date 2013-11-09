@@ -31,9 +31,9 @@ using System.Text;
 
 namespace org.apache.juddi.client.sample
 {
-    class WadlImport
+    public class WadlImport
     {
-        static void main(string[] args)
+        public static void main(string[] args)
         {
 
             UDDIClient clerkManager = null;
@@ -121,6 +121,7 @@ namespace org.apache.juddi.client.sample
                 sb.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
                 sb.businessEntity = new businessEntity[] { be };
                 publish.save_business(sb);
+                Console.Out.WriteLine("Saved!");
             }
             catch (Exception ex)
             {

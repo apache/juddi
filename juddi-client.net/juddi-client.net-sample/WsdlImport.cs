@@ -30,15 +30,14 @@ using System.Text;
 
 namespace org.apache.juddi.client.sample
 {
-    class WsdlImport
+    public class WsdlImport
     {
-        static void main(string[] args)
+        public static void main(string[] args)
         {
             String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
             ReadWSDL wsi = new ReadWSDL();
-            org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.parse(
+            org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.readWSDL(
                 // "http://localhost/UDDI_API_V31.wsdl"
-                //@"C:\projects\OpenESM6.3PRC\OpenESM.Discovery.UDDI\src\META-INF\UDDI_API_V31.wsdl"
                 wsdlURL
                 );
             Properties properties1 = new Properties();

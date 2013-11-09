@@ -27,6 +27,13 @@ namespace org.apache.juddi.v3.client
     public static class UDDIConstants
     {
 
+        /// <summary>
+        /// identifies a tmodel instance info containing some version information of a service
+        /// a juddi extension based on 
+        /// http://www.ibm.com/developerworks/webservices/library/ws-version/
+        /// </summary>
+        public static readonly String VERSION_TMODEL = "urn:uddi:uddi.org:version";
+
         ///
         ///andAllKeys: this changes the behavior for identifierBag to AND keys
         ///rather than OR them. This is already the default for categoryBag and
@@ -653,7 +660,7 @@ namespace org.apache.juddi.v3.client
 
 
 
-        public static  int MAX_xml_lang_length = 26;
+        public static int MAX_xml_lang_length = 26;
         public static int MAX_description_length = 255;
         public static int MAX_discoveryURL_length = 4096;
     }

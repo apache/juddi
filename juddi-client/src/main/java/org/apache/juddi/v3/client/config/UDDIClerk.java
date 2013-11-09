@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.wsdl.Definition;
 import javax.xml.ws.Holder;
@@ -37,6 +39,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.Node;
@@ -54,6 +57,7 @@ import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
+import org.uddi.api_v3.BusinessServices;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.DeleteBinding;
 import org.uddi.api_v3.DeleteBusiness;
@@ -715,6 +719,8 @@ public class UDDIClerk implements Serializable {
 
     /**
      * Gets an auth token from the uddi server using the uddi auth token
+     * <br>
+     * Notice: never log auth tokens! Treat it like a password
      * 
      * notes: changed to public to have access from the subscription callback API 8/20/2013 AO
      * @param endpointURL
@@ -1013,7 +1019,7 @@ public class UDDIClerk implements Serializable {
         doc.getDescription().add(new Description(
                 "Describes a version associated with either a service interface, a bindingTemplate service instance.", lang));
         tt.getDescription().add(new Description("Describes a version associated with either a service interface, a bindingTemplate service instance.", lang));
-        tt.getInstanceDetails().getOverviewDoc().add(new OverviewDoc());
+        tt.getInstanceDetails().getOverviewDoc().add(doc);
         return tt;
     }
     
@@ -1071,4 +1077,188 @@ public class UDDIClerk implements Serializable {
         }
         return ret;
     }
+    
+    /**
+     * JUDDI-700
+     * This implements the "find_endpoints" pattern as described in Alex O'Ree's
+     * Master's Thesis on UDDI. Basically, UDDI never provided a 'simple' way to 
+     * get a list of execution URLs for a web service. This function will resolve
+     * all AccessPoint and HostingRedictor indirections and provide to you a list
+     * of URLs that <i>should</i> be accessible for the given service.
+     * @param serviceKey
+     * @return 
+     */
+    public List<String> GetEndpoints(String serviceKey){
+            List<String> items = new ArrayList<String>();
+            ServiceDetail serviceDetail=null;
+            try{
+                   serviceDetail = this.getServiceDetail(serviceKey);
+            }
+            catch (Exception ex){
+                log.error("Unable to fetch the specified service's details", ex);
+            }
+        if (serviceDetail == null) {
+            return items;
+        }
+        for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
+            if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {
+                for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
+                    try {
+                        items.addAll(ParseBinding(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k)));
+                    } catch (Exception ex) {
+                        log.warn(ex);
+                    }
+                }
+            }
+        }
+        return items;
+    }
+    
+      private List<String> GetBindingInfo(String value) throws Exception {
+        List<String> items = new ArrayList<String>();
+        if (value == null) {
+            return items;
+        }
+        
+        GetBindingDetail b = new GetBindingDetail();
+        b.setAuthInfo(getAuthToken(this.getApiClerk().getNode().getSecurityUrl()));
+        b.getBindingKey().add(value);
+        BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIInquiryService(this.getApiClerk().getNode().getInquiryUrl()).getBindingDetail(b);
+        for (int i = 0; i < bindingDetail.getBindingTemplate().size(); i++) {
+            items.addAll(ParseBinding(bindingDetail.getBindingTemplate().get(i)));
+        }
+        return items;
+    }
+      private List<String> ParseBinding(BindingTemplate get) throws Exception {
+        List<String> items = new ArrayList<String>();
+        if (get == null || get.getAccessPoint() == null) {
+            return items;
+        }
+        if (get.getHostingRedirector() != null) {
+            //hosting Redirector is the same as "reference this other binding template". It's actually deprecated so 
+            //don't expect to see this too often
+            items.addAll(GetBindingInfo(get.getHostingRedirector().getBindingKey()));
+        }
+        if (get.getAccessPoint() != null) {
+            String usetype = get.getAccessPoint().getUseType();
+            if (usetype == null) {
+                //this is unexpected, usetype is a required field
+                items.add(get.getAccessPoint().getValue());
+            } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {
+                //referencing another binding template
+                items.addAll(GetBindingInfo(get.getAccessPoint().getValue()));
+            } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {
+                //this one is a bit strange. the value should be a binding template
+
+                items.addAll(GetBindingInfo(get.getAccessPoint().getValue()));
+
+            } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {
+                //fetch wsdl and parse
+                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));
+            } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {
+                items.add(get.getAccessPoint().getValue());
+            } else {
+                //treat it has an extension or whatever
+                items.add(get.getAccessPoint().getValue());
+            }
+
+        }
+        return items;
+    }
+      
+      
+      /**
+       * fetches a wsdl endpoint and parses for execution urls
+       * @param value
+       * @return 
+       */
+    private List<String> FetchWSDL(String value) {
+        List<String> items = new ArrayList<String>();
+
+        if (value.startsWith("http://") || value.startsWith("https://")) {
+            //here, we need an HTTP Get for WSDLs
+            org.apache.juddi.v3.client.mapping.ReadWSDL r = new ReadWSDL();
+            r.setIgnoreSSLErrors(true);
+            try {
+                Definition wsdlDefinition = r.readWSDL(new URL(value));
+                Properties properties = new Properties();
+
+
+                properties.put("keyDomain", "domain");
+                properties.put("businessName", "biz");
+                properties.put("serverName", "localhost");
+                properties.put("serverPort", "80");
+
+                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+                BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
+                for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
+                    if (businessServices.getBusinessService().get(i).getBindingTemplates() != null) {
+                        for (int k = 0; k < businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
+                            items.addAll(ParseBinding(businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k)));
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                log.error(ex);
+            }
+
+        }
+        return items;
+    }
+    
+    /**
+     * Gets service details or NULL if it doesn't exist or an error occurred
+     * @param key
+     * @return
+     * @throws RemoteException
+     * @throws ConfigurationException
+     * @throws TransportException 
+     */
+    public ServiceDetail getServiceDetail(String key) throws RemoteException, ConfigurationException, TransportException {
+        GetServiceDetail getTModelDetail = new GetServiceDetail();
+        getTModelDetail.getServiceKey().add(key);
+        return getServiceDetail(getTModelDetail);
+    }
+
+    /**
+     * Gets service details or NULL if it doesn't exist or an error occurred
+     * @param getDetail
+     * @return
+     * @throws RemoteException
+     * @throws ConfigurationException
+     * @throws TransportException 
+     */
+    public ServiceDetail getServiceDetail(GetServiceDetail getDetail) throws RemoteException, ConfigurationException, TransportException {
+        return getServiceDetail(getDetail, this.getUDDINode().getApiNode());
+    }
+
+    /**
+     * Gets service details or NULL if it doesn't exist or an error occurred
+     * @param getDetail
+     * @param node
+     * @return
+     * @throws RemoteException
+     * @throws TransportException
+     * @throws ConfigurationException 
+     */
+    public ServiceDetail getServiceDetail(GetServiceDetail getDetail, Node node) throws RemoteException,
+            TransportException, ConfigurationException {
+
+        getDetail.setAuthInfo(getAuthToken(node.getSecurityUrl()));
+        try {
+            ServiceDetail tModelDetail = getUDDINode().getTransport().getUDDIInquiryService(node.getInquiryUrl()).getServiceDetail(getDetail);
+            return tModelDetail;
+        } catch (DispositionReportFaultMessage dr) {
+            DispositionReport report = DispositionReportFaultMessage.getDispositionReport(dr);
+            checkForErrorInDispositionReport(report, null, null);
+        } catch (SOAPFaultException sfe) {
+            DispositionReport report = DispositionReportFaultMessage.getDispositionReport(sfe);
+            checkForErrorInDispositionReport(report, null, null);
+        } catch (UndeclaredThrowableException ute) {
+            DispositionReport report = DispositionReportFaultMessage.getDispositionReport(ute);
+            checkForErrorInDispositionReport(report, null, null);
+        }
+        return null;
+    }
+
 }

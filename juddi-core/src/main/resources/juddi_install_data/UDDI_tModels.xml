@@ -1342,7 +1342,7 @@
 	
 	<tModel tModelKey="urn:uddi:uddi.org:version">
         <name>Service Interface Version</name>
-        <description xml:lang="en">When using this tModel as a tModelInstance, it can be used to describe a version associated with either a service interface, a bindingTemplate service instance.</description>
+        <description xml:lang="en">When using this tModel as a tModelInstance, it can be used to describe a version associated with either a service interface, a bindingTemplate service instance. Note: This is a jUDDI specific addon and may not be present in other registries.</description>
        <overviewDoc>
             <overviewURL>
                http://www.ibm.com/developerworks/webservices/library/ws-version/

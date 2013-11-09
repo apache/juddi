@@ -29,64 +29,39 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace juddi_client.net_sample
+namespace org.apache.juddi.client.sample
+
 {
     class Program
     {
         static void Main(string[] args)
         {
-
-
-            UDDIClient clerkManager = null;
-            Transport transport = null;
-            UDDIClerk clerk = null;
-            try
-            {
-                clerkManager = new UDDIClient("uddi.xml");
-                UDDIClientContainer.addClient(clerkManager);
-
-                transport = clerkManager.getTransport("default");
-
-                org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
-                org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
-                org.uddi.apiv3.UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
-
-                clerk = clerkManager.getClerk("default");
-
-
-                find_business fb = new find_business();
-                fb.authInfo = clerk.getAuthToken(security.Url);
-                fb.findQualifiers = new string[] { UDDIConstants.APPROXIMATE_MATCH };
-                fb.name = new name[1];
-                fb.name[0] = new name(UDDIConstants.WILDCARD, "en");
-                businessList bl = inquiry.find_business(fb);
-                for (int i = 0; i < bl.businessInfos.Length; i++)
-                {
-                    Console.WriteLine(bl.businessInfos[i].name[0].Value);
-                }
-            }
-            catch (Exception ex)
-            {
-                while (ex != null)
-                {
-                    System.Console.WriteLine("Error! " + ex.Message);
-                    ex = ex.InnerException;
-                }
-            }
-            finally
-            {
-                if (transport != null && transport is IDisposable)
-                {
-                    ((IDisposable)transport).Dispose();
-                }
-                if (clerk != null)
-                    clerk.Dispose();
-            }
-
-
+            Console.Out.WriteLine("jUDDI.Net sampe programs!");
+            Console.Out.WriteLine("1) SimpleInquiry");
+            Console.Out.WriteLine("2) ServiceVersioning");
+            Console.Out.WriteLine("3) Encryption");
+            Console.Out.WriteLine("4) WADL2UDDI");
+            Console.Out.WriteLine("5) WSDL2UDDI");
+            Console.Out.WriteLine("6) Find_endpoints");
+            Console.Out.Write("Enter selection> ");
+            String selection=Console.In.ReadLine();
+            selection = selection.Trim();
+            if (selection.Equals("1"))
+                SimpleInquiry.Run();
+            else if (selection.Equals("2"))
+                new ServiceVersioning().go();
+            else if (selection.Equals("3"))
+                Encryption.main(args);
+            else if (selection.Equals("4"))
+                WadlImport.main(args);
+            else if (selection.Equals("5"))
+                WsdlImport.main(args);
+            else if (selection.Equals("6"))
+                FindendpointsDemo.main(args);
 
             Console.WriteLine("Press any key to exit");
             Console.Read();
+
         }
     }
 }
