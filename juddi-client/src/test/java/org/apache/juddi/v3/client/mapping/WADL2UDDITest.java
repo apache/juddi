@@ -50,7 +50,7 @@ public class WADL2UDDITest {
     @Test
     public void Test1() throws Exception {
         log.info("Test1 read from file");
-
+ 
         Application app = WADL2UDDI.parseWadl(new File("src/test/resources/wadl/cxf.wadl"));
         Assert.assertNotNull(app);
         Assert.assertNotNull(app);
