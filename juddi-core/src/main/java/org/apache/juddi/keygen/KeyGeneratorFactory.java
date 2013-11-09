@@ -17,8 +17,6 @@
 
 package org.apache.juddi.keygen;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,13 +46,13 @@ public abstract class KeyGeneratorFactory {
 	 * 
 	 * @return KeyGenerator
 	 */
-	public static KeyGenerator getKeyGenerator() {
+	public static synchronized KeyGenerator getKeyGenerator() {
 		if (keyGenerator == null)
 			keyGenerator = createKeyGenerator();
 		return keyGenerator;
 	}
 	
-	public static KeyGenerator forceNewKeyGenerator() {
+	public static synchronized KeyGenerator forceNewKeyGenerator() {
 		keyGenerator = null;
 		keyGenerator = createKeyGenerator();
 		return keyGenerator;
@@ -101,7 +99,7 @@ public abstract class KeyGeneratorFactory {
 		} catch(IllegalAccessException iae) {
 			throw new RuntimeException("The specified Key Generator class '" + className + "' cannot be instantiated due to illegal access.",iae);
 		} catch(Exception e) {
-			throw new RuntimeException("Exception while attempting to instantiate the implementation of Key Generator: " + keygenClass.getName() + "\n" + e.getMessage());
+			throw new RuntimeException("Exception while attempting to instantiate the implementation of Key Generator: " + className + "\n" + e.getMessage());
 		}
 	
 		return keyGenerator;

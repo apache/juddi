@@ -44,7 +44,7 @@ public class AuthenticatorFactory {
 	 * 
 	 * @return Authenticator
 	 */
-	public static Authenticator getAuthenticator() {
+	public static synchronized Authenticator getAuthenticator() {
 		if (auth == null)
 			auth = createAuthenticator();
 		return auth;
@@ -90,7 +90,7 @@ public class AuthenticatorFactory {
 			}
 		}
 		catch(Exception e) {
-			log.error("Exception while attempting to instantiate the implementation of Authenticator: " + authClass.getName() + "\n" + e.getMessage());
+			log.error("Exception while attempting to instantiate the implementation of Authenticator: " + className + "\n" + e.getMessage());
 			log.error(e);
 		}
 	

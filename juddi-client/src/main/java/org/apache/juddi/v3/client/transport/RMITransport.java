@@ -68,9 +68,9 @@ public class RMITransport extends Transport {
 		String factoryInitial = client.getClientConfig().getHomeNode().getFactoryInitial();
 		String factoryURLPkgs = client.getClientConfig().getHomeNode().getFactoryURLPkgs();
 		String factoryNamingProvider = client.getClientConfig().getHomeNode().getFactoryNamingProvider();
-        if (factoryInitial!=null && factoryInitial!="") env.setProperty(Property.UDDI_PROXY_FACTORY_INITIAL, factoryInitial);
-        if (factoryURLPkgs!=null && factoryURLPkgs!="") env.setProperty(Property.UDDI_PROXY_FACTORY_URL_PKS, factoryURLPkgs);
-        if (factoryNamingProvider!=null && factoryNamingProvider!="") env.setProperty(Property.UDDI_PROXY_PROVIDER_URL, factoryNamingProvider);
+        if (factoryInitial!=null && !"".equals(factoryInitial)) env.setProperty(Property.UDDI_PROXY_FACTORY_INITIAL, factoryInitial);
+        if (factoryURLPkgs!=null && !"".equals(factoryURLPkgs)) env.setProperty(Property.UDDI_PROXY_FACTORY_URL_PKS, factoryURLPkgs);
+        if (factoryNamingProvider!=null && !"".equals(factoryNamingProvider)) env.setProperty(Property.UDDI_PROXY_PROVIDER_URL, factoryNamingProvider);
     	logger.debug("Initial Context using env=" + env.toString());
     	context = new InitialContext(env);
 	}

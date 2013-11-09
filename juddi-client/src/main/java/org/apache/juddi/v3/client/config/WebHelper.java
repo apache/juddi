@@ -17,8 +17,6 @@
 package org.apache.juddi.v3.client.config;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -30,7 +28,7 @@ import org.apache.juddi.v3.client.transport.Transport;
 
 public class WebHelper {
 	
-	public static Log logger = LogFactory.getLog(WebHelper.class);
+	public static final Log logger = LogFactory.getLog(WebHelper.class);
 	public static final String UDDI_CLIENT_NAME           = "uddi.client.name";
 	public static final String UDDI_CLIENT_CONFIG_FILE    = "uddi.client.config.file";
 	public static final String JUDDI_CLIENT_NAME          = "juddi.client.name";

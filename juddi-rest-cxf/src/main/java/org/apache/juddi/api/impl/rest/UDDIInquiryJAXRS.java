@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.*;
 import javax.wsdl.Definition;
 import org.apache.commons.logging.Log;
@@ -255,7 +253,7 @@ public class UDDIInquiryJAXRS {
         GetBindingDetail req = new GetBindingDetail();
         req.getBindingKey().add(id);
         try {
-            BindingDetail bindingDetail = inquiry.getBindingDetail(null);
+            BindingDetail bindingDetail = inquiry.getBindingDetail(req);
             return bindingDetail.getBindingTemplate().get(0);
         } catch (DispositionReportFaultMessage ex) {
             HandleException(ex);
@@ -305,7 +303,7 @@ public class UDDIInquiryJAXRS {
                 throw new WebApplicationException(400);
             } else {
                 List<URI> endpoints = GetEndpoints(serviceDetail, null);
-
+                ret.addAll(endpoints);
             }
         } catch (DispositionReportFaultMessage ex) {
             HandleException(ex);

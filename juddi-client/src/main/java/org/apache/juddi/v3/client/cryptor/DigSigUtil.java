@@ -476,7 +476,7 @@ public class DigSigUtil {
 
             X509Certificate signingcert = getSigningCertificatePublicKey(obj, docElement);
 
-            if (signingcert != null && signingcert instanceof X509Certificate) {
+            if (signingcert != null ) {
                 logger.info("verifying signature based on X509 public key " + signingcert.getSubjectDN().toString());
                 if (map.containsKey(CHECK_TIMESTAMPS) && Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {
                     signingcert.checkValidity();
@@ -529,6 +529,7 @@ public class DigSigUtil {
 
                     TrustAnchor ta = pkixResult.getTrustAnchor();
                     X509Certificate cert = ta.getTrustedCert();
+                    
                     logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString());
                 }
                 return verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);
@@ -551,9 +552,16 @@ public class DigSigUtil {
                 } catch (Exception x) {
                 }
             }
+            if (url == null) {
+                logger.error("");
+                OutErrorMessage.set("The signed entity is signed but does not have a certificate attached and"
+                        + "you didn't specify a keystore for me to look it up in");
+                return false;
+            }
+            KeyStore.PrivateKeyEntry keyEntry = null;
 
             ks.load(url.openStream(), map.getProperty(SIGNATURE_KEYSTORE_FILE_PASSWORD).toCharArray());
-            KeyStore.PrivateKeyEntry keyEntry = null;
+
             if (map.getProperty(SIGNATURE_KEYSTORE_KEY_PASSWORD) == null) {
                 keyEntry =
                         (KeyStore.PrivateKeyEntry) ks.getEntry(map.getProperty(SIGNATURE_KEYSTORE_KEY_ALIAS),

@@ -216,7 +216,7 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
         }
         
         try {
-        	if (! mbeanServer.isRegistered(mbeanName))
+        	if (mbeanServer!=null && ! mbeanServer.isRegistered(mbeanName))
         		mbeanServer.registerMBean(this, mbeanName);
         } catch (InstanceAlreadyExistsException e) {
             log.warn("", e);

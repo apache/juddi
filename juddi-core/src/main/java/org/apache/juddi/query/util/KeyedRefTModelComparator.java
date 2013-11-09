@@ -17,13 +17,15 @@
 
 package org.apache.juddi.query.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import org.uddi.api_v3.KeyedReference;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class KeyedRefTModelComparator implements Comparator<KeyedReference> {
+public class KeyedRefTModelComparator implements Comparator<KeyedReference>, Serializable {
+    private static final long serialVersionUID = 1L;
 
 	public int compare(KeyedReference kr1, KeyedReference kr2) {
 		if (kr1 == null && kr2 == null)

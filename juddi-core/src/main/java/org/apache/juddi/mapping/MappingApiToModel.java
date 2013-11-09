@@ -648,7 +648,7 @@ public class MappingApiToModel {
 
 			org.uddi.api_v3.OverviewURL elem = apiOverviewDoc.getOverviewURL();
 			if (elem instanceof org.uddi.api_v3.OverviewURL) {
-				org.uddi.api_v3.OverviewURL overviewURL = (org.uddi.api_v3.OverviewURL) elem;
+				org.uddi.api_v3.OverviewURL overviewURL = elem;
 				modelOverviewDoc.setOverviewUrl(overviewURL.getValue());
 				modelOverviewDoc.setOverviewUrlUseType(overviewURL.getUseType());
 			}

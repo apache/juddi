@@ -85,8 +85,8 @@ public class ValidateUDDIKey {
 			if (elems != null && elems.size() == 1) {
 				org.uddi.api_v3.KeyedReference elem = elems.get(0);
 				if (elem != null) {
-					if (elem != null && elem instanceof org.uddi.api_v3.KeyedReference) {
-						String keyedValue = ((org.uddi.api_v3.KeyedReference)elem).getKeyValue();
+					if (elem instanceof org.uddi.api_v3.KeyedReference) {
+						String keyedValue = elem.getKeyValue();
 						if (keyedValue != null) {
 							if (keyedValue.equalsIgnoreCase(KeyGenerator.KEYGENERATOR_SUFFIX))
 								return;

@@ -102,12 +102,13 @@ public class WSDL2UDDI {
      *
      * @param clerk - can be null if register/unregister methods are not used.
      * @param urlLocalizer - A reference to an custom
-     * @param properties
+     * @param properties - required values keyDomain, businessKey, nodeName
      * @throws ConfigurationException
      */
     public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws ConfigurationException {
         super();
-
+        if (properties==null)
+            throw new IllegalArgumentException("properties");
         this.clerk = clerk;
         this.urlLocalizer = urlLocalizer;
         this.properties = properties;
@@ -765,7 +766,7 @@ public class WSDL2UDDI {
         CategoryBag categoryBag = new CategoryBag();
 
         String namespace = serviceQName.getNamespaceURI();
-        if (namespace != null && namespace != "") {
+        if (namespace != null && namespace.length() != 0) {
             KeyedReference namespaceReference = newKeyedReference(
                     "uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
             categoryBag.getKeyedReference().add(namespaceReference);

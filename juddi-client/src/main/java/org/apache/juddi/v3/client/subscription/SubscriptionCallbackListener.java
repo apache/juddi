@@ -144,7 +144,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
             instance = new SubscriptionCallbackListener();
         }
 
-        if (ep !=null && ep.isPublished()) {
+        if (ep != null && ep.isPublished()) {
             throw new ServiceAlreadyStartedException();
         }
 
@@ -379,7 +379,7 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
     }
 
     @Override
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         run();
         super.finalize();
 
@@ -390,6 +390,10 @@ public class SubscriptionCallbackListener implements org.uddi.v3_service.UDDISub
      */
     @Override
     public void run() {
+        shutdown();
+    }
+
+    private synchronized void shutdown() {
         if (ep != null && !ep.isPublished()) {
             log.fatal("Hey, someone should tell the developer to call SubscriptionCallbackListern.stop(...) before ending the program. Stopping endpoint at " + callback);
             unregisterAllCallbacks();

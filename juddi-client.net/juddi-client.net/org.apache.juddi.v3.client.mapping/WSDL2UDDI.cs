@@ -51,8 +51,16 @@ namespace org.apache.juddi.v3.client.mapping
  */
     public class WSDL2UDDI
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clerk"></param>
+        /// <param name="urlLocalizer"></param>
+        /// <param name="properties">required props, keyDomain,businessKey, nodeName </param>
         public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties)
         {
+            if (properties == null)
+                throw new ArgumentNullException("properties");
             this.clerk = clerk;
             this.urlLocalizer = urlLocalizer;
             this.properties = properties;
@@ -61,11 +69,11 @@ namespace org.apache.juddi.v3.client.mapping
             {
                 if (!properties.containsKey("keyDomain"))
                 {
-                    throw new ConfigurationException("Property keyDomain is a required property when using WSDL2UDDI.");
+                    throw new ConfigurationErrorsException("Property keyDomain is a required property when using WSDL2UDDI.");
                 }
                 if (!properties.containsKey("businessKey") && !properties.containsKey("businessName"))
                 {
-                    throw new ConfigurationException("Either property businessKey, or businessName, is a required property when using WSDL2UDDI.");
+                    throw new ConfigurationErrorsException("Either property businessKey, or businessName, is a required property when using WSDL2UDDI.");
                 }
                 if (!properties.containsKey("nodeName"))
                 {
@@ -76,7 +84,7 @@ namespace org.apache.juddi.v3.client.mapping
                     }
                     else
                     {
-                        throw new ConfigurationException("Property nodeName is not defined and is a required property when using WSDL2UDDI.");
+                        throw new ConfigurationErrorsException("Property nodeName is not defined and is a required property when using WSDL2UDDI.");
                     }
                 }
             }
@@ -1098,7 +1106,8 @@ namespace org.apache.juddi.v3.client.mapping
     }
 
     /// <summary>
-    /// Information about a web service
+    /// Information about a web service, a WSDL Parser
+    /// Supports imported WSDL's
     /// </summary>
     public class ReadWSDL
     {
@@ -1109,8 +1118,17 @@ namespace org.apache.juddi.v3.client.mapping
             set { ignoressl = value; }
         }
 
+        /// <summary>
+        /// Parses a WSDL. Note all exceptions are returned to the caller, including transport
+        /// IO and parsing errors
+        /// </summary>
+        /// <param name="file">the file path or URL to the WSDL</param>
+        /// <returns></returns>
+        /// <throws>ArgumentNullException if file is null</throws>
         public org.xmlsoap.schemas.easyWsdl.tDefinitions readWSDL(String file)
         {
+            if (file == null)
+                throw new ArgumentNullException();
             org.xmlsoap.schemas.easyWsdl.tDefinitions wsdl = getWsdl(file);
             return wsdl;
         }

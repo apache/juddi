@@ -140,7 +140,7 @@ public class ClientConfig
 		if (config.containsKey("client.clerks.clerk[@name]")) {
 			String[] names = config.getStringArray("client.clerks.clerk[@name]");
 			
-			log.debug("clerk names=" + names);
+			log.debug("clerk names=" + names.length);
 			for (int i=0; i<names.length; i++) {
 				UDDIClerk uddiClerk = new UDDIClerk();
 				uddiClerk.setManagerName(clientName);
@@ -219,7 +219,7 @@ public class ClientConfig
 	throws ConfigurationException {
 		String[] names = config.getStringArray("client.nodes.node.name");
 		Map<String,UDDINode> nodes = new HashMap<String,UDDINode>();
-		log.debug("node names=" + names);
+		log.debug("node names=" + names.length);
 		for (int i=0; i<names.length; i++) {
 			UDDINode uddiNode = new UDDINode();
 			String nodeName = config.getString("client.nodes.node(" + i +").name");

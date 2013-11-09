@@ -17,7 +17,7 @@ import org.apache.juddi.model.TmodelInstanceInfo;
 public class NotifierFactory {
 	
 	Log log = LogFactory.getLog(this.getClass());
-	public static String UDDI_TRANSPORT_KEY = "uddi:uddi.org:transport:";
+	public static final String UDDI_TRANSPORT_KEY = "uddi:uddi.org:transport:";
 	
 	public Notifier getNotifier(BindingTemplate bindingTemplate) 
 		throws URISyntaxException, IllegalArgumentException, SecurityException, 
@@ -36,7 +36,7 @@ public class NotifierFactory {
 		}
 		if (notifierClassName == null) {
 			//JUDDI-496 TODO make sure the tModel is loaded
-			log.error("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport. Defaulting " 
+			log.warn("The bindingTemplate " + bindingTemplate.getEntityKey() + " does not contain a tModel to define its type of transport. Defaulting " 
 				  +	"to http.");
                         //JUDDI-596, attempt http transport, even if a transport isn't specified
 			notifierClassName =   "org.apache.juddi.subscription.notify.HTTPNotifier";

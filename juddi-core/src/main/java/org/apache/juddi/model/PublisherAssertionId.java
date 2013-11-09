@@ -63,11 +63,11 @@ public class PublisherAssertionId implements java.io.Serializable {
 			return false;
 		PublisherAssertionId castOther = (PublisherAssertionId) other;
 
-		return ((this.getFromKey() == castOther.getFromKey()) || (this
+		return ((this.getFromKey() == null ? castOther.getFromKey() == null : this.getFromKey().equals(castOther.getFromKey())) || (this
 				.getFromKey() != null
 				&& castOther.getFromKey() != null && this.getFromKey().equals(
 				castOther.getFromKey())))
-				&& ((this.getToKey() == castOther.getToKey()) || (this
+				&& ((this.getToKey() == null ? castOther.getToKey() == null : this.getToKey().equals(castOther.getToKey())) || (this
 						.getToKey() != null
 						&& castOther.getToKey() != null && this.getToKey()
 						.equals(castOther.getToKey())));

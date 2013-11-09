@@ -27,14 +27,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JNDIRegistration
 {
-	public static String JUDDI = "/juddiv3";
-	public static String UDDI_SECURITY_SERVICE    = JUDDI + "/UDDISecurityService";
-	public static String UDDI_PUBLICATION_SERVICE = JUDDI + "/UDDIPublicationService";
-	public static String UDDI_INQUIRY_SERVICE     = JUDDI + "/UDDIInquiryService";
-	public static String UDDI_SUBSCRIPTION_SERVICE = JUDDI + "/UDDISubscriptionService";
-	public static String UDDI_SUBSCRIPTION_LISTENER_SERVICE = JUDDI + "/UDDISubscriptionListenerService";
-	public static String UDDI_CUSTODY_TRANSFER_SERVICE = JUDDI + "/UDDICustodyTransferService";
-	public static String JUDDI_PUBLISHER_SERVICE  = JUDDI + "/JUDDIApiService";
+	public static final String JUDDI = "/juddiv3";
+	public static final String UDDI_SECURITY_SERVICE    = JUDDI + "/UDDISecurityService";
+	public static final String UDDI_PUBLICATION_SERVICE = JUDDI + "/UDDIPublicationService";
+	public static final String UDDI_INQUIRY_SERVICE     = JUDDI + "/UDDIInquiryService";
+	public static final String UDDI_SUBSCRIPTION_SERVICE = JUDDI + "/UDDISubscriptionService";
+	public static final String UDDI_SUBSCRIPTION_LISTENER_SERVICE = JUDDI + "/UDDISubscriptionListenerService";
+	public static final String UDDI_CUSTODY_TRANSFER_SERVICE = JUDDI + "/UDDICustodyTransferService";
+	public static final String JUDDI_PUBLISHER_SERVICE  = JUDDI + "/JUDDIApiService";
 	
 	private UDDISecurityService securityService = null;
 	private UDDIPublicationService publicationService = null;

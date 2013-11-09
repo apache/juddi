@@ -22,8 +22,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
-import org.apache.juddi.v3.client.config.Property;
-import org.apache.juddi.v3.client.config.UDDIClerk;
 
 /**
  * Used to create the org.apache.juddi.cryptor.Cryptor implementation

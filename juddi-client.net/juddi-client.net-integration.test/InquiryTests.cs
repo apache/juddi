@@ -53,7 +53,7 @@ namespace juddi_client.net_integration.test
                     Console.Out.WriteLine("Tomcat is running");
                     break;
                 }
-                catch (Exception ex)
+                catch 
                 { }
                 Console.Out.WriteLine("tomcat isn't running yet, waiting...");
                 Thread.Sleep(1000);

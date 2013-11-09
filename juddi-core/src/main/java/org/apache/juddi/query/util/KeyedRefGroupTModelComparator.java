@@ -17,13 +17,15 @@
 
 package org.apache.juddi.query.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import org.uddi.api_v3.KeyedReferenceGroup;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class KeyedRefGroupTModelComparator implements Comparator<KeyedReferenceGroup> {
+public class KeyedRefGroupTModelComparator implements Comparator<KeyedReferenceGroup>, Serializable {
+    private static final long serialVersionUID = 1L;
 
 	public int compare(KeyedReferenceGroup krg1, KeyedReferenceGroup krg2) {
 		if (krg1 == null && krg2 == null)

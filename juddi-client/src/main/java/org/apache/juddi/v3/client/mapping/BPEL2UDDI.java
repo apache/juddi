@@ -495,7 +495,7 @@ public class BPEL2UDDI extends AnnotationProcessor {
     	CategoryBag categoryBag = new CategoryBag();
     	
     	String namespace = serviceName.getNamespaceURI();
-    	if (namespace!=null && namespace!="") {
+    	if (namespace!=null && namespace.length()!=0) {
     		KeyedReference namespaceReference = WSDL2UDDI.newKeyedReference(
     			"uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
     		categoryBag.getKeyedReference().add(namespaceReference);

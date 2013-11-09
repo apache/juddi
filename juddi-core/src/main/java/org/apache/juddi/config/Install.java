@@ -74,7 +74,7 @@ public class Install {
 	public static final String FILE_PERSISTENCE = "persistence.xml";
 	public static final String JUDDI_INSTALL_DATA_DIR = "juddi_install_data/";
 	public static final String JUDDI_CUSTOM_INSTALL_DATA_DIR = "juddi_custom_install_data/";
-	public static Log log = LogFactory.getLog(Install.class);
+	public static final Log log = LogFactory.getLog(Install.class);
 
 	protected static void install(Configuration config) throws JAXBException, DispositionReportFaultMessage, IOException, ConfigurationException {
 				
@@ -88,7 +88,7 @@ public class Install {
 			boolean seedAlways = config.getBoolean("juddi.seed.always", false);
 			boolean alreadyInstalled = alreadyInstalled(config);
 			if (!seedAlways && alreadyInstalled)
-				new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
+				throw new FatalErrorException(new ErrorMessage("errors.install.AlreadyInstalled"));
 			
 			
 			String rootPublisherStr = config.getString(Property.JUDDI_ROOT_PUBLISHER);
@@ -541,22 +541,25 @@ public class Install {
 		} else {
 			String[] paths = {};
 			Enumeration<JarEntry> en = null;
+                        JarFile jf = null;
 			try {
 
 				if (path.indexOf("!") > 0) {
 					paths = path.split("!");
-					en = new JarFile(new File(new URI(paths[0]))).entries();
+                                        jf=new JarFile(new File(new URI(paths[0])));
+					en = jf.entries();
 				} else {
 					// Handle Windows / jboss-5.1.0 case
 					if (path.indexOf(".jar") > 0) {
 						paths = path.split(".jar");
 						paths[0] = paths[0] + ".jar";
-						en = new JarFile(new File(paths[0])).entries();
+                                                jf= new JarFile(new File(paths[0]));
+						en = jf.entries();
 					}
 				}
 				if (paths.length > 0) {
 					log.debug("Discovering the Publisher XML data files in jar: " + paths[0]);
-					while (en.hasMoreElements()) {
+					while (en!=null && en.hasMoreElements()) {
 						String name = en.nextElement().getName();
 						if (name.endsWith(FILE_PUBLISHER)) {
 							log.debug("Found publisher file=" + name);
@@ -569,6 +572,9 @@ public class Install {
 				} else {
 					log.info("No custom configuration files where found in " + path);
 				}
+                                if (jf!=null)
+                                    jf.close();
+                                
 			} catch (IOException e) {
 				throw new ConfigurationException(e);
 			} catch (URISyntaxException e) {

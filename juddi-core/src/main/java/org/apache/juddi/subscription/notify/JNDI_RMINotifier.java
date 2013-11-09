@@ -28,7 +28,7 @@ public class JNDI_RMINotifier implements Notifier {
 	
 	Log log = LogFactory.getLog(this.getClass());
 	UDDISubscriptionListenerPortType  subscriptionListenerPort = null;
-	public static String JNDI_RMI_TRANSPORT_KEY = "uddi:uddi.org:transport:jndi-rmi";
+	public static final String JNDI_RMI_TRANSPORT_KEY = "uddi:uddi.org:transport:jndi-rmi";
 	
 	public JNDI_RMINotifier(BindingTemplate bindingTemplate) throws IOException, 
 	URISyntaxException, NotBoundException, NamingException, JAXBException {

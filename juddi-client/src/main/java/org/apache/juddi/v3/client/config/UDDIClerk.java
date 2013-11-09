@@ -315,20 +315,20 @@ public class UDDIClerk implements Serializable {
         BindingTemplate bindingTemplate = null;
         log.info("Registering bindingTemplate with key " + binding.getBindingKey());
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
+            String authToken2 = getAuthToken(node.getSecurityUrl());
             SaveBinding saveBinding = new SaveBinding();
-            saveBinding.setAuthInfo(authToken);
+            saveBinding.setAuthInfo(authToken2);
             saveBinding.getBindingTemplate().add(binding);
             BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
             bindingTemplate = bindingDetail.getBindingTemplate().get(0);
             if (log.isDebugEnabled()) {
-                log.debug("Registering template binding " + binding.getBindingKey() + " completed.");
+                log.debug("Registering template binding " + bindingTemplate.getBindingKey() + " completed.");
             }
         } catch (Exception e) {
-            log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
+            log.error("Unable to register template binding " + binding.getBindingKey()
                     + " ." + e.getMessage(), e);
         } catch (Throwable t) {
-            log.error("Unable to register template binding " + bindingTemplate.getBindingKey()
+            log.error("Unable to register template binding " + binding.getBindingKey()
                     + " ." + t.getMessage(), t);
         }
         return bindingTemplate;

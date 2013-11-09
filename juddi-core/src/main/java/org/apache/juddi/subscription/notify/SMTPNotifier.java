@@ -41,7 +41,7 @@ public class SMTPNotifier implements Notifier {
 	
 	Log log = LogFactory.getLog(this.getClass());
 	String notificationEmailAddress = null;
-	String from = null;
+	//String from = null;
 	Session session = null;
 	Properties properties = null;
 	
@@ -70,9 +70,11 @@ public class SMTPNotifier implements Notifier {
 				log.info("Path="+ path);
 				File tmpFile = new File(path + "/juddi-mail.properties");
 				if (tmpFile.exists()) {
+                                    FileInputStream fis = null;
 					try {
 						Properties fileProperties = new Properties();
-						fileProperties.load(new FileInputStream(tmpFile));
+                                                fis = new FileInputStream(tmpFile);
+						fileProperties.load(fis);
 						for (String key: mailProps) {
 							if (fileProperties.containsKey(mailPrefix + key)) {
 								properties.put(key, fileProperties.get(mailPrefix + key));
@@ -80,8 +82,15 @@ public class SMTPNotifier implements Notifier {
 						}
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn("Unable to load mail properties",e);
 					}
+                                        finally{
+                                            if (fis!=null)
+                                                try {
+                                                fis.close();
+                                                } catch (Exception ex) {
+                                                }
+                                        }
 					log.info("TEST only: Reading properties from " + tmpFile.getAbsolutePath() + ":" + properties);
 				}
 			}

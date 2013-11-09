@@ -61,7 +61,7 @@ public class WSDLLocatorImpl implements WSDLLocator {
      */
     public WSDLLocatorImpl(URI baseURI) {
         this.baseURI = baseURI;
-        this.ignoreSSLErrors = ignoreSSLErrors;
+        this.ignoreSSLErrors = false;
     }
 
     /**

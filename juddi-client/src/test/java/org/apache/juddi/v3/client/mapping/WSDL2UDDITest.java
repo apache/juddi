@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.wsdl.Binding;
 import javax.wsdl.Definition;
@@ -40,6 +42,25 @@ public class WSDL2UDDITest {
 	PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
 	ReadWSDL rw = new ReadWSDL();
 	
+        @Test
+        public void Nulltest1()
+        {
+            try {
+                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, null, new Properties());
+            } catch (ConfigurationException ex) {
+                Logger.getLogger(WSDL2UDDITest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        @Test(expected = IllegalArgumentException.class)
+        public void Nulltest2()
+        {
+            try {
+                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), null);
+            } catch (ConfigurationException ex) {
+                
+            }
+            
+        }
 	@Test
 	public void testUDDIBindingModel() throws WSDLException, JAXBException, ConfigurationException , Exception{
 

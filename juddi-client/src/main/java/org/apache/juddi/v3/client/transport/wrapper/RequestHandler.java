@@ -30,8 +30,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Holder;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.jaxb.JAXBMarshaller;
 import org.uddi.api_v3.AssertionStatusItem;
 import org.uddi.api_v3.AssertionStatusReport;
@@ -115,7 +113,7 @@ public class RequestHandler
       return version;
   }
   
-  public static String getText(Element element) throws TransformerException
+  public static synchronized String getText(Element element) throws TransformerException
   {
 	  if (transFactory == null) {
 		  transFactory = TransformerFactory.newInstance();		  

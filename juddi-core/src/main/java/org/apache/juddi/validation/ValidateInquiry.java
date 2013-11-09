@@ -408,7 +408,6 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NullInput"));
 		
 		// Keyed references must contain a tModelKey and keyValue
-		if (kr instanceof org.uddi.api_v3.KeyedReference) {
 			if (kr.getTModelKey() == null || kr.getTModelKey().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoTModelKey"));
 			
@@ -417,7 +416,6 @@ public class ValidateInquiry extends ValidateUDDIApi {
 			
 			if (kr.getKeyValue() == null || kr.getKeyValue().length() == 0)
 				throw new ValueNotAllowedException(new ErrorMessage("errors.keyedreference.NoKeyValue"));			
-		}
 	}
 		
 	private void validateFindQualifiers(org.uddi.api_v3.FindQualifiers findQualifiers) throws DispositionReportFaultMessage {

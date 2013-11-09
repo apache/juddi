@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -98,7 +97,6 @@ public class ValidatePublish extends ValidateUDDIApi {
      * set this to true if
      */
     private Log log = LogFactory.getLog(this.getClass());
-    Set<String> buildInTmodels = null;
 
     public ValidatePublish(UddiEntityPublisher publisher) {
         super(publisher);
@@ -993,7 +991,8 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         // TODO: validate "checked" categories or category groups (see section 5.2.3 of spec)? optional to support
 
-        if (tModel.getName() == null || tModel.getName().equals("")) {
+        if (tModel.getName() == null || tModel.getName().getValue()==null ||
+                tModel.getName().getValue().equals("")) {
             throw new ValueNotAllowedException(new ErrorMessage("errors.tmodel.NoName"));
         }
 
@@ -1536,7 +1535,7 @@ public class ValidatePublish extends ValidateUDDIApi {
                 } else if (value.getUseType().equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {
                     try {
                         //no validation necessary other than confirm that it's a URL
-                        URL url = new URL(value.getValue());
+                        new URL(value.getValue());
                     } catch (MalformedURLException ex) {
                         throw new ValueNotAllowedException(new ErrorMessage("errors.accessPoint.hostingRedirector.notaurl"));
                     }

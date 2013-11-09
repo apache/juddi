@@ -69,8 +69,8 @@ import org.uddi.api_v3.TModelInstanceInfo;
  * structure that more or less works within the UDDI data structures.<br><br>
  * <h1>Example Usage Scenario</h1>
  * <pre>
-        Application app = WADL2UDDI.ParseWadl(new File("A path to your file.wadl"));
-        List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+        Application app = WADL2UDDI.parseWadl(new File("A path to your file.wadl"));
+        List<URL> urls = WADL2UDDI.getBaseAddresses(app);
         URL url = urls.get(0);
         String domain = url.getHost();
         TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
@@ -287,7 +287,7 @@ public class WADL2UDDI {
         CategoryBag categoryBag = new CategoryBag();
 
         String namespace = serviceQName.getNamespaceURI();
-        if (namespace != null && namespace != "") {
+        if (namespace != null && namespace.length()!=0) {
             KeyedReference namespaceReference = newKeyedReference(
                     "uddi:uddi.org:xml:namespace", "uddi-org:xml:namespace", namespace);
             categoryBag.getKeyedReference().add(namespaceReference);
@@ -316,7 +316,7 @@ public class WADL2UDDI {
         return service;
     }
     
-    public static List<URL> GetBaseAddresses(Application app)
+    public static List<URL> getBaseAddresses(Application app)
     {
         List<URL> urls = new ArrayList<URL>();
         if (app==null) return urls;
@@ -391,13 +391,23 @@ public class WADL2UDDI {
         return bindingTemplate;
     }
 
-    public static Application ParseWadl(InputStream stream) {
+    /**
+     * parses a wadl from stream
+     * @param stream
+     * @return 
+     */
+    public static Application parseWadl(InputStream stream) {
         Application unmarshal = JAXB.unmarshal(stream, Application.class);
         return unmarshal;
     }
     public static final String PACKAGE = "org.apache.juddi.v3.client.mappings.wadl";
 
-    public static Application ParseWadl(URL file) {
+    /**
+     * parses a wadl from a URL or file
+     * @param file
+     * @return 
+     */
+    public static Application parseWadl(URL file) {
         Application unmarshal = JAXB.unmarshal(file, Application.class);
         return unmarshal;
     }
@@ -411,7 +421,7 @@ public class WADL2UDDI {
      * @return a non-null "Application" object, represeting a WADL's application root XML 
      * Sample code:<br>
      * <pre>
-     * Application app = WADL2UDDI.ParseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", 
+     * Application app = WADL2UDDI.parseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", 
      *      clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
      * </pre>
      */
@@ -421,7 +431,7 @@ public class WADL2UDDI {
         try {
             String url = weburl.toString();
             if (!url.toLowerCase().startsWith("http")) {
-                return ParseWadl(weburl);
+                return parseWadl(weburl);
             }
             
             boolean usessl = false;

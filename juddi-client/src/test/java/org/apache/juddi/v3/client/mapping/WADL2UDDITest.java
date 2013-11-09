@@ -54,7 +54,7 @@ public class WADL2UDDITest {
         Application app = WADL2UDDI.ParseWadl(new File("src/test/resources/wadl/cxf.wadl"));
         Assert.assertNotNull(app);
         Assert.assertNotNull(app);
-        List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+        List<URL> urls = WADL2UDDI.getBaseAddresses(app);
         URL url = urls.get(0);
         String domain = url.getHost();
         PrintUDDI<TModel> tmodelPrinter = new PrintUDDI<TModel>();
@@ -133,10 +133,10 @@ public class WADL2UDDITest {
         org.junit.Assume.assumeTrue(b);
 
 
-        Application app = WADL2UDDI.ParseWadl(new URL("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl"));
+        Application app = WADL2UDDI.parseWadl(new URL("http://svn.apache.org/repos/asf/cxf/trunk/systests/jaxrs/src/test/resources/wadl/bookstoreImportResource.wadl"));
         Assert.assertNotNull(app);
         Assert.assertNotNull(app);
-        List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+        List<URL> urls = WADL2UDDI.getBaseAddresses(app);
         URL url = urls.get(0);
         String domain = url.getHost();
         PrintUDDI<TModel> tmodelPrinter = new PrintUDDI<TModel>();

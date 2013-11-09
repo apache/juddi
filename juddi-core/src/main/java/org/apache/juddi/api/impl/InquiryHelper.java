@@ -233,7 +233,7 @@ public class InquiryHelper {
 
 		int returnedRowCount = 0;
 		
-		while (currentIndex < queryResults.size()) {
+		while (queryResults!=null && currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
 			org.apache.juddi.model.BusinessEntity modelBusinessEntity = (org.apache.juddi.model.BusinessEntity)item;
@@ -265,7 +265,7 @@ public class InquiryHelper {
 
 		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
 		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
-		if (currentIndex < (queryResults.size() - 1)) {
+		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
 		}
@@ -322,7 +322,7 @@ public class InquiryHelper {
 
 		int returnedRowCount = 0;
 		if (logger.isDebugEnabled()) logger.debug("Period = " + modifiedAfter + " ---- " + modifiedBefore);
-		while (currentIndex < queryResults.size()) {
+		while (queryResults!=null && currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 
 			org.apache.juddi.model.BusinessService modelBusinessService = (org.apache.juddi.model.BusinessService)item;
@@ -354,7 +354,7 @@ public class InquiryHelper {
 
 		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
 		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
-		if (currentIndex < (queryResults.size() - 1)) {
+		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
 		}
@@ -400,7 +400,7 @@ public class InquiryHelper {
 
 		int returnedRowCount = 0;
 		
-		while (currentIndex < queryResults.size()) {
+		while (queryResults!=null && currentIndex < queryResults.size()) {
 			Object item = queryResults.get(currentIndex);
 			
 			org.apache.juddi.model.Tmodel modelTModel = (org.apache.juddi.model.Tmodel)item;
@@ -432,7 +432,7 @@ public class InquiryHelper {
 		
 		// If the loop was broken prematurely (max row count hit) we set the subscriptionStartIndex to the next index to start with.
 		// Otherwise, set it to null so the subscription call won't trigger chunk token generation. 
-		if (currentIndex < (queryResults.size() - 1)) {
+		if (queryResults!=null && currentIndex < (queryResults.size() - 1)) {
 			if (subscriptionStartIndex != null)
 				subscriptionStartIndex.value = currentIndex + 1;
 		}
