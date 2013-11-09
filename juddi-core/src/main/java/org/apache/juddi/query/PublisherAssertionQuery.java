@@ -31,13 +31,13 @@ public class PublisherAssertionQuery extends EntityQuery {
 	protected static String deleteSQL;
 
 	static {
-		StringBuffer sql = new StringBuffer(200);
+		StringBuilder sql = new StringBuilder(200);
 		sql.append("select distinct " + ENTITY_ALIAS + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		selectSQL = sql.toString();
 	}
 
 	static {
-		StringBuffer sql = new StringBuffer(200);
+		StringBuilder sql = new StringBuilder(200);
 		sql.append("delete from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		deleteSQL = sql.toString();
 	}

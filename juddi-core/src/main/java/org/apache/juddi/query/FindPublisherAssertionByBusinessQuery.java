@@ -40,7 +40,7 @@ public class FindPublisherAssertionByBusinessQuery extends PublisherAssertionQue
 
 	@SuppressWarnings("unchecked")
 	public static List<PublisherAssertion> select(EntityManager em, List<?> businessKeys, CompletionStatus completionStatus) {
-		if ((businessKeys == null) || (businessKeys.size() == 0))
+		if ((businessKeys == null) || (businessKeys.isEmpty()))
 			return null;
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);

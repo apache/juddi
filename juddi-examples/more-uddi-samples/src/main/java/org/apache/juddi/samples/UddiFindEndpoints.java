@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.wsdl.Definition;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
@@ -45,6 +46,7 @@ public class UddiFindEndpoints {
 
     private static UDDISecurityPortType security = null;
     private static UDDIInquiryPortType inquiry = null;
+    static UDDIClerk clerk = null;
 
     public UddiFindEndpoints() {
         try {
@@ -53,6 +55,7 @@ public class UddiFindEndpoints {
             UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
             // register the clerkManager with the client side container
             UDDIClientContainer.addClient(clerkManager);
+            clerk = clerkManager.getClerk("default");
             // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
@@ -67,32 +70,15 @@ public class UddiFindEndpoints {
 
     public void find() {
         try {
-            // Setting up the values to get an authentication token for the 'root' user ('root' user has admin privileges
-            // and can save other publishers).
-            GetAuthToken getAuthTokenRoot = new GetAuthToken();
-            getAuthTokenRoot.setUserID("root");
-            getAuthTokenRoot.setCred("root");
-
-            // Making API call that retrieves the authentication token for the 'root' user.
-            AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-
-            GetServiceDetail fs = new GetServiceDetail();
-            fs.setAuthInfo(rootAuthToken.getAuthInfo());
 
             //TODO Key! insert your key here!
             String key = "uddi:juddi.apache.org:services-inquiry";
 
-            fs.getServiceKey().add(key);
-            ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);
-            if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {
-                System.out.println(key + " is not registered");
-            } else {
-                List<String> endpoints = GetEndpoints(serviceDetail, rootAuthToken.getAuthInfo());
-                for (int i = 0; i < endpoints.size(); i++) {
-                    System.out.println(endpoints.get(i));
-                }
+            List<String> endpoints = clerk.getEndpoints(key);
+            for (int i = 0; i < endpoints.size(); i++) {
+                System.out.println(endpoints.get(i));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,106 +87,5 @@ public class UddiFindEndpoints {
     public static void main(String args[]) {
         UddiFindEndpoints sp = new UddiFindEndpoints();
         sp.find();
-    }
-
-    private List<String> GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws Exception {
-        List<String> items = new ArrayList<String>();
-        if (serviceDetail == null) {
-            return items;
-        }
-        for (int i = 0; i < serviceDetail.getBusinessService().size(); i++) {
-            if (serviceDetail.getBusinessService().get(i).getBindingTemplates() != null) {
-                for (int k = 0; k < serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
-                    items.addAll(ParseBinding(serviceDetail.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), authInfo));
-                }
-            }
-        }
-        return items;
-    }
-
-    private List<String> GetBindingInfo(String value, String cred) throws Exception {
-        List<String> items = new ArrayList<String>();
-        if (value == null) {
-            return items;
-        }
-        GetBindingDetail b = new GetBindingDetail();
-        b.setAuthInfo(cred);
-        b.getBindingKey().add(value);
-        BindingDetail bindingDetail = inquiry.getBindingDetail(b);
-        for (int i = 0; i < bindingDetail.getBindingTemplate().size(); i++) {
-            items.addAll(ParseBinding(bindingDetail.getBindingTemplate().get(i), cred));
-        }
-        return items;
-    }
-
-    private List<String> FetchWSDL(String value) {
-        List<String> items = new ArrayList<String>();
-
-        if (value.startsWith("http://") || value.startsWith("https://")) {
-            //here, we need an HTTP Get for WSDLs
-            org.apache.juddi.v3.client.mapping.ReadWSDL r = new ReadWSDL();
-            r.setIgnoreSSLErrors(true);
-            try {
-                Definition wsdlDefinition = r.readWSDL(new URL(value));
-                Properties properties = new Properties();
-
-
-                properties.put("keyDomain", "domain");
-                properties.put("businessName", "biz");
-                properties.put("serverName", "localhost");
-                properties.put("serverPort", "80");
-
-                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-                BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
-                for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
-                    if (businessServices.getBusinessService().get(i).getBindingTemplates() != null) {
-                        for (int k = 0; k < businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++) {
-                            items.addAll(ParseBinding(businessServices.getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k), null));
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(UddiFindEndpoints.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        return items;
-    }
-
-    private List<String> ParseBinding(BindingTemplate get, String authInfo) throws Exception {
-        List<String> items = new ArrayList<String>();
-        if (get == null || get.getAccessPoint() == null) {
-            return items;
-        }
-        if (get.getHostingRedirector() != null) {
-            //hosting Redirector is the same as "reference this other binding template". It's actually deprecated so 
-            //don't expect to see this too often
-            items.addAll(GetBindingInfo(get.getHostingRedirector().getBindingKey(), authInfo));
-        }
-        if (get.getAccessPoint() != null) {
-            String usetype = get.getAccessPoint().getUseType();
-            if (usetype == null) {
-                //this is unexpected, usetype is a required field
-                items.add(get.getAccessPoint().getValue());
-            } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {
-                //referencing another binding template
-                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));
-            } else if (usetype.equalsIgnoreCase(AccessPointType.HOSTING_REDIRECTOR.toString())) {
-                //this one is a bit strange. the value should be a binding template
-
-                items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));
-
-            } else if (usetype.equalsIgnoreCase(AccessPointType.WSDL_DEPLOYMENT.toString())) {
-                //fetch wsdl and parse
-                items.addAll(FetchWSDL(get.getAccessPoint().getValue()));
-            } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {
-                items.add(get.getAccessPoint().getValue());
-            } else {
-                //treat it has an extension or whatever
-                items.add(get.getAccessPoint().getValue());
-            }
-
-        }
-        return items;
     }
 }

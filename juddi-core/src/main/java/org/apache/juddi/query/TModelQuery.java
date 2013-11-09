@@ -30,7 +30,7 @@ public class TModelQuery extends EntityQuery {
 	protected static String selectSQL;
 
 	static {
-		StringBuffer sql = new StringBuffer(200);
+		StringBuilder sql = new StringBuilder(200);
 		sql.append("select distinct "+ ENTITY_ALIAS + "." + KEY_NAME + " from " + ENTITY_NAME + " " + ENTITY_ALIAS + " ");
 		selectSQL = sql.toString();
 	}

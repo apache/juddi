@@ -21,7 +21,6 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.wsdl.Definition;
 import javax.xml.ws.Holder;
@@ -1088,7 +1085,7 @@ public class UDDIClerk implements Serializable {
      * @param serviceKey
      * @return 
      */
-    public List<String> GetEndpoints(String serviceKey){
+    public List<String> getEndpoints(String serviceKey){
             List<String> items = new ArrayList<String>();
             ServiceDetail serviceDetail=null;
             try{
@@ -1159,6 +1156,7 @@ public class UDDIClerk implements Serializable {
                 items.add(get.getAccessPoint().getValue());
             } else {
                 //treat it has an extension or whatever
+                log.info("Unable to figure out the useType for " + get.getAccessPoint().getValue());
                 items.add(get.getAccessPoint().getValue());
             }
 

@@ -425,7 +425,7 @@ public class WADL2UDDI {
      *      clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
      * </pre>
      */
-    public static Application ParseWadl(URL weburl, String username, String password, boolean ignoreSSLErrors){
+    public static Application parseWadl(URL weburl, String username, String password, boolean ignoreSSLErrors){
             DefaultHttpClient httpclient = null;
             Application unmarshal=null;
         try {
@@ -491,7 +491,7 @@ public class WADL2UDDI {
         return unmarshal;
     }
 
-    public static Application ParseWadl(File file) throws FileNotFoundException, IOException {
+    public static Application parseWadl(File file) throws FileNotFoundException, IOException {
         Application unmarshal = JAXB.unmarshal(file, Application.class);
         return unmarshal;
     }

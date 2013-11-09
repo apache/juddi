@@ -47,8 +47,8 @@ public class FindEntityByPublisherQuery extends EntityQuery {
 		this.keyName = keyName;
 		this.signaturePresent = signaturePresent;
 		
-		StringBuffer sql = new StringBuffer(200);
-		sql.append("select distinct " + entityAlias + "." + keyName + " from " + entityName + " " + entityAlias + " ");
+		StringBuilder sql = new StringBuilder(200);
+		sql.append("select distinct ").append(entityAlias).append(".").append(keyName).append(" from ").append(entityName).append(" ").append(entityAlias).append(" ");
 		selectSQL = sql.toString();
 	}
 

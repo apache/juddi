@@ -62,14 +62,14 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 
 	public static List<?> select(EntityManager em, FindQualifiers fq, TModelBag tModels, List<?> keysIn, DynamicQuery.Parameter... restrictions) {
 		// If keysIn is not null and empty, then search is over.
-		if ((keysIn != null) && (keysIn.size() == 0))
+		if ((keysIn != null) && (keysIn.isEmpty()))
 			return keysIn;
 		
 		if (tModels == null)
 			return keysIn;
 		
 		List<String> tmodelKeys = tModels.getTModelKey();
-		if (tmodelKeys == null || tmodelKeys.size() == 0)
+		if (tmodelKeys == null || tmodelKeys.isEmpty())
 			return keysIn;
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);
@@ -125,7 +125,7 @@ public class FindBusinessByTModelKeyQuery extends BusinessEntityQuery {
 			qry.comma().pad().append(BusinessServiceQuery.ENTITY_NAME + " " + BusinessServiceQuery.ENTITY_ALIAS).pad();
 			qry.comma().pad().append(BindingTemplateQuery.ENTITY_NAME + " " + BindingTemplateQuery.ENTITY_ALIAS).pad();
 			
-			StringBuffer thetaJoins = new StringBuffer(200);
+			StringBuilder thetaJoins = new StringBuilder(200);
 			int tblCount = 0;
 			for(int count = 0; count < tmodelKeys.size(); count++) {
 				if (count != 0) {

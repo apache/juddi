@@ -134,7 +134,7 @@ public class FindEntityByCategoryQuery extends EntityQuery {
 			if (elem instanceof KeyedReference)
 				keyedRefs.add((KeyedReference)elem);
 		}
-		if (keyedRefs.size() == 0)
+		if (keyedRefs.isEmpty())
 			return keysIn;		
 		
 		DynamicQuery dynamicQry = new DynamicQuery(selectSQL);

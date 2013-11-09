@@ -750,7 +750,7 @@ public class UDDISubscriptionImpl extends AuthenticatedService implements UDDISu
 				catch(ConfigurationException ce) { 
 					throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval"));
 				}
-				newChunkToken.setExpiresAfter(new Date(System.currentTimeMillis() + chunkExpirationMinutes * 60 * 1000));
+				newChunkToken.setExpiresAfter(new Date(System.currentTimeMillis() + ((long)chunkExpirationMinutes * 60L * 1000L)));
 				
 				em.persist(newChunkToken);
 				
