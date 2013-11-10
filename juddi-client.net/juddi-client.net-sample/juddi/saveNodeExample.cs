@@ -77,7 +77,7 @@ namespace org.apache.juddi.client.sample.juddi
 
 
               
-             //   clerk.saveNode(n1);
+             //  clerk.saveNode(n1);
                 
             }
             catch (Exception ex)
