@@ -14,10 +14,11 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.validation;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 
@@ -28,54 +29,93 @@ import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
-
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class ValidateNode extends ValidateUDDIApi {
 
-	public ValidateNode(UddiEntityPublisher publisher) {
-		super(publisher);
-	}
+    public ValidateNode(UddiEntityPublisher publisher) {
+        super(publisher);
+    }
 
-	
-	
-	/*-------------------------------------------------------------------
-	 ClientSubscriptionInf functions are specific to jUDDI.
-	 --------------------------------------------------------------------*/
+    /*-------------------------------------------------------------------
+     validateSaveNode functions are specific to jUDDI.
+     --------------------------------------------------------------------*/
+    public void validateSaveNode(EntityManager em, org.apache.juddi.api_v3.SaveNode body) throws DispositionReportFaultMessage {
+
+        if (body == null) {
+            throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
+        }
+
+        // No null or empty list
+        List<Node> nodes = body.getNode();
+        if (nodes == null) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.saveNodes.NoInput"));
+        }
+
+        for (Node clerk : body.getNode()) {
+            validateNode(clerk);
+        }
+
+    }
+
+    public void validateNode(org.apache.juddi.api_v3.Node node) throws DispositionReportFaultMessage {
+
+        // No null input
+        if (node == null) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NullInput"));
+        }
+
+        String name = node.getName();
+        if (name == null || name.length() == 0 || node.getClientName().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
+        }
+        if (node.getDescription() == null || node.getDescription().length() == 0 || node.getDescription().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoDescription"));
+        }
+        if (node.getClientName() == null || node.getClientName().length() == 0 || node.getClientName().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoClientName"));
+        }
+        if (node.getCustodyTransferUrl() == null || node.getCustodyTransferUrl().length() == 0 || node.getClientName().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoNCT"));
+        }
+        if (node.getInquiryUrl() == null || node.getInquiryUrl().length() == 0 || node.getInquiryUrl().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoIN"));
+        }
+        if (node.getPublishUrl() == null || node.getPublishUrl().length() == 0 || node.getPublishUrl().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoPUB"));
+        }
+        if (node.getSubscriptionListenerUrl() == null || node.getSubscriptionListenerUrl().length() == 0 || node.getSubscriptionListenerUrl().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
+        }
+        if (node.getSubscriptionUrl() == null || node.getSubscriptionUrl().length() == 0 || node.getSubscriptionUrl().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUB"));
+        }
+        if (node.getProxyTransport() == null || node.getProxyTransport().length() == 0 || node.getProxyTransport().length() > 255) {
+            throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoProxy"));
+        } else {
+            try {
+                //validate that the class exists and that it is of type
+                //org.apache.juddi.v3.client.transport.Transport
+                Class<?> forName = Class.forName(node.getProxyTransport());
+                Object j = forName.newInstance();
+                if (!(j instanceof org.apache.juddi.v3.client.transport.Transport)) {
+                    throw new ValueNotAllowedException(new ErrorMessage("errors.node.illegalProxyTransport"));
+                }
+            } catch (Exception ex) {
+                throw new ValueNotAllowedException(new ErrorMessage("errors.node.illegalProxyTransport"));
+            }
+        }
+        if (node.getFactoryInitial() == null || node.getFactoryInitial().length() == 0 || node.getFactoryInitial().length() > 255) {
+            //    throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
+        }
+        if (node.getFactoryNamingProvider() == null || node.getFactoryNamingProvider().length() == 0 || node.getFactoryNamingProvider().length() > 255) {
+            //    throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
+        }
+        if (node.getFactoryURLPkgs() == null || node.getFactoryURLPkgs().length() == 0 || node.getFactoryURLPkgs().length() > 255) {
+            //    throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
+        }
 
 
-	public void validateSaveNode(EntityManager em, org.apache.juddi.api_v3.SaveNode body) throws DispositionReportFaultMessage {
-
-		if (body == null)
-			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
-		
-		// No null or empty list
-		List<Node> nodes = body.getNode();
-		if (nodes == null)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.saveNodes.NoInput"));
-		
-		for (Node clerk : body.getNode()) {
-			validateNode(clerk);
-		}
-
-	}
-	
-	public void validateNode(org.apache.juddi.api_v3.Node node) throws DispositionReportFaultMessage {
-
-		// No null input
-		if (node == null)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.node.NullInput"));
-		
-		String name = node.getName();
-		if (name == null || name.length() == 0)
-			throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoName"));
-	
-		//TODO could check we have all the urls
-	
-	}
-	
-	
-	
-	
+    }
 }

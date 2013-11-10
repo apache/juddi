@@ -31,12 +31,10 @@ public class Node implements java.io.Serializable {
 	@Transient
 	private static final long serialVersionUID = -893203927029468343L;
 	@Id
-	@Column(name="name", nullable = false)
+	@Column(name="name", nullable = false, length=255)
 	private String name;
 	@Column(name="client_name", nullable = false, length=255)
 	private String clientName;
-	@Column(name="proxy_transport", nullable = false, length=255)
-	private String proxyTransport;
 	@Column(name="security_url", nullable = false, length=255)
 	private String securityUrl;
 	@Column(name="inquiry_url", nullable = false, length=255)
@@ -47,13 +45,16 @@ public class Node implements java.io.Serializable {
 	private String custodyTransferUrl;
 	@Column(name="subscription_url", nullable = false, length=255)
 	private String subscriptionUrl;
-	@Column(name="juddi_api_url", length=255)
+        @Column(name="proxy_transport", nullable = false, length=255)
+	private String proxyTransport;
+        
+	@Column(name="juddi_api_url", nullable = true, length=255)
 	private String juddiApiUrl;
-	@Column(name="factory_initial", length=255)
+	@Column(name="factory_initial", nullable = true, length=255)
 	private String factoryInitial;
-	@Column(name="factory_url_pkgs", length=255)
+	@Column(name="factory_url_pkgs", nullable = true, length=255)
 	private String factoryURLPkgs;
-	@Column(name="factory_naming_provider", length=255)
+	@Column(name="factory_naming_provider", nullable = true, length=255)
 	private String factoryNamingProvider;
 
 	public Node() {}

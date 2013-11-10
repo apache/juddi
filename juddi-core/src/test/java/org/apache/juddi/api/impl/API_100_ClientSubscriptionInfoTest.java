@@ -32,6 +32,7 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
+import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.junit.AfterClass;
@@ -79,8 +80,9 @@ public class API_100_ClientSubscriptionInfoTest {
 		node.setCustodyTransferUrl("http://localhost:8080/services/securityUrl");
 		node.setDescription("description");
 		node.setInquiryUrl("http://localhost:8080/services/securityUrl");
-		node.setPublishUrl("http://localhost:8080/services/securityUrl");
-		node.setProxyTransport("class");
+		node.setPublishUrl("http://localhost:8080/services/publishUrl");
+                node.setSubscriptionListenerUrl("http://localhost:8080/services/subUrladdClientSubscriptionInfo");
+		node.setProxyTransport("org.apache.juddi.v3.client.transport.JAXWSTransport");
 		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
 		node.setClientName("defaultClient");
@@ -104,8 +106,9 @@ public class API_100_ClientSubscriptionInfoTest {
 		node2.setDescription("description2");
 		node2.setInquiryUrl("http://localhost:8080/services/securityUrl2");
 		node2.setPublishUrl("http://localhost:8080/services/securityUrl2");
-		node2.setProxyTransport("class2");
+		node2.setProxyTransport("org.apache.juddi.v3.client.transport.JAXWSTransport");
 		node2.setSubscriptionUrl("http://localhost:8080/services/securityUrl2");
+                node2.setSubscriptionListenerUrl("http://localhost:8080/services/securityUrl2");
 		node2.setName("default2");
 		node2.setClientName("default2Client");
 		saveNode.getNode().add(node2);
@@ -162,6 +165,31 @@ public class API_100_ClientSubscriptionInfoTest {
 			logger.error(e.getMessage(), e);
 			Assert.fail("No exception should be thrown");
 		}
+	}
+        
+        
+        
+        @Test(expected = ValueNotAllowedException.class)
+	public void addNodeInvalidProxy() throws Exception {
+		
+		Node node = new Node();
+		node.setSecurityUrl("http://localhost:8080/services/securityUrl");
+		node.setCustodyTransferUrl("http://localhost:8080/services/securityUrl");
+		node.setDescription("description");
+		node.setInquiryUrl("http://localhost:8080/services/securityUrl");
+		node.setPublishUrl("http://localhost:8080/services/publishUrl");
+                node.setSubscriptionListenerUrl("http://localhost:8080/services/subUrladdClientSubscriptionInfo");
+		node.setProxyTransport("orgasdasdasdasd.apache.juddi.v3.client.transport.JAXWSTransport");
+		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
+		node.setName("default");
+		node.setClientName("defaultClient");
+		SaveNode saveNode = new SaveNode();
+		saveNode.setAuthInfo(authInfoJoe);
+		saveNode.getNode().add(node);
+		
+		NodeDetail nodeDetail = publisher.saveNode(saveNode);
+		
+		
 	}
 	
 }
