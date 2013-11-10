@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Encryption.cs" />
     <Compile Include="findendpoints.cs" />
+    <Compile Include="juddi\saveNodeExample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceVersioning.cs" />

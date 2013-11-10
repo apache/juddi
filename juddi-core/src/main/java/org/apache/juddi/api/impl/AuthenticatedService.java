@@ -151,4 +151,25 @@ public abstract class AuthenticatedService {
 				   
 	}
 
+        /**
+         * Attempts to get the requestor's ip address from the servlet context, defaults to null it it can't be
+         * retrieved
+         * @return 
+         */
+        public String getRequestorsIPAddress()
+        {
+            try {
+                MessageContext mc = ctx.getMessageContext();
+                HttpServletRequest req = null;
+                if (mc != null) {
+                    req = (HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST);
+                }
+                if (req != null) {
+                    return req.getRemoteAddr();
+                }
+            } catch (Exception ex) {
+                logger.debug("Error caught looking up the requestor's ip address", ex);
+            }
+            return null;
+        }
 }

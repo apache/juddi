@@ -11,3 +11,8 @@ Goals
 It is not yet complete!
 
 Mono users, make sure you use juddi-client.net-mono.sln when building!
+
+Notes:
+-embedded mode is not supported
+-transport is via ASP.NET (System.Web.Services)
+-digital signature support is not yet supported

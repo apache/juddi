@@ -24,7 +24,6 @@ using org.xmlsoap.schemas.easyWsdl;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Text;
 
 namespace org.apache.juddi.v3.client.config
 {
@@ -91,85 +90,98 @@ namespace org.apache.juddi.v3.client.config
         {
             this.managerName = managerName;
         }
-        /*
-    public void registerWsdls() {
-        if (this.getWsdls() != null) {
-            Properties properties = new Properties();
-            properties.putAll(this.getUDDINode().getProperties());
 
-            for (WSDL wsdl : this.getWsdls()) {
-                try {
-                    URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());
-                    ReadWSDL rw = new ReadWSDL();
-                    Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
-                    if (wsdl.keyDomain != null) {
-                        properties.setProperty("keyDomain", wsdl.keyDomain);
-                    }
-                    if (wsdl.businessKey != null) {
-                        properties.setProperty("businessKey", wsdl.getBusinessKey());
-                    }
+        public void registerWsdls()
+        {
+            if (this.getWsdls() != null)
+            {
+                Properties properties = new Properties();
+                properties.putAll(this.getUDDINode().getProperties());
 
-                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
-                    wsdl2UDDI.registerBusinessServices(wsdlDefinition);
-                } catch (Exception e) {
-                    log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.Message, e);
-                } catch (Throwable t) {
-                    log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + t.getMessage(), t);
+                foreach (WSDL wsdl in this.getWsdls())
+                {
+                    try
+                    {
+                        ReadWSDL rw = new ReadWSDL();
+                        tDefinitions wsdlDefinition = rw.readWSDL(wsdl.getFileName());
+                        if (wsdl.getKeyDomain() != null)
+                        {
+                            properties.setProperty("keyDomain", wsdl.getKeyDomain());
+                        }
+                        if (wsdl.getBusinessKey() != null)
+                        {
+                            properties.setProperty("businessKey", wsdl.getBusinessKey());
+                        }
+
+                        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizer(), properties);
+                        wsdl2UDDI.registerBusinessServices(wsdlDefinition);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.Message, e);
+                    }
                 }
             }
         }
-    }
 
-    public void registerWsdls(Definition wsdlDefinition, String keyDomain, String businessKey) {
+        public void registerWsdls(tDefinitions wsdlDefinition, String keyDomain, String businessKey)
+        {
 
-        try {
-            Properties properties = new Properties();
-            properties.putAll(this.getUDDINode().getProperties());
-            //Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
-            if (keyDomain != null) {
-                properties.setProperty("keyDomain", keyDomain);
+            try
+            {
+                Properties properties = new Properties();
+                properties.putAll(this.getUDDINode().getProperties());
+
+                if (keyDomain != null)
+                {
+                    properties.setProperty("keyDomain", keyDomain);
+                }
+                if (businessKey != null)
+                {
+                    properties.setProperty("businessKey", businessKey);
+                }
+                WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizer(), properties);
+                wsdl2UDDI.registerBusinessServices(wsdlDefinition);
             }
-            if (businessKey != null) {
-                properties.setProperty("businessKey", businessKey);
+            catch (Exception e)
+            {
+                log.error("Unable to register wsdl " + " ." + e.Message, e);
             }
-
-            WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
-            wsdl2UDDI.registerBusinessServices(wsdlDefinition);
-        } catch (Exception e) {
-            log.error("Unable to register wsdl " + " ." + e.Message, e);
-        } catch (Throwable t) {
-            log.error("Unable to register wsdl " + " ." + t.getMessage(), t);
         }
-    }
 
-    public void unRegisterWsdls() {
-        if (this.getWsdls() != null) {
-            Properties properties = new Properties();
-            properties.putAll(this.getUDDINode().getProperties());
+        public void unRegisterWsdls()
+        {
+            if (this.getWsdls() != null)
+            {
+                Properties properties = new Properties();
+                properties.putAll(this.getUDDINode().getProperties());
 
-            for (WSDL wsdl : this.getWsdls()) {
-                try {
-                    URL wsdlUrl = this.getClass().getClassLoader().getResource(wsdl.getFileName());
-                    ReadWSDL rw = new ReadWSDL();
-                    Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
-                    if (wsdl.keyDomain != null) {
-                        properties.setProperty("keyDomain", wsdl.keyDomain);
+                foreach (WSDL wsdl in this.getWsdls())
+                {
+                    try
+                    {
+                        ReadWSDL rw = new ReadWSDL();
+                        tDefinitions wsdlDefinition = rw.readWSDL(wsdl.getFileName());
+                        if (wsdl.getKeyDomain() != null)
+                        {
+                            properties.setProperty("keyDomain", wsdl.getKeyDomain());
+                        }
+                        if (wsdl.getBusinessKey() != null)
+                        {
+                            properties.setProperty("businessKey", wsdl.getBusinessKey());
+                        }
+
+                        WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizer(), properties);
+                        wsdl2UDDI.unRegisterBusinessServices(wsdlDefinition);
                     }
-                    if (wsdl.businessKey != null) {
-                        properties.setProperty("businessKey", wsdl.getBusinessKey());
+                    catch (Exception e)
+                    {
+                        log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.Message, e);
                     }
-
-                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
-                    wsdl2UDDI.unRegisterBusinessServices(wsdlDefinition);
-                } catch (Exception e) {
-                    log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.Message, e);
-                } catch (Throwable t) {
-                    log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + t.getMessage(), t);
                 }
             }
         }
-    }
-        */
+
         public org.uddi.apiv3.subscription register(org.uddi.apiv3.subscription subscription)
         {
             return register(subscription, this.getUDDINode().getApiNode());
@@ -182,7 +194,6 @@ namespace org.apache.juddi.v3.client.config
         {
 
             log.info("Registering subscription with key " + subscription.subscriptionKey);
-            //Holder<List<Subscription>> holder = new Holder<List<Subscription>>();
             try
             {
                 String authToken = getAuthToken(node.securityUrl);
@@ -779,59 +790,38 @@ namespace org.apache.juddi.v3.client.config
             return authToken;
         }
 
-        public apiv3.node[] savenode(org.apache.juddi.apiv3.node node)
+        
+
+        /// <summary>
+        ///  This calls a jUDDI implementation specific API call and is used to help 
+        /// configure internode communication between jUDDI servers. This is NOT 
+        /// part of the UDDI specification.<br> Note: this API call should only
+        /// be used with secure ports (SSL/TLS)
+        /// </summary>
+        /// <param name="senderClerk"></param>
+        /// <returns></returns>
+        public clerk[] saveClerk(UDDIClerk senderClerk)
         {
-            apiv3.node[] nodeDetail = null;
+
+            clerk[] clerkDetail = null;
             try
             {
-                log.info("Sending node " + node.name + " info to jUDDI " + getUDDINode().getName());
-                org.apache.juddi.apiv3.save_noodeInfo savenode = new org.apache.juddi.apiv3.save_noodeInfo();
-                savenode.authInfo = (getAuthToken(node.securityUrl));
-                savenode.node = new apiv3.node[] { node };
-                using (org.apache.juddi.apiv3.JUDDIApiService juddi = getUDDINode().getTransport().getJUDDIApiService(node.juddiApiUrl))
-                {
-                    nodeDetail = juddi.save_Node(savenode);
-                }
+                log.debug("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
+                save_clerkInfo saveClerk = new save_clerkInfo();
+                saveClerk.authInfo = (getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
+                saveClerk.clerk = new clerk[] { (getApiClerk()) };
+                clerkDetail = getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).save_Clerk(saveClerk);
             }
             catch (Exception e)
             {
-                log.error("Unable to save node " + node.name
+                log.error("Unable to save clerk " + getName()
                         + " ." + e.Message, e);
             }
 
-            return nodeDetail;
+            return clerkDetail;
         }
 
-        /* public ClerkDetail saveClerk(UDDIClerk senderClerk)
-         {
-             ClerkDetail clerkDetail = null;
-             try
-             {
-                 log.debug("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
-                 SaveClerk saveClerk = new SaveClerk();
-                 saveClerk.setAuthInfo(getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
-                 saveClerk.getClerk().add(getApiClerk());
-                 clerkDetail = getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).save_Clerk(saveClerk);
-             }
-             catch (Exception e)
-             {
-                 log.error("Unable to save clerk " + getName()
-                         + " ." + e.Message, e);
-             }
-            
-             return clerkDetail;
-         }
-        
-         public Clerk getApiClerk()
-         {
-             Clerk apiClerk = new Clerk();
-             apiClerk.setName(name);
-             apiClerk.setnode(uddinode.getApiNode());
-             apiClerk.setPassword(password);
-             apiClerk.setPublisher(publisher);
-             return apiClerk;
-         }
-         */
+
         public UDDINode getUDDINode()
         {
             return uddinode;
@@ -980,19 +970,32 @@ namespace org.apache.juddi.v3.client.config
             return tm;
         }
 
-        internal void registerWsdls()
+        /// <summary>
+        /// This calls a jUDDI implementation specific API call and is used to help 
+        /// configure internode communication between jUDDI servers. This is NOT 
+        /// part of the UDDI specification.<br> Note: this API call should only
+        /// be used with secure ports (SSL/TLS)
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public node[] saveNode(apiv3.node node)
         {
-            throw new NotImplementedException();
-        }
+            node[] nodeDetail = null;
+            try
+            {
+                log.info("Sending Node " + node.name + " info to jUDDI " + getUDDINode().getName());
+                save_nodeInfo saveNode = new save_nodeInfo();
+                saveNode.authInfo = (getAuthToken(node.getSecurityUrl()));
+                saveNode.node = new node[] { (node) };
+                nodeDetail = getUDDINode().getTransport().getJUDDIApiService(this.getUDDINode().getJuddiApiUrl()).save_Node(saveNode);
+            }
+            catch (Exception e)
+            {
+                log.error("Unable to save node " + node.name
+                        + " ." + e.Message, e);
+            }
 
-        internal void unRegisterWsdls()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void saveNode(apiv3.node node)
-        {
-            throw new NotImplementedException();
+            return nodeDetail;
         }
 
         public void setCryptoProvider(string p)

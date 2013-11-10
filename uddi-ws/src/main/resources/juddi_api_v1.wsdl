@@ -947,7 +947,7 @@
       <xs:element maxOccurs="unbounded" name="publisher" type="tns:publisher"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="save_noodeInfo">
+  <xs:complexType name="save_nodeInfo">
     <xs:sequence>
       <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
       <xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
@@ -990,7 +990,7 @@
   </xs:complexType>
   <xs:element name="delete_ClientSubscriptionInfo" nillable="true" type="tns:delete_clientSubscriptionInfo"/>
   <xs:element name="save_Clerk" nillable="true" type="tns:save_clerkInfo"/>
-  <xs:element name="save_Node" nillable="true" type="tns:save_noodeInfo"/>
+  <xs:element name="save_Node" nillable="true" type="tns:save_nodeInfo"/>
   <xs:element name="adminDelete_tmodel" nillable="true" type="ns2:delete_tModel"/>
   <xs:element name="save_ClientSubscriptionInfo" nillable="true" type="tns:save_clientSubscriptionInfo"/>
   <xs:element name="invoke_SyncSubscription" nillable="true" type="tns:syncSubscription"/>

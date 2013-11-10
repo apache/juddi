@@ -240,12 +240,11 @@ public class UDDIClerk implements Serializable {
         log.info("Registering subscription with key " + subscription.getSubscriptionKey());
         Holder<List<Subscription>> holder = new Holder<List<Subscription>>();
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
-
             List<Subscription> subscriptions = new ArrayList<Subscription>();
             subscriptions.add(subscription);
             holder.value = subscriptions;
-            getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).saveSubscription(authToken, holder);
+            getUDDINode().getTransport().getUDDISubscriptionService(node.getSubscriptionUrl()).
+                    saveSubscription(getAuthToken(node.getSecurityUrl()), holder);
             if (log.isDebugEnabled()) {
                 log.debug("Registering subscription " + subscription.getSubscriptionKey() + " completed.");
             }
@@ -277,9 +276,8 @@ public class UDDIClerk implements Serializable {
         TModelDetail tModelDetail = null;
         log.info("Registering tModel with key " + tModel.getTModelKey());
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             SaveTModel saveTModel = new SaveTModel();
-            saveTModel.setAuthInfo(authToken);
+            saveTModel.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             saveTModel.getTModel().add(tModel);
             tModelDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveTModel(saveTModel);
             if (log.isDebugEnabled()) {
@@ -312,9 +310,8 @@ public class UDDIClerk implements Serializable {
         BindingTemplate bindingTemplate = null;
         log.info("Registering bindingTemplate with key " + binding.getBindingKey());
         try {
-            String authToken2 = getAuthToken(node.getSecurityUrl());
             SaveBinding saveBinding = new SaveBinding();
-            saveBinding.setAuthInfo(authToken2);
+            saveBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             saveBinding.getBindingTemplate().add(binding);
             BindingDetail bindingDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBinding(saveBinding);
             bindingTemplate = bindingDetail.getBindingTemplate().get(0);
@@ -349,9 +346,8 @@ public class UDDIClerk implements Serializable {
         log.info("Registering service " + service.getName().get(0).getValue()
                 + " with key " + service.getServiceKey());
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             SaveService saveService = new SaveService();
-            saveService.setAuthInfo(authToken);
+            saveService.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             saveService.getBusinessService().add(service);
             ServiceDetail serviceDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveService(saveService);
             businessService = serviceDetail.getBusinessService().get(0);
@@ -385,9 +381,8 @@ public class UDDIClerk implements Serializable {
         log.info("Registering business " + business.getName().get(0).getValue()
                 + " with key " + business.getBusinessKey());
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             SaveBusiness saveBusiness = new SaveBusiness();
-            saveBusiness.setAuthInfo(authToken);
+            saveBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             saveBusiness.getBusinessEntity().add(business);
             BusinessDetail businessDetail = getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).saveBusiness(saveBusiness);
             businessEntity = businessDetail.getBusinessEntity().get(0);
@@ -416,9 +411,8 @@ public class UDDIClerk implements Serializable {
     public void unRegisterBusiness(String businessKey, Node node) {
         log.info("UnRegistering the business " + businessKey);
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             DeleteBusiness deleteBusiness = new DeleteBusiness();
-            deleteBusiness.setAuthInfo(authToken);
+            deleteBusiness.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             deleteBusiness.getBusinessKey().add(businessKey);
             getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBusiness(deleteBusiness);
         } catch (Exception e) {
@@ -439,9 +433,8 @@ public class UDDIClerk implements Serializable {
     public void unRegisterService(String serviceKey, Node node) {
         log.info("UnRegistering the service " + serviceKey);
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             DeleteService deleteService = new DeleteService();
-            deleteService.setAuthInfo(authToken);
+            deleteService.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             deleteService.getServiceKey().add(serviceKey);
             getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteService(deleteService);
         } catch (Exception e) {
@@ -463,9 +456,8 @@ public class UDDIClerk implements Serializable {
     public void unRegisterBinding(String bindingKey, Node node) {
         log.info("UnRegistering binding key " + bindingKey);
         try {
-            String authToken = getAuthToken(node.getSecurityUrl());
             DeleteBinding deleteBinding = new DeleteBinding();
-            deleteBinding.setAuthInfo(authToken);
+            deleteBinding.setAuthInfo(getAuthToken(node.getSecurityUrl()));
             deleteBinding.getBindingKey().add(bindingKey);
             getUDDINode().getTransport().getUDDIPublishService(node.getPublishUrl()).deleteBinding(deleteBinding);
         } catch (Exception e) {
@@ -762,6 +754,14 @@ public class UDDIClerk implements Serializable {
         return authToken;
     }
 
+    /**
+     * This calls a jUDDI implementation specific API call and is used to help
+     * configure internode communication between jUDDI servers. This is NOT
+     * part of the UDDI specification.<br>
+     * Note: this API call should only be used with secure ports (SSL/TLS)
+     * @param node
+     * @return 
+     */
     public NodeDetail saveNode(Node node) {
         NodeDetail nodeDetail = null;
         try {
@@ -780,6 +780,14 @@ public class UDDIClerk implements Serializable {
         return nodeDetail;
     }
 
+    /**
+     * This calls a jUDDI implementation specific API call and is used to help
+     * configure internode communication between jUDDI servers. This is NOT
+     * part of the UDDI specification.<br>
+     * Note: this API call should only be used with secure ports (SSL/TLS)
+     * @param senderClerk
+     * @return 
+     */
     public ClerkDetail saveClerk(UDDIClerk senderClerk) {
         ClerkDetail clerkDetail = null;
         try {

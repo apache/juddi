@@ -14,23 +14,11 @@
  * limitations under the License.
  *
  */
-using net.java.dev.wadl;
-using org.apache.juddi.jaxb;
-using org.apache.juddi.v3.client;
-using org.apache.juddi.v3.client.config;
-using org.apache.juddi.v3.client.crypto;
-using org.apache.juddi.v3.client.mapping;
-using org.apache.juddi.v3.client.transport;
-using org.uddi.apiv3;
-using org.xmlsoap.schemas.easyWsdl;
+using org.apache.juddi.client.sample.juddi;
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 
 
 namespace org.apache.juddi.client.sample
-
 {
     class Program
     {
@@ -43,8 +31,9 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine("4) WADL2UDDI");
             Console.Out.WriteLine("5) WSDL2UDDI");
             Console.Out.WriteLine("6) Find_endpoints");
+            Console.Out.WriteLine("7) jUDDI specific - Save Node");
             Console.Out.Write("Enter selection> ");
-            String selection=Console.In.ReadLine();
+            String selection = Console.In.ReadLine();
             selection = selection.Trim();
             if (selection.Equals("1"))
                 SimpleInquiry.Run();
@@ -58,6 +47,8 @@ namespace org.apache.juddi.client.sample
                 WsdlImport.main(args);
             else if (selection.Equals("6"))
                 FindendpointsDemo.main(args);
+            else if (selection.Equals("7"))
+                saveNodeExample.main(args);
 
             Console.WriteLine("Press any key to exit");
             Console.Read();

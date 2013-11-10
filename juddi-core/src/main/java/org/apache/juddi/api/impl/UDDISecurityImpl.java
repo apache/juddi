@@ -91,13 +91,16 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 				modelAuthToken.setLastUsed(new Date());
 				modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
 				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
+                                logger.info("AUDIT: AuthToken discarded for " + modelAuthToken.getAuthorizedName() + " from " + getRequestorsIPAddress());
 			}
 	
 			tx.commit();
+                        
                         long procTime = System.currentTimeMillis() - startTime;
                         serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
                                 QueryStatus.SUCCESS, procTime);
                 } catch (DispositionReportFaultMessage drfm) {
+                    logger.info("AUDIT: AuthToken discard request aborted, issued from " + getRequestorsIPAddress());
                     long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SecurityQuery.DISCARD_AUTHTOKEN, 
                             QueryStatus.FAILED, procTime);                      
@@ -146,17 +149,8 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 				modelAuthToken.setAuthorizedName(publisherId);
 				modelAuthToken.setNumberOfUses(0);
 				modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
-                                if (ctx !=null){
-                                    try{
-                                        MessageContext mc = ctx.getMessageContext();
-                                        HttpServletRequest req = (HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST); 
-                                        modelAuthToken.setIPAddress(req.getRemoteAddr());
-                                        //System.out.println("Client IP = " + req.getRemoteAddr());
-                                    }
-                                    catch (Exception ex){
-                                        logger.warn("unexpected erorr fetching requestor's ip address. Assiocation of auth token to IP will not be possible", ex);
-                                    }
-                                }
+                                modelAuthToken.setIPAddress(this.getRequestorsIPAddress());
+                    
 				em.persist(modelAuthToken);
 			}
 
@@ -165,6 +159,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			MappingModelToApi.mapAuthToken(modelAuthToken, apiAuthToken);
 
 			tx.commit();
+                        logger.info("AUDIT: AuthToken issued for " + modelAuthToken.getAuthorizedName() + " from " + getRequestorsIPAddress());
 	                long procTime = System.currentTimeMillis() - startTime;
 	                serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
 	                        QueryStatus.SUCCESS, procTime);
@@ -174,6 +169,7 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
                     long procTime = System.currentTimeMillis() - startTime;
                     serviceCounter.update(SecurityQuery.GET_AUTHTOKEN, 
                             QueryStatus.FAILED, procTime);                      
+                    logger.info("AUDIT: AuthToken issue FAILED " + publisherId + " from " + getRequestorsIPAddress());
                     throw drfm;                                                                                                 
 		} finally {
 			if (tx.isActive()) {
