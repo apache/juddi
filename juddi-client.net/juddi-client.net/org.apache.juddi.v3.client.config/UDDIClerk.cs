@@ -985,7 +985,7 @@ namespace org.apache.juddi.v3.client.config
             {
                 log.info("Sending Node " + node.name + " info to jUDDI " + getUDDINode().getName());
                 save_nodeInfo saveNode = new save_nodeInfo();
-                saveNode.authInfo = (getAuthToken(node.getSecurityUrl()));
+                saveNode.authInfo = (getAuthToken(this.getUDDINode().getSecurityUrl()));
                 saveNode.node = new node[] { (node) };
                 nodeDetail = getUDDINode().getTransport().getJUDDIApiService(this.getUDDINode().getJuddiApiUrl()).save_Node(saveNode);
             }

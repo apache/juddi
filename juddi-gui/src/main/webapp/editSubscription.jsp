@@ -395,15 +395,16 @@
                     </div>
                     <div id="collapse4" class="accordion-body collapse">
                         <div class="accordion-inner">
+                            <a name="step4anchor"></a>
                             <div style="float:left"><%=ResourceLoader.GetResource(session, "items.maxrecords.callback")%>
-                                <a href="#" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.maxrecords.callback.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
+                                <a href="#step4anchor" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.maxrecords.callback.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
                             <div class="edit" id="maxRecords"><%
                                 if (sub.getMaxEntities() != null) {
                                     sub.getMaxEntities().toString();
                                 }
                                 %></div>
                             <div style="float:left"><%=ResourceLoader.GetResource(session, "items.subscriptionbrief")%>
-                                <a href="#" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.subscriptionbrief.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
+                                <a href="#step4anchor" class="uddi_tooltips" data-toggle="tooltip" data-container="body" title="<%=ResourceLoader.GetResource(session, "items.subscriptionbrief.tooltip")%>"><i class="icon-question-sign"></i></a>: &nbsp;</div>
                             <div> <input type="checkbox" id="brief" 
                                          <%
                                              out.write(sub.isBrief() ? "checked" : "");
@@ -412,7 +413,7 @@
                             <%=ResourceLoader.GetResource(session, "items.expiration")%>: 
                             <div id="datetimepicker2" class="input-append date">
                                         <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" value="<%
-                                    if (sub.getExpiresAfter() != null) {
+                                    if (sub.getExpiresAfter() != null && !newitem) {
                                         Date d = sub.getExpiresAfter().toGregorianCalendar().getTime();
                                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
                                         String dateStr = dateFormat.format(d);
@@ -460,8 +461,7 @@
                                     defaultTime: '00:05:00',
                                     showSeconds: true,
                                     template: 'modal',
-                                    showSeconds: true,
-                                            showMeridian: false
+                                    showMeridian: false
                                 });
                             </script>
                             <br>

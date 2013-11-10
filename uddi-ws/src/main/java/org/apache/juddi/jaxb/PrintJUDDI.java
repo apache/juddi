@@ -23,17 +23,17 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 /**
- * This is for printing UDDI v3 objects from the spec
- * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * This is for printing jUDDI specific data objects only
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  * @param <T>
  */
-public class PrintUDDI<T> {
+public class PrintJUDDI<T> {
 
 	static JAXBContext jaxbContext = null;
 	
 	private Marshaller getUDDIMarshaller() throws JAXBException {
 		if (jaxbContext==null) {
-			jaxbContext=JAXBContext.newInstance("org.uddi.api_v3");
+			jaxbContext=JAXBContext.newInstance("org.apache.juddi.api_v3");
 		}
 		Marshaller marshaller = jaxbContext.createMarshaller();
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

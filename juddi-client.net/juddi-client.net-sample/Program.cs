@@ -32,6 +32,7 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine("5) WSDL2UDDI");
             Console.Out.WriteLine("6) Find_endpoints");
             Console.Out.WriteLine("7) jUDDI specific - Save Node");
+            Console.Out.WriteLine("8) jUDDI specific - Save Clerk");
             Console.Out.Write("Enter selection> ");
             String selection = Console.In.ReadLine();
             selection = selection.Trim();
@@ -49,7 +50,8 @@ namespace org.apache.juddi.client.sample
                 FindendpointsDemo.main(args);
             else if (selection.Equals("7"))
                 saveNodeExample.main(args);
-
+            else if (selection.Equals("8"))
+                saveClerkExample.main(args);
             Console.WriteLine("Press any key to exit");
             Console.Read();
 

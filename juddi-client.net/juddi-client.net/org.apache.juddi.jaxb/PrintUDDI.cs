@@ -22,6 +22,11 @@ using System.Xml.Serialization;
 
 namespace org.apache.juddi.jaxb
 {
+    /// <summary>
+    /// This is for printing UDDI v3 spec data objects only
+    /// @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public  class PrintUDDI<T>
     {
         public  String print(Object j)

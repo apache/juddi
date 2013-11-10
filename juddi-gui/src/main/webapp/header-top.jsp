@@ -114,11 +114,11 @@
                             <ul class="nav">
                                 <li class="dropdown"><a href="home.jsp" data-toggle="dropdown" class="dropdowb-town"><i class="icon-home icon-large"></i><%=ResourceLoader.GetResource(session, "navbar.home")%><b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li><i class="icon-signin" title="<%=ResourceLoader.GetResource(session, "navbar.login.required")%>"></i><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
-                                        <li><i class="icon-signin" title="<%=ResourceLoader.GetResource(session, "navbar.login.required")%>"></i><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
-                                        <li><i class="icon-signin" title="<%=ResourceLoader.GetResource(session, "navbar.login.required")%>"></i><a href="transfer.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.transfer.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.transfer")%></a></li>
+                                        <li><a href="reginfo.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.mybiz.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.mybiz")%></a></li>
+                                        <li><a href="assertions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.publisherassertions.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.publisherassertions")%></a></li>
+                                        <li><a href="transfer.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.transfer.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.transfer")%></a></li>
                                         <li class="divider"></li>
-                                        <li><i class="icon-signin" title="<%=ResourceLoader.GetResource(session, "navbar.login.required")%>"></i><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
+                                        <li><a href="viewSubscriptions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.view.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.view")%></a></li>
                                         <li><a href="editSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a></li>
                                         <li><a href="subscriptionFeed.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions.feed")%></a></li>
                                     </ul>
@@ -147,7 +147,7 @@
                                         <li><a href="importFromWadl.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.tooltip.wadl")%>"><%=ResourceLoader.GetResource(session, "navbar.create.serviceimport.wadl")%></a></li>
                                         <li><a href="tmodelEditor.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodel.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodel")%></a></li>
                                         <li><a href="tmodelPartitions.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.create.tmodelkeygen")%></a></li>
-                                        <li><a href="editSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "nnavbar.subscriptions")%></a></li>
+                                        <li><a href="editSubscription.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.subscriptions.create.tooltip")%>"><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%></a></li>
                                         <li><a href="advanced.jsp" title="<%=ResourceLoader.GetResource(session, "navbar.advanced")%>"><%=ResourceLoader.GetResource(session, "navbar.advanced")%></a></li>
                                     </ul>
                                 </li>
