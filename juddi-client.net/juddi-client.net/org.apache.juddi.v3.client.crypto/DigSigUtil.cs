@@ -13,6 +13,13 @@ namespace org.apache.juddi.v3.client.crypto
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class DigSigUtil
     {
+        private config.Properties properties;
+
+        public DigSigUtil(config.Properties properties)
+        {
+            // TODO: Complete member initialization
+            this.properties = properties;
+        }
         /// <summary>
         ///
         /// Verifies the signature on an enveloped digital signature on a UDDI
@@ -32,6 +39,11 @@ namespace org.apache.juddi.v3.client.crypto
         {
             OutErrorMessage = "";
             return false;
+        }
+
+        internal uddi.apiv3.bindingTemplate signUddiEntity(object bt)
+        {
+            throw new NotImplementedException();
         }
     }
 }

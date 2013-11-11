@@ -3,6 +3,7 @@
   <reloadDelay>5000</reloadDelay>
   <client name="test-client">
     <nodes>
+        <!-- hint, there can be more than one "node"-->
       <node isHomeJUDDI="true">
         <!-- required 'default' node -->
         <name>default</name>
@@ -34,29 +35,47 @@
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
       </node>
-      <node>
-        <name>med</name>
-        <description>jUDDI node in other Department</description>
+
+      <node isHomeJUDDI="true">
+        <!-- required 'default' node -->
+        <name>default_non_root</name>
+        <description>Main jUDDI node</description>
+        <properties>
+          <!-- for a live instance of jUDDI, use this url
+          <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
+          <property name="serverPort" value="80" />-->
+
+          <!-- for a dev instance of jUDDI, use this url -->
+          <property name="serverName" value="localhost" />
+          <property name="serverPort" value="8080" />
+
+          <!-- for UDDI nodes that use HTTP u/p, using the following 
+					<property name="basicAuthUsername" value="root" />
+					<property name="basicAuthPassword" value="password" />
+					<property name="basicAuthPasswordIsEncrypted" value="false" />
+					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+        </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
-        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
         <factoryInitial>not used</factoryInitial>
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
-
       </node>
     </nodes>
 
     <clerks registerOnStartup="false">
+      <!-- one clerk for each node is required-->
       <clerk name="default" node="default" publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
-      <clerk name="medroot" node="med"     publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
+      <clerk name="default_non_root" node="default_non_root"     publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
       <xregister>
-        <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
+        <!-- automatic registration on start. this only triggers when registerOnStartup=true-->
+        <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="default_non_root"/>
       </xregister>
       
     </clerks>
@@ -78,10 +97,10 @@
       <checkRevocationOCSP>false</checkRevocationOCSP>
     </signature>
     <subscriptionCallbacks>
-      <keyDomain>uddi:org.apache.juddi</keyDomain>
+      <keyDomain>uddi:org.apache.demos</keyDomain>
       <listenUrl>http://localhost:4444/callback</listenUrl>
-      <autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
-      <autoRegisterBusinessServiceKey>uddi:org.apache.juddi:callbackServices</autoRegisterBusinessServiceKey>
+      <autoRegisterBindingTemplate>true</autoRegisterBindingTemplate>
+      <autoRegisterBusinessServiceKey>uddi:org.apache.demos:coolbizexample-service</autoRegisterBusinessServiceKey>
       <signatureBehavior>DoNothing</signatureBehavior>
     </subscriptionCallbacks>
     <XtoWsdl>

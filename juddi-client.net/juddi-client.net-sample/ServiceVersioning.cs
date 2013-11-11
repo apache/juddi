@@ -1,4 +1,20 @@
-﻿using org.apache.juddi.v3.client;
+﻿/*
+ * Copyright 2001-2008 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
@@ -144,11 +160,11 @@ namespace org.apache.juddi.client.sample
             // create a client and read the config in the archive; 
             // you can use your config file name
             client = new UDDIClient("uddi.xml");
-            clerk = client.getClerk("default");
+            clerk = client.getClerk("default_non_root");
             // a UddiClient can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-            Transport transport = client.getTransport("default");
+            Transport transport = client.getTransport("default_non_root");
             // Now you create a reference to the UDDI API
             security = transport.getUDDISecurityService();
             inquiry = transport.getUDDIInquiryService();

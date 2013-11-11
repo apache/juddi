@@ -116,6 +116,8 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 
 	public AuthToken getAuthToken(GetAuthToken body)
 			throws DispositionReportFaultMessage {
+            
+                logger.info("AUDIT: AuthToken request for " + body.getUserID() + " from " + getRequestorsIPAddress());
 		Authenticator authenticator = AuthenticatorFactory.getAuthenticator();
 		
 		String publisherId = authenticator.authenticate(body.getUserID(), body.getCred());
@@ -142,17 +144,14 @@ public class UDDISecurityImpl extends AuthenticatedService implements UDDISecuri
 			// Generate auth token and store it!
 			String authInfo = AUTH_TOKEN_PREFIX + UUID.randomUUID();
 			org.apache.juddi.model.AuthToken modelAuthToken = new org.apache.juddi.model.AuthToken();
-			if (authInfo != null) {
-				modelAuthToken.setAuthToken(authInfo);
-				modelAuthToken.setCreated(new Date());
-				modelAuthToken.setLastUsed(new Date());
-				modelAuthToken.setAuthorizedName(publisherId);
-				modelAuthToken.setNumberOfUses(0);
-				modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
-                                modelAuthToken.setIPAddress(this.getRequestorsIPAddress());
-                    
-				em.persist(modelAuthToken);
-			}
+                        modelAuthToken.setAuthToken(authInfo);
+                        modelAuthToken.setCreated(new Date());
+                        modelAuthToken.setLastUsed(new Date());
+                        modelAuthToken.setAuthorizedName(publisherId);
+                        modelAuthToken.setNumberOfUses(0);
+                        modelAuthToken.setTokenState(AUTHTOKEN_ACTIVE);
+                        modelAuthToken.setIPAddress(this.getRequestorsIPAddress());
+                        em.persist(modelAuthToken);
 
 			org.uddi.api_v3.AuthToken apiAuthToken = new org.uddi.api_v3.AuthToken();
 

@@ -44,13 +44,13 @@ namespace org.apache.juddi.client.sample
                 clerkManager = new UDDIClient("uddi.xml");
                 UDDIClientContainer.addClient(clerkManager);
 
-                transport = clerkManager.getTransport("default");
+                transport = clerkManager.getTransport("default_non_root");
 
-                org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
-                org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
-                org.uddi.apiv3.UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
+                UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
+                UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+                UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
 
-                clerk = clerkManager.getClerk("default");
+                clerk = clerkManager.getClerk("default_non_root");
 
                 //Wadl Import example
 

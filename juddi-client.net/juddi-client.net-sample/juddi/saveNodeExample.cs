@@ -40,9 +40,9 @@ namespace org.apache.juddi.client.sample.juddi
 
                 transport = clerkManager.getTransport("default");
 
-                org.uddi.apiv3.UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
-                org.uddi.apiv3.UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
-                org.uddi.apiv3.UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
+               UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
+               UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
+               UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
                 JUDDIApiService juddi= transport.getJUDDIApiService();
 
                 clerk = clerkManager.getClerk("default");

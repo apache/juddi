@@ -36,6 +36,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -48,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceVersioning.cs" />
     <Compile Include="SimpleInquiry.cs" />
+    <Compile Include="SubscriptionCallbackExample.cs" />
     <Compile Include="WadlImport.cs" />
     <Compile Include="WsdlImport.cs" />
   </ItemGroup>
@@ -58,7 +61,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\juddi-client.net\juddi-client.net.csproj">

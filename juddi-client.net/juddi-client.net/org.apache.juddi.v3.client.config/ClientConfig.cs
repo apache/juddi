@@ -404,5 +404,10 @@ namespace org.apache.juddi.v3.client.config
         {
             return configurationFile;
         }
+
+        public Properties  getDigitalSignatureConfiguration()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -37,6 +37,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+ <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -78,6 +79,13 @@
     <Compile Include="org.apache.juddi.v3.client.mapping\wsdl.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\WSDL2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\XMLSchema.cs" />
+ <Compile Include="org.apache.juddi.v3.client.subscription\ISubscriptionCallback.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\RegistrationAbortedException.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\ServiceAlreadyStartedException.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\SubscriptionCallbackListener.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\UDDISubscriptionListenerService.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\UnableToSignException.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\UnexpectedResponseException.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />

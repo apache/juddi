@@ -328,7 +328,7 @@ public class UddiHub implements Serializable{
                     && session.getAttribute("password") != null) {
                 req.setUserID((String) session.getAttribute("username"));
                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
-                log.info("AUDIT: fetching auth token for " + req.getUserID() + " security enable is " + ((security == null) ? "null" : "active"));
+                log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTO" : "AUTH_TOKEN"));
                 try {
                     AuthToken authToken = security.getAuthToken(req);
                     token = authToken.getAuthInfo();

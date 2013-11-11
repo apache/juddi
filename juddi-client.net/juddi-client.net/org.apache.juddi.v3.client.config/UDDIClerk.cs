@@ -202,7 +202,7 @@ namespace org.apache.juddi.v3.client.config
 
                 //List<org.uddi.apiv3.subscription> subscriptions = new List<org.uddi.apiv3.subscription>();
                 //subscriptions.Add(subscription);
-                ss.subscription = new subscription[1];
+                ss.subscription = new org.uddi.apiv3.subscription[1];
                 ss.subscription[0] = subscription;
                 //holder.value = subscriptions;
                 using (UDDI_Subscription_SoapBinding sub = getUDDINode().getTransport().getUDDISubscriptionService(node.subscriptionUrl))

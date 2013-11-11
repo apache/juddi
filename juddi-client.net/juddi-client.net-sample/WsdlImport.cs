@@ -36,7 +36,7 @@ namespace org.apache.juddi.client.sample
         {
             String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
             ReadWSDL wsi = new ReadWSDL();
-            org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.readWSDL(
+            tDefinitions wsdlDefinition = wsi.readWSDL(
                 // "http://localhost/UDDI_API_V31.wsdl"
                 wsdlURL
                 );
@@ -65,6 +65,7 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine(new PrintUDDI<save_tModel>().print(st));
 
 
+            //TODO register the stuff
         }
     }
 }

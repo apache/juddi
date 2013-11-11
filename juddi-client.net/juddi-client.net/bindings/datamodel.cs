@@ -484,7 +484,10 @@ namespace org.uddi.apiv3
             }
         }
 
-        /// <remarks/>
+       
+        /// <summary>
+        /// assertionStatusReport,bindingDetail,businessDetail,businessList,relatedBusinessesList,serviceDetail,serviceList,tModelDetail, or tModelList
+        /// </summary>
         [System.Xml.Serialization.XmlElementAttribute("assertionStatusReport", typeof(assertionStatusReport), Namespace = "urn:uddi-org:api_v3")]
         [System.Xml.Serialization.XmlElementAttribute("bindingDetail", typeof(bindingDetail), Namespace = "urn:uddi-org:api_v3")]
         [System.Xml.Serialization.XmlElementAttribute("businessDetail", typeof(businessDetail), Namespace = "urn:uddi-org:api_v3")]

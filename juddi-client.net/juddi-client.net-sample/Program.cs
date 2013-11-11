@@ -33,6 +33,7 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine("6) Find_endpoints");
             Console.Out.WriteLine("7) jUDDI specific - Save Node");
             Console.Out.WriteLine("8) jUDDI specific - Save Clerk");
+            Console.Out.WriteLine("9) Subscription callbacks");
             Console.Out.Write("Enter selection> ");
             String selection = Console.In.ReadLine();
             selection = selection.Trim();
@@ -52,6 +53,8 @@ namespace org.apache.juddi.client.sample
                 saveNodeExample.main(args);
             else if (selection.Equals("8"))
                 saveClerkExample.main(args);
+            else if (selection.Equals("9"))
+                SubscriptionCallbackExample.Run(args);
             Console.WriteLine("Press any key to exit");
             Console.Read();
 
