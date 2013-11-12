@@ -92,8 +92,10 @@ namespace org.apache.juddi.v3.client.subscription
     /// </pre>
     /// 
     [ServiceBehaviorAttribute( AutomaticSessionShutdown=false, ConcurrencyMode=ConcurrencyMode.Single, 
-        //DOES NOT WORK ON MONO Name="SubscriptionCallbackListener",
-        Namespace="org.apache.juddi.v3.client.subscription", IncludeExceptionDetailInFaults=false, InstanceContextMode=InstanceContextMode.Single, ValidateMustUnderstand=false,
+        //DOES NOT WORK ON MONO 
+        Name="SubscriptionCallbackListener",
+        Namespace="org.apache.juddi.v3.client.subscription", 
+        IncludeExceptionDetailInFaults=false, InstanceContextMode=InstanceContextMode.Single, ValidateMustUnderstand=false,
         AddressFilterMode=AddressFilterMode.Any)]
     public class SubscriptionCallbackListener : UDDI_SubscriptionListener_PortType
     {
@@ -327,12 +329,12 @@ namespace org.apache.juddi.v3.client.subscription
                     try
                     {
                         DigSigUtil ds = new DigSigUtil(client.getClientConfig().getDigitalSignatureConfiguration());
-                        bt = ds.signUddiEntity(bt);
+                        bt = (bindingTemplate)ds.signUddiEntity(bt);
                     }
                     catch (Exception ex)
                     {
                         log.error("Unable to sign", ex);
-                        throw new UnableToSignException(ex);
+                        throw new UnableToSignException("Unable to sign",ex);
                     }
 
                     break;
@@ -342,12 +344,12 @@ namespace org.apache.juddi.v3.client.subscription
                         try
                         {
                             DigSigUtil ds = new DigSigUtil(client.getClientConfig().getDigitalSignatureConfiguration());
-                            bt = ds.signUddiEntity(bt);
+                            bt = (bindingTemplate)ds.signUddiEntity(bt);
                         }
                         catch (Exception ex)
                         {
                             log.error("Unable to sign", ex);
-                            throw new UnableToSignException(ex);
+                            throw new UnableToSignException("Unable to sign",ex);
                         }
                     }
                     break;

@@ -47,23 +47,31 @@ public class DigSigUtilTest {
         Default();
     }
 
+    
+    void SetCertStoreSettigns() {
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "./src/test/resources/keystore.jks");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
+        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
+        ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
+        ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
+        ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
+
+
+    }
+
     void Default() throws CertificateException {
         ds = new DigSigUtil();
         SetCertStoreSettigns();
         ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
     }
-    
-    void SetCertStoreSettigns(){
-        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "./src/test/resources/keystore.jks");
-        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
-        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
-        ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
-        
-        ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
-        ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
-        ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
-        
-        
+
+    void Everything() throws CertificateException {
+        ds = new DigSigUtil();
+        SetCertStoreSettigns();
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "t");
     }
 
     void SubjectDNOnly() throws CertificateException {
@@ -80,7 +88,7 @@ public class DigSigUtilTest {
 
     @Test
     public void testSignBusinessSubjectDNOnly() throws CertificateException {
-        
+
         SubjectDNOnly();
         System.out.println("testSignBusinessSubjectDNOnly signing");
         BusinessEntity be = new BusinessEntity();
@@ -109,7 +117,34 @@ public class DigSigUtilTest {
     public void testSignBusinessSerialAndIssuerOnly() throws CertificateException {
         System.out.println("testSignBusinessSerialAndIssuerOnly signing");
         SerialAndIssuerOnly();
-        
+
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey("uddi:juddi.apache.org:testkey");
+        be.setDiscoveryURLs(new DiscoveryURLs());
+        be.getDiscoveryURLs().getDiscoveryURL().add(new DiscoveryURL("website", "http://localhost"));
+        be.getDescription().add(new Description("a description", "en"));
+        be.getName().add(new Name("My biz", "en"));
+
+        BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
+        DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
+        Assert.assertNotSame("items are the same", be, signUDDI_JAXBObject);
+        //System.out.println("verifing");
+        AtomicReference<String> msg = new AtomicReference<String>();
+        boolean verifySigned_UDDI_JAXB_Object = ds.verifySignedUddiEntity(signUDDI_JAXBObject, msg);
+        if (verifySigned_UDDI_JAXB_Object) {
+            //System.out.println("signature validation passed (expected)");
+        } else {
+            System.out.println("signature validation failed (not expected)");
+            Assert.fail(msg.get());
+        }
+        validAllSignatureElementsArePresent(signUDDI_JAXBObject.getSignature());
+    }
+    
+        @Test
+    public void testSignBusinessEverything() throws CertificateException {
+        System.out.println("testSignBusinessEverything signing");
+        Everything();
+
         BusinessEntity be = new BusinessEntity();
         be.setBusinessKey("uddi:juddi.apache.org:testkey");
         be.setDiscoveryURLs(new DiscoveryURLs());

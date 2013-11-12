@@ -861,6 +861,14 @@ namespace org.apache.juddi.v3.client.config {
         
         private bool checkRevocationOCSPField;
         
+        private bool keyInfoInclusionSubjectDNField;
+        
+        private bool keyInfoInclusionSerialField;
+        
+        private bool keyInfoInclusionBase64PublicKeyField;
+        
+        private string digestMethodField;
+        
         public uddiClientSignature() {
             this.canonicalizationMethodField = "http://www.w3.org/2001/10/xml-exc-c14n#";
             this.signatureMethodField = "RSA_SHA1";
@@ -869,6 +877,10 @@ namespace org.apache.juddi.v3.client.config {
             this.checkTrustField = true;
             this.checkRevocationCRLField = false;
             this.checkRevocationOCSPField = false;
+            this.keyInfoInclusionSubjectDNField = false;
+            this.keyInfoInclusionSerialField = false;
+            this.keyInfoInclusionBase64PublicKeyField = false;
+            this.digestMethodField = "http://www.w3.org/2000/09/xmldsig#sha1";
         }
         
         /// <remarks/>
@@ -1018,6 +1030,46 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.checkRevocationOCSPField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool keyInfoInclusionSubjectDN {
+            get {
+                return this.keyInfoInclusionSubjectDNField;
+            }
+            set {
+                this.keyInfoInclusionSubjectDNField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool keyInfoInclusionSerial {
+            get {
+                return this.keyInfoInclusionSerialField;
+            }
+            set {
+                this.keyInfoInclusionSerialField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool keyInfoInclusionBase64PublicKey {
+            get {
+                return this.keyInfoInclusionBase64PublicKeyField;
+            }
+            set {
+                this.keyInfoInclusionBase64PublicKeyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string digestMethod {
+            get {
+                return this.digestMethodField;
+            }
+            set {
+                this.digestMethodField = value;
             }
         }
     }

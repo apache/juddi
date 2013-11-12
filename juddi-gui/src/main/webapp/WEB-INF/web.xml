@@ -3,7 +3,8 @@
 
     <display-name>jUDDI Graphical User Interface (juddi-gui)</display-name>
     <description>This is an end user web application for an implementation of OASIS's UDDI v3 specification</description>
-    <distributable />
+    <!--  This may cause issues in some containers, if it complains about a non serializable object, comment this out
+    <distributable /> -->
     
     <listener>
         <!-- this class setups the encryption key for the session-->

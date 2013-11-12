@@ -110,10 +110,14 @@
 				isPasswordEncrypted="false" 
 				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
 			<signingKeyAlias>my special key</signingKeyAlias>
+                        
 			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
-			<signatureMethod>RSA_SHA1</signatureMethod>
+			<signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
 			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
-			<!-- validation stuff -->
+
+			<!-- validation stuff 
+			Used whenever someone views an entity that is signed and validation is required	-->
+			<!-- if this doesn't exist or is incorrect, the client will atempt to load the standard jdk trust store-->
 			<trustStorePath>truststore.jks</trustStorePath>
 			<trustStoreType>JKS</trustStoreType>
 			<trustStorePassword
@@ -123,6 +127,10 @@
 			<checkTimestamps>true</checkTimestamps>
 			<checkTrust>true</checkTrust>
 			<checkRevocationCRL>true</checkRevocationCRL>
+			<keyInfoInclusionSubjectDN>false</keyInfoInclusionSubjectDN>
+			<keyInfoInclusionSerial>false</keyInfoInclusionSerial>
+			<keyInfoInclusionBase64PublicKey>true</keyInfoInclusionBase64PublicKey>
+			<digestMethod>http://www.w3.org/2000/09/xmldsig#sha1</digestMethod>
 		</signature>
 		<subscriptionCallbacks>
 			<keyDomain>uddi:somebusiness</keyDomain>

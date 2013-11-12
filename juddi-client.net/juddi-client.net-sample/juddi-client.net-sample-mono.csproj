@@ -36,21 +36,22 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
- <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-  <Compile Include="Encryption.cs" />
- <Compile Include="findendpoints.cs" />
-  <Compile Include="juddi\saveClerkExample.cs" />
+    <Compile Include="DigitalSignaturesExample.cs" />
+    <Compile Include="Encryption.cs" />
+    <Compile Include="findendpoints.cs" />
+    <Compile Include="juddi\saveClerkExample.cs" />
     <Compile Include="juddi\saveNodeExample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
- <Compile Include="ServiceVersioning.cs" />
+    <Compile Include="ServiceVersioning.cs" />
     <Compile Include="SimpleInquiry.cs" />
- <Compile Include="SubscriptionCallbackExample.cs" />
+    <Compile Include="SubscriptionCallbackExample.cs" />
     <Compile Include="WadlImport.cs" />
     <Compile Include="WsdlImport.cs" />
   </ItemGroup>

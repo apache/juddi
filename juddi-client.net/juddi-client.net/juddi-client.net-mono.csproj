@@ -47,7 +47,7 @@
     <Compile Include="bindings\events.cs" />
     <Compile Include="bindings\ext.cs" />
     <Compile Include="bindings\JUDDIApiService.cs" />
-<Compile Include="org.apache.juddi.jaxb\PrintJUDDI.cs" />
+    <Compile Include="org.apache.juddi.jaxb\PrintJUDDI.cs" />
     <Compile Include="org.apache.juddi.jaxb\PrintUDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.annotations\AnnotationProcessor.cs" />
     <Compile Include="org.apache.juddi.v3.client.annotations\UDDIService.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="org.apache.juddi.v3.client.mapping\wsdl.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\WSDL2UDDI.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\XMLSchema.cs" />
- <Compile Include="org.apache.juddi.v3.client.subscription\ISubscriptionCallback.cs" />
+    <Compile Include="org.apache.juddi.v3.client.subscription\ISubscriptionCallback.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\RegistrationAbortedException.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\ServiceAlreadyStartedException.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\SubscriptionCallbackListener.cs" />

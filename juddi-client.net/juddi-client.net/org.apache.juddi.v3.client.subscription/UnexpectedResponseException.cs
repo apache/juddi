@@ -1,26 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace org.apache.juddi.client.org.apache.juddi.v3.client.subscription
 {
-    class UnexpectedResponseException : Exception
+   
+    [Serializable]
+    public class UnexpectedResponseException : Exception
     {
-        private string p;
-        private Exception ex;
 
-        public UnexpectedResponseException(string p)
+        public UnexpectedResponseException() { }
+
+        public UnexpectedResponseException(string message)
+            : base(message)
         {
-            // TODO: Complete member initialization
-            this.p = p;
         }
-
-        public UnexpectedResponseException(string p, Exception ex)
+        public UnexpectedResponseException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            // TODO: Complete member initialization
-            this.p = p;
-            this.ex = ex;
+        }
+        protected UnexpectedResponseException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

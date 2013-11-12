@@ -49,5 +49,20 @@ namespace org.apache.juddi.jaxb
                 return err;
             }
         }
+
+        public T createObject(String data)
+        {
+            try
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+                StringReader sw = new StringReader(data);
+                object j = xs.Deserialize(sw);
+                return (T)j;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

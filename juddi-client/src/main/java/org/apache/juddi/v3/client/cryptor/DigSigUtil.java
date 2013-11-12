@@ -172,49 +172,53 @@ public class DigSigUtil {
      *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     //public final static String SIGNATURE_OPTION_CERT_INCLUSION_THUMBPRINT = "THUMBPRINT";
-    /*
-     * Include the signer's serial of the public key.
-     * 
-     * Clients will not be able to validate the signature unless they have a copy of the signer's public key 
-     * in a trust store or the full certificate is included
-     * out of band
-     *     
+    /**
+     * Include the signer's serial of the public key and the issuer's subject
+     * name
+     *
+     * Clients will not be able to validate the signature unless they have a
+     * copy of the signer's public key in a trust store or the full certificate
+     * is included out of band
+     *
      * Example
      * <pre>
      * Map map = new HashMap();
      * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, true);</pre>
      * any value can be used.
-     *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+     *
+     * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     public final static String SIGNATURE_OPTION_CERT_INCLUSION_SERIAL = "SERIAL";
-    /*
+    /**
      * Include the signer's Subject DN of the public key.
-     * 
-     * Clients will not be able to validate the signature unless they have a copy of the signer's public key 
-     * in a trust store or the full certificate is included
-     * out of band
-     *     
+     *
+     * Clients will not be able to validate the signature unless they have a
+     * copy of the signer's public key in a trust store or the full certificate
+     * is included out of band
+     *
      * Example
      * <pre>
      * Map map = new HashMap();
      * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, true);</pre>
      * any value can be used.
-     *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+     *
+     * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     public final static String SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN = "SUBJECTDN";
-    /*
+    /**
      * Include the signer's X500 Prinicple of the public key.
-     * 
-     * Clients will not be able to validate the signature unless they have a copy of the signer's public key 
-     * in a trust store or the full certificate is included
-     * out of band
-     *     
+     *
+     * Clients will not be able to validate the signature unless they have a
+     * copy of the signer's public key in a trust store or the full certificate
+     * is included out of band
+     *
      * Example
      * <pre>
      * Map map = new HashMap();
      * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, true);</pre>
      * any value can be used.
-     *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
+     *
+     * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     //public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
@@ -305,7 +309,7 @@ public class DigSigUtil {
     }
 
     /**
-     * Digital signs a UDDI entity, such as a business, service, tmodel or
+     * Digitally signs a UDDI entity, such as a business, service, tmodel or
      * binding template, provided you've already done the legwork to provide the
      * signing keys <br><br> The UDDI entity MUST support XML Digital Signatures
      * (tModel, Business, Service, Binding Template)
@@ -372,7 +376,7 @@ public class DigSigUtil {
 
         Document doc = ((Document) domResult.getNode());
         Element docElement = doc.getDocumentElement();  //this is our signed node
-        return getSigningCertificatePublicKey(obj, docElement);
+        return getSigningCertificatePublicKey(docElement);
     }
 
     /**
@@ -385,8 +389,8 @@ public class DigSigUtil {
      * that is not present in the current keystore
      * * @throws IllegalArgumentException for null input
      */
-    private X509Certificate getSigningCertificatePublicKey(Object obj, Element docElement) throws IllegalArgumentException, CertificateException {
-        if (obj == null) {
+    private X509Certificate getSigningCertificatePublicKey(Element docElement) throws IllegalArgumentException, CertificateException {
+        if (docElement == null) {
             throw new IllegalArgumentException();
         }
 
@@ -463,6 +467,7 @@ public class DigSigUtil {
     public boolean verifySignedUddiEntity(Object obj, AtomicReference<String> OutErrorMessage) throws IllegalArgumentException {
         if (OutErrorMessage == null) {
             OutErrorMessage = new AtomicReference<String>();
+            OutErrorMessage.set("");
         }
         if (obj == null) {
             throw new IllegalArgumentException("obj");
@@ -474,9 +479,9 @@ public class DigSigUtil {
             Document doc = ((Document) domResult.getNode());
             Element docElement = doc.getDocumentElement();  //this is our signed node
 
-            X509Certificate signingcert = getSigningCertificatePublicKey(obj, docElement);
+            X509Certificate signingcert = getSigningCertificatePublicKey(docElement);
 
-            if (signingcert != null ) {
+            if (signingcert != null) {
                 logger.info("verifying signature based on X509 public key " + signingcert.getSubjectDN().toString());
                 if (map.containsKey(CHECK_TIMESTAMPS) && Boolean.parseBoolean(map.getProperty(CHECK_TIMESTAMPS))) {
                     signingcert.checkValidity();
@@ -494,7 +499,9 @@ public class DigSigUtil {
                     RevocationStatus check = OCSP.check(signingcert, issuer);
                     logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
                     if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
-                        throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                        OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
+
+                        //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
                     }
                 }
                 if (map.containsKey(CHECK_REVOCATION_STATUS_CRL) && Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
@@ -511,13 +518,16 @@ public class DigSigUtil {
 
                     CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
                     CertPathValidatorResult result = certPathValidator.validate(certPath, params);
-
-                    PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
-                    logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString());
-
+                    try {
+                        PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
+                        logger.info("revokation status via CRL PASSED for X509 public key " + signingcert.getSubjectDN().toString());
+                    } catch (Exception ex) {
+                        OutErrorMessage.set("Certificate status is via CRL Failed: " + ex.getMessage() + "." + OutErrorMessage.get());
+                    }
                 }
                 if (map.containsKey(CHECK_TRUST_CHAIN) && Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {
                     logger.info("verifying trust chain X509 public key " + signingcert.getSubjectDN().toString());
+                    try{
                     PKIXParameters params = new PKIXParameters(GetTrustStore());
                     params.setRevocationEnabled(false);
                     CertPath certPath = cf.generateCertPath(Arrays.asList(signingcert));
@@ -529,10 +539,20 @@ public class DigSigUtil {
 
                     TrustAnchor ta = pkixResult.getTrustAnchor();
                     X509Certificate cert = ta.getTrustedCert();
-                    
+
                     logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString());
+                    }
+                    catch (Exception ex){
+                        OutErrorMessage.set("Certificate status Trust validation failed: " + ex.getMessage() + "." + OutErrorMessage.get());
+                    }
                 }
-                return verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);
+                boolean b= verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);
+                if ((OutErrorMessage.get()== null || OutErrorMessage.get().length()==0) && b)
+                {
+                    //no error message and its cryptographically valid
+                    return true;
+                }
+                return false;
             }
 
             //last chance validation
@@ -555,7 +575,7 @@ public class DigSigUtil {
             if (url == null) {
                 logger.error("");
                 OutErrorMessage.set("The signed entity is signed but does not have a certificate attached and"
-                        + "you didn't specify a keystore for me to look it up in");
+                        + "you didn't specify a keystore for me to look it up in. " + OutErrorMessage.get());
                 return false;
             }
             KeyStore.PrivateKeyEntry keyEntry = null;
@@ -624,12 +644,12 @@ public class DigSigUtil {
             logger.error("Unable to load user specified trust store! attempting to load the default", ex);
             URL cacerts = null;
             try {
-                cacerts = new File(System.getenv("JAVA_HOME") + File.pathSeparator + "lib" + File.pathSeparator + "security" + File.pathSeparator + "cacerts").toURI().toURL();
+                cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
             } catch (Exception c) {
                 logger.debug("unable to load default jre truststore", c);
             }
             try {
-                cacerts = new File(System.getenv("JAVA_HOME") + File.pathSeparator + "jre" + File.pathSeparator + "lib" + File.pathSeparator + "security" + File.pathSeparator + "cacerts").toURI().toURL();
+                cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "jre" + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
             } catch (Exception c) {
                 logger.debug("unable to load default jdk/jre truststore", c);
             }
@@ -702,7 +722,7 @@ public class DigSigUtil {
                 logger.warn("Signature failed core validation");
                 boolean sv = signature.getSignatureValue().validate(valContext);
                 logger.debug("signature validation status: " + sv);
-                OutReadableErrorMessage.set("signature validation failed: " + sv);
+                OutReadableErrorMessage.set("signature validation failed: " + sv + "." + OutReadableErrorMessage.get());
                 // Check the validation status of each Reference.
                 @SuppressWarnings("unchecked")
                 Iterator<Reference> i = signature.getSignedInfo().getReferences().iterator();
@@ -713,7 +733,7 @@ public class DigSigUtil {
                     logger.debug(j);
                     logger.debug("ref[" + j + "] validity status: " + refValid);
                     if (!refValid) {
-                        OutReadableErrorMessage.set("signature reference " + j + " invalid");
+                        OutReadableErrorMessage.set("signature reference " + j + " invalid. " + OutReadableErrorMessage.get());
                     }
                     logger.debug("Ref type: " + ref.getType() + ", URI: " + ref.getURI());
                     for (Object xform : ref.getTransforms()) {
@@ -724,24 +744,15 @@ public class DigSigUtil {
                     logger.warn("    Calc Digest: " + calcDigValStr);
                     logger.warn("Expected Digest: " + expectedDigValStr);
                     if (!calcDigValStr.equalsIgnoreCase(expectedDigValStr)) {
-                        OutReadableErrorMessage.set("digest mismatch for signature ref " + j);
+                        OutReadableErrorMessage.set("digest mismatch for signature ref " + j + "." + OutReadableErrorMessage.get());
                     }
-                    /*InputStream is = ref.getDigestInputStream();
-                     InputStreamReader isr = new InputStreamReader(is);
-                     BufferedReader br = new BufferedReader(isr);
-                     String line;
-                     while ((line = br.readLine()) != null) {
-                     System.out.println(line);
-                     }
-                     is.close();
-                     System.out.println("---------------------------------------------");*/
                 }
             } else {
                 logger.info("Signature passed core validation");
             }
             return coreValidity;
         } catch (Exception e) {
-            OutReadableErrorMessage.set("signature validation failed: " + e.getMessage());
+            OutReadableErrorMessage.set("signature validation failed: " + e.getMessage() + OutReadableErrorMessage.get());
             logger.fatal(e);
             return false;
         }

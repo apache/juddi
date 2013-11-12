@@ -139,5 +139,13 @@ namespace org.apache.juddi.v3.client.config
                 return defaultvalue;
             return s;
         }
+
+        public void setProperty(string key, string value, string def)
+        {
+            if (String.IsNullOrEmpty(value))
+                setProperty(key, def);
+            else
+                setProperty(key, value);
+        }
     }
 }

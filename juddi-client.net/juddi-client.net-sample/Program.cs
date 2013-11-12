@@ -34,6 +34,7 @@ namespace org.apache.juddi.client.sample
             Console.Out.WriteLine("7) jUDDI specific - Save Node");
             Console.Out.WriteLine("8) jUDDI specific - Save Clerk");
             Console.Out.WriteLine("9) Subscription callbacks");
+            Console.Out.WriteLine("10) Digital Signatures");
             Console.Out.Write("Enter selection> ");
             String selection = Console.In.ReadLine();
             selection = selection.Trim();
@@ -55,6 +56,8 @@ namespace org.apache.juddi.client.sample
                 saveClerkExample.main(args);
             else if (selection.Equals("9"))
                 SubscriptionCallbackExample.Run(args);
+            else if (selection.Equals("10"))
+                DigitalSignaturesExample.Run(args);
             Console.WriteLine("Press any key to exit");
             Console.Read();
 

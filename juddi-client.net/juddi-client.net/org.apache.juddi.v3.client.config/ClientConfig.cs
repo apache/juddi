@@ -1,4 +1,5 @@
-﻿/*
+﻿using org.apache.juddi.v3.client.crypto;
+/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -268,7 +270,7 @@ namespace org.apache.juddi.v3.client.config
                 log.warn("XRegistration cannot continue, no clerks are defined!");
                 return xRegistrations;
             }
-            if (config.client.clerks.xregister==null || config.client.clerks.xregister.business == null)
+            if (config.client.clerks.xregister == null || config.client.clerks.xregister.business == null)
                 return xRegistrations;
             if (config.client.clerks.xregister.business.Length > 0)
                 log.info("XRegistration " + config.client.clerks.xregister.business.Length + " business Keys");
@@ -302,7 +304,7 @@ namespace org.apache.juddi.v3.client.config
                 log.warn("XRegistration cannot continue, no clerks are defined!");
                 return xRegistrations;
             }
-            if (config.client.clerks.xregister==null || config.client.clerks.xregister.servicebinding == null)
+            if (config.client.clerks.xregister == null || config.client.clerks.xregister.servicebinding == null)
                 return xRegistrations;
             if (config.client.clerks.xregister.servicebinding.Length > 0)
                 log.info("XRegistration " + config.client.clerks.xregister.servicebinding.Length + " serviceBinding Keys");
@@ -405,9 +407,82 @@ namespace org.apache.juddi.v3.client.config
             return configurationFile;
         }
 
-        public Properties  getDigitalSignatureConfiguration()
+        /// <summary>
+        /// Fetches all digital signature related properties for the digital signature utility.          
+        /// warning, this will decrypt all passwords
+        ///           
+
+        /// </summary>
+        /// <returns></returns>
+        public Properties getDigitalSignatureConfiguration()
         {
-            throw new NotImplementedException();
+            Properties p = new Properties();
+            if ( this.config==null || 
+                this.config.client==null ||
+                this.config.client.signature==null)
+            {
+                log.warn("No configuration data is available, signatures probably won't be possible");
+                this.config.client.signature = new uddiClientSignature();
+            }
+            p.setProperty(DigSigUtil.CANONICALIZATIONMETHOD, this.config.client.signature.canonicalizationMethod, SignedXml.XmlDsigExcC14NWithCommentsTransformUrl);
+            p.setProperty(DigSigUtil.CHECK_TIMESTAMPS, this.config.client.signature.checkTimestamps.ToString(), "true");
+            p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_CRL, this.config.client.signature.checkRevocationCRL.ToString(), "true");
+            p.setProperty(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP, this.config.client.signature.checkRevocationOCSP.ToString(), "true");
+            p.setProperty(DigSigUtil.CHECK_TRUST_CHAIN, this.config.client.signature.checkTrust.ToString(), "true");
+
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE, this.config.client.signature.signingKeyStorePath);
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE,  this.config.client.signature.signingKeyStoreType);
+
+            if (this.config.client.signature.signingKeyPassword!=null &&
+                this.config.client.signature.signingKeyPassword.isPasswordEncrypted)
+            {
+                String enc = this.config.client.signature.signingKeyPassword.Value;
+                String prov = this.config.client.signature.signingKeyPassword.cryptoProvider;
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+            {
+                log.warn("Hey, you should consider encrypting your passwords!");
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.client.signature.signingKeyPassword.Value);
+            }
+            if (this.config.client.signature.signingKeyStoreFilePassword!=null &&
+                this.config.client.signature.signingKeyStoreFilePassword.isPasswordEncrypted)
+            {
+                String enc = this.config.client.signature.signingKeyStoreFilePassword.Value;
+                String prov = this.config.client.signature.signingKeyStoreFilePassword.cryptoProvider;
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+            {
+                log.warn("Hey, you should consider encrypting your passwords!");
+                p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, this.config.client.signature.signingKeyStoreFilePassword.Value);
+            }
+
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, this.config.client.signature.signingKeyAlias);
+            p.setProperty(DigSigUtil.SIGNATURE_METHOD, this.config.client.signature.signatureMethod, "http://www.w3.org/2000/09/xmldsig#rsa-sha1");
+            p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, this.config.client.signature.keyInfoInclusionSubjectDN.ToString());
+            p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, this.config.client.signature.keyInfoInclusionBase64PublicKey.ToString());
+            p.setProperty(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, this.config.client.signature.keyInfoInclusionSerial.ToString());
+
+            p.setProperty(DigSigUtil.SIGNATURE_OPTION_DIGEST_METHOD, this.config.client.signature.digestMethod, "http://www.w3.org/2000/09/xmldsig#sha1");
+
+            p.setProperty(DigSigUtil.TRUSTSTORE_FILE, this.config.client.signature.trustStorePath);
+            p.setProperty(DigSigUtil.TRUSTSTORE_FILETYPE, this.config.client.signature.trustStoreType);
+
+
+            if (this.config.client.signature.trustStorePassword!=null &&
+                this.config.client.signature.trustStorePassword.isPasswordEncrypted)
+            {
+                String enc = this.config.client.signature.trustStorePassword.Value;
+                String prov = this.config.client.signature.trustStorePassword.cryptoProvider;
+                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
+            }
+            else
+            {
+                log.warn("Hey, you should consider encrypting your passwords!");
+                p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, this.config.client.signature.trustStorePassword);
+            }
+            return p;
         }
     }
 }

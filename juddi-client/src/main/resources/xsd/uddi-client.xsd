@@ -164,7 +164,7 @@
                       </xsd:documentation></xsd:annotation>
                     
                     </xsd:element>
-                    <xsd:element type="xsd:string" name="signatureMethod" default="RSA_SHA1">
+                    <xsd:element type="xsd:string" name="signatureMethod" default="http://www.w3.org/2000/09/xmldsig#rsa-sha1">
                       <xsd:annotation><xsd:documentation>default is RSA_SHA1</xsd:documentation></xsd:annotation>
                     </xsd:element>
                     <xsd:element type="xsd:string" name="XML_DIGSIG_NS" default="http://www.w3.org/2000/09/xmldsig#"></xsd:element>
@@ -187,6 +187,11 @@
                     <xsd:element type="xsd:boolean" name="checkTrust" default="true"></xsd:element>
                     <xsd:element type="xsd:boolean" name="checkRevocationCRL" default="false"></xsd:element>
                     <xsd:element type="xsd:boolean" name="checkRevocationOCSP" default="false"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="keyInfoInclusionSubjectDN" default="false"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="keyInfoInclusionSerial" default="false"></xsd:element>
+                    <xsd:element type="xsd:boolean" name="keyInfoInclusionBase64PublicKey" default="false"></xsd:element>
+                    <xsd:element type="xsd:string" name="digestMethod" default="http://www.w3.org/2000/09/xmldsig#sha1"></xsd:element>
+                    
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>

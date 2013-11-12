@@ -1,4 +1,5 @@
-﻿/*
+﻿using org.apache.juddi.jaxb;
+/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +17,16 @@
  */
 using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
+using org.apache.juddi.v3.client.crypto;
 using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;
 
-
 namespace org.apache.juddi.client.sample
 {
-
-    public static class SimpleInquiry
+    class DigitalSignaturesExample
     {
-
-        public static void Run()
+        public static void Run(string[] args)
         {
 
             UDDIClient clerkManager = null;
@@ -38,13 +37,13 @@ namespace org.apache.juddi.client.sample
                 clerkManager = new UDDIClient("uddi.xml");
                 UDDIClientContainer.addClient(clerkManager);
 
-                transport = clerkManager.getTransport("default_non_root");
+                transport = clerkManager.getTransport("default");
 
                 UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
                 UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
                 UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
 
-                clerk = clerkManager.getClerk("default_non_root");
+                clerk = clerkManager.getClerk("default");
 
 
                 find_business fb = new find_business();
@@ -53,13 +52,43 @@ namespace org.apache.juddi.client.sample
                 fb.name = new name[1];
                 fb.name[0] = new name(UDDIConstants.WILDCARD, "en");
                 businessList bl = inquiry.find_business(fb);
-                for (int i = 0; i < bl.businessInfos.Length; i++)
+                if (bl.businessInfos.Length > 0)
                 {
-                    Console.WriteLine(bl.businessInfos[i].name[0].Value);
+                    Console.Out.WriteLine(bl.businessInfos[0].name[0].Value);
+                    Console.Out.WriteLine("attempting to sign");
+                    serviceDetail sd = clerk.getServiceDetail(bl.businessInfos[0].serviceInfos[0].serviceKey);
+
+                    DigSigUtil ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+                    businessService signedsvc = (businessService)ds.signUddiEntity(sd.businessService[0]);
+                    PrintUDDI<businessService> p = new PrintUDDI<businessService>();
+                    Console.Out.WriteLine("signed successfully!");
+
+                    Console.Out.WriteLine(p.print(signedsvc));
+                    Console.Out.WriteLine("attempting verify and validate");
+                    String err = "";
+                    bool valid = ds.verifySignedUddiEntity(signedsvc, out err);
+                    Console.Out.WriteLine("Signature is " + (valid ? "Valid, Yippy!" : "Invalid!") + " msg: " + err);
+
+                    Console.Out.WriteLine("saving");
+                    clerk.register(signedsvc);
+                    Console.Out.WriteLine("reloading content from the server...");
+
+                    get_serviceDetail gsd = new get_serviceDetail();
+                    gsd.authInfo = clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl());
+                    gsd.serviceKey = new string[] { signedsvc.serviceKey };
+                    sd = inquiry.get_serviceDetail(gsd);
+
+                    Console.Out.WriteLine(p.print(sd.businessService[0]));
+                    Console.Out.WriteLine("attempting verify and validate");
+                    err = "";
+                    valid = ds.verifySignedUddiEntity(sd.businessService[0], out err);
+                    Console.Out.WriteLine("Signature is " + (valid ? "Valid, Yippy!" : "Invalid!") + " msg: " + err);
+
 
                 }
-                //  serviceDetail s= clerk.getServiceDetail("uddi:mydomain.com:zerocoolsvc");
-                //   Console.Out.WriteLine(new PrintUDDI<serviceDetail>().print(s));
+                else
+                    Console.Out.WriteLine("no businesses were returned!");
+
             }
             catch (Exception ex)
             {
