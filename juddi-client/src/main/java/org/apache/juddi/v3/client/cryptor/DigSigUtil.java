@@ -494,14 +494,16 @@ public class DigSigUtil {
                     Security.setProperty("ocsp.enable", "false");
                     X509Certificate issuer = FindCertByDN(issuerX500Principal);
                     if (issuer == null) {
-                        throw new CertificateException("unable to locate the issuers certificate in the trust store");
-                    }
-                    RevocationStatus check = OCSP.check(signingcert, issuer);
-                    logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
-                    if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
-                        OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
+                        OutErrorMessage.set("Unable to verify certificate status from OCSP because the issuer of the certificate is not in the trust store. " + OutErrorMessage.get());
+                        //throw new CertificateException("unable to locate the issuers certificate in the trust store");
+                    } else {
+                        RevocationStatus check = OCSP.check(signingcert, issuer);
+                        logger.info("certificate " + signingcert.getSubjectDN().toString() + " revocation status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                        if (check.getCertStatus() != RevocationStatus.CertStatus.GOOD) {
+                            OutErrorMessage.set("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString() + "." + OutErrorMessage.get());
 
-                        //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                            //throw new CertificateException("Certificate status is " + check.getCertStatus().toString() + " reason " + check.getRevocationReason().toString());
+                        }
                     }
                 }
                 if (map.containsKey(CHECK_REVOCATION_STATUS_CRL) && Boolean.parseBoolean(map.getProperty(CHECK_REVOCATION_STATUS_CRL))) {
@@ -527,28 +529,26 @@ public class DigSigUtil {
                 }
                 if (map.containsKey(CHECK_TRUST_CHAIN) && Boolean.parseBoolean(map.getProperty(CHECK_TRUST_CHAIN))) {
                     logger.info("verifying trust chain X509 public key " + signingcert.getSubjectDN().toString());
-                    try{
-                    PKIXParameters params = new PKIXParameters(GetTrustStore());
-                    params.setRevocationEnabled(false);
-                    CertPath certPath = cf.generateCertPath(Arrays.asList(signingcert));
+                    try {
+                        PKIXParameters params = new PKIXParameters(GetTrustStore());
+                        params.setRevocationEnabled(false);
+                        CertPath certPath = cf.generateCertPath(Arrays.asList(signingcert));
 
-                    CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
-                    CertPathValidatorResult result = certPathValidator.validate(certPath, params);
+                        CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
+                        CertPathValidatorResult result = certPathValidator.validate(certPath, params);
 
-                    PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
+                        PKIXCertPathValidatorResult pkixResult = (PKIXCertPathValidatorResult) result;
 
-                    TrustAnchor ta = pkixResult.getTrustAnchor();
-                    X509Certificate cert = ta.getTrustedCert();
+                        TrustAnchor ta = pkixResult.getTrustAnchor();
+                        X509Certificate cert = ta.getTrustedCert();
 
-                    logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString());
-                    }
-                    catch (Exception ex){
+                        logger.info("trust chain validated X509 public key " + signingcert.getSubjectDN().toString());
+                    } catch (Exception ex) {
                         OutErrorMessage.set("Certificate status Trust validation failed: " + ex.getMessage() + "." + OutErrorMessage.get());
                     }
                 }
-                boolean b= verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);
-                if ((OutErrorMessage.get()== null || OutErrorMessage.get().length()==0) && b)
-                {
+                boolean b = verifySignature(docElement, signingcert.getPublicKey(), OutErrorMessage);
+                if ((OutErrorMessage.get() == null || OutErrorMessage.get().length() == 0) && b) {
                     //no error message and its cryptographically valid
                     return true;
                 }
