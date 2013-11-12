@@ -60,28 +60,18 @@ function RenderServiceListBySearch(keyword, offset, maxrecords)
     var request=   $.ajax({
         url: 'ajax/servicesearch.jsp?keyword=' + keyword + "&offset=" + offset + "&maxrecords=" + maxrecords + "&lang=" + lang,
         type:"GET",
-        //  dataType: "html", 
         cache: false
-    //  processData: false,f
-    //data: d
     });
                   
     request.done(function(msg) {
         window.console && console.log('postback done ');                
         $("#serviceBrowserListings").html(msg);
-    //refresh();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
         $("#serviceBrowserListings").html("An error occured! " + jqXHR.responseText + textStatus);
-    //refresh();
     });
-/*
-    $.get('ajax/servicesearch.jsp?keyword=' + keyword + "&offset=" + offset + "&maxrecords=" + maxrecords, function(data) {
-        $("#serviceBrowserListings").html(data);
-        refresh();
-    });*/
 }
 
 function refresh()

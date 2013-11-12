@@ -65,20 +65,12 @@ function RenderBindingListBySearch(keyword1, offset1, maxrecords1, isForChooser)
     request.done(function(msg) {
         window.console && console.log('postback done ');                
         $("#bindinglist").html(msg);
-       
-    //refresh();
     });
 
     request.fail(function(jqXHR, textStatus) {
         window.console && console.log('postback failed ');                                
         $("#bindinglist").html("An error occured! " + jqXHR.responseText + textStatus);
-    //refresh();
     });
-/*
-    $.get('ajax/businesssearch.jsp?keyword=' + keyword1 + "&offset=" + offset1 + "&maxrecords=" + maxrecords1 + "&lang=" + lang, function(data) {
-        $("#businesslist").html(data);
-        refresh();
-    });*/
 }
 
 function refreshBinding()
