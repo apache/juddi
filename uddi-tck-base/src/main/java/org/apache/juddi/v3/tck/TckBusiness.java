@@ -50,20 +50,20 @@ import org.w3c.dom.Element;
  */
 public class TckBusiness 
 {
-	final static String JOE_BUSINESS_XML        = "uddi_data/joepublisher/businessEntity.xml";
-    final static String JOE_BUSINESS_KEY        = "uddi:uddi.joepublisher.com:businessone";
-    final static String JOE_BUSINESS3_XML       = "uddi_data/joepublisher/businessEntity3.xml";
-    final static String JOE_BUSINESS3_KEY       = "uddi:uddi.joepublisher.com:businessthree.com";
-    final static String JOE_BUSINESS_MOVE_XML   = "uddi_data/joepublisher/moveBusinessService1to3.xml";
-    final static String MARY_BUSINESS_XML       = "uddi_data/marypublisher/businessEntity.xml";
-    final static String MARY_BUSINESS_KEY       = "uddi:uddi.marypublisher.com:marybusinessone";
-    final static String SAM_BUSINESS_XML        = "uddi_data/samsyndicator/businessEntity.xml";
-    final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
-    final static String SAM_BUSINESS_KEY        = "uddi:www.samco.com:samco";
-    final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
-    final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
-    public final static String RIFTSAW_BUSINESS_KEY    = "uddi:riftsaw.jboss.org:business_redhat-jboss";
-    public final static String RIFTSAW_BUSINESS_XML    = "uddi_data/bpel/riftsaw/businessEntity.xml";
+    public final static String JOE_BUSINESS_XML = "uddi_data/joepublisher/businessEntity.xml";
+    public final static String JOE_BUSINESS_KEY = "uddi:uddi.joepublisher.com:businessone";
+    public final static String JOE_BUSINESS3_XML = "uddi_data/joepublisher/businessEntity3.xml";
+    public final static String JOE_BUSINESS3_KEY = "uddi:uddi.joepublisher.com:businessthree.com";
+    public final static String JOE_BUSINESS_MOVE_XML = "uddi_data/joepublisher/moveBusinessService1to3.xml";
+    public final static String MARY_BUSINESS_XML = "uddi_data/marypublisher/businessEntity.xml";
+    public final static String MARY_BUSINESS_KEY = "uddi:uddi.marypublisher.com:marybusinessone";
+    public final static String SAM_BUSINESS_XML = "uddi_data/samsyndicator/businessEntity.xml";
+    public final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
+    public final static String SAM_BUSINESS_KEY = "uddi:www.samco.com:samco";
+    public final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
+    public final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
+    public final static String RIFTSAW_BUSINESS_KEY = "uddi:riftsaw.jboss.org:business_redhat-jboss";
+    public final static String RIFTSAW_BUSINESS_XML = "uddi_data/bpel/riftsaw/businessEntity.xml";
 
     final static String SIGNATURE_KEYSTORE = "uddi_data/signature/signature.jks";
     final static String SIGNATURE_KEYSTORE_TYPE = "JKS";

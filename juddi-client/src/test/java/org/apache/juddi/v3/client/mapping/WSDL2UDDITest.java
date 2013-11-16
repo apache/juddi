@@ -42,6 +42,14 @@ public class WSDL2UDDITest {
 	PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
 	ReadWSDL rw = new ReadWSDL();
 	
+        static boolean serialize = false;
+
+    public WSDL2UDDITest() {
+        if (System.getProperty("debug") != null && System.getProperty("debug").equalsIgnoreCase("true")) {
+            serialize = true;
+        }
+    }
+    
         @Test
         public void Nulltest1()
         {
@@ -79,6 +87,7 @@ public class WSDL2UDDITest {
 	    
 		for (TModel tModel : tModels) {
 			System.out.println("UDDI PortType TModel " + tModel.getName().getValue());
+                        if (serialize)
 			System.out.println(pTModel.print(tModel));
 		}
 		Assert.assertEquals(1,tModels.size());
@@ -102,6 +111,7 @@ public class WSDL2UDDITest {
 	    
 		for (TModel tModel : tModels) {
 			System.out.println("UDDI Binding TModel " + tModel.getName().getValue());
+                        if (serialize)
 			System.out.println(pTModel.print(tModel));
 		}
 		Assert.assertEquals(1,tModels.size());

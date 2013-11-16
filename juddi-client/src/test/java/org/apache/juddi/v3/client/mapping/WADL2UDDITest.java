@@ -41,6 +41,13 @@ public class WADL2UDDITest {
     static final Logger log = Logger.getLogger(WADL2UDDITest.class.getCanonicalName());
     static PrintUDDI<TModel> pTModel = new PrintUDDI<TModel>();
     static Properties properties = new Properties();
+    static boolean serialize = false;
+
+    public WADL2UDDITest() {
+        if (System.getProperty("debug") != null && System.getProperty("debug").equalsIgnoreCase("true")) {
+            serialize = true;
+        }
+    }
 
     /**
      * tests loading a wadl from a file
@@ -50,7 +57,7 @@ public class WADL2UDDITest {
     @Test
     public void Test1() throws Exception {
         log.info("Test1 read from file");
- 
+
         Application app = WADL2UDDI.parseWadl(new File("src/test/resources/wadl/cxf.wadl"));
         Assert.assertNotNull(app);
         Assert.assertNotNull(app);
@@ -62,7 +69,9 @@ public class WADL2UDDITest {
         //save the keygen
         SaveTModel stm = new SaveTModel();
         stm.getTModel().add(keygen);
-        System.out.println(tmodelPrinter.print(keygen));
+        if (serialize) {
+            System.out.println(tmodelPrinter.print(keygen));
+        }
 
         properties.put("keyDomain", domain);
         properties.put("businessName", domain);
@@ -86,8 +95,9 @@ public class WADL2UDDITest {
 
 
         PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
-
-        System.out.println(servicePrinter.print(businessServices));
+        if (serialize) {
+            System.out.println(servicePrinter.print(businessServices));
+        }
 
 
 
@@ -144,7 +154,9 @@ public class WADL2UDDITest {
         //save the keygen
         SaveTModel stm = new SaveTModel();
         stm.getTModel().add(keygen);
-        System.out.println(tmodelPrinter.print(keygen));
+        if (serialize) {
+            System.out.println(tmodelPrinter.print(keygen));
+        }
 
         properties.put("keyDomain", domain);
         properties.put("businessName", domain);
@@ -168,8 +180,9 @@ public class WADL2UDDITest {
 
 
         PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
-
-        System.out.println(servicePrinter.print(businessServices));
+        if (serialize) {
+            System.out.println(servicePrinter.print(businessServices));
+        }
 
 
     }

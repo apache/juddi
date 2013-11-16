@@ -543,6 +543,69 @@ public class ValidatePublish extends ValidateUDDIApi {
             }
         }
     }
+    
+    void validateNotSigned(org.uddi.api_v3.BusinessEntity item) throws ValueNotAllowedException{
+        if (item==null)
+            return;
+        if (item.getBusinessKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "businessKey"));
+        if (item.getBusinessServices()!=null && !item.getSignature().isEmpty())
+        {
+            for (int i=0; i < item.getBusinessServices().getBusinessService().size(); i++){
+                if (item.getBusinessServices().getBusinessService().get(i).getBusinessKey()==null ||
+                        item.getBusinessServices().getBusinessService().get(i).getBusinessKey().length()==0){
+                    throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service("+i+")/businessKey"));        
+                }
+                if (item.getBusinessServices().getBusinessService().get(i).getServiceKey()==null ||
+                        item.getBusinessServices().getBusinessService().get(i).getServiceKey().length()==0){
+                    throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service("+i+")/serviceKey"));        
+                }
+                if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates()!=null){
+                    for (int k=0; k < item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().size(); k++){
+                        if (item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey()==null ||
+                                item.getBusinessServices().getBusinessService().get(i).getBindingTemplates().getBindingTemplate().get(k).getBindingKey().length()==0)
+                        {
+                            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "business/Service("+i+")/bindingTemplate)"+k+")/bindingKey"));        
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void validateNotSigned(org.uddi.api_v3.BindingTemplate item) throws ValueNotAllowedException{
+        if (item==null)
+            return;
+        if (item.getBindingKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "bindingKey"));
+        if (item.getServiceKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "serviceKey"));
+    }
+    void validateNotSigned(org.uddi.api_v3.TModel item) throws ValueNotAllowedException{
+        if (item==null)
+            return;
+        if (item.getTModelKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "tModelKey"));
+    }
+    
+    void validateNotSigned(org.uddi.api_v3.BusinessService item) throws ValueNotAllowedException{
+        if (item==null)
+            return;
+        if (item.getBusinessKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "businessKey"));
+        if (item.getServiceKey()==null && !item.getSignature().isEmpty())
+            throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "serviceKey"));
+        //if i'm signed and a key isn't defined in a bt
+        if (item.getBindingTemplates()!=null && !item.getSignature().isEmpty())
+            for (int i=0; i < item.getBindingTemplates().getBindingTemplate().size(); i++)
+            {
+                if (item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey()==null ||
+                        item.getBindingTemplates().getBindingTemplate().get(i).getBindingKey().length()==0)
+                {
+                    throw new ValueNotAllowedException(new ErrorMessage("errors.entity.SignedButNoKey", "businessService/bindingTemplate(" + i + ")/bindingKey"));
+                }
+        }
+    }
 
     public void validateBusinessEntity(EntityManager em, org.uddi.api_v3.BusinessEntity businessEntity, Configuration config) throws DispositionReportFaultMessage {
 
@@ -552,6 +615,7 @@ public class ValidatePublish extends ValidateUDDIApi {
         }
 
         boolean entityExists = false;
+        validateNotSigned(businessEntity);
         String entityKey = businessEntity.getBusinessKey();
         if (entityKey == null || entityKey.length() == 0) {
             KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
@@ -608,7 +672,6 @@ public class ValidatePublish extends ValidateUDDIApi {
         if (businessServices == null) {
             return;
         }
-
         List<org.uddi.api_v3.BusinessService> businessServiceList = businessServices.getBusinessService();
         if (businessServiceList == null || businessServiceList.size() == 0) {
             throw new ValueNotAllowedException(new ErrorMessage("errors.businessservices.NoInput"));
@@ -628,6 +691,7 @@ public class ValidatePublish extends ValidateUDDIApi {
             throw new ValueNotAllowedException(new ErrorMessage("errors.businessservice.NullInput"));
         }
 
+        validateNotSigned(businessService);
         // Retrieve the service's passed key
         String entityKey = businessService.getServiceKey();
         if (entityKey != null && entityKey.length() > 0) {
@@ -665,6 +729,8 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         // Projections don't require as rigorous testing as only the projected service's business key and service key are examined for validity.
         if (isProjection) {
+
+         
             Object obj = em.find(org.apache.juddi.model.BusinessService.class, entityKey);
             // Can't project a service that doesn't exist!
             if (obj == null) {
@@ -828,6 +894,7 @@ public class ValidatePublish extends ValidateUDDIApi {
 
         boolean entityExists = false;
         if (entityKey == null || entityKey.length() == 0) {
+            validateNotSigned(bindingTemplate);
             KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
             entityKey = keyGen.generate();
             bindingTemplate.setBindingKey(entityKey);
@@ -932,6 +999,7 @@ public class ValidatePublish extends ValidateUDDIApi {
         if (entityKey == null || entityKey.length() == 0) {
             KeyGenerator keyGen = KeyGeneratorFactory.getKeyGenerator();
             entityKey = keyGen.generate();
+            validateNotSigned(tModel);
             tModel.setTModelKey(entityKey);
         } else {
             // Per section 4.4: keys must be case-folded

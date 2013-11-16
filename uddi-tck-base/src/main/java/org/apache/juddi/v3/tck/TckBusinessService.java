@@ -25,13 +25,9 @@ import org.junit.Assert;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessService;
 import org.uddi.api_v3.DeleteService;
-import org.uddi.api_v3.FindQualifiers;
-import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.GetServiceDetail;
-import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveService;
 import org.uddi.api_v3.ServiceDetail;
-import org.uddi.api_v3.ServiceList;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 /**
@@ -41,21 +37,19 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 public class TckBusinessService 
 {
 	
-	public final static String NOTIFIER_SERVICE_XML  = "uddi_data/subscriptionnotifier/businessService.xml";
-	public final static String NOTIFIER_SERVICE_KEY  = "uddi:uddi.joepublisher.com:notifierone";
-
-	final static String JOE_SERVICE_XML              = "uddi_data/joepublisher/businessService.xml";
-    final static String JOE_SERVICE_KEY              = "uddi:uddi.joepublisher.com:serviceone";
-    final static String JOE_SERVICE_XML_2              = "uddi_data/joepublisher/businessService2.xml";
-    final static String JOE_SERVICE_KEY_2              = "uddi:uddi.joepublisher.com:servicetwo";
-    final static String SAM_SERVICE_XML              = "uddi_data/samsyndicator/businessService.xml";
-    final static String SAM_SERVICE_KEY              = "uddi:www.samco.com:listingservice";
-    
-    public final static String RIFTSAW_PROCESS_XML          = "uddi_data/bpel/riftsaw/WSDLPort.xml";
-    public final static String RIFTSAW_PROCESS_KEY          = "uddi:riftsaw.jboss.org:ticket-service";
-   
+    public final static String NOTIFIER_SERVICE_XML = "uddi_data/subscriptionnotifier/businessService.xml";
+    public final static String NOTIFIER_SERVICE_KEY = "uddi:uddi.joepublisher.com:notifierone";
+    public final static String JOE_SERVICE_XML = "uddi_data/joepublisher/businessService.xml";
+    public final static String JOE_SERVICE_KEY = "uddi:uddi.joepublisher.com:serviceone";
+    public final static String JOE_SERVICE_XML_2 = "uddi_data/joepublisher/businessService2.xml";
+    public final static String JOE_SERVICE_KEY_2 = "uddi:uddi.joepublisher.com:servicetwo";
+    public final static String SAM_SERVICE_XML = "uddi_data/samsyndicator/businessService.xml";
+    public final static String SAM_SERVICE_KEY = "uddi:www.samco.com:listingservice";
+    public final static String RIFTSAW_PROCESS_XML = "uddi_data/bpel/riftsaw/WSDLPort.xml";
+    public final static String RIFTSAW_PROCESS_KEY = "uddi:riftsaw.jboss.org:ticket-service";
+    public final static String JOE_BINDING_KEY_1="uddi:uddi.joepublisher.com:bindingone";
     private Log logger = LogFactory.getLog(this.getClass());
-	private UDDIPublicationPortType publication = null;
+    private UDDIPublicationPortType publication = null;
     private UDDIInquiryPortType inquiry = null;
 	
 	public TckBusinessService(UDDIPublicationPortType publication, 

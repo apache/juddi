@@ -50,8 +50,11 @@ public class WSDLinaUDDIRegistryTest {
 	static Definition wsdlDefinition = null;
 	static Properties properties = new Properties();
 	static String wsdlURL = null;
-	
-	
+	static boolean serialize=false;
+	public WSDLinaUDDIRegistryTest(){
+            if (System.getProperty("debug")!=null && System.getProperty("debug").equalsIgnoreCase("true"))
+                serialize = true;
+        }
 	@BeforeClass
 	public static void before() throws Exception{
 		try {
@@ -81,7 +84,8 @@ public class WSDLinaUDDIRegistryTest {
 	    
 		TModel tModel =tModels.iterator().next();
 		System.out.println("UDDI PortType TModel " + tModel.getName().getValue());
-		System.out.println(pTModel.print(tModel));
+		if (serialize)
+                System.out.println(pTModel.print(tModel));
 		
 		//now compare to the spec example
 		String porttypeXml = "wsdl/uddiv3-xml/3_2_1_porttype.xml";
@@ -130,6 +134,7 @@ public class WSDLinaUDDIRegistryTest {
 	    
 		TModel tModel =tModels.iterator().next();
 		System.out.println("UDDI Binding TModel " + tModel.getName().getValue());
+                if (serialize)
 		System.out.println(pTModel.print(tModel));
 		
 		//Compare to the spec example
@@ -175,6 +180,7 @@ public class WSDLinaUDDIRegistryTest {
 		BusinessService businessService = businessServices.getBusinessService().get(0);
 		
 		System.out.println(businessService.getName().get(0).getValue());
+                if (serialize)
 		System.out.println(servicePrinter.print(businessService));
 		
 		//Compare to the spec example

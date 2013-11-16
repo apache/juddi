@@ -47,7 +47,13 @@ public class BPEL2UDDITest {
 	PrintUDDI<FindTModel> pFindTModel = new PrintUDDI<FindTModel>();
 	PrintUDDI<BindingTemplate> pBinding = new PrintUDDI<BindingTemplate>();
 	ReadWSDL rw = new ReadWSDL();
-	
+
+        static boolean serialize=false;
+	public BPEL2UDDITest(){
+            if (System.getProperty("debug")!=null && System.getProperty("debug").equalsIgnoreCase("true"))
+                serialize = true;
+        }
+        
 	@BeforeClass
 	public static void before() throws JAXBException, ConfigurationException {
 		Properties properties = new Properties();
@@ -68,6 +74,7 @@ public class BPEL2UDDITest {
 	    Set<TModel> portTypeTModels = bpel2UDDI.createWSDLPortTypeTModels(wsdlDefinition.getDocumentBaseURI(), portTypes); 
 	    for (TModel tModel : portTypeTModels) {
 			System.out.println("***** UDDI PortType TModel: " + tModel.getName().getValue());
+                        if (serialize)
 			System.out.println(pTModel.print(tModel));
 		}
 		Assert.assertEquals(2,portTypeTModels.size());
@@ -89,6 +96,7 @@ public class BPEL2UDDITest {
 	    TModel bpel4WSTModel = bpel2UDDI.createBPEL4WSProcessTModel(serviceName, targetNamespace, portTypes, bpelOverViewUrl);
 	    
 		System.out.println("***** BPEL4WS Process TModel: " + bpel4WSTModel.getName().getValue());
+                if (serialize)
 		System.out.println(pTModel.print(bpel4WSTModel));
 		
 		Assert.assertNotNull(bpel4WSTModel);
@@ -102,6 +110,7 @@ public class BPEL2UDDITest {
 		FindTModel findTModel = bpel2UDDI.createFindTModelForProcessName(processName);
 		
 		System.out.println("***** Find TModel For ProcessName: " + processName);
+                if (serialize)
 		System.out.println(pFindTModel.print(findTModel));
 		
 		Assert.assertNotNull(findTModel.getCategoryBag());
@@ -118,6 +127,7 @@ public class BPEL2UDDITest {
 	    
 		for (TModel tModel : portTypeTModels) {
 			System.out.println("***** UDDI PortType TModel: " + tModel.getName().getValue());
+                        if (serialize)
 			System.out.println(pTModel.print(tModel));
 		}
 		Assert.assertEquals(1,portTypeTModels.size());
@@ -134,6 +144,7 @@ public class BPEL2UDDITest {
 	    
 		for (TModel tModel : bindingTModels) {
 			System.out.println("***** UDDI Binding TModel: " + tModel.getName().getValue());
+                        if (serialize)
 			System.out.println(pTModel.print(tModel));
 		}
 		Assert.assertEquals(1,bindingTModels.size());
@@ -155,6 +166,7 @@ public class BPEL2UDDITest {
 	    TModel bpel4WSTModel = bpel2UDDI.createBPEL4WSProcessTModel(serviceName, targetNamespace, portTypes, bpelOverViewUrl);
 	    
 		System.out.println("***** BPEL4WS Process TModel: " + bpel4WSTModel.getName().getValue());
+                if (serialize)
 		System.out.println(pTModel.print(bpel4WSTModel));
 		
 		Assert.assertNotNull(bpel4WSTModel);
@@ -173,6 +185,7 @@ public class BPEL2UDDITest {
 	    BindingTemplate binding = bpel2UDDI.createBPELBinding(serviceName, portName, serviceUrl, wsdlDefinition);
 	    
 		System.out.println("***** WSDL Port BindingTemplate: " + binding.getBindingKey());
+                if (serialize)
 		System.out.println(pBinding.print(binding));
 		
 		Assert.assertNotNull(binding.getTModelInstanceDetails());
@@ -186,6 +199,7 @@ public class BPEL2UDDITest {
 		FindTModel findTModel = bpel2UDDI.createFindTModelForProcessName(processName);
 		
 		System.out.println("***** Find TModel For ProcessName: " + processName);
+                if (serialize)
 		System.out.println(pFindTModel.print(findTModel));
 		
 		Assert.assertNotNull(findTModel.getCategoryBag());

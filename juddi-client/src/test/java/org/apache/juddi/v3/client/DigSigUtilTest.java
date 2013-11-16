@@ -44,10 +44,13 @@ public class DigSigUtilTest {
     org.apache.juddi.v3.client.cryptor.DigSigUtil ds = null;
 
     public DigSigUtilTest() throws Exception {
+        if (System.getProperty("debug") != null && System.getProperty("debug").equalsIgnoreCase("true")) {
+            serialize = true;
+        }
         Default();
     }
+    static boolean serialize = false;
 
-    
     void SetCertStoreSettigns() {
         ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "./src/test/resources/keystore.jks");
         ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
@@ -99,6 +102,7 @@ public class DigSigUtilTest {
         be.getName().add(new Name("My biz", "en"));
 
         BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
+        if (serialize)
         DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
         Assert.assertNotSame("items are the same", be, signUDDI_JAXBObject);
         //System.out.println("verifing");
@@ -126,6 +130,7 @@ public class DigSigUtilTest {
         be.getName().add(new Name("My biz", "en"));
 
         BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
+        if (serialize)
         DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
         Assert.assertNotSame("items are the same", be, signUDDI_JAXBObject);
         //System.out.println("verifing");
@@ -139,8 +144,8 @@ public class DigSigUtilTest {
         }
         validAllSignatureElementsArePresent(signUDDI_JAXBObject.getSignature());
     }
-    
-        @Test
+
+    @Test
     public void testSignBusinessEverything() throws CertificateException {
         System.out.println("testSignBusinessEverything signing");
         Everything();
@@ -153,6 +158,7 @@ public class DigSigUtilTest {
         be.getName().add(new Name("My biz", "en"));
 
         BusinessEntity signUDDI_JAXBObject = ds.signUddiEntity(be);
+        if (serialize)
         DigSigUtil.JAXB_ToStdOut(signUDDI_JAXBObject);
         Assert.assertNotSame("items are the same", be, signUDDI_JAXBObject);
         //System.out.println("verifing");
