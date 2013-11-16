@@ -32,6 +32,7 @@
                     out.write("Loaded from: (location unknown)<br>");
                 }
             %>
+            <h2>Server Config</h2>
             <table class="table table-hover">
                 <tr><th>Field</th><th>Value</th></tr>
                         <%

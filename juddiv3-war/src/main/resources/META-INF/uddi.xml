@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-
 <uddi>
     <reloadDelay>5000</reloadDelay>
     <client name="example-client">
@@ -7,15 +6,6 @@
             <node>
                 <!-- required 'default' node -->
                 <name>default</name> 
-                <properties>
-                    <property name="serverName" value="localhost"/>
-                    <property name="serverPort" value="8080"/>
-					<!-- for UDDI nodes that use HTTP u/p, using the following 
-					<property name="basicAuthUsername" value="root" />
-					<property name="basicAuthPassword" value="password" />
-					<property name="basicAuthPasswordIsEncrypted" value="false" />
-					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
-                </properties>
                 <description>Main jUDDI node</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
@@ -29,35 +19,35 @@
             </node>
         </nodes>
 		<signature>
-			<!-- signing stuff -->
-			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
+			<!-- signing stuff (not used)-->
+			<signingKeyStorePath></signingKeyStorePath>
 			<signingKeyStoreType>JKS</signingKeyStoreType>
 			<signingKeyStoreFilePassword 
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"></signingKeyStoreFilePassword>
 			<signingKeyPassword
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
-			<signingKeyAlias>my special key</signingKeyAlias>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"></signingKeyPassword>
+			<signingKeyAlias>(not used)</signingKeyAlias>
 			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
 			<signatureMethod>RSA_SHA1</signatureMethod>
 			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
 			<!-- validation stuff -->
-			<trustStorePath>truststore.jks</trustStorePath>
-			<trustStoreType>JKS</trustStoreType>
+			<trustStorePath></trustStorePath>
+			<trustStoreType></trustStoreType>
 			<trustStorePassword
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"></trustStorePassword>
 			
 			<checkTimestamps>true</checkTimestamps>
 			<checkTrust>true</checkTrust>
 			<checkRevocationCRL>true</checkRevocationCRL>
 		</signature>
 		<subscriptionCallbacks>
-			<keyDomain>uddi:somebusiness</keyDomain>
-			<listenUrl>http://MyHostname:4444/callback</listenUrl>
+			<keyDomain></keyDomain>
+			<listenUrl></listenUrl>
 			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
-			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+			<autoRegisterBusinessServiceKey></autoRegisterBusinessServiceKey>
 			<signatureBehavior>DoNothing</signatureBehavior>
 			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
 		</subscriptionCallbacks>
@@ -65,4 +55,27 @@
 			<IgnoreSSLErrors>false</IgnoreSSLErrors>
 		</XtoWsdl>
     </client>
+    
+    
+    <!-- hi there!
+    this section is required by juddi admin page and is an extension of what the normal juddi-client does.
+    it's not in the standard config schema.
+    
+    -->
+    <config>
+        
+        <props>
+            <!--#required. if this uddi client is connected to uddi services that use the auth token, then set to UDDI_AUTH
+            #if not, set authtype to HTTP-->
+            <authtype>UDDI_AUTH</authtype>
+            <automaticLogouts>
+                <!-- #enables automatic logout timer, defaults to false if not defined-->
+                <enabled>true</enabled>
+                <!--#defines the duration of time to wait for the automatic logout, defaults to 15min if not defined-->
+                <duration>900000</duration>
+            </automaticLogouts>
+            <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
+            <node>default-ssl</node>
+        </props>
+    </config>
 </uddi>

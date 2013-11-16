@@ -39,7 +39,8 @@
             %>
             This page lets you access the jUDDI Web Service.
             Its functions are outside the scope of the UDDI specification and provide basic administrative functions
-            for managing your UDDI node. You'll need to be logged in order to do anything. Please select an item from the drop down menu.<br>
+            for managing your UDDI node. <br><br><b>You'll need to be logged (top right) in order to do anything.</b><br>
+            Please select an item from the drop down menu.<br>
             <select onchange="toggledivs();" id="divselector">
                 <option>adminDelete_tmodel</option>
                 <option>delete_ClientSubscriptionInfo</option>
@@ -80,7 +81,7 @@
                 <div id="save_publisher" style="display:none">
                     Name<input type="text" id="savePublisherNAME"  class="forminput" placeholder="Enter name"><br>
                     Email<input type="text" id="savePublisherEMAIL"  class="forminput" placeholder="Enter email"><br>
-                    Authorized Name <input type="text" id="savePublisherAuthorizedName"  class="forminput" placeholder="Enter Authorized Name"><br>
+                    Authorized Name (username) <input type="text" id="savePublisherAuthorizedName"  class="forminput" placeholder="Enter Authorized Name"><br>
                     Is Admin <input type="text" id="savePublisherIsAdmin"  class="forminput" ><br>
                     Is Enabled <input type="text" id="savePublisherIsEnabled"  class="forminput"><br>
                     Max bindings per service <input type="text" id="savePublisherMaxBindings" placeholder="100"  class="forminput"><br>
@@ -158,7 +159,7 @@
                 }
             </script>
             <br>
-            * For items that require an XML input, let the UDDI authentication token blank. It will be populated automatically.
+            * For items that require XML input, leave the UDDI authentication token blank. It will be populated automatically.
             <a href="javascript:submitform();" class="btn btn-primary">Go!</a>
             <div id="adminresults"></div>
         </div>

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bindings\bindingsWcf.cs" />
     <Compile Include="bindings\datamodel.cs" />
     <Compile Include="bindings\events.cs" />
     <Compile Include="bindings\ext.cs" />

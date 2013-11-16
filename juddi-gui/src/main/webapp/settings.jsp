@@ -1,4 +1,4 @@
-<%-- 
+-<%-- 
     Document   : settings
     Created on : Feb 23, 2013, 2:05:35 PM
     Author     : Alex O'Ree
@@ -29,55 +29,114 @@
 
 
             %>
+
+
             <%=ResourceLoader.GetResource(session, "pages.settings.loading")%> <%=StringEscapeUtils.escapeHtml(x.GetJuddiClientConfig().getConfigurationFile())%><br>
-            <%=ResourceLoader.GetResource(session, "pages.settings.loading")%> <%=StringEscapeUtils.escapeHtml(x.GetRawConfigurationPath())%>
             <table class="table table-hover">
                 <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
                     <th><%=ResourceLoader.GetResource(session, "items.value")%></th></tr>
                         <%
-
-
-                            Properties p = x.GetRawConfiguration();
-                            Set<Entry<Object, Object>> set = p.entrySet();
-                            Iterator<Entry<Object, Object>> it = set.iterator();
-                            while (it.hasNext()) {
-                                out.write("<tr><td>");
-                                Entry<Object, Object> item = (Entry<Object, Object>) it.next();
-                                String key = (String) item.getKey();
-                                String value = (String) item.getValue();
-                                out.write(StringEscapeUtils.escapeHtml(key));
-                                out.write("</td><td><div ");
-                                if (!key.equalsIgnoreCase("key")) {
-                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
-                                }
-                                out.write(">");
-
-                                out.write(StringEscapeUtils.escapeHtml(value));
-                                out.write("</div></td></tr>");
-                            }
                             try {
                                 ClientConfig cfg = x.GetJuddiClientConfig();
+                                Configuration cfg2 = cfg.getConfiguration();
                                 Iterator<String> it2 = cfg.getConfiguration().getKeys();
+
+                                String[] nodes = cfg2.getStringArray("client.nodes.node.name");
+
                                 while (it2.hasNext()) {
-                                    out.write("<tr><td>");
+
                                     String key = it2.next();
 
                                     String value = cfg.getConfiguration().getString(key);
+                                    if (key.startsWith("client") && !key.startsWith("client.nodes.node")) {
+                                        out.write("<tr><td>");
+                                        out.write(StringEscapeUtils.escapeHtml(key));
+                                        out.write("</td><td><div ");
+                                        if (key.startsWith("client") && !key.startsWith("client.nodes")) {
+                                            out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
+                                        }
+                                        out.write(">");
+                                        out.write(StringEscapeUtils.escapeHtml(value));
+                                        out.write("</div></td></tr>");
+                                    }
+                                }
+
+                                for (int i = 0; i < nodes.length; i++) {
+
+                                    String key = "client.nodes.node(" + i + ").name";
+                                    out.write("<tr><td>");
                                     out.write(StringEscapeUtils.escapeHtml(key));
                                     out.write("</td><td><div ");
-                                    if (key.startsWith("client")) {
-                                        out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\"");
-                                    }
-                                    out.write(">");
-                                    out.write(StringEscapeUtils.escapeHtml(value));
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").description";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").proxyTransport";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").custodyTransferUrl";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").inquiryUrl";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").publishUrl";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").securityUrl";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
+                                    out.write("</div></td></tr>");
+
+                                    key = "client.nodes.node(" + i + ").subscriptionUrl";
+                                    out.write("<tr><td>");
+                                    out.write(StringEscapeUtils.escapeHtml(key));
+                                    out.write("</td><td><div ");
+                                    out.write("class=\"edit\" id=\"" + StringEscapeUtils.escapeHtml(key) + "\">");
+                                    out.write(StringEscapeUtils.escapeHtml(cfg2.getString(key)));
                                     out.write("</div></td></tr>");
 
                                 }
+
+
                             } catch (Exception ex) {
                                 x.log.error(ex);
                             }
                         %>
             </table>
+
+
             <a class="btn btn-primary " href="javascript:saveSettings();"><i class="icon-large icon-save"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
             <script type="text/javascript">
 
@@ -137,6 +196,45 @@
                     });
                 }
             </script>
+
+            <br><br>
+            <script type="text/javascript">
+                function showDebug() {
+                    $("#debugtable").show();
+                }
+            </script>
+            <a class="btn " href="javascript:showDebug();"><i class="icon-large icon-save"></i> <%=ResourceLoader.GetResource(session, "pages.settings.debuginfo")%></a>
+            <div id="debugtable" class="hide">
+                <table class="table table-hover">
+                    <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
+                        <th><%=ResourceLoader.GetResource(session, "items.value")%></th></tr>
+                            <%
+
+                                try {
+                                    ClientConfig cfg = x.GetJuddiClientConfig();
+                                    Iterator<String> it2 = cfg.getConfiguration().getKeys();
+
+                                    while (it2.hasNext()) {
+
+                                        String key = it2.next();
+
+                                        if (!key.startsWith("config.props.") && !key.startsWith("client")) {
+                                            String value = cfg.getConfiguration().getString(key);
+                                            out.write("<tr><td>");
+                                            out.write(StringEscapeUtils.escapeHtml(key));
+                                            out.write("</td><td><div ");
+                                            out.write(">");
+                                            out.write(StringEscapeUtils.escapeHtml(value));
+                                            out.write("</div></td></tr>");
+                                        }
+                                    }
+                                } catch (Exception ex) {
+                                    x.log.error(ex);
+                                }
+
+                            %>
+                </table>
+            </div>
         </div>
     </div>
     <%@include file="header-bottom.jsp" %>

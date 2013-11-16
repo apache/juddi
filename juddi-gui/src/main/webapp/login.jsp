@@ -4,6 +4,7 @@
     Author     : Alex O'Ree
 --%>
 
+<%@page import="org.apache.juddi.webconsole.hub.UddiHub"%>
 <%@page import="org.apache.juddi.webconsole.resources.ResourceLoader"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,7 +22,7 @@
     </script>
     <a class="btn" title="<%=ResourceLoader.GetResource(session, "navbar.login.logout")%>" href="javascript:logout();">
         <%
-                if (!request.isSecure()) {
+                if (!request.isSecure() && UddiHub.getInstance(application, session).isSecure()) {
             %>
             <i class="icon-warning-sign" title="<%=ResourceLoader.GetResource(session, "warning.ssl")%>"></i>
             <%

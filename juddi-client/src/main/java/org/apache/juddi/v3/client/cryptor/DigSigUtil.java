@@ -616,53 +616,98 @@ public class DigSigUtil {
             type = "JKS";
         }
         KeyStore ks = KeyStore.getInstance(type);
-        String filename = map.getProperty(TRUSTSTORE_FILE);
-        if (filename == null) {
-            return null;
-        }
-        URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
-        if (url == null) {
-            try {
-                url = new File(map.getProperty(TRUSTSTORE_FILE)).toURI().toURL();
-            } catch (Exception x) {
-            }
-        }
-        if (url == null) {
-            try {
-                url = this.getClass().getClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
-            } catch (Exception x) {
-            }
-        }
+        boolean ksLoaded = false;
+
+        //try windows trust store first
         try {
-            if (!map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
-                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
-            } else {
-                //Windows only
+            if (map.getProperty(TRUSTSTORE_FILETYPE).equalsIgnoreCase("WINDOWS-ROOT")) {
                 ks.load(null, null);
+                ksLoaded = true;
+                logger.info("trust store loaded from windows");
             }
         } catch (Exception ex) {
-            logger.error("Unable to load user specified trust store! attempting to load the default", ex);
-            URL cacerts = null;
+            logger.debug("unable to load truststore from windows", ex);
+        }
+
+        //load from thread classloader
+        if (!ksLoaded) {
             try {
-                cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
-            } catch (Exception c) {
-                logger.debug("unable to load default jre truststore", c);
+                URL url = Thread.currentThread().getContextClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
+                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+                ksLoaded = true;
+                logger.info("trust store loaded from classpath(1) " + map.getProperty(TRUSTSTORE_FILE));
+            } catch (Exception x) {
+                logger.debug("unable to load truststore from classpath", x);
             }
+        }
+
+        //load from this classloader
+        if (!ksLoaded) {
             try {
-                cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "jre" + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
+                URL url = this.getClass().getClassLoader().getResource(map.getProperty(TRUSTSTORE_FILE));
+                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+                ksLoaded = true;
+                logger.info("trust store loaded from classpath(2) " + map.getProperty(TRUSTSTORE_FILE));
+            } catch (Exception x) {
+                logger.debug("unable to load truststore from classpath", x);
+            }
+        }
+        //load as a file
+        if (!ksLoaded) {
+            try {
+                URL url = new File(map.getProperty(TRUSTSTORE_FILE)).toURI().toURL();
+                ks.load(url.openStream(), (map.getProperty(TRUSTSTORE_FILE_PASSWORD)).toCharArray());
+                ksLoaded = true;
+                logger.info("trust store loaded from file " + map.getProperty(TRUSTSTORE_FILE));
+            } catch (Exception x) {
+                logger.debug("unable to load truststore from file", x);
+            }
+        }
+
+
+        //    logger.error("Unable to load user specified trust store! attempting to load the default", ex);
+
+        //load from system property
+        if (!ksLoaded) {
+            try {
+                String truststore = System.getProperty("javax.net.ssl.keyStore");
+                String pwd = System.getProperty("javax.net.ssl.keyStorePassword");
+                if (truststore != null && pwd != null) {
+                    ks.load(new File(truststore).toURI().toURL().openStream(), pwd.toCharArray());
+                    ksLoaded = true;
+                    logger.info("trust store loaded from sysprop " + truststore);
+                }
+            } catch (Exception ex) {
+                logger.debug("unable to load truststore from sysprop", ex);
+            }
+        }
+
+        if (!ksLoaded) {
+            try {
+                URL cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
+                ks.load(cacerts.openStream(), "changeit".toCharArray());
+                logger.info("trust store loaded from JRE " + cacerts.toExternalForm());
+                ksLoaded = true;
+            } catch (Exception c) {
+                logger.debug("unable to load default JDK truststore", c);
+            }
+        }
+        if (!ksLoaded) {
+            try {
+                URL cacerts = new File(System.getenv("JAVA_HOME") + File.separator + "jre" + File.separator + "lib" + File.separator + "security" + File.separator + "cacerts").toURI().toURL();
+                ks.load(cacerts.openStream(), "changeit".toCharArray());
+                logger.info("trust store loaded from JRE " + cacerts.toExternalForm());
+                ksLoaded = true;
             } catch (Exception c) {
                 logger.debug("unable to load default jdk/jre truststore", c);
             }
-            if (cacerts != null) {
-                try {
-                    logger.info("Attempting to load trust store from " + cacerts.toString());
-                    ks.load(cacerts.openStream(), "changeit".toCharArray());
-                } catch (Exception c) {
-                    logger.warn("error loading default truststore", c);
-                }
-            }
-
         }
+        if (!ksLoaded)
+        {
+            logger.warn("unable to load trust store!");
+        }
+
+
         return ks;
     }
 

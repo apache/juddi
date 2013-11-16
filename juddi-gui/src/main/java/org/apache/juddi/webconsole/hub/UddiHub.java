@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.security.cert.CertificateFactory;
@@ -50,7 +49,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.webconsole.AES;
 import org.apache.juddi.webconsole.PostBackConstants;
@@ -81,21 +82,55 @@ import sun.misc.BASE64Encoder;
  *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UddiHub implements Serializable{
+public class UddiHub implements Serializable {
 
     /**
      * The logger name
      */
     public static final String LOGGER_NAME = "org.apache.juddi";
-    URL propertiesurl = null;
-    Properties properties = null;
+    private static final long serialVersionUID = 1L;
     AuthStyle style = null;
+    private String nodename = "default";
+    private final String clientName = "juddigui";
+    private boolean WS_Transport = false;
+    private boolean WS_securePorts = false;
+    private transient HttpSession session;
+    private transient Transport transport = null;
+    private transient ClientConfig clientConfig;
+    private transient Properties properties;
+    private transient UDDISubscriptionPortType subscription = null;
+    private transient UDDISecurityPortType security = null;
+    private transient UDDIInquiryPortType inquiry = null;
+    private transient UDDIPublicationPortType publish = null;
+    private transient UDDICustodyTransferPortType custody = null;
+    //private JUDDIApiPortType juddi = null;
+    private transient String token = null;
     /**
      * The Log4j logger. This is also referenced from the Builders class, thus
      * it is public
      */
-    public static final Log log = LogFactory.getLog(LOGGER_NAME);
-    private DatatypeFactory df;
+    public transient static final Log log = LogFactory.getLog(LOGGER_NAME);
+    private transient DatatypeFactory df;
+    /**
+     * the name of the 'node' property in the config
+     */
+    public static final String PROP_CONFIG_NODE = "config.props.node";
+    /**
+     *
+     */
+    public static final String PROP_AUTH_TYPE = "config.props.authtype";
+    /**
+     *
+     */
+    public static final String PROP_AUTO_LOGOUT = "config.props.automaticLogouts.enable";
+    /**
+     *
+     */
+    public static final String PROP_AUTO_LOGOUT_TIMER = "config.props.automaticLogouts.duration";
+    /**
+     *
+     */
+    public static final String PROP_PREFIX = "config.props.";
 
     private UddiHub() throws DatatypeConfigurationException {
         df = DatatypeFactory.newInstance();
@@ -147,7 +182,7 @@ public class UddiHub implements Serializable{
         if (j == null) {
             UddiHub hub = new UddiHub(application, _session);
             _session.setAttribute("hub", hub);
-            hub.locale =(String) _session.getAttribute("locale");
+            hub.locale = (String) _session.getAttribute("locale");
             return hub;
         }
 
@@ -156,68 +191,95 @@ public class UddiHub implements Serializable{
     String locale = "en";
 
     /**
-     * Provides access to the configuration file for the Hub. useful for I/O
-     * changes to the config
+     * gets the user selected locale
      *
      * @return
-     * @throws URISyntaxException
      */
-    public String GetRawConfigurationPath() throws URISyntaxException {
-        return propertiesurl.toString();
-    }
-
-    /**
-     *
-     * @return Provides access to the configuration file for the Hub. useful for
-     * I/O changes to the config
-     */
-    public Properties GetRawConfiguration() {
-        return properties;
-    }
-
-    public String getLocale(){
+    public String getLocale() {
         return locale;
     }
+
+    private void EnsureConfig() {
+        if (clientConfig == null) {
+            try {
+                UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+                clientConfig = client.getClientConfig();
+                try {
+                    style = AuthStyle.valueOf(clientConfig.getConfiguration().getString(PROP_AUTH_TYPE));
+                } catch (Exception ex) {
+                    log.warn("'UDDI_AUTH' is not defined in the config (" + PROP_AUTH_TYPE + ")! defaulting to UDDI_AUTH");
+                    style = AuthStyle.UDDI_AUTH;
+                }
+
+                nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
+                if (nodename == null || nodename.equals("")) {
+                    log.warn("'node' is not defined in the config! defaulting to 'default'");
+                    nodename = "default";
+                }
+                UDDINode uddiNode = clientConfig.getUDDINode(nodename);
+
+                String clazz = uddiNode.getProxyTransport();
+                if (clazz.contains("JAXWSTransport")) {
+                    WS_Transport = true;
+                }
+                Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
+                if (transportClass != null) {
+                    transport = (Transport) transportClass.
+                            getConstructor(String.class).newInstance(nodename);
+
+                    security = transport.getUDDISecurityService();
+                    inquiry = transport.getUDDIInquiryService();
+                    subscription = transport.getUDDISubscriptionService();
+                    publish = transport.getUDDIPublishService();
+                    custody = transport.getUDDICustodyTransferService();
+
+                    if (WS_Transport) {
+                        if (uddiNode.getPublishUrl().toLowerCase().startsWith("https://")
+                                && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))
+                                && uddiNode.getInquiryUrl().toLowerCase().startsWith("https://")
+                                && (uddiNode.getCustodyTransferUrl() != null && uddiNode.getCustodyTransferUrl().toLowerCase().startsWith("https://"))
+                                && uddiNode.getSubscriptionUrl().toLowerCase().startsWith("https://")) {
+                            WS_securePorts = true;
+                        }
+                    }
+
+                }
+            } catch (Exception ex) {
+                HandleException(ex);
+            }
+        }
+
+    }
+
     private UddiHub(ServletContext application, HttpSession _session) throws Exception {
+        session = _session;
+
         URL prop = application.getResource("/META-INF/config.properties");
         if (prop == null) {
             throw new Exception("Cannot locate the configuration file.");
         }
-        session = _session;
-        propertiesurl = prop;
+
         InputStream in = prop.openStream();
         Properties p = new Properties();
         p.load(in);
         in.close();
         properties = p;
-        try {
-            style = AuthStyle.valueOf((String) p.get(PROP_AUTH_TYPE));
-        } catch (Exception ex) {
-            log.info("UDDI_AUTH is not defined in the config");
-            style = AuthStyle.UDDI_AUTH;
-        }
-        try {
 
-            String clazz = UDDIClientContainer.getUDDIClient(null).
-                    getClientConfig().getUDDINode("default").getProxyTransport();
-            Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-            if (transportClass != null) {
-                transport = (Transport) transportClass.
-                        getConstructor(String.class).newInstance("default");
 
-                security = transport.getUDDISecurityService();
-                inquiry = transport.getUDDIInquiryService();
-                subscription = transport.getUDDISubscriptionService();
-                publish = transport.getUDDIPublishService();
-                custody = transport.getUDDICustodyTransferService();
-
-            }
-        } catch (Exception ex) {
-            HandleException(ex);
-        }
+        EnsureConfig();
     }
-    private HttpSession session;
-    private Transport transport = null;
+
+    /**
+     * returns true if we are using JAXWS transport AND all of the URLs start
+     * with https://
+     *
+     * @return
+     */
+    public boolean isSecure() {
+
+        EnsureConfig();
+        return WS_securePorts;
+    }
 
     /**
      * gets a reference to the current juddi client config file. this is a live
@@ -227,8 +289,8 @@ public class UddiHub implements Serializable{
      * @throws ConfigurationException g
      */
     public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
-        return UDDIClientContainer.getUDDIClient(null).
-                getClientConfig();
+        EnsureConfig();
+        return clientConfig;
     }
 
     /**
@@ -328,7 +390,7 @@ public class UddiHub implements Serializable{
                     && session.getAttribute("password") != null) {
                 req.setUserID((String) session.getAttribute("username"));
                 req.setCred(AES.Decrypt((String) session.getAttribute("password"), (String) properties.get("key")));
-                log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTO" : "AUTH_TOKEN"));
+                log.info("AUDIT: fetching auth token for " + req.getUserID() + " Auth Mode is " + ((security == null) ? "HTTP" : "AUTH_TOKEN"));
                 try {
                     AuthToken authToken = security.getAuthToken(req);
                     token = authToken.getAuthInfo();
@@ -349,13 +411,6 @@ public class UddiHub implements Serializable{
     public boolean getUddiIsAuthenticated() {
         return (token != null && !token.isEmpty());
     }
-    private UDDISubscriptionPortType subscription = null;
-    private UDDISecurityPortType security = null;
-    private UDDIInquiryPortType inquiry = null;
-    private UDDIPublicationPortType publish = null;
-    private UDDICustodyTransferPortType custody = null;
-    //private JUDDIApiPortType juddi = null;
-    private String token = null;
 
     /**
      * Performs a find_business call in the inquiry API
@@ -499,12 +554,11 @@ public class UddiHub implements Serializable{
     }
 
     /**
-     * Performs Inquiry Find_service API
-     * used from servicedetails.jsp
+     * Performs Inquiry Find_service API used from servicedetails.jsp
+     *
      * @param serviceid
      * @return
      */
-    
     public String GetServiceDetailAsHtml(String serviceid) {
         if (serviceid == null || serviceid.length() == 0) {
             return ResourceLoader.GetResource(session, "errors.noinput");
@@ -731,18 +785,18 @@ public class UddiHub implements Serializable{
             return ResourceLoader.GetResource(session, "errors.noinput.businesskey");
         }
 
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
         BindingTemplates bt = new BindingTemplates();
-        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        bt.getBindingTemplate().addAll(Builders.BuildBindingTemplates(Builders.MapFilter(request.getParameterMap(), PostBackConstants.BINDINGTEMPLATE), PostBackConstants.BINDINGTEMPLATE, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
         if (!bt.getBindingTemplate().isEmpty()) {
             be.setBindingTemplates(bt);
         }
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
 
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
@@ -841,21 +895,21 @@ public class UddiHub implements Serializable{
                 be.setBusinessServices(GetBusinessDetails.getBusinessServices());
             }
         }
-        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.getName().addAll(Builders.BuildNames(Builders.MapFilter(request.getParameterMap(), PostBackConstants.NAME), PostBackConstants.NAME, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
 
 
-        be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.setContacts(Builders.BuildContacts(request.getParameterMap(), ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
-        be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL,locale));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+        be.setDiscoveryURLs(Builders.BuildDisco(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DISCOVERYURL), PostBackConstants.DISCOVERYURL, locale));
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
-        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF,locale));
+        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, locale));
         return SaveBusinessDetails(be);
     }
 
@@ -866,7 +920,6 @@ public class UddiHub implements Serializable{
      * @return
      * @throws Exception
      */
-  
     /**
      * Gets a business's details used for the businessEditor
      *
@@ -925,15 +978,13 @@ public class UddiHub implements Serializable{
     public enum AuthStyle {
 
         /**
-         * Http 
+         * Http
          */
         HTTP,
-        
         /**
          * UDDI Authentication via the Security API
          */
         UDDI_AUTH
-        
     }
 
     /**
@@ -1727,7 +1778,7 @@ public class UddiHub implements Serializable{
                 }
 
             }
-            if (findBusiness!=null && findBusiness.getTModelInfos() != null) {
+            if (findBusiness != null && findBusiness.getTModelInfos() != null) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<table class=\"table\">");
                 for (int i = 0; i < findBusiness.getTModelInfos().getTModelInfo().size(); i++) {
@@ -1932,7 +1983,7 @@ public class UddiHub implements Serializable{
             return HandleException(ex);
         }
     }
-    
+
     /**
      * This rebuild a tmodel from the http request, such as from the tmodel
      * editor page
@@ -1970,17 +2021,17 @@ public class UddiHub implements Serializable{
 
 
 
-        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
-        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit"),locale));
+        be.getDescription().addAll(Builders.BuildDescription(Builders.MapFilter(request.getParameterMap(), PostBackConstants.DESCRIPTION), PostBackConstants.DESCRIPTION, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
+        be.getOverviewDoc().addAll(Builders.BuildOverviewDocs(Builders.MapFilter(request.getParameterMap(), PostBackConstants.OVERVIEW), PostBackConstants.OVERVIEW, ResourceLoader.GetResource(session, "items.clicktoedit"), locale));
 
         CategoryBag cb = new CategoryBag();
-        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF,locale));
-        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP,locale));
+        cb.getKeyedReference().addAll(Builders.BuildKeyedReference(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF), PostBackConstants.CATBAG_KEY_REF, locale));
+        cb.getKeyedReferenceGroup().addAll(Builders.BuildKeyedReferenceGroup(Builders.MapFilter(request.getParameterMap(), PostBackConstants.CATBAG_KEY_REF_GRP), PostBackConstants.CATBAG_KEY_REF_GRP, locale));
 
         if (!cb.getKeyedReference().isEmpty() || !cb.getKeyedReferenceGroup().isEmpty()) {
             be.setCategoryBag(cb);
         }
-        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF,locale));
+        be.setIdentifierBag(Builders.BuildIdentBag(Builders.MapFilter(request.getParameterMap(), PostBackConstants.IDENT_KEY_REF), PostBackConstants.IDENT_KEY_REF, locale));
 
         return SaveTModel(be);
 
@@ -3613,52 +3664,43 @@ public class UddiHub implements Serializable{
             return HandleException(ex);
         }
     }
-    
-    /**
-     * 
-     */
-    public static final String PROP_AUTH_TYPE="config.props.authtype";
-    /**
-     * 
-     */
-    public static final String PROP_AUTO_LOGOUT="config.props.enableAutomaticLogouts";
-    /**
-     * 
-     */
-    public static final String PROP_AUTO_LOGOUT_TIMER="config.props.enableAutomaticLogouts.duration";
-    /**
-     * 
-     */
-    public static final String PROP_PREFIX="config.props.";
-    
+
     /**
      * returns true if automatic logouts are configured
-     * @return 
+     *
+     * @return
      */
-    public boolean isAutoLogoutEnabled(){
-        String val=properties.getProperty(PROP_AUTO_LOGOUT);
-        if (val==null)
+    public boolean isAutoLogoutEnabled() {
+
+        if (clientConfig == null) {
+            EnsureConfig();
+        }
+        String val = clientConfig.getConfiguration().getString(PROP_AUTO_LOGOUT);
+        if (val == null) {
             return false;
-        try{
+        }
+        try {
             return Boolean.parseBoolean(val);
-        }catch (Exception ex){
-            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT + " in config.properties, defaulting to false",ex);
+        } catch (Exception ex) {
+            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT + " in uddi.xml, defaulting to false", ex);
         }
         return false;
     }
-    
+
     /**
      * defaults to 15 minutes if not defined
-     * @return 
+     *
+     * @return
      */
-    public long GetAutoLogoutDuration(){
-        String val=properties.getProperty(PROP_AUTO_LOGOUT_TIMER);
-        if (val==null)
+    public long GetAutoLogoutDuration() {
+        String val = clientConfig.getConfiguration().getString(PROP_AUTO_LOGOUT_TIMER);
+        if (val == null) {
             return 15 * 60 * 1000;
-        try{
+        }
+        try {
             return Long.parseLong(val);
-        }catch (Exception ex){
-            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT_TIMER + " in config.properties, defaulting to 15 minutes",ex);
+        } catch (Exception ex) {
+            log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT_TIMER + " in uddi.xml, defaulting to 15 minutes", ex);
         }
         return 15 * 60 * 1000;
     }

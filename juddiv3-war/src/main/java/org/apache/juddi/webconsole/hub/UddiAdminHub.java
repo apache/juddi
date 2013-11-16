@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.BindingProvider;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +51,10 @@ import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
 import org.apache.juddi.v3.client.ClassUtil;
+import org.apache.juddi.v3.client.config.ClientConfig;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
+import org.apache.juddi.v3.client.config.UDDINode;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.webconsole.AES;
@@ -78,18 +82,16 @@ public class UddiAdminHub {
      * The logger name
      */
     public static final String LOGGER_NAME = "org.apache.juddi";
-    AuthStyle style = null;
-    URL propertiesurl = null;
+    transient AuthStyle style = null;
     Properties properties = null;
     /**
      * The Log4j logger. This is also referenced from the Builders class, thus
      * it is public
      */
     public static final Log log = LogFactory.getLog(LOGGER_NAME);
-    private DatatypeFactory df;
 
     private UddiAdminHub() throws DatatypeConfigurationException {
-        df = DatatypeFactory.newInstance();
+        //    df = DatatypeFactory.newInstance();
     }
 
     /**
@@ -118,6 +120,37 @@ public class UddiAdminHub {
         security = null;
         juddi = null;
     }
+    /**
+     * the name of the 'node' property in the config
+     */
+    public static final String PROP_CONFIG_NODE = "config.props.node";
+    /**
+     *
+     */
+    public static final String PROP_AUTH_TYPE = "config.props.authtype";
+    /**
+     *
+     */
+    public static final String PROP_AUTO_LOGOUT = "config.props.automaticLogouts.enable";
+    /**
+     *
+     */
+    public static final String PROP_AUTO_LOGOUT_TIMER = "config.props.automaticLogouts.duration";
+    /**
+     *
+     */
+    public static final String PROP_PREFIX = "config.props.";
+    private transient UDDISecurityPortType security = null;
+    private transient JUDDIApiPortType juddi = null;
+    private transient String token = null;
+    private transient HttpSession session;
+    private transient Transport transport = null;
+    private transient ClientConfig clientConfig;
+    private static final long serialVersionUID = 1L;
+    private String nodename = "default";
+    private final String clientName = "juddigui";
+    private boolean WS_Transport = false;
+    private boolean WS_securePorts = false;
 
     /**
      * This is the singleton accessor UddiHub. There should be at most 1
@@ -146,36 +179,61 @@ public class UddiAdminHub {
             throw new Exception("Cannot locate the configuration file.");
         }
         session = _session;
-        propertiesurl = prop;
+
         InputStream in = prop.openStream();
         Properties p = new Properties();
         p.load(in);
         in.close();
         session = _session;
         properties = p;
-        style = (AuthStyle) AuthStyle.valueOf((String) p.get("authtype"));
-        try {
-
-            String clazz = UDDIClientContainer.getUDDIClient(null).
-                    getClientConfig().getUDDINode("default").getProxyTransport();
-            Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
-            if (transportClass != null) {
-                Transport transport = (Transport) transportClass.
-                        getConstructor(String.class).newInstance("default");
-
-                security = transport.getUDDISecurityService();
-                juddi = transport.getJUDDIApiService();
-
-
-            }
-        } catch (Exception ex) {
-            HandleException(ex);
-        }
+        EnsureConfig();
     }
-    private HttpSession session;
-    private UDDISecurityPortType security = null;
-    private JUDDIApiPortType juddi = null;
-    private String token = null;
+
+    private void EnsureConfig() {
+        if (clientConfig == null) {
+            try {
+                UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+                clientConfig = client.getClientConfig();
+                try {
+                    style = AuthStyle.valueOf(clientConfig.getConfiguration().getString(PROP_AUTH_TYPE));
+                } catch (Exception ex) {
+                    log.warn("'UDDI_AUTH' is not defined in the config (" + PROP_AUTH_TYPE + ")! defaulting to UDDI_AUTH");
+                    style = AuthStyle.UDDI_AUTH;
+                }
+
+                nodename = clientConfig.getConfiguration().getString(PROP_CONFIG_NODE);
+                if (nodename == null || nodename.equals("")) {
+                    log.warn("'node' is not defined in the config! defaulting to 'default'");
+                    nodename = "default";
+                }
+                UDDINode uddiNode = clientConfig.getUDDINode(nodename);
+
+                String clazz = uddiNode.getProxyTransport();
+                if (clazz.contains("JAXWSTransport")) {
+                    WS_Transport = true;
+                }
+                Class<?> transportClass = ClassUtil.forName(clazz, Transport.class);
+                if (transportClass != null) {
+                    transport = (Transport) transportClass.
+                            getConstructor(String.class).newInstance(nodename);
+
+                    security = transport.getUDDISecurityService();
+                    juddi = transport.getJUDDIApiService();
+
+                    if (WS_Transport) {
+                        if (uddiNode.getJuddiApiUrl().toLowerCase().startsWith("https://")
+                                && (uddiNode.getSecurityUrl() != null && uddiNode.getSecurityUrl().toLowerCase().startsWith("https://"))) {
+                            WS_securePorts = true;
+                        }
+                    }
+
+                }
+            } catch (Exception ex) {
+                HandleException(ex);
+            }
+        }
+
+    }
 
     /**
      * This function provides a basic error handling rutine that will pull out
@@ -201,6 +259,30 @@ public class UddiAdminHub {
                 ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
         //+ "</h3></div>";
 
+    }
+
+    /**
+     * returns true if we are using JAXWS transport AND all of the URLs start
+     * with https://
+     *
+     * @return
+     */
+    public boolean isSecure() {
+
+        EnsureConfig();
+        return WS_securePorts;
+    }
+
+    /**
+     * gets a reference to the current juddi client config file. this is a live
+     * instance changes can be stored to disk, usually
+     *
+     * @return
+     * @throws ConfigurationException g
+     */
+    public ClientConfig GetJuddiClientConfig() throws ConfigurationException {
+        EnsureConfig();
+        return clientConfig;
     }
 
     /**
@@ -250,28 +332,17 @@ public class UddiAdminHub {
     public enum AuthStyle {
 
         /**
-         * Http Basic
+         * Http
          */
-        HTTP_BASIC,
-        /**
-         * Http Digest
-         */
-        HTTP_DIGEST,
-        /**
-         * HTTP NTLM
-         */
-        HTTP_NTLM,
+        HTTP,
         /**
          * UDDI Authentication via the Security API
          */
-        UDDI_AUTH,
-        /**
-         * HTTP Client Certificate Authentication
-         */
-        HTTP_CLIENT_CERT
+        UDDI_AUTH
     }
 
     private String GetToken() {
+        EnsureConfig();
         if (style != AuthStyle.UDDI_AUTH) {
             BindingProvider bp = null;
             Map<String, Object> context = null;

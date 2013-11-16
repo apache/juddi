@@ -7,7 +7,7 @@
             <node>
                 <!-- required 'default' node -->
                 <name>default</name> 
-                <description>Main jUDDI node</description>
+                <description>Main UDDI Node</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://localhost:8080/juddiv3/services/custody-transfer</custodyTransferUrl>
@@ -15,49 +15,70 @@
                 <publishUrl>http://localhost:8080/juddiv3/services/publish</publishUrl>
                 <securityUrl>http://localhost:8080/juddiv3/services/security</securityUrl>
                 <subscriptionUrl>http://localhost:8080/juddiv3/services/subscription</subscriptionUrl>
-                <subscriptionListenerUrl>http://localhost:8080/juddiv3/services/subscription-listener</subscriptionListenerUrl>
-                <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
-				
-				<!-- 
-				Jboss users, note that the url is typically different, here's an example for Jboss EAP 6.x
-				<custodyTransferUrl>http://localhost:8080/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
-				<inquiryUrl>http://localhost:8080/juddiv3/UDDIInquiryService</inquiryUrl>
-				<publishUrl>http://localhost:8080/juddiv3/UDDIPublicationService</publishUrl>
-				<securityUrl>http://localhost:8080/juddiv3/UDDISecurityService</securityUrl>
-				<subscriptionUrl>http://localhost:8080/juddiv3/UDDISubscriptionService</subscriptionUrl>
-				<subscriptionListenerUrl>http://localhost:8080/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
-				<juddiApiUrl>http://localhost:8080/juddiv3/UDDIApiService</juddiApiUrl>
-				
-				-->
-				
-				
+            </node>
+             <node>
+                <name>default-ssl</name> 
+                <description>Main UDDI Node using SSL</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://localhost:8443/juddiv3/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>https://localhost:8443/juddiv3/services/inquiry</inquiryUrl>
+                <publishUrl>https://localhost:8443/juddiv3/services/publish</publishUrl>
+                <securityUrl>https://localhost:8443/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>https://localhost:8443/juddiv3/services/subscription</subscriptionUrl>
+            </node>
+            <node>
+                <name>jboss7</name> 
+                <description>Main UDDI node running on Jboss EAP6 or AS7</description>
+                <!-- 
+                Jboss users, note that the url is typically different, here's an example for Jboss EAP 6.x-->
+                <custodyTransferUrl>http://localhost:8080/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
+                <inquiryUrl>http://localhost:8080/juddiv3/UDDIInquiryService</inquiryUrl>
+                <publishUrl>http://localhost:8080/juddiv3/UDDIPublicationService</publishUrl>
+                <securityUrl>http://localhost:8080/juddiv3/UDDISecurityService</securityUrl>
+                <subscriptionUrl>http://localhost:8080/juddiv3/UDDISubscriptionService</subscriptionUrl>
+                <subscriptionListenerUrl>http://localhost:8080/juddiv3/UDDISubscriptionListenerService</subscriptionListenerUrl>
+            </node>
+             <node>
+                <name>jboss7-ssl</name> 
+                <description>Main UDDI node running on Jboss EAP6 or AS7</description>
+                <!-- 
+                Jboss users, note that the url is typically different, here's an example for Jboss EAP 6.x-->
+                <custodyTransferUrl>https://localhost:8443/juddiv3/UDDICustodyTransferService</custodyTransferUrl>
+                <inquiryUrl>https://localhost:8443/juddiv3/UDDIInquiryService</inquiryUrl>
+                <publishUrl>https://localhost:8443/juddiv3/UDDIPublicationService</publishUrl>
+                <securityUrl>https://localhost:8443/juddiv3/UDDISecurityService</securityUrl>
+                <subscriptionUrl>https://localhost:8443/juddiv3/UDDISubscriptionService</subscriptionUrl>
             </node>
         </nodes>
 		<signature>
-			<!-- signing stuff, is used by juddi-gui -->
-			<signingKeyStorePath>keystore.jks</signingKeyStorePath>
-			<signingKeyStoreType>JKS</signingKeyStoreType>
+			<!-- signing stuff, is NOT used by juddi-gui -->
+			<signingKeyStorePath>(not used)</signingKeyStorePath>
+			<signingKeyStoreType>(not used)</signingKeyStoreType>
 			<signingKeyStoreFilePassword 
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyStoreFilePassword>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">(not used)</signingKeyStoreFilePassword>
 			<signingKeyPassword
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</signingKeyPassword>
-			<signingKeyAlias>my special key</signingKeyAlias>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">(not used)</signingKeyPassword>
+			<signingKeyAlias>(not used)</signingKeyAlias>
                         
 			<canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
 			<signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
 			<XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
 			
                         <!-- validation stuff 
-                        This part is used by juddi-gui whenever someone views an entity that is signed
+                        This part IS used by juddi-gui whenever someone views an entity that is signed
                         -->
-			<!-- if this doesn't exist or is incorrect, the client will atempt to load the standard jdk trust store-->
-			<trustStorePath>truststore.jks</trustStorePath>
+			<!-- if this doesn't exist or is incorrect, the client will attempt to load  from system properties, then 
+                        from the standard jdk trust store
+                        generally, if defined, the working path is typically the bin folder of the container
+                        -->
+			<trustStorePath></trustStorePath>
 			<trustStoreType>JKS</trustStoreType>
 			<trustStorePassword
 				isPasswordEncrypted="false" 
-				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor">password</trustStorePassword>
+				cryptoProvider="org.apache.juddi.v3.client.crypto.AES128Cryptor"></trustStorePassword>
 			
 			<checkTimestamps>true</checkTimestamps>
 			<checkTrust>true</checkTrust>
@@ -69,10 +90,10 @@
 		</signature>
                 <!-- not used by juddi-gui-->
 		<subscriptionCallbacks>
-			<keyDomain>uddi:somebusiness</keyDomain>
-			<listenUrl>http://MyHostname:4444/callback</listenUrl>
+			<keyDomain>(not used)</keyDomain>
+			<listenUrl>(not used)</listenUrl>
 			<autoRegisterBindingTemplate>false</autoRegisterBindingTemplate>
-			<autoRegisterBusinessServiceKey>uddi:somebusiness:someservicekey</autoRegisterBusinessServiceKey>
+			<autoRegisterBusinessServiceKey>(not used)</autoRegisterBusinessServiceKey>
 			<signatureBehavior>DoNothing</signatureBehavior>
 			<!--valid values are AbortIfSigned,Sign,DoNothing,SignOnlyIfParentIsntSigned, default is DoNothing-->
 		</subscriptionCallbacks>
@@ -82,4 +103,26 @@
 		</XtoWsdl>
                 
     </client>
+    
+    <!-- hi there!
+    this section is required by juddi-gui and is an extension of what the normal juddi-client does
+    it's not in the standard config schema.
+    
+    -->
+    <config>
+        
+        <props>
+            <!--#required. if this uddi client is connected to uddi services that use the auth token, then set to UDDI_AUTH
+            #if not, set authtype to HTTP-->
+            <authtype>UDDI_AUTH</authtype>
+            <automaticLogouts>
+                <!-- #enables automatic logout timer, defaults to false if not defined-->
+                <enabled>true</enabled>
+                <!--#defines the duration of time to wait for the automatic logout, defaults to 15min if not defined-->
+                <duration>900000</duration>
+            </automaticLogouts>
+            <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
+            <node>default-ssl</node>
+        </props>
+    </config>
 </uddi>

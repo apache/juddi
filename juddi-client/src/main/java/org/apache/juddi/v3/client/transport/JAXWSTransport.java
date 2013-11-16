@@ -43,7 +43,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
 
 
 public class JAXWSTransport extends Transport {
-            private static Log logger = LogFactory.getLog(WADL2UDDI.class);
+            private static Log logger = LogFactory.getLog(JAXWSTransport.class);
 	
 	String nodeName = null;
 	String clientName = null;

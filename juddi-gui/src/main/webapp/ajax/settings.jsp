@@ -27,14 +27,12 @@
          }*/
         if (request.getMethod().equalsIgnoreCase("post")) {
             UddiHub x = UddiHub.getInstance(application, session);
-            Properties p = x.GetRawConfiguration();
+            
             Enumeration it = request.getParameterNames();
             while (it.hasMoreElements()) {
                 String key = (String) it.nextElement();
                 String value = request.getParameter(key);
-                if (key.startsWith(UddiHub.PROP_PREFIX)) {
-                    p.setProperty(key, value);
-                } else if (key.startsWith("client")) {
+                if (key.startsWith("client.") || key.startsWith("config.")) {
                     //its part of the juddi client config file
                     x.GetJuddiClientConfig().getConfiguration().setProperty(key, value);
                     //this just sets the runtime config
@@ -46,19 +44,6 @@
             } catch (Exception ex) {
                 response.setStatus(500);
                 out.write("Error saving Juddi Client Config" + ex.getMessage());
-            }
-            //attempt to save the properties file
-            try {
-                FileOutputStream fos = new FileOutputStream(new File(x.GetRawConfigurationPath()));
-                String msg = "Edited at " + System.currentTimeMillis() + " by " + request.getRemoteUser();
-                if (request.getUserPrincipal() != null) {
-                    msg += " " + request.getUserPrincipal().toString();
-                }
-                p.store(fos, msg);
-                fos.close();
-            } catch (Exception ex) {
-                response.setStatus(500);
-                out.write("Error saving config.properties (authmode only) " + ex.getMessage());
             }
         }
     }
