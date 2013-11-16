@@ -15,7 +15,6 @@
 package org.apache.juddi.v3.tck;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -26,7 +25,6 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.JAXB;
 import javax.xml.transform.dom.DOMResult;
@@ -38,12 +36,9 @@ import org.apache.juddi.jaxb.EntityCreator;
 import org.junit.Assert;
 import org.uddi.api_v3.BusinessDetail;
 import org.uddi.api_v3.BusinessEntity;
-import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.Description;
 import org.uddi.api_v3.GetBusinessDetail;
-import org.uddi.api_v3.KeyedReference;
-import org.uddi.api_v3.KeyedReferenceGroup;
 import org.uddi.api_v3.SaveBusiness;
 import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
@@ -78,12 +73,16 @@ public class TckBusiness
     private Log logger = LogFactory.getLog(this.getClass());
 	private UDDIPublicationPortType publication = null;
     private UDDIInquiryPortType inquiry = null;
-	
+	private boolean serialize=false;
 	public TckBusiness(UDDIPublicationPortType publication, 
 				  UDDIInquiryPortType inquiry) {
 		super();
 		this.publication = publication;
 		this.inquiry = inquiry;
+                serialize = false;
+                if (System.getProperty("debug")!=null &&
+                        System.getProperty("debug").equalsIgnoreCase("true"))
+                    serialize=true;
 	}
 	
 	public void saveSamSyndicatorBusiness(String authInfoSam) {
@@ -113,7 +112,7 @@ public class TckBusiness
         }
         
 	public void saveJoePublisherBusiness(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, false);
+		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, serialize);
     }
 	
 	public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
@@ -299,7 +298,8 @@ public class TckBusiness
 			sb.getBusinessEntity().add(beIn);
                     BusinessDetail saveBusiness = publication.saveBusiness(sb);
                     logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                    JAXB.marshal(saveBusiness, System.out);
+                    if (serialize)
+                        JAXB.marshal(saveBusiness, System.out);
 	
 			// Now get the entity and check the values
 			GetBusinessDetail gb = new GetBusinessDetail();

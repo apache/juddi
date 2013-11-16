@@ -17,6 +17,20 @@
                 <subscriptionListenerUrl>http://localhost:8080/juddiv3/services/subscription-listener</subscriptionListenerUrl>
                 <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
             </node>
+            <node>
+                <!-- required 'default' node -->
+                <name>invm</name> 
+                <description>This server</description>
+                <!-- JAX-WS Transport -->
+               <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
+               <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
+               <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
+               <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
+               <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
+               <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>
+               <subscriptionListenerUrl>org.apache.juddi.api.impl.UDDISubscriptionListenerImpl</subscriptionListenerUrl>
+               <juddiApiUrl>org.apache.juddi.api.impl.JUDDIApiImpl</juddiApiUrl>
+            </node>
         </nodes>
 		<signature>
 			<!-- signing stuff (not used)-->
@@ -75,7 +89,7 @@
                 <duration>900000</duration>
             </automaticLogouts>
             <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
-            <node>default-ssl</node>
+            <node>default</node>
         </props>
     </config>
 </uddi>

@@ -15,11 +15,22 @@
     if (request.getMethod().equalsIgnoreCase("POST")) {
         try {
             Enumeration it = request.getParameterNames();
-            Configuration cfg = AppConfig.getConfiguration();
+            Configuration cfg = null;
+            Configuration server = AppConfig.getConfiguration();
+            Configuration client = UddiAdminHub.getInstance(application, session).GetJuddiClientConfig().getConfiguration();
             while (it.hasMoreElements()) {
                 String key = (String) it.nextElement();
                 String val = request.getParameter(key);
                 if (key != "nonce") {
+                    if (key.startsWith("config.props.") || key.startsWith("client.")) {
+                        cfg = client;
+                    }
+                    if (key.startsWith("juddi.")) {
+                        cfg = server;
+                    }
+                    if (cfg == null) {
+                        continue;
+                    }
                     boolean isbool = false;
                     boolean isint = false;
                     boolean boolval = false;
@@ -41,9 +52,11 @@
                     } else {
                         cfg.setProperty(key, val);
                     }
-
+                    cfg = null;
 
                 }
+                UddiAdminHub.getInstance(application,session).GetJuddiClientConfig().saveConfig();
+                //note server config is autosave.
             }
             out.write("<i class=\"icon-thumbs-up icon-2x\"> Saved!");
         } catch (Exception ex) {

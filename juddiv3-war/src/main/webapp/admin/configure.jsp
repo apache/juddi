@@ -40,16 +40,36 @@
                             Iterator it = AppConfig.getConfiguration().getKeys();
                             while (it.hasNext()) {
                                 String key = (String) it.next();
-                                if (!key.equalsIgnoreCase("nonce")) {
+                                if (!key.equalsIgnoreCase("nonce")
+                                        && key.startsWith("juddi.")) {
                                     out.write("<tr ><td>" + StringEscapeUtils.escapeHtml(key) + "</td><td><div ");
-                                    if (key.startsWith("juddi.")) {
-                                        out.write(" id=\"" + StringEscapeUtils.escapeHtml(key) + "\" class=\"edit\"");
-                                    }
+                                    out.write(" id=\"" + StringEscapeUtils.escapeHtml(key) + "\" class=\"edit\"");
                                     out.write(">" + StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getProperty(key).toString()) + "</div></td></tr>");
                                 }
                             }
                         %>
             </table>
+            
+            <h2>Admin Console Config (this web site)</h2>
+            <table class="table table-hover">
+                <tr><th>Field</th><th>Value</th></tr>
+                        <%
+                            UddiAdminHub ahub = UddiAdminHub.getInstance(application, session);
+                            it = ahub.GetJuddiClientConfig().getConfiguration().getKeys();
+                            while (it.hasNext()) {
+                                String key = (String) it.next();
+                                if (!key.equalsIgnoreCase("nonce")
+                                        && (key.startsWith("config.props.")
+                                        || key.startsWith("client."))) {
+                                    out.write("<tr ><td>" + StringEscapeUtils.escapeHtml(key) + "</td><td><div ");
+                                    out.write(" id=\"" + StringEscapeUtils.escapeHtml(key) + "\" class=\"edit\"");
+                                    out.write(">" + StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getProperty(key).toString()) + "</div></td></tr>");
+                                }
+                            }
+                        %>
+            </table>
+            
+            
             <script type="text/javascript">
                 function save()
                 {
@@ -97,7 +117,30 @@
                 Reedit();
             </script>
             <a class="btn btn-primary" href="javascript:save();">Save</a><br><br>
+
+
             <div id="saveConfigresultBar" class="well-small"></div>
+
+            <h2>Debug Information</h2>
+            <table class="table table-hover">
+                <tr><th>Field</th><th>Value</th></tr>
+                        <%
+
+                            it = AppConfig.getConfiguration().getKeys();
+                            while (it.hasNext()) {
+                                String key = (String) it.next();
+
+                                if (!key.equalsIgnoreCase("nonce")
+                                        && !key.startsWith("juddi.")
+                                        && !key.startsWith("client.")
+                                        && key.startsWith("config.props.")) {
+                                    out.write("<tr ><td>" + StringEscapeUtils.escapeHtml(key) + "</td><td><div ");
+
+                                    out.write(">" + StringEscapeUtils.escapeHtml(AppConfig.getConfiguration().getProperty(key).toString()) + "</div></td></tr>");
+                                }
+                            }
+                        %>
+            </table>
         </div>
 
     </div>
