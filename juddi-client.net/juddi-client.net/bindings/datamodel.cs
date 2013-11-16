@@ -2434,7 +2434,7 @@ namespace org.uddi.apiv3
 
         private description[] descriptionField;
 
-        private object[] itemsField;
+        private overviewDoc[] itemsField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("description")]
@@ -2455,7 +2455,7 @@ namespace org.uddi.apiv3
         /// </summary>
 
         [System.Xml.Serialization.XmlElementAttribute("overviewDoc", typeof(overviewDoc))]
-        public object[] Items
+        public overviewDoc[] Items
         {
             get
             {

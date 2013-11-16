@@ -790,7 +790,7 @@ namespace org.apache.juddi.v3.client.config
             return authToken;
         }
 
-        
+
 
         /// <summary>
         ///  This calls a jUDDI implementation specific API call and is used to help 
@@ -910,25 +910,27 @@ namespace org.apache.juddi.v3.client.config
             }
         }
 
-        /**
-         *A helper class to create a tModel key generator.<br>
-         * Why would I want a key generator? In UDDIv3, you're support to specify what you want the keys (unique identifiers) to be, however there's
-         * a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
-         * Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
-         * should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method.<br><br>
-         * In addition, no changes are made to the UDDI server. You'll have to do that one using code similar to this:
-         * <pre>
-         * UDDIClerk clerk = ...
-         * tModel keygen = UDDIClerk.createKeyGenator("mydomain.com", "my domain", "en");
-         * clerk.register(keygen);
-         * 
-         * @param partitionName think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
-         * key associated with the tModel generator (uddi:juddi.apache.org:keygenerator)
-         * @param DescriptiveName required. max length is 255 char
-         * @param DescriptiveNameLanguage optional, max length is 26 char
-         * @return a populated tModel entity representing a tModel key generator. No changes are made to any connect UDDI service
-         * @since 3.2
-         */
+        /// <summary>
+        /// A helper class to create a tModel key generator.
+        /// 
+        /// Why would I want a key generator? In UDDIv3, you're support to specify what you want the keys (unique identifiers) to be, however there's
+        /// a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
+        /// Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
+        /// should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method.
+        /// In addition, no changes are made to the UDDI server. You'll have to do that one using code similar to this:
+        /// 
+        /// UDDIClerk clerk = ...
+        /// tModel keygen = UDDIClerk.createKeyGenator("mydomain.com", "my domain", "en");
+        /// clerk.register(keygen);
+        /// 
+
+        /// @since 3.2
+        /// </summary>
+        /// <param name="partitionName">think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
+        /// key associated with the tModel generator (uddi:juddi.apache.org:keygenerator)</param>
+        /// <param name="DescriptiveName">required. max length is 255 char</param>
+        /// <param name="DescriptiveNameLanguage">optional, max length is 26 char</param>
+        /// <returns>a populated tModel entity representing a tModel key generator. No changes are made to any connect UDDI service</returns>
         public static tModel createKeyGenator(String partitionName, String DescriptiveName, String DescriptiveNameLanguage)
         {
             if (partitionName == null || partitionName.Length == 0)
@@ -942,12 +944,14 @@ namespace org.apache.juddi.v3.client.config
             }
             if (!partitionName.StartsWith("uddi:"))
             {
-                throw new ArgumentOutOfRangeException("partitionName must have a 'uddi:' prefix");
+                partitionName = "uddi:" + partitionName;
+               // throw new ArgumentOutOfRangeException("partitionName must have a 'uddi:' prefix");
 
             }
             if (!partitionName.EndsWith(":keygenerator"))
             {
-                throw new ArgumentOutOfRangeException("partitionName must have a ':keyGenerator' postfix");
+                partitionName = partitionName + "keygenerator";
+                //throw new ArgumentOutOfRangeException("partitionName must have a ':keyGenerator' postfix");
             }
             tModel tm = new tModel();
             tm.name = new name();
@@ -1063,7 +1067,7 @@ namespace org.apache.juddi.v3.client.config
             //"Describes a version associated with either a service interface, a bindingTemplate service instance.", lang)};
             tt.description = new description[] { new description("Describes a version associated with either a service interface, a bindingTemplate service instance.", lang) };
 
-            tt.instanceDetails.Items = new object[] { doc };
+            tt.instanceDetails.Items = new overviewDoc[] { doc };
             tt.instanceDetails.instanceParms = version;
 
             //tt.instanceDetails.Items = new object[] { doc };

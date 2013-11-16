@@ -303,7 +303,7 @@ namespace org.apache.juddi.v3.client.mapping
                 tModelInstanceInfo tModelInstanceInfoBinding = new tModelInstanceInfo();
                 tModelInstanceInfoBinding.tModelKey = (keyDomainURI + "binding");
                 instanceDetails id = new instanceDetails();
-                id.Items = new object[] { portName };
+                id.instanceParms=  portName ;
                 tModelInstanceInfoBinding.instanceDetails = (id);
                 description descriptionB = new description();
                 descriptionB.lang = (lang);

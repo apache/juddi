@@ -139,17 +139,15 @@ public class WsdlImport {
 
         TModel[] tmodels = portTypeTModels.toArray(new TModel[0]);
         for (int i = 0; i < tmodels.length; i++) {
-            System.out.println(tmodelPrinter.print(tmodels[i]));
             tms.getTModel().add(tmodels[i]);
         }
 
         tmodels = createWSDLBindingTModels.toArray(new TModel[0]);
         for (int i = 0; i < tmodels.length; i++) {
-            System.out.println(tmodelPrinter.print(tmodels[i]));
             tms.getTModel().add(tmodels[i]);
         }
 
-        //important, you'll need to save your new tModels, or else saving the business/service may fail
+        //important, you'll need to save your new tModels first, or else saving the business/service may fail
         System.out.println(new PrintUDDI<SaveTModel>().print(tms));
         //publish.saveTModel(stm);
 
@@ -161,10 +159,8 @@ public class WsdlImport {
         SaveService ss = new  SaveService();
         
         
-        //PrintUDDI<BusinessService> servicePrinter = new PrintUDDI<BusinessService>();
         for (int i = 0; i < businessServices.getBusinessService().size(); i++) {
             ss.getBusinessService().add(businessServices.getBusinessService().get(i));
-            //System.out.println(servicePrinter.print(businessServices.getBusinessService().get(i)));
         }
 
         

@@ -466,28 +466,29 @@ namespace org.apache.juddi.v3.client.mapping
 
 
 
-        /**
-         * Creates a business service based off of a WSDL definition<Br>No changes are made to the UDDI
-         * endpoints using this method
-         *<br>
-         * Example Code:
-         * <pre>
-         * URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-         * String domain = url.getHost();
-         * ReadWSDL rw = new ReadWSDL();
-         * Definition wsdlDefinition = rw.readWSDL(url);
-         * properties.put("keyDomain", domain);
-         * properties.put("businessName", domain);
-         * properties.put("serverName", url.getHost());
-         * properties.put("serverPort", url.getPort());
-         * wsdlURL = wsdlDefinition.getDocumentBaseURI();
-         * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-         * BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
-         * </pre>
-         * @param wsdlDefinition must not be null
-         * @return a business service
-         * @throws IllegalArgumentException if the wsdlDefinition is null
-         */
+        /// <summary>
+        /// 
+        ///   Creates a business service based off of a WSDL definition<Br>No changes are made to the UDDI
+        /// endpoints using this method
+        /// <br>
+        /// Example Code:
+        /// <pre>
+        /// URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
+        /// String domain = url.getHost();
+        /// ReadWSDL rw = new ReadWSDL();
+        /// Definition wsdlDefinition = rw.readWSDL(url);
+        /// properties.put("keyDomain", domain);
+        /// properties.put("businessName", domain);
+        /// properties.put("serverName", url.getHost());
+        /// properties.put("serverPort", url.getPort());
+        /// wsdlURL = wsdlDefinition.getDocumentBaseURI();
+        /// WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+        /// BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
+        /// /// </pre>
+        /// </summary>
+        /// <param name="wsdlDefinition">must not be null</param>
+        /// <returns>a business service</returns>
+        /// @throws IllegalArgumentException if the wsdlDefinition is null
         public businessService[] createBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
             if (wsdlDefinition == null)
@@ -698,7 +699,7 @@ namespace org.apache.juddi.v3.client.mapping
                     tModelInstanceInfo tModelInstanceInfoBinding = new tModelInstanceInfo();
                     tModelInstanceInfoBinding.tModelKey = (keyDomainURI + bindingelement.name);
                     instanceDetails instanceDetails = new instanceDetails();
-                    instanceDetails.Items = new object[] { (portName) };
+                    instanceDetails.instanceParms =  (portName) ;
                     tModelInstanceInfoBinding.instanceDetails = (instanceDetails);
                     description descriptionB = new description();
                     descriptionB.lang = (lang);
@@ -1091,6 +1092,53 @@ namespace org.apache.juddi.v3.client.mapping
                         keyedReference soapProtocol = newKeyedReference(
                                 "uddi:uddi.org:wsdl:categorization:protocol", "uddi-org:protocol:http", "uddi:uddi.org:protocol:http");
                         cbitems.Add(soapProtocol);
+                    }
+                    else if (xe.NamespaceURI.Equals("http://schemas.xmlsoap.org/wsdl/soap12/", StringComparison.CurrentCultureIgnoreCase)
+                        && xe.LocalName.Equals("binding", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // If the wsdl:binding contains a soap:binding extensibility element from the 
+                        // 'http://schemas.xmlsoap.org/wsdl/soap/' namespace then the categoryBag MUST 
+                        //include a keyedReference with a tModelKey of the Protocol Categorization 
+                        // category system and a keyValue of the tModelKey of the SOAP Protocol tModel.
+
+                        keyedReference soapProtocol = newKeyedReference(
+                                "uddi:uddi.org:wsdl:categorization:protocol", "uddi-org:protocol:soap", "uddi:uddi.org:protocol:soap");
+                        cbitems.Add(soapProtocol);
+                        // If the value of the transport attribute of the soap:binding element 
+                        // is 'http://schemas.xmlsoap.org/soap/http' then the categoryBag MUST 
+                        // include a keyedReference with a tModelKey of the Transport Categorization 
+                        // category system and a keyValue of the tModelKey of the HTTP Transport tModel.
+
+
+                        if (String.IsNullOrEmpty(xe.GetAttribute("transport")))
+                        {
+                            // TODO If the value of the transport attribute is anything else, 
+                            // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
+                            // of the Transport Categorization category system and a keyValue of the tModelKey of 
+                            // an appropriate transport tModel.
+                            log.warn("empty soap transport for binding " + it.Current.Key.getLocalPart() + " " + it.Current.Key.getNamespaceURI());
+                        }
+                        else
+                        {
+                            String attr = xe.GetAttribute("transport");
+
+                            if (attr != null && attr.Equals("http://schemas.xmlsoap.org/soap/http"))
+                            {
+                                keyedReference httpTransport = newKeyedReference(
+                                       "uddi:uddi.org:wsdl:categorization:transport", "uddi-org:http", "uddi:uddi.org:transport:http");
+                                cbitems.Add(httpTransport);
+                            }
+                            else
+                            {
+                                log.warn("i don't know how to process the soap transport value of " + xe.GetAttribute("transport", "http://schemas.xmlsoap.org/wsdl/soap/"));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        log.warn("Unrecongnized binding type: " + xe.NamespaceURI + " " + xe.LocalName + ". Generated"
+                            + "binding tModel may be missing the required (according to WSDL2UDDI spec) "
+                            + "uddi:uddi.org:wsdl:categorization:protocol keyedReference.");
                     }
                 }
 

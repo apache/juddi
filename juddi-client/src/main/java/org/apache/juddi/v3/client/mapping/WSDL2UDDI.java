@@ -16,6 +16,7 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import com.ibm.wsdl.extensions.soap12.SOAP12BindingImpl;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -37,6 +38,7 @@ import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap12.SOAP12Address;
+import javax.wsdl.extensions.soap12.SOAP12Binding;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -447,12 +449,25 @@ public class WSDL2UDDI {
 
             // One or two keyedReferences as required to capture the protocol
             for (Object object : binding.getExtensibilityElements()) {
-                if (SOAPBinding.class.isAssignableFrom(object.getClass())) {
+                SOAPBinding sb =null;
+                SOAP12Binding sb12 =null;
+                HTTPBinding hb = null;
+                
+                try{
+                    hb = (HTTPBinding) object;
+                }catch (Exception x){}
+                 try{
+                    sb = (SOAPBinding) object;
+                }catch (Exception x){}
+                   try{
+                    sb12 = (SOAP12Binding) object;
+                }catch (Exception x){}
+                if (sb!=null) {
                     // If the wsdl:binding contains a soap:binding extensibility element from the 
                     // 'http://schemas.xmlsoap.org/wsdl/soap/' namespace then the categoryBag MUST 
                     //include a keyedReference with a tModelKey of the Protocol Categorization 
                     // category system and a keyValue of the tModelKey of the SOAP Protocol tModel.
-                    SOAPBinding soapBinding = (SOAPBinding) object;
+                    SOAPBinding soapBinding = sb;
                     KeyedReference soapProtocol = newKeyedReference(
                             "uddi:uddi.org:wsdl:categorization:protocol", "uddi-org:protocol:soap", "uddi:uddi.org:protocol:soap");
                     categoryBag.getKeyedReference().add(soapProtocol);
@@ -469,11 +484,11 @@ public class WSDL2UDDI {
                         // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
                         // of the Transport Categorization category system and a keyValue of the tModelKey of 
                         // an appropriate transport tModel.
-                        log.warn("not implemented");
+                        log.warn("not implemented, binding transport is " + soapBinding.getTransportURI());
                     }
 
 
-                } else if (object.getClass().isInstance(HTTPBinding.class)) {
+                } else if (hb!=null) {
 
                     // If the wsdl:binding contains an http:binding extensibility element from the 
                     // http://schemas.xmlsoap.org/wsdl/http/ namespace then the categoryBag MUST 
@@ -482,6 +497,41 @@ public class WSDL2UDDI {
                     KeyedReference soapProtocol = newKeyedReference(
                             "uddi:uddi.org:wsdl:categorization:protocol", "uddi-org:protocol:http", "uddi:uddi.org:protocol:http");
                     categoryBag.getKeyedReference().add(soapProtocol);
+                }
+                else if (sb12!=null) {
+                    // If the wsdl:binding contains a soap:binding extensibility element from the 
+                    // 'http://schemas.xmlsoap.org/wsdl/soap/' namespace then the categoryBag MUST 
+                    //include a keyedReference with a tModelKey of the Protocol Categorization 
+                    // category system and a keyValue of the tModelKey of the SOAP Protocol tModel.
+                    
+                    KeyedReference soapProtocol = newKeyedReference(
+                            "uddi:uddi.org:wsdl:categorization:protocol", "uddi-org:protocol:soap", "uddi:uddi.org:protocol:soap");
+                    categoryBag.getKeyedReference().add(soapProtocol);
+                    // If the value of the transport attribute of the soap:binding element 
+                    // is 'http://schemas.xmlsoap.org/soap/http' then the categoryBag MUST 
+                    // include a keyedReference with a tModelKey of the Transport Categorization 
+                    // category system and a keyValue of the tModelKey of the HTTP Transport tModel.
+                    if ("http://schemas.xmlsoap.org/soap/http".equals(sb12.getTransportURI())) {
+                        KeyedReference httpTransport = newKeyedReference(
+                                "uddi:uddi.org:wsdl:categorization:transport", "uddi-org:http", "uddi:uddi.org:transport:http");
+                        categoryBag.getKeyedReference().add(httpTransport);
+                    } else if (sb12.getTransportURI() != null) {
+                        // TODO If the value of the transport attribute is anything else, 
+                        // then the bindingTemplate MUST include an additional keyedReference with a tModelKey 
+                        // of the Transport Categorization category system and a keyValue of the tModelKey of 
+                        // an appropriate transport tModel.
+                        log.warn("not implemented, binding transport is " + sb12.getTransportURI());
+                    }
+
+
+                }
+                else
+                {
+                    log.warn("Unrecongnized binding type: " + object.getClass().getCanonicalName() +". Generated"
+                            + "binding tModel may be missing the required (according to WSDL2UDDI spec) "
+                            + "uddi:uddi.org:wsdl:categorization:protocol keyedReference.");
+                    
+                    
                 }
             }
 

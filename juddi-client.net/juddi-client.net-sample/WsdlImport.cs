@@ -34,24 +34,40 @@ namespace org.apache.juddi.client.sample
     {
         public static void main(string[] args)
         {
-            String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
+            Console.Out.Write("Enter WSDL url: >");
+            String input = Console.In.ReadLine();
+            if (String.IsNullOrEmpty("input"))
+                input = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
+            //String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
+            Uri url = new Uri(input);
+
             ReadWSDL wsi = new ReadWSDL();
-            tDefinitions wsdlDefinition = wsi.readWSDL(
-                // "http://localhost/UDDI_API_V31.wsdl"
-                wsdlURL
-                );
+            tDefinitions wsdlDefinition = wsi.readWSDL(input);
             Properties properties1 = new Properties();
-            properties1.put("keyDomain", "my.key.domain");
+            properties1.put("serverName", url.Host);
+            properties1.put("businessName", url.Host);
+            properties1.put("keyDomain", "uddi:" + url.Host);
+            int port = url.Port;
+            if (port <= 0)
+            {
+                if (url.ToString().StartsWith("https", StringComparison.CurrentCultureIgnoreCase))
+                    port = 443;
+                else port = 80;
+            }
+            properties1.put("serverPort", port.ToString());
+
+            tModel keypart = UDDIClerk.createKeyGenator(url.Host, url.Host + "'s key partition", "en");
+
             WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizer(), properties1);
             List<tModel> tModels1 = new List<tModel>();
 
             Dictionary<QName, tPortType> portTypes1 = (Dictionary<QName, tPortType>)wsdlDefinition.getAllPortTypes();
-            List<tModel> portTypeTModels1 = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes1);
+            List<tModel> portTypeTModels1 = wsdl2UDDI.createWSDLPortTypeTModels(input, portTypes1);
 
             tModels1.AddRange(portTypeTModels1);
 
             Dictionary<QName, tBinding> allBindings1 = wsdlDefinition.getAllBindings();
-            List<tModel> createWSDLBindingTModels1 = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings1);
+            List<tModel> createWSDLBindingTModels1 = wsdl2UDDI.createWSDLBindingTModels(input, allBindings1);
 
             tModels1.AddRange(createWSDLBindingTModels1);
             businessService[] services = wsdl2UDDI.createBusinessServices(wsdlDefinition);
@@ -64,6 +80,10 @@ namespace org.apache.juddi.client.sample
             st.tModel = tModels1.ToArray();
             Console.Out.WriteLine(new PrintUDDI<save_tModel>().print(st));
 
+            //save keypart
+
+            //save tmodels
+            //save business
 
             //TODO register the stuff
         }
