@@ -71,6 +71,7 @@ namespace juddi_client.net.test
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");
             ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
+            ds.put(DigSigUtil.CHECK_TIMESTAMPS, "true");
         }
 
         [Test]
