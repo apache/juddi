@@ -19,30 +19,33 @@ using System.Collections.Generic;
 
 using System.Text;
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
-    /// The Crpytor interface, used for encrypting and decrypted credentials
+    /// AES128 Cipher
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public interface Cryptor
+    internal sealed class AES128Cryptor : AESCryptor
     {
+        protected internal override int GetKeySize()
+        {
+            return 128;
+        }
 
+        protected internal override int GetBlockSize()
+        {
+            return 128;
+        }
 
+        protected internal override byte[] GetKey()
+        {
+            return Convert.FromBase64String("oT5ljhVnMVQMnV2E7BOj7Q==");
 
-        /// <summary>
-        /// Encrypt the string, if unable to encrypt, return null
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>encrypted string</returns>
-        String encrypt(String str);
-        /// <summary>
-        /// decrypts the string
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>if the password can be decrypted, the decrypted value is returned, otherwise the original value is returned<br>
-        ///In the event that decryption fails, the error message must be logged.</returns>
-        String decrypt(String str);
+        }
 
+        protected internal override byte[] GetIV()
+        {
+            return Convert.FromBase64String("xtMa34fpJ9bCdpODQn8GmQ==");
+        }
     }
 }

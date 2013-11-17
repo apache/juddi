@@ -153,25 +153,11 @@ public class DigSigUtil {
      * (default) * Example
      * <pre>
      * Map map = new HashMap();
-     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, true);</pre>
+     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");</pre>
      * any value can be used.
      */
     public final static String SIGNATURE_OPTION_CERT_INCLUSION_BASE64 = "BASE64";
-    /*
-     * Include the signer's thumbprint of the public key.
-     * 
-     * Clients will not be able to validate the signature unless they have a copy of the signer's public key 
-     * in a trust store or the full certificate is included
-     * out of band
-     * 
-     * Example
-     * <pre>
-     * Map map = new HashMap();
-     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_THUMBPRINT, true);</pre>
-     * any value can be used.
-     *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
-     */
-    //public final static String SIGNATURE_OPTION_CERT_INCLUSION_THUMBPRINT = "THUMBPRINT";
+    
     /**
      * Include the signer's serial of the public key and the issuer's subject
      * name
@@ -183,7 +169,7 @@ public class DigSigUtil {
      * Example
      * <pre>
      * Map map = new HashMap();
-     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, true);</pre>
+     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");</pre>
      * any value can be used.
      *
      * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
@@ -199,7 +185,7 @@ public class DigSigUtil {
      * Example
      * <pre>
      * Map map = new HashMap();
-     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, true);</pre>
+     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");</pre>
      * any value can be used.
      *
      * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
@@ -215,7 +201,7 @@ public class DigSigUtil {
      * Example
      * <pre>
      * Map map = new HashMap();
-     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, true);</pre>
+     * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, "true");</pre>
      * any value can be used.
      *
      * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64

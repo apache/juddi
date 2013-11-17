@@ -21,7 +21,15 @@ using System;
 namespace org.uddi.apiv3
 {
 
- 
+    public partial class personName
+    {
+        public personName() { }
+        public personName(String value, String lang)
+        {
+            this.Value = value;
+            this.lang = lang;
+        }
+    }
   
     public partial class accessPoint
     {
@@ -52,6 +60,12 @@ namespace org.uddi.apiv3
     }
     public partial class keyedReference
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         public keyedReference(String key, String name, String value)
         {
             this.tModelKey = key;
@@ -61,8 +75,16 @@ namespace org.uddi.apiv3
     }
     public partial class name
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public name()
         { }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="lang"></param>
         public name(String Value, String lang)
         {
             this.valueField = Value;

@@ -16,7 +16,7 @@
  */
 
 using org.apache.juddi.apiv3;
-using org.apache.juddi.v3.client.crypto;
+using org.apache.juddi.v3.client.cryptor;
 using org.apache.juddi.v3.client.log;
 using org.apache.juddi.v3.client.mapping;
 using org.uddi.apiv3;
@@ -795,7 +795,7 @@ namespace org.apache.juddi.v3.client.config
         /// <summary>
         ///  This calls a jUDDI implementation specific API call and is used to help 
         /// configure internode communication between jUDDI servers. This is NOT 
-        /// part of the UDDI specification.<br> Note: this API call should only
+        /// part of the UDDI specification. Note: this API call should only
         /// be used with secure ports (SSL/TLS)
         /// </summary>
         /// <param name="senderClerk"></param>
@@ -911,26 +911,25 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /// <summary>
-        /// A helper class to create a tModel key generator.
         /// 
-        /// Why would I want a key generator? In UDDIv3, you're support to specify what you want the keys (unique identifiers) to be, however there's
+        /// A helper class to create a tModel key generator.&lt;br&gt;
+        /// Why would I want a key generator? In UDDIv3, you&#39;re suppose to specify what you want the keys (unique identifiers) to be, however there&#39;s
         /// a number of naming rules associated with the keys. Generally, use the FQDN of your business or organization.
         /// Optionally, when saving an UDDI entity, you can just leave the key name blank and the server
-        /// should generate one for you. It's normally a UUID that's not easy to remember. In this case, there's no need to call this method.
-        /// In addition, no changes are made to the UDDI server. You'll have to do that one using code similar to this:
-        /// 
+        /// should generate one for you. It&#39;s normally a UUID that&#39;s not easy to remember. In this case, there&#39;s no need to call this method. &lt;br&gt;&lt;br&gt;
+        /// In addition, no changes are made to the UDDI server. You&#39;ll have to do that one using code similar to this:
+        /// &lt;pre&gt;
         /// UDDIClerk clerk = ...
-        /// tModel keygen = UDDIClerk.createKeyGenator("mydomain.com", "my domain", "en");
+        /// TModel keygen = UDDIClerk.createKeyGenator(&quot;uddi:mydomain.com:keygenerator&quot;, &quot;my domain&quot;, &quot;en&quot;);
         /// clerk.register(keygen);
         /// 
-
-        /// @since 3.2
         /// </summary>
-        /// <param name="partitionName">think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the
-        /// key associated with the tModel generator (uddi:juddi.apache.org:keygenerator)</param>
+        /// <param name="partitionName">think of this as the domain, i.e. juddi.apache.org, but it can really be anything you want. This will become part of the</param>
+        /// key associated with the tModel generator (uddi:juddi.apache.org:keygenerator)
         /// <param name="DescriptiveName">required. max length is 255 char</param>
         /// <param name="DescriptiveNameLanguage">optional, max length is 26 char</param>
         /// <returns>a populated tModel entity representing a tModel key generator. No changes are made to any connect UDDI service</returns>
+        /// @since 3.2
         public static tModel createKeyGenator(String partitionName, String DescriptiveName, String DescriptiveNameLanguage)
         {
             if (partitionName == null || partitionName.Length == 0)
@@ -975,10 +974,11 @@ namespace org.apache.juddi.v3.client.config
         }
 
         /// <summary>
-        /// This calls a jUDDI implementation specific API call and is used to help 
-        /// configure internode communication between jUDDI servers. This is NOT 
-        /// part of the UDDI specification.<br> Note: this API call should only
-        /// be used with secure ports (SSL/TLS)
+        /// 
+        /// This calls a jUDDI implementation specific API call and is used to help
+        /// configure internode communication between jUDDI servers. This is NOT
+        /// part of the UDDI specification.&lt;br&gt;
+        /// Note: this API call should only be used with secure ports (SSL/TLS)
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
@@ -1030,28 +1030,29 @@ namespace org.apache.juddi.v3.client.config
         }
 
 
-        /**
-         * This is a convenience function that will build and return a TModelInstanceInfo
-         * as described in the following link that will enable you to tag web services
-         * registered in UDDI with some kind of version information.<Br><Br>
-         * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
-         * <Br><Br>
-         * 
-         * When using this tModel as a tModelInstance, it can be used to describe a 
-         * version associated with either a service interface, a bindingTemplate 
-         * service instance. Note: This is a jUDDI specific addon and may not be 
-         * present in other registries
-         * 
-         * @param version From the article, no specificity is provided on what to use as a value, but
-         * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
-         * Example 
-         * <ul>
-         * <li>6.1.2.3</li>
-         * <li>1.0</li>
-         * <li>0.1</li>
-         * </ul>
-         * @return TModelInstanceInfo populated as described in the article, plus some descriptive information
-         */
+        /// <summary>
+        /// 
+        /// This is a convenience function that will build and return a TModelInstanceInfo
+        /// as described in the following link that will enable you to tag web services
+        /// registered in UDDI with some kind of version information.&lt;Br&gt;&lt;Br&gt;
+        /// Article source: &lt;a href=&quot;http://www.ibm.com/developerworks/webservices/library/ws-version/&quot;&gt;http://www.ibm.com/developerworks/webservices/library/ws-version/&lt;/a&gt;
+        /// &lt;Br&gt;&lt;Br&gt;
+        /// 
+        /// When using this tModel as a tModelInstance, it can be used to describe a
+        /// version associated with either a service interface, a bindingTemplate
+        /// service instance. Note: This is a jUDDI specific addon and may not be
+        /// present in other registries
+        /// 
+        /// </summary>
+        /// <param name="version">From the article, no specificity is provided on what to use as a value, but</param>
+        /// we recommend that you use the string representation of major.minor[.build[.revision]].&lt;br&gt;
+        /// Example
+        /// &lt;ul&gt;
+        /// &lt;li&gt;6.1.2.3&lt;/li&gt;
+        /// &lt;li&gt;1.0&lt;/li&gt;
+        /// &lt;li&gt;0.1&lt;/li&gt;
+        /// &lt;/ul&gt;
+        /// <returns>TModelInstanceInfo populated as described in the article, plus some descriptive information</returns>
         public static tModelInstanceInfo createServiceInterfaceVersion(String version, String lang)
         {
             if (version == null)
@@ -1074,34 +1075,40 @@ namespace org.apache.juddi.v3.client.config
             return tt;
         }
 
-        /**
-         * This is a convenience function that will filter a list of binding templates
-         * and return a list of bindings matching the specified version number.
-         * 
-         * This implements and expands upon service versioning described in the 
-         * following link and will enable you to tag web services
-         * registered in UDDI with some kind of version information.<Br><Br>
-         * Article source: <a href="http://www.ibm.com/developerworks/webservices/library/ws-version/">http://www.ibm.com/developerworks/webservices/library/ws-version/</a>
-         * <Br><Br>
-         * @see createServiceInterfaceVersion for more information<Br><br>
-         * 
-         * This function operates using tModelInstances that are used to describe a 
-         * version associated with either a service interface, a bindingTemplate 
-         * service instance. Note: This is a jUDDI specific addon and may not be 
-         * present in other registries
-         * 
-         * @param version From the article, no specificity is provided on what to use as a value, but
-         * we recommend that you use the string representation of major.minor[.build[.revision]].<br>
-         * Example 
-         * <ul>
-         * <li>6.1.2.3</li>
-         * <li>1.0</li>
-         * <li>0.1</li>
-         * </ul>
-         * @param version
-         * @param bindingTemplate
-         * @return a list if binding templates where the version equals ignoring case trimmed equals the version value
-         */
+        /// <summary>
+        /// 
+        /// This is a convenience function that will filter a list of binding templates
+        /// and return a list of bindings matching the specified version number.
+        /// 
+        /// This implements and expands upon service versioning described in the
+        /// following link and will enable you to tag web services
+        /// registered in UDDI with some kind of version information.&lt;Br&gt;&lt;Br&gt;
+        /// Article source: &lt;a href=&quot;http://www.ibm.com/developerworks/webservices/library/ws-version/&quot;&gt;http://www.ibm.com/developerworks/webservices/library/ws-version/&lt;/a&gt;
+        /// &lt;Br&gt;&lt;Br&gt;
+        /// </summary>
+        /// <see cref="createServiceInterfaceVersion"></see>
+        /// <see cref="createServiceInterfaceVersion"></see>
+        /// <see cref="createServiceInterfaceVersion"></see>
+        /// <see cref="createServiceInterfaceVersion"></see>
+        /// <see cref="createServiceInterfaceVersion"></see>
+        /// 
+        /// This function operates using tModelInstances that are used to describe a
+        /// version associated with either a service interface, a bindingTemplate
+        /// service instance. Note: This is a jUDDI specific addon and may not be
+        /// present in other registries
+        /// 
+        /// <param name="version">From the article, no specificity is provided on what to use as a value, but</param>
+        /// we recommend that you use the string representation of major.minor[.build[.revision]].&lt;br&gt;
+        /// Example
+        /// &lt;ul&gt;
+        /// &lt;li&gt;6.1.2.3&lt;/li&gt;
+        /// &lt;li&gt;1.0&lt;/li&gt;
+        /// &lt;li&gt;0.1&lt;/li&gt;
+        /// &lt;/ul&gt;
+        /// <param name="version"></param>
+        /// <param name="bindingTemplate"></param>
+        /// <returns>a list if binding templates where the version equals ignoring case trimmed equals the version value</returns>
+
         public static List<bindingTemplate> getBindingByVersion(String version, bindingTemplate[] bindingTemplate)
         {
             if (version == null)

@@ -1,5 +1,6 @@
 ﻿using net.java.dev.wadl;
 using NUnit.Framework;
+using org.apache.juddi.jaxb;
 using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.mapping;
@@ -15,9 +16,15 @@ namespace juddi_client.net.test
     [TestFixture]
     public class WADL2UDDITests
     {
+        bool serialize = false;
         string path = "";
         public WADL2UDDITests()
         {
+            if (Environment.GetEnvironmentVariable("debug") != null
+                && Environment.GetEnvironmentVariable("debug").Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                serialize = true;
+            }
             Console.Out.WriteLine(Directory.GetCurrentDirectory());
             path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar + "resources";
             if (!Directory.Exists(path))
@@ -101,8 +108,10 @@ namespace juddi_client.net.test
             properties.put("businessName", domain);
             properties.put("serverName", url.Host);
             properties.put("serverPort", url.Port.ToString());
-            WADL2UDDI wadl2UDDI = new WADL2UDDI(clerk, properties);
+            WADL2UDDI wadl2UDDI = new WADL2UDDI(clerk, properties); 
             businessService businessServices = wadl2UDDI.createBusinessService(new QName("MyWasdl.namespace", "Servicename"), app);
+            if (serialize)
+                Console.Out.WriteLine(new PrintUDDI<businessService>().print(businessServices));
             Assert.NotNull(businessServices);
             Assert.NotNull(businessServices.bindingTemplates);
             foreach (bindingTemplate bt in businessServices.bindingTemplates)

@@ -20,7 +20,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>3</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <DocumentationFile>bin\Debug\juddi-dotnet-client.XML</DocumentationFile>
   </PropertyGroup>
@@ -34,11 +34,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-   <Reference Include="System.Core" />
+    <Reference Include="System.Core" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
- <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -65,13 +65,13 @@
     <Compile Include="org.apache.juddi.v3.client.config\UDDINode.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\XmlConfiguration.cs" />
     <Compile Include="org.apache.juddi.v3.client.config\XRegistration.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\AES128Cryptor.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\AES256Cryptor.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\AESCryptor.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\Cryptor.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\CryptorFactory.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\DigSigUtil.cs" />
-    <Compile Include="org.apache.juddi.v3.client.crypto\TripleDESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\AES128Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\AES256Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\AESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\Cryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\CryptorFactory.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\DigSigUtil.cs" />
+    <Compile Include="org.apache.juddi.v3.client.cryptor\TripleDESCryptor.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\easyWsdl.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\ServiceRegistrationResponse.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\URLLocalizer.cs" />

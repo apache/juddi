@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
     /// AES256 Cipher

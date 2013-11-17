@@ -21,7 +21,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
     /// 3DES Ciphers

@@ -645,7 +645,7 @@ namespace org.apache.juddi.apiv3
 
         private get_subscriptionResults[] listField;
         [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        /// <remarks/>
+        
         public string authInfo
         {
             get

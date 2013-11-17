@@ -14,19 +14,13 @@
  * limitations under the License.
  *
  */
-using net.java.dev.wadl;
 using org.apache.juddi.jaxb;
-using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
-using org.apache.juddi.v3.client.crypto;
 using org.apache.juddi.v3.client.mapping;
-using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using org.xmlsoap.schemas.easyWsdl;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace org.apache.juddi.client.sample
 {

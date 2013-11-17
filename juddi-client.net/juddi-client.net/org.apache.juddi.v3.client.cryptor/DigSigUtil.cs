@@ -11,26 +11,44 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
     /// A utility class for signing and verifying JAXB Objects, such as UDDI  entities.   
     /// Notes: This class only supports elements that are signed once. 
     /// Multiple signature are not currently supported.
+    /// 
+    /// Digital signatures can be generated using a standalone PFX file or via the Windows Certificate store
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class DigSigUtil
     {
+        /// <summary>
+        /// creates an uninitialized DigSigUtil, use put to configure
+        /// </summary>
+        public DigSigUtil()
+        {
+            map = new Properties();
+        }
 
+
+        /// <summary>
+        /// Constructor that will accept a properties set from the juddi config file, or whatever you want
+        /// 
+        /// </summary>
+        /// <param name="c"></param>
         public DigSigUtil(Properties c)
         {
             map = c;
-
-
         }
 
         private Log logger = LogFactory.getLog(typeof(DigSigUtil));
 
+        /// <summary>
+        /// added a new key/value to the running config
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void put(String key, String value)
         {
             map.put(key, value);
@@ -58,6 +76,7 @@ namespace org.apache.juddi.v3.client.crypto
          * for MacOS
          */
         public readonly static String SIGNATURE_KEYSTORE_FILETYPE = "keyStoreType";
+        public readonly static string SIGNATURE_KEYSTORE_FILETYPE_VALUE_PFX = "PFX";
         public readonly static String SIGNATURE_KEYSTORE_FILE_PASSWORD = "filePassword";
         public readonly static String SIGNATURE_KEYSTORE_KEY_PASSWORD = "keyPassword";
         public readonly static String SIGNATURE_KEYSTORE_KEY_ALIAS = "keyAlias";
@@ -77,13 +96,15 @@ namespace org.apache.juddi.v3.client.crypto
          */
         public readonly static String SIGNATURE_METHOD = "SignatureMethod";
         /**
-         * Defines whether or not a certificate is included with the signature<Br>
+         * Defines whether or not a certificate is included with the signature.
          * Values - Include whole X509 Public Key in the signature (recommended)
          * (default) * Example
-         * <pre>
+         * <example>
+         * <code>
          * Map map = new HashMap();
-         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, true);</pre>
-         * any value can be used.
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+         * </code>
+         * </example>
          */
         public readonly static String SIGNATURE_OPTION_CERT_INCLUSION_BASE64 = "BASE64";
 
@@ -98,7 +119,7 @@ namespace org.apache.juddi.v3.client.crypto
         ///  Example
         ///  <pre>
         ///  Map map = new HashMap();
-        ///  map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, true);</pre>
+        ///  map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");</pre>
         ///  any value can be used.
         /// @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
         /// </summary>
@@ -113,7 +134,7 @@ namespace org.apache.juddi.v3.client.crypto
          * Example
          * <pre>
          * Map map = new HashMap();
-         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, true);</pre>
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");</pre>
          * any value can be used.
          *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
          */
@@ -124,12 +145,12 @@ namespace org.apache.juddi.v3.client.crypto
          * Clients will not be able to validate the signature unless they have a copy of the signer's public key 
          * in a trust store or the full certificate is included
          * out of band
-         *     
+         * <example>    
          * Example
-         * <pre>
+         * <code>
          * Map map = new HashMap();
-         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, true);</pre>
-         * any value can be used.
+         * map.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL, "true");
+         * </code></example>
          *@see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
          */
         //public readonly static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
@@ -165,10 +186,9 @@ namespace org.apache.juddi.v3.client.crypto
         /// It is expected that either the public key of the signing certificate is
         /// included within the signature keyinfo section OR that sufficient
         /// information is provided in the signature to reference a public key
-        /// located within the Trust Store provided<br><Br> Optionally, this function
+        /// located within the Trust Store provided. Optionally, this function
         /// also validate the signing certificate using the options provided to the
         /// configuration map.
-
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="OutErrorMessage"></param>
@@ -211,7 +231,7 @@ namespace org.apache.juddi.v3.client.crypto
             X509Certificate2 signingCert = getSigningCertificatePublicKey(doc);
 
             //check timestamps
-            if (map.getProperty(DigSigUtil.CHECK_TIMESTAMPS).Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            if (map.containsKey(DigSigUtil.CHECK_TIMESTAMPS) && map.getProperty(DigSigUtil.CHECK_TIMESTAMPS).Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 if (DateTime.Now < signingCert.NotBefore)
                 {
@@ -222,7 +242,7 @@ namespace org.apache.juddi.v3.client.crypto
                     msg += "Signing certificate is not yet valid";
                 }
             }
-            if (map.getProperty(DigSigUtil.CHECK_TRUST_CHAIN).Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            if (map.containsKey(DigSigUtil.CHECK_TRUST_CHAIN) && map.getProperty(DigSigUtil.CHECK_TRUST_CHAIN).Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 //check trust
                 X509Chain chain = new X509Chain();
@@ -239,8 +259,8 @@ namespace org.apache.juddi.v3.client.crypto
             }
             //check ocsp
             //check crl
-            if (map.getProperty(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP).Equals("true", StringComparison.CurrentCultureIgnoreCase) ||
-                map.getProperty(DigSigUtil.CHECK_REVOCATION_STATUS_CRL).Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            if ((map.containsKey(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP) && map.getProperty(DigSigUtil.CHECK_REVOCATION_STATUS_OCSP).Equals("true", StringComparison.CurrentCultureIgnoreCase)) ||
+                (map.containsKey(DigSigUtil.CHECK_REVOCATION_STATUS_CRL) && map.getProperty(DigSigUtil.CHECK_REVOCATION_STATUS_CRL).Equals("true", StringComparison.CurrentCultureIgnoreCase)))
             {
                 //check trust
                 X509Chain chain = new X509Chain();
@@ -256,7 +276,7 @@ namespace org.apache.juddi.v3.client.crypto
                     }
                 }
             }
-           
+
 
             //verify crypto (math)
             String verifytext = "";
@@ -359,9 +379,8 @@ namespace org.apache.juddi.v3.client.crypto
         /// <summary>
         ///  Digitally signs a UDDI entity, such as a business, service, tmodel or
         /// binding template using the map to provide certificate key stores and
-        /// credentials<br><br> The UDDI entity MUST support XML Digital Signatures
+        /// credentials. The UDDI entity MUST support XML Digital Signatures
         /// (tModel, Business, Service, Binding Template)
-
         /// </summary>
         /// <param name="bt"></param>
         /// <returns></returns>
@@ -426,9 +445,19 @@ namespace org.apache.juddi.v3.client.crypto
 
         private X509Certificate2 GetKey()
         {
+            
             String storelocation = map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE);
+            if (storelocation.Equals( DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE_VALUE_PFX, StringComparison.CurrentCultureIgnoreCase))
+            {
+                logger.info("Attempting to load certificate from " + map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE));
+                X509Certificate2 cert = new X509Certificate2(map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE), 
+                    map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD));
+                return cert;
+
+            }
             String storename = map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE);
             String keyserial = map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS);
+            
             X509Store store = new X509Store(
                 (StoreName)Enum.Parse(typeof(StoreName), storename),
                 (StoreLocation)Enum.Parse(typeof(StoreLocation), storelocation));
@@ -576,5 +605,7 @@ namespace org.apache.juddi.v3.client.crypto
 
 
 
+
+        
     }
 }

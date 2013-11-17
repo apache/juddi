@@ -59,34 +59,32 @@ public class DigSigUtilTest {
         ds.put(DigSigUtil.TRUSTSTORE_FILE, "./src/test/resources/truststore.jks");
         ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
         ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
-
-
     }
 
     void Default() throws CertificateException {
         ds = new DigSigUtil();
         SetCertStoreSettigns();
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
     }
 
     void Everything() throws CertificateException {
         ds = new DigSigUtil();
         SetCertStoreSettigns();
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "t");
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
     }
 
     void SubjectDNOnly() throws CertificateException {
         ds = new DigSigUtil();
         SetCertStoreSettigns();
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");
     }
 
     void SerialAndIssuerOnly() throws CertificateException {
         ds = new DigSigUtil();
         SetCertStoreSettigns();
-        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "t");
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
     }
 
     @Test

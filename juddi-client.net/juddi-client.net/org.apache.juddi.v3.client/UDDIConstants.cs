@@ -494,7 +494,7 @@ namespace org.apache.juddi.v3.client
         ///
         public static String WILDCARD = "%";
         ///
-        ///Presents any SINGLE character<br> Wildcards, when they are allowed, may
+        ///Presents any SINGLE character. Wildcards, when they are allowed, may
         ///occur at any position in the string of characters that constitutes the
         ///argument value and may occur more than once. Wildcards are denoted with a
         ///percent sign (%) to indicate any value for any number of characters and
@@ -503,7 +503,6 @@ namespace org.apache.juddi.v3.client
         ///sign, underscore and backslash characters. Use of the "exactMatch"
         ///findQualifier will cause wildcard characters to be interpreted literally,
         ///and as such should not also be combined with the escape character.
-        ///
         public static String WILDCARD_CHAR = "_";
         ///
         ///unchecked: Marking a tModel with this categorization asserts that it

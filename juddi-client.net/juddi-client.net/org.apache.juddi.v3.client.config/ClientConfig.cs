@@ -1,5 +1,4 @@
-﻿using org.apache.juddi.v3.client.crypto;
-/*
+﻿/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +14,7 @@
  * limitations under the License.
  *
  */
+using org.apache.juddi.v3.client.cryptor;
 using org.apache.juddi.v3.client.log;
 using System;
 using System.Collections;
@@ -410,8 +410,6 @@ namespace org.apache.juddi.v3.client.config
         /// <summary>
         /// Fetches all digital signature related properties for the digital signature utility.          
         /// warning, this will decrypt all passwords
-        ///           
-
         /// </summary>
         /// <returns></returns>
         public Properties getDigitalSignatureConfiguration()

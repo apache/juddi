@@ -344,7 +344,14 @@ namespace org.apache.juddi.v3.client.mapping
 
         public const String PACKAGE = "org.apache.juddi.v3.client.mappings.wadl";
 
-
+        /// <summary>
+        /// used to ignore SSL errors
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="certification"></param>
+        /// <param name="chain"></param>
+        /// <param name="sslPolicyErrors"></param>
+        /// <returns></returns>
         public bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
         {
             return true;
@@ -357,11 +364,11 @@ namespace org.apache.juddi.v3.client.mapping
          * @param password
          * @param ignoreSSLErrors if true, SSL errors are ignored
          * @return a non-null "application" object, represeting a WADL's application root XML 
-         * Sample code:<br>
-         * <pre>
+         * Sample code:
+         * <example>
          * application app = WADL2UDDI.ParseWadl(new URL("http://server/wsdl.wsdl"), "username", "password", 
          *      clerkManager.getClientConfig().isX_To_Wsdl_Ignore_SSL_Errors() );
-         * </pre>
+         * </example>
          */
         public application ParseWadl(Uri weburl, String username, String password, bool ignoreSSLErrors)
         {

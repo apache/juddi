@@ -17,7 +17,7 @@
  */
 using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
-using org.apache.juddi.v3.client.crypto;
+using org.apache.juddi.v3.client.cryptor;
 using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;

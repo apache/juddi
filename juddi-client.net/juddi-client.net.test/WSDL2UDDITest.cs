@@ -78,7 +78,7 @@ namespace juddi_client.net.test
         {
             Assume.That(File.Exists(pathAndFile));
 
-            String wsdlURL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL";
+           
             ReadWSDL wsi = new ReadWSDL();
             org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.readWSDL(
                pathAndFile
@@ -91,7 +91,7 @@ namespace juddi_client.net.test
             Dictionary<QName, tPortType> portTypes1 = (Dictionary<QName, tPortType>)wsdlDefinition.getAllPortTypes();
             Assert.NotNull(portTypes1);
             Assert.True(portTypes1.Count > 0);
-            List<tModel> portTypeTModels1 = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes1);
+            List<tModel> portTypeTModels1 = wsdl2UDDI.createWSDLPortTypeTModels(pathAndFile, portTypes1);
 
             Assert.NotNull(portTypeTModels1);
             Assert.True(portTypeTModels1.Count > 0);
@@ -100,7 +100,7 @@ namespace juddi_client.net.test
             Dictionary<QName, tBinding> allBindings1 = wsdlDefinition.getAllBindings();
             Assert.NotNull(allBindings1);
             Assert.True(allBindings1.Count > 0);
-            List<tModel> createWSDLBindingTModels1 = wsdl2UDDI.createWSDLBindingTModels(wsdlURL, allBindings1);
+            List<tModel> createWSDLBindingTModels1 = wsdl2UDDI.createWSDLBindingTModels(pathAndFile, allBindings1);
             Assert.NotNull(createWSDLBindingTModels1);
             Assert.True(createWSDLBindingTModels1.Count > 0);
 

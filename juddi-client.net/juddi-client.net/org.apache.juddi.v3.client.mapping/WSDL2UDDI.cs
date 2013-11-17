@@ -33,30 +33,39 @@ using System.Xml.Serialization;
 
 namespace org.apache.juddi.v3.client.mapping
 {
-    /**
- * This class implements the OASIS <a
- * href="http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v202-20040631.htm">
- * 'Using WSDL in a UDDI Registry, Version 2.0.2'</a> technote. This class
- * creates a detailed mapping of WSDL 1.1 artifacts to the UDDI V3 data model.
- * <ul> <th>Section 2.4 in the technote</th> <li>2.4.1 wsdl:portType ->
- * uddi:tModel - {@link #createWSDLPortTypeTModels(String, Map)}</li> <li>2.4.2
- * wsdl:binding -> uddi:tModel -
- * {@link #createWSDLBindingTModels(String, Map)}</li> <li>TODO: 2.4.3
- * wsdl:service -> uddi:businessService</li> <li>TODO: 2.4.4 wsdl:port ->
- * uddi:bindingTemplate</li> <li>TODO: 2.4.5 wsdl:port Address Extensions ->
- * uddi:bindingTemplate</li> </ul>
- *
- * @author Kurt T Stam, ported by Alex O'Ree
- * @Since 3.2
- */
+    /// <summary>
+    /// 
+    /// This class implements the OASIS <a
+    /// href="http://www.oasis-open.org/committees/uddi-spec/doc/tn/uddi-spec-tc-tn-wsdl-v202-20040631.htm">
+    /// 'Using WSDL in a UDDI Registry, Version 2.0.2'</a> technote. This class
+    /// creates a detailed mapping of WSDL 1.1 artifacts to the UDDI V3 data model.
+    /// <ul> <th>Section 2.4 in the technote</th> <li>2.4.1 wsdl:portType ->
+    /// uddi:tModel - {@link #createWSDLPortTypeTModels(String, Map)}</li> <li>2.4.2
+    /// wsdl:binding -> uddi:tModel -
+    /// {@link #createWSDLBindingTModels(String, Map)}</li> <li>TODO: 2.4.3
+    /// wsdl:service -> uddi:businessService</li> <li>TODO: 2.4.4 wsdl:port ->
+    /// uddi:bindingTemplate</li> <li>TODO: 2.4.5 wsdl:port Address Extensions ->
+    /// uddi:bindingTemplate</li> </ul>
+    /// 
+    /// </summary>
+    /// @author Kurt T Stam
+    /// @Since 3.1.5
     public class WSDL2UDDI
     {
+
         /// <summary>
         /// 
+        /// Required Properties are: businessName, for example: &#39;Apache&#39; nodeName,
+        /// for example: &#39;uddi.example.org_80&#39; keyDomain, for example:
+        /// juddi.apache.org
+        /// 
+        /// Optional Properties are: lang: for example: &#39;nl&#39;
+        /// 
         /// </summary>
-        /// <param name="clerk"></param>
-        /// <param name="urlLocalizer"></param>
-        /// <param name="properties">required props, keyDomain,businessKey, nodeName </param>
+        /// <param name="clerk">can be null if register/unregister methods are not used.</param>
+        /// <param name="urlLocalizer">A reference to an custom</param>
+        /// <param name="properties">required values keyDomain, businessKey, nodeName</param>
+        /// <exception cref="ConfigurationException"></exception>
         public WSDL2UDDI(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties)
         {
             if (properties == null)
@@ -103,6 +112,8 @@ namespace org.apache.juddi.v3.client.mapping
             this.lang = properties.getProperty(Property.LANG, Property.DEFAULT_LANG);
 
         }
+
+
         public businessService[] registerBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
             List<businessService> businessServices = new List<businessService>();
@@ -190,15 +201,15 @@ namespace org.apache.juddi.v3.client.mapping
 
         }
 
-        /**
-    * Perform a lookup by serviceKey, and will return null if not found.
-    *
-    * @param serviceKey
-    * @return
-    * @throws RemoteException
-    * @throws ConfigurationException
-    * @throws TransportException
-    */
+        /// <summary>
+        /// 
+        /// Perform a lookup by serviceKey, and will return null if not found.
+        /// 
+        /// </summary>
+        /// <param name="serviceKey"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="ConfigurationErrorsException"></exception>
         private businessService lookupService(string serviceKey)
         {
             //Checking if this serviceKey already exist
@@ -334,58 +345,13 @@ namespace org.apache.juddi.v3.client.mapping
             }
         }
 
-        /**
-    * <h3>2.4.1 wsdl:portType -> uddi:tModel</h3>
-    *
-    * <p>A wsdl:portType MUST be modeled as a uddi:tModel.</p>
-    *
-    * <p>The minimum information that must be captured about a portType is its
-    * entity type, its local name, its namespace, and the location of the WSDL
-    * document that defines the portType. Capturing the entity type enables
-    * users to search for tModels that represent portType artifacts. Capturing
-    * the local name, namespace, and WSDL location enables users to locate the
-    * definition of the specified portType artifact.</p>
-    *
-    * <p>The wsdl:portType information is captured as follows:</p>
-    *
-    * <p>The uddi:name element of the tModel MUST be the value of the name
-    * attribute of the wsdl:portType.</p>
-    *
-    * <p>The tModel MUST contain a categoryBag, and the categoryBag MUST
-    * contain a keyedReference with a tModelKey of the WSDL Entity Type
-    * category system and a keyValue of "portType".</p>
-    *
-    * <p>If the wsdl:portType has a targetNamespace then the categoryBag MUST
-    * also contain an additional keyedReference with a tModelKey of the XML
-    * Namespace category system and a keyValue of the target namespace of the
-    * wsdl:definitions element that contains the wsdl:portType. If the
-    * targetNamespace is absent from the portType, a categoryBag MUST NOT
-    * contain a keyedReference to the XML Namespace category system.</p>
-    *
-    * <p>The tModel MUST contain an overviewDoc with an overviewURL containing
-    * the location of the WSDL document that describes the wsdl:portType.</p>
-    * Example Code
-    * <pre>
-    * URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-    * String domain = url.getHost();
-    * ReadWSDL rw = new ReadWSDL();
-    * Definition wsdlDefinition = rw.readWSDL(url);
-    * properties.put("keyDomain", domain);
-    * properties.put("businessName", domain);
-    * properties.put("serverName", url.getHost());
-    * properties.put("serverPort", url.getPort());
-    * wsdlURL = wsdlDefinition.getDocumentBaseURI();
-    * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-    * Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
-    * Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
-    * </pre>
-    *
-    * @param wsdlURL This is used to set the Overview URL
-    * @param portType Map
-    * @return set of WSDL PortType tModels
-    * @throws WSDLException
-    */
-
+        /// <summary>
+        /// a simple convenience wrapper
+        /// </summary>
+        /// <param name="tModelKey"></param>
+        /// <param name="keyName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         protected static keyedReference newKeyedReference(String tModelKey, String keyName, String value)
         {
             keyedReference typesReference = new keyedReference();
@@ -394,12 +360,14 @@ namespace org.apache.juddi.v3.client.mapping
             typesReference.keyValue = (value);
             return typesReference;
         }
-        /**
-           * Builds a finder to find the binding tModels for a portType.
-           *
-           * @param processName
-           * @return
-           */
+        /// <summary>
+        /// 
+        /// Builds a finder to find the binding tModels for a portType.
+        /// 
+        /// </summary>
+        /// <param name="portType"></param>
+        ///  <param name="ns">Namespace</param>
+        /// <returns></returns>
         public static find_tModel createFindBindingTModelForPortType(String portType, String ns)
         {
 
@@ -429,12 +397,14 @@ namespace org.apache.juddi.v3.client.mapping
             }
             return findTModel;
         }
-        /**
- * Builds a finder to find the portType tModels for a portType.
- *
- * @param processName
- * @return
- */
+        /// <summary>
+        /// 
+        /// Builds a finder to find the portType tModels for a portType.
+        /// 
+        /// </summary>
+        /// <param name="portTypeName"></param>
+        /// <param name="ns">Namespace</param>
+        /// <returns></returns>
         public static find_tModel createFindPortTypeTModelForPortType(String portTypeName, String ns)
         {
             find_tModel findTModel = new find_tModel();
@@ -468,27 +438,27 @@ namespace org.apache.juddi.v3.client.mapping
 
         /// <summary>
         /// 
-        ///   Creates a business service based off of a WSDL definition<Br>No changes are made to the UDDI
+        /// Creates a business service based off of a WSDL definition&lt;Br&gt;No changes are made to the UDDI
         /// endpoints using this method
-        /// <br>
+        /// &lt;br&gt;
         /// Example Code:
-        /// <pre>
-        /// URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
+        /// &lt;pre&gt;
+        /// URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
         /// String domain = url.getHost();
         /// ReadWSDL rw = new ReadWSDL();
         /// Definition wsdlDefinition = rw.readWSDL(url);
-        /// properties.put("keyDomain", domain);
-        /// properties.put("businessName", domain);
-        /// properties.put("serverName", url.getHost());
-        /// properties.put("serverPort", url.getPort());
+        /// properties.put(&quot;keyDomain&quot;, domain);
+        /// properties.put(&quot;businessName&quot;, domain);
+        /// properties.put(&quot;serverName&quot;, url.getHost());
+        /// properties.put(&quot;serverPort&quot;, url.getPort());
         /// wsdlURL = wsdlDefinition.getDocumentBaseURI();
         /// WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
         /// BusinessServices businessServices = wsdl2UDDI.createBusinessServices(wsdlDefinition);
-        /// /// </pre>
+        /// &lt;/pre&gt;
         /// </summary>
         /// <param name="wsdlDefinition">must not be null</param>
         /// <returns>a business service</returns>
-        /// @throws IllegalArgumentException if the wsdlDefinition is null
+        /// <exception cref="ArgumentNullException"> if the wsdlDefinition is null</exception>
         public businessService[] createBusinessServices(org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
             if (wsdlDefinition == null)
@@ -523,13 +493,14 @@ namespace org.apache.juddi.v3.client.mapping
             return businessServices.ToArray();
         }
 
-        /**
-     * Creates a UDDI Business Service.
-     *
-     * @param serviceName
-     * @param wsldDefinition
-     * @return
-     */
+        /// <summary>
+        /// 
+        /// Creates a UDDI Business Service.
+        /// 
+        /// </summary>
+        /// <param name="serviceQName"></param>
+        /// <param name="wsdlDefinition"></param>
+        /// <returns></returns>
         private businessService createBusinessService(QName serviceQName, xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition)
         {
 
@@ -699,7 +670,7 @@ namespace org.apache.juddi.v3.client.mapping
                     tModelInstanceInfo tModelInstanceInfoBinding = new tModelInstanceInfo();
                     tModelInstanceInfoBinding.tModelKey = (keyDomainURI + bindingelement.name);
                     instanceDetails instanceDetails = new instanceDetails();
-                    instanceDetails.instanceParms =  (portName) ;
+                    instanceDetails.instanceParms = (portName);
                     tModelInstanceInfoBinding.instanceDetails = (instanceDetails);
                     description descriptionB = new description();
                     descriptionB.lang = (lang);
@@ -742,57 +713,60 @@ namespace org.apache.juddi.v3.client.mapping
 
             return bindingTemplate;
         }
-        /**
-     * <h3>2.4.1 wsdl:portType -> uddi:tModel</h3>
-     *
-     * <p>A wsdl:portType MUST be modeled as a uddi:tModel.</p>
-     *
-     * <p>The minimum information that must be captured about a portType is its
-     * entity type, its local name, its namespace, and the location of the WSDL
-     * document that defines the portType. Capturing the entity type enables
-     * users to search for tModels that represent portType artifacts. Capturing
-     * the local name, namespace, and WSDL location enables users to locate the
-     * definition of the specified portType artifact.</p>
-     *
-     * <p>The wsdl:portType information is captured as follows:</p>
-     *
-     * <p>The uddi:name element of the tModel MUST be the value of the name
-     * attribute of the wsdl:portType.</p>
-     *
-     * <p>The tModel MUST contain a categoryBag, and the categoryBag MUST
-     * contain a keyedReference with a tModelKey of the WSDL Entity Type
-     * category system and a keyValue of "portType".</p>
-     *
-     * <p>If the wsdl:portType has a targetNamespace then the categoryBag MUST
-     * also contain an additional keyedReference with a tModelKey of the XML
-     * Namespace category system and a keyValue of the target namespace of the
-     * wsdl:definitions element that contains the wsdl:portType. If the
-     * targetNamespace is absent from the portType, a categoryBag MUST NOT
-     * contain a keyedReference to the XML Namespace category system.</p>
-     *
-     * <p>The tModel MUST contain an overviewDoc with an overviewURL containing
-     * the location of the WSDL document that describes the wsdl:portType.</p>
-     * Example Code
-     * <pre>
-     * URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-     * String domain = url.getHost();
-     * ReadWSDL rw = new ReadWSDL();
-     * Definition wsdlDefinition = rw.readWSDL(url);
-     * properties.put("keyDomain", domain);
-     * properties.put("businessName", domain);
-     * properties.put("serverName", url.getHost());
-     * properties.put("serverPort", url.getPort());
-     * wsdlURL = wsdlDefinition.getDocumentBaseURI();
-     * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-     * Map<QName, PortType> portTypes = (Map<QName, PortType>) wsdlDefinition.getAllPortTypes();
-     * Set<TModel> portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
-     * </pre>
-     *
-     * @param wsdlURL This is used to set the Overview URL
-     * @param portType Map
-     * @return set of WSDL PortType tModels
-     * @throws WSDLException
-     */
+
+        /// <summary>
+        /// 
+        /// &lt;h3&gt;2.4.1 wsdl:portType -&gt; uddi:tModel&lt;/h3&gt;
+        /// 
+        /// &lt;p&gt;A wsdl:portType MUST be modeled as a uddi:tModel.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The minimum information that must be captured about a portType is its
+        /// entity type, its local name, its namespace, and the location of the WSDL
+        /// document that defines the portType. Capturing the entity type enables
+        /// users to search for tModels that represent portType artifacts. Capturing
+        /// the local name, namespace, and WSDL location enables users to locate the
+        /// definition of the specified portType artifact.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The wsdl:portType information is captured as follows:&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The uddi:name element of the tModel MUST be the value of the name
+        /// attribute of the wsdl:portType.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The tModel MUST contain a categoryBag, and the categoryBag MUST
+        /// contain a keyedReference with a tModelKey of the WSDL Entity Type
+        /// category system and a keyValue of &quot;portType&quot;.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;If the wsdl:portType has a targetNamespace then the categoryBag MUST
+        /// also contain an additional keyedReference with a tModelKey of the XML
+        /// Namespace category system and a keyValue of the target namespace of the
+        /// wsdl:definitions element that contains the wsdl:portType. If the
+        /// targetNamespace is absent from the portType, a categoryBag MUST NOT
+        /// contain a keyedReference to the XML Namespace category system.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The tModel MUST contain an overviewDoc with an overviewURL containing
+        /// the location of the WSDL document that describes the wsdl:portType.&lt;/p&gt;
+        /// Example Code
+        /// &lt;pre&gt;
+        /// URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
+        /// String domain = url.getHost();
+        /// ReadWSDL rw = new ReadWSDL();
+        /// Definition wsdlDefinition = rw.readWSDL(url);
+        /// properties.put(&quot;keyDomain&quot;, domain);
+        /// properties.put(&quot;businessName&quot;, domain);
+        /// properties.put(&quot;serverName&quot;, url.getHost());
+        /// properties.put(&quot;serverPort&quot;, url.getPort());
+        /// wsdlURL = wsdlDefinition.getDocumentBaseURI();
+        /// WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+        /// Map&lt;QName, PortType&gt; portTypes = (Map&lt;QName, PortType&gt;) wsdlDefinition.getAllPortTypes();
+        /// Set&lt;TModel&gt; portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
+        /// &lt;/pre&gt;
+        /// 
+        /// </summary>
+        /// <param name="wsdlURL">This is used to set the Overview URL</param>
+        /// <param name="portTypes">Map</param>
+        /// <returns>set of WSDL PortType tModels</returns>
+        /// <exception cref="Exception"></exception>
+
         public List<tModel> createWSDLPortTypeTModels(string wsdlURL, Dictionary<QName, xmlsoap.schemas.easyWsdl.tPortType> portTypes)
         {
             List<tModel> tModels = new List<tModel>();
@@ -856,126 +830,59 @@ namespace org.apache.juddi.v3.client.mapping
 
         static Log log = LogFactory.getLog(typeof(WSDL2UDDI));
 
-        /**
-    * <h3>2.4.2 wsdl:binding -> uddi:tModel</h3>
-    *
-    * <p>A wsdl:binding MUST be modeled as a uddi:tModel. The minimum
-    * information that must be captured about a binding is its entity type, its
-    * local name, its namespace, the location of the WSDL document that defines
-    * the binding, the portType that it implements, its protocol, and,
-    * optionally, the transport information. Capturing the entity type enables
-    * users to search for tModels that represent binding artifacts. Capturing
-    * the local name, namespace, and WSDL location enables users to locate the
-    * definition of the specified binding artifact. The link to the portType
-    * enables users to search for bindings that implement a particular
-    * portType.</p>
-    *
-    * <p>A wsdl:binding corresponds to a WSDL service interface definition as
-    * defined by the mapping in the Version 1 Best Practice. To maintain
-    * compatibility with the previous mapping, the binding must also be
-    * characterized as type "wsdlSpec".</p>
-    *
-    * <p>The wsdl:binding information is captured as follows:</p>
-    *
-    * <p>The uddi:name element of the tModel MUST be the value of the name
-    * attribute of the wsdl:binding.</p>
-    *
-    * <p>The tModel MUST contain a categoryBag, and the categoryBag MUST
-    * contain at least the following keyedReference elements:</p> <ol> <li> A
-    * keyedReference with a tModelKey of the WSDL Entity Type category system
-    * and a keyValue of "binding".</li> <li> A keyedReference with a tModelKey
-    * of the WSDL portType Reference category system and a keyValue of the
-    * tModelKey that models the wsdl:portType to which the wsdl:binding
-    * relates.</li> <li> A keyedReference with a tModelKey of the UDDI Types
-    * category system and a keyValue of "wsdlSpec" for backward
-    * compatibility[1].</li> <li> One or two keyedReferences as required to
-    * capture the protocol and optionally the transport information refer to
-    * the next section.</li> </ol>
-    *
-    * <p>If the wsdl:binding has a targetNamespace then the categoryBag MUST
-    * also contain an additional keyedReference with a tModelKey of the XML
-    * Namespace category system and a keyValue of the target namespace of the
-    * wsdl:definitions element that contains the wsdl:binding. If the
-    * targetNamespace is absent from the binding, a categoryBag MUST NOT
-    * contain a keyedReference to the XML Namespace category system.</p>
-    *
-    * <p>The tModel MUST contain an overviewDoc with an overviewURL containing
-    * the location of the WSDL document that describes the wsdl:binding.</p>
-    *
-    * <h4>2.4.2.1 wsdl:binding Extensions</h4>
-    *
-    * <p>Information about the protocol and transport, if applicable, specified
-    * in an extension to the wsdl:binding is used to categorize the binding
-    * tModel as described in the following sections. This information is
-    * specified using two of the category systems defined in this Technical
-    * Note:</p> <ol> <li> Protocol Categorization</li> <li> Transport
-    * Categorization</li> </ol> <p>The valid values for the Protocol
-    * Categorization category system are tModelKeys of tModels that are
-    * categorized as protocol tModels. Similarly, the valid values for the
-    * Transport Categorization category system are tModelKeys of tModels that
-    * are categorized as transport tModels.</p> <p> The reason for having these
-    * two categorization schemes that take tModel keys as values is to allow
-    * other standard or proprietary protocols and transports to be defined and
-    * used in the same way as the standard SOAP and HTTP protocols and
-    * transport.</p>
-    *
-    * <h4>2.4.2.1.1 soap:binding</h4>
-    *
-    * <p>If the wsdl:binding contains a soap:binding extensibility element from
-    * the http://schemas.xmlsoap.org/wsdl/soap/ namespace then the categoryBag
-    * MUST include a keyedReference with a tModelKey of the Protocol
-    * Categorization category system and a keyValue of the tModelKey of the
-    * SOAP Protocol tModel.</p>
-    *
-    * <p>If the value of the transport attribute of the soap:binding element is
-    * http://schemas.xmlsoap.org/soap/http then the categoryBag MUST include a
-    * keyedReference with a tModelKey of the Transport Categorization category
-    * system and a keyValue of the tModelKey of the HTTP Transport tModel.</p>
-    *
-    * <p>If the value of the transport attribute is anything else, then the
-    * bindingTemplate MUST include an additional keyedReference with a
-    * tModelKey of the Transport Categorization category system and a keyValue
-    * of the tModelKey of an appropriate transport tModel.</p>
-    *
-    * <h4>2.4.2.1.2 http:binding</h4>
-    *
-    * <p>If the wsdl:binding contains an http:binding extensibility element
-    * from the http://schemas.xmlsoap.org/wsdl/http/ namespace then the
-    * categoryBag MUST include a keyedReference with a tModelKey of the
-    * Protocol Categorization category system and a keyValue of the tModelKey
-    * of the HTTP Protocol tModel.</p>
-    *
-    * <p>Note that this is a different tModel from the HTTP Transport tModel,
-    * and in this case there is no separate transport tModel, and therefore no
-    * keyedReference in the categoryBag from the Transport Categorization
-    * category system.</p>
-    *
-    * <h4>2.4.2.1.3 Other wsdl:binding Extensions</h4>
-    *
-    * <p>Other wsdl:binding extensibility elements are handled in a similar
-    * fashion. It is assumed that vendors who provide other bindings will
-    * provide the appropriate protocol and transport tModels.</p>
-    *
-    * Example Code
-    * <pre>
-    * URL url = new URL("http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl");
-    * String domain = url.getHost();
-    * ReadWSDL rw = new ReadWSDL();
-    * Definition wsdlDefinition = rw.readWSDL(url);
-    * properties.put("keyDomain", domain);
-    * properties.put("businessName", domain);
-    * properties.put("serverName", url.getHost());
-    * properties.put("serverPort", url.getPort());
-    * wsdlURL = wsdlDefinition.getDocumentBaseURI();
-    * WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
-    * Map allBindings = wsdlDefinition.getAllBindings();
-    * Set<TModel> createWSDLBindingTModels = wsdl2UDDI.createWSDLBindingTModels(url.toString(), allBindings);
-    * </pre>
-    * @param wsdlURL
-    * @param binding Map
-    * @return set of WSDL Binding tModels
-    * @throws WSDLException
-    */
+        /// <summary>
+        /// 
+        /// &lt;h3&gt;2.4.1 wsdl:portType -&gt; uddi:tModel&lt;/h3&gt;
+        /// 
+        /// &lt;p&gt;A wsdl:portType MUST be modeled as a uddi:tModel.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The minimum information that must be captured about a portType is its
+        /// entity type, its local name, its namespace, and the location of the WSDL
+        /// document that defines the portType. Capturing the entity type enables
+        /// users to search for tModels that represent portType artifacts. Capturing
+        /// the local name, namespace, and WSDL location enables users to locate the
+        /// definition of the specified portType artifact.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The wsdl:portType information is captured as follows:&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The uddi:name element of the tModel MUST be the value of the name
+        /// attribute of the wsdl:portType.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The tModel MUST contain a categoryBag, and the categoryBag MUST
+        /// contain a keyedReference with a tModelKey of the WSDL Entity Type
+        /// category system and a keyValue of &quot;portType&quot;.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;If the wsdl:portType has a targetNamespace then the categoryBag MUST
+        /// also contain an additional keyedReference with a tModelKey of the XML
+        /// Namespace category system and a keyValue of the target namespace of the
+        /// wsdl:definitions element that contains the wsdl:portType. If the
+        /// targetNamespace is absent from the portType, a categoryBag MUST NOT
+        /// contain a keyedReference to the XML Namespace category system.&lt;/p&gt;
+        /// 
+        /// &lt;p&gt;The tModel MUST contain an overviewDoc with an overviewURL containing
+        /// the location of the WSDL document that describes the wsdl:portType.&lt;/p&gt;
+        /// Example Code
+        /// &lt;pre&gt;
+        /// URL url = new URL(&quot;http://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php?wsdl&quot;);
+        /// String domain = url.getHost();
+        /// ReadWSDL rw = new ReadWSDL();
+        /// Definition wsdlDefinition = rw.readWSDL(url);
+        /// properties.put(&quot;keyDomain&quot;, domain);
+        /// properties.put(&quot;businessName&quot;, domain);
+        /// properties.put(&quot;serverName&quot;, url.getHost());
+        /// properties.put(&quot;serverPort&quot;, url.getPort());
+        /// wsdlURL = wsdlDefinition.getDocumentBaseURI();
+        /// WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(null, new URLLocalizerDefaultImpl(), properties);
+        /// Map&lt;QName, PortType&gt; portTypes = (Map&lt;QName, PortType&gt;) wsdlDefinition.getAllPortTypes();
+        /// Set&lt;TModel&gt; portTypeTModels = wsdl2UDDI.createWSDLPortTypeTModels(wsdlURL, portTypes);
+        /// &lt;/pre&gt;
+        /// 
+        /// </summary>
+        /// <param name="wsdlURL">This is used to set the Overview URL</param>
+        /// <param name="portType">Map</param>
+        /// @return set of WSDL PortType tModels
+        /// <exception cref="Exception"></exception>
+
         public List<tModel> createWSDLBindingTModels(string wsdlURL, Dictionary<QName, xmlsoap.schemas.easyWsdl.tBinding> bindings)
         {
             List<tModel> tModels = new List<tModel>();

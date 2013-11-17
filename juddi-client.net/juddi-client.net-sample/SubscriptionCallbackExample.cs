@@ -116,12 +116,6 @@ namespace org.apache.juddi.client.sample
                 if (clerk != null)
                     clerk.Dispose();
             }
-
-
-
-
         }
-
-
     }
 }

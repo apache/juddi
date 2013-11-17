@@ -15,88 +15,57 @@
  *
  */
 
+using org.apache.juddi.client.org.apache.juddi.v3.client.subscription;
+using org.apache.juddi.v3.client.config;
+using org.apache.juddi.v3.client.cryptor;
 using org.apache.juddi.v3.client.log;
 using org.apache.juddi.v3.client.subscription.wcf;
+using org.apache.juddi.v3.client.transport;
 using org.uddi.apiv3;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using org.apache.juddi.client.org.apache.juddi.v3.client.subscription;
 using System.Security;
 using System.ServiceModel;
-using org.apache.juddi.v3.client.config;
-using org.apache.juddi.v3.client.transport;
-using org.apache.juddi.v3.client.crypto;
-using System.Net;
 
 namespace org.apache.juddi.v3.client.subscription
 {
     /// <summary>
-    /// WebService which implements the UDDI v3 SubscriptionListener API. 
-    /// This service will be called by the UDDI registry when any change to a Service or BindingTemplate call in to it.
+    /// 
+    /// WebService which implements the UDDI v3 SubscriptionListener API. This
+    /// service will be called by the UDDI registry when any change to a Service or
+    /// BindingTemplate call in to it.
     /// </summary>
-    /// Usage scenario
-    /// Usethis call for when you need to be notified from a UDDI server that either a UDDI entity was created, changed, or deleted via the UDDI Subscription web service. This class will start up an embedded Jetty server (built into the JRE). You can then register your code to be notified of any inbound messages received from the UDDI server asynchronously. Here's some sample code.
-    /// <pre>
-    /// 
-    /*
-    /// 
-    /// UDDIClient clerkManager = null;
-            Transport transport = null;
-            UDDIClerk clerk = null;
-            try
-            {
-                clerkManager = new UDDIClient("uddi.xml");
-                UDDIClientContainer.addClient(clerkManager);
+    /// &lt;h1&gt;Usage scenario&lt;/h1&gt;
+    /// Use this call for when you need to be notified from a UDDI server that either
+    /// a UDDI entity was created, changed, or deleted via the UDDI Subscription web
+    /// service. This class will start up an embedded Jetty server (built into the
+    /// JRE). You can then register your code to be notified of any inbound messages
+    /// received from the UDDI server asynchronously. Here&#39;s some sample code.
+    /// <example>
+    /// <code>
+    /// &lt;pre&gt;
+    /// UDDIClient c = new UDDIClient(&quot;META-INF/uddiclient.xml&quot;);
+    /// UDDIClerk clerk = c.getClerk(&quot;default&quot;);
+    /// TModel createKeyGenator = UDDIClerk.createKeyGenator(&quot;uddi:org.apache.juddi:test:keygenerator&quot;, &quot;Test domain&quot;, &quot;en&quot;);
+    /// clerk.register(createKeyGenator);
+    /// BindingTemplate start = SubscriptionCallbackListener.start(c, &quot;default&quot;);
+    /// //keep alive
+    /// while(running)
+    /// Thread.sleep(1000);
+    /// SubscriptionCallbackListener.stop(c, &quot;default&quot;, start.getBindingKey());
+    /// &lt;/pre&gt;
+    /// </code></example>
+    /// @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O&#39;Ree&lt;/a&gt;
+    /// @since 3.2
 
-                transport = clerkManager.getTransport("default");
-
-                UDDI_Security_SoapBinding security = transport.getUDDISecurityService();
-                UDDI_Inquiry_SoapBinding inquiry = transport.getUDDIInquiryService();
-                UDDI_Publication_SoapBinding publish = transport.getUDDIPublishService();
-
-                clerk = clerkManager.getClerk("default");
-
-                tModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
-                clerk.register(createKeyGenator);
-                bindingTemplate start = SubscriptionCallbackListener.start(clerkManager, "default");
-                //bkeep alive
-                DateTime stop = DateTime.Now.Add(new TimeSpan(0, 1, 0));
-                while (DateTime.Now < stop)
-                {
-                    Thread.Sleep(1000);
-
-                }
-                SubscriptionCallbackListener.stop(c, "default", start.bindingKey);
-            }
-            catch (Exception ex)
-            {
-                while (ex != null)
-                {
-                    System.Console.WriteLine("Error! " + ex.Message);
-                    ex = ex.InnerException;
-                }
-            }
-            finally
-            {
-                if (transport != null && transport is IDisposable)
-                {
-                    ((IDisposable)transport).Dispose();
-                }
-                if (clerk != null)
-                    clerk.Dispose();
-            }
-*/
-    /// </pre>
-    /// 
-    [ServiceBehaviorAttribute( AutomaticSessionShutdown=false, ConcurrencyMode=ConcurrencyMode.Single, 
+    [ServiceBehaviorAttribute(AutomaticSessionShutdown = false, ConcurrencyMode = ConcurrencyMode.Single,
         //DOES NOT WORK ON MONO 
-        Name="SubscriptionCallbackListener",
-        Namespace="org.apache.juddi.v3.client.subscription", 
-        IncludeExceptionDetailInFaults=false, InstanceContextMode=InstanceContextMode.Single, ValidateMustUnderstand=false,
-        AddressFilterMode=AddressFilterMode.Any)]
+        Name = "SubscriptionCallbackListener",
+        Namespace = "org.apache.juddi.v3.client.subscription",
+        IncludeExceptionDetailInFaults = false, InstanceContextMode = InstanceContextMode.Single, ValidateMustUnderstand = false,
+        AddressFilterMode = AddressFilterMode.Any)]
     public class SubscriptionCallbackListener : UDDI_SubscriptionListener_PortType
     {
         public SubscriptionCallbackListener()
@@ -334,7 +303,7 @@ namespace org.apache.juddi.v3.client.subscription
                     catch (Exception ex)
                     {
                         log.error("Unable to sign", ex);
-                        throw new UnableToSignException("Unable to sign",ex);
+                        throw new UnableToSignException("Unable to sign", ex);
                     }
 
                     break;
@@ -349,7 +318,7 @@ namespace org.apache.juddi.v3.client.subscription
                         catch (Exception ex)
                         {
                             log.error("Unable to sign", ex);
-                            throw new UnableToSignException("Unable to sign",ex);
+                            throw new UnableToSignException("Unable to sign", ex);
                         }
                     }
                     break;
@@ -574,7 +543,7 @@ namespace org.apache.juddi.v3.client.subscription
             {
                 return Dns.GetHostName();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "HOST_UNKNOWN";
             }

@@ -21,13 +21,13 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
     /// An abstract class for AES functions
     /// </summary>
-    /// <see cref="AES128"/>
-    /// <see cref="AES256"/>
+    /// <see cref="org.apache.juddi.v3.client.cryptor.AES128Cryptor"/>
+    /// <see cref="org.apache.juddi.v3.client.cryptor.AES256Cryptor"/>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public  abstract class AESCryptor : Cryptor
     {

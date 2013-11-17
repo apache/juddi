@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace org.apache.juddi.v3.client.crypto
+namespace org.apache.juddi.v3.client.cryptor
 {
     /// <summary>
     /// loads the appropriate cipher
@@ -46,15 +46,15 @@ namespace org.apache.juddi.v3.client.crypto
             if (cache.ContainsKey(clazz))
                 return cache[clazz];
             Cryptor c = null;
-            if (clazz.Equals(typeof(org.apache.juddi.v3.client.crypto.AES128Cryptor).Name))
+            if (clazz.Equals(typeof(org.apache.juddi.v3.client.cryptor.AES128Cryptor).Name))
             {
                 c = new AES128Cryptor();
             }
-            if (clazz.Equals(typeof(org.apache.juddi.v3.client.crypto.AES256Cryptor).Name))
+            if (clazz.Equals(typeof(org.apache.juddi.v3.client.cryptor.AES256Cryptor).Name))
             {
                 c = new AES256Cryptor();
             }
-            if (clazz.Equals(typeof(org.apache.juddi.v3.client.crypto.TripleDESCryptor).Name))
+            if (clazz.Equals(typeof(org.apache.juddi.v3.client.cryptor.TripleDESCryptor).Name))
             {
                 c = new TripleDESCryptor();
             }
