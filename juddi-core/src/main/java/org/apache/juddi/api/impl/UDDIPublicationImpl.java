@@ -452,9 +452,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			List<?> tmodelKeysFound = null;
 
 			if (body.getInfoSelection().equals(InfoSelection.HIDDEN))
-				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", new Boolean(true), DynamicQuery.PREDICATE_EQUALS));
+				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted",  Boolean.TRUE, DynamicQuery.PREDICATE_EQUALS));
 			else if (body.getInfoSelection().equals(InfoSelection.VISIBLE))
-				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted", new Boolean(false), DynamicQuery.PREDICATE_EQUALS));
+				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound, new DynamicQuery.Parameter(TModelQuery.ENTITY_ALIAS + ".deleted",  Boolean.FALSE, DynamicQuery.PREDICATE_EQUALS));
 			else
 				tmodelKeysFound = FindTModelByPublisherQuery.select(em, null, publisher, tmodelKeysFound);
 				

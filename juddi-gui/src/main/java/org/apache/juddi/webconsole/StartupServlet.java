@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2001-2013 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  */
 package org.apache.juddi.webconsole;
 
@@ -19,6 +31,8 @@ import javax.servlet.ServletContextEvent;
  */
 public class StartupServlet implements javax.servlet.ServletContextListener {
 
+    static final Logger log = Logger.getLogger(StartupServlet.class.getCanonicalName());
+
     /**
      * creates a new AES key and stores it to the properties files
      *
@@ -27,7 +41,6 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         FileOutputStream fos = null;
         try {
-            Logger log = Logger.getLogger(this.getClass().getCanonicalName());
             //URL resource = sce.getServletContext().getResource("/META-INF/config.properties");
             Properties p = new Properties();
             InputStream is = sce.getServletContext().getResourceAsStream("/META-INF/config.properties");
@@ -50,7 +63,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
             fos.flush();
             fos.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.log(Level.WARNING, null, ex);
             try {
                 if (fos != null) {
                     fos.close();
@@ -68,9 +81,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         FileOutputStream fos = null;
         try {
-
-            Logger log = Logger.getLogger(this.getClass().getCanonicalName());
-            //URL resource = sce.getServletContext().getResource("/META-INF/config.properties");
+            log.info("Cleaning up juddi-gui");
             Properties p = new Properties();
             InputStream is = sce.getServletContext().getResourceAsStream("/META-INF/config.properties");
             p.load(is);
@@ -81,7 +92,7 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
             fos.flush();
             fos.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.log(Level.WARNING, null, ex);
             try {
                 if (fos != null) {
                     fos.close();
@@ -89,5 +100,14 @@ public class StartupServlet implements javax.servlet.ServletContextListener {
             } catch (Exception e) {
             }
         }
+        try {
+            sce.getServletContext().removeAttribute("username");
+            sce.getServletContext().removeAttribute("password");
+            sce.getServletContext().removeAttribute("locale");
+            sce.getServletContext().removeAttribute("hub");
+        } catch (Exception ex) {
+            log.log(Level.WARNING, null, ex);
+        }
+
     }
 }

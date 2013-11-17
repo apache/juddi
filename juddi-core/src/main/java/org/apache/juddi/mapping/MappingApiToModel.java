@@ -753,7 +753,7 @@ public class MappingApiToModel {
 		if (apiSubscription.isBrief() != null) {
 			modelSubscription.setBrief(apiSubscription.isBrief());
 		} else {
-			modelSubscription.setBrief(new Boolean(false));
+			modelSubscription.setBrief(Boolean.FALSE);
 		}
 			
 		

@@ -16,10 +16,6 @@
  */
 package org.apache.juddi.webconsole;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 

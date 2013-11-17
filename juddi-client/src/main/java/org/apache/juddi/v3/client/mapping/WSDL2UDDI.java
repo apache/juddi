@@ -16,7 +16,6 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
-import com.ibm.wsdl.extensions.soap12.SOAP12BindingImpl;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -82,6 +81,7 @@ import org.w3c.dom.Element;
  * uddi:bindingTemplate</li> <li>TODO: 2.4.5 wsdl:port Address Extensions ->
  * uddi:bindingTemplate</li> </ul>
  *
+ * @see 
  * @author Kurt T Stam
  * @Since 3.1.5
  */

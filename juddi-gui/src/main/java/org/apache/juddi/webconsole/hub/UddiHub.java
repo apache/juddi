@@ -308,6 +308,7 @@ public class UddiHub implements Serializable {
     }
 
     private String GetToken() {
+        EnsureConfig();
         if (style != AuthStyle.UDDI_AUTH) {
             BindingProvider bp = null;
             Map<String, Object> context = null;
@@ -1175,9 +1176,11 @@ public class UddiHub implements Serializable {
             }
 
             ret.offset = offset;
-            ret.displaycount = findTModel.getListDescription().getIncludeCount();
-            ret.totalrecords = findTModel.getListDescription().getActualCount();
-            if (findTModel == null || findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
+            if (findTModel.getListDescription() != null) {
+                ret.displaycount = findTModel.getListDescription().getIncludeCount();
+                ret.totalrecords = findTModel.getListDescription().getActualCount();
+            }
+            if (findTModel.getTModelInfos() == null || findTModel.getTModelInfos().getTModelInfo().isEmpty()) {
                 ret.renderedHtml = ResourceLoader.GetResource(session, "errors.norecordsfound");//"No tModels are defined";
             } else {
                 // if (!isChooser) {
@@ -1756,6 +1759,7 @@ public class UddiHub implements Serializable {
                     tmi.setName(tmodelDetails.getName());
                     tmi.setTModelKey(tmodelDetails.getTModelKey());
                     tmi.getDescription().addAll(tmodelDetails.getDescription());
+                    findBusiness.setTModelInfos(new TModelInfos());
                     findBusiness.getTModelInfos().getTModelInfo().add(tmi);
 
                     break;
@@ -3528,11 +3532,11 @@ public class UddiHub implements Serializable {
                 TransferToken tt = new TransferToken();
                 Holder<String> node = new Holder<String>();
                 Holder<XMLGregorianCalendar> xcal = new Holder<XMLGregorianCalendar>();
-                Holder<byte[]> token = new Holder<byte[]>();
+                Holder<byte[]> ttoken = new Holder<byte[]>();
                 try {
-                    custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, token);
+                    custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, ttoken);
                     tt.setNodeID(node.value);
-                    tt.setOpaqueToken(token.value);
+                    tt.setOpaqueToken(ttoken.value);
                     tt.setExpirationTime(xcal.value);
                     response = tt;
                 } catch (Exception ex) {
@@ -3540,9 +3544,9 @@ public class UddiHub implements Serializable {
                         DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
                         if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
                             token = null;
-                            custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, token);
+                            custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, ttoken);
                             tt.setNodeID(node.value);
-                            tt.setOpaqueToken(token.value);
+                            tt.setOpaqueToken(ttoken.value);
                             tt.setExpirationTime(xcal.value);
                             response = tt;
                         }
