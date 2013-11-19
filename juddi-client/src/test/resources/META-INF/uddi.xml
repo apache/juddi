@@ -64,7 +64,10 @@
         </nodes>
 		
         <clerks registerOnStartup="false" >
-            <clerk name="default" node="default" publisher="root" password="root"/>
+            <clerk name="default" node="default" publisher="userjoe" password="******" >
+                <!--<wsdl businessKey="" businessName="" keyDomain=""></wsdl>-->
+                <class></class>
+            </clerk>
             <clerk name="medroot" node="med"     publisher="root" password="root"/> 
             <xregister>
                 <service bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>

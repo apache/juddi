@@ -1,5 +1,4 @@
-﻿using org.apache.juddi.jaxb;
-/*
+﻿/*
  * Copyright 2001-2008 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +14,7 @@
  * limitations under the License.
  *
  */
+using org.apache.juddi.jaxb;
 using org.apache.juddi.v3.client;
 using org.apache.juddi.v3.client.config;
 using org.apache.juddi.v3.client.cryptor;
@@ -58,6 +58,7 @@ namespace org.apache.juddi.client.sample
                     Console.Out.WriteLine("attempting to sign");
                     serviceDetail sd = clerk.getServiceDetail(bl.businessInfos[0].serviceInfos[0].serviceKey);
 
+                    //pist, the signing config comes from the stuff in in uddi.xml
                     DigSigUtil ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
                     businessService signedsvc = (businessService)ds.signUddiEntity(sd.businessService[0]);
                     PrintUDDI<businessService> p = new PrintUDDI<businessService>();

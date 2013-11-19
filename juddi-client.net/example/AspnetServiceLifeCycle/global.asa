@@ -7,15 +7,13 @@
     void Application_Start(object sender, EventArgs e)
     {
 			// Code that runs on application startup
-
-			Type t = typeof(HelloImpl);
             UDDIClient clerkManager = null;
             Transport transport = null;
             UDDIClerk clerk = null;
 
             clerkManager = new UDDIClient("uddi.xml");
             UDDIClientContainer.addClient(clerkManager);
-            clerkManager.registerAnnotatedServices();
+            clerkManager.start();
     }
 </script>
 

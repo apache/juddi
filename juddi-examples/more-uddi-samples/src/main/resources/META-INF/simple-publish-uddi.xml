@@ -3,30 +3,33 @@
 <uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
     <client name="example-client">
-		<nodes>
-			<node>
-			    <!-- required 'default' node -->
-				<name>default</name> 
+        <nodes>
+            <node>
+                <!-- required 'default' node -->
+                <name>default</name> 
                 <properties>
                     <property name="serverName" value="localhost"/>
                     <property name="serverPort" value="8080"/>
-					<!-- for UDDI nodes that use HTTP u/p, using the following 
-					<property name="basicAuthUsername" value="root" />
-					<property name="basicAuthPassword" value="password" />
-					<property name="basicAuthPasswordIsEncrypted" value="false" />
-					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
+                    <!-- for UDDI nodes that use HTTP u/p, using the following 
+                    <property name="basicAuthUsername" value="root" />
+                    <property name="basicAuthPassword" value="password" />
+                    <property name="basicAuthPasswordIsEncrypted" value="false" />
+                    <property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
                 </properties>
-				<description>Main jUDDI node</description>
-				<!-- JAX-WS Transport -->
-				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
-				<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
-				<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
-		        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
-		        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
-				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
-				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
-				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
-			</node>
-		</nodes>
-	</client>
+                <description>Main jUDDI node</description>
+                <!-- JAX-WS Transport -->
+                <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+                <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+                <publishUrl>http://localhost:8888/juddiv3/services/publish</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
+            </node>
+        </nodes>
+        <clerks registerOnStartup="false">
+            <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
+        </clerks>
+    </client>
 </uddi>

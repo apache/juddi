@@ -443,6 +443,7 @@ namespace org.apache.juddi.v3.client.cryptor
             return bt;
         }
 
+
         private X509Certificate2 GetKey()
         {
             
@@ -451,6 +452,7 @@ namespace org.apache.juddi.v3.client.cryptor
             {
                 logger.info("Attempting to load certificate from " + map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE));
                 X509Certificate2 cert = new X509Certificate2(map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE), 
+                    //this should be decrypted already
                     map.getProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD));
                 return cert;
 
@@ -469,7 +471,10 @@ namespace org.apache.juddi.v3.client.cryptor
                 if (cert.HasPrivateKey)
                 {
                     //do some comparisions
-                    if (cert.SerialNumber.Equals(keyserial, StringComparison.CurrentCultureIgnoreCase))
+                    if (cert.SerialNumber.Equals(keyserial, StringComparison.CurrentCultureIgnoreCase) ||
+                        cert.FriendlyName.Equals(keyserial, StringComparison.CurrentCultureIgnoreCase) ||
+                        cert.Subject.Equals(keyserial, StringComparison.CurrentCultureIgnoreCase) ||
+                        cert.Thumbprint.Equals(keyserial, StringComparison.CurrentCultureIgnoreCase))
                     {
                         store.Close();
                         return cert;
@@ -482,7 +487,7 @@ namespace org.apache.juddi.v3.client.cryptor
         }
 
 
-        XmlDocument StringToXmlDocument(String s)
+        private XmlDocument StringToXmlDocument(String s)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.PreserveWhitespace = false;
@@ -492,6 +497,7 @@ namespace org.apache.juddi.v3.client.cryptor
 
 
         //source http://objectmix.com/dotnet/794749-digitally-sign-xml-doc-x509certificate-solution.html
+        //which came from the msdn tutorial
 
         //Certificate get Signature method
         private XmlElement SignXml(XmlDocument xmlDoc, X509Certificate2 cert)
@@ -566,46 +572,5 @@ namespace org.apache.juddi.v3.client.cryptor
             return xmlDoc;
 
         }
-
-        //GET CERT BY FRIENDLYNAME
-        public X509Certificate2 GetCertificateBySubject(string subject)
-        {
-            X509Certificate2 cert = null;
-
-            try
-            {
-
-                X509Store xstore = new X509Store(StoreName.Root,
-                StoreLocation.LocalMachine);
-                xstore.Open(OpenFlags.IncludeArchived);
-
-
-                string strOutput = string.Empty;
-
-                foreach (X509Certificate2 cert2 in xstore.Certificates)
-                {
-
-                    if (cert2.FriendlyName == subject.ToString())
-                    {
-                        cert = cert2;
-                        break;
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.error("", ex);
-
-                throw ex;
-            }
-
-            return cert;
-        }
-
-
-
-
-        
     }
 }

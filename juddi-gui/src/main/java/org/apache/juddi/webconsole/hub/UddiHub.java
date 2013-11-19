@@ -1967,7 +1967,7 @@ public class UddiHub implements Serializable {
             sb.setAuthInfo(GetToken());
 
             sb.getTModel().add(be);
-            JAXB.marshal(be, System.out);
+            //JAXB.marshal(be, System.out);
             try {
                 publish.saveTModel(sb);
             } catch (Exception ex) {

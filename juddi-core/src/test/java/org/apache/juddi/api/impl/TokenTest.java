@@ -16,16 +16,10 @@
 package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
-import org.apache.juddi.api.impl.UDDIPublicationImplExt;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
-import org.apache.juddi.api.impl.UDDIPublicationImpl;
-import org.apache.juddi.api.impl.UDDIPublicationImpl;
-import org.apache.juddi.api.impl.UDDISecurityImpl;
-import org.apache.juddi.api.impl.UDDISecurityImpl;
-import org.apache.juddi.auth.MockWebServiceContext;
 import org.apache.juddi.auth.MockWebServiceContext;
 import org.apache.juddi.v3.error.AuthTokenRequiredException;
 import org.apache.juddi.v3.tck.TckBusiness;
@@ -38,8 +32,6 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.api_v3.AuthToken;
-import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**

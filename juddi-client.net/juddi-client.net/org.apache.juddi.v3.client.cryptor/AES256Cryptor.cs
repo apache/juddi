@@ -26,7 +26,7 @@ namespace org.apache.juddi.v3.client.cryptor
     /// AES256 Cipher
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public sealed class AES256Cryptor : AESCryptor
+    internal sealed class AES256Cryptor : AESCryptor
     {
 
         protected internal override int GetKeySize()

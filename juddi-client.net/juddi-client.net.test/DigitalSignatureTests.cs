@@ -77,7 +77,7 @@ namespace juddi_client.net.test
         [Test]
         public void Business()
         {
-
+            Console.Out.WriteLine("DigitalSignature biz");
             businessEntity be = new businessEntity();
             be.businessKey = "uddi:business";
             be.businessServices = new businessService[] { NewBusinessService() };
@@ -96,6 +96,7 @@ namespace juddi_client.net.test
 
         private businessService NewBusinessService()
         {
+            
             businessService bs = new businessService();
             bs.bindingTemplates = new bindingTemplate[] { NewBindingTempalte() };
             bs.businessKey = "asd";
@@ -121,6 +122,7 @@ namespace juddi_client.net.test
         [Test]
         public void Service()
         {
+            Console.Out.WriteLine("DigitalSignature svc");
             businessService bs = NewBusinessService();
             SigningAndVerify(bs);
         }
@@ -128,6 +130,7 @@ namespace juddi_client.net.test
         [Test]
         public void Tmodel()
         {
+            Console.Out.WriteLine("DigitalSignature tmodel");
             tModel bs = UDDIClerk.createKeyGenator("part", "desc", "en");
             
             SigningAndVerify(bs);

@@ -55,21 +55,27 @@
       
     </clerks>
     <signature>
-      <signingKeyStorePath>CURRENT-USER</signingKeyStorePath>
-      <signingKeyStoreType>WINDOWS</signingKeyStoreType>
-      <signingKeyStoreFilePassword>ignored</signingKeyStoreFilePassword>
+      <signingKeyStorePath>..\..\..\juddi-client.net.test\resources\cert.pfx</signingKeyStorePath>
+      <signingKeyStoreType>PFX</signingKeyStoreType>
+      <signingKeyStoreFilePassword>password</signingKeyStoreFilePassword>
       <signingKeyPassword>ignored</signingKeyPassword>
-      <signingKeyAlias>SERIAL</signingKeyAlias>
+
+      <!-- this is the localhost Test certificate -->
+      <signingKeyAlias>?518ed27c</signingKeyAlias>
       <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
-      <signatureMethod>RSA_SHA1</signatureMethod>
+      <signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
       <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
-      <trustStorePath>CURRENT-USER</trustStorePath>
-      <trustStoreType>WINDOWS</trustStoreType>
+      <trustStorePath>ignored</trustStorePath>
+      <trustStoreType>ignored</trustStoreType>
       <trustStorePassword>ignored</trustStorePassword>
       <checkTimestamps>true</checkTimestamps>
-      <checkTrust>true</checkTrust>
-      <checkRevocationCRL>true</checkRevocationCRL>
+      <checkTrust>false</checkTrust>
+      <checkRevocationCRL>false</checkRevocationCRL>
       <checkRevocationOCSP>false</checkRevocationOCSP>
+      <keyInfoInclusionSubjectDN>true</keyInfoInclusionSubjectDN>
+      <keyInfoInclusionSerial>true</keyInfoInclusionSerial>
+      <keyInfoInclusionBase64PublicKey>true</keyInfoInclusionBase64PublicKey>
+      <digestMethod>http://www.w3.org/2000/09/xmldsig#sha1</digestMethod>
     </signature>
     <subscriptionCallbacks>
       <keyDomain>uddi:org.apache.juddi</keyDomain>

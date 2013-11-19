@@ -82,10 +82,10 @@ public class UddiDigitalSignatureService {
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "password");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "selfsigned");
-            ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+            ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
 
             //option 2), load it from the juddi config file
-            ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+            //ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
 
             //login
             String token = null;

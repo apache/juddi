@@ -13,6 +13,7 @@ namespace juddi_client.net.test
         [Test]
         public void AES128()
         {
+            Console.Out.WriteLine("Cryptor AES128");
             Cryptor c = org.apache.juddi.v3.client.cryptor.CryptorFactory.getCryptor(CryptorFactory.AES128);
             TestCryptor(c);
         }
@@ -31,6 +32,7 @@ namespace juddi_client.net.test
         [Test]
         public void AES256()
         {
+            Console.Out.WriteLine("Cryptor AES256");
             Cryptor c = org.apache.juddi.v3.client.cryptor.CryptorFactory.getCryptor(CryptorFactory.AES256);
             TestCryptor(c);
         }
@@ -38,6 +40,7 @@ namespace juddi_client.net.test
         [Test]
         public void TripleDES()
         {
+            Console.Out.WriteLine("Cryptor TripleDES");
             Cryptor c = org.apache.juddi.v3.client.cryptor.CryptorFactory.getCryptor(CryptorFactory.TripleDES);
             TestCryptor(c);
         }

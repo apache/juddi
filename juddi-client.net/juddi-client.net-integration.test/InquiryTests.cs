@@ -25,9 +25,16 @@ namespace juddi_client.net_integration.test
         static org.uddi.apiv3.UDDI_Publication_SoapBinding publish = null;
         static org.uddi.apiv3.UDDI_Subscription_SoapBinding sub = null;
         static bool online = true;
+        static bool serialize = false;
         [TestFixtureSetUp]
         public static void init()
         {
+
+            if (Environment.GetEnvironmentVariable("debug") != null
+                && Environment.GetEnvironmentVariable("debug").Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                serialize = true;
+            }
 
             clerkManager = new UDDIClient("uddi.xml");
             UDDIClientContainer.addClient(clerkManager);
@@ -43,7 +50,7 @@ namespace juddi_client.net_integration.test
             WebClient c = new WebClient();
 
             Console.Out.WriteLine("Checking to see if tomcat is running");
-            String s=null;
+            String s = null;
             int count = 100;
             while (s == null && count > 0)
             {
@@ -53,7 +60,7 @@ namespace juddi_client.net_integration.test
                     Console.Out.WriteLine("Tomcat is running");
                     break;
                 }
-                catch 
+                catch
                 { }
                 Console.Out.WriteLine("tomcat isn't running yet, waiting...");
                 Thread.Sleep(1000);
@@ -85,7 +92,8 @@ namespace juddi_client.net_integration.test
                 Assert.IsNotNullOrEmpty(bl.businessInfos[i].businessKey);
             }
             PrintUDDI<businessList> p = new PrintUDDI<businessList>();
-            Console.Out.WriteLine(p.print(bl));
+            if (serialize)
+                Console.Out.WriteLine(p.print(bl));
 
         }
 
@@ -107,7 +115,8 @@ namespace juddi_client.net_integration.test
                 Assert.IsNotNullOrEmpty(bl.serviceInfos[i].serviceKey);
             }
             PrintUDDI<serviceList> p = new PrintUDDI<serviceList>();
-            Console.Out.WriteLine(p.print(bl));
+            if (serialize)
+                Console.Out.WriteLine(p.print(bl));
         }
 
         [Test]
@@ -128,10 +137,11 @@ namespace juddi_client.net_integration.test
                 Assert.NotNull(bl.tModelInfos[i].name);
             }
             PrintUDDI<tModelList> p = new PrintUDDI<tModelList>();
-            Console.Out.WriteLine(p.print(bl));
+            if (serialize)
+                Console.Out.WriteLine(p.print(bl));
         }
 
 
-     
+
     }
 }

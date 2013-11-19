@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net.test", "ju
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-integration.test", "juddi-client.net-integration.test\juddi-client.net-integration.test.csproj", "{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net.cryptor", "juddi-client.net.cryptor\juddi-client.net.cryptor.csproj", "{15F6DF2F-82AF-49AA-B449-6E21F8409845}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABE1C470-52E1-4C28-AB1D-91F1CD7B89C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

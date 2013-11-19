@@ -44,6 +44,7 @@ public class UDDIClerkServlet extends HttpServlet {
 			manager = WebHelper.getUDDIClient(config.getServletContext());
 			if (manager.getClientConfig().isRegisterOnStartup()) {
 				manager.registerWSDLs();
+				manager.registerAnnotatedServices();
 			}
 		} catch (Exception e) {
 			logger.error("UDDI-client could not be started for manager " + manager.getName() + ". "

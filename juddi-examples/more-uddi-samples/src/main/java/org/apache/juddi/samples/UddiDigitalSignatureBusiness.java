@@ -81,12 +81,19 @@ public class UddiDigitalSignatureBusiness {
             ds = new DigSigUtil();
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE, "keystore.jks");
             ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, "JKS");
-            ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "password");
-            ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "selfsigned");
-            ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+            ds.put(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, "Test");
+            ds.put(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, "Test");
+            ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+            //this flag will cause juddi to crash until JUDDI-716 is fixed
+            //TODO JUDDI-716
+            //ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
+            ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN, "true");
+            ds.put(DigSigUtil.TRUSTSTORE_FILE, "truststore.jks");
+            ds.put(DigSigUtil.TRUSTSTORE_FILETYPE, "JKS");
+            ds.put(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, "Test");
 
             //option 2), load it from the juddi config file
-            ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
+            //ds = new DigSigUtil(clerkManager.getClientConfig().getDigitalSignatureConfiguration());
 
             //login
             String token = null;

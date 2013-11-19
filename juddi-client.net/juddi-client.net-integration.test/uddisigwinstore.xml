@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <uddi xmlns="urn:juddi-apache-org:v3_client" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:juddi-apache-org:v3_client ..\..\juddi-client\src\main\resources\xsd\uddi-client.xsd">
   <reloadDelay>5000</reloadDelay>
   <client name="test-client">
@@ -8,8 +8,8 @@
         <name>default</name>
         <description>Main jUDDI node</description>
         <properties>
-          <property name="serverName" value="uddi-jbossoverlord.rhcloud.com" />
-          <property name="serverPort" value="80" />
+          <property name="serverName" value="localhost" />
+          <property name="serverPort" value="8080" />
 		  <!-- for UDDI nodes that use HTTP u/p, using the following 
 					<property name="basicAuthUsername" value="root" />
 					<property name="basicAuthPassword" value="password" />
@@ -17,51 +17,31 @@
 					<property name="basicAuthPasswordCryptoProvider" value="org.apache.juddi.v3.client.crypto.AES128Cryptor (an example)" />-->
         </properties>
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://${serverName}:${serverPort}/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://${serverName}:${serverPort}/services/publish?wsdl</publishUrl>
-        <securityUrl>http://${serverName}:${serverPort}/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://${serverName}:${serverPort}/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://${serverName}:${serverPort}/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://${serverName}:${serverPort}/services/juddi-api?wsdl</juddiApiUrl>
+        <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
+        <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry?wsdl</inquiryUrl>
+        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish?wsdl</publishUrl>
+        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security?wsdl</securityUrl>
+        <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription?wsdl</subscriptionUrl>
+        <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
+        <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
         <factoryInitial>not used</factoryInitial>
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
-      </node>
-      <node>
-        <name>med</name>
-        <description>jUDDI node in other Department</description>
-        <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
-        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
-        <factoryInitial>not used</factoryInitial>
-        <factoryURLPkgs>not used</factoryURLPkgs>
-        <factoryNamingProvider>not used</factoryNamingProvider>
-
       </node>
     </nodes>
 
     <clerks registerOnStartup="false">
       <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
-      <clerk name="medroot" node="med"     publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
-      <xregister>
-        <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-      </xregister>
       
     </clerks>
     <signature>
-      <signingKeyStorePath>..\..\..\juddi-client.net.test\resources\cert.pfx</signingKeyStorePath>
-      <signingKeyStoreType>PFX</signingKeyStoreType>
-      <signingKeyStoreFilePassword>password</signingKeyStoreFilePassword>
+      <signingKeyStorePath>My</signingKeyStorePath>
+      <signingKeyStoreType>CurrentUser</signingKeyStoreType>
+      <signingKeyStoreFilePassword>ignored</signingKeyStoreFilePassword>
       <signingKeyPassword>ignored</signingKeyPassword>
-
+      
       <!-- this is the localhost Test certificate -->
-      <signingKeyAlias>?518ed27c</signingKeyAlias>
+      <signingKeyAlias>‎518ed27c</signingKeyAlias>
       <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
       <signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
       <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
@@ -73,7 +53,7 @@
       <checkRevocationCRL>false</checkRevocationCRL>
       <checkRevocationOCSP>false</checkRevocationOCSP>
       <keyInfoInclusionSubjectDN>true</keyInfoInclusionSubjectDN>
-      <keyInfoInclusionSerial>true</keyInfoInclusionSerial>
+      <keyInfoInclusionSerial>false</keyInfoInclusionSerial>
       <keyInfoInclusionBase64PublicKey>true</keyInfoInclusionBase64PublicKey>
       <digestMethod>http://www.w3.org/2000/09/xmldsig#sha1</digestMethod>
     </signature>

@@ -8,11 +8,17 @@ package org.apache.juddi.v3.client;
 public interface UDDIConstants {
 
     /**
-     * identifies a tmodel instance info containing some version information of a service
-     * a juddi extension based on 
+     * identifies a tmodel instance info containing some version information of
+     * a service a juddi extension based on
      * http://www.ibm.com/developerworks/webservices/library/ws-version/
      */
      public static final String VERSION_TMODEL = "urn:uddi:uddi.org:version";
+    /**
+     * When using this tModel as a tModelInstance, it can be used to describe a
+     * service endpoint that was automatically registered by jUDDI. This is a
+     * jUDDI specific addon and may not be present in other registries.
+     */
+    public static final String JUDDI_TMODEL_AUTOREG = "uddi:juddi.apache.org:autoregistration";
      
     public static final int MAX_xml_lang_length = 26;
     public static final int MAX_description_length = 255;

@@ -90,22 +90,28 @@
         TrustedPeople
         TrustedPublisher-->
       <signingKeyStorePath>My</signingKeyStorePath>
-      <!-- storelocation 
-      CurrentUser
-      LocalMachine
+      
+      <!-- storelocation, this can either be CurrentUser or LocalMachine using the Windows certificate store OR
+        the value "PFX" to load the certificate from a PFX file
       -->
       <signingKeyStoreType>CurrentUser</signingKeyStoreType>
-      <signingKeyStoreFilePassword>ignored</signingKeyStoreFilePassword>
+      
+      <!-- only used when signingKeyStoreType is "PFX-->
+      <signingKeyStoreFilePassword cryptoProvider="" isPasswordEncrypted="false">ignored</signingKeyStoreFilePassword>
+      
+      <!-- not used-->
       <signingKeyPassword>ignored</signingKeyPassword>
       
-      <!-- serial number-->
+      <!-- serial number or friendly name/alias, subject or thumbprint-->
       <signingKeyAlias>‎514a6615</signingKeyAlias>
       <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
       <signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
       <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>
+      <!-- trust store always goes to the windows certificate store -->
       <trustStorePath>ignored</trustStorePath>
       <trustStoreType>ignored</trustStoreType>
       <trustStorePassword>ignored</trustStorePassword>
+      
       <checkTimestamps>true</checkTimestamps>
       <checkTrust>true</checkTrust>
       <checkRevocationCRL>true</checkRevocationCRL>

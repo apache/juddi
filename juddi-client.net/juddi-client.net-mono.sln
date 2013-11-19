@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfServiceLifeCycle-mono", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net-sample-mono", "juddi-client.net-sample\juddi-client.net-sample-mono.csproj", "{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "juddi-client.net.cryptor-mono", "juddi-client.net.cryptor\juddi-client.net.cryptor-mono.csproj", "{15F6DF2F-82AF-49AA-B449-6E21F8409845}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA52B63-F70A-4EC7-8390-CC7C1C9C6B84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15F6DF2F-82AF-49AA-B449-6E21F8409845}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
