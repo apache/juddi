@@ -99,7 +99,7 @@ namespace juddi_client.net_integration.test
         {
             Assume.That(online);
             Console.Out.WriteLine("DigitalSignatureIntegration fromWindowsstore");
-            SignSaveAndVerifyToJuddi("uddisigwinstore.xml");
+            SignSaveAndVerifyToJuddi("resource/uddisigwinstore.xml");
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace juddi_client.net_integration.test
         {
             Assume.That(online);
             Console.Out.WriteLine("DigitalSignatureIntegration fromFile");
-            SignSaveAndVerifyToJuddi( "uddisigfile.xml");
+            SignSaveAndVerifyToJuddi("resource/uddisigfile.xml");
         }
 
         /// <summary>

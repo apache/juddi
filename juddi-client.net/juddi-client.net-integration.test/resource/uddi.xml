@@ -28,30 +28,13 @@
         <factoryURLPkgs>not used</factoryURLPkgs>
         <factoryNamingProvider>not used</factoryNamingProvider>
       </node>
-      <node>
-        <name>med</name>
-        <description>jUDDI node in other Department</description>
-        <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
-        <custodyTransferUrl>http://med:8080/juddiv3/services/custody-transfer?wsdl</custodyTransferUrl>
-        <inquiryUrl>http://med:8080/juddiv3/services/inquiry?wsdl</inquiryUrl>
-        <publishUrl>http://med:8080/juddiv3/services/publish?wsdl</publishUrl>
-        <securityUrl>http://med:8080/juddiv3/services/security?wsdl</securityUrl>
-        <subscriptionUrl>http://med:8080/juddiv3/services/subscription?wsdl</subscriptionUrl>
-        <subscriptionListenerUrl>http://med:8080/juddiv3/services/subscription-listener?wsdl</subscriptionListenerUrl>
-        <juddiApiUrl>http://med:8080/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
-        <factoryInitial>not used</factoryInitial>
-        <factoryURLPkgs>not used</factoryURLPkgs>
-        <factoryNamingProvider>not used</factoryNamingProvider>
-
-      </node>
+      
     </nodes>
 
     <clerks registerOnStartup="false">
-      <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider=""/>
-      <clerk name="medroot" node="med"     publisher="root" password="root"  isPasswordEncrypted="false" cryptoProvider=""/>
-      <xregister>
-        <servicebinding bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws" fromClerk="default" toClerk="medroot"/>
-      </xregister>
+      <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider="">
+<class 
+      </clerk>
       
     </clerks>
     <signature>
@@ -61,7 +44,7 @@
       <signingKeyPassword>ignored</signingKeyPassword>
 
       <!-- this is the localhost Test certificate -->
-      <signingKeyAlias>?518ed27c</signingKeyAlias>
+      <signingKeyAlias>518ed27c</signingKeyAlias>
       <canonicalizationMethod>http://www.w3.org/2001/10/xml-exc-c14n#</canonicalizationMethod>
       <signatureMethod>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signatureMethod>
       <XML_DIGSIG_NS>http://www.w3.org/2000/09/xmldsig#</XML_DIGSIG_NS>

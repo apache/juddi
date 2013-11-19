@@ -46,8 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DigitalSignatureIntegrationTests.cs" />
-    <Compile Include="InquiryTests.cs" />
+    <Compile Include="org.apache.juddi.client.test.integration\AutomatedRegistrationTests.cs" />
+    <Compile Include="org.apache.juddi.client.test.integration\DigitalSignatureIntegrationTests.cs" />
+    <Compile Include="org.apache.juddi.client.test.mocks\Hello_ServiceInterfaces.cs" />
+    <Compile Include="org.apache.juddi.client.test.mocks\Program.cs" />
+    <Compile Include="org.apache.juddi.client.test.integration\InquiryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,23 +60,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="uddisigwinstore.xml">
+    <Content Include="resource\uddi-autoregAnnotations.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="uddisigfile.xml">
+    <Content Include="resource\uddisigwinstore.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="uddi.xml">
+    <Content Include="resource\uddisigfile.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resource\uddi.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd $(OutDir)
-rem C:\juddi\NUnit-2.6.1\bin\nunit-console.exe $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>echo cd $(OutDir) C:\juddi\NUnit-2.6.1\bin\nunit-console.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

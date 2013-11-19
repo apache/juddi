@@ -36,7 +36,7 @@ namespace juddi_client.net_integration.test
                 serialize = true;
             }
 
-            clerkManager = new UDDIClient("uddi.xml");
+            clerkManager = new UDDIClient("resource/uddi.xml");
             UDDIClientContainer.addClient(clerkManager);
 
             transport = clerkManager.getTransport("default");

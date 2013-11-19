@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CryptoTests.cs" />
-	<Compile Include="DigitalSignatureTests.cs" />
+    <Compile Include="org.apache.juddi.client.test\CryptoTests.cs" />
+    <Compile Include="org.apache.juddi.client.test\DigitalSignatureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerializationTests.cs" />
-    <Compile Include="WADL2UDDITests.cs" />
-    <Compile Include="WSDL2UDDITest.cs" />
+    <Compile Include="org.apache.juddi.client.test\SerializationTests.cs" />
+    <Compile Include="org.apache.juddi.client.test\WADL2UDDITests.cs" />
+    <Compile Include="org.apache.juddi.client.test\WSDL2UDDITest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
