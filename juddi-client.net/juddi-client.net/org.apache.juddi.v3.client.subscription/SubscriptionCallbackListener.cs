@@ -64,8 +64,8 @@ namespace org.apache.juddi.v3.client.subscription
         //DOES NOT WORK ON MONO 
        // Name = "SubscriptionCallbackListener",
        // Namespace = "org.apache.juddi.v3.client.subscription",
-        IncludeExceptionDetailInFaults = false, InstanceContextMode = InstanceContextMode.Single, ValidateMustUnderstand = false,
-       // AddressFilterMode = AddressFilterMode.Any
+        IncludeExceptionDetailInFaults = false, InstanceContextMode = InstanceContextMode.Single, ValidateMustUnderstand = false
+       // ,AddressFilterMode = AddressFilterMode.Any
         )]
     public class SubscriptionCallbackListener : UDDI_SubscriptionListener_PortType
     {
