@@ -310,9 +310,6 @@ namespace org.apache.juddi.v3.client.mapping
                 descriptionB.Value = ("The binding that this endpoint implements. " + bindingTemplate.description[0].Value
                         + " The instanceParms specifies the port local name.");
                 tModelInstanceInfoBinding.description = new description[] { descriptionB };
-                tModelInstanceInfo tModelInstanceDetails = new tModelInstanceInfo();
-                //  tModelInstanceDetails.instanceDetails = new instanceDetails[]{tModelInstanceInfoBinding};
-
 
                 tModelInstanceInfo tModelInstanceInfoPortType = new tModelInstanceInfo();
                 tModelInstanceInfoPortType.tModelKey = (keyDomainURI + "rest");
@@ -321,10 +318,6 @@ namespace org.apache.juddi.v3.client.mapping
                 descriptionPT.lang = (lang);
                 descriptionPT.Value = ("The wadl:Resource:base implements.");
                 tModelInstanceInfoPortType.description = new description[] { descriptionPT };
-                //  tModelInstanceDetails.getTModelInstanceInfo().add(tModelInstanceInfoPortType);
-
-                //bindingTemplate.tModelInstanceDetails = new tModelInstanceInfo
-
             }
             return bindingTemplate;
         }
