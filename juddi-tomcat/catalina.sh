@@ -199,7 +199,7 @@ fi
 
 # begin custom juddi settings
 JAVA_OPTS="$JAVA_OPTS -Xms256m -Xmx256m -XX:PermSize=256M -XX:MaxPermSize=256M"
-JAVA_OPTS="%JAVA_OPTS% -Djavax.net.ssl.trustStore=truststore.jks -Djavax.net.ssl.trustStorePassword=password"
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.ssl.trustStore=truststore.jks -Djavax.net.ssl.trustStorePassword=password"
 # end custom juddi settings
 
 if [ -z "$LOGGING_MANAGER" ]; then
