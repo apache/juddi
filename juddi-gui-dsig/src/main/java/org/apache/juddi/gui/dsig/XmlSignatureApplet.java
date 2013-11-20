@@ -308,20 +308,24 @@ public class XmlSignatureApplet extends java.applet.Applet {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String signedXml = "error!";
+        JSObject window = JSObject.getWindow(this);
         try {
             if (keyStore == null || keyStore.size() == 0) {
                 signedXml = "Unforunately, it looks as if you don't have any certificates to choose from.";
+                window.call("writeXml", new Object[]{signedXml});
                 return;
             }
         } catch (Exception ex) {
             signedXml = "Unforunately, it looks as if you don't have any certificates to choose from.";
+            window.call("writeXml", new Object[]{signedXml});
             return;
         }
         if (jList1.getSelectedValue() == null) {
             signedXml = "You must pick a certificate first";
+            window.call("writeXml", new Object[]{signedXml});
             return;
         }
-        JSObject window = JSObject.getWindow(this);
+        
         Object object2 = window.call("getBrowserName", null);
         Object object1 = window.call("getOsName", null);
         Object object3 = window.call("getObjectType", null);
@@ -363,7 +367,8 @@ public class XmlSignatureApplet extends java.applet.Applet {
             try {
                 //sign it
                 org.apache.juddi.v3.client.cryptor.DigSigUtil ds = new DigSigUtil();
-                ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "t");
+                ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_BASE64, "true");
+                ds.put(DigSigUtil.SIGNATURE_METHOD, "RSA_SHA1");
                 PrivateKey key = (PrivateKey) keyStore.getKey((String) jList1.getSelectedValue(), null);
 
                 Certificate publickey = keyStore.getCertificate((String) jList1.getSelectedValue());

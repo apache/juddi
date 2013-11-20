@@ -137,12 +137,13 @@ public class DigSigUtil {
     public final static String TRUSTSTORE_FILE_PASSWORD = "trustStorePassword";
     /**
      * default is CanonicalizationMethod.EXCLUSIVE
+     * http://www.w3.org/2001/10/xml-exc-c14n#
      *
      * @see CanonicalizationMethod
      */
     public final static String CANONICALIZATIONMETHOD = "CanonicalizationMethod";
     /**
-     * default is RSA_SHA1
+     * default is http://www.w3.org/2000/09/xmldsig#rsa-sha1
      *
      * @see SignatureMethod
      */
@@ -191,7 +192,7 @@ public class DigSigUtil {
      * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     public final static String SIGNATURE_OPTION_CERT_INCLUSION_SUBJECTDN = "SUBJECTDN";
-    /**
+    /*
      * Include the signer's X500 Prinicple of the public key.
      *
      * Clients will not be able to validate the signature unless they have a
@@ -207,6 +208,10 @@ public class DigSigUtil {
      * @see SIGNATURE_OPTION_CERT_INCLUSION_BASE64
      */
     //public final static String SIGNATURE_OPTION_CERT_INCLUSION_X500_PRINICPAL = "X500";
+
+    /**
+     * This is the namespace of the digital signature. 
+     */
     public final static String XML_DIGSIG_NS = "http://www.w3.org/2000/09/xmldsig#";
     /**
      * Default value DigestMethod.SHA1 =
