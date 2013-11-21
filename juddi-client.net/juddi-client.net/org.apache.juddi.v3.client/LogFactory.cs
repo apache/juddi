@@ -27,7 +27,7 @@ namespace org.apache.juddi.v3.client.log
     /// and produces the appropriate logger
     /// </summary>
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
-    public class LogFactory :IDisposable
+    public class LogFactory
     {
         private static LogLevel level = LogLevel.WARN;
         private static String target = "CONSOLE";
@@ -47,10 +47,10 @@ namespace org.apache.juddi.v3.client.log
                     String s = "WARN";
                     s = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.level"];
                     if (String.IsNullOrEmpty(s))
-                        s = "INFO";
+                        s = "WARN";
                     level = (LogLevel)Enum.Parse(typeof(LogLevel), s);
                 }
-                catch 
+                catch
                 {
                     level = LogLevel.WARN;
                 }
@@ -58,11 +58,11 @@ namespace org.apache.juddi.v3.client.log
                 String target = "";
                 try
                 {
-                    target = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.targets"];
+                    target = System.Configuration.ConfigurationManager.AppSettings["org.apache.juddi.v3.client.log.target"];
                 }
-                catch 
+                catch
                 {
-                    level = LogLevel.WARN;
+                    target = "CONSOLE";
                 }
                 try
                 {
@@ -81,22 +81,46 @@ namespace org.apache.juddi.v3.client.log
             return getLogger(name);
         }
 
+        public static Log getLog(String name, String targets, LogLevel level1, String options1)
+        {
+            
+            return getLogger(name, targets, level1, options1);
+        }
+
+        private static Log getLogger(String name1, String targets1, LogLevel level1, String options1)
+        {
+            string[] targets = targets1.Split(',');
+            Log ret = null;
+            Log last = null;
+            for (int i = 0; i < targets.Length; i++)
+            {
+                last = ret;
+                if (targets[i].Equals("CONSOLE", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ret = new ConsoleLogger();
+
+                }
+                else if (targets[i].Equals("EVENTLOG", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ret = new EventLogger();
+                }
+                else if (targets[i].Equals("FILE", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    ret = new FileLogger(options1);
+
+                }
+                else
+                    ret = new ConsoleLogger();
+                ret.setName(name1);
+                ret.setLevel(level1);
+                if (last != null)
+                    ret.setDownstream(last);
+            }
+            return ret;
+        }
         private static Log getLogger(String name)
         {
-            if (target.Equals("CONSOLE", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return new ConsoleLogger(name, level);
-            }
-            else if (target.Equals("EVENTLOG", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return new EventLogger(name, level);
-            }
-            else if (target.Equals("FILE", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return new FileLogger(name, level, option);
-            }
-            else
-                return new ConsoleLogger(name, level);
+            return getLogger(name, target, level, option);
         }
 
         public static Log getLog(Type type)
@@ -106,9 +130,6 @@ namespace org.apache.juddi.v3.client.log
             //return new ConsoleLogger(type.Name, level);
         }
 
-        public void Dispose()
-        {
-            
-        }
+
     }
 }

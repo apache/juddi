@@ -28,18 +28,29 @@ namespace org.apache.juddi.v3.client.log
     {
         private string name;
         private LogLevel level;
-
-        public ConsoleLogger(string name, LogLevel level)
+        private Log downstream = null;
+        public void setDownstream(Log downstream)
         {
-            
-            this.name = name;
+            this.downstream = downstream;
+        }
+
+        public void setLevel(LogLevel level)
+        {
             this.level = level;
         }
+
+        public void setName(string name)
+        {
+            this.name = name;
+        }
+
         public void info(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.INFO) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.info(msg, ex);
         }
 
         public void info(string msg)
@@ -47,6 +58,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.INFO) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.info(msg);
         }
 
         public void warn(string msg, Exception ex)
@@ -54,6 +67,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.WARN) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.warn(msg, ex);
         }
 
         public void warn(string msg)
@@ -61,6 +76,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.WARN) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.warn(msg);
         }
 
         public void error(string msg, Exception ex)
@@ -68,6 +85,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.ERROR) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.error(msg, ex);
         }
 
         public void error(string msg)
@@ -75,6 +94,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.ERROR) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.error(msg); ;
         }
 
         public void debug(string msg, Exception ex)
@@ -82,6 +103,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.debug(msg, ex);
         }
 
         public void debug(string msg)
@@ -89,6 +112,8 @@ namespace org.apache.juddi.v3.client.log
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 if (Console.Out != null)
                     Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.debug(msg);
         }
 
         public bool isDebugEnabled()
@@ -104,6 +129,9 @@ namespace org.apache.juddi.v3.client.log
                     Console.WriteLine(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString());
         }
 
-       
+
+
+
+        
     }
 }

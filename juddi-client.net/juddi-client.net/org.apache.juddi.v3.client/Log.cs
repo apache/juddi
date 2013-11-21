@@ -36,7 +36,9 @@ namespace org.apache.juddi.v3.client.log
         void debug(string msg);
         bool isDebugEnabled();
         void debug(Object msg);
-       
+        void setDownstream(Log downstream);
+        void setLevel(LogLevel level);
+        void setName(String name);
     }
 
     /// <summary>

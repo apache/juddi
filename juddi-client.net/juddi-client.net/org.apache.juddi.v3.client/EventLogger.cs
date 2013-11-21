@@ -25,73 +25,121 @@ namespace org.apache.juddi.v3.client.log
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class EventLogger : Log
     {
-        LogLevel level;
-        string name = "";
-        public EventLogger(String name, LogLevel level)
+
+        private string name;
+        private LogLevel level;
+        private Log downstream = null;
+        public static readonly string EVENT_LOG_SOURCE = "org.apache.juddi.client.net";
+        public void setDownstream(Log downstream)
+        {
+            this.downstream = downstream;
+        }
+
+        public void setLevel(LogLevel level)
         {
             this.level = level;
+        }
+
+        public void setName(string name)
+        {
             this.name = name;
+        }
+
+        /// <summary>
+        /// throws security exception if not ran as admin
+        /// </summary>
+        public static void RegisterLogSources()
+        {
+            if (!System.Diagnostics.EventLog.SourceExists(EVENT_LOG_SOURCE))
+            {
+                EventLog.CreateEventSource(EVENT_LOG_SOURCE, EVENT_LOG_SOURCE);
+            }
+
 
         }
+
+        private void write(string msg, EventLogEntryType level)
+        {
+            try
+            {
+                using (EventLog log = new EventLog(EVENT_LOG_SOURCE))
+                {
+                    log.Source = EVENT_LOG_SOURCE;
+                    log.WriteEntry(msg, level);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Console.Out != null)
+                    Console.Out.WriteLine("WARNING, could not log to windows event log, make sure " + EVENT_LOG_SOURCE + " is registered as a log source");
+                
+            }
+        }
+
         public void info(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.INFO) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                {
-
-                    log.WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
-                }
+                write(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
+            if (downstream != null)
+                downstream.info(msg);
         }
 
         public void info(string msg)
         {
             if (level.CompareTo(LogLevel.INFO) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg, EventLogEntryType.Information);
+                write(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg, EventLogEntryType.Information);
+            if (downstream != null)
+                downstream.info(msg);
         }
 
         public void warn(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.WARN) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
+                write(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Warning);
+            if (downstream != null)
+                downstream.warn(msg, ex);
         }
 
         public void warn(string msg)
         {
 
             if (level.CompareTo(LogLevel.WARN) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg, EventLogEntryType.Warning);
+                write(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg, EventLogEntryType.Warning);
+            if (downstream != null)
+                downstream.warn(msg);
         }
 
         public void error(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
+                write(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Error);
+            if (downstream != null)
+                downstream.error(msg, ex);
         }
 
         public void error(string msg)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg, EventLogEntryType.Error);
+                write(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg, EventLogEntryType.Error);
+            if (downstream != null)
+                downstream.error(msg);
         }
 
 
         public void debug(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
+                write(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex), EventLogEntryType.Information);
+            if (downstream != null)
+                downstream.debug(msg, ex);
         }
 
         public void debug(string msg)
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg, EventLogEntryType.Information);
+                write(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg, EventLogEntryType.Information);
+            if (downstream != null)
+                downstream.debug(msg);
         }
 
         public bool isDebugEnabled()
@@ -103,8 +151,9 @@ namespace org.apache.juddi.v3.client.log
         public void debug(object msg)
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
-                using (EventLog log = new EventLog("Application", "localhost", name))
-                    log.WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString(), EventLogEntryType.Information);
+                write(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString(), EventLogEntryType.Information);
+            if (downstream != null)
+                downstream.debug(msg);
         }
 
 

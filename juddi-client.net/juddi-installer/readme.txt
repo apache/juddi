@@ -1,0 +1,1 @@
+This simple program will register the juddi.net event log sources for logging to the windows event log. It must be ran as administrator

@@ -28,65 +28,104 @@ namespace org.apache.juddi.v3.client.log
     /// <author><a href="mailto:alexoree@apache.org">Alex O'Ree</a></author> 
     public class FileLogger : Log
     {
+        private string option = "juddi.log";
+
         private string name;
         private LogLevel level;
-        private string option;
+        private Log downstream = null;
+        public FileLogger() { }
+        public FileLogger(string option)
+        {
+            this.option = option;
+        }
+        public void setDownstream(Log downstream)
+        {
+            this.downstream = downstream;
+        }
 
-        public FileLogger(string name, LogLevel level, string option)
+        public void setLevel(LogLevel level)
+        {
+            this.level = level;
+        }
+
+        public void setName(string name)
         {
             this.name = name;
-            this.level = level;
-            this.option = option;
-            if (String.IsNullOrEmpty(option))
-                option = "juddi.log";
         }
+
+        public void setOption(string option)
+        {
+            this.option = option;
+        }
+
 
         public void info(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.INFO) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.info(msg, ex);
         }
 
-        private void WriteEntry(string p)
+        private void WriteEntry(string msg)
         {
             try
             {
+                if (!File.Exists(option))
+                {
+                    StreamWriter sw = File.CreateText(option);
+                    sw.Close();
+                    sw.Dispose();
+                }
                 using (StreamWriter sw = File.AppendText(option))
                 {
-                    sw.WriteLine(p);
+                    sw.WriteLine(msg);
                 }
             }
-            catch { }
+            catch (Exception ex){
+                Console.Out.WriteLine("Unable to log to " + option + "! " + ex.Message);
+            }
+
         }
 
         public void info(string msg)
         {
             if (level.CompareTo(LogLevel.INFO) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " INFO [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.info(msg);
         }
 
         public void warn(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.WARN) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.warn(msg, ex);
         }
 
         public void warn(string msg)
         {
             if (level.CompareTo(LogLevel.WARN) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " WARN [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.warn(msg);
         }
 
         public void error(string msg, Exception ex)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.error(msg, ex);
         }
 
         public void error(string msg)
         {
             if (level.CompareTo(LogLevel.ERROR) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " ERROR [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.error(msg);
         }
 
 
@@ -94,12 +133,16 @@ namespace org.apache.juddi.v3.client.log
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg + " " + LogHelper.HandleException(ex));
+            if (downstream != null)
+                downstream.debug(msg, ex);
         }
 
         public void debug(string msg)
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg);
+            if (downstream != null)
+                downstream.warn(msg);
         }
 
         public bool isDebugEnabled()
@@ -112,8 +155,10 @@ namespace org.apache.juddi.v3.client.log
         {
             if (level.CompareTo(LogLevel.DEBUG) <= 0)
                 WriteEntry(DateTime.Now.ToString("o") + " DEBUG [" + name + "] " + msg.ToString());
+            if (downstream != null)
+                downstream.warn(msg.ToString());
         }
 
-    
+
     }
 }
