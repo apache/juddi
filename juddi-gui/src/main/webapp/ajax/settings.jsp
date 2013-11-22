@@ -12,21 +12,30 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include  file="../csrf.jsp" %>
 <%
-    if (!request.getRemoteAddr().equalsIgnoreCase("localhost") && !request.getRemoteHost().equalsIgnoreCase("127.0.0.1")) {
+    UddiHub x = UddiHub.getInstance(application, session);
+    if (x.isAdminLocalhostOnly() && 
+            !request.getRemoteAddr().equalsIgnoreCase("localhost") && 
+            !request.getRemoteHost().equalsIgnoreCase("127.0.0.1") &&
+            !request.getRemoteHost().equalsIgnoreCase("0:0:0:0:0:0:0:1")) {
         out.write(ResourceLoader.GetResource(session, "pages.settings.accessdenied.remote"));
-        UddiHub.log.warn("Audit: Attempt to alter configuration remotely from " + 
+        UddiHub.log.fatal("Audit: FAILURE Attempt to alter configuration remotely from " + 
                 request.getRemoteAddr() + " " +
                 request.getRemoteHost() + " " + 
                 request.getRemoteUser());
         response.setStatus(403);
     } else {
+         
+        
         //this is controlled by web.xml
     /*if (!request.isUserInRole("uddiadmin")) {
          out.write("Sorry, you need to have the 'uddiadmin' admin role to access this page.");
          response.setStatus(403);
          }*/
         if (request.getMethod().equalsIgnoreCase("post")) {
-            UddiHub x = UddiHub.getInstance(application, session);
+            UddiHub.log.info("Audit: SUCCESS Altering juddi config " + 
+                request.getRemoteAddr() + " " +
+                request.getRemoteHost() + " " + 
+                request.getRemoteUser());
             
             Enumeration it = request.getParameterNames();
             while (it.hasMoreElements()) {

@@ -123,6 +123,8 @@
             </automaticLogouts>
             <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
             <node>default-ssl</node>
+            <!-- controls remote access to the settings/configuration page -->
+            <configLocalHostOnly>true</configLocalHostOnly>
         </props>
     </config>
 </uddi>

@@ -248,6 +248,7 @@
         </div>
         <div class="modal-body" id="addPublisherAssertionContent">
             <%=ResourceLoader.GetResource(session, "items.publisherassertion.add.description")%>
+            <br>
             <div style="float:left;width:25%">
                 <%=ResourceLoader.GetResource(session, "items.publisherassertion.add.fromkey")%> : </div><div id="fromkey" class="edit"><%
                 if (fromkey != null) {

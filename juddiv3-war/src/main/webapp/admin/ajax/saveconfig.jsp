@@ -12,55 +12,69 @@
 <!DOCTYPE html>
 <%@include  file="../csrf.jsp" %>
 <%
-    if (request.getMethod().equalsIgnoreCase("POST")) {
-        try {
-            Enumeration it = request.getParameterNames();
-            Configuration cfg = null;
-            Configuration server = AppConfig.getConfiguration();
-            Configuration client = UddiAdminHub.getInstance(application, session).GetJuddiClientConfig().getConfiguration();
-            while (it.hasMoreElements()) {
-                String key = (String) it.nextElement();
-                String val = request.getParameter(key);
-                if (key != "nonce") {
-                    if (key.startsWith("config.props.") || key.startsWith("client.")) {
-                        cfg = client;
-                    }
-                    if (key.startsWith("juddi.")) {
-                        cfg = server;
-                    }
-                    if (cfg == null) {
-                        continue;
-                    }
-                    boolean isbool = false;
-                    boolean isint = false;
-                    boolean boolval = false;
-                    int intval = 0;
-                    if (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("true")) {
-                        isbool = true;
-                        boolval = Boolean.parseBoolean(val);
-                    }
+    UddiAdminHub ahub = UddiAdminHub.getInstance(application, session);
 
-                    try {
-                        intval = Integer.parseInt(val);
-                        isint = true;
-                    } catch (Exception ex) {
-                    }
-                    if (isbool) {
-                        cfg.setProperty(key, boolval);
-                    } else if (isint) {
-                        cfg.setProperty(key, intval);
-                    } else {
-                        cfg.setProperty(key, val);
-                    }
-                    cfg = null;
+    if (ahub.isAdminLocalhostOnly() && 
+            !request.getRemoteAddr().equalsIgnoreCase("localhost") && 
+            !request.getRemoteHost().equalsIgnoreCase("127.0.0.1") &&
+            !request.getRemoteHost().equalsIgnoreCase("0:0:0:0:0:0:0:1")) {
+        out.write("Access Denied");
+        UddiAdminHub.log.fatal("Audit: FAILURE Attempt to alter configuration remotely from "
+                + request.getRemoteAddr() + " "
+                + request.getRemoteHost() + " "
+                + request.getRemoteUser());
+        response.setStatus(403);
+    } else {
+        if (request.getMethod().equalsIgnoreCase("POST")) {
+            try {
+                Enumeration it = request.getParameterNames();
+                Configuration cfg = null;
+                Configuration server = AppConfig.getConfiguration();
+                Configuration client = ahub.GetJuddiClientConfig().getConfiguration();
+                while (it.hasMoreElements()) {
+                    String key = (String) it.nextElement();
+                    String val = request.getParameter(key);
+                    if (key != "nonce") {
+                        if (key.startsWith("config.props.") || key.startsWith("client.")) {
+                            cfg = client;
+                        }
+                        if (key.startsWith("juddi.")) {
+                            cfg = server;
+                        }
+                        if (cfg == null) {
+                            continue;
+                        }
+                        boolean isbool = false;
+                        boolean isint = false;
+                        boolean boolval = false;
+                        int intval = 0;
+                        if (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("true")) {
+                            isbool = true;
+                            boolval = Boolean.parseBoolean(val);
+                        }
 
+                        try {
+                            intval = Integer.parseInt(val);
+                            isint = true;
+                        } catch (Exception ex) {
+                        }
+                        if (isbool) {
+                            cfg.setProperty(key, boolval);
+                        } else if (isint) {
+                            cfg.setProperty(key, intval);
+                        } else {
+                            cfg.setProperty(key, val);
+                        }
+                        cfg = null;
+
+                    }
+                    UddiAdminHub.getInstance(application, session).GetJuddiClientConfig().saveConfig();
+                    //note server config is autosave.
                 }
-                UddiAdminHub.getInstance(application,session).GetJuddiClientConfig().saveConfig();
-                //note server config is autosave.
+                out.write("<i class=\"icon-thumbs-up icon-2x\"> Saved!");
+            } catch (Exception ex) {
+                out.write("<i class=\"icon-thumbs-down icon-2x\"> Save Failed!<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
             }
-            out.write("<i class=\"icon-thumbs-up icon-2x\"> Saved!");
-        } catch (Exception ex) {
-            out.write("<i class=\"icon-thumbs-down icon-2x\"> Save Failed!<br>" + StringEscapeUtils.escapeHtml(ex.getMessage()));
         }
     }
 %>

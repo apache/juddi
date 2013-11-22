@@ -140,6 +140,12 @@ public class UddiAdminHub {
      *
      */
     public static final String PROP_PREFIX = "config.props.";
+     /**
+     * 
+     * 
+     */
+    public static final String PROP_ADMIN_LOCALHOST_ONLY = "config.props.configLocalHostOnly";
+
     private transient UDDISecurityPortType security = null;
     private transient JUDDIApiPortType juddi = null;
     private transient String token = null;
@@ -676,5 +682,16 @@ public class UddiAdminHub {
             }
         }
         return "Success";
+    }
+    
+        /**
+     * If false, the configuration page will be available from anywhere.
+     * If true, it will only be accessible from the server hosting juddi-gui. 
+     * if not defined, the result is true.
+     * @return 
+     */
+    public boolean isAdminLocalhostOnly()
+    {
+        return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
     }
 }

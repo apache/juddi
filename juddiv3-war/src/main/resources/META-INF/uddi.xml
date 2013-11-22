@@ -5,7 +5,7 @@
         <nodes>
             <node>
                 <!-- required 'default' node -->
-                <name>default</name> 
+                <name>remote</name> 
                 <description>Main jUDDI node</description>
                 <!-- JAX-WS Transport -->
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
@@ -18,8 +18,7 @@
                 <juddiApiUrl>http://localhost:8080/juddiv3/services/juddi-api</juddiApiUrl>
             </node>
             <node>
-                <!-- required 'default' node -->
-                <name>invm</name> 
+                <name>default</name> 
                 <description>This server</description>
                 <!-- JAX-WS Transport -->
                <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
@@ -90,6 +89,8 @@
             </automaticLogouts>
             <!--#node, this is the node defined in uddi.xml that the jUDDI-GUI will use for connections-->
             <node>default</node>
+            <!-- controls remote access to the settings/configuration page -->
+            <configLocalHostOnly>true</configLocalHostOnly>
         </props>
     </config>
 </uddi>

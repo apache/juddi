@@ -34,7 +34,7 @@ function safe_tags_replace(str) {
 function escapeJquerySelector(str)
 {
     if (str)
-        return str.replace(/([ #;?&,.+*~\':"!^$[\]()=>|\/@])/g, '\\$1');
+        return str.replace(/([ #;?&,.+*~\':"!^$[\]()=<>|\/@])/g, '\\$1');
     return str;
 }
 

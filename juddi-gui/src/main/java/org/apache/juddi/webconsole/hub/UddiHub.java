@@ -131,6 +131,12 @@ public class UddiHub implements Serializable {
      *
      */
     public static final String PROP_PREFIX = "config.props.";
+    
+    /**
+     * 
+     * 
+     */
+    public static final String PROP_ADMIN_LOCALHOST_ONLY = "config.props.configLocalHostOnly";
 
     private UddiHub() throws DatatypeConfigurationException {
         df = DatatypeFactory.newInstance();
@@ -3707,5 +3713,16 @@ public class UddiHub implements Serializable {
             log.warn("unable to parse the value for " + PROP_AUTO_LOGOUT_TIMER + " in uddi.xml, defaulting to 15 minutes", ex);
         }
         return 15 * 60 * 1000;
+    }
+    
+    /**
+     * If false, the configuration page will be available from anywhere.
+     * If true, it will only be accessible from the server hosting juddi-gui. 
+     * if not defined, the result is true.
+     * @return 
+     */
+    public boolean isAdminLocalhostOnly()
+    {
+        return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
     }
 }
