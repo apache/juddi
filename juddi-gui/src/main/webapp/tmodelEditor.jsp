@@ -147,7 +147,7 @@
                             bd.setName(new Name());
                         }
                         out.write("<div id=\"" + PostBackConstants.NAME + "\" style=\"border-width:2px; border-style:solid\" >");
-                        out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-trash icon-large\"></i></a></div>");
+                        //out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
                                 + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + PostBackConstants.VALUE + "\">" + (bd.getName().getValue() == null ? " " : StringEscapeUtils.escapeHtml(bd.getName().getValue())) + "</div>");
                         out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + ":&nbsp;</div>"
@@ -499,5 +499,6 @@
         }
     %>
     <%@include file="tmodelChooser.jsp" %>
-    <%@include file="header-bottom.jsp" %>
     <%@include file="keyHelpModal.jsp" %>
+    <%@include file="header-bottom.jsp" %>
+    
