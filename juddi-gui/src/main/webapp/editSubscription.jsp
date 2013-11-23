@@ -45,7 +45,6 @@
         <h1><%=ResourceLoader.GetResource(session, "navbar.subscriptions")%></h1>
     </div>
     <%
-        //TODO i18n
         //TODO use this page as a subscription editor
         Subscription sub = null;
         boolean newitem = false;
@@ -115,31 +114,6 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                                    function toggleType1(firstLoad)
-                                    {
-                                        //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
-                                        setTimeout(function() {
-                                            if ($("#btn-specificitem").hasClass("active"))
-                                            {
-                                                $("#basedonresults").hide();
-                                                $("#specific").show();
-                                            }
-                                            else
-                                            {
-                                                $("#basedonresults").show();
-                                                $("#specific").hide();
-                                            }
-                                            if (firstLoad != true) {
-                                                $('#collapseOne').collapse('hide');
-                                                $('#collapseTwo').collapse('show');
-                                            }
-                                        }, 100);
-
-                                        return false;
-                                    }
-                                    $(document).ready(function() {
-                                        toggleType1(true);
-                                    });
 
                         </script>
                     </div>
@@ -154,7 +128,7 @@
                     </div>
                     <div id="collapseTwo" class="accordion-body collapse">
                         <div class="accordion-inner">
-                            <div id="specific">
+                            <div id="specific" class="<%=SubscriptionHelper.isSpecificItem(sub) ? "" : "hide"%>">
                                 <%=ResourceLoader.GetResource(session, "pages.subscription.specificitem")%>:<Br>
                                 <div class="btn-group" id="alertCriteraSingleItem" data-toggle="buttons-radio">
                                     <button onclick="javascript:clearbox();
@@ -171,96 +145,11 @@
                                 <div id="keylistcontainer">
                                     <a href="javascript:additem();" class="btn" ><%=ResourceLoader.GetResource(session, "actions.add")%></a>
                                     <a href="javascript:removeitem();" class="btn" ><%=ResourceLoader.GetResource(session, "actions.remove")%></a> 
-                                    <select  id="keylist" size="5" style="width:100%">
+                                    <select  id="keylist" size="5" style="width:300px; height: 70px">
                                         <%=SubscriptionHelper.getItemKeySpecific(sub)%>
                                     </select>
 
                                 </div>
-                                <script type="text/javascript">
-                                    $("#pubassertcontainer").hide();
-                                    $("#keylist").resizable();
-                                    <%
-                                        if (!SubscriptionHelper.isPublisherAssertionSpecific(sub).equals("")) {
-                                            out.write("publisherAssertionPicker();");
-                                        }
-                                    %>
-                                    function publisherAssertionPicker()
-                                    {
-                                        $("#keylistcontainer").hide();
-                                        $("#pubassertcontainer").show();
-                                        selectPublisherAssertionStatus();
-                                    }
-                                    function clearbox()
-                                    {
-                                        $("#keylist option").remove();
-                                        $("#keylistcontainer").show();
-                                        $("#pubassertcontainer").hide();
-                                        return false;
-                                    }
-                                    function additem()
-                                    {
-                                        var alertCriteraSingleItem = $("#alertCriteraSingleItem > button.btn.active").val();
-                                        if (alertCriteraSingleItem === "binding")
-                                        {
-                                            reloadBindingModal();
-                                            $.dialogBinding.confirm({
-                                                callback: function(success, result) {
-                                                    if (success)
-                                                    {
-                                                        for (var i = 0; i < result.length; i++)
-                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
-                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        if (alertCriteraSingleItem === "business") {
-                                            reloadBusinessModal();
-                                            $.dialogBusiness.confirm({
-                                                callback: function(success, result) {
-                                                    if (success)
-                                                    {
-                                                        for (var i = 0; i < result.length; i++)
-                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
-                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        if (alertCriteraSingleItem === "service") {
-                                            reloadServiceModal();
-
-                                            $.dialogService.confirm({
-                                                callback: function(success, result) {
-                                                    if (success)
-                                                    {
-                                                        for (var i = 0; i < result.length; i++)
-                                                            if ($("#keylist option[value='" + result[i] + "']").length == 0)
-                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                    }
-                                                }
-                                            });
-
-                                        }
-                                        if (alertCriteraSingleItem === "tmodel") {
-                                            reloadTmodelModal();
-                                            $.dialogTmodel.confirm({
-                                                callback: function(success, result) {
-                                                    if (success)
-                                                    {
-                                                        for (var i = 0; i < result.length; i++)
-                                                            if ($("#keylist option[value='" + result[i] + "']").length === 0)
-                                                                $("#keylist").append("<option value=\"" + result[i] + "\">" + result[i] + "</option>");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                    function removeitem()
-                                    {
-                                        $("#keylist option:selected").remove();
-                                    }
-                                </script>
                                 <div id="pubassertcontainer" class="">
                                     <div style="float:left"><%=ResourceLoader.GetResource(session, "items.key")%>: &nbsp;</div>
                                     <div class="" id="itemKey"><%
@@ -270,59 +159,56 @@
                                         %></div>
                                 </div>
                             </div>
-                            <div id="basedonresults">
+                            <div id="basedonresults" class="<%=SubscriptionHelper.isSpecificItem(sub) ? "hide" : ""%>">
                                 <%=ResourceLoader.GetResource(session, "search.results")%>:<br>
                                 <div class="btn-group" id="alertCriteraMultipleItem" data-toggle="buttons-radio">
-                                    <button onclick="return false;" class="btn" value="binding"><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></button>
-                                    <button onclick="return false;" class="btn" value="business"><%=ResourceLoader.GetResource(session, "items.business")%></button>
-                                    <button onclick="return false;" class="btn" value="service"><%=ResourceLoader.GetResource(session, "items.service")%></button>
-                                    <button onclick="return false;" class="btn" value="tmodel"><%=ResourceLoader.GetResource(session, "items.tmodel")%></button>
-                                    <button onclick="return false;" class="btn" value="relatedBusiness"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.relatedbusinesses")%></button>
+                                    <button onclick="return false;" class="btn <%=SubscriptionHelper.isFindBinding(sub)%>" value="binding"><%=ResourceLoader.GetResource(session, "items.bindingtemplate")%></button>
+                                    <button onclick="return false;" class="btn <%=SubscriptionHelper.isFindBusiness(sub)%>" value="business"><%=ResourceLoader.GetResource(session, "items.business")%></button>
+                                    <button onclick="return false;" class="btn <%=SubscriptionHelper.isFindService(sub)%>" value="service"><%=ResourceLoader.GetResource(session, "items.service")%></button>
+                                    <button onclick="return false;" class="btn <%=SubscriptionHelper.isFindTModel(sub)%>" value="tmodel"><%=ResourceLoader.GetResource(session, "items.tmodel")%></button>
+                                    <button onclick="return false;" class="btn <%=SubscriptionHelper.isFindRelatedBusinesses(sub)%>" value="relatedBusiness"><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.relatedbusinesses")%></button>
                                 </div>
                                 <br><br>
                                 <%=ResourceLoader.GetResource(session, "items.findqualifiers")%><br>
                                 <table class="table">
                                     <tr>
 
-                                        <td><input class="fq" type="checkbox" name="<%=UDDIConstants.AND_ALL_KEYS%>" value="<%=UDDIConstants.AND_ALL_KEYS%>"> <%=UDDIConstants.AND_ALL_KEYS%></td>
-                                        <td><input class="fq" type="checkbox" name="<%=UDDIConstants.APPROXIMATE_MATCH%>" value="<%=UDDIConstants.APPROXIMATE_MATCH%>"> <%=UDDIConstants.APPROXIMATE_MATCH%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.BINARY_SORT%>" value="<%=UDDIConstants.BINARY_SORT%>"> <%=UDDIConstants.BINARY_SORT%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.BINDING_SUBSET%>" value="<%=UDDIConstants.BINDING_SUBSET%>"> <%=UDDIConstants.BINDING_SUBSET%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>"> <%=UDDIConstants.CASE_INSENSITIVE_MATCH%></td>
+                                        <td><input class="fq" type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.AND_ALL_KEYS)%> name="<%=UDDIConstants.AND_ALL_KEYS%>" value="<%=UDDIConstants.AND_ALL_KEYS%>"> <%=UDDIConstants.AND_ALL_KEYS%></td>
+                                        <td><input class="fq" type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.APPROXIMATE_MATCH)%> name="<%=UDDIConstants.APPROXIMATE_MATCH%>" value="<%=UDDIConstants.APPROXIMATE_MATCH%>"> <%=UDDIConstants.APPROXIMATE_MATCH%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.BINARY_SORT)%> name="<%=UDDIConstants.BINARY_SORT%>" value="<%=UDDIConstants.BINARY_SORT%>"> <%=UDDIConstants.BINARY_SORT%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.BINDING_SUBSET)%> name="<%=UDDIConstants.BINDING_SUBSET%>" value="<%=UDDIConstants.BINDING_SUBSET%>"> <%=UDDIConstants.BINDING_SUBSET%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.CASE_INSENSITIVE_MATCH)%> name="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_INSENSITIVE_MATCH%>"> <%=UDDIConstants.CASE_INSENSITIVE_MATCH%></td>
                                     </tr>
                                     <tr>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>" value="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>"> <%=UDDIConstants.CASE_INSENSITIVE_SORT%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.CASE_SENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_SENSITIVE_MATCH%>"> <%=UDDIConstants.CASE_SENSITIVE_MATCH%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.CASE_SENSITIVE_SORT%>" value="<%=UDDIConstants.CASE_SENSITIVE_SORT%>"> <%=UDDIConstants.CASE_SENSITIVE_SORT%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.COMBINE_CATEGORY_BAGS%>" value="<%=UDDIConstants.COMBINE_CATEGORY_BAGS%>"> <%=UDDIConstants.COMBINE_CATEGORY_BAGS%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%>"> <%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.CASE_INSENSITIVE_SORT)%> name="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>" value="<%=UDDIConstants.CASE_INSENSITIVE_SORT%>"> <%=UDDIConstants.CASE_INSENSITIVE_SORT%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.CASE_SENSITIVE_MATCH)%> name="<%=UDDIConstants.CASE_SENSITIVE_MATCH%>" value="<%=UDDIConstants.CASE_SENSITIVE_MATCH%>"> <%=UDDIConstants.CASE_SENSITIVE_MATCH%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.CASE_SENSITIVE_SORT)%> name="<%=UDDIConstants.CASE_SENSITIVE_SORT%>" value="<%=UDDIConstants.CASE_SENSITIVE_SORT%>"> <%=UDDIConstants.CASE_SENSITIVE_SORT%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.COMBINE_CATEGORY_BAGS)%> name="<%=UDDIConstants.COMBINE_CATEGORY_BAGS%>" value="<%=UDDIConstants.COMBINE_CATEGORY_BAGS%>"> <%=UDDIConstants.COMBINE_CATEGORY_BAGS%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.DIACRITIC_INSENSITIVE_MATCH)%> name="<%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%>" value="<%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%>"> <%=UDDIConstants.DIACRITIC_INSENSITIVE_MATCH%></td>
                                     </tr>
                                     <tr>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%>" value="<%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%>"> <%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.EXACT_MATCH%>" value="<%=UDDIConstants.EXACT_MATCH%>"> <%=UDDIConstants.EXACT_MATCH%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.OR_ALL_KEYS%>" value="<%=UDDIConstants.OR_ALL_KEYS%>"> <%=UDDIConstants.OR_ALL_KEYS%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.OR_LIKE_KEYS%>" value="<%=UDDIConstants.OR_LIKE_KEYS%>"> <%=UDDIConstants.OR_LIKE_KEYS%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SERVICE_SUBSET%>" value="<%=UDDIConstants.SERVICE_SUBSET%>"> <%=UDDIConstants.SERVICE_SUBSET%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.DIACRITIC_SENSITIVE_MATCH)%> name="<%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%>" value="<%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%>"> <%=UDDIConstants.DIACRITIC_SENSITIVE_MATCH%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.EXACT_MATCH)%> name="<%=UDDIConstants.EXACT_MATCH%>" value="<%=UDDIConstants.EXACT_MATCH%>"> <%=UDDIConstants.EXACT_MATCH%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.OR_ALL_KEYS)%> name="<%=UDDIConstants.OR_ALL_KEYS%>" value="<%=UDDIConstants.OR_ALL_KEYS%>"> <%=UDDIConstants.OR_ALL_KEYS%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.OR_LIKE_KEYS)%> name="<%=UDDIConstants.OR_LIKE_KEYS%>" value="<%=UDDIConstants.OR_LIKE_KEYS%>"> <%=UDDIConstants.OR_LIKE_KEYS%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SERVICE_SUBSET)%> name="<%=UDDIConstants.SERVICE_SUBSET%>" value="<%=UDDIConstants.SERVICE_SUBSET%>"> <%=UDDIConstants.SERVICE_SUBSET%></td>
                                     </tr>
                                     <tr>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SIGNATURE_PRESENT%>" value="<%=UDDIConstants.SIGNATURE_PRESENT%>"> <%=UDDIConstants.SIGNATURE_PRESENT%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SORT_BY_DATE_ASC%>" value="<%=UDDIConstants.SORT_BY_DATE_ASC%>"> <%=UDDIConstants.SORT_BY_DATE_ASC%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SORT_BY_DATE_DESC%>" value="<%=UDDIConstants.SORT_BY_DATE_DESC%>"> <%=UDDIConstants.SORT_BY_DATE_DESC%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SORT_BY_NAME_ASC%>" value="<%=UDDIConstants.SORT_BY_NAME_ASC%>"> <%=UDDIConstants.SORT_BY_NAME_ASC%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SORT_BY_NAME_DESC%>" value="<%=UDDIConstants.SORT_BY_NAME_DESC%>"> <%=UDDIConstants.SORT_BY_NAME_DESC%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SIGNATURE_PRESENT)%> name="<%=UDDIConstants.SIGNATURE_PRESENT%>" value="<%=UDDIConstants.SIGNATURE_PRESENT%>"> <%=UDDIConstants.SIGNATURE_PRESENT%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SORT_BY_DATE_ASC)%> name="<%=UDDIConstants.SORT_BY_DATE_ASC%>" value="<%=UDDIConstants.SORT_BY_DATE_ASC%>"> <%=UDDIConstants.SORT_BY_DATE_ASC%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SORT_BY_DATE_DESC)%> name="<%=UDDIConstants.SORT_BY_DATE_DESC%>" value="<%=UDDIConstants.SORT_BY_DATE_DESC%>"> <%=UDDIConstants.SORT_BY_DATE_DESC%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SORT_BY_NAME_ASC)%> name="<%=UDDIConstants.SORT_BY_NAME_ASC%>" value="<%=UDDIConstants.SORT_BY_NAME_ASC%>"> <%=UDDIConstants.SORT_BY_NAME_ASC%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SORT_BY_NAME_DESC)%> name="<%=UDDIConstants.SORT_BY_NAME_DESC%>" value="<%=UDDIConstants.SORT_BY_NAME_DESC%>"> <%=UDDIConstants.SORT_BY_NAME_DESC%></td>
                                     </tr>
                                     <tr>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%>" value="<%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%>"> <%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%></td>
-                                        <td><input class="fq"  type="checkbox" name="<%=UDDIConstants.UTS_10%>" value="<%=UDDIConstants.UTS_10%>"> <%=UDDIConstants.UTS_10%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.SUPPRESS_PROJECTED_SERVICES)%> name="<%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%>" value="<%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%>"> <%=UDDIConstants.SUPPRESS_PROJECTED_SERVICES%></td>
+                                        <td><input class="fq"  type="checkbox" <%=SubscriptionHelper.containsFindQualifier(sub,UDDIConstants.UTS_10)%> name="<%=UDDIConstants.UTS_10%>" value="<%=UDDIConstants.UTS_10%>"> <%=UDDIConstants.UTS_10%></td>
                                     </tr>
                                 </table>
-
-
-
                                 <div>
 
-                                    <input type="text" placeholder="<%=ResourceLoader.GetResource(session, "items.name")%>..." id="searchcontent">
-                                    <input type="text" placeholder="<%=ResourceLoader.GetResource(session, "items.lang")%>..." id="searchlang"><br></div>
+                                    <input type="text" placeholder="<%=ResourceLoader.GetResource(session, "items.name")%>..." id="searchcontent" value="<%=StringEscapeUtils.escapeHtml(SubscriptionHelper.getSearchName(sub))%>">
+                                    <input type="text" placeholder="<%=ResourceLoader.GetResource(session, "items.lang")%>..." id="searchlang" value="<%=StringEscapeUtils.escapeHtml(SubscriptionHelper.getSearchLang(sub))%>"><br></div>
                             </div>
 
 
@@ -340,12 +226,12 @@
                     <div id="collapseThree" class="accordion-body collapse">
                         <div class="accordion-inner">
                             <div class="btn-group" id="alertTransport" data-toggle="buttons-radio">
-                                <button id="btn-bindingTemplate" onclick="return toggleTransport1();" value="bindingTemplate" class="btn <%=(sub.getBindingKey() == null ? "" : " active")%>" 
+                                <button id="btn-bindingTemplate" onclick="return toggleTransport1();" value="bindingTemplate" class="btn <%=((sub.getBindingKey() != null && sub.getBindingKey().trim().length()>0)? " active " : "")%>" 
                                         title="<%=ResourceLoader.GetResource(session, "pages.subscription.step3.direct.tooltip")%>"><%=ResourceLoader.GetResource(session, "pages.subscription.step3.direct")%></button>
-                                <button id="btn-manual" onclick="return toggleTransport1();" value="manual" class="btn <%=(sub.getBindingKey() == null ? " active " : "")%>" 
+                                <button id="btn-manual" onclick="return toggleTransport1();" value="manual" class="btn <%=((sub.getBindingKey() == null || sub.getBindingKey().trim().length()==0) ? " active " : "")%>" 
                                         title="<%=ResourceLoader.GetResource(session, "pages.subscription.step3.pickup.tooltip")%>"><%=ResourceLoader.GetResource(session, "pages.subscription.step3.pickup")%></button>
                             </div><br>
-                            <div class="" id="bindingKeyDiv">
+                            <div class="<%=((sub.getBindingKey() != null && sub.getBindingKey().trim().length()>0) ? "" : " hide ")%>" id="bindingKeyDiv">
                                 <%=ResourceLoader.GetResource(session, "pages.subscription.step3.content")%>
                                 <b><%=UDDIConstants.TRANSPORT_HTTP%></b>.
                                 <input type="text" id="bindingKey" placeholder="<%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%>" style="width:360px">
@@ -353,33 +239,7 @@
                                         return false;" class="btn "><%=ResourceLoader.GetResource(session, "actions.select")%></button>
                             </div>
                             <script type="text/javascript">
-                                    function selectPublisherAssertionStatus()
-                                    {
-                                        $("#assertionStatusChooser").modal('show');
-                                    }
 
-                                    function toggleTransport1()
-                                    {
-                                        //window.console && console.log('hi  ' + $("#btn-specificitem").hasClass("active"));   
-                                        setTimeout(function() {
-                                            if ($("#btn-manual").hasClass("active"))
-                                            {
-                                                $("#bindingKeyDiv").hide();
-                                                //$("#specific").show();
-                                            }
-                                            else
-                                            {
-                                                $("#bindingKeyDiv").show();
-                                                // $("#specific").hide();
-                                            }
-
-                                        }, 100);
-
-
-                                        // $("#bindingKeyDiv").show();
-                                        return false;
-                                    }
-                                    toggleTransport1();
                             </script>
                         </div>
                     </div>
@@ -412,7 +272,7 @@
                             </div><br>
                             <%=ResourceLoader.GetResource(session, "items.expiration")%>: 
                             <div id="datetimepicker2" class="input-append date">
-                                        <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text" value="<%
+                                <input data-format="MM/dd/yyyy HH:mm:ss PP" type="text"  value="<%
                                     if (sub.getExpiresAfter() != null && !newitem) {
                                         Date d = sub.getExpiresAfter().toGregorianCalendar().getTime();
                                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
@@ -431,9 +291,9 @@
                             <script type="text/javascript">
                                 $(document).ready(function() {
                                     $('.uddi_tooltips').tooltip();
-                                    
+
                                     $('#datetimepicker2').datetimepicker({
-                                        language: '<%=StringEscapeUtils.escapeJavaScript((String)session.getAttribute("locale"))%>',
+                                        language: '<%=StringEscapeUtils.escapeJavaScript((String) session.getAttribute("locale"))%>',
                                         pick12HourFormat: true
                                     });
                                 });
@@ -443,7 +303,7 @@
                             <div style=""><%=ResourceLoader.GetResource(session, "items.notificationinterval")%>: &nbsp;</div>
 
                             <div class="input-append bootstrap-timepicker">
-                                <input id="timepicker2" type="text" class="input-small" placeholder="Duration of time (hh:mm:ss)" value="<%
+                                <input id="timepicker2" type="text" class="input-small" placeholder="(hh:mm:ss)" value="<%
                                     if (sub.getNotificationInterval() != null) {
                                         out.write(sub.getNotificationInterval().getHours() + ":"
                                                 + sub.getNotificationInterval().getMinutes() + ":"
@@ -472,162 +332,13 @@
                                     out.write(StringEscapeUtils.escapeHtml(sub.getSubscriptionKey()));
                                 }
                                 %> </div>
-                            About Subscription Keys: You can optionally specify a subscription key. If you do, it must follow the rules for UDDI keys (uniqueness, prefixes, tModel Partitions, etc).
-                            If you do not define one, the UDDI server should generate one for you. 
+                                <%=ResourceLoader.GetResource(session, "pages.subscription.aboutkeys")%>
 
 
 
                         </div>
                     </div>
                 </div>
-
-
-                <script type="text/javascript">
-                    Reedit();
-                    $("#bindingKey").resizable();
-                    function saveSubscription()
-                    {
-
-                        var interval = $("#interval").val();
-                        var maxRecords = $("#maxRecords").val();
-                        var brief = $("#brief").val();
-                        var datetimepicker2 = $("#datetimepicker2").val();
-
-                        var subkey = $("#subkey").html();
-
-                        var alertCriteraSingleItem = $("#alertCriteraSingleItem > button.btn.active").val();
-                        var alertTransport = $("#alertTransport > button.btn.active").val();
-                        var itemKey = $("#keylist option");
-                        var keys = "";
-                        var first = true;
-                        $.each(itemKey, function(idx, value) {
-                            if (first)
-                                keys = value.value;
-                            else
-                                keys = keys + "," + value.value;
-                            first = false;
-                        });
-                        var bindingKey = $("#bindingKey").val();
-                        var alertType = $("#alertType > button.btn.active").val();
-
-                        var alertCriteraMultipleItem = $("#alertCriteraMultipleItem > button.btn.active").val();
-                        var searchcontent = $("#searchcontent").val();
-                        var searchlang = $("#searchlang").val();
-
-                        var postbackdata = new Array();
-                        var url = 'ajax/subscription.jsp';
-                        itemKey = $("#itemKey").html();
-
-                        //  var tqs = new Array();
-                        $.each($('.fq input:checkbox'), function(index, item) {
-                            var itemname = item.id;
-                            if (item.checked)
-                            {
-                                postbackdata.push({
-                                    name: "findqualifier",
-                                    value: itemname
-                                });
-                            }
-                        });
-
-                        postbackdata.push({
-                            name: "alertCriteraMultipleItem",
-                            value: alertCriteraMultipleItem
-                        });
-                        postbackdata.push({
-                            name: "searchcontent",
-                            value: searchcontent
-                        });
-
-                        postbackdata.push({
-                            name: "searchlang",
-                            value: searchlang
-                        });
-
-
-                        postbackdata.push({
-                            name: "subkey",
-                            value: subkey
-                        });
-
-                        postbackdata.push({
-                            name: "expires",
-                            value: datetimepicker2
-                        });
-
-                        postbackdata.push({
-                            name: "interval",
-                            value: interval
-                        });
-
-                        postbackdata.push({
-                            name: "brief",
-                            value: brief
-                        });
-
-                        postbackdata.push({
-                            name: "maxRecords",
-                            value: maxRecords
-                        });
-
-
-                        postbackdata.push({
-                            name: "alertType",
-                            value: alertType
-                        });
-                        postbackdata.push({
-                            name: "itemKey",
-                            value: keys
-                        });
-
-                        postbackdata.push({
-                            name: "assertionStatus",
-                            value: itemKey
-                        });
-                        postbackdata.push({
-                            name: "alertCriteraSingleItem",
-                            value: alertCriteraSingleItem
-                        });
-                        postbackdata.push({
-                            name: "bindingKey",
-                            value: bindingKey
-                        });
-                        postbackdata.push({
-                            name: "alertTransport",
-                            value: alertTransport
-                        });
-                        postbackdata.push({
-                            name: "nonce",
-                            value: $("#nonce").val()
-                        });
-
-
-                        var request = $.ajax({
-                            url: url,
-                            type: "POST",
-                            //  dataType: "html", 
-                            cache: false,
-                            //  processData: false,f
-                            data: postbackdata
-                        });
-
-
-                        request.done(function(msg) {
-                            window.console && console.log('postback done ' + url);
-
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + msg);
-                            $("#resultBar").show();
-
-                        });
-
-                        request.fail(function(jqXHR, textStatus) {
-                            window.console && console.log('postback failed ' + url);
-                            $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus);
-                            $("#resultBar").show();
-
-                        });
-                    }
-                </script>
             </div>
 
             <a  class="btn btn-primary" href="javascript:saveSubscription();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
@@ -673,6 +384,18 @@
             </script>
         </div>
     </div>
+
+
+    <script type="text/javascript" src="js/editSubscription.js"></script>
+    <script type="text/javascript">
+
+        <%
+            if (!SubscriptionHelper.isPublisherAssertionSpecific(sub).equals("")) {
+                out.write("publisherAssertionPicker();");
+            }
+        %>
+
+    </script>
 
 
     <%@include file="tmodelChooser.jsp" %>

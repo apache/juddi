@@ -22,6 +22,8 @@
 
 
 
+<%@page import="javax.xml.datatype.DatatypeFactory"%>
+<%@page import="org.apache.commons.lang.time.DurationFormatUtils"%>
 <%@page import="java.util.List"%>
 <%@page import="org.uddi.sub_v3.Subscription"%>
 <%@page import="java.net.URLEncoder"%>
@@ -43,7 +45,9 @@
             <p>
                 <%=ResourceLoader.GetResource(session, "pages.viewsubscriptions.content")%>
 
+
             </p>
+            <a href="editSubscription.jsp"><i class="icon-large icon-plus-sign"></i> <%=ResourceLoader.GetResource(session, "navbar.subscriptions.create")%></a><br><br>
             <%
                 UddiHub x = UddiHub.getInstance(application, session);
 
@@ -54,11 +58,14 @@
                 if (list != null) {
                     if (!list.isEmpty()) {
             %>
+
             <table class="table table-hover">
                 <tr><th><%=ResourceLoader.GetResource(session, "items.key")%></th>
                     <th><%=ResourceLoader.GetResource(session, "items.expires")%></th>
-                    <th><%=ResourceLoader.GetResource(session, "items.bindingtemplate.key")%></th>
-                    <th><%=ResourceLoader.GetResource(session, "items.actions")%></th></tr>
+                    <th><%=ResourceLoader.GetResource(session, "items.deliverymech")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.actions")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.maxitems")%></th>
+                    <th><%=ResourceLoader.GetResource(session, "items.notificationinterval")%></th></tr>
 
                 <%
                     for (int i = 0; i < list.size(); i++) {
@@ -67,24 +74,32 @@
                         out.write("</td><td>");
                         out.write(StringEscapeUtils.escapeHtml(list.get(i).getExpiresAfter().toString()));
                         out.write("</td><td>");
-                        out.write(StringEscapeUtils.escapeHtml(list.get(i).getBindingKey()));
+                        if (list.get(i).getBindingKey() == null || list.get(i).getBindingKey().trim().length() == 0) {
+                            out.write(StringEscapeUtils.escapeHtml(ResourceLoader.GetResource(session, "pages.subscription.step3.pickup")));
+                        } else {
+                            out.write(StringEscapeUtils.escapeHtml(ResourceLoader.GetResource(session, "pages.subscription.step3.direct")));
+                        }
                         out.write("</td><td>");
 
 
                         out.write("<a href=\"editSubscription.jsp?id=" + URLEncoder.encode(list.get(i).getSubscriptionKey(), "UTF8") + "\"><i class=\"icon-edit icon-2x\"></i></a> ");
                         out.write("<a href=\"javascript:deleteSub('" + StringEscapeUtils.escapeJavaScript(list.get(i).getSubscriptionKey()) + "');\"><i class=\"icon-trash icon-2x\"></i></a> ");
                         out.write("<a href=\"javascript:ViewAsXML('" + StringEscapeUtils.escapeJavaScript(list.get(i).getSubscriptionKey()) + "');\"><i class=\"icon-zoom-in icon-2x\"></i></a> ");
-
-                        out.write(list.get(i).getBindingKey());
+                        out.write("</td><td>");
                         if (list.get(i).getMaxEntities() != null) {
                             out.write(list.get(i).getMaxEntities().toString());
                         }
+                        out.write("</td><td>");
                         if (list.get(i).getNotificationInterval() != null) {
-                            out.write(list.get(i).getNotificationInterval().toString());
+                            if (list.get(i).getNotificationInterval().getDays() > 0) {
+                                out.write("&gt; 24hr");
+                            } else {
+                                out.write(list.get(i).getNotificationInterval().getHours() + ":"
+                                        + list.get(i).getNotificationInterval().getMinutes() + ":"
+                                        + list.get(i).getNotificationInterval().getSeconds());
+                            }
                         }
-//out.write(list.get(i).getSubscriptionFilter());
                         out.write("</td></tr>");
-                        //  out.write("<tr><td colspan=\"3\"><div id=\"" + StringEscapeUtils.escapeHtml(list.get(i).getSubscriptionKey()) + "\"></div></td></tr>");
                     }
                 %>
             </table>
@@ -99,44 +114,44 @@
                 function deleteSub(key)
                 {
                     var postbackdata = new Array();
-                    var url='ajax/subscription.jsp';
-                        
-                              
+                    var url = 'ajax/subscription.jsp';
+
+
                     postbackdata.push({
-                        name:"nonce", 
+                        name: "nonce",
                         value: $("#nonce").val()
                     });
-    
-                        
+
+
                     postbackdata.push({
-                        name:"DELETE", 
+                        name: "DELETE",
                         value: key
                     });
-            
-                    var request=   $.ajax({
+
+                    var request = $.ajax({
                         url: url,
-                        type:"POST",
+                        type: "POST",
                         //  dataType: "html", 
-                        cache: false, 
+                        cache: false,
                         //  processData: false,f
                         data: postbackdata
                     });
-                
-                
+
+
                     request.done(function(msg) {
-                        window.console && console.log('postback done '  + url);                
-        
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' + msg);
+                        window.console && console.log('postback done ' + url);
+
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + msg);
                         $("#resultBar").show();
                         $("#" + escapeJquerySelector(key)).remove();
-        
+
                     });
 
                     request.fail(function(jqXHR, textStatus) {
-                        window.console && console.log('postback failed ' + url);                                
-                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;'  + '</a>' +jqXHR.responseText + textStatus);
+                        window.console && console.log('postback failed ' + url);
+                        $("#resultBar").html('<a class="close" data-dismiss="alert" href="javascript:hideAlert();">&times;' + '</a>' + jqXHR.responseText + textStatus);
                         $("#resultBar").show();
-        
+
                     });
                 }
             </script>
@@ -159,17 +174,17 @@
         </div>
     </div>
     <script type="text/javascript">
-         
+
         function ViewAsXML(id)
         {
-            $.get("ajax/toXML.jsp?id=" + id + "&type=subscription", function(data){
-                window.console && console.log('asXml success');                
-                  
+            $.get("ajax/toXML.jsp?id=" + id + "&type=subscription", function(data) {
+                window.console && console.log('asXml success');
+
                 $("#viewAsXmlContent").html(safe_tags_replace(data));
-                $( "#viewAsXml" ).modal('show');
+                $("#viewAsXml").modal('show');
             });
-                       
+
         }
-                   
+
     </script>
     <%@include file="header-bottom.jsp" %>

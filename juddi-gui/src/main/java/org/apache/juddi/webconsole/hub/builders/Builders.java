@@ -38,7 +38,9 @@ import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
 
 /**
- * This class provides functions for building UDDI entities from Http request parameters
+ * This class provides functions for building UDDI entities from Http request
+ * parameters
+ *
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class Builders {
@@ -107,10 +109,11 @@ public class Builders {
 
     /**
      * overview docs
+     *
      * @param map
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static List<OverviewDoc> BuildOverviewDocs(Map map, String prefix, String cte, String locale) {
         List<OverviewDoc> ret = new ArrayList<OverviewDoc>();
@@ -129,7 +132,7 @@ public class Builders {
                     pn.getOverviewURL().setValue(t[0]);
                     t = (String[]) map.get(prefix + index + PostBackConstants.TYPE);
                     pn.getOverviewURL().setUseType(t[0]);
-                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte,locale));
+                    pn.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.DESCRIPTION, cte, locale));
                     ret.add(pn);
                     processedIndexes.add(index);
                 }
@@ -142,9 +145,10 @@ public class Builders {
 
     /**
      * phone numbers
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static List<Phone> BuildPhone(Map map, String prefix, String locale) {
         List<Phone> ret = new ArrayList();
@@ -174,10 +178,11 @@ public class Builders {
 
     /**
      * builds a contact
+     *
      * @param m
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static Contact BuildSingleContact(Map m, String prefix, String cte, String locale) {
         Contact c = new Contact();
@@ -193,10 +198,11 @@ public class Builders {
 
     /**
      * name elements
+     *
      * @param map
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static List<Name> BuildNames(Map map, String prefix, String cte, String locale) {
         List<Name> ret = new ArrayList();
@@ -230,9 +236,10 @@ public class Builders {
 
     /**
      * builds a compelte category bag
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static CategoryBag BuildCatBag(Map map, String prefix, String locale) {
         CategoryBag ret = new CategoryBag();
@@ -261,13 +268,14 @@ public class Builders {
         }
         return ret;
     }
-    
-/**
- * identifier bag
- * @param map
- * @param prefix
- * @return 
- */
+
+    /**
+     * identifier bag
+     *
+     * @param map
+     * @param prefix
+     * @return
+     */
     public static IdentifierBag BuildIdentBag(Map map, String prefix, String locale) {
         IdentifierBag ret = new IdentifierBag();
         ret.getKeyedReference().addAll(BuildKeyedReference(map, prefix, locale));
@@ -276,12 +284,14 @@ public class Builders {
         }
         return ret;
     }
-/**
- * discovery urls
- * @param map
- * @param prefix
- * @return 
- */
+
+    /**
+     * discovery urls
+     *
+     * @param map
+     * @param prefix
+     * @return
+     */
     public static DiscoveryURLs BuildDisco(Map map, String prefix, String locale) {
         DiscoveryURLs list = new DiscoveryURLs();
         Iterator it = map.keySet().iterator();
@@ -313,10 +323,11 @@ public class Builders {
 
     /**
      * addresses
+     *
      * @param map
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static List<Address> BuildAddress(Map map, String prefix, String cte, String locale) {
         List<Address> ret = new ArrayList();
@@ -367,9 +378,10 @@ public class Builders {
 
     /**
      * keyed reference group
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static List<KeyedReferenceGroup> BuildKeyedReferenceGroup(Map map, String prefix, String locale) {
         List<KeyedReferenceGroup> ret = new ArrayList<KeyedReferenceGroup>();
@@ -433,9 +445,10 @@ public class Builders {
 
     /**
      * email
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static List<Email> BuildEmail(Map map, String prefix, String locale) {
         List<Email> list = new ArrayList<Email>();
@@ -465,10 +478,11 @@ public class Builders {
 
     /**
      * description
+     *
      * @param map
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static List<Description> BuildDescription(Map map, String prefix, String cte, String locale) {
         List<Description> ret = new ArrayList();
@@ -502,9 +516,10 @@ public class Builders {
 
     /**
      * keyed references
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static List<KeyedReference> BuildKeyedReference(Map map, String prefix, String locale) {
         List<KeyedReference> ret = new ArrayList<KeyedReference>();
@@ -538,9 +553,10 @@ public class Builders {
 
     /**
      * address lines
+     *
      * @param map
      * @param prefix
-     * @return 
+     * @return
      */
     public static List<AddressLine> BuildAddressLine(Map map, String prefix, String locale) {
         List<AddressLine> ret = new ArrayList();
@@ -572,10 +588,11 @@ public class Builders {
 
     /**
      * binding templates
+     *
      * @param map
      * @param prefix
      * @param cte
-     * @return 
+     * @return
      */
     public static List<BindingTemplate> BuildBindingTemplates(Map map, String prefix, String cte, String locale) {
         List<BindingTemplate> ret = new ArrayList();
@@ -651,7 +668,7 @@ public class Builders {
 
                     tmi.setInstanceDetails(BuildInstanceDetails(MapFilter(map, prefix + index + PostBackConstants.INSTANCE), prefix + index + PostBackConstants.INSTANCE, cte, locale));
 
-                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte,locale));
+                    tmi.getDescription().addAll(BuildDescription(MapFilter(map, prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION), prefix + index + PostBackConstants.INSTANCE + PostBackConstants.DESCRIPTION, cte, locale));
 
                     ret.getTModelInstanceInfo().add(tmi);
                     processedIndexes.add(index);
@@ -695,10 +712,11 @@ public class Builders {
 
     /**
      * client subscription api
+     *
      * @param map
      * @param outmsg
      * @param session
-     * @return 
+     * @return
      */
     public static Subscription BuildClientSubscription(Map map, AtomicReference<String> outmsg, HttpSession session) {
         Subscription sub = new Subscription();
@@ -713,7 +731,7 @@ public class Builders {
                 return null;
             }
             if (alertType.equalsIgnoreCase("specificItem")) {
-                sub = BuildClientSubscriptionSpecificItem(map, outmsg, (String)session.getAttribute("locale"));
+                sub = BuildClientSubscriptionSpecificItem(map, outmsg, (String) session.getAttribute("locale"));
             } else if (alertType.equalsIgnoreCase("searchResults")) {
                 sub = BuildClientSubscriptionSearchResults(map, outmsg);
             } else {
@@ -895,13 +913,15 @@ public class Builders {
         try {
             DatatypeFactory df = DatatypeFactory.newInstance();
             DateFormat dformat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
-            Date parsed = dformat.parse(((String[]) map.get("expires"))[0]);
-
-            GregorianCalendar gcal = new GregorianCalendar();
-            gcal.setTime(parsed);
-            sub.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+            String ds = (String) map.get("expires");
+            if (ds != null && ds.trim().length() != 0 && !ds.equals("\"\"")) {
+                Date parsed = dformat.parse(((String[]) map.get("expires"))[0]);
+                GregorianCalendar gcal = new GregorianCalendar();
+                gcal.setTime(parsed);
+                sub.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
+            }
         } catch (Exception ex) {
-            UddiHub.log.warn("Unexpected parsing error ", ex);
+            UddiHub.log.debug("Unexpected parsing expires error "+ex.getMessage());
         }
 
 
@@ -914,7 +934,7 @@ public class Builders {
             gcal.setTime(parsed);
             sub.setExpiresAfter(df.newXMLGregorianCalendar(gcal));
         } catch (Exception ex) {
-            UddiHub.log.warn("Unexpected parsing error ", ex);
+            UddiHub.log.debug("Unexpected parsing expires error "+ ex.getMessage());
         }
 
         try {
@@ -930,7 +950,23 @@ public class Builders {
             sub.setNotificationInterval(df.newDuration(durationInMilliSeconds));
 
         } catch (Exception ex) {
-            UddiHub.log.warn("Unexpected parsing error ", ex);
+            UddiHub.log.debug("Unexpected parsing interval error "+ ex.getMessage());
+        }
+        
+        try {
+            long durationInMilliSeconds = 0;
+            DatatypeFactory df = DatatypeFactory.newInstance();
+            String interval = (String) map.get("interval");
+            String[] tokens = interval.split(":");
+            durationInMilliSeconds += Integer.parseInt(tokens[0]) * 60 * 60 * 1000;
+            durationInMilliSeconds += Integer.parseInt(tokens[1]) * 60 * 1000;
+            durationInMilliSeconds += Integer.parseInt(tokens[2]) * 1000;
+
+
+            sub.setNotificationInterval(df.newDuration(durationInMilliSeconds));
+
+        } catch (Exception ex) {
+            UddiHub.log.debug("Unexpected parsing interval error "+ ex.getMessage());
         }
 
 

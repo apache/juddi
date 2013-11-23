@@ -131,10 +131,9 @@ public class UddiHub implements Serializable {
      *
      */
     public static final String PROP_PREFIX = "config.props.";
-    
     /**
-     * 
-     * 
+     *
+     *
      */
     public static final String PROP_ADMIN_LOCALHOST_ONLY = "config.props.configLocalHostOnly";
 
@@ -453,13 +452,12 @@ public class UddiHub implements Serializable {
             try {
                 findBusiness = inquiry.findBusiness(fb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fb.setAuthInfo(GetToken());
-                        findBusiness = inquiry.findBusiness(fb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fb.setAuthInfo(GetToken());
+                    findBusiness = inquiry.findBusiness(fb);
+                } else {
+                    throw ex;
                 }
             }
             if (findBusiness == null || findBusiness.getBusinessInfos() == null) {
@@ -507,13 +505,10 @@ public class UddiHub implements Serializable {
             try {
                 findBusiness = publish.getRegisteredInfo(r);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        findBusiness = publish.getRegisteredInfo(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    findBusiness = publish.getRegisteredInfo(r);
                 } else {
                     throw ex;
                 }
@@ -579,13 +574,11 @@ public class UddiHub implements Serializable {
             try {
                 get = inquiry.getServiceDetail(gbd);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        gbd.setAuthInfo(GetToken());
-                        get = inquiry.getServiceDetail(gbd);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    gbd.setAuthInfo(GetToken());
+                    get = inquiry.getServiceDetail(gbd);
+
                 } else {
                     throw ex;
                 }
@@ -615,6 +608,43 @@ public class UddiHub implements Serializable {
     }
 
     /**
+     * return true if the word expire is in the exception or the UDDI error code
+     * representing an expired token
+     *
+     * @param ex
+     * @return r
+     */
+    public static boolean isExceptionExpiration(Exception ex) {
+        if (ex == null) {
+            return false;
+        }
+        if (ex instanceof DispositionReportFaultMessage) {
+            DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
+            if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().toLowerCase().contains("expired")) {
+                return true;
+            }
+        }
+        
+        if (ex.getMessage()==null){
+            return false;
+        }
+        if (ex.getMessage().toLowerCase().contains("expire")) {
+            return true;
+        }
+        
+        if (ex.getMessage().toLowerCase().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED.toLowerCase())) {
+            return true;
+        }
+        if (ex.getLocalizedMessage()==null){
+            return false;
+        }
+        if (ex.getLocalizedMessage().toLowerCase().contains("expire")) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * returns an html formatted list of services for a specific business used
      * on browse.jsp
      *
@@ -634,13 +664,12 @@ public class UddiHub implements Serializable {
             try {
                 businessDetail = inquiry.getBusinessDetail(gbd);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        gbd.setAuthInfo(GetToken());
-                        businessDetail = inquiry.getBusinessDetail(gbd);
-                    }
+                if (isExceptionExpiration(ex)) {
+
+                    token = null;
+                    gbd.setAuthInfo(GetToken());
+                    businessDetail = inquiry.getBusinessDetail(gbd);
+
                 } else {
                     throw ex;
                 }
@@ -685,13 +714,11 @@ public class UddiHub implements Serializable {
             try {
                 get = inquiry.getServiceDetail(gbd);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        gbd.setAuthInfo(GetToken());
-                        get = inquiry.getServiceDetail(gbd);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    gbd.setAuthInfo(GetToken());
+                    get = inquiry.getServiceDetail(gbd);
+
                 } else {
                     throw ex;
                 }
@@ -722,13 +749,10 @@ public class UddiHub implements Serializable {
             try {
                 publish.saveService(sb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        sb.setAuthInfo(GetToken());
-                        publish.saveService(sb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(GetToken());
+                    publish.saveService(sb);
                 } else {
                     throw ex;
                 }
@@ -755,13 +779,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.saveBinding(sb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        sb.setAuthInfo(GetToken());
-                        publish.saveBinding(sb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(GetToken());
+                    publish.saveBinding(sb);
+
                 } else {
                     throw ex;
                 }
@@ -826,13 +848,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.saveService(sb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        sb.setAuthInfo(GetToken());
-                        publish.saveService(sb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(GetToken());
+                    publish.saveService(sb);
+
                 } else {
                     throw ex;
                 }
@@ -857,13 +877,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.saveBusiness(sb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        sb.setAuthInfo(GetToken());
-                        publish.saveBusiness(sb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(GetToken());
+                    publish.saveBusiness(sb);
+
                 } else {
                     throw ex;
                 }
@@ -948,13 +966,11 @@ public class UddiHub implements Serializable {
             try {
                 businessDetail = inquiry.getBusinessDetail(gbd);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        gbd.setAuthInfo(GetToken());
-                        businessDetail = inquiry.getBusinessDetail(gbd);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    gbd.setAuthInfo(GetToken());
+                    businessDetail = inquiry.getBusinessDetail(gbd);
+
                 } else {
                     throw ex;
                 }
@@ -1029,13 +1045,11 @@ public class UddiHub implements Serializable {
             try {
                 findService = inquiry.findService(fs);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fs.setAuthInfo(GetToken());
-                        findService = inquiry.findService(fs);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fs.setAuthInfo(GetToken());
+                    findService = inquiry.findService(fs);
+
                 } else {
                     throw ex;
                 }
@@ -1123,19 +1137,19 @@ public class UddiHub implements Serializable {
     private String HandleException(Exception ex) {
         if (ex instanceof DispositionReportFaultMessage) {
             DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-            log.error(null, ex);
+            log.error(ex.getMessage());
+            log.debug(null, ex);
             return ResourceLoader.GetResource(session, "errors.uddi") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
         if (ex instanceof RemoteException) {
             RemoteException f = (RemoteException) ex;
-            log.error(null, ex);
+            log.error(ex.getMessage());
+            log.debug(null, ex);
             return ResourceLoader.GetResource(session, "errors.generic") + " " + ex.getMessage() + " " + f.detail.getMessage();
         }
-        log.error(null, ex);
-        return //"<div class=\"alert alert-error\" ><h3><i class=\"icon-warning-sign\"></i> "
-                ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
-        //+ "</h3></div>";
-
+        log.error(ex.getMessage());
+        log.debug(null, ex);
+        return ResourceLoader.GetResource(session, "errors.generic") + " " + StringEscapeUtils.escapeHtml(ex.getMessage());
     }
 
     /**
@@ -1169,13 +1183,11 @@ public class UddiHub implements Serializable {
             try {
                 findTModel = inquiry.findTModel(fm);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fm.setAuthInfo(GetToken());
-                        findTModel = inquiry.findTModel(fm);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fm.setAuthInfo(GetToken());
+                    findTModel = inquiry.findTModel(fm);
+
                 } else {
                     throw ex;
                 }
@@ -1223,14 +1235,12 @@ public class UddiHub implements Serializable {
                 tModelDetail = inquiry.getTModelDetail(req);
 
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        req.setAuthInfo(GetToken());
-                        tModelDetail = inquiry.getTModelDetail(req);
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    req.setAuthInfo(GetToken());
+                    tModelDetail = inquiry.getTModelDetail(req);
 
-                    }
+
                 } else {
                     throw ex;
                 }
@@ -1281,13 +1291,11 @@ public class UddiHub implements Serializable {
             try {
                 bindingDetail = inquiry.getBindingDetail(r);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        bindingDetail = inquiry.getBindingDetail(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    bindingDetail = inquiry.getBindingDetail(r);
+
                 } else {
                     throw ex;
                 }
@@ -1314,13 +1322,10 @@ public class UddiHub implements Serializable {
             try {
                 tModelDetail = inquiry.getTModelDetail(r);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        tModelDetail = inquiry.getTModelDetail(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    tModelDetail = inquiry.getTModelDetail(r);
                 } else {
                     throw ex;
                 }
@@ -1451,13 +1456,11 @@ public class UddiHub implements Serializable {
                 try {
                     findBusiness = inquiry.findBinding(fb);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            fb.setAuthInfo(GetToken());
-                            findBusiness = inquiry.findBinding(fb);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        fb.setAuthInfo(GetToken());
+                        findBusiness = inquiry.findBinding(fb);
+
                     } else {
                         throw ex;
                     }
@@ -1542,13 +1545,11 @@ public class UddiHub implements Serializable {
                 try {
                     findBusiness = inquiry.findBusiness(fb);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            fb.setAuthInfo(GetToken());
-                            findBusiness = inquiry.findBusiness(fb);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        fb.setAuthInfo(GetToken());
+                        findBusiness = inquiry.findBusiness(fb);
+
                     } else {
                         throw ex;
                     }
@@ -1600,13 +1601,11 @@ public class UddiHub implements Serializable {
             try {
                 findBusiness = inquiry.findRelatedBusinesses(fb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fb.setAuthInfo(GetToken());
-                        findBusiness = inquiry.findRelatedBusinesses(fb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fb.setAuthInfo(GetToken());
+                    findBusiness = inquiry.findRelatedBusinesses(fb);
+
                 } else {
                     throw ex;
                 }
@@ -1686,13 +1685,11 @@ public class UddiHub implements Serializable {
                 try {
                     findBusiness = inquiry.findService(fb);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            fb.setAuthInfo(GetToken());
-                            findBusiness = inquiry.findService(fb);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        fb.setAuthInfo(GetToken());
+                        findBusiness = inquiry.findService(fb);
+
                     } else {
                         throw ex;
                     }
@@ -1775,13 +1772,11 @@ public class UddiHub implements Serializable {
                 try {
                     findBusiness = inquiry.findTModel(fb);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            fb.setAuthInfo(GetToken());
-                            findBusiness = inquiry.findTModel(fb);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        fb.setAuthInfo(GetToken());
+                        findBusiness = inquiry.findTModel(fb);
+
                     } else {
                         throw ex;
                     }
@@ -1861,13 +1856,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.deleteService(db);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        db.setAuthInfo(GetToken());
-                        publish.deleteService(db);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    db.setAuthInfo(GetToken());
+                    publish.deleteService(db);
+
                 } else {
                     throw ex;
                 }
@@ -1895,13 +1888,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.deleteBusiness(db);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        db.setAuthInfo(GetToken());
-                        publish.deleteBusiness(db);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    db.setAuthInfo(GetToken());
+                    publish.deleteBusiness(db);
+
                 } else {
                     throw ex;
                 }
@@ -1944,13 +1935,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.deleteTModel(db);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        db.setAuthInfo(GetToken());
-                        publish.deleteTModel(db);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    db.setAuthInfo(GetToken());
+                    publish.deleteTModel(db);
+
                 } else {
                     throw ex;
                 }
@@ -1977,13 +1966,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.saveTModel(sb);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        sb.setAuthInfo(GetToken());
-                        publish.saveTModel(sb);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    sb.setAuthInfo(GetToken());
+                    publish.saveTModel(sb);
+
                 } else {
                     throw ex;
                 }
@@ -2178,12 +2165,10 @@ public class UddiHub implements Serializable {
             try {
                 return subscription.getSubscriptions(GetToken());
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        return subscription.getSubscriptions(GetToken());
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    return subscription.getSubscriptions(GetToken());
+
                 } else {
                     throw ex;
                 }
@@ -2208,12 +2193,10 @@ public class UddiHub implements Serializable {
             try {
                 subscription.saveSubscription(GetToken(), data);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        subscription.saveSubscription(GetToken(), data);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    subscription.saveSubscription(GetToken(), data);
+
                 } else {
                     throw ex;
                 }
@@ -2239,14 +2222,12 @@ public class UddiHub implements Serializable {
                 subscription.deleteSubscription(ds);
                 return ResourceLoader.GetResource(session, "actions.deleted");
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        ds.setAuthInfo(GetToken());
-                        subscription.deleteSubscription(ds);
-                        return ResourceLoader.GetResource(session, "actions.deleted");
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    ds.setAuthInfo(GetToken());
+                    subscription.deleteSubscription(ds);
+                    return ResourceLoader.GetResource(session, "actions.deleted");
+
                 } else {
                     throw ex;
                 }
@@ -2254,7 +2235,7 @@ public class UddiHub implements Serializable {
         } catch (Exception ex) {
             return HandleException(ex);
         }
-        return ResourceLoader.GetResource(session, "messages.success");
+        // return ResourceLoader.GetResource(session, "messages.success");
     }
 
     /**
@@ -2275,13 +2256,10 @@ public class UddiHub implements Serializable {
             try {
                 operationalInfo = inquiry.getOperationalInfo(goi);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        goi.setAuthInfo(GetToken());
-                        operationalInfo = inquiry.getOperationalInfo(goi);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    goi.setAuthInfo(GetToken());
+                    operationalInfo = inquiry.getOperationalInfo(goi);
                 } else {
                     throw ex;
                 }
@@ -2367,13 +2345,11 @@ public class UddiHub implements Serializable {
             try {
                 registeredInfo = publish.getRegisteredInfo(r);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        registeredInfo = publish.getRegisteredInfo(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    registeredInfo = publish.getRegisteredInfo(r);
+
                 } else {
                     throw ex;
                 }
@@ -2414,12 +2390,10 @@ public class UddiHub implements Serializable {
             try {
                 STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    STATUS_COMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_COMPLETE);
+
                 } else {
                     throw ex;
                 }
@@ -2435,13 +2409,11 @@ public class UddiHub implements Serializable {
             try {
                 STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    STATUS_FROM_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_FROM_KEY_INCOMPLETE);
 
-                    }
+
                 } else {
                     throw ex;
                 }
@@ -2458,13 +2430,11 @@ public class UddiHub implements Serializable {
                 STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
 
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    STATUS_TO_KEY_INCOMPLETE = publish.getAssertionStatusReport(GetToken(), CompletionStatus.STATUS_TO_KEY_INCOMPLETE);
 
-                    }
+
                 } else {
                     throw ex;
                 }
@@ -2506,13 +2476,11 @@ public class UddiHub implements Serializable {
             try {
                 publish.deletePublisherAssertions(dp);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        dp.setAuthInfo(GetToken());
-                        publish.deletePublisherAssertions(dp);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    dp.setAuthInfo(GetToken());
+                    publish.deletePublisherAssertions(dp);
+
                 } else {
                     throw ex;
                 }
@@ -2550,13 +2518,11 @@ public class UddiHub implements Serializable {
                 publish.addPublisherAssertions(r);
 
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        publish.addPublisherAssertions(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    publish.addPublisherAssertions(r);
+
                 } else {
                     throw ex;
                 }
@@ -2588,13 +2554,11 @@ public class UddiHub implements Serializable {
                 subscriptions = subscription.getSubscriptions(GetToken());
 
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
+                if (isExceptionExpiration(ex)) {
+                    token = null;
 
-                        subscriptions = subscription.getSubscriptions(GetToken());
-                    }
+                    subscriptions = subscription.getSubscriptions(GetToken());
+
                 } else {
                     throw ex;
                 }
@@ -2615,6 +2579,9 @@ public class UddiHub implements Serializable {
 
         r.getCoveragePeriod().setStartPoint(lastRefresh);
         StringBuilder sb = new StringBuilder();
+        if (subscriptions.isEmpty()) {
+            return ToErrorAlert(ResourceLoader.GetResource(session, "errors.subscriptionfeed.nosubs"));
+        }
         for (int k = 0; k < subscriptions.size(); k++) {
 
             r.setSubscriptionKey(subscriptions.get(k).getSubscriptionKey());
@@ -2624,13 +2591,11 @@ public class UddiHub implements Serializable {
                     subscriptionResults = subscription.getSubscriptionResults(r);
 
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            r.setAuthInfo(GetToken());
-                            subscriptionResults = subscription.getSubscriptionResults(r);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        r.setAuthInfo(GetToken());
+                        subscriptionResults = subscription.getSubscriptionResults(r);
+
                     } else {
                         throw ex;
                     }
@@ -2782,13 +2747,11 @@ public class UddiHub implements Serializable {
             try {
                 findService = inquiry.findService(fs);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fs.setAuthInfo(GetToken());
-                        findService = inquiry.findService(fs);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fs.setAuthInfo(GetToken());
+                    findService = inquiry.findService(fs);
+
                 } else {
                     throw ex;
                 }
@@ -2810,13 +2773,11 @@ public class UddiHub implements Serializable {
             try {
                 serviceDetail = inquiry.getServiceDetail(gs);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        fs.setAuthInfo(GetToken());
-                        serviceDetail = inquiry.getServiceDetail(gs);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    fs.setAuthInfo(GetToken());
+                    serviceDetail = inquiry.getServiceDetail(gs);
+
                 } else {
                     throw ex;
                 }
@@ -2915,12 +2876,10 @@ public class UddiHub implements Serializable {
             try {
                 custody.getTransferToken(GetToken(), keys, nodeid, outExpires, outToken);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        custody.getTransferToken(GetToken(), keys, nodeid, outExpires, outToken);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    custody.getTransferToken(GetToken(), keys, nodeid, outExpires, outToken);
+
                 } else {
                     throw ex;
                 }
@@ -2960,13 +2919,11 @@ public class UddiHub implements Serializable {
             try {
                 custody.discardTransferToken(r);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        r.setAuthInfo(GetToken());
-                        custody.discardTransferToken(r);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    r.setAuthInfo(GetToken());
+                    custody.discardTransferToken(r);
+
                 } else {
                     throw ex;
                 }
@@ -2997,13 +2954,11 @@ public class UddiHub implements Serializable {
             try {
                 custody.transferEntities(te);
             } catch (Exception ex) {
-                if (ex instanceof DispositionReportFaultMessage) {
-                    DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                    if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                        token = null;
-                        te.setAuthInfo(GetToken());
-                        custody.transferEntities(te);
-                    }
+                if (isExceptionExpiration(ex)) {
+                    token = null;
+                    te.setAuthInfo(GetToken());
+                    custody.transferEntities(te);
+
                 } else {
                     throw ex;
                 }
@@ -3071,13 +3026,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findBinding((FindBinding) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((FindBinding) request).setAuthInfo(GetToken());
-                            response = inquiry.findBinding((FindBinding) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((FindBinding) request).setAuthInfo(GetToken());
+                        response = inquiry.findBinding((FindBinding) request);
+
                     } else {
                         throw ex;
                     }
@@ -3088,13 +3041,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findBusiness((FindBusiness) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((FindBusiness) request).setAuthInfo(GetToken());
-                            response = inquiry.findBusiness((FindBusiness) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((FindBusiness) request).setAuthInfo(GetToken());
+                        response = inquiry.findBusiness((FindBusiness) request);
+
                     } else {
                         throw ex;
                     }
@@ -3106,13 +3057,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findService((FindService) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((FindService) request).setAuthInfo(GetToken());
-                            response = inquiry.findService((FindService) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((FindService) request).setAuthInfo(GetToken());
+                        response = inquiry.findService((FindService) request);
+
                     } else {
                         throw ex;
                     }
@@ -3124,13 +3073,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findRelatedBusinesses((FindRelatedBusinesses) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((FindRelatedBusinesses) request).setAuthInfo(GetToken());
-                            response = inquiry.findRelatedBusinesses((FindRelatedBusinesses) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((FindRelatedBusinesses) request).setAuthInfo(GetToken());
+                        response = inquiry.findRelatedBusinesses((FindRelatedBusinesses) request);
+
                     } else {
                         throw ex;
                     }
@@ -3143,13 +3090,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findTModel((FindTModel) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((FindTModel) request).setAuthInfo(GetToken());
-                            response = inquiry.findTModel((FindTModel) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((FindTModel) request).setAuthInfo(GetToken());
+                        response = inquiry.findTModel((FindTModel) request);
+
                     } else {
                         throw ex;
                     }
@@ -3161,13 +3106,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.getBindingDetail((GetBindingDetail) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((GetBindingDetail) request).setAuthInfo(GetToken());
-                            response = inquiry.getBindingDetail((GetBindingDetail) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((GetBindingDetail) request).setAuthInfo(GetToken());
+                        response = inquiry.getBindingDetail((GetBindingDetail) request);
+
                     } else {
                         throw ex;
                     }
@@ -3180,13 +3123,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.getBusinessDetail((GetBusinessDetail) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((GetBusinessDetail) request).setAuthInfo(GetToken());
-                            response = inquiry.getBusinessDetail((GetBusinessDetail) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((GetBusinessDetail) request).setAuthInfo(GetToken());
+                        response = inquiry.getBusinessDetail((GetBusinessDetail) request);
+
                     } else {
                         throw ex;
                     }
@@ -3199,13 +3140,11 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.getServiceDetail((GetServiceDetail) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((GetServiceDetail) request).setAuthInfo(GetToken());
-                            response = inquiry.getServiceDetail((GetServiceDetail) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((GetServiceDetail) request).setAuthInfo(GetToken());
+                        response = inquiry.getServiceDetail((GetServiceDetail) request);
+
                     } else {
                         throw ex;
                     }
@@ -3218,12 +3157,10 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findBinding((FindBinding) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            response = inquiry.findBinding((FindBinding) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        response = inquiry.findBinding((FindBinding) request);
+
                     } else {
                         throw ex;
                     }
@@ -3236,12 +3173,10 @@ public class UddiHub implements Serializable {
                 try {
                     response = inquiry.findBinding((FindBinding) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            response = inquiry.findBinding((FindBinding) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        response = inquiry.findBinding((FindBinding) request);
+
                     } else {
                         throw ex;
                     }
@@ -3266,13 +3201,11 @@ public class UddiHub implements Serializable {
                 try {
                     publish.addPublisherAssertions((AddPublisherAssertions) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((AddPublisherAssertions) request).setAuthInfo(GetToken());
-                            publish.addPublisherAssertions((AddPublisherAssertions) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((AddPublisherAssertions) request).setAuthInfo(GetToken());
+                        publish.addPublisherAssertions((AddPublisherAssertions) request);
+
                     } else {
                         throw ex;
                     }
@@ -3283,13 +3216,11 @@ public class UddiHub implements Serializable {
                     ((DeleteBinding) request).setAuthInfo(GetToken());
                     publish.deleteBinding((DeleteBinding) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteBinding) request).setAuthInfo(GetToken());
-                            publish.deleteBinding((DeleteBinding) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteBinding) request).setAuthInfo(GetToken());
+                        publish.deleteBinding((DeleteBinding) request);
+
                     } else {
                         throw ex;
                     }
@@ -3300,13 +3231,11 @@ public class UddiHub implements Serializable {
                     ((DeleteBusiness) request).setAuthInfo(GetToken());
                     publish.deleteBusiness((DeleteBusiness) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteBusiness) request).setAuthInfo(GetToken());
-                            publish.deleteBusiness((DeleteBusiness) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteBusiness) request).setAuthInfo(GetToken());
+                        publish.deleteBusiness((DeleteBusiness) request);
+
                     } else {
                         throw ex;
                     }
@@ -3317,13 +3246,11 @@ public class UddiHub implements Serializable {
                     ((DeletePublisherAssertions) request).setAuthInfo(GetToken());
                     publish.deletePublisherAssertions((DeletePublisherAssertions) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteBusiness) request).setAuthInfo(GetToken());
-                            publish.deletePublisherAssertions((DeletePublisherAssertions) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteBusiness) request).setAuthInfo(GetToken());
+                        publish.deletePublisherAssertions((DeletePublisherAssertions) request);
+
                     } else {
                         throw ex;
                     }
@@ -3334,13 +3261,11 @@ public class UddiHub implements Serializable {
                     ((DeleteService) request).setAuthInfo(GetToken());
                     publish.deleteService((DeleteService) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteBusiness) request).setAuthInfo(GetToken());
-                            publish.deleteService((DeleteService) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteBusiness) request).setAuthInfo(GetToken());
+                        publish.deleteService((DeleteService) request);
+
                     } else {
                         throw ex;
                     }
@@ -3351,13 +3276,11 @@ public class UddiHub implements Serializable {
                     ((DeleteTModel) request).setAuthInfo(GetToken());
                     publish.deleteTModel((DeleteTModel) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteTModel) request).setAuthInfo(GetToken());
-                            publish.deleteTModel((DeleteTModel) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteTModel) request).setAuthInfo(GetToken());
+                        publish.deleteTModel((DeleteTModel) request);
+
                     } else {
                         throw ex;
                     }
@@ -3368,12 +3291,10 @@ public class UddiHub implements Serializable {
                 try {
                     response = publish.getAssertionStatusReport(GetToken(), stat);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            response = publish.getAssertionStatusReport(GetToken(), stat);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        response = publish.getAssertionStatusReport(GetToken(), stat);
+
                     } else {
                         throw ex;
                     }
@@ -3384,12 +3305,10 @@ public class UddiHub implements Serializable {
                 try {
                     response = publish.getPublisherAssertions(GetToken());
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            response = publish.getPublisherAssertions(GetToken());
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        response = publish.getPublisherAssertions(GetToken());
+
                     } else {
                         throw ex;
                     }
@@ -3400,13 +3319,11 @@ public class UddiHub implements Serializable {
                     ((GetRegisteredInfo) request).setAuthInfo(GetToken());
                     response = publish.getRegisteredInfo((GetRegisteredInfo) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((GetRegisteredInfo) request).setAuthInfo(GetToken());
-                            publish.getRegisteredInfo((GetRegisteredInfo) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((GetRegisteredInfo) request).setAuthInfo(GetToken());
+                        publish.getRegisteredInfo((GetRegisteredInfo) request);
+
                     } else {
                         throw ex;
                     }
@@ -3417,13 +3334,11 @@ public class UddiHub implements Serializable {
                     ((SaveBinding) request).setAuthInfo(GetToken());
                     response = publish.saveBinding((SaveBinding) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((SaveBinding) request).setAuthInfo(GetToken());
-                            publish.saveBinding((SaveBinding) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((SaveBinding) request).setAuthInfo(GetToken());
+                        publish.saveBinding((SaveBinding) request);
+
                     } else {
                         throw ex;
                     }
@@ -3434,13 +3349,11 @@ public class UddiHub implements Serializable {
                     ((SaveBusiness) request).setAuthInfo(GetToken());
                     response = publish.saveBusiness((SaveBusiness) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((SaveBusiness) request).setAuthInfo(GetToken());
-                            publish.saveBusiness((SaveBusiness) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((SaveBusiness) request).setAuthInfo(GetToken());
+                        publish.saveBusiness((SaveBusiness) request);
+
                     } else {
                         throw ex;
                     }
@@ -3451,13 +3364,11 @@ public class UddiHub implements Serializable {
                     ((SaveTModel) request).setAuthInfo(GetToken());
                     response = publish.saveTModel((SaveTModel) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((SaveTModel) request).setAuthInfo(GetToken());
-                            publish.saveTModel((SaveTModel) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((SaveTModel) request).setAuthInfo(GetToken());
+                        publish.saveTModel((SaveTModel) request);
+
                     } else {
                         throw ex;
                     }
@@ -3468,13 +3379,11 @@ public class UddiHub implements Serializable {
                     ((SaveService) request).setAuthInfo(GetToken());
                     response = publish.saveService((SaveService) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((SaveService) request).setAuthInfo(GetToken());
-                            publish.saveService((SaveService) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((SaveService) request).setAuthInfo(GetToken());
+                        publish.saveService((SaveService) request);
+
                     } else {
                         throw ex;
                     }
@@ -3487,14 +3396,12 @@ public class UddiHub implements Serializable {
                     publish.setPublisherAssertions(GetToken(), list);
                     response = list.value;
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((SetPublisherAssertions) request).setAuthInfo(GetToken());
-                            publish.setPublisherAssertions(GetToken(), list);
-                            response = list.value;
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((SetPublisherAssertions) request).setAuthInfo(GetToken());
+                        publish.setPublisherAssertions(GetToken(), list);
+                        response = list.value;
+
                     } else {
                         throw ex;
                     }
@@ -3521,13 +3428,11 @@ public class UddiHub implements Serializable {
                     ((DiscardTransferToken) request).setAuthInfo(GetToken());
                     custody.discardTransferToken((DiscardTransferToken) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DiscardTransferToken) request).setAuthInfo(GetToken());
-                            custody.discardTransferToken((DiscardTransferToken) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DiscardTransferToken) request).setAuthInfo(GetToken());
+                        custody.discardTransferToken((DiscardTransferToken) request);
+
                     } else {
                         throw ex;
                     }
@@ -3546,16 +3451,14 @@ public class UddiHub implements Serializable {
                     tt.setExpirationTime(xcal.value);
                     response = tt;
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, ttoken);
-                            tt.setNodeID(node.value);
-                            tt.setOpaqueToken(ttoken.value);
-                            tt.setExpirationTime(xcal.value);
-                            response = tt;
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        custody.getTransferToken(GetToken(), r.getKeyBag(), node, xcal, ttoken);
+                        tt.setNodeID(node.value);
+                        tt.setOpaqueToken(ttoken.value);
+                        tt.setExpirationTime(xcal.value);
+                        response = tt;
+
                     } else {
                         throw ex;
                     }
@@ -3566,13 +3469,11 @@ public class UddiHub implements Serializable {
                     ((TransferEntities) request).setAuthInfo(GetToken());
                     custody.transferEntities((TransferEntities) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((TransferEntities) request).setAuthInfo(GetToken());
-                            custody.transferEntities((TransferEntities) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((TransferEntities) request).setAuthInfo(GetToken());
+                        custody.transferEntities((TransferEntities) request);
+
                     } else {
                         throw ex;
                     }
@@ -3598,13 +3499,11 @@ public class UddiHub implements Serializable {
                     ((DeleteSubscription) request).setAuthInfo(GetToken());
                     subscription.deleteSubscription((DeleteSubscription) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((DeleteSubscription) request).setAuthInfo(GetToken());
-                            subscription.deleteSubscription((DeleteSubscription) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((DeleteSubscription) request).setAuthInfo(GetToken());
+                        subscription.deleteSubscription((DeleteSubscription) request);
+
                     } else {
                         throw ex;
                     }
@@ -3615,13 +3514,11 @@ public class UddiHub implements Serializable {
                     ((GetSubscriptionResults) request).setAuthInfo(GetToken());
                     response = subscription.getSubscriptionResults((GetSubscriptionResults) request);
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            ((GetSubscriptionResults) request).setAuthInfo(GetToken());
-                            subscription.getSubscriptionResults((GetSubscriptionResults) request);
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        ((GetSubscriptionResults) request).setAuthInfo(GetToken());
+                        subscription.getSubscriptionResults((GetSubscriptionResults) request);
+
                     } else {
                         throw ex;
                     }
@@ -3632,13 +3529,11 @@ public class UddiHub implements Serializable {
 
                     response = subscription.getSubscriptions(GetToken());
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
 
-                            response = subscription.getSubscriptions(GetToken());
-                        }
+                        response = subscription.getSubscriptions(GetToken());
+
                     } else {
                         throw ex;
                     }
@@ -3652,13 +3547,11 @@ public class UddiHub implements Serializable {
                     subscription.saveSubscription(GetToken(), h);
                     response = h.value;
                 } catch (Exception ex) {
-                    if (ex instanceof DispositionReportFaultMessage) {
-                        DispositionReportFaultMessage f = (DispositionReportFaultMessage) ex;
-                        if (f.getFaultInfo().countainsErrorCode(DispositionReport.E_AUTH_TOKEN_EXPIRED) || ex.getMessage().contains(DispositionReport.E_AUTH_TOKEN_EXPIRED)) {
-                            token = null;
-                            subscription.saveSubscription(GetToken(), h);
-                            response = h.value;
-                        }
+                    if (isExceptionExpiration(ex)) {
+                        token = null;
+                        subscription.saveSubscription(GetToken(), h);
+                        response = h.value;
+
                     } else {
                         throw ex;
                     }
@@ -3714,15 +3607,15 @@ public class UddiHub implements Serializable {
         }
         return 15 * 60 * 1000;
     }
-    
+
     /**
-     * If false, the configuration page will be available from anywhere.
-     * If true, it will only be accessible from the server hosting juddi-gui. 
-     * if not defined, the result is true.
-     * @return 
+     * If false, the configuration page will be available from anywhere. If
+     * true, it will only be accessible from the server hosting juddi-gui. if
+     * not defined, the result is true.
+     *
+     * @return
      */
-    public boolean isAdminLocalhostOnly()
-    {
+    public boolean isAdminLocalhostOnly() {
         return clientConfig.getConfiguration().getBoolean(PROP_ADMIN_LOCALHOST_ONLY, true);
     }
 }
