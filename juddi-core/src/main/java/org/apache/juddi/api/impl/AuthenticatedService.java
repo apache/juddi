@@ -81,7 +81,7 @@ public abstract class AuthenticatedService {
 			// expire tokens after # minutes of inactivity
 			// compare the time in milli-seconds
 			if (now.getTime() > modelAuthToken.getLastUsed().getTime() + allowedMinutesOfInactivity * 60000l) {
-				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to inactivity");
+				logger.info("AUDIT: FAILTURE Token " + modelAuthToken.getAuthToken() + " expired due to inactivity "+getRequestorsIPAddress());
 				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
 			}
 		}
@@ -89,13 +89,16 @@ public abstract class AuthenticatedService {
 			// expire tokens when max age is reached
 			// compare the time in milli-seconds
 			if (now.getTime() > modelAuthToken.getCreated().getTime()  + maxMinutesOfAge * 60000l) {
-				logger.debug("Token " + modelAuthToken.getAuthToken() + " expired due to old age");
+                            
+				logger.info("AUDIT: FAILURE - Token " + modelAuthToken.getAuthorizedName() + " expired due to old age " + getRequestorsIPAddress());
 				modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
 			}
 		}
 
-		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED)
+		if (modelAuthToken.getTokenState() == AUTHTOKEN_RETIRED){
+                    
 			throw new AuthTokenExpiredException(new ErrorMessage("errors.auth.AuthTokenExpired"));
+                }
 		if (ctx !=null){
                     try{
                         boolean check=true;
@@ -118,7 +121,7 @@ public abstract class AuthenticatedService {
                                     !modelAuthToken.getIPAddress().equalsIgnoreCase(req.getRemoteAddr()))
                             {
                                 modelAuthToken.setTokenState(AUTHTOKEN_RETIRED);
-                                logger.error("Security Alert - Attempt to use issued auth token from a different IP address, user " +
+                                logger.error("AUDIT FAILURE - Security Alert - Attempt to use issued auth token from a different IP address, user " +
                                         modelAuthToken.getAuthorizedName() + ", issued IP " + modelAuthToken.getIPAddress() + 
                                         ", attempted use from " + req.getRemoteAddr() + ", forcing reauthentication.");
                                 throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
@@ -137,12 +140,14 @@ public abstract class AuthenticatedService {
 		UddiEntityPublisher entityPublisher = authenticator.identify(authInfo, modelAuthToken.getAuthorizedName());
 		
 		// Must make sure the returned publisher has all the necessary fields filled
-		if (entityPublisher == null)
+		if (entityPublisher == null) {
+                    logger.warn("AUDIT FAILURE - Auth token invalided, publisher does not exist "+ getRequestorsIPAddress());
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
-
-		if (entityPublisher.getAuthorizedName() == null)
+                }
+		if (entityPublisher.getAuthorizedName() == null){
+                    logger.warn("AUDIT FAILURE - Auth token invalided, username does exist"+ getRequestorsIPAddress());
 			throw new AuthTokenRequiredException(new ErrorMessage("errors.auth.AuthInvalid"));
-
+                }
 		// Auth token is being used.  Adjust appropriate values so that it's internal 'expiration clock' is reset.
 		modelAuthToken.setLastUsed(new Date());
 		modelAuthToken.setNumberOfUses(modelAuthToken.getNumberOfUses() + 1);
