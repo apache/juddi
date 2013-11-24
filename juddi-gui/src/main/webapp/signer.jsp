@@ -30,7 +30,7 @@
             You're about to digitally sign the <b><%=StringEscapeUtils.escapeHtml(itemtype)%></b> identified by the key <b><%=StringEscapeUtils.escapeHtml(id)%></b>.<br>
             By electronically signing this UDDI entry, other users will then be able to verify that this entry hasn't been modified.<br>
 
-            <applet code="org.apache.juddi.gui.dsig.XmlSigApplet2" archive="applets/juddi-gui-dsig-all.jar" MAYSCRIPT></applet> 
+            <applet code="org.apache.juddi.gui.dsig.XmlSigApplet2" archive="applets/juddi-gui-dsig-all.jar" MAYSCRIPT height="300px" width="400px"></applet> 
             <script type="text/javascript">
                 $.get("ajax/toXML.jsp?id=<%=id%>&type=<%=itemtype%>", function(data){
                     $("#data").val(data);
@@ -136,7 +136,7 @@
                     //display:none  <a class="btn" href="javascript:go();">Go</a>
             </script>
 
-            <textarea name="data" rows="15" cols="80" id="data" style=""><%=ResourceLoader.GetResource(session, "items.loading")%>....</textarea>
+            <textarea class="hide" name="data" rows="15" cols="80" id="data" style=""><%=ResourceLoader.GetResource(session, "items.loading")%>....</textarea>
         </div>
 
     </div>
