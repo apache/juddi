@@ -103,7 +103,7 @@ public class UDDIInquiryImpl extends AuthenticatedService implements UDDIInquiry
 
 			List<?> keysFound = InquiryHelper.findBinding(body, findQualifiers, em);
 
-			if (keysFound.size() == 0) {
+			if (keysFound!=null && keysFound.size() == 0) {
 			    if (body.getServiceKey() != null) {
 			        // Check that we were passed a valid serviceKey per
         			// 5.1.12.4 of the UDDI v3 spec

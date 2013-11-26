@@ -49,9 +49,19 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "keyedReference")
 public class KeyedReference implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = 2695435294724172036L;
-	@XmlAttribute(required = true)
+    
+    public KeyedReference() {
+    }
+
+    public KeyedReference(String key, String name, String value) {
+        tModelKey = key;
+        keyName = name;
+        keyValue = value;
+    }
+    
+    @XmlTransient
+    private static final long serialVersionUID = 2695435294724172036L;
+    @XmlAttribute(required = true)
     protected String tModelKey;
     @XmlAttribute
     protected String keyName;

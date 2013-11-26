@@ -20,6 +20,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.v3.client.UDDIConstants;
+import org.apache.juddi.v3.client.ext.wsdm.WSDMQosConstants;
 import org.apache.juddi.v3.tck.TckBindingTemplate;
 import org.apache.juddi.v3.tck.TckBusiness;
 import org.apache.juddi.v3.tck.TckBusinessService;
@@ -31,6 +33,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.uddi.api_v3.FindBinding;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.IdentifierBag;
+import org.uddi.api_v3.KeyedReference;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
@@ -114,4 +120,22 @@ public class API_050_BindingTemplateTest
 			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
 		}
 	}
+        /**
+         * https://issues.apache.org/jira/browse/JUDDI-728
+         * @throws Exception 
+         */
+    @Test
+    public void testJUDDI_728() throws Exception {
+        UDDIInquiryImpl inquiry = new UDDIInquiryImpl();
+        FindBinding fb = new FindBinding();
+        fb.setAuthInfo(authInfoJoe);
+        org.uddi.api_v3.FindQualifiers fq = new org.uddi.api_v3.FindQualifiers();
+        fq.getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
+        fb.setFindQualifiers(fq);
+        fb.setFindTModel(new FindTModel());
+        fb.getFindTModel().setIdentifierBag(new IdentifierBag());
+        fb.getFindTModel().getIdentifierBag().getKeyedReference().add(new KeyedReference(WSDMQosConstants.METRIC_FAULT_COUNT_KEY, "%", "%"));
+        inquiry.findBinding(fb);
+    }
 }
+

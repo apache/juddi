@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * @see org.apache.juddi.v3.client.UDDIConstants
  * <p>Java class for findQualifiers complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

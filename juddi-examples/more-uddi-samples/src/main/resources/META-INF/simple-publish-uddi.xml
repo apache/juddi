@@ -21,7 +21,7 @@
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
                 <custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
                 <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
-                <publishUrl>http://localhost:8888/juddiv3/services/publish</publishUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
                 <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
                 <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
                 <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>

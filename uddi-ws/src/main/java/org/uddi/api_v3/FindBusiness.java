@@ -30,6 +30,116 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * · authInfo: This optional argument is an element that contains an
+ * authentication token. Registries that wish to restrict who can perform an
+ * inquiry in them typically require authInfo for this call.<br><br>
+ *
+ * · categoryBag: This is a list of category references in the form of
+ * keyedReference elements and keyedReferenceGroup structures. The returned
+ * businessList contains businessInfo elements matching all of the categories
+ * passed (logical AND by default). Specifying the appropriate findQualifiers
+ * can override this behavior. Matching rules for each can be found in Section
+ * 5.1.7 Matching Rules for keyedReferences and keyedReferenceGroups.<br><br>
+ *
+ * · discoveryURLs: This is a list of discoveryURL structures to be matched
+ * against the discoveryURL data associated with registered businessEntity
+ * information. To search for URL without regard to useType attribute values,
+ * omit the useType attribute or pass it as an empty attribute. If useType
+ * values are included, the match occurs only on registered information that
+ * matches both the useType and URL value. The returned businessList contains
+ * businessInfo structures matching any of the URL's passed (logical OR).<br><br>
+ *
+ * · identifierBag: This is a list of business identifier references in the form
+ * of keyedReference elements. The returned businessList contains businessInfo
+ * structures matching any of the identifiers passed (logical OR by default).
+ * Specifying the appropriate findQualifiers can override this behavior.
+ * Matching rules can be found in Section 5.1.7 Matching Rules for
+ * keyedReferences and keyedReferenceGroups.<br><br>
+ *
+ * · findQualifiers: This collection of findQualifier elements can be used to
+ * alter the default behavior of search functionality. See the Section 5.1.4
+ * Find Qualifiers, for more information.<br><br>
+ *
+ * · find_relatedBusinesses: This argument is an embedded inquiry and limits the
+ * search results to those businesses that are related to a specified business
+ * in a specified way. The result is comprised of an intersection of the
+ * businesses located with this embedded inquiry and the businesses discovered
+ * using the remaining inquiry criteria. The standard syntax and arguments for
+ * find_relatedBusinesses apply here. Note that the authInfo argument to this
+ * embedded find_relatedBusinesses argument is always ignored. Large result set
+ * behavior involving the return of a listDescription does not apply within an
+ * embedded argument. If the intermediate result set produced is too large, then
+ * the overall query will return E_resultSetTooLarge with an indication that the
+ * embedded query returned too many results. If an E_unsupported error occurs as
+ * part of processing this embedded argument, it is propagated up to the
+ * containing (calling) API. See Section 5.1.11 find_relatedBusinesses, for
+ * further information.<br><br>
+ *
+ * · find_tModel: This argument provides an alternative or additional way of
+ * specifying tModelKeys that are used to find businesses which have service
+ * bindings with specific technical fingerprints as described above for the
+ * tModelBag element. When specified, the find_tModel argument is treated as an
+ * embedded inquiry that is performed prior to searching for businesses. The
+ * tModelKeys found are those whose tModels match the criteria contained within
+ * the find_tModel element. The tModelKeys found are added to the (possibly
+ * empty) collection specified by the tModelBag prior to finding qualified
+ * businesses. Note that the authInfo argument to this embedded find_tModel
+ * argument is always ignored. Large result set behavior involving the return of
+ * a listDescription does not apply within an embedded argument. If the
+ * intermediate result set produced is too large, then the overall query will
+ * return E_resultSetTooLarge with an indication that the embedded query
+ * returned too many results. If an E_unsupported error occurs as part of
+ * processing this embedded argument, it is propagated up to the containing
+ * (calling) API.<br><br>
+ *
+ * · listHead: This optional integer value is used to indicate which item SHOULD
+ * be returned as the head of the list. The client may request a subset of the
+ * matching data by indicating which item in the resultant set constitutes the
+ * beginning of the returned data. The use of the listDescription element is
+ * mutually exclusive to the use of the truncated attribute that simply
+ * indicates a truncated result list in the Inquiry APIs. See Section 5.1.5 Use
+ * of listDescription, for a detailed description of the listHead argument.<br><br>
+ *
+ * · maxRows: This optional integer value allows the requesting program to limit
+ * the number of results returned. This argument can be used in conjunction with
+ * the listHead argument.<br><br>
+ *
+ * · name: This optional collection of string values represents one or more
+ * names potentially qualified with xml:lang attributes. Since "exactMatch" is
+ * the default behavior, the value supplied for the name argument must be an
+ * exact match. If the "approximateMatch" findQualifier is used together with an
+ * appropriate wildcard character in the name, then any businessEntity matching
+ * this name with wildcards and the other criteria will be referenced in the
+ * results. For more on wildcard matching, see Section 5.1.6 About Wildcards.
+ * The businessList returned contains businessInfo structures for businesses
+ * whose name matches the value(s) passed (lexical-order match – i.e., leftmost
+ * in left-to-right languages). If multiple name values are passed, the match
+ * occurs on a logical OR basis. Each name MAY be marked with an xml:lang
+ * adornment. If a language markup is specified, the search results report a
+ * match only on those entries that match both the name value and language
+ * criteria. The match on language is a leftmost case-insensitive comparison of
+ * the characters supplied. This allows one to find all businesses whose name
+ * begins with an "A" and are expressed in any dialect of French, for example.
+ * Values which can be passed in the language criteria adornment MUST obey the
+ * rules governing the xml:lang data type as defined in Section 3.3.2.3 name.<br><br>
+ *
+ * · tModelBag: Every Web service instance exposed by a registered
+ * businessEntity is represented in UDDI by a bindingTemplate contained within
+ * the businessEntity. Each bindingTemplate contains a collection of tModel
+ * references called its "technical fingerprint" that specifies its type. The
+ * tModelBag argument is a collection of tModelKey elements specifying that the
+ * search results are to be limited to businesses that expose Web services with
+ * technical fingerprints that match.<br><br>
+ *
+ * If a find_tModel argument is specified (see above), it is treated as an
+ * embedded inquiry. The tModelKeys returned as a result of this embedded
+ * find_tModel argument are used as if they had been supplied in a tModelBag
+ * argument. Changing the order of the keys in the collection or specifying the
+ * same tModelKey more than once does not change the behavior of the find.  *
+ * By default, only bindingTemplates that contain all of the tModelKeys in the
+ * technical fingerprint match (logical AND). Specifying appropriate
+ * findQualifiers can override this behavior so that bindingTemplates containing
+ * any of the specified tModelKeys match (logical OR).<br><br>
  * <p>Java class for find_business complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
