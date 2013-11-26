@@ -368,20 +368,20 @@ public class ClientConfig
         p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILETYPE, this.config.getString("client.signature.signingKeyStoreType",""));
     
         if (this.config.getBoolean("client.signature.signingKeyPassword[@isPasswordEncrypted]", false)) {
-            String enc = this.config.getString("client.signature.signingKeyPassword");
-            String prov = this.config.getString("client.signature.signingKeyPassword[@cryptoProvider]");
+            String enc = this.config.getString("client.signature.signingKeyPassword","");
+            String prov = this.config.getString("client.signature.signingKeyPassword[@cryptoProvider]","");
             p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
         } else {
             log.warn("Hey, you should consider encrypting your key password!");
-            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.getString("client.signature.signingKeyPassword"));
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_PASSWORD, this.config.getString("client.signature.signingKeyPassword",""));
         }
         if (this.config.getBoolean("client.signature.signingKeyStoreFilePassword[@isPasswordEncrypted]", false)) {
-            String enc = this.config.getString("client.signature.signingKeyStoreFilePassword");
-            String prov = this.config.getString("client.signature.signingKeyStoreFilePassword[@cryptoProvider]");
+            String enc = this.config.getString("client.signature.signingKeyStoreFilePassword","");
+            String prov = this.config.getString("client.signature.signingKeyStoreFilePassword[@cryptoProvider]","");
             p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
         } else {
             log.warn("Hey, you should consider encrypting your keystore password!");
-            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, this.config.getString("client.signature.signingKeyStoreFilePassword"));
+            p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_FILE_PASSWORD, this.config.getString("client.signature.signingKeyStoreFilePassword",""));
         }
 
         p.setProperty(DigSigUtil.SIGNATURE_KEYSTORE_KEY_ALIAS, this.config.getString("client.signature.signingKeyAlias",""));
@@ -397,12 +397,12 @@ public class ClientConfig
       
 
         if (this.config.getBoolean("client.signature.trustStorePassword[@isPasswordEncrypted]", false)) {
-            String enc = this.config.getString("client.signature.trustStorePassword");
-            String prov = this.config.getString("client.signature.trustStorePassword[@cryptoProvider]");
+            String enc = this.config.getString("client.signature.trustStorePassword","");
+            String prov = this.config.getString("client.signature.trustStorePassword[@cryptoProvider]","");
             p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, CryptorFactory.getCryptor(prov).decrypt(enc));
         } else {
             log.warn("Hey, you should consider encrypting your trust store password!");
-            p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, this.config.getString("client.signature.trustStorePassword"));
+            p.setProperty(DigSigUtil.TRUSTSTORE_FILE_PASSWORD, this.config.getString("client.signature.trustStorePassword",""));
         }
 
         return p;
