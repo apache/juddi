@@ -59,7 +59,6 @@ namespace org.apache.juddi.v3.client.subscription
     /// </code></example>
     /// @author &lt;a href=&quot;mailto:alexoree@apache.org&quot;&gt;Alex O&#39;Ree&lt;/a&gt;
     /// @since 3.2
-
     [ServiceBehaviorAttribute(AutomaticSessionShutdown = false, ConcurrencyMode = ConcurrencyMode.Single,
         //DOES NOT WORK ON MONO 
        // Name = "SubscriptionCallbackListener",

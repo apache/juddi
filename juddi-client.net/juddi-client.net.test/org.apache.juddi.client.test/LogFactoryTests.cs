@@ -25,6 +25,7 @@ namespace juddi_client.net.test
         [Test]
         public void testLogFactory2()
         {
+            Assume.That(!IsLinux);
             Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG", LogLevel.INFO, null);
             Assert.NotNull(log);
             log.info("test");
@@ -34,6 +35,7 @@ namespace juddi_client.net.test
         [Test]
         public void testLogFactory3()
         {
+            Assume.That(!IsLinux);
             if (File.Exists("./testlog.log"))
                 File.Delete("./testlog.log");
             Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG,FILE", LogLevel.INFO, "./testlog.log");
@@ -68,7 +70,7 @@ namespace juddi_client.net.test
         [Test]
         public void testLogFactory5()
         {
-
+            Assume.That(!IsLinux);
             Log log = LogFactory.getLog("testLogFactory", "EVENTLOG", LogLevel.INFO, null);
             Assert.NotNull(log);
             log.info("test");
@@ -81,6 +83,16 @@ namespace juddi_client.net.test
             catch (Exception ex) { }
             Assume.That(elog != null);
             Assert.True(elog.Entries.Count > 1);
+        }
+
+
+        public static bool IsLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
         }
     }
 }
