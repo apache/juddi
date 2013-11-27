@@ -52,7 +52,7 @@ namespace juddi_client.net.test
             ReadWSDL wsi = new ReadWSDL();
             try
             {
-                org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.readWSDL(null);
+                tDefinitions wsdlDefinition = wsi.readWSDL(null);
             }
             catch (ArgumentNullException)
             {
@@ -80,7 +80,7 @@ namespace juddi_client.net.test
 
            
             ReadWSDL wsi = new ReadWSDL();
-            org.xmlsoap.schemas.easyWsdl.tDefinitions wsdlDefinition = wsi.readWSDL(
+            tDefinitions wsdlDefinition = wsi.readWSDL(
                pathAndFile
                 );
             Properties properties1 = new Properties();

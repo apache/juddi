@@ -1,11 +1,12 @@
 ﻿using NUnit.Framework;
-using org.apache.juddi.v3.client.log;
+using org.apache.juddi.v3.client;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using org.apache.juddi.v3.client.log;
 
 namespace juddi_client.net.test
 {
@@ -15,7 +16,7 @@ namespace juddi_client.net.test
         [Test]
         public void testLogFactory()
         {
-            Log log = LogFactory.getLog("testLogFactory", "CONSOLE", org.apache.juddi.v3.client.LogLevel.INFO, null);
+            Log log = LogFactory.getLog("testLogFactory", "CONSOLE", LogLevel.INFO, null);
             Assert.NotNull(log);
             log.info("test");
             log.info("test", new Exception("hi"));
@@ -24,7 +25,7 @@ namespace juddi_client.net.test
         [Test]
         public void testLogFactory2()
         {
-            Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG", org.apache.juddi.v3.client.LogLevel.INFO, null);
+            Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG", LogLevel.INFO, null);
             Assert.NotNull(log);
             log.info("test");
             log.info("test", new Exception("hi"));
@@ -35,7 +36,7 @@ namespace juddi_client.net.test
         {
             if (File.Exists("./testlog.log"))
                 File.Delete("./testlog.log");
-            Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG,FILE", org.apache.juddi.v3.client.LogLevel.INFO, "./testlog.log");
+            Log log = LogFactory.getLog("testLogFactory", "CONSOLE,EVENTLOG,FILE", LogLevel.INFO, "./testlog.log");
             Assert.NotNull(log);
             log.info("test");
             log.info("test", new Exception("hi"));
@@ -56,7 +57,7 @@ namespace juddi_client.net.test
         {
             if (File.Exists("./testlog.log"))
                 File.Delete("./testlog.log");
-            Log log = LogFactory.getLog("testLogFactory", "FILE", org.apache.juddi.v3.client.LogLevel.INFO, "./testlog.log");
+            Log log = LogFactory.getLog("testLogFactory", "FILE", LogLevel.INFO, "./testlog.log");
             Assert.NotNull(log);
             log.info("test");
             log.info("test", new Exception("hi"));
@@ -68,7 +69,7 @@ namespace juddi_client.net.test
         public void testLogFactory5()
         {
 
-            Log log = LogFactory.getLog("testLogFactory", "EVENTLOG", org.apache.juddi.v3.client.LogLevel.INFO, null);
+            Log log = LogFactory.getLog("testLogFactory", "EVENTLOG", LogLevel.INFO, null);
             Assert.NotNull(log);
             log.info("test");
             log.info("test", new Exception("hi"));

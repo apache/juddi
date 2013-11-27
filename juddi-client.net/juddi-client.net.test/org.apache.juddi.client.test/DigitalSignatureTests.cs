@@ -16,7 +16,7 @@ namespace juddi_client.net.test
     [TestFixture]
     public class DigitalSignatureTests
     {
-        org.apache.juddi.v3.client.cryptor.DigSigUtil ds = null;
+        DigSigUtil ds = null;
         string path = "";
         bool serialize = false;
         public DigitalSignatureTests()

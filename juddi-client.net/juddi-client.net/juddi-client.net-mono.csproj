@@ -72,6 +72,7 @@
     <Compile Include="org.apache.juddi.v3.client.cryptor\CryptorFactory.cs" />
     <Compile Include="org.apache.juddi.v3.client.cryptor\DigSigUtil.cs" />
     <Compile Include="org.apache.juddi.v3.client.cryptor\TripleDESCryptor.cs" />
+    <Compile Include="org.apache.juddi.v3.client.ext.wsdm\WSDMQosConstants.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\easyWsdl.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\ServiceRegistrationResponse.cs" />
     <Compile Include="org.apache.juddi.v3.client.mapping\URLLocalizer.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="org.apache.juddi.v3.client.subscription\UnableToSignException.cs" />
     <Compile Include="org.apache.juddi.v3.client.subscription\UnexpectedResponseException.cs" />
     <Compile Include="org.apache.juddi.v3.client.transport\AspNetTransport.cs" />
+    <Compile Include="org.apache.juddi.v3.client.util\TModelInstanceDetailsComparator.cs" />
     <Compile Include="org.apache.juddi.v3.client\ConsoleLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\EventLogger.cs" />
     <Compile Include="org.apache.juddi.v3.client\FileLogger.cs" />
