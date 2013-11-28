@@ -23,8 +23,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 /**
- * This is for printing UDDI v3 objects from the spec
+ * This is for printing UDDI v3 objects from the spec.<br><br>
+ * Note: This class should be used for troubleshooting purposes only.
+ * To marshall and unmarshall entites, use JAXB.marshal
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @see javax.xml.bind.JAXB
  * @param <T>
  */
 public class PrintUDDI<T> {
@@ -43,7 +46,17 @@ public class PrintUDDI<T> {
 		return marshaller;
 	}
 	
+        /**
+         * Prints a UDDI entity. WARNING only use for debugging purposes. Resultant text
+         * may not be unmarshalable. Use JAXB.marshall(entity) if need to be able to unmarshall 
+         * the content again.
+         * @param UDDIEntity
+         * @return Marshalled XML as a string
+         * @throws IllegalArgumentException
+         */
 	public String print(T UDDIEntity) {
+                if (UDDIEntity==null)
+                    throw new IllegalArgumentException();
 		String xml = "";
 		@SuppressWarnings("unchecked")
 		Class<T> type = (Class<T>) UDDIEntity.getClass();

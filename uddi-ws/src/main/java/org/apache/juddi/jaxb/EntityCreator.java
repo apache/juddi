@@ -18,6 +18,7 @@ package org.apache.juddi.jaxb;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -32,14 +33,38 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * This class is the logical opposite of PrintUDDI. It will create
+ * UDDI objects from a string or file.
+ * @see PrintUDDI
+ * @author unknown, but probably Kurt Stam
+ */
 public class EntityCreator {
 
+    public static final String UDDIv3_Package="org.uddi.api_v3";
+    public static final String JUDDIv3_Package="org.apache.juddi.api_v3";
+    
 	private static Log logger = LogFactory.getLog(EntityCreator.class);
 	
+        /**
+         * Builds UDDI data from a document, URL, file, etc
+         * @param fileName
+         * @param thePackage
+         * @return
+         * @throws JAXBException
+         * @throws IOException 
+         */
 	@SuppressWarnings("rawtypes")
 	public static Object buildFromDoc(String fileName, String thePackage) throws JAXBException, IOException {
 		Object obj = null;
-		URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+                File f = new File(fileName);
+                URL url=null;
+                if (f.exists()){
+                    url = f.toURI().toURL();
+                }
+                if (url==null) {
+		    url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+                }
 		if (url==null) {
 			logger.error("Could not find resource: " + fileName);
 		} else {
@@ -52,6 +77,14 @@ public class EntityCreator {
 		return obj;
 	}
 
+        /**
+         * converts a XML in a String to a UDDI entity
+         * @param source
+         * @param thePackage
+         * @return
+         * @throws JAXBException
+         * @throws IOException 
+         */
 	@SuppressWarnings("rawtypes")
 	public static Object buildFromString(String source, String thePackage) throws JAXBException, IOException {
 		Object obj = null;
@@ -61,6 +94,14 @@ public class EntityCreator {
 		return obj;
 	}
 		
+        /**
+         * Only use this class for debugging purposes. Output may not be valid XML
+         * @param obj
+         * @param thePackage
+         * @throws JAXBException
+         * @deprecated
+         */
+        @Deprecated
 	public static void outputEntity(Object obj, String thePackage) throws JAXBException {
 		JAXBContext jc = JAXBContext.newInstance(thePackage);
 		Marshaller marshaller = jc.createMarshaller();

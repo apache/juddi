@@ -41,6 +41,11 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.juddi</groupId>
+			<artifactId>juddi-migration-tool</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
             <groupId>org.apache.juddi</groupId>
             <artifactId>uddi-tck</artifactId>
             <type>test-jar</type>

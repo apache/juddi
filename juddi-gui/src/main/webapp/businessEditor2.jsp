@@ -160,7 +160,7 @@
                                     out.write("<div id=\"" + PostBackConstants.NAME + i + "\" style=\"border-width:1px; border-style:solid\" >");
                                     out.write("<div style=\"float:left; height:100%\"><a href=\"javascript:Remove('Name" + i + "');\"><i class=\"icon-trash icon-large\"></i></a></div>");
                                     out.write("<div style=\"float:left\"> " + ResourceLoader.GetResource(session, "items.value") + ":&nbsp;</div>"
-                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + (bd.getName().get(i).getValue()!=null ? StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) : "") + "</div>");
+                                            + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.VALUE + "\">" + (bd.getName().get(i).getValue() != null ? StringEscapeUtils.escapeHtml(bd.getName().get(i).getValue()) : "") + "</div>");
                                     out.write("<div style=\"float:left\">" + ResourceLoader.GetResource(session, "items.lang") + "&nbsp;</div>"
                                             + "<div class=\"edit\" id=\"" + PostBackConstants.NAME + i + PostBackConstants.LANG + "\">");
                                     if (bd.getName().get(i).getLang() != null) {
@@ -523,10 +523,10 @@
                                 out.write(ResourceLoader.GetResource(session, "items.signed") + " " + bd.getSignature().size());
                         %>
                         <table class="table table-hover">
-                             <tr><th>#</th>
-                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
-                            <th></th>
-                            <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
+                            <tr><th>#</th>
+                                <th><%=ResourceLoader.GetResource(session, "pages.signatures.signedby")%></th>
+                                <th></th>
+                                <th><%=ResourceLoader.GetResource(session, "pages.signatures.status")%></th></tr>
 
                             <%
                                 for (int k = 0; k < bd.getSignature().size(); k++) {
@@ -560,12 +560,18 @@
                     </div>
 
                     <div class="tab-pane" id="opinfo">
+                        <%
+                            if (!newitem) {
+                        %>
                         <script type="text/javascript">
                             $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getBusinessKey())%>", function(data) {
                                 $("#opinfodiv").html(data);
                             })
                         </script>
                         <div id="opinfodiv"></div>
+                        <%
+                            }
+                        %>
 
                     </div>
                     <div class="tab-pane" id="relations">
@@ -610,7 +616,10 @@
                 <%
                     if (bd.getSignature().isEmpty()) {
                 %>
-                <a class="btn btn-primary " href="javascript:saveBusiness();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
+                <a class="btn btn-primary " href="javascript:saveBusiness();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.s                    e
+
+                    
+                        )%></a>
                 <%  } else {
                 %>
                 <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
@@ -624,7 +633,7 @@
                 <a class="btn btn-info " href="editSubscription.jsp?bizid=<%=URLEncoder.encode(bizid, "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.subscribe.description")%>"><i class="icon-rss icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.subscribe")%></a> |
                 <a class="btn btn-warning "  href="transfer.jsp?biz=<%=URLEncoder.encode(bizid, "UTF-8")%>" title="<%=ResourceLoader.GetResource(session, "actions.transfer.description")%>"><i class="icon-exchange icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.transfer")%></a> |
                 <a class="btn "  href="javascript:ViewAsXML();"><i class="icon-screenshot icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.asxml")%></a>
-                
+
                 <%
                         //TODO for 3.2.1 <a class="btn "  href="javascript:Copy();"><i class="icon-copy icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.copy")% ></a>
                     }
@@ -690,9 +699,9 @@
         </div>
     </div>
     <script type="text/javascript">
-       
+
     </script>
-        
+
     <%
         }
     %>

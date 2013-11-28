@@ -89,7 +89,7 @@ public class WSDLinaUDDIRegistryTest {
 		
 		//now compare to the spec example
 		String porttypeXml = "wsdl/uddiv3-xml/3_2_1_porttype.xml";
-		TModel specTModel = (org.uddi.api_v3.TModel)EntityCreator.buildFromDoc(porttypeXml, "org.uddi.api_v3");
+		TModel specTModel = (org.uddi.api_v3.TModel)EntityCreator.buildFromDoc(porttypeXml, EntityCreator.UDDIv3_Package);
 		
 		//making sure the names are the same
 		Assert.assertEquals(specTModel.getName().getValue(),tModel.getName().getValue());
@@ -139,7 +139,7 @@ public class WSDLinaUDDIRegistryTest {
 		
 		//Compare to the spec example
 		String bindingtmodelXml = "wsdl/uddiv3-xml/3_2_2_bindingtmodel.xml";
-		TModel specTModel = (org.uddi.api_v3.TModel)EntityCreator.buildFromDoc(bindingtmodelXml, "org.uddi.api_v3");
+		TModel specTModel = (org.uddi.api_v3.TModel)EntityCreator.buildFromDoc(bindingtmodelXml, EntityCreator.UDDIv3_Package);
 		
 		//Make sure the names are the same
 		Assert.assertEquals(specTModel.getName().getValue(),tModel.getName().getValue());
@@ -185,7 +185,7 @@ public class WSDLinaUDDIRegistryTest {
 		
 		//Compare to the spec example
 		String businessServiceXml = "wsdl/uddiv3-xml/3_2_3_business_service.xml";
-		BusinessService specBusinessService = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(businessServiceXml, "org.uddi.api_v3");
+		BusinessService specBusinessService = (org.uddi.api_v3.BusinessService)EntityCreator.buildFromDoc(businessServiceXml, EntityCreator.UDDIv3_Package);
 		
 		//Make sure the names are the same
 		Assert.assertEquals(specBusinessService.getName().get(0).getValue(),businessService.getName().get(0).getValue());

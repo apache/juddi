@@ -280,7 +280,7 @@
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
-    
+        <module>juddi-migration-tool</module>
   </modules>
 	<distributionManagement>
 	    <site>

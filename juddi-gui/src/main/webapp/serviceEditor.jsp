@@ -163,13 +163,13 @@
                 <br>
 
                 <script type="text/javascript">
-                    var currentNameEntries=<%= bd.getName().size() - 1%>;
+                    var currentNameEntries =<%= bd.getName().size() - 1%>;
                     var currentbindingtemplatesInstance =<%=currentbindingtemplatesInstance%>;
-                    var currentDescriptionEntries=<%= bd.getDescription().size() - 1%>;
-                    var currentcatkeyrefBT=<%=currentcatkeyrefBT%>;
-                    var currentcatkeyref=<%=bd.getCategoryBag().getKeyedReference().size()%>;
-                    var currentcatkeyrefgrpBT=<%=currentcatkeyrefgrpBT%>;
-                    var currentcatkeyrefgrp=<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
+                    var currentDescriptionEntries =<%= bd.getDescription().size() - 1%>;
+                    var currentcatkeyrefBT =<%=currentcatkeyrefBT%>;
+                    var currentcatkeyref =<%=bd.getCategoryBag().getKeyedReference().size()%>;
+                    var currentcatkeyrefgrpBT =<%=currentcatkeyrefgrpBT%>;
+                    var currentcatkeyrefgrp =<%=bd.getCategoryBag().getKeyedReferenceGroup().size()%>;
                     var currentbindingtemplates = <%=bd.getBindingTemplates().getBindingTemplate().size()%>;
                     var currentOverviewDocs = <%=currentOverviewDocs%>;
                 </script> 
@@ -186,30 +186,30 @@
                     <li><a href="#opinfo" ><%=ResourceLoader.GetResource(session, "pages.editor.tabnav.opinfo")%></a></li>
                 </ul>
                 <script>
-                    $(function () {
+                    $(function() {
                         $('#myTab').tab;//('show');
                     })
-                    $('#myTab a[href=#general]').click(function (e) {
+                    $('#myTab a[href=#general]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#categories]').click(function (e) {
+                    $('#myTab a[href=#categories]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#bindingtemplates]').click(function (e) {
+                    $('#myTab a[href=#bindingtemplates]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#signatures]').click(function (e) {
+                    $('#myTab a[href=#signatures]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    $('#myTab a[href=#opinfo]').click(function (e) {
+                    $('#myTab a[href=#opinfo]').click(function(e) {
                         e.preventDefault();
                         $(this).tab('show');
                     });
-                    
+
                 </script>
                 <div class="tab-content">
                     <div class="tab-pane active" id="general">
@@ -599,9 +599,9 @@
                                 out.write("</td><td><div id=\"digsig" + k + "\">" + ResourceLoader.GetResource(session, "items.loading") + "</div>");
                         %>
                         <script type="text/javascript">
-                            $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
+                            $.get("ajax/validateSignature.jsp?type=service&id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
                                 $("#digsig<%=k%>").html(data);
-                                if (data.indexOf("invalid") !== -1 )
+                                if (data.indexOf("invalid") !== -1)
                                 {
                                     $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-down icon-large\" style=\"color:red\"></i>");
                                 }
@@ -609,7 +609,7 @@
                                 {
                                     $("#sigtagheader").html($("#sigtagheader").html() + "<i class=\"icon-thumbs-up icon-large\" style=\"color:green\"></i>");
                                 }
-                            } )
+                            })
                         </script>
                         <%
                                 out.write("</td></tr>");
@@ -628,9 +628,9 @@
 
                     %>
                     <script type="text/javascript">
-                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data){
+                        $.get("ajax/opInfo.jsp?id=<%=StringEscapeUtils.escapeJavaScript(bd.getServiceKey())%>", function(data) {
                             $("#opinfodiv").html(data);
-                        } )
+                        })
                     </script>
                     <div id="opinfodiv"></div>
                     <%
@@ -643,7 +643,7 @@
 
 
         <script type="text/javascript">
-            var currentDescriptionSpecific=<%=totalBTDescriptions%>;
+            var currentDescriptionSpecific =<%=totalBTDescriptions%>;
         </script>
         <Br><br>
         <%
@@ -669,12 +669,12 @@
         <script type="text/javascript">
             function ViewAsXML()
             {
-                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=service", function(data){
-                    window.console && console.log('asXml success');                
+                $.get("ajax/toXML.jsp?id=<%=URLEncoder.encode(serviceid, "UTF-8")%>&type=service", function(data) {
+                    window.console && console.log('asXml success');
                     $("#viewAsXmlContent").html(safe_tags_replace(data));
-                    $( "#viewAsXml" ).modal('show');
+                    $("#viewAsXml").modal('show');
                 });
-                       
+
             }
         </script>
         <%
@@ -709,7 +709,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3><%=ResourceLoader.GetResource(session, "actions.asxml")%> </h3>
     </div>
-   
+
     <div class="modal-body" id="viewAsXmlContent">
 
 
@@ -722,7 +722,9 @@
 <%
     }
 %>
-<!-- container div is in header bottom-->
+
 <%@include file="tmodelChooser.jsp" %>
-<%@include file="header-bottom.jsp" %>
 <%@include file="keyHelpModal.jsp" %>
+<!-- container div is in header bottom-->
+<%@include file="header-bottom.jsp" %>
+

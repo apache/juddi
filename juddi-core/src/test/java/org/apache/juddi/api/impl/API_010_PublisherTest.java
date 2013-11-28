@@ -144,7 +144,7 @@ public class API_010_PublisherTest {
 			logger.debug("Saving new publisher: " + publisherXML);
 			SavePublisher sp = new SavePublisher();
 			sp.setAuthInfo(authInfo);
-			Publisher pubIn = (Publisher)EntityCreator.buildFromDoc(publisherXML, "org.apache.juddi.api_v3");
+			Publisher pubIn = (Publisher)EntityCreator.buildFromDoc(publisherXML, EntityCreator.JUDDIv3_Package);
 			sp.getPublisher().add(pubIn);
 			publisher.savePublisher(sp);
 	
