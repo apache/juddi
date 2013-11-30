@@ -536,7 +536,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 				modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
 				
-				MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService,this.getThisNodeID());
+				MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 	
 				setOperationalInfo(em, modelBindingTemplate, publisher, false);
 	
@@ -590,7 +590,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				
 				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 				
-				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity,this.getThisNodeID());
+				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
 
 				setOperationalInfo(em, modelBusinessEntity, publisher);
 	
@@ -645,7 +645,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 				modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
 				
-				MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity, this.getThisNodeID());
+				MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
 	
 				setOperationalInfo(em, modelBusinessService, publisher, false);
 
@@ -697,7 +697,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				
 				org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 				
-				MappingApiToModel.mapTModel(apiTModel, modelTModel,this.getThisNodeID());
+				MappingApiToModel.mapTModel(apiTModel, modelTModel);
 	
 				setOperationalInfo(em, modelTModel, publisher);
 	
@@ -921,8 +921,5 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 		
 	}
 
-    private void setNodeID(UddiEntity e) {
-        e.setNodeId(this.getThisNodeID());
-    }
 	
 }
