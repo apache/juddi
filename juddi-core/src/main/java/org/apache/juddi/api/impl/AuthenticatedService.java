@@ -17,7 +17,11 @@
 
 package org.apache.juddi.api.impl;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import javax.persistence.EntityManager;
@@ -46,7 +50,7 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 public abstract class AuthenticatedService {
 	public static final int AUTHTOKEN_ACTIVE = 1;
 	public static final int AUTHTOKEN_RETIRED = 0;
-	Log logger = LogFactory.getLog(this.getClass());
+	static final Log logger = LogFactory.getLog(AuthenticatedService.class);
 	
         @Resource
         protected WebServiceContext ctx;
@@ -177,4 +181,34 @@ public abstract class AuthenticatedService {
             }
             return null;
         }
+        
+        /**
+         * Returns the current node id for multi-node UDDI registries via replication
+         * @return 
+         */
+    public String getThisNodeID() {
+        try {
+            AppConfig.getInstance();
+           return AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, GetHostname());
+        } catch (Exception ex) {
+            logger.error("Unable to determine the current node id, check juddiv3.xml config file! Defaulting to " + UNKNOWN,ex);
+        }
+        return UNKNOWN;
+    }
+    
+    public static final String UNKNOWN="UNKNOWN";
+    
+    /**
+     * Gets the current hostname
+     * @return 
+     */
+    public static String GetHostname(){
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (Exception ex) {
+                logger.info("Unable to determine hostname, defaulting to " + UNKNOWN);
+                logger.debug("Unable to determine hostname, defaulting to "+UNKNOWN,ex);
+            }
+            return UNKNOWN;
+    }
 }

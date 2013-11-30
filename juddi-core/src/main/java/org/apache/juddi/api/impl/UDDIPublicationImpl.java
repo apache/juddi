@@ -70,6 +70,8 @@ import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.model.Tmodel;
+import org.apache.juddi.model.UddiEntity;
 import org.apache.juddi.query.util.DynamicQuery;
 import org.apache.juddi.query.util.FindQualifiers;
 
@@ -530,10 +532,11 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
 				
 				org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
+                                
 				org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
 				modelBusinessService.setEntityKey(apiBindingTemplate.getServiceKey());
 				
-				MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
+				MappingApiToModel.mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService,this.getThisNodeID());
 	
 				setOperationalInfo(em, modelBindingTemplate, publisher, false);
 	
@@ -587,8 +590,8 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				
 				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 				
-				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity);
-				
+				MappingApiToModel.mapBusinessEntity(apiBusinessEntity, modelBusinessEntity,this.getThisNodeID());
+
 				setOperationalInfo(em, modelBusinessEntity, publisher);
 	
 				em.persist(modelBusinessEntity);
@@ -642,10 +645,10 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
 				modelBusinessEntity.setEntityKey(apiBusinessService.getBusinessKey());
 				
-				MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
+				MappingApiToModel.mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity, this.getThisNodeID());
 	
 				setOperationalInfo(em, modelBusinessService, publisher, false);
-	
+
 				em.persist(modelBusinessService);
 				
 				result.getBusinessService().add(apiBusinessService);
@@ -694,7 +697,7 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 				
 				org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 				
-				MappingApiToModel.mapTModel(apiTModel, modelTModel);
+				MappingApiToModel.mapTModel(apiTModel, modelTModel,this.getThisNodeID());
 	
 				setOperationalInfo(em, modelTModel, publisher);
 	
@@ -917,5 +920,9 @@ public class UDDIPublicationImpl extends AuthenticatedService implements UDDIPub
 			em.remove(existingUddiEntity);
 		
 	}
+
+    private void setNodeID(UddiEntity e) {
+        e.setNodeId(this.getThisNodeID());
+    }
 	
 }

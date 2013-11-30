@@ -82,8 +82,8 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
  * Provides validation of publish requests to Juddi
  *
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
- * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a> Modified by
- * Alex O'Ree March 2013 to validate string length and ref integrity
+ * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a> 
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a> Modified March 2013 to validate string length and ref integrity
  *
  * Advisory, be careful calling AppConfig.getConfiguration() from within
  * validation functions, it may inadvertently cause infinite loops during the

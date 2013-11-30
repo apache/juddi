@@ -38,6 +38,7 @@ public class ValidateNode extends ValidateUDDIApi {
         super(publisher);
     }
 
+    private static final Logger logger = Logger.getLogger(ValidateNode.class.getCanonicalName());
     /*-------------------------------------------------------------------
      validateSaveNode functions are specific to jUDDI.
      --------------------------------------------------------------------*/
@@ -87,6 +88,10 @@ public class ValidateNode extends ValidateUDDIApi {
         }
         if (node.getSubscriptionListenerUrl() == null || node.getSubscriptionListenerUrl().length() == 0 || node.getSubscriptionListenerUrl().length() > 255) {
             throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
+        }
+        if (node.getReplicationUrl()== null || node.getReplicationUrl().length() == 0 || node.getReplicationUrl().length() > 255) {
+            //throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUBL"));
+            logger.log(Level.WARNING,"No replication url on save node request!");
         }
         if (node.getSubscriptionUrl() == null || node.getSubscriptionUrl().length() == 0 || node.getSubscriptionUrl().length() > 255) {
             throw new ValueNotAllowedException(new ErrorMessage("errors.node.NoSUB"));
