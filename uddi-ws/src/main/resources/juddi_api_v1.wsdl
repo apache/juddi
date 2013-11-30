@@ -918,6 +918,7 @@
       <xs:element minOccurs="0" name="securityUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="subscriptionUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="subscriptionListenerUrl" type="xs:string"/>
+	  <xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="juddiApiUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="proxyTransport" type="xs:string"/>
       <xs:element minOccurs="0" name="factoryInitial" type="xs:string"/>

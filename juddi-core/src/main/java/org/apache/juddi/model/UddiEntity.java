@@ -89,7 +89,11 @@ public abstract class UddiEntity implements Comparable<UddiEntity>{
 		this.modifiedIncludingChildren = modifiedIncludingChildren;
 	}
 	
-	@Column(name = "node_id", length = 255)
+        /**
+         * As of 3.3, node_id is a required field
+         * @return 
+         */
+	@Column(name = "node_id", nullable=false,length = 255)
 	public String getNodeId() {
 		return nodeId;
 	}

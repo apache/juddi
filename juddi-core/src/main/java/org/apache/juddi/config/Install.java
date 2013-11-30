@@ -62,7 +62,11 @@ import org.uddi.api_v3.TModel;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
+ * This class is called when jUDDI starts up
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
+ * @see org.apache.juddi.Registry.RegistryServlet
+ * @see 
  */
 public class Install {
 
@@ -109,7 +113,7 @@ public class Install {
 				rootPublisher = installPublisher(em, fileRootPublisher, config);
 				installRootPublisherKeyGen(em, rootTModelKeyGen, rootPartition, rootPublisher, nodeId);
 				rootBusinessEntity.setBusinessKey(rootbizkey);
-				installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config);
+				installBusinessEntity(true, em, rootBusinessEntity, rootPublisher, rootPartition, config,nodeId);
 			} else {
 				log.debug("juddi.seed.always reapplies all seed files except for the root data.");
 			}
@@ -126,7 +130,7 @@ public class Install {
 					throw new ConfigurationException("File " + filePublisher + " not found.");
 				} else {
 					if (tModelKeyGen!=null) installPublisherKeyGen(em, tModelKeyGen, publisher, nodeId);
-					if (businessEntity!=null) installBusinessEntity(false, em, businessEntity, publisher, null, config);
+					if (businessEntity!=null) installBusinessEntity(false, em, businessEntity, publisher, null, config,nodeId);
 					String fileTModels = publisherStr + FILE_TMODELS;
 					installSaveTModel(em, fileTModels, publisher, nodeId, config);
 				}
@@ -259,13 +263,13 @@ public class Install {
 	
 	
 	private static String installBusinessEntity(boolean isRoot, EntityManager em, org.uddi.api_v3.BusinessEntity rootBusinessEntity, 
-			UddiEntityPublisher rootPublisher, String rootPartition, Configuration config) 
+			UddiEntityPublisher rootPublisher, String rootPartition, Configuration config ,String nodeId) 
 	throws JAXBException, DispositionReportFaultMessage, IOException {
 		
 		if (isRoot) validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition, config);
 		
 		org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
-		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity);
+		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity, nodeId);
 		
 		modelBusinessEntity.setAuthorizedName(rootPublisher.getAuthorizedName());
 		
@@ -465,7 +469,7 @@ public class Install {
 					org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 					apiTModel.setTModelKey(apiTModel.getTModelKey().toLowerCase());
 					
-					MappingApiToModel.mapTModel(apiTModel, modelTModel);
+					MappingApiToModel.mapTModel(apiTModel, modelTModel,nodeId);
 
 					modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 					
@@ -494,7 +498,7 @@ public class Install {
 	private static void installPublisherKeyGen(EntityManager em, TModel apiTModel, UddiEntityPublisher publisher, String nodeId) throws DispositionReportFaultMessage {
 
 		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
-		MappingApiToModel.mapTModel(apiTModel, modelTModel);
+		MappingApiToModel.mapTModel(apiTModel, modelTModel,nodeId);
 		
 		modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 

@@ -855,6 +855,8 @@ namespace org.apache.juddi.apiv3
         private string subscriptionUrlField;
 
         private string subscriptionListenerUrlField;
+		
+		private string replicationUrlField;
 
         private string juddiApiUrlField;
 
@@ -982,6 +984,16 @@ namespace org.apache.juddi.apiv3
                 this.subscriptionListenerUrlField = value;
             }
         }
+
+		/// <remarks/>
+		public string replicationUrl {
+			get {
+				return this.replicationUrlField;
+			}
+			set {
+				this.replicationUrlField = value;
+			}
+		}
 
         /// <remarks/>
         public string juddiApiUrl

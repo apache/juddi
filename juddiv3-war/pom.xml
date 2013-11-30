@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.apache.juddi</groupId>
 		<artifactId>juddi-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>juddiv3-war</artifactId>
 	<packaging>war</packaging>
@@ -24,7 +24,7 @@
 		<dependency>
 			<artifactId>uddi-ws</artifactId>
 			<groupId>org.apache.juddi</groupId>
-			<version>3.2.0-SNAPSHOT</version>
+			<version>3.3.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -108,7 +108,7 @@
 				<dependency>
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-entitymanager</artifactId>
-					<version>3.3.1.ga</version>
+					<version>3.2.1.ga</version>
 					<scope>provided</scope>
 				</dependency>
 
@@ -163,7 +163,7 @@
 				<dependency>
 					<groupId>org.hibernate</groupId>
 					<artifactId>hibernate-entitymanager</artifactId>
-					<version>3.3.1.ga</version>
+					<version>3.2.1.ga</version>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
@@ -306,7 +306,7 @@
 				<dependency>
 					<groupId>org.codehaus.jettison</groupId>
 					<artifactId>jettison</artifactId>
-					<version>1.3.3</version>
+					<version>1.3.2</version>
 				</dependency>
 				<!--END added AO 6/8/2013 support for JSON encoding on REST endpoints -->
 				<dependency>

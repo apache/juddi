@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlType;
     "securityUrl",
 	"subscriptionUrl",
 	"subscriptionListenerUrl",
+	"replicationUrl",
 	"juddiApiUrl",
 	"proxyTransport",
 	"factoryInitial",
@@ -59,6 +60,7 @@ public class Node implements Serializable{
 	private String securityUrl;
 	private String subscriptionUrl;
 	private String subscriptionListenerUrl;
+	private String replicationUrl;
 	private String juddiApiUrl;
 	private String proxyTransport;
 	private String factoryInitial;
@@ -133,6 +135,12 @@ public class Node implements Serializable{
 	}
 	public void setSubscriptionListenerUrl(String subscriptionListenerUrl) {
 		this.subscriptionListenerUrl = subscriptionListenerUrl;
+	}
+	public String getReplicationUrl() {
+		return replicationUrl;
+	}
+	public void setReplicationUrl(String replicationUrl) {
+		this.replicationUrl = replicationUrl;
 	}
 	public String getFactoryInitial() {
 		return factoryInitial;
