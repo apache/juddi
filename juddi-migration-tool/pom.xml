@@ -7,11 +7,14 @@
 		<artifactId>juddi-parent</artifactId>
 		<version>3.2.0-SNAPSHOT</version>
 	</parent>
+	
 	<groupId>org.apache.juddi</groupId>
 	<artifactId>juddi-migration-tool</artifactId>
-	<version>3.2-SNAPSHOT</version>
+	
 	<name>UDDI Migration tool</name>
-	<url>http://maven.apache.org</url>
+	<packaging>bundle</packaging>
+  
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

@@ -63,14 +63,23 @@ public class Import {
     boolean safemode = false;
     boolean preserveOwnership = false;
     Set<String> usernames = new HashSet<String>();
+    /**
+     * item to user
+     */
     Properties mapping = new Properties();
+    /**
+     * user to password
+     */
+    Properties userpwd = new Properties();
+    String credFile;
 
     public void Execute(String config, String name, String username, String pass,
             String tmodelIn, String businessIn,
             boolean isJuddi, boolean safe, String publishersFile,
             boolean preserveOwnership,
-            String mappingsfile) throws Exception {
+            String mappingsfile, String credFile) throws Exception {
 
+        this.credFile = credFile;
         this.publishersfile = publishersFile;
         this.tmodelfile = tmodelIn;
         this.businessfile = businessIn;
@@ -128,8 +137,8 @@ public class Import {
         return mapping.getProperty(key);
     }
 
-    public String GetPwd(String key) {
-        return null;
+    public String GetPwd(String username) {
+        return userpwd.getProperty(username);
     }
 
     private void ImportTmodels() throws Exception {
@@ -139,7 +148,9 @@ public class Import {
                 if (!TModelExists(stm.getTModel().get(i).getTModelKey(), token)) {
                     SaveTModel stm2 = new SaveTModel();
                     if (preserveOwnership) {
-                        stm2.setAuthInfo(Common.GetAuthToken(GetOwner(stm.getTModel().get(i).getTModelKey()), GetPwd(GetOwner(stm.getTModel().get(i).getTModelKey())), security));
+                        stm2.setAuthInfo(Common.GetAuthToken(
+                                GetOwner(stm.getTModel().get(i).getTModelKey()), 
+                                GetPwd(GetOwner(stm.getTModel().get(i).getTModelKey())), security));
                     } else {
                         stm2.setAuthInfo(token);
                     }
@@ -261,15 +272,7 @@ public class Import {
 
     private void LoadProperties() {
 
-        StringBuilder sb = new StringBuilder();
-        Iterator<String> it = usernames.iterator();
-        while (it.hasNext()) {
-            sb.append(it.next());
-            if (it.hasNext()) {
-                sb.append(",");
-            }
-        }
-        mapping.put("usernames", sb.toString());
+
         try {
             FileInputStream fos = new FileInputStream(mappingsfile);
             mapping.load(fos);
@@ -278,7 +281,15 @@ public class Import {
             ex.printStackTrace();
         }
 
-        mapping.getProperty("usernames");
+        //mapping.getProperty("usernames");
+
+        try {
+            FileInputStream fos = new FileInputStream(credFile);
+            userpwd.load(fos);
+            fos.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void EnsureCredentials() {

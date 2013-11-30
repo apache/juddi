@@ -30,6 +30,7 @@
                 <include>org.apache.juddi:uddi-tck:test-jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
+				<include>org.apache.juddi:juddi-migration-tool:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>

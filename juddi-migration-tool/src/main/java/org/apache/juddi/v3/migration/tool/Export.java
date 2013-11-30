@@ -17,6 +17,7 @@ package org.apache.juddi.v3.migration.tool;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.security.AuthProvider;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
@@ -70,6 +71,8 @@ public class Export {
     String mappingsfile = null;
     boolean safemode = false;
     boolean myitemsonly = false;
+    boolean preserveOwnership;
+    String credFile;
     Set<String> usernames = new HashSet<String>();
     Properties mapping = new Properties();
 
@@ -77,7 +80,8 @@ public class Export {
             String tmodelout, String businessOut,
             boolean isJuddi, boolean safe, String publishersFile,
             boolean myItemsOnly,
-            String mappingsfile) throws Exception {
+            String mappingsfile,
+            boolean preserveOwnership, String credFile) throws Exception {
         // create a manager and read the config in the archive; 
         // you can use your config file name
         this.publishersfile = publishersFile;
@@ -85,6 +89,9 @@ public class Export {
         this.businessfile = businessOut;
         this.myitemsonly = myItemsOnly;
         this.mappingsfile = mappingsfile;
+        this.credFile = credFile;
+        this.preserveOwnership = preserveOwnership;
+
         UDDIClient clerkManager = new UDDIClient(config);
         clerkManager.start();
         UDDIClerk clerk = clerkManager.getClerk(name);
@@ -126,7 +133,10 @@ public class Export {
             ExportClerks();
             ExportPublishers();
         }
-        SaveProperties();
+        if (preserveOwnership) {
+            SaveProperties();
+            SaveCredFileTemplate();
+        }
         clerkManager.stop();
     }
 
@@ -140,12 +150,10 @@ public class Export {
         int offset = 0;
         int maxrows = 20;
 
-        //TODO param
         req.setMaxRows(maxrows);
         req.setListHead(offset);
         BusinessList findTModel = null;
         SaveBusiness sb = new SaveBusiness();
-        //TODO exclusion list
         do {
             findTModel = inquiry.findBusiness(req);
             if (findTModel.getBusinessInfos() != null) {
@@ -238,9 +246,11 @@ public class Export {
     }
 
     private void ExportNodes() {
+        //TODO wait for JUDDI-706
     }
 
     private void ExportClerks() {
+        //TODO wait for JUDDI-706
     }
 
     private void ExportPublishers() throws Exception {
@@ -269,7 +279,23 @@ public class Export {
         mapping.put("usernames", sb.toString());
         try {
             FileOutputStream fos = new FileOutputStream(mappingsfile);
-            mapping.store(fos, token);
+            mapping.store(fos, "no comments");
+            fos.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void SaveCredFileTemplate() {
+        Iterator<String> it = usernames.iterator();
+        Properties p = new Properties();
+        while (it.hasNext()) {
+            String s = it.next();
+            p.setProperty(s, s);
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(credFile);
+            mapping.store(fos, "no comments");
             fos.close();
         } catch (Exception ex) {
             ex.printStackTrace();
