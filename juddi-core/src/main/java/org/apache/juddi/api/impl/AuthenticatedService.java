@@ -181,34 +181,4 @@ public abstract class AuthenticatedService {
             }
             return null;
         }
-        
-        /**
-         * Returns the current node id for multi-node UDDI registries via replication
-         * @return 
-         */
-    public String getThisNodeID() {
-        try {
-            AppConfig.getInstance();
-           return AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID, GetHostname());
-        } catch (Exception ex) {
-            logger.error("Unable to determine the current node id, check juddiv3.xml config file! Defaulting to " + UNKNOWN,ex);
-        }
-        return UNKNOWN;
-    }
-    
-    public static final String UNKNOWN="UNKNOWN";
-    
-    /**
-     * Gets the current hostname
-     * @return 
-     */
-    public static String GetHostname(){
-            try {
-                return InetAddress.getLocalHost().getHostName();
-            } catch (Exception ex) {
-                logger.info("Unable to determine hostname, defaulting to " + UNKNOWN);
-                logger.debug("Unable to determine hostname, defaulting to "+UNKNOWN,ex);
-            }
-            return UNKNOWN;
-    }
 }

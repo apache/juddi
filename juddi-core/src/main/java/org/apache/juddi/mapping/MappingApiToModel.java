@@ -104,7 +104,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessEntity(org.uddi.api_v3.BusinessEntity apiBusinessEntity,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity, String node)
+                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
                 throws DispositionReportFaultMessage {
 
                 modelBusinessEntity.setEntityKey(apiBusinessEntity.getBusinessKey());
@@ -122,9 +122,9 @@ public class MappingApiToModel {
                 mapBusinessServices(apiBusinessEntity.getBusinessServices(),
                         modelBusinessEntity.getBusinessServices(),
                         modelBusinessEntity.getServiceProjections(),
-                        modelBusinessEntity, node);
+                        modelBusinessEntity);
 
-                mapBusinessSignature(apiBusinessEntity.getSignature(), modelBusinessEntity, node);
+                mapBusinessSignature(apiBusinessEntity.getSignature(), modelBusinessEntity);
         }
 
         private static List<Signature> mapApiSignaturesToModelSignatures(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures)
@@ -285,7 +285,7 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapBusinessSignature(List<org.w3._2000._09.xmldsig_.SignatureType> apiSignatures,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity, String node)
+                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
                 throws DispositionReportFaultMessage {
                 List<Signature> modelSignatures = mapApiSignaturesToModelSignatures(apiSignatures);
                 for (Signature modelSignature : modelSignatures) {
@@ -543,15 +543,13 @@ public class MappingApiToModel {
         public static void mapBusinessServices(org.uddi.api_v3.BusinessServices apiBusinessServices,
                 List<org.apache.juddi.model.BusinessService> modelBusinessServiceList,
                 List<org.apache.juddi.model.ServiceProjection> modelServiceProjectionList,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity, String node)
+                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
                 throws DispositionReportFaultMessage {
                 modelBusinessServiceList.clear();
-                modelBusinessEntity.setNodeId(node);
                 if (apiBusinessServices != null) {
                         List<org.uddi.api_v3.BusinessService> apiBusinessServiceList = apiBusinessServices.getBusinessService();
                         for (org.uddi.api_v3.BusinessService apiBusinessService : apiBusinessServiceList) {
                                 org.apache.juddi.model.BusinessService modelBusinessService = new org.apache.juddi.model.BusinessService();
-                                modelBusinessService.setNodeId(node);
 
                                 // If the parent businessEntity key and the service businessEntity key (if provided) do not match, it's a projection.
                                 if (apiBusinessService.getBusinessKey() != null && apiBusinessService.getBusinessKey().length() > 0
@@ -562,7 +560,7 @@ public class MappingApiToModel {
 
                                         modelServiceProjectionList.add(modelServiceProjection);
                                 } else {
-                                        mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity, node);
+                                        mapBusinessService(apiBusinessService, modelBusinessService, modelBusinessEntity);
                                         modelBusinessServiceList.add(modelBusinessService);
                                 }
                         }
@@ -579,11 +577,9 @@ public class MappingApiToModel {
          */
         public static void mapBusinessService(org.uddi.api_v3.BusinessService apiBusinessService,
                 org.apache.juddi.model.BusinessService modelBusinessService,
-                org.apache.juddi.model.BusinessEntity modelBusinessEntity, String node)
+                org.apache.juddi.model.BusinessEntity modelBusinessEntity)
                 throws DispositionReportFaultMessage {
 
-                modelBusinessService.setNodeId(node);
-                modelBusinessEntity.setNodeId(node);
                 modelBusinessService.setBusinessEntity(modelBusinessEntity);
                 modelBusinessService.setEntityKey(apiBusinessService.getServiceKey());
 
@@ -594,7 +590,7 @@ public class MappingApiToModel {
                         mapCategoryBag(apiBusinessService.getCategoryBag(), modelBusinessService.getCategoryBag());
                 }
 
-                mapBindingTemplates(apiBusinessService.getBindingTemplates(), modelBusinessService.getBindingTemplates(), modelBusinessService, node);
+                mapBindingTemplates(apiBusinessService.getBindingTemplates(), modelBusinessService.getBindingTemplates(), modelBusinessService);
                 mapBusinessServiceSignature(apiBusinessService.getSignature(), modelBusinessService);
         }
 
@@ -644,7 +640,7 @@ public class MappingApiToModel {
          */
         public static void mapBindingTemplates(org.uddi.api_v3.BindingTemplates apiBindingTemplates,
                 List<org.apache.juddi.model.BindingTemplate> modelBindingTemplateList,
-                org.apache.juddi.model.BusinessService modelBusinessService, String node)
+                org.apache.juddi.model.BusinessService modelBusinessService)
                 throws DispositionReportFaultMessage {
                 modelBindingTemplateList.clear();
 
@@ -653,7 +649,7 @@ public class MappingApiToModel {
                         for (org.uddi.api_v3.BindingTemplate apiBindingTemplate : apiBindingTemplateList) {
                                 org.apache.juddi.model.BindingTemplate modelBindingTemplate = new org.apache.juddi.model.BindingTemplate();
 
-                                mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService, node);
+                                mapBindingTemplate(apiBindingTemplate, modelBindingTemplate, modelBusinessService);
 
                                 modelBindingTemplateList.add(modelBindingTemplate);
                         }
@@ -670,7 +666,7 @@ public class MappingApiToModel {
          */
         public static void mapBindingTemplate(org.uddi.api_v3.BindingTemplate apiBindingTemplate,
                 org.apache.juddi.model.BindingTemplate modelBindingTemplate,
-                org.apache.juddi.model.BusinessService modelBusinessService, String node)
+                org.apache.juddi.model.BusinessService modelBusinessService)
                 throws DispositionReportFaultMessage {
 
                 modelBindingTemplate.setBusinessService(modelBusinessService);
@@ -886,14 +882,13 @@ public class MappingApiToModel {
          * @throws DispositionReportFaultMessage
          */
         public static void mapTModel(org.uddi.api_v3.TModel apiTModel,
-                org.apache.juddi.model.Tmodel modelTModel, String node)
+                org.apache.juddi.model.Tmodel modelTModel)
                 throws DispositionReportFaultMessage {
 
                 modelTModel.setEntityKey(apiTModel.getTModelKey());
                 modelTModel.setName(apiTModel.getName().getValue());
                 modelTModel.setLangCode(apiTModel.getName().getLang());
                 modelTModel.setDeleted(apiTModel.isDeleted());
-                modelTModel.setNodeId(node);
 
                 mapTModelDescriptions(apiTModel.getDescription(), modelTModel.getTmodelDescrs(), modelTModel);
                 mapTModelIdentifiers(apiTModel.getIdentifierBag(), modelTModel.getTmodelIdentifiers(), modelTModel);

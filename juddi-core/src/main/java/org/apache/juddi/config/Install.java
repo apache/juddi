@@ -269,10 +269,10 @@ public class Install {
 		if (isRoot) validateRootBusinessEntity(rootBusinessEntity, rootPublisher, rootPartition, config);
 		
 		org.apache.juddi.model.BusinessEntity modelBusinessEntity = new org.apache.juddi.model.BusinessEntity();
-		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity, nodeId);
+		MappingApiToModel.mapBusinessEntity(rootBusinessEntity, modelBusinessEntity);
 		
 		modelBusinessEntity.setAuthorizedName(rootPublisher.getAuthorizedName());
-		
+		modelBusinessEntity.setNodeId(nodeId);
 		Date now = new Date();
 		modelBusinessEntity.setCreated(now);
 		modelBusinessEntity.setModified(now);
@@ -284,22 +284,22 @@ public class Install {
 		
 		for (org.apache.juddi.model.BusinessService service : modelBusinessEntity.getBusinessServices()) {
 			service.setAuthorizedName(rootPublisher.getAuthorizedName());
-			
+			service.setNodeId(nodeId);
 			service.setCreated(now);
 			service.setModified(now);
 			service.setModifiedIncludingChildren(now);
                         //JUDDI-645
-                        service.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
+                        //service.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
 			//service.setNodeId(modelBusinessEntity.getEntityKey());
 			
 			for (org.apache.juddi.model.BindingTemplate binding : service.getBindingTemplates()) {
 				binding.setAuthorizedName(rootPublisher.getAuthorizedName());
-				
+                                binding.setNodeId(nodeId);
 				binding.setCreated(now);
 				binding.setModified(now);
 				binding.setModifiedIncludingChildren(now);
 				//binding.setNodeId(modelBusinessEntity.getEntityKey());
-                                binding.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
+                                //binding.setNodeId(config.getString(Property.JUDDI_NODE_ID,modelBusinessEntity.getEntityKey()));
                                 //JUDDI-645
                                 
 			}
@@ -469,7 +469,7 @@ public class Install {
 					org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
 					apiTModel.setTModelKey(apiTModel.getTModelKey().toLowerCase());
 					
-					MappingApiToModel.mapTModel(apiTModel, modelTModel,nodeId);
+					MappingApiToModel.mapTModel(apiTModel, modelTModel);
 
 					modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 					
@@ -498,7 +498,7 @@ public class Install {
 	private static void installPublisherKeyGen(EntityManager em, TModel apiTModel, UddiEntityPublisher publisher, String nodeId) throws DispositionReportFaultMessage {
 
 		org.apache.juddi.model.Tmodel modelTModel = new org.apache.juddi.model.Tmodel();
-		MappingApiToModel.mapTModel(apiTModel, modelTModel,nodeId);
+		MappingApiToModel.mapTModel(apiTModel, modelTModel);
 		
 		modelTModel.setAuthorizedName(publisher.getAuthorizedName());
 
