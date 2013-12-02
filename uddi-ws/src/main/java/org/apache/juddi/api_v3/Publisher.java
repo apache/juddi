@@ -1,38 +1,42 @@
-/*
- * Copyright 2001-2009 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
+
 package org.apache.juddi.api_v3;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-
 import org.w3._2000._09.xmldsig_.SignatureType;
 
 
 /**
- * <p>Java class for Publisher type.  Specific to juddi.
+ * <p>Java class for publisher complex type.
  * 
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="publisher">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="publisherName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="emailAddress" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="isAdmin" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="isEnabled" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="maxBindingsPerService" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="maxBusinesses" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="maxServicePerBusiness" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="maxTModels" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element ref="{http://www.w3.org/2000/09/xmldsig#}Signature" maxOccurs="unbounded" minOccurs="0"/>
+ *       &lt;/sequence>
+ *       &lt;attribute name="authorizedName" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,14 +49,12 @@ import org.w3._2000._09.xmldsig_.SignatureType;
     "maxBusinesses",
     "maxServicePerBusiness",
     "maxTModels",
-    "signature",
-    "authorizedName"
+    "signature"
 })
-public class Publisher implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = 9145476126076932380L;
-	@XmlElement(required=true)
-	protected String publisherName;
+public class Publisher {
+
+    @XmlElement(required = true)
+    protected String publisherName;
     protected String emailAddress;
     protected String isAdmin;
     protected String isEnabled;
@@ -60,139 +62,204 @@ public class Publisher implements Serializable{
     protected Integer maxBusinesses;
     protected Integer maxServicePerBusiness;
     protected Integer maxTModels;
-    @XmlElement(name="Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
+    @XmlElement(name = "Signature", namespace = "http://www.w3.org/2000/09/xmldsig#")
     protected List<SignatureType> signature;
-    @XmlAttribute(required=true)
+    @XmlAttribute(name = "authorizedName", required = true)
     protected String authorizedName;
 
-    
     /**
-	 * @return the publisherName
-	 */
-	public String getPublisherName() {
-		return publisherName;
-	}
+     * Gets the value of the publisherName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPublisherName() {
+        return publisherName;
+    }
 
-	/**
-	 * @param publisherName the publisherName to set
-	 */
-	public void setPublisherName(String publisherName) {
-		this.publisherName = publisherName;
-	}
+    /**
+     * Sets the value of the publisherName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPublisherName(String value) {
+        this.publisherName = value;
+    }
 
-	/**
-	 * @return the emailAddress
-	 */
-	public String getEmailAddress() {
-		return emailAddress;
-	}
+    /**
+     * Gets the value of the emailAddress property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 
-	/**
-	 * @param emailAddress the emailAddress to set
-	 */
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
+    /**
+     * Sets the value of the emailAddress property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setEmailAddress(String value) {
+        this.emailAddress = value;
+    }
 
-	/**
-	 * @return the isAdmin
-	 */
-	public String getIsAdmin() {
-		return isAdmin;
-	}
+    /**
+     * Gets the value of the isAdmin property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIsAdmin() {
+        return isAdmin;
+    }
 
-	/**
-	 * @param isAdmin the isAdmin to set
-	 */
-	public void setIsAdmin(String isAdmin) {
-		this.isAdmin = isAdmin;
-	}
+    /**
+     * Sets the value of the isAdmin property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIsAdmin(String value) {
+        this.isAdmin = value;
+    }
 
-	/**
-	 * @return the isEnabled
-	 */
-	public String getIsEnabled() {
-		return isEnabled;
-	}
+    /**
+     * Gets the value of the isEnabled property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIsEnabled() {
+        return isEnabled;
+    }
 
-	/**
-	 * @param isEnabled the isEnabled to set
-	 */
-	public void setIsEnabled(String isEnabled) {
-		this.isEnabled = isEnabled;
-	}
+    /**
+     * Sets the value of the isEnabled property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIsEnabled(String value) {
+        this.isEnabled = value;
+    }
 
-	/**
-	 * @return the maxBindingsPerService
-	 */
-	public Integer getMaxBindingsPerService() {
-		return maxBindingsPerService;
-	}
+    /**
+     * Gets the value of the maxBindingsPerService property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxBindingsPerService() {
+        return maxBindingsPerService;
+    }
 
-	/**
-	 * @param maxBindingsPerService the maxBindingsPerService to set
-	 */
-	public void setMaxBindingsPerService(Integer maxBindingsPerService) {
-		this.maxBindingsPerService = maxBindingsPerService;
-	}
+    /**
+     * Sets the value of the maxBindingsPerService property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxBindingsPerService(Integer value) {
+        this.maxBindingsPerService = value;
+    }
 
-	/**
-	 * @return the maxBusinesses
-	 */
-	public Integer getMaxBusinesses() {
-		return maxBusinesses;
-	}
+    /**
+     * Gets the value of the maxBusinesses property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxBusinesses() {
+        return maxBusinesses;
+    }
 
-	/**
-	 * @param maxBusinesses the maxBusinesses to set
-	 */
-	public void setMaxBusinesses(Integer maxBusinesses) {
-		this.maxBusinesses = maxBusinesses;
-	}
+    /**
+     * Sets the value of the maxBusinesses property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxBusinesses(Integer value) {
+        this.maxBusinesses = value;
+    }
 
-	/**
-	 * @return the maxServicePerBusiness
-	 */
-	public Integer getMaxServicePerBusiness() {
-		return maxServicePerBusiness;
-	}
+    /**
+     * Gets the value of the maxServicePerBusiness property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxServicePerBusiness() {
+        return maxServicePerBusiness;
+    }
 
-	/**
-	 * @param maxServicePerBusiness the maxServicePerBusiness to set
-	 */
-	public void setMaxServicePerBusiness(Integer maxServicePerBusiness) {
-		this.maxServicePerBusiness = maxServicePerBusiness;
-	}
+    /**
+     * Sets the value of the maxServicePerBusiness property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxServicePerBusiness(Integer value) {
+        this.maxServicePerBusiness = value;
+    }
 
-	/**
-	 * @return the maxTModels
-	 */
-	public Integer getMaxTModels() {
-		return maxTModels;
-	}
+    /**
+     * Gets the value of the maxTModels property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getMaxTModels() {
+        return maxTModels;
+    }
 
-	/**
-	 * @param maxTModels the maxTModels to set
-	 */
-	public void setMaxTModels(Integer maxTModels) {
-		this.maxTModels = maxTModels;
-	}
+    /**
+     * Sets the value of the maxTModels property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setMaxTModels(Integer value) {
+        this.maxTModels = value;
+    }
 
-	/**
-	 * @return the authorizedName
-	 */
-	public String getAuthorizedName() {
-		return authorizedName;
-	}
-
-	/**
-	 * @param authorizedName the authorizedName to set
-	 */
-	public void setAuthorizedName(String authorizedName) {
-		this.authorizedName = authorizedName;
-	}
-
-	/**
+    /**
      * Gets the value of the signature property.
      * 
      * <p>
@@ -221,6 +288,28 @@ public class Publisher implements Serializable{
         return this.signature;
     }
 
+    /**
+     * Gets the value of the authorizedName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAuthorizedName() {
+        return authorizedName;
+    }
+
+    /**
+     * Sets the value of the authorizedName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAuthorizedName(String value) {
+        this.authorizedName = value;
+    }
 
 }
-

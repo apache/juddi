@@ -50,3 +50,4 @@ nunit-console.exe juddi-client.net-integration.test\bin\Debug\juddi-client.net-i
 
 UPGRADING
 Note: one or more of the database columns names have changed.
+Note: Significant jUDDI API Web Service changes since 3.2!

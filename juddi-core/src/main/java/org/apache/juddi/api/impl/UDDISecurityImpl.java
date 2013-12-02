@@ -23,9 +23,7 @@ import java.util.UUID;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
 
 import org.uddi.api_v3.AuthToken;
 import org.uddi.api_v3.DiscardAuthToken;
@@ -33,13 +31,12 @@ import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
-import org.apache.juddi.api.util.PublicationQuery;
 import org.apache.juddi.api.util.QueryStatus;
-import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.api.util.SecurityQuery;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingModelToApi;
 import org.apache.juddi.model.Publisher;
+import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.v3.auth.Authenticator;
 import org.apache.juddi.v3.auth.AuthenticatorFactory;
 import org.apache.juddi.v3.error.ErrorMessage;

@@ -76,6 +76,16 @@
 		<servlet-name>CustodyTransferService</servlet-name>
 		<servlet-class>org.apache.juddi.api.impl.UDDICustodyTransferImpl</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>ReplicationService</servlet-name>
+		<servlet-class>org.apache.juddi.api.impl.UDDIReplicationImpl</servlet-class>
+	</servlet>
+		 
+	<servlet>
+		<servlet-name>ValueSetService</servlet-name>
+		<servlet-class>org.apache.juddi.api.impl.UDDIValueSetValidationImpl</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>JUDDIApiService</servlet-name>
@@ -119,6 +129,16 @@
 	<servlet-mapping>
 		<servlet-name>CustodyTransferService</servlet-name>
 		<url-pattern>/services/custody-transfer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ReplicationService</servlet-name>
+		<url-pattern>/services/replication</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ValueSetService</servlet-name>
+		<url-pattern>/services/valueset-validation</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

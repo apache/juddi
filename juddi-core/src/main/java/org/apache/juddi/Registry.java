@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.replication.ReplicationNotifier;
 import org.apache.juddi.rmi.JNDIRegistration;
 import org.apache.juddi.rmi.RMIRegistration;
 import org.apache.juddi.subscription.SubscriptionNotifier;
@@ -32,6 +33,7 @@ public class Registry {
 	private static Registry registry = null;
 	private static Log log = LogFactory.getLog(Registry.class);
 	private static SubscriptionNotifier subscriptionNotifier = null;
+        private static ReplicationNotifier replicationNotifier = null;
 	/**
 	 * Singleton.
 	 */
@@ -50,6 +52,8 @@ public class Registry {
 				subscriptionNotifier.cancel();
 				subscriptionNotifier=null;
 			}
+                        replicationNotifier.cancel();
+                        replicationNotifier = null;
 			if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_JNDI_REGISTRATION, false)) {
 				try {
 					JNDIRegistration.getInstance().unregister();
@@ -69,7 +73,7 @@ public class Registry {
 		if (registry==null) {
 			log.info("Starting jUDDI registry...");
 			registry = new Registry();
-			
+			replicationNotifier = new ReplicationNotifier();
 			if (AppConfig.getConfiguration().getBoolean(Property.JUDDI_SUBSCRIPTION_NOTIFICATION, true)) {
 				subscriptionNotifier = new SubscriptionNotifier();
 			}

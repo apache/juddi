@@ -42,7 +42,7 @@ public class ValidateNode extends ValidateUDDIApi {
     /*-------------------------------------------------------------------
      validateSaveNode functions are specific to jUDDI.
      --------------------------------------------------------------------*/
-    public void validateSaveNode(EntityManager em, org.apache.juddi.api_v3.SaveNode body) throws DispositionReportFaultMessage {
+    public void validateSaveNode(EntityManager em, org.apache.juddi.api_v3.SaveNodeInfo body) throws DispositionReportFaultMessage {
 
         if (body == null) {
             throw new FatalErrorException(new ErrorMessage("errors.NullInput"));

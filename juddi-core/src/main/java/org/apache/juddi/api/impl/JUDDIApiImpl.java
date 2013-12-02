@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.juddi.api.impl;
 
 import java.io.StringWriter;
@@ -33,23 +32,26 @@ import javax.xml.bind.Marshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.ClassUtil;
+import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
+import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
-import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
-import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
-import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveClerkInfo;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SaveNodeInfo;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
+import org.apache.juddi.api_v3.ValidValues;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.mapping.MappingModelToApi;
@@ -59,6 +61,7 @@ import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.subscription.NotificationList;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.error.ErrorMessage;
+import org.apache.juddi.v3.error.FatalErrorException;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.apache.juddi.validation.ValidateClerk;
@@ -67,526 +70,622 @@ import org.apache.juddi.validation.ValidateNode;
 import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidatePublisher;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.repl_v3.ReplicationConfiguration;
 import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
 /**
+ * Implements the jUDDI API service
+ * 
+ * As of 3.3, this interface and implementation has significantly changed and is not backwards compatible.
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-@WebService(serviceName="JUDDIApiService", 
-			endpointInterface="org.apache.juddi.v3_service.JUDDIApiPortType",
-			targetNamespace = "urn:juddi-apache-org:v3_service")
+@WebService(serviceName = "JUDDIApiService",
+        endpointInterface = "org.apache.juddi.v3_service.JUDDIApiPortType",
+        targetNamespace = "urn:juddi-apache-org:v3_service")
 public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortType {
 
-	private Log log = LogFactory.getLog(this.getClass());
-	
-	/**
-	 * Saves publisher(s) to the persistence layer.  This method is specific to jUDDI.
-	 */
-	public PublisherDetail savePublisher(SavePublisher body)
-			throws DispositionReportFaultMessage {
+        private Log log = LogFactory.getLog(this.getClass());
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidatePublish(publisher).validateSavePublisher(em, body);
-			
-			PublisherDetail result = new PublisherDetail();
-	
-			List<org.apache.juddi.api_v3.Publisher> apiPublisherList = body.getPublisher();
-			for (org.apache.juddi.api_v3.Publisher apiPublisher : apiPublisherList) {
-				
-				org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
-				
-				MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
-				
-				Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
-				if (existingUddiEntity != null)
-					em.remove(existingUddiEntity);
-				
-				em.persist(modelPublisher);
-				
-				result.getPublisher().add(apiPublisher);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
+        /**
+         * Saves publisher(s) to the persistence layer. This method is specific
+         * to jUDDI.
+         */
+        @Override
+        public PublisherDetail savePublisher(SavePublisher body)
+                throws DispositionReportFaultMessage {
 
-	/**
-	 * Deletes publisher(s) from the persistence layer.  This method is specific to jUDDI.
-	 */
-	public void deletePublisher(DeletePublisher body)
-			throws DispositionReportFaultMessage {
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidatePublish(publisher).validateDeletePublisher(em, body);
-	
-			List<String> entityKeyList = body.getPublisherId();
-			for (String entityKey : entityKeyList) {
-				Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
-				em.remove(obj);
-			}
-	
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-	
-	/**
-	 * Retrieves publisher(s) from the persistence layer.  This method is specific to jUDDI.
-	 */
-	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
-			throws DispositionReportFaultMessage {
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-		new ValidatePublisher(null).validateGetPublisherDetail(body);
+                        new ValidatePublish(publisher).validateSavePublisher(em, body);
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			this.getEntityPublisher(em, body.getAuthInfo());
-			
-			PublisherDetail result = new PublisherDetail();
-			
-			List<String> publisherIdList = body.getPublisherId();
-			for (String publisherId : publisherIdList) {
-				org.apache.juddi.model.Publisher modelPublisher = null;
-				try {
-					modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
-				} catch (ClassCastException e) {}
-					if (modelPublisher == null) {
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
-				}
-				
-				org.apache.juddi.api_v3.Publisher apiPublisher = new org.apache.juddi.api_v3.Publisher();
-				
-				MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
-				
-				result.getPublisher().add(apiPublisher);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
+                        PublisherDetail result = new PublisherDetail();
 
-	}
+                        List<org.apache.juddi.api_v3.Publisher> apiPublisherList = body.getPublisher();
+                        for (org.apache.juddi.api_v3.Publisher apiPublisher : apiPublisherList) {
 
-	@SuppressWarnings("unchecked")
-	public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
-			throws DispositionReportFaultMessage, RemoteException {
-		
-		new ValidatePublisher(null).validateGetAllPublisherDetail(body);
+                                org.apache.juddi.model.Publisher modelPublisher = new org.apache.juddi.model.Publisher();
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			this.getEntityPublisher(em, body.getAuthInfo());
-			
-			PublisherDetail result = new PublisherDetail();
-			
-			Query query = em.createQuery("SELECT p from Publisher as p");
-			List<Publisher> modelPublisherList = query.getResultList();
-			
-			for (Publisher modelPublisher : modelPublisherList) {
-				
-				org.apache.juddi.api_v3.Publisher apiPublisher = new org.apache.juddi.api_v3.Publisher();
-				
-				MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
-				
-				result.getPublisher().add(apiPublisher);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
+                                MappingApiToModel.mapPublisher(apiPublisher, modelPublisher);
 
-	public void adminDeleteTModel(DeleteTModel body)
-			throws DispositionReportFaultMessage {
+                                Object existingUddiEntity = em.find(modelPublisher.getClass(), modelPublisher.getAuthorizedName());
+                                if (existingUddiEntity != null) {
+                                        em.remove(existingUddiEntity);
+                                }
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-		
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidatePublish(publisher).validateAdminDeleteTModel(em, body);
-			
-			List<String> entityKeyList = body.getTModelKey();
-			for (String entityKey : entityKeyList) {
-				Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
-				em.remove(obj);
-			}
-		
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-}
+                                em.persist(modelPublisher);
 
-	public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
-			throws DispositionReportFaultMessage, RemoteException {
-		
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidateClientSubscriptionInfo(publisher).validateDeleteClientSubscriptionInfo(em, body);
-	
-			List<String> entityKeyList = body.getSubscriptionKey();
-			for (String entityKey : entityKeyList) {
-				Object obj = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, entityKey);
-				em.remove(obj);
-			}
-	
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-		
-	}
+                                result.getPublisher().add(apiPublisher);
+                        }
 
-	public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
-			throws DispositionReportFaultMessage, RemoteException {
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidateClientSubscriptionInfo(publisher).validateSaveClientSubscriptionInfo(em, body);
-			
-			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
-	
-			List<org.apache.juddi.api_v3.ClientSubscriptionInfo> apiClientSubscriptionInfoList = body.getClientSubscriptionInfo();
-			for (org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo : apiClientSubscriptionInfoList) {
-				
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = new org.apache.juddi.model.ClientSubscriptionInfo();
-				
-				MappingApiToModel.mapClientSubscriptionInfo(apiClientSubscriptionInfo, modelClientSubscriptionInfo);
-				
-				Object existingUddiEntity = em.find(modelClientSubscriptionInfo.getClass(), modelClientSubscriptionInfo.getSubscriptionKey());
-				if (existingUddiEntity != null)
-					em.remove(existingUddiEntity);
-				
-				em.persist(modelClientSubscriptionInfo);
-				
-				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ClientSubscriptionInfoDetail getAllClientSubscriptionInfoDetail(GetAllClientSubscriptionInfoDetail body) 
-		throws DispositionReportFaultMessage {
-		
-		new ValidateClientSubscriptionInfo(null).validateGetAllClientSubscriptionDetail(body);
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			this.getEntityPublisher(em, body.getAuthInfo());
-			
-			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
-			
-			Query query = em.createQuery("SELECT cs from ClientSubscriptionInfo as cs");
-			List<org.apache.juddi.model.ClientSubscriptionInfo> modelClientSubscriptionInfoList = query.getResultList();
-			
-			for (ClientSubscriptionInfo modelClientSubscriptionInfo : modelClientSubscriptionInfoList) {
-				
-				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
-				
-				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
-				
-				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-		
-	}
-	
-	/**
-	 * Retrieves clientSubscriptionKey(s) from the persistence layer.  This method is specific to jUDDI.
-	 */
-	public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body)
-			throws DispositionReportFaultMessage {
+        /**
+         * Deletes publisher(s) from the persistence layer. This method is
+         * specific to jUDDI.
+         */
+        @Override
+        public void deletePublisher(DeletePublisher body)
+                throws DispositionReportFaultMessage {
 
-		new ValidateClientSubscriptionInfo(null).validateGetClientSubscriptionInfoDetail(body);
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			this.getEntityPublisher(em, body.getAuthInfo());
-			
-			ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
-			
-			List<String> subscriptionKeyList = body.getClientSubscriptionKey();
-			for (String subscriptionKey : subscriptionKeyList) {
-				
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
-				try {
-					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
-				} catch (ClassCastException e) {}
-				if (modelClientSubscriptionInfo == null) {
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
-				}
-				
-				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
-				
-				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
-				
-				result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
 
-	}
-	
-	/**
-	 * Saves clerk(s) to the persistence layer.  This method is specific to jUDDI.
-	 */
-	public ClerkDetail saveClerk(SaveClerk body)
-			throws DispositionReportFaultMessage {
+                        new ValidatePublish(publisher).validateDeletePublisher(em, body);
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidateClerk(publisher).validateSaveClerk(em, body);
-			
-			ClerkDetail result = new ClerkDetail();
-	
-			List<org.apache.juddi.api_v3.Clerk> apiClerkList = body.getClerk();;
-			for (org.apache.juddi.api_v3.Clerk apiClerk : apiClerkList) {
-				
-				org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
-				
-				MappingApiToModel.mapClerk(apiClerk, modelClerk);
-				
-				Object existingUddiEntity = em.find(modelClerk.getClass(), modelClerk.getClerkName());
-				if (existingUddiEntity != null) {
-					em.merge(modelClerk);
-				} else {
-					em.persist(modelClerk);
-				}
-				
-				result.getClerk().add(apiClerk);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
-	
-	/**
-	 * Saves nodes(s) to the persistence layer.  This method is specific to jUDDI.
-	 */
-	public NodeDetail saveNode(SaveNode body)
-			throws DispositionReportFaultMessage {
+                        List<String> entityKeyList = body.getPublisherId();
+                        for (String entityKey : entityKeyList) {
+                                Object obj = em.find(org.apache.juddi.model.Publisher.class, entityKey);
+                                em.remove(obj);
+                        }
 
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
-			
-			new ValidateNode(publisher).validateSaveNode(em, body);
-			
-			NodeDetail result = new NodeDetail();
-	
-			List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();;
-			for (org.apache.juddi.api_v3.Node apiNode : apiNodeList) {
-				
-				org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
-				
-				MappingApiToModel.mapNode(apiNode, modelNode);
-				
-				Object existingUddiEntity = em.find(modelNode.getClass(), modelNode.getName());
-				if (existingUddiEntity != null) {
-					em.merge(modelNode);
-				} else {
-				    em.persist(modelNode);
-				}
-				
-				result.getNode().add(apiNode);
-			}
-	
-			tx.commit();
-			return result;
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-	}
+                        tx.commit();
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
 
-	/**
-	 * Instructs the registry to perform a synchronous subscription response.
-	 */
-	@SuppressWarnings("unchecked")
-	public SyncSubscriptionDetail invokeSyncSubscription(
-			SyncSubscription body) throws DispositionReportFaultMessage,
-			RemoteException {
-		
-		//validate
-		
-		SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
-		
-		Map<String,org.apache.juddi.api_v3.ClientSubscriptionInfo> clientSubscriptionInfoMap 
-				= new HashMap<String,org.apache.juddi.api_v3.ClientSubscriptionInfo>();
-		//find the clerks to go with these subscriptions
-		EntityManager em = PersistenceManager.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-	
-			this.getEntityPublisher(em, body.getAuthInfo());
-			for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
-				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
-				org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
-				try {
-					modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
-				} catch (ClassCastException e) {}
-				if (modelClientSubscriptionInfo == null) {
-					throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
-				}
-				org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
-				MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
-				clientSubscriptionInfoMap.put(apiClientSubscriptionInfo.getSubscriptionKey(),apiClientSubscriptionInfo);
-			}
-	
-			tx.commit();
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			em.close();
-		}
-		
-		for (GetSubscriptionResults getSubscriptionResult : body.getGetSubscriptionResultsList()) {
-			try {
-				String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
-				Clerk fromClerk = clientSubscriptionInfoMap.get(subscriptionKey).getFromClerk();
-				Clerk toClerk = clientSubscriptionInfoMap.get(subscriptionKey).getToClerk();
-				String clazz = fromClerk.getNode().getProxyTransport();
-				Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
-				Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(fromClerk.getNode().getName()); 
-				UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(fromClerk.getNode().getSubscriptionUrl());
-				SubscriptionResultsList list = subscriptionService.getSubscriptionResults(getSubscriptionResult);
-				
-				JAXBContext context = JAXBContext.newInstance(list.getClass());
-				Marshaller marshaller = context.createMarshaller();
-				StringWriter sw = new StringWriter();
-				marshaller.marshal(list, sw);
+        /**
+         * Retrieves publisher(s) from the persistence layer. This method is
+         * specific to jUDDI.
+         */
+        @Override
+        public PublisherDetail getPublisherDetail(GetPublisherDetail body)
+                throws DispositionReportFaultMessage {
 
-				log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
-				
-				NotificationList<String> nl = NotificationList.getInstance();
-				nl.getNotifications().add(sw.toString());
-				
-				//update the registry with the notification list.
-				XRegisterHelper.handle(fromClerk, toClerk, list);
-				
-				syncSubscriptionDetail.getSubscriptionResultsList().add(list);
-			} catch (Exception ce) {
-				log.error(ce.getMessage(),ce);
-				if (ce instanceof DispositionReportFaultMessage) {
-					throw (DispositionReportFaultMessage) ce;
-				}
-				if (ce instanceof RemoteException) {
-					throw (RemoteException) ce;
-				}
-			}
-		}
-		//for now sending a clean object back
-		
-		return syncSubscriptionDetail;
-	}
+                new ValidatePublisher(null).validateGetPublisherDetail(body);
 
-	
-	
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        this.getEntityPublisher(em, body.getAuthInfo());
+
+                        PublisherDetail result = new PublisherDetail();
+
+                        List<String> publisherIdList = body.getPublisherId();
+                        for (String publisherId : publisherIdList) {
+                                org.apache.juddi.model.Publisher modelPublisher = null;
+                                try {
+                                        modelPublisher = em.find(org.apache.juddi.model.Publisher.class, publisherId);
+                                } catch (ClassCastException e) {
+                                }
+                                if (modelPublisher == null) {
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.PublisherNotFound", publisherId));
+                                }
+
+                                org.apache.juddi.api_v3.Publisher apiPublisher = new org.apache.juddi.api_v3.Publisher();
+
+                                MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
+
+                                result.getPublisher().add(apiPublisher);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
+                throws DispositionReportFaultMessage {
+
+                new ValidatePublisher(null).validateGetAllPublisherDetail(body);
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        this.getEntityPublisher(em, body.getAuthInfo());
+
+                        PublisherDetail result = new PublisherDetail();
+
+                        Query query = em.createQuery("SELECT p from Publisher as p");
+                        List<Publisher> modelPublisherList = query.getResultList();
+
+                        for (Publisher modelPublisher : modelPublisherList) {
+
+                                org.apache.juddi.api_v3.Publisher apiPublisher = new org.apache.juddi.api_v3.Publisher();
+
+                                MappingModelToApi.mapPublisher(modelPublisher, apiPublisher);
+
+                                result.getPublisher().add(apiPublisher);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        @Override
+        public void adminDeleteTModel(DeleteTModel body) throws DispositionReportFaultMessage {
+        
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+                        new ValidatePublish(publisher).validateAdminDeleteTModel(em, body);
+
+                        List<String> entityKeyList = body.getTModelKey();
+                        for (String entityKey : entityKeyList) {
+                                Object obj = em.find(org.apache.juddi.model.Tmodel.class, entityKey);
+                                em.remove(obj);
+                        }
+
+                        tx.commit();
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        @Override
+        public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
+                throws DispositionReportFaultMessage {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+                        new ValidateClientSubscriptionInfo(publisher).validateDeleteClientSubscriptionInfo(em, body);
+
+                        List<String> entityKeyList = body.getSubscriptionKey();
+                        for (String entityKey : entityKeyList) {
+                                Object obj = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, entityKey);
+                                em.remove(obj);
+                        }
+
+                        tx.commit();
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+        }
+
+        @Override
+        public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
+                throws DispositionReportFaultMessage {
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+                        new ValidateClientSubscriptionInfo(publisher).validateSaveClientSubscriptionInfo(em, body);
+
+                        ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+
+                        List<org.apache.juddi.api_v3.ClientSubscriptionInfo> apiClientSubscriptionInfoList = body.getClientSubscriptionInfo();
+                        for (org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo : apiClientSubscriptionInfoList) {
+
+                                org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = new org.apache.juddi.model.ClientSubscriptionInfo();
+
+                                MappingApiToModel.mapClientSubscriptionInfo(apiClientSubscriptionInfo, modelClientSubscriptionInfo);
+
+                                Object existingUddiEntity = em.find(modelClientSubscriptionInfo.getClass(), modelClientSubscriptionInfo.getSubscriptionKey());
+                                if (existingUddiEntity != null) {
+                                        em.remove(existingUddiEntity);
+                                }
+
+                                em.persist(modelClientSubscriptionInfo);
+
+                                result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public List<SubscriptionWrapper> getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+        private ClientSubscriptionInfoDetail getAllClientSubscriptionInfoDetail(String authinfo)
+                throws DispositionReportFaultMessage {
+
+                new ValidateClientSubscriptionInfo(null).validateGetAllClientSubscriptionDetail(authinfo);
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        this.getEntityPublisher(em,authinfo);
+
+                        ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+
+                        Query query = em.createQuery("SELECT cs from ClientSubscriptionInfo as cs");
+                        List<org.apache.juddi.model.ClientSubscriptionInfo> modelClientSubscriptionInfoList = query.getResultList();
+
+                        for (ClientSubscriptionInfo modelClientSubscriptionInfo : modelClientSubscriptionInfoList) {
+
+                                org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+
+                                result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+        }
+
+        /**
+         * Retrieves clientSubscriptionKey(s) from the persistence layer. This
+         * method is specific to jUDDI.
+         * 
+         * This is in a test case, but not exposed as a web service
+         */
+        public ClientSubscriptionInfoDetail getClientSubscriptionInfoDetail(String authinfo,  List<String>  key)
+                throws DispositionReportFaultMessage {
+
+               new ValidateClientSubscriptionInfo(null).validateGetClientSubscriptionInfoDetail( authinfo,  key);
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        this.getEntityPublisher(em, authinfo);
+
+                        ClientSubscriptionInfoDetail result = new ClientSubscriptionInfoDetail();
+
+                        List<String> subscriptionKeyList = key;
+                        for (String subscriptionKey : subscriptionKeyList) {
+
+                                org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+                                try {
+                                        modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+                                } catch (ClassCastException e) {
+                                }
+                                if (modelClientSubscriptionInfo == null) {
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
+                                }
+
+                                org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+
+                                result.getClientSubscriptionInfo().add(apiClientSubscriptionInfo);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+        }
+
+        /**
+         * Saves clerk(s) to the persistence layer. This method is specific to
+         * jUDDI.
+         */
+        @Override
+        public ClerkDetail saveClerk(SaveClerkInfo body)
+                throws DispositionReportFaultMessage {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+                        new ValidateClerk(publisher).validateSaveClerk(em, body);
+
+                        ClerkDetail result = new ClerkDetail();
+
+                        List<org.apache.juddi.api_v3.Clerk> apiClerkList = body.getClerk();;
+                        for (org.apache.juddi.api_v3.Clerk apiClerk : apiClerkList) {
+
+                                org.apache.juddi.model.Clerk modelClerk = new org.apache.juddi.model.Clerk();
+
+                                MappingApiToModel.mapClerk(apiClerk, modelClerk);
+
+                                Object existingUddiEntity = em.find(modelClerk.getClass(), modelClerk.getClerkName());
+                                if (existingUddiEntity != null) {
+                                        em.merge(modelClerk);
+                                } else {
+                                        em.persist(modelClerk);
+                                }
+
+                                result.getClerk().add(apiClerk);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        /**
+         * Saves nodes(s) to the persistence layer. This method is specific to
+         * jUDDI.
+         */
+        @Override
+        public NodeDetail saveNode(SaveNodeInfo body)
+                throws DispositionReportFaultMessage {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, body.getAuthInfo());
+
+                        new ValidateNode(publisher).validateSaveNode(em, body);
+
+                        NodeDetail result = new NodeDetail();
+
+                        List<org.apache.juddi.api_v3.Node> apiNodeList = body.getNode();;
+                        for (org.apache.juddi.api_v3.Node apiNode : apiNodeList) {
+
+                                org.apache.juddi.model.Node modelNode = new org.apache.juddi.model.Node();
+
+                                MappingApiToModel.mapNode(apiNode, modelNode);
+
+                                Object existingUddiEntity = em.find(modelNode.getClass(), modelNode.getName());
+                                if (existingUddiEntity != null) {
+                                        em.merge(modelNode);
+                                } else {
+                                        em.persist(modelNode);
+                                }
+
+                                result.getNode().add(apiNode);
+                        }
+
+                        tx.commit();
+                        return result;
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+        }
+
+        /**
+         * Instructs the registry to perform a synchronous subscription
+         * response.
+         */
+        @SuppressWarnings("unchecked")
+        @Override
+        public SyncSubscriptionDetail invokeSyncSubscription(
+               SyncSubscription body) throws DispositionReportFaultMessage {
+
+                //validate
+
+                SyncSubscriptionDetail syncSubscriptionDetail = new SyncSubscriptionDetail();
+
+                Map<String, org.apache.juddi.api_v3.ClientSubscriptionInfo> clientSubscriptionInfoMap = new HashMap<String, org.apache.juddi.api_v3.ClientSubscriptionInfo>();
+                //find the clerks to go with these subscriptions
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        this.getEntityPublisher(em, body.getAuthInfo());
+                        for (GetSubscriptionResults getSubscriptionResult : body.getList()) {
+                                String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
+                                org.apache.juddi.model.ClientSubscriptionInfo modelClientSubscriptionInfo = null;
+                                try {
+                                        modelClientSubscriptionInfo = em.find(org.apache.juddi.model.ClientSubscriptionInfo.class, subscriptionKey);
+                                } catch (ClassCastException e) {
+                                }
+                                if (modelClientSubscriptionInfo == null) {
+                                        throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.SubscripKeyNotFound", subscriptionKey));
+                                }
+                                org.apache.juddi.api_v3.ClientSubscriptionInfo apiClientSubscriptionInfo = new org.apache.juddi.api_v3.ClientSubscriptionInfo();
+                                MappingModelToApi.mapClientSubscriptionInfo(modelClientSubscriptionInfo, apiClientSubscriptionInfo);
+                                clientSubscriptionInfoMap.put(apiClientSubscriptionInfo.getSubscriptionKey(), apiClientSubscriptionInfo);
+                        }
+
+                        tx.commit();
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                for (GetSubscriptionResults getSubscriptionResult : body.getList()) {
+                        try {
+                                String subscriptionKey = getSubscriptionResult.getSubscriptionKey();
+                                Clerk fromClerk = clientSubscriptionInfoMap.get(subscriptionKey).getFromClerk();
+                                Clerk toClerk = clientSubscriptionInfoMap.get(subscriptionKey).getToClerk();
+                                String clazz = fromClerk.getNode().getProxyTransport();
+                                Class<?> transportClass = ClassUtil.forName(clazz, this.getClass());
+                                Transport transport = (Transport) transportClass.getConstructor(String.class).newInstance(fromClerk.getNode().getName());
+                                UDDISubscriptionPortType subscriptionService = transport.getUDDISubscriptionService(fromClerk.getNode().getSubscriptionUrl());
+                                SubscriptionResultsList listr = subscriptionService.getSubscriptionResults(getSubscriptionResult);
+
+                                JAXBContext context = JAXBContext.newInstance(listr.getClass());
+                                Marshaller marshaller = context.createMarshaller();
+                                StringWriter sw = new StringWriter();
+                                marshaller.marshal(listr, sw);
+
+                                log.info("Notification received by UDDISubscriptionListenerService : " + sw.toString());
+
+                                NotificationList<String> nl = NotificationList.getInstance();
+                                nl.getNotifications().add(sw.toString());
+
+                                //update the registry with the notification list.
+                                XRegisterHelper.handle(fromClerk, toClerk, listr);
+
+                                syncSubscriptionDetail.getList().add(listr);
+                        } catch (Exception ce) {
+                                log.error(ce.getMessage(), ce);
+                                if (ce instanceof DispositionReportFaultMessage) {
+                                        throw (DispositionReportFaultMessage) ce;
+                                }
+                                if (ce instanceof RemoteException) {
+                                        DispositionReportFaultMessage x = new FatalErrorException(new ErrorMessage("errors.subscriptionnotifier.client",ce.getMessage()));
+                                        throw x;
+                                }
+                        }
+                }
+                //for now sending a clean object back
+
+                return syncSubscriptionDetail;
+        }
+
+       
+        
+
+        
+
+        @Override
+        public List<Node> getAllNodes(String authInfo) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public List<Clerk> getAllClerks(String authInfo) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport deleteNode(String authInfo, String nodeID) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport deleteClerk(String authInfo, String clerkID) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport setReplicationNodes(String authInfo, ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+     
+
+        @Override
+        public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        
+
+
 }

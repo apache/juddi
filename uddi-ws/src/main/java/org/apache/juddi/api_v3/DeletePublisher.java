@@ -1,48 +1,42 @@
-/*
- * Copyright 2001-2008 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 
 package org.apache.juddi.api_v3;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for delete_publisher type.  Specific to juddi.
+ * <p>Java class for delete_publisher complex type.
  * 
- * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a> 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="delete_publisher">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="authInfo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="publisherId" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "delete_publisher", propOrder = {
     "authInfo",
     "publisherId"
 })
-public class DeletePublisher implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = 3984153946328762738L;
-	@XmlElement(namespace = "urn:uddi-org:api_v3")
-	protected String authInfo;
+public class DeletePublisher {
+
+    protected String authInfo;
     @XmlElement(required = true)
     protected List<String> publisherId;
 
@@ -77,7 +71,7 @@ public class DeletePublisher implements Serializable{
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the businessKey property.
+     * This is why there is not a <CODE>set</CODE> method for the publisherId property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
@@ -94,10 +88,9 @@ public class DeletePublisher implements Serializable{
      */
     public List<String> getPublisherId() {
         if (publisherId == null) {
-        	publisherId = new ArrayList<String>();
+            publisherId = new ArrayList<String>();
         }
         return this.publisherId;
     }
 
 }
-

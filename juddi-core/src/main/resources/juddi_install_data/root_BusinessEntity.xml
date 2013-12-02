@@ -200,6 +200,50 @@
         </bindingTemplate>
       </bindingTemplates>
     </businessService>
+	
+	
+	<businessService serviceKey="uddi:juddi.apache.org:services-valueset" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Value Set API Service</name>
+      <description xml:lang="en">Web Service supporting UDDI Value Set Validation service. This service provides tModel value validation and is
+		configured using the jUDDI Publisher Service</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-valueset-ws" serviceKey="uddi:juddi.apache.org:services-valueset">
+          <description>UDDI Value Set Validation API Version 3</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/valueset-validation?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_valuesetvalidation" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+      </bindingTemplates>
+    </businessService>
+	
+	
+	
+	<businessService serviceKey="uddi:juddi.apache.org:replication" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Replication API Version 3</name>
+      <description xml:lang="en">UDDI Replication API Version 3</description>
+      <bindingTemplates>
+        <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-replication-ws" serviceKey="uddi:juddi.apache.org:replication">
+          <description>UDDI Value Set Validation API Version 3</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/replication?wsdl</accessPoint>
+         <tModelInstanceInfo
+			  tModelKey="uddi:uddi.org:v3_replication" />
+			<tModelInstanceInfo 
+			  tModelKey="uddi:uddi.org:protocol:mutualauthenticatedssl3" />
+		  
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+      </bindingTemplates>
+    </businessService>
+	
+	
+	
+	
      <businessService serviceKey="uddi:juddi.apache.org:services-publisher" businessKey="uddi:juddi.apache.org:businesses-asf">
       <name xml:lang="en">jUDDI Publisher Service</name>
       <description xml:lang="en">Web Service supporting jUDDI specific API</description>

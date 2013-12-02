@@ -15,6 +15,8 @@
 package org.apache.juddi.api.impl;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -25,12 +27,11 @@ import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
-import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
-import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveClerkInfo;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SaveNodeInfo;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.v3.error.ValueNotAllowedException;
 import org.apache.juddi.v3.tck.TckPublisher;
@@ -86,7 +87,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
 		node.setClientName("defaultClient");
-		SaveNode saveNode = new SaveNode();
+		SaveNodeInfo saveNode = new SaveNodeInfo();
 		saveNode.setAuthInfo(authInfoJoe);
 		saveNode.getNode().add(node);
 		
@@ -94,7 +95,7 @@ public class API_100_ClientSubscriptionInfoTest {
 		clerk.setName("clerkName");
 		clerk.setPublisher("root");
 		clerk.setNode(node);
-		SaveClerk saveClerk = new SaveClerk();
+		SaveClerkInfo saveClerk = new SaveClerkInfo();
 		saveClerk.setAuthInfo(authInfoJoe);
 		saveClerk.getClerk().add(clerk);
 		
@@ -142,11 +143,12 @@ public class API_100_ClientSubscriptionInfoTest {
 			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
 			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 			
-			GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
-			getDetail.setAuthInfo(authInfoJoe);
-			getDetail.getClientSubscriptionKey().add("mykey");
-			
-			ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(getDetail);
+			//GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
+			//getDetail.setAuthInfo(authInfoJoe);
+			//getDetail.getClientSubscriptionKey().add("mykey");
+			List<String>keys = new ArrayList<String>();
+                        keys.add("mykey");
+			ClientSubscriptionInfoDetail detail2 = publisher.getClientSubscriptionInfoDetail(authInfoJoe,keys);
 			Assert.assertEquals("mykey", detail2.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 	
 			DeleteClientSubscriptionInfo deleteInfo = new DeleteClientSubscriptionInfo();
@@ -156,7 +158,7 @@ public class API_100_ClientSubscriptionInfoTest {
 			
 			try {
 				@SuppressWarnings("unused")
-				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(getDetail);
+				ClientSubscriptionInfoDetail detail3 = publisher.getClientSubscriptionInfoDetail(authInfoJoe, keys);
 				Assert.fail("We're expecting an InvalidKeyPassedException");
 			} catch (Exception e) {
 				Assert.assertEquals(InvalidKeyPassedException.class, e.getClass());
@@ -183,11 +185,12 @@ public class API_100_ClientSubscriptionInfoTest {
 		node.setSubscriptionUrl("http://localhost:8080/services/securityUrl");
 		node.setName("default");
 		node.setClientName("defaultClient");
-		SaveNode saveNode = new SaveNode();
+		SaveNodeInfo saveNode = new SaveNodeInfo();
 		saveNode.setAuthInfo(authInfoJoe);
 		saveNode.getNode().add(node);
 		
 		NodeDetail nodeDetail = publisher.saveNode(saveNode);
+                Assert.fail();
 		
 		
 	}

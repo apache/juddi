@@ -21,7 +21,7 @@ import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
-import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
+//import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -54,7 +54,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 
 		logger.debug("Getting auth tokens..");
 		try {
-			Transport transport = manager.getTransport();
+ 			Transport transport = manager.getTransport();
 			
 			security = transport.getUDDISecurityService();
 			GetAuthToken getAuthToken = new GetAuthToken();
@@ -104,9 +104,9 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 		try {
 			ClientSubscriptionInfoDetail detail = publisher.saveClientSubscriptionInfo(saveClientSubscriptionInfo);
 
-			GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
-			getDetail.setAuthInfo(authInfo);
-			getDetail.getClientSubscriptionKey().add("mykey");
+			//GetClientSubscriptionInfoDetail getDetail = new GetClientSubscriptionInfoDetail();
+			//getDetail.setAuthInfo(authInfo);
+			//getDetail.getClientSubscriptionKey().add("mykey");
 
 			Assert.assertEquals("mykey", detail.getClientSubscriptionInfo().get(0).getSubscriptionKey());
 

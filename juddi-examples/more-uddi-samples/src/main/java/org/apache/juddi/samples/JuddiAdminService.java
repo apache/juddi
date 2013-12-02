@@ -16,7 +16,7 @@
 package org.apache.juddi.samples;
 
 import org.apache.juddi.api_v3.Node;
-import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SaveNodeInfo;
 import org.apache.juddi.jaxb.PrintJUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
@@ -71,7 +71,7 @@ public class JuddiAdminService {
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
             System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
             
-            SaveNode node = new SaveNode();
+            SaveNodeInfo node = new SaveNodeInfo();
             node.setAuthInfo(rootAuthToken.getAuthInfo());
             Node n = new Node();
             n.setClientName("juddicloud");
@@ -87,7 +87,7 @@ public class JuddiAdminService {
             n.setSubscriptionUrl("http://uddi-jbossoverlord.rhcloud.com/services/subscription");
             node.getNode().add(n);
             
-            PrintJUDDI<SaveNode> p = new PrintJUDDI<SaveNode>();
+            PrintJUDDI<SaveNodeInfo> p = new PrintJUDDI<SaveNodeInfo>();
             System.out.println("Before sending");
             System.out.println(p.print(node));
             juddi.saveNode(node);

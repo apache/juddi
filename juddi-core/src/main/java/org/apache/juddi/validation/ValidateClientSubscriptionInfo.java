@@ -24,8 +24,8 @@ import javax.persistence.EntityManager;
 
 import org.apache.juddi.api_v3.ClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
-import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
-import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
+//import org.apache.juddi.api_v3.GetAllClientSubscriptionInfoDetail;
+//import org.apache.juddi.api_v3.GetClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
 import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.error.ErrorMessage;
@@ -109,14 +109,14 @@ public class ValidateClientSubscriptionInfo extends ValidateUDDIApi {
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.ClerkNotFound", name));
 	}
 	
-	public void validateGetClientSubscriptionInfoDetail(GetClientSubscriptionInfoDetail body) throws DispositionReportFaultMessage {
+	public void validateGetClientSubscriptionInfoDetail(String authinfo,  List<String>  key) throws DispositionReportFaultMessage {
 
 		// No null input
-		if (body == null)
+		if (authinfo == null || key== null || key.isEmpty())
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));
 		
 		// No null or empty list
-		List<String> clientSubscriptionKeyList = body.getClientSubscriptionKey();
+		List<String> clientSubscriptionKeyList = key;
 		if (clientSubscriptionKeyList == null || clientSubscriptionKeyList.size() == 0)
 			throw new InvalidKeyPassedException(new ErrorMessage("errors.invalidkey.NoKeys"));
 
@@ -128,7 +128,7 @@ public class ValidateClientSubscriptionInfo extends ValidateUDDIApi {
 		}
 	}
 	
-	public void validateGetAllClientSubscriptionDetail(GetAllClientSubscriptionInfoDetail body) throws DispositionReportFaultMessage {
+	public void validateGetAllClientSubscriptionDetail(String body) throws DispositionReportFaultMessage {
 
 		// No null input
 		if (body == null)

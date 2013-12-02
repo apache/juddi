@@ -83,6 +83,25 @@
       <param-value>org.apache.juddi.api.impl.UDDICustodyTransferImpl</param-value>
     </init-param>
   </servlet>
+  
+  <servlet>
+    <servlet-name>UDDIReplicationWS</servlet-name>
+    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+    <init-param>
+      <param-name>jboss.ws.endpoint</param-name>
+      <param-value>org.apache.juddi.api.impl.UDDIReplicationImpl</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>UDDIValueSetWS</servlet-name>
+    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+    <init-param>
+      <param-name>jboss.ws.endpoint</param-name>
+      <param-value>org.apache.juddi.api.impl.UDDIValueSetValidationImpl</param-value>
+    </init-param>
+  </servlet>  
+  
   <servlet>
     <servlet-name>JUDDIApiWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>

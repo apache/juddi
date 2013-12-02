@@ -205,19 +205,29 @@ public interface UDDIReplicationPortType extends Remote {
             @WebParam(name = "notify_changeRecordsAvailable", targetNamespace = "urn:uddi-org:repl_v3", partName = "body") NotifyChangeRecordsAvailable body)
             throws DispositionReportFaultMessage, RemoteException;
 
-    /**
-     * This UDDI API message provides the means by which the current existence
-     * and replication readiness of a node may be obtained.
-     *
-     * @param body
-     * @return returns java.lang.String The response to this message must
-     * contain the operatorNodeID element of the pinged node.
-     * @throws DispositionReportFaultMessage, RemoteException Processing an
-     * inbound replication message may fail due to a server internal error. The
-     * common behavior for all error cases is to return an E_fatalError error
-     * code. Error reporting SHALL be that specified by Section 4.8 – Success
-     * and Error Reporting of this specification.
-     */
+        /**
+         * This UDDI API message provides the means by which the current
+         * existence and replication readiness of a node may be obtained.
+         *
+         * @param body
+         * @return returns java.lang.String The response to this message must
+         * contain the operatorNodeID element of the pinged node. The
+         * operatorNodeID contains a unique key that is used to uniquely
+         * identify this node throughout the UDDI registry. The value used MUST
+         * match the businessKey of the Node Business Entity as referenced in
+         * Section 6.2.2 Self-Registration of Node Business Entity. The contact
+         * or contacts listed provide information about humans who should be
+         * contacted in the face of administrative and technical situations of
+         * various sorts. . The dsig:KeyInfo elements are intended to contain
+         * the certificate details if the soapReplicationURL makes use of Secure
+         * Sockets Layer 3.0 with mutual authentication as described in Section
+         * 7.5.5 Security Configuration.
+         * @throws DispositionReportFaultMessage, RemoteException Processing an
+         * inbound replication message may fail due to a server internal error.
+         * The common behavior for all error cases is to return an E_fatalError
+         * error code. Error reporting SHALL be that specified by Section 4.8 –
+         * Success and Error Reporting of this specification.
+         */
     @WebMethod(operationName = "do_ping", action = "do_ping")
     @WebResult(name = "operatorNodeID", targetNamespace = "urn:uddi-org:repl_v3", partName = "body")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)

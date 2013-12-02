@@ -275,12 +275,13 @@
 		<module>juddi-core-openjpa</module>
 		<module>juddiv3-war</module>
 		<module>juddi-examples</module>
+		<module>juddi-migration-tool</module>
 		<!-- this may fail if not on windows -->
 		<module>juddi-gui-dsig</module>
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
-        <module>juddi-migration-tool</module>
+
   </modules>
 	<distributionManagement>
 	    <site>

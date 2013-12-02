@@ -47,7 +47,7 @@ public class ValidateClerk extends ValidateUDDIApi {
 	 --------------------------------------------------------------------*/
 
 
-	public void validateSaveClerk(EntityManager em, org.apache.juddi.api_v3.SaveClerk body) throws DispositionReportFaultMessage {
+	public void validateSaveClerk(EntityManager em, org.apache.juddi.api_v3.SaveClerkInfo body) throws DispositionReportFaultMessage {
 
 		if (body == null)
 			throw new FatalErrorException(new ErrorMessage("errors.NullInput"));

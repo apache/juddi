@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-
-
 package org.uddi.repl_v3;
 
 import java.io.Serializable;
@@ -26,12 +24,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for changeRecordID_type complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
+ * <p>The following schema fragment specifies the expected content contained
+ * within this class.
+ *
  * <pre>
  * &lt;complexType name="changeRecordID_type">
  *   &lt;complexContent>
@@ -44,68 +42,68 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "changeRecordID_type", propOrder = {
-    "nodeID",
-    "originatingUSN"
+        "nodeID",
+        "originatingUSN"
 })
-public class ChangeRecordIDType implements Serializable{
-	@XmlTransient
-	private static final long serialVersionUID = -8665882376068031545L;
-	@XmlElement(required = true)
-    protected String nodeID;
-    protected Long originatingUSN;
+public class ChangeRecordIDType implements Serializable {
 
-    /**
-     * Gets the value of the nodeID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNodeID() {
-        return nodeID;
-    }
+        @XmlTransient
+        private static final long serialVersionUID = -8665882376068031545L;
+        @XmlElement(required = true)
+        protected String nodeID;
+        protected Long originatingUSN;
 
-    /**
-     * Sets the value of the nodeID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNodeID(String value) {
-        this.nodeID = value;
-    }
+        public ChangeRecordIDType() {
+        }
 
-    /**
-     * Gets the value of the originatingUSN property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
-     */
-    public Long getOriginatingUSN() {
-        return originatingUSN;
-    }
+        public ChangeRecordIDType(String node, Long oUSN) {
+                originatingUSN = oUSN;
+                nodeID = node;
+        }
 
-    /**
-     * Sets the value of the originatingUSN property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
-     */
-    public void setOriginatingUSN(Long value) {
-        this.originatingUSN = value;
-    }
+        /**
+         * Gets the value of the nodeID property.
+         *
+         * @return possible object is {@link String }
+         *
+         */
+        public String getNodeID() {
+                return nodeID;
+        }
 
+        /**
+         * Sets the value of the nodeID property.
+         *
+         * @param value allowed object is {@link String }
+         *
+         */
+        public void setNodeID(String value) {
+                this.nodeID = value;
+        }
+
+        /**
+         * Gets the value of the originatingUSN property.
+         *
+         * @return possible object is {@link Long }
+         *
+         */
+        public Long getOriginatingUSN() {
+                return originatingUSN;
+        }
+
+        /**
+         * Sets the value of the originatingUSN property.
+         *
+         * @param value allowed object is {@link Long }
+         *
+         */
+        public void setOriginatingUSN(Long value) {
+                this.originatingUSN = value;
+        }
 }
 

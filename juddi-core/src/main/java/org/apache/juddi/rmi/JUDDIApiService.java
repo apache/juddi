@@ -18,30 +18,42 @@ package org.apache.juddi.rmi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 import org.apache.juddi.api.impl.JUDDIApiImpl;
+import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
+import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
+import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
 import org.apache.juddi.api_v3.PublisherDetail;
-import org.apache.juddi.api_v3.SaveClerk;
+import org.apache.juddi.api_v3.SaveClerkInfo;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
-import org.apache.juddi.api_v3.SaveNode;
+import org.apache.juddi.api_v3.SaveNodeInfo;
 import org.apache.juddi.api_v3.SavePublisher;
+import org.apache.juddi.api_v3.SubscriptionWrapper;
 import org.apache.juddi.api_v3.SyncSubscription;
 import org.apache.juddi.api_v3.SyncSubscriptionDetail;
+import org.apache.juddi.api_v3.ValidValues;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.DeleteTModel;
+import org.uddi.api_v3.DispositionReport;
+import org.uddi.repl_v3.ReplicationConfiguration;
+import org.uddi.sub_v3.GetSubscriptionResults;
+import org.uddi.sub_v3.Subscription;
+import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 /**
  * UDDIPublicationPortType wrapper so it can be exposed as a service over RMI.
  * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
- *
+ *@author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPortType {
 
@@ -53,58 +65,121 @@ public class JUDDIApiService extends UnicastRemoteObject implements JUDDIApiPort
 	}
 
 	public void deletePublisher(DeletePublisher body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		juddiAPI.deletePublisher(body);
 	}
 
 	public PublisherDetail getAllPublisherDetail(GetAllPublisherDetail body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		return juddiAPI.getAllPublisherDetail(body);
 	}
 
 	public PublisherDetail getPublisherDetail(GetPublisherDetail body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		return juddiAPI.getPublisherDetail(body);
 	}
 
 	public PublisherDetail savePublisher(SavePublisher body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		return juddiAPI.savePublisher(body);
 	}
 
 	public void adminDeleteTModel(DeleteTModel body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		juddiAPI.adminDeleteTModel(body);
 	}
 
 	public void deleteClientSubscriptionInfo(DeleteClientSubscriptionInfo body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		juddiAPI.deleteClientSubscriptionInfo(body);
 	}
 
+        @Override
 	public ClientSubscriptionInfoDetail saveClientSubscriptionInfo(SaveClientSubscriptionInfo body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		return juddiAPI.saveClientSubscriptionInfo(body);
 		
 	}
 	
-	public ClerkDetail saveClerk(SaveClerk body)
-			throws DispositionReportFaultMessage, RemoteException {
-		return juddiAPI.saveClerk(body);
 
-	}
-	
-	public NodeDetail saveNode(SaveNode body)
-			throws DispositionReportFaultMessage, RemoteException {
-		return juddiAPI.saveNode(body);
-	
-	}
-
+        @Override
 	public SyncSubscriptionDetail invokeSyncSubscription(SyncSubscription body)
-			throws DispositionReportFaultMessage, RemoteException {
+			throws DispositionReportFaultMessage{
 		return juddiAPI.invokeSyncSubscription(body);
 	}
-	
+
+        @Override
+        public ClerkDetail saveClerk(SaveClerkInfo body) throws DispositionReportFaultMessage {
+                		return juddiAPI.saveClerk(body);
+        }
+
+        @Override
+        public NodeDetail saveNode(SaveNodeInfo body) throws DispositionReportFaultMessage {
+		return juddiAPI.saveNode(body);
+        }
+
+
+        @Override
+        public List<Node> getAllNodes(String authInfo) throws DispositionReportFaultMessage {
+                return juddiAPI.getAllNodes(authInfo);
+        }
+
+        @Override
+        public List<Clerk> getAllClerks(String authInfo) throws DispositionReportFaultMessage {
+                return juddiAPI.getAllClerks(authInfo);
+        }
+
+        @Override
+        public DispositionReport deleteNode(String authInfo, String nodeID) throws DispositionReportFaultMessage {
+                return juddiAPI.deleteNode(authInfo, nodeID);
+        }
+
+        @Override
+        public DispositionReport deleteClerk(String authInfo, String clerkID) throws DispositionReportFaultMessage {
+                return juddiAPI.deleteClerk(authInfo, clerkID);
+        }
+
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage {
+                return juddiAPI.adminSaveBusiness(authInfo, values);
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage {
+                return juddiAPI.adminSaveTModel(authInfo, values);
+        }
+
+        @Override
+        public ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage {
+                return juddiAPI.getReplicationNodes(authInfo);
+        }
+
+        @Override
+        public DispositionReport setReplicationNodes(String authInfo, ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
+                return juddiAPI.setReplicationNodes(authInfo, replicationConfiguration);
+        }
+
+        @Override
+        public List<SubscriptionWrapper> getAllClientSubscriptionInfo(String authInfo) throws DispositionReportFaultMessage {
+                return juddiAPI.getAllClientSubscriptionInfo(authInfo);
+        }
+
+        @Override
+        public DispositionReport setAllValidValues(String authInfo, List<ValidValues> values) throws DispositionReportFaultMessage {
+                return juddiAPI.setAllValidValues(authInfo, values);
+        }
+
+        @Override
+        public void adminDeleteSubscription(String authInfo, List<String> subscriptionKey) throws DispositionReportFaultMessage {
+                 juddiAPI.adminDeleteSubscription(authInfo, subscriptionKey);
+        }
+
+        @Override
+        public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage {
+                 juddiAPI.adminSaveSubscription(authInfo, publisherOrUsername, subscriptions);
+        }
+
+        
 	
 
 

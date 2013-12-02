@@ -67,21 +67,21 @@
     </jaxws:properties>
   </jaxws:endpoint>
 
-<!--  not yet implemented
+<!--  not yet implemented -->
   <jaxws:endpoint id="replication" implementor="org.apache.juddi.api.impl.UDDIReplicationImpl" address="/replication">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
--->
 
-<!-- ClientSide APIs
+
+<!-- ClientSide APIs -->
   <jaxws:endpoint id="valueset-validation" implementor="org.apache.juddi.api.impl.UDDIValueSetValidationImpl" address="/valueset-validation">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
-
+<!--
   <jaxws:endpoint id="valueset-caching" implementor="org.apache.juddi.api.impl.UDDIValueSetCachingImpl" address="/valueset-caching">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
