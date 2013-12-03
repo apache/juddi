@@ -35,6 +35,7 @@
 							org.apache.juddi.query, org.apache.juddi.query.util,
 							org.apache.juddi.rmi, org.apache.juddi.subscription,
 							org.apache.juddi.subscription.notify,
+							org.apache.juddi.replication,
 							org.apache.juddi.validation, org.apache.juddi.v3.auth,
 							org.apache.juddi.v3.error</Export-Package>
 						<Include-Resource>juddi_install_data=src/main/resources/juddi_install_data,
