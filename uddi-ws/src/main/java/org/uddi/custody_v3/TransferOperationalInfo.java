@@ -28,6 +28,14 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * The accepting publisher’s authorizedName and the accepting node’s nodeID are
+ * provided on input to the relinquishing custodial node to allow it to update
+ * the operationalInfo associated with the entities whose custody is being
+ * transferred. The authorizedName and nodeID elements are both required. The
+ * accepting node’s nodeID is obtained via the Replication Configuration
+ * structure as described in Section 7.5.2 Configuration of a UDDI Node –
+ * operator element. The authorizedName is obtained from the call to
+ * transfer_entities by the requesting publisher.
  * <p>Java class for transferOperationalInfo complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.

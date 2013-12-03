@@ -27,18 +27,23 @@ import org.apache.commons.configuration.ConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.juddi.api.util.PublicationQuery;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.api.util.ReplicationQuery;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingApiToModel;
 import org.apache.juddi.model.Node;
+import org.apache.juddi.model.UddiEntityPublisher;
 import org.apache.juddi.v3.client.UDDIService;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.FatalErrorException;
+import org.apache.juddi.validation.ValidatePublish;
 import org.apache.juddi.validation.ValidateReplication;
 import org.uddi.api_v3.DispositionReport;
 import org.uddi.api_v3.Result;
+import org.uddi.custody_v3.DiscardTransferToken;
 import org.uddi.repl_v3.ChangeRecord;
 import org.uddi.repl_v3.ChangeRecordIDType;
 import org.uddi.repl_v3.DoPing;
@@ -161,11 +166,31 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
         public void transferCustody(TransferCustody body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
-                long procTime = System.currentTimeMillis() - startTime;
-                serviceCounter.update(ReplicationQuery.TRANSFER_CUSTODY,
-                        QueryStatus.SUCCESS, procTime);
+
+
+                //*this node is transfering data to another node
+                //body.getTransferOperationalInfo().
 
 
                 ValidateReplication.unsupportedAPICall();
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                //EntityTransaction tx = em.getTransaction();
+
+
+                //The custodial node must verify that it has granted permission to transfer the entities identified and that this permission is still valid.  This operation is comprised of two steps:
+                //1.       Verification that the transferToken was issued by it, that it has not expired, that it represents the authority to transfer no more and no less than those entities identified by the businessKey and tModelKey elements and that all these entities are still valid and not yet transferred. The transferToken is invalidated if any of these conditions are not met.
+                //2.       If the conditions above are met, the custodial node will prevent any further changes to the entities identified by the businessKey and tModelKey elements identified. The entity will remain in this state until the replication stream indicates it has been successfully processed via the replication stream. 
+
+                //Upon successful verification of the custody transfer request by the custodial node, an empty message is returned by it indicating the success of the request and acknowledging the custody transfer. 
+
+                //Following the issue of the empty message, the custodial node will submit into the replication stream a changeRecordNewData providing in the operationalInfo, the nodeID accepting custody of the datum and the authorizedName of the publisher accepting ownership. The acknowledgmentRequested attribute of this change record MUST be set to "true".
+                //TODO enqueue Replication message
+
+                //Finally, the custodial node invalidates the transferToken in order to prevent additional calls of the transfer_entities API.
+                DiscardTransferToken dtt = new DiscardTransferToken();
+                dtt.setKeyBag(body.getKeyBag());
+                dtt.setTransferToken(body.getTransferToken());
+                new UDDICustodyTransferImpl().discardTransferToken(dtt);
         }
 }
