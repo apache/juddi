@@ -11,6 +11,7 @@
                 <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
                 <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
                 <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>
+				<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
                 <publishUrl>org.apache.juddi.api.impl.UDDIPublicationImpl</publishUrl>
                 <securityUrl>org.apache.juddi.api.impl.UDDISecurityImpl</securityUrl>
                 <subscriptionUrl>org.apache.juddi.api.impl.UDDISubscriptionImpl</subscriptionUrl>

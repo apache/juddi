@@ -242,6 +242,7 @@ public class ClientConfig
 			uddiNode.setDescription(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").description"),properties));
 			uddiNode.setProxyTransport(         TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").proxyTransport"),properties));
 			uddiNode.setInquiryUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").inquiryUrl"),properties));
+                        uddiNode.setInquiryRESTUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").inquiryRESTUrl"),properties));
 			uddiNode.setPublishUrl(             TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").publishUrl"),properties));
 			uddiNode.setCustodyTransferUrl(     TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").custodyTransferUrl"),properties));
 			uddiNode.setSecurityUrl(            TokenResolver.replaceTokens(config.getString("client.nodes.node(" + i +").securityUrl"),properties));

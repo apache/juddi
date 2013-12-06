@@ -152,6 +152,8 @@ namespace org.apache.juddi.v3.client.config {
         
         private string inquiryUrlField;
         
+        private string inquiryRESTUrlField;
+        
         private string publishUrlField;
         
         private string securityUrlField;
@@ -230,6 +232,16 @@ namespace org.apache.juddi.v3.client.config {
             }
             set {
                 this.inquiryUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string inquiryRESTUrl {
+            get {
+                return this.inquiryRESTUrlField;
+            }
+            set {
+                this.inquiryRESTUrlField = value;
             }
         }
         
@@ -871,7 +883,7 @@ namespace org.apache.juddi.v3.client.config {
         
         public uddiClientSignature() {
             this.canonicalizationMethodField = "http://www.w3.org/2001/10/xml-exc-c14n#";
-            this.signatureMethodField = "RSA_SHA1";
+            this.signatureMethodField = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
             this.xML_DIGSIG_NSField = "http://www.w3.org/2000/09/xmldsig#";
             this.checkTimestampsField = true;
             this.checkTrustField = true;

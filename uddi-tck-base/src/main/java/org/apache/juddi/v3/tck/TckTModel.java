@@ -40,7 +40,8 @@ public class TckTModel
     final static String JOE_PUBLISHER_TMODEL_XML      = "uddi_data/joepublisher/tModelKeyGen.xml";
     public static String JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3      = "uddi_data/joepublisher/FindTmodelTest.xml";
     public static String JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY="uddi:uddi.joepublisher.com:tmodelone";
-    
+    /**"uddi:uddi.joepublisher.com:"*/
+    public final static String JOE_PUBLISHER_KEY_PREFIX= "uddi:uddi.joepublisher.com:";
     final static String JOE_PUBLISHER_TMODEL_KEY      = "uddi:uddi.joepublisher.com:keygenerator";
     final static String MARY_PUBLISHER_TMODEL_XML     = "uddi_data/marypublisher/tModelKeyGen.xml";
     final static String MARY_PUBLISHER_TMODEL_KEY     = "uddi:uddi.marypublisher.com:keygenerator";

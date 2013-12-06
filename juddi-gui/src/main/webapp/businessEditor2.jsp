@@ -616,10 +616,7 @@
                 <%
                     if (bd.getSignature().isEmpty()) {
                 %>
-                <a class="btn btn-primary " href="javascript:saveBusiness();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.s                    e
-
-                    
-                        )%></a>
+                <a class="btn btn-primary " href="javascript:saveBusiness();"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>
                 <%  } else {
                 %>
                 <a href="#confirmDialog" role="button" class="btn btn-primary" data-toggle="modal"><i class="icon-save icon-large"></i> <%=ResourceLoader.GetResource(session, "actions.save")%></a>

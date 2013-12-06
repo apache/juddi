@@ -290,12 +290,43 @@ public class UDDIInquiryJAXRS {
     public List<URI> getEndpointsByServiceXML(@PathParam("id") String id) throws WebApplicationException {
         return getEndpointsByService(id);
     }
+    
+    /**
+     * 6.5 HTTP GET Services for UDDI Data Structures
+A node may offer an HTTP GET service for access to the XML representations of UDDI data structures. If a node offers this service, the URLs should be in a format that is predictable and uses the entity key as a URL parameter.
 
+The RECOMMENDED syntax for the URLs for such a service is as follows:
+
+If a UDDI node’s base URI is http://uddi.example.org/mybase, then the URI http://uddi.example.org/mybase?<entity>Key=uddiKey would retrieve the XML for the data structure whose type is <entity> and whose key is uddiKey.  For example, the XML representation of a tModel whose key is "uddi:tempuri.com:fish:interface" can be retrieved by using the URL http://uddi.example.org/mybase?tModelKey=uddi:tempuri.com:fish:interface.
+
+In the case of businessEntities, the node MAY add these URIs to the businessEntity’s discoveryURLs structure, though this is NOT RECOMMENDED behavior as it complicates the use of digital signatures.
+
+
+ 
+     * @param id
+     * @return
+     * @throws WebApplicationException 
+     */
+    @GET
+    @Path("/base?{entity}Key={key}")
+    @Produces("application/xml")
+     @org.apache.cxf.jaxrs.model.wadl.Description("Returns the selected UDDI entity as XML per section 6.5 of the UDDIv3 specification. Use businessKey, tmodelKey, bindingKey or serviceKey ")
+    public Object getEntityAsXML(@PathParam("entity") String entity,@PathParam("key") String key) throws WebApplicationException {
+        if (entity.equalsIgnoreCase("business"))
+                return getBusinessDetailXML(key);
+        if (entity.equalsIgnoreCase("tmodel"))
+                return getTModelDetailXML(key);
+        if (entity.equalsIgnoreCase("binding"))
+                return getBindingDetailXML(key);
+        if (entity.equalsIgnoreCase("service"))
+                return getServiceDetailXML(key);
+        throw new WebApplicationException(400);
+    }
+    
     private List<URI> getEndpointsByService(String id) throws WebApplicationException {
         List<URI> ret = new ArrayList<URI>();
         GetServiceDetail fs = new GetServiceDetail();
-        //TODO fs.setAuthInfo(rootAuthToken.getAuthInfo());
-
+    
         fs.getServiceKey().add(id);
         try {
             ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);
@@ -310,6 +341,8 @@ public class UDDIInquiryJAXRS {
         }
         return ret;
     }
+    
+    
 
     private List<URI> GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws DispositionReportFaultMessage {
         List<URI> items = new ArrayList<URI>();

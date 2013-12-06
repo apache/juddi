@@ -82,6 +82,13 @@
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-rest" serviceKey="uddi:juddi.apache.org:services-inquiry">
+          <description>UDDI Inquiry API V3 REST</description>
+		  <accessPoint useType="wadlDeployment">${juddi.server.baseurl}/services/inquiryRest?_wadl</accessPoint>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wadl" keyValue="wadlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
       </bindingTemplates>
     </businessService>
     <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:businesses-asf">

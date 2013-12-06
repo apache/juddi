@@ -95,11 +95,13 @@
     </jaxws:properties>
   </jaxws:endpoint>
 
-    <jaxrs:server id="inquiryRestService" address="/inquiryRest">
+  <jaxrs:server id="inquiryRestService" address="/inquiryRest">
     <jaxrs:serviceBeans>
       <ref bean="inquiryRest" />
     </jaxrs:serviceBeans>
   </jaxrs:server>
   <bean id="inquiryRest" class="org.apache.juddi.api.impl.rest.UDDIInquiryJAXRS" />
-  
+	<bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+		<property name="ignoreNamespaces" value="true"/>
+  </bean>
 </beans>
