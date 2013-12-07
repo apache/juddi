@@ -375,13 +375,22 @@ public class MappingModelToApi {
 			apiDiscUrl.setUseType(modelDiscUrl.getUseType());
 			String discoveryURL = modelDiscUrl.getUrl();
 			try {
-				String baseUrl = AppConfig.getConfiguration().getString("juddi.server.baseurl");
+				String baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL);
 				if (baseUrl==null) {
-					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to '" 
+					logger.warn("Token '"+Property.JUDDI_BASE_URL+"' not found in the juddiv3.xml, defaulting to '" 
 							+ Property.DEFAULT_BASE_URL + "'");
 					baseUrl = Property.DEFAULT_BASE_URL;
 				}
-				discoveryURL = discoveryURL.replaceAll("\\$\\{juddi.server.baseurl\\}", baseUrl);
+				discoveryURL = discoveryURL.replaceAll("\\$\\{"+Property.JUDDI_BASE_URL+"\\}", baseUrl);
+                                
+                                 baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE);
+				if (baseUrl==null) {
+					logger.warn("Token '"+Property.JUDDI_BASE_URL_SECURE+"' not found in the juddiv3.xml, defaulting to '" 
+							+ Property.JUDDI_BASE_URL_SECURE + "'");
+					baseUrl = Property.DEFAULT_BASE_URL_SECURE;
+				}
+				discoveryURL = discoveryURL.replaceAll("\\$\\{"+Property.JUDDI_BASE_URL_SECURE+"\\}", baseUrl);
+                                
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage(),e);
 			}
@@ -632,13 +641,21 @@ public class MappingModelToApi {
 		String accessPointValue = modelBindingTemplate.getAccessPointUrl();
 		if (accessPointValue!=null) {
 			try {
-				String baseUrl = AppConfig.getConfiguration().getString("juddi.server.baseurl");
+				String baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL);
 				if (baseUrl==null) {
-					logger.warn("Token 'juddi.server.baseurl' not found in the juddiv3.properties, defaulting to '" 
+					logger.warn("Token '"+Property.JUDDI_BASE_URL+"' not found in the juddiv3.xml, defaulting to '" 
 							+ Property.DEFAULT_BASE_URL + "'");
 					baseUrl = Property.DEFAULT_BASE_URL;
 				}
-				accessPointValue = accessPointValue.replaceAll("\\$\\{juddi.server.baseurl\\}", baseUrl);
+				accessPointValue = accessPointValue.replaceAll("\\$\\{"+Property.JUDDI_BASE_URL+"\\}", baseUrl);
+                                
+                                 baseUrl = AppConfig.getConfiguration().getString(Property.JUDDI_BASE_URL_SECURE);
+				if (baseUrl==null) {
+					logger.warn("Token '"+Property.JUDDI_BASE_URL_SECURE+"' not found in the juddiv3.xml, defaulting to '" 
+							+ Property.JUDDI_BASE_URL_SECURE + "'");
+					baseUrl = Property.DEFAULT_BASE_URL_SECURE;
+				}
+				accessPointValue = accessPointValue.replaceAll("\\$\\{"+Property.JUDDI_BASE_URL_SECURE+"\\}", baseUrl);
 			} catch (ConfigurationException e) {
 				logger.error(e.getMessage(),e);
 			}

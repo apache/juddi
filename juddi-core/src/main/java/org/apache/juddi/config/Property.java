@@ -12,6 +12,9 @@ import org.apache.juddi.v3.auth.MD5XMLDocAuthenticator;
  */
 public interface Property {
     
+        public final static String JUDDI_BASE_URL="juddi.server.baseurl";
+        public final static String JUDDI_BASE_URL_SECURE="juddi.server.baseurlsecure";
+        
     public final static String JUDDI_ROOT_PUBLISHER = "juddi.root.publisher";
     public final static String JUDDI_LOAD_INSTALL_DATA = "juddi.load.install.data";
     public final static String JUDDI_PERSISTENCEUNIT_NAME = "juddi.persistenceunit.name";
@@ -157,6 +160,7 @@ public interface Property {
     public final static String DEFAULT_SECURITY_DOMAIN = "java:/jaas/other";
     public final static boolean DEFAULT_LOAD_INSTALL_DATA = true;
     public final static String DEFAULT_BASE_URL = "http://localhost:8080/juddiv3";
+    public final static String DEFAULT_BASE_URL_SECURE = "https://localhost:8443/juddiv3";
     /* Allowing the the user to override jpa persistence properties in the juddi.properties file */
     public final static String PERSISTENCE_PROVIDER = "persistenceProvider";
     public final static String DATASOURCE = "hibernate.connection.datasource";

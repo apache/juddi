@@ -13,6 +13,7 @@
 		<!-- The ${juddi.server.baseurl} token can be referenced in accessPoints and will be resolved at runtime. -->
 		<server>
 			<baseurl>http://localhost:8080/juddiv3</baseurl>
+			<baseurlsecure>https://localhost:8443/juddiv3</baseurlsecure>
 		</server>
 		<!-- The node Id must be unique when setup in a cluster of UDDI servers implementing the replication API
 			don't worry, jUDDI doesn't implement it right now, but it may come in the future -->
