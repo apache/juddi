@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- 
+This config is for the juddi-gui.
 
+It currently does not use the ValueSet, jUDDI, Replication, or REST APIs
+-->
 <uddi>
     <reloadDelay>5000</reloadDelay>
     <client name="juddigui">

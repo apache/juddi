@@ -36,6 +36,7 @@ public class UDDINode implements Serializable {
 	private String description;
 	private String custodyTransferUrl;
 	private String inquiryUrl;
+        private String inquiryRESTUrl;
 	private String publishUrl;
 	private String securityUrl;
 	private String subscriptionUrl;
@@ -58,6 +59,7 @@ public class UDDINode implements Serializable {
 		description = node.getDescription();
 		custodyTransferUrl = node.getCustodyTransferUrl();
 		inquiryUrl = node.getInquiryUrl();
+                //TODO inquiryRESTUrl = node.getInquiryRESTUrl();
 		publishUrl = node.getPublishUrl();
 		securityUrl = node.getSecurityUrl();
 		subscriptionUrl = node.getSubscriptionUrl();
@@ -85,6 +87,7 @@ public class UDDINode implements Serializable {
 		apiNode.setFactoryNamingProvider(factoryNamingProvider);
 		apiNode.setFactoryURLPkgs(factoryURLPkgs);
 		apiNode.setInquiryUrl(inquiryUrl);
+                //apiNode.setInquiryRESTUrl(name);
 		apiNode.setJuddiApiUrl(juddiApiUrl);
 		apiNode.setClientName(clientName);
 		apiNode.setName(name);
@@ -143,6 +146,23 @@ public class UDDINode implements Serializable {
 
 	public String getInquiryUrl() {
 		return inquiryUrl;
+	}
+        
+        /**
+         * used ONLY for jUDDI's HTTP GET (REST) endpoint
+         * @since 3.2
+         * @param url 
+         */
+        public void setInquiryRESTUrl(String url){
+                this.inquiryRESTUrl = url;
+        }
+        /**
+         * used ONLY for jUDDI's HTTP GET (REST) endpoint
+         * @since 3.2
+         * @return 
+         */
+        public String getInquiry_REST_Url() {
+		return inquiryRESTUrl;
 	}
 
 	public void setInquiryUrl(String inquiryUrl) {

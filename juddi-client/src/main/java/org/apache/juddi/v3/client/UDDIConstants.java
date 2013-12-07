@@ -564,8 +564,17 @@ public interface UDDIConstants {
     /**
      * Category system used to point a value set or category group system tModel
      * to associated value set Web service implementations.
+     * used for keyedReference tmodel key<br>
+     * hint: use the ValueSetValidation binding template key as the value
      */
     public static String IS_VALIDATED_BY = "uddi:uddi.org:categorization:validatedby";
+    /**
+     * Category system used to point a value set or category group system tModel
+     * to associated value set Web service implementations.
+     * used for keyedReference key name<br>
+     * hint: use the ValueSetValidation binding template key as the value
+     */
+    public static String IS_VALIDATED_BY_KEY_NAME = "uddi-org:validatedBy";
     /**
      * Category system for referring tModels to other tModels for the purpose of
      * reuse.

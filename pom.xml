@@ -270,6 +270,7 @@
 		<module>uddi-ws</module>
 		<module>uddi-tck-base</module>
 		<module>juddi-client</module>
+		<module>juddi-migration-tool</module>
 		<module>juddi-core</module>
 		<module>juddi-rest-cxf</module>
 		<module>juddi-core-openjpa</module>
@@ -280,7 +281,7 @@
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
-        <module>juddi-migration-tool</module>
+        
   </modules>
 	<distributionManagement>
 	    <site>

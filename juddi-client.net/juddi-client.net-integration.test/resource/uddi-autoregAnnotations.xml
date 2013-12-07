@@ -19,6 +19,7 @@
         <proxyTransport>org.apache.juddi.v3.client.transport.AspNetTransport</proxyTransport>
         <custodyTransferUrl>http://${serverName}:${serverPort}/services/custody-transfer?wsdl</custodyTransferUrl>
         <inquiryUrl>http://${serverName}:${serverPort}/services/inquiry?wsdl</inquiryUrl>
+		<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
         <publishUrl>http://${serverName}:${serverPort}/services/publish?wsdl</publishUrl>
         <securityUrl>http://${serverName}:${serverPort}/services/security?wsdl</securityUrl>
         <subscriptionUrl>http://${serverName}:${serverPort}/services/subscription?wsdl</subscriptionUrl>

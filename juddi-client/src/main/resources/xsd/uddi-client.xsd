@@ -41,6 +41,8 @@
                           <xsd:element type="xsd:string" name="proxyTransport" />
                           <xsd:element type="xsd:string" name="custodyTransferUrl" />
                           <xsd:element type="xsd:string" name="inquiryUrl" />
+						  <xsd:element type="xsd:string" name="inquiryRESTUrl" />
+						  
                           <xsd:element type="xsd:string" name="publishUrl" />
                           <xsd:element type="xsd:string" name="securityUrl" />
                           <xsd:element type="xsd:string" name="subscriptionUrl" />
