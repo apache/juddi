@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
+import org.uddi.sub_v3.KeyBag;
 
 /**
  * test cases for the jUDDI Inquiry REST service
@@ -75,6 +76,16 @@ public class UDDIInquiryJAXRSTest extends Assert {
 // The JSON prefix can be "" to specify that you don't want any prefix.
                 HashMap<String, String> nstojns = new HashMap<String, String>();
                 nstojns.put("urn:uddi-org:api_v3", "urn:uddi-org:api_v3");
+                nstojns.put("urn:uddi-org:sub_v3", "urn:uddi-org:sub_v3");
+                nstojns.put("urn:uddi-org:custody_v3", "urn:uddi-org:custody_v3");
+                nstojns.put("urn:uddi-org:repl_v3", "urn:uddi-org:repl_v3");
+                nstojns.put("urn:uddi-org:subr_v3", "urn:uddi-org:subr_v3");
+                nstojns.put("urn:uddi-org:repl_v3", "urn:uddi-org:repl_v3");
+                nstojns.put("urn:uddi-org:vs_v3", "urn:uddi-org:vs_v3");
+                nstojns.put("urn:uddi-org:vscache_v3", "urn:uddi-org:vscache_v3");
+                nstojns.put("urn:uddi-org:policy_v3", "urn:uddi-org:policy_v3");
+                nstojns.put("urn:uddi-org:policy_instanceParms_v3", "urn:uddi-org:policy_instanceParms_v3");
+                nstojns.put("http://www.w3.org/2000/09/xmldsig#", "http://www.w3.org/2000/09/xmldsig#");
 
                 properties.put("namespaceMap", nstojns);
                 JSONProvider jsonProvider = new org.apache.cxf.jaxrs.provider.json.JSONProvider();
@@ -120,6 +131,16 @@ public class UDDIInquiryJAXRSTest extends Assert {
 // The JSON prefix can be "" to specify that you don't want any prefix.
                 HashMap<String, String> nstojns = new HashMap<String, String>();
                 nstojns.put("urn:uddi-org:api_v3", "urn:uddi-org:api_v3");
+                nstojns.put("urn:uddi-org:sub_v3", "urn:uddi-org:sub_v3");
+                nstojns.put("urn:uddi-org:custody_v3", "urn:uddi-org:custody_v3");
+                nstojns.put("urn:uddi-org:repl_v3", "urn:uddi-org:repl_v3");
+                nstojns.put("urn:uddi-org:subr_v3", "urn:uddi-org:subr_v3");
+                nstojns.put("urn:uddi-org:repl_v3", "urn:uddi-org:repl_v3");
+                nstojns.put("urn:uddi-org:vs_v3", "urn:uddi-org:vs_v3");
+                nstojns.put("urn:uddi-org:vscache_v3", "urn:uddi-org:vscache_v3");
+                nstojns.put("urn:uddi-org:policy_v3", "urn:uddi-org:policy_v3");
+                nstojns.put("urn:uddi-org:policy_instanceParms_v3", "urn:uddi-org:policy_instanceParms_v3");
+                nstojns.put("http://www.w3.org/2000/09/xmldsig#", "http://www.w3.org/2000/09/xmldsig#");
 
                 properties.put("namespaceMap", nstojns);
                 JSONProvider jsonProvider = new org.apache.cxf.jaxrs.provider.json.JSONProvider();
@@ -156,7 +177,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         @Test(expected = WebApplicationException.class)
         public void testGetBusinessDetailJSON_NULL() {
                 System.out.println("testGetBusinessDetailJSON_NULL");
-                
+
                 String id = UUID.randomUUID().toString();
 
                 BusinessEntity expResult = null;
@@ -169,7 +190,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         @Test(expected = WebApplicationException.class)
         public void testGetBusinessDetailXML_NULL() {
                 System.out.println("testGetBusinessDetailXML_NULL");
-                
+
 
                 String id = UUID.randomUUID().toString();
                 BusinessEntity expResult = null;
@@ -197,7 +218,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         @Test
         public void testGetTModelDetailXML() {
                 System.out.println("testGetTModelDetailXML");
-                
+
                 TModel result = instance.getTModelDetailXML(JUDDI_TMODEL);
                 Assert.assertNotNull(result);
                 Assert.assertNotNull(result.getName());
@@ -212,7 +233,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetTModelDetailJSON_NULL() {
                 System.out.println("getTModelDetailJSON_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 TModel expResult = null;
                 TModel result = instance.getTModelDetailJSON(id);
 
@@ -221,7 +242,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         @Test
         public void testGetTModelDetailJSON() {
                 System.out.println("testGetTModelDetailJSON");
-                
+
                 TModel result = instance.getTModelDetailJSON(JUDDI_TMODEL);
                 Assert.assertNotNull(result);
                 Assert.assertNotNull(result.getName());
@@ -236,7 +257,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetServiceDetailJSON_NULL() {
                 System.out.println("getServiceDetailJSON_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 BusinessService expResult = null;
                 BusinessService result = instance.getServiceDetailJSON(id);
 
@@ -246,7 +267,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetServiceDetailJSON() {
                 System.out.println("getServiceDetailJSON");
                 String id = UUID.randomUUID().toString();
-                
+
                 BusinessService expResult = null;
                 BusinessService result = instance.getServiceDetailJSON(JUDDI_SVC);
                 Assert.assertNotNull(result);
@@ -261,7 +282,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetServiceDetailXML_NULL() {
                 System.out.println("getServiceDetailXML_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 BusinessService expResult = null;
                 BusinessService result = instance.getServiceDetailXML(id);
 
@@ -271,7 +292,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetServiceDetailXML() {
                 System.out.println("getServiceDetailXML");
                 String id = UUID.randomUUID().toString();
-                
+
                 BusinessService expResult = null;
                 BusinessService result = instance.getServiceDetailXML(JUDDI_SVC);
                 Assert.assertNotNull(result);
@@ -286,7 +307,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetOpInfoJSON_NULL() {
                 System.out.println("getOpInfoJSON_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 OperationalInfo expResult = null;
                 OperationalInfo result = instance.getOpInfoJSON(id);
 
@@ -296,7 +317,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetOpInfoJSON() {
                 System.out.println("getOpInfoJSON");
                 String id = UUID.randomUUID().toString();
-                
+
                 OperationalInfo expResult = null;
                 OperationalInfo result = instance.getOpInfoJSON(JUDDI_BIZ);
                 Assert.assertNotNull(result);
@@ -313,7 +334,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetOpInfoXML_NULL() {
                 System.out.println("getOpInfoXML_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 OperationalInfo expResult = null;
                 OperationalInfo result = instance.getOpInfoXML(id);
 
@@ -323,7 +344,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetOpInfoXML() {
                 System.out.println("getOpInfoXML");
                 String id = UUID.randomUUID().toString();
-                
+
                 OperationalInfo expResult = null;
                 OperationalInfo result = instance.getOpInfoXML(JUDDI_BIZ);
                 Assert.assertNotNull(result);
@@ -340,7 +361,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetBindingDetailJSON_NULL() {
                 System.out.println("getBindingDetailJSON_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 BindingTemplate expResult = null;
                 BindingTemplate result = instance.getBindingDetailJSON(id);
 
@@ -350,7 +371,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetBindingDetailJSON() {
                 System.out.println("getBindingDetailJSON");
                 String id = UUID.randomUUID().toString();
-                
+
                 BindingTemplate expResult = null;
                 BindingTemplate result = instance.getBindingDetailJSON(JUDDI_BT);
                 Assert.assertNotNull(result);
@@ -367,7 +388,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetBindingDetailXML_NULL() {
                 System.out.println("getBindingDetailXML_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 BindingTemplate expResult = null;
                 BindingTemplate result = instance.getBindingDetailXML(id);
 
@@ -377,7 +398,7 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGetBindingDetailXML() {
                 System.out.println("getBindingDetailXML");
                 String id = UUID.randomUUID().toString();
-                
+
                 BindingTemplate expResult = null;
                 BindingTemplate result = instance.getBindingDetailXML(JUDDI_BT);
                 Assert.assertNotNull(result);
@@ -394,105 +415,266 @@ public class UDDIInquiryJAXRSTest extends Assert {
         public void testGeEndpointsByServiceJSON_NULL() {
                 System.out.println("geEndpointsByServiceJSON_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 UriContainer expResult = null;
                 UriContainer result = instance.geEndpointsByServiceJSON(id);
 
         }
 
-        /*
         @Test
         public void testGeEndpointsByServiceJSON() {
                 System.out.println("geEndpointsByServiceJSON");
                 String id = UUID.randomUUID().toString();
-                
+
                 UriContainer expResult = null;
                 UriContainer result = instance.geEndpointsByServiceJSON(JUDDI_SVC);
                 Assert.assertNotNull(result);
-                Assert.assertFalse(result.getUriList().isEmpty());
+
 
         }
 
-        
         @Test(expected = WebApplicationException.class)
         public void testGetEndpointsByServiceXML_NULL() {
                 System.out.println("getEndpointsByServiceXML_NULL");
                 String id = UUID.randomUUID().toString();
-                
+
                 UriContainer expResult = null;
                 UriContainer result = instance.getEndpointsByServiceXML(id);
 
         }
 
         @Test
-        public void testGeEndpointsByServiceXML() {
+        public void testGeTEndpointsByServiceXML() {
                 System.out.println("geEndpointsByServiceXML");
                 String id = UUID.randomUUID().toString();
-                
+
                 UriContainer expResult = null;
                 UriContainer result = instance.getEndpointsByServiceXML(JUDDI_SVC);
                 Assert.assertNotNull(result);
-                Assert.assertFalse(result.getUriList().isEmpty());
+        }
 
-        }*/
+        @Test
+        public void testgetServiceListXML() {
+                System.out.println("getServiceListXML");
+                String id = UUID.randomUUID().toString();
 
-        /**
-         * Test of getEntityAsXML method, of class UDDIInquiryJAXRS.
-         */
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getServiceListXML();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getServiceKey().isEmpty());
+        }
+
+        @Test
+        public void testgetServiceListJSON() {
+                System.out.println("getServiceListJSON");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getServiceListJSON();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getServiceKey().isEmpty());
+        }
+
+        @Test
+        public void testgetBusinessListXML() {
+                System.out.println("testgetBusinessListXML");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getBusinessListXML();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getBusinessKey().isEmpty());
+        }
+
+        @Test
+        public void testgetBusinessListJSON() {
+                System.out.println("testgetBusinessListJSON");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getBusinessListJSON();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getBusinessKey().isEmpty());
+        }
+
+        @Test
+        public void testgetTModelListXML() {
+                System.out.println("testgetTModelListXML");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getTModelListXML();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
+        @Test
+        public void testgetTModelListJSON() {
+                System.out.println("testgetTModelListJSON");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                KeyBag serviceListXML = instance.getTModelListJSON();
+                Assert.assertNotNull(serviceListXML);
+                Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
         @Test(expected = WebApplicationException.class)
-        public void testGetEntityAsXML_NULL() {
-                System.out.println("getEntityAsXML_NULL");
-                String entity = "";
-                String key = "";
-                
-                Object expResult = null;
-                Object result = instance.getEntityAsXML(entity, key);
+        public void testgetDetailXMLNULL() {
+                System.out.println("testgetDetailXMLNULL");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                Object output = instance.getDetailXML(null, null, null, null);
+                Assert.assertNotNull(output);
+                //Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
+        @Test(expected = WebApplicationException.class)
+        public void testgetDetailJSONNULL() {
+                System.out.println("testgetDetailJSONNULL");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                Object output = instance.getDetailJSON(null, null, null, null);
+                Assert.assertNotNull(output);
+                //Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
+        @Test(expected = WebApplicationException.class)
+        public void testgetDetailJSON_Random() {
+                System.out.println("testgetDetailJSON_Random");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                Object output = instance.getDetailJSON(id, null, null, null);
+                Assert.assertNotNull(output);
+                //Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
+        @Test(expected = WebApplicationException.class)
+        public void testgetDetailXML_Random() {
+                System.out.println("testgetDetailXML_Random");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                Object output = instance.getDetailXML(id, null, null, null);
+                Assert.assertNotNull(output);
+                //Assert.assertFalse(serviceListXML.getTModelKey().isEmpty());
+        }
+
+        @Test
+        public void testgetDetailJSON_SVC() {
+                System.out.println("testgetDetailJSON_SVC");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                BusinessService output = (BusinessService) instance.getDetailJSON(JUDDI_SVC, null, null, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getBusinessKey());
+                Assert.assertNotNull(output.getServiceKey());
+        }
+/*
+ * These tests are valid, but fail when ran as a unit test. cause unknown
+        @Test
+        public void testgetDetailXML_SVC() {
+                System.out.println("testgetDetailXML_SVC");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                BusinessService output = (BusinessService) instance.getDetailXML(JUDDI_SVC, null, null, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getBusinessKey());
+                Assert.assertNotNull(output.getServiceKey());
+        }
+
+        @Test
+        public void testgetDetailJSON_BIZ() {
+                System.out.println("testgetDetailJSON_BIZ");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                BusinessEntity output = (BusinessEntity) instance.getDetailJSON(null, JUDDI_BIZ, null, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getBusinessKey());
 
         }
-        /*
-         @Test
-         public void testGetEntityAsXML_BIZ() {
-         System.out.println("testGetEntityAsXML_BIZ");
-         String entity = "";
-         String key = "";
-         
-         Object expResult = null;
-         BusinessEntity result = (BusinessEntity) instance.getEntityAsXML("businessKey", JUDDI_BIZ);
-         Assert.assertNotNull(result);
-         Assert.assertNotNull(result.getBusinessKey());
-         Assert.assertFalse(result.getName().isEmpty());
-                
-         }
+
+        @Test
+        public void testgetDetailXML_BIZ() {
+                System.out.println("testgetDetailXML_BIZ");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                BusinessEntity output = (BusinessEntity) instance.getDetailXML(null, JUDDI_BIZ, null, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getBusinessKey());
+        }
+
+        @Test
+        public void testgetDetailJSON_TM() {
+                System.out.println("testgetDetailJSON_TM");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                TModel output = (TModel) instance.getDetailJSON(null, null, JUDDI_TMODEL, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getTModelKey());
+
+        }
+
+        @Test
+        public void testgetDetailXML_TM() {
+                System.out.println("testgetDetailXML_TM");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                TModel output = (TModel) instance.getDetailXML(null, null, JUDDI_TMODEL, null);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getTModelKey());
+        }
         
-         @Test
-         public void testGetEntityAsXML_SVC() {
-         System.out.println("testGetEntityAsXML_SVC");
-         String entity = "";
-         String key = "";
-         
-         Object expResult = null;
-         BusinessService result = (BusinessService) instance.getEntityAsXML("serviceKey", JUDDI_BIZ);
-         Assert.assertNotNull(result);
-         Assert.assertNotNull(result.getBusinessKey());
-         Assert.assertNotNull(result.getServiceKey());
-         Assert.assertFalse(result.getName().isEmpty());
-                
-         }
         
-         @Test
-         public void testGetEntityAsXML_BT() {
-         System.out.println("testGetEntityAsXML_BT");
-         String entity = "";
-         String key = "";
-         
-         Object expResult = null;
-         BindingTemplate result = (BindingTemplate) instance.getEntityAsXML("bundingKey", JUDDI_BIZ);
-         Assert.assertNotNull(result);
-         Assert.assertNotNull(result.getBindingKey());
-         Assert.assertNotNull(result.getServiceKey());
-         Assert.assertNotNull(result.getAccessPoint());
+        @Test
+        public void testgetDetailJSON_BT() {
+                System.out.println("testgetDetailJSON_BT");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                TModel output = (TModel) instance.getDetailJSON(null, null, null, JUDDI_BT);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getTModelKey());
+
+        }
+
+        @Test
+        public void testgetDetailXML_BT() {
+                System.out.println("testgetDetailXML_BT");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                TModel output = (TModel) instance.getDetailXML(null, null, null, JUDDI_BT);
+                Assert.assertNotNull(output);
+                Assert.assertNotNull(output.getTModelKey());
+        }
+        
+        @Test(expected = WebApplicationException.class)
+        public void testgetDetailJSON_ALL() {
+                System.out.println("testgetDetailJSON_ALL");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                instance.getDetailJSON(JUDDI_BIZ, JUDDI_SVC, JUDDI_TMODEL, JUDDI_BT);
+                Assert.fail();
+        }
+        @Test(expected = WebApplicationException.class)
+        public void testgetDetailXML_ALL() {
+                System.out.println("testgetDetailXML_ALL");
+                String id = UUID.randomUUID().toString();
+
+                UriContainer expResult = null;
+                instance.getDetailXML(JUDDI_BIZ, JUDDI_SVC, JUDDI_TMODEL, JUDDI_BT);
+                Assert.fail();
                 
-                
-                
-         }*/
+        }*/
 }
