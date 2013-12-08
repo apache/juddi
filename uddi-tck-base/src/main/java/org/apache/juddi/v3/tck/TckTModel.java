@@ -99,8 +99,10 @@ public class TckTModel
 		try {
 			SaveTModel st = new SaveTModel();
 			st.setAuthInfo(authInfo);
-
+                        logger.info("Loading tModel from " + tModelXml);
 			org.uddi.api_v3.TModel tmIn = (org.uddi.api_v3.TModel)EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
+                        if (tmIn==null)
+                                Assert.fail("unable to load tmodel from file!");
 			st.getTModel().add(tmIn);
 			publication.saveTModel(st);
 	

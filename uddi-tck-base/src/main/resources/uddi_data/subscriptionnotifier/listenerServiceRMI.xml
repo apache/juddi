@@ -29,15 +29,15 @@
 		<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:rmi" />
 	  </tModelInstanceDetails>
 	  <categoryBag>
-	    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
+	    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="secure" />
 	  </categoryBag>
 	</bindingTemplate>
   </bindingTemplates>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="peaches" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="plums" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:transport:telephone">
+      <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
 </businessService>

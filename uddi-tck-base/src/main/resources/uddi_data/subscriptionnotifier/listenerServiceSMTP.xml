@@ -28,16 +28,16 @@
       <tModelInstanceDetails>
 	    <tModelInstanceInfo tModelKey="uddi:uddi.org:transport:smtp"/>
 	  </tModelInstanceDetails>
-	  <categoryBag>
+	  <!--<categoryBag>
 	    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="secure" />
-	  </categoryBag>
+	  </categoryBag>-->
 	</bindingTemplate>
   </bindingTemplates>
-  <categoryBag>
+  <!--<categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
     <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
     <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
       <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
-  </categoryBag>
+  </categoryBag>-->
 </businessService>

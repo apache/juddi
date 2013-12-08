@@ -25,7 +25,7 @@
       <description xml:lang="en">This is the access point for listing service.</description>
       <accessPoint useType="endPoint">http:/samco.com/services/listingservice</accessPoint>
       <tModelInstanceDetails>
-        <tModelInstanceInfo tModelKey="uddi:www.samco.com:listservice-wsdlspec">
+        <tModelInstanceInfo tModelKey="uddi:uddi.org:transport:telephone">
           <description xml:lang="en">The wsdl for this service: Listing Service</description>
           <instanceDetails>
             <overviewDoc>
@@ -37,15 +37,15 @@
         </tModelInstanceInfo>
       </tModelInstanceDetails>
 	  <categoryBag>
-	    <keyedReference tModelKey="uddi:tmodelkey:categories:bindings" keyName="category" keyValue="accesspoint" />
+	    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="accesspoint" />
 	  </categoryBag>
     </bindingTemplate>
   </bindingTemplates>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:beer" keyName="category" keyValue="lager" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:beer" keyName="category" keyValue="pilsner" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="lager" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="pilsner" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:transport:telephone">
+      <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
 </businessService>

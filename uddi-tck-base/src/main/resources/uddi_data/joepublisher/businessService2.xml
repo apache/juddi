@@ -26,7 +26,7 @@
       <description xml:lang="en">This is the access point for service two.</description>
       <accessPoint useType="endPoint">http://businessone.com/services/servicetwo</accessPoint>
       <tModelInstanceDetails>
-        <tModelInstanceInfo tModelKey="uddi:uddi.joepublisher.com:services:servicetwo:wsdlspec">
+        <tModelInstanceInfo tModelKey="uddi:uddi.org:transport:telephone">
           <description xml:lang="en">The wsdl for this service: service two</description>
           <instanceDetails>
             <overviewDoc>
@@ -43,10 +43,10 @@
     </bindingTemplate>
   </bindingTemplates>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="peaches" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories" keyName="category" keyValue="plums" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="peaches" />
+    <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="category" keyValue="plums" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:transport:telephone">
+      <keyedReference tModelKey="uddi:uddi.org:transport:telephone" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
-  </categoryBag>
+  </categoryBag>-->
 </businessService>

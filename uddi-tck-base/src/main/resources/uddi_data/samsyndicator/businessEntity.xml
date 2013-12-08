@@ -36,7 +36,7 @@
       </address>
     </contact>
   </contacts>
-  <categoryBag>
+  z<categoryBag>
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="bananas" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="kiwi" />
     <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="progressive-rock" />

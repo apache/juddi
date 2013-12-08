@@ -98,8 +98,9 @@ public class TckSubscription
 			SubscriptionResultsList result = subscription.getSubscriptionResults(getSubResultsIn);
 			if (result == null)
 				Assert.fail("Null result from getSubscriptionResults operation");
-
-			ServiceInfos sInfos = result.getServiceList().getServiceInfos();
+                        ServiceInfos sInfos=null;
+                        if (result.getServiceList()!=null)
+                                sInfos = result.getServiceList().getServiceInfos();
 			if (sInfos == null)
 				Assert.fail("No result from getSubscriptionResults operation");
 			List<ServiceInfo> siList = sInfos.getServiceInfo();
