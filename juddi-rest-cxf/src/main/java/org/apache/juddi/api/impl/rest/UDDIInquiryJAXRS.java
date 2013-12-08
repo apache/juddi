@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.impl.UDDIInquiryImpl;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.api_v3.rest.UriContainer;
 import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
 import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
@@ -272,7 +273,7 @@ public class UDDIInquiryJAXRS {
     @Path("/XML/endpointsByService/{id}")
     @Produces("application/json")
     @org.apache.cxf.jaxrs.model.wadl.Description("Returns the binding details of a given entity in JSON")
-    public List<URI> geEndpointsByServiceJSON(@PathParam("id") String id) throws WebApplicationException {
+    public UriContainer geEndpointsByServiceJSON(@PathParam("id") String id) throws WebApplicationException {
         return getEndpointsByService(id);
     }
 
@@ -287,32 +288,67 @@ public class UDDIInquiryJAXRS {
     @Path("/XML/endpointsByService/{id}")
     @Produces("application/xml")
     @org.apache.cxf.jaxrs.model.wadl.Description("Returns the binding details of a given entity in XML")
-    public List<URI> getEndpointsByServiceXML(@PathParam("id") String id) throws WebApplicationException {
+    public UriContainer getEndpointsByServiceXML(@PathParam("id") String id) throws WebApplicationException {
         return getEndpointsByService(id);
     }
+    
+    /**
+     * 6.5 HTTP GET Services for UDDI Data Structures
+A node may offer an HTTP GET service for access to the XML representations of UDDI data structures. If a node offers this service, the URLs should be in a format that is predictable and uses the entity key as a URL parameter.
 
-    private List<URI> getEndpointsByService(String id) throws WebApplicationException {
-        List<URI> ret = new ArrayList<URI>();
+The RECOMMENDED syntax for the URLs for such a service is as follows:
+
+If a UDDI node’s base URI is http://uddi.example.org/mybase, then the URI http://uddi.example.org/mybase?<entity>Key=uddiKey would retrieve the XML for the data structure whose type is <entity> and whose key is uddiKey.  For example, the XML representation of a tModel whose key is "uddi:tempuri.com:fish:interface" can be retrieved by using the URL http://uddi.example.org/mybase?tModelKey=uddi:tempuri.com:fish:interface.
+
+In the case of businessEntities, the node MAY add these URIs to the businessEntity’s discoveryURLs structure, though this is NOT RECOMMENDED behavior as it complicates the use of digital signatures.
+
+
+ 
+     * @param id
+     * @return
+     * @throws WebApplicationException 
+     */
+    @GET
+    @Path("/base/{entitykey}/{key}")
+    @Produces("application/xml")
+     @org.apache.cxf.jaxrs.model.wadl.Description("Returns the selected UDDI entity as XML per section 6.5 of the UDDIv3 specification. Use businessKey, tmodelKey, bindingKey or serviceKey ")
+    public Object getEntityAsXML(@PathParam("entitykey") String entity,@PathParam("key") String key) throws WebApplicationException {
+        if (entity.equalsIgnoreCase("businessKey"))
+                return getBusinessDetailXML(key);
+        if (entity.equalsIgnoreCase("tmodelKey"))
+                return getTModelDetailXML(key);
+        if (entity.equalsIgnoreCase("bindingKey"))
+                return getBindingDetailXML(key);
+        if (entity.equalsIgnoreCase("serviceKey"))
+                return getServiceDetailXML(key);
+        throw new WebApplicationException(400);
+    }
+    
+    private UriContainer getEndpointsByService(String id) throws WebApplicationException {
+            UriContainer c = new UriContainer();
+        List<String> ret = new ArrayList<String>();
         GetServiceDetail fs = new GetServiceDetail();
-        //TODO fs.setAuthInfo(rootAuthToken.getAuthInfo());
-
+    
         fs.getServiceKey().add(id);
         try {
             ServiceDetail serviceDetail = inquiry.getServiceDetail(fs);
             if (serviceDetail == null || serviceDetail.getBusinessService().isEmpty()) {
                 throw new WebApplicationException(400);
             } else {
-                List<URI> endpoints = GetEndpoints(serviceDetail, null);
+                List<String> endpoints = GetEndpoints(serviceDetail, null);
                 ret.addAll(endpoints);
             }
         } catch (DispositionReportFaultMessage ex) {
             HandleException(ex);
         }
-        return ret;
+        c.setUriList(ret);
+        return c;
     }
+    
+    
 
-    private List<URI> GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws DispositionReportFaultMessage {
-        List<URI> items = new ArrayList<URI>();
+    private List<String> GetEndpoints(ServiceDetail serviceDetail, String authInfo) throws DispositionReportFaultMessage {
+        List<String> items = new ArrayList<String>();
         if (serviceDetail == null) {
             return items;
         }
@@ -326,8 +362,8 @@ public class UDDIInquiryJAXRS {
         return items;
     }
 
-    private List<URI> GetBindingInfo(String value, String cred) throws DispositionReportFaultMessage {
-        List<URI> items = new ArrayList<URI>();
+    private List<String> GetBindingInfo(String value, String cred) throws DispositionReportFaultMessage {
+        List<String> items = new ArrayList<String>();
         if (value == null) {
             return items;
         }
@@ -341,8 +377,8 @@ public class UDDIInquiryJAXRS {
         return items;
     }
 
-    private List<URI> FetchWSDL(String value) {
-        List<URI> items = new ArrayList<URI>();
+    private List<String> FetchWSDL(String value) {
+        List<String> items = new ArrayList<String>();
 
         if (value.startsWith("http://") || value.startsWith("https://")) {
             //here, we need an HTTP Get for WSDLs
@@ -374,8 +410,8 @@ public class UDDIInquiryJAXRS {
         return items;
     }
 
-    private List<URI> ParseBinding(BindingTemplate get, String authInfo) throws DispositionReportFaultMessage {
-        List<URI> items = new ArrayList<URI>();
+    private List<String> ParseBinding(BindingTemplate get, String authInfo) throws DispositionReportFaultMessage {
+        List<String> items = new ArrayList<String>();
         if (get == null || get.getAccessPoint() == null) {
             return items;
         }
@@ -387,12 +423,10 @@ public class UDDIInquiryJAXRS {
         if (get.getAccessPoint() != null) {
             String usetype = get.getAccessPoint().getUseType();
             if (usetype == null) {
-                try {
+                
                     //this is unexpected, usetype is a required field
-                    items.add(new URI(get.getAccessPoint().getValue()));
-                } catch (URISyntaxException ex) {
-                    log.warn(ex);
-                }
+                    items.add((get.getAccessPoint().getValue()));
+                
             } else if (usetype.equalsIgnoreCase(AccessPointType.BINDING_TEMPLATE.toString())) {
                 //referencing another binding template
                 items.addAll(GetBindingInfo(get.getAccessPoint().getValue(), authInfo));
@@ -405,18 +439,14 @@ public class UDDIInquiryJAXRS {
                 //fetch wsdl and parse
                 items.addAll(FetchWSDL(get.getAccessPoint().getValue()));
             } else if (usetype.equalsIgnoreCase(AccessPointType.END_POINT.toString())) {
-                try {
-                    items.add(new URI(get.getAccessPoint().getValue()));
-                } catch (URISyntaxException ex) {
-                    log.warn(ex);
-                }
+                
+                    items.add((get.getAccessPoint().getValue()));
+                
             } else {
-                try {
+                
                     //treat it has an extension or whatever
-                    items.add(new URI(get.getAccessPoint().getValue()));
-                } catch (URISyntaxException ex) {
-                    log.warn(ex);
-                }
+                    items.add((get.getAccessPoint().getValue()));
+                
             }
 
         }

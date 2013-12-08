@@ -21,10 +21,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:jaxws="http://cxf.apache.org/jaxws"
 	    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+		xmlns:util="http://www.springframework.org/schema/util"
   xsi:schemaLocation="
   http://www.springframework.org/schema/beans classpath:schemas/spring-beans.xsd
   http://cxf.apache.org/jaxws  classpath:schemas/jaxws.xsd
   http://cxf.apache.org/jaxrs classpath:schemas/jaxrs.xsd
+  http://www.springframework.org/schema/util classpath:schemas/spring-util.xsd
   ">
  
   <import resource="classpath:META-INF/cxf/cxf.xml" />
@@ -95,11 +97,28 @@
     </jaxws:properties>
   </jaxws:endpoint>
 
-    <jaxrs:server id="inquiryRestService" address="/inquiryRest">
+   <util:map id="jsonNamespaceMap" map-class="java.util.Hashtable" >
+                <entry key="urn:uddi-org:api_v3" value="urn:uddi-org:api_v3"/>
+  </util:map>
+ 
+
+  <jaxrs:server id="inquiryRestService" address="/inquiryRest">
     <jaxrs:serviceBeans>
       <ref bean="inquiryRest" />
     </jaxrs:serviceBeans>
+	<jaxrs:providers>
+                           <ref bean="jaxbProvider"/>
+                           <ref bean="jsonProvider"/>
+    </jaxrs:providers>
   </jaxrs:server>
   <bean id="inquiryRest" class="org.apache.juddi.api.impl.rest.UDDIInquiryJAXRS" />
-  
+	<bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+		<property name="ignoreNamespaces" value="true"/>
+		<property name="namespaceMap" ref="jsonNamespaceMap"/>
+  </bean>
+   <bean id="jaxbProvider"
+class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"/>
+ 
+
+
 </beans>
