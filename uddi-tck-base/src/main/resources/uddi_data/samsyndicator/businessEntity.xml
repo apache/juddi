@@ -36,13 +36,13 @@
       </address>
     </contact>
   </contacts>
-  z<categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="bananas" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="kiwi" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="progressive-rock" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="country" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank" />
+  <categoryBag>
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="bananas" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="kiwi" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="progressive-rock" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="country" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:categorization:types">
+      <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
   <identifierBag>
