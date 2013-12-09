@@ -24,14 +24,14 @@
   <name xml:lang="en">john%</name>
   <name xml:lang="en">A-1%</name>
   <identifierBag>
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity%" />
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identityX%" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="identify" keyValue="identity%" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="identify" keyValue="identityX%" />
   </identifierBag>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples%" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues%" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelkey:blank" keyName="blank" keyValue="blank%" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="apples%" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="blues%" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:categorization:types">
+      <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="blank" keyValue="blank%" />
     </keyedReferenceGroup>
   </categoryBag>
   <discoveryURLs>

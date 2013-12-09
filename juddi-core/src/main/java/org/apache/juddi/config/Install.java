@@ -346,8 +346,8 @@ public class Install {
 		validatePublish.validateNames(businessEntity.getName());
 		validatePublish.validateDiscoveryUrls(businessEntity.getDiscoveryURLs());
 		validatePublish.validateContacts(businessEntity.getContacts(),config);
-		validatePublish.validateCategoryBag(businessEntity.getCategoryBag(),config);
-		validatePublish.validateIdentifierBag(businessEntity.getIdentifierBag(),config);
+		validatePublish.validateCategoryBag(businessEntity.getCategoryBag(),config, true);
+		validatePublish.validateIdentifierBag(businessEntity.getIdentifierBag(),config, true);
 
 		org.uddi.api_v3.BusinessServices businessServices = businessEntity.getBusinessServices();
 		if (businessServices != null) {
@@ -399,7 +399,7 @@ public class Install {
 		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
 		
 		validatePublish.validateNames(businessService.getName());
-		validatePublish.validateCategoryBag(businessService.getCategoryBag(), config);
+		validatePublish.validateCategoryBag(businessService.getCategoryBag(), config,true);
 
 		org.uddi.api_v3.BindingTemplates bindingTemplates = businessService.getBindingTemplates();
 		if (bindingTemplates != null) {
@@ -449,8 +449,8 @@ public class Install {
 		
 		ValidatePublish validatePublish = new ValidatePublish(rootPublisher);
 		
-		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag(), config);
-		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails(),config);
+		validatePublish.validateCategoryBag(bindingTemplate.getCategoryBag(), config,true);
+		validatePublish.validateTModelInstanceDetails(bindingTemplate.getTModelInstanceDetails(),config,true);
 
 	}
 	

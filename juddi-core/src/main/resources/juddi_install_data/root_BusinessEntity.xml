@@ -82,15 +82,61 @@
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
-		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-rest" serviceKey="uddi:juddi.apache.org:services-inquiry">
+    
+	      <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-ws-ssl" serviceKey="uddi:juddi.apache.org:services-inquiry">
+          <description>UDDI Inquiry API V3 SSL</description>
+          <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
+          in this file.  They all must point to their API's WSDL URL -->
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/inquiry?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                  <?xml version="1.0" encoding="utf-8" ?>
+                  <UDDIinstanceParmsContainer xmlns="urn:uddi-org:policy_v3_instanceParms">
+                    <defaultSortOrder>
+                      uddi:uddi.org:sortorder:binarysort
+                    </defaultSortOrder>
+                  </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+			 <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+      </bindingTemplates>
+	  
+    </businessService>
+	
+	<businessService serviceKey="uddi:juddi.apache.org:services-inquiry-rest" businessKey="uddi:juddi.apache.org:businesses-asf">
+      <name xml:lang="en">UDDI Inquiry REST Service</name>
+      <description xml:lang="en">Web Service supporting UDDI Inquiry API via HTTP GET</description>
+      <bindingTemplates>
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-rest" serviceKey="uddi:juddi.apache.org:services-inquiry-rest">
           <description>UDDI Inquiry API V3 REST</description>
 		  <accessPoint useType="wadlDeployment">${juddi.server.baseurl}/services/inquiryRest?_wadl</accessPoint>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wadl" keyValue="wadlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-inquiry-rest-ssl" serviceKey="uddi:juddi.apache.org:services-inquiry-rest">
+          <description>UDDI Inquiry API V3 REST SSL</description>
+		  <accessPoint useType="wadlDeployment">${juddi.server.baseurlsecure}/services/inquiryRest?_wadl</accessPoint>
+		  <tModelInstanceDetails>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wadl" keyValue="wadlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
       </bindingTemplates>
     </businessService>
+	
     <businessService serviceKey="uddi:juddi.apache.org:services-publish" businessKey="uddi:juddi.apache.org:businesses-asf">
       <name xml:lang="en">UDDI Publish Service</name>
       <description xml:lang="en">Web Service supporting UDDI Publish API</description>
@@ -116,6 +162,30 @@
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publish-ws-ssl" serviceKey="uddi:juddi.apache.org:services-publish">
+          <description>UDDI Publication API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publish?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_publication">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                  <?xml version="1.0" encoding="utf-8" ?>
+                  <UDDIinstanceParmsContainer xmlns="urn:uddi-org:policy_v3_instanceParms">
+                    <authInfoUse>required</authInfoUse>
+                  </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
       </bindingTemplates>
     </businessService>
     <businessService serviceKey="uddi:juddi.apache.org:services-security" businessKey="uddi:juddi.apache.org:businesses-asf">
@@ -125,6 +195,16 @@
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-security-ws" serviceKey="uddi:juddi.apache.org:services-security">
           <description>UDDI Security API V3</description>
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/security?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-security-ws-ssl" serviceKey="uddi:juddi.apache.org:services-security">
+          <description>UDDI Security API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/security?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
           </tModelInstanceDetails>
@@ -160,6 +240,33 @@
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-custodytransfer-ws-ssl" serviceKey="uddi:juddi.apache.org:services-custodytransfer">
+          <description>UDDI Custody and Ownership Transfer API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/custody-transfer?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_ownership_transfer">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                <?xml version="1.0" encoding="utf-8" ?>
+                <UDDIinstanceParmsContainer
+                 xmlns="urn:uddi-org:policy_v3_instanceParms">
+                  <authInfoUse>required</authInfoUse>
+                </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		
       </bindingTemplates>
     </businessService>
     <businessService serviceKey="uddi:juddi.apache.org:services-subscription" businessKey="uddi:juddi.apache.org:businesses-asf">
@@ -189,6 +296,33 @@
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-subscription-ws-ssl" serviceKey="uddi:juddi.apache.org:services-subscription">
+          <description>UDDI Subscription API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/subscription?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscription">
+              <instanceDetails>
+                <instanceParms>
+                <![CDATA[
+                <?xml version="1.0" encoding="utf-8" ?>
+                <UDDIinstanceParmsContainer
+                xmlns="urn:uddi-org:policy_v3_instanceParms">
+                <authInfoUse>required</authInfoUse>
+                <filterUsingFindAPI>supported</filterUsingFindAPI>
+                </UDDIinstanceParmsContainer>
+                ]]>
+                </instanceParms>
+              </instanceDetails>
+            </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		
       </bindingTemplates>
     </businessService>
     <businessService serviceKey="uddi:juddi.apache.org:services-subscriptionlistener" businessKey="uddi:juddi.apache.org:businesses-asf">
@@ -200,11 +334,25 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
         </bindingTemplate>
+		
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-subscriptionlistener-ws-ssl" serviceKey="uddi:juddi.apache.org:services-subscriptionlistener">
+          <description>UDDI Subscription Listener API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/subscription-listener?wsdl</accessPoint>
+          <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
+          </tModelInstanceDetails>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		
+		
       </bindingTemplates>
     </businessService>
 	
@@ -258,6 +406,16 @@
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publisher-ws" serviceKey="uddi:juddi.apache.org:services-publisher">
           <description>jUDDI Publisher Service API V3</description>
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publisher?wsdl</accessPoint>
+          <categoryBag>
+            <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
+          </categoryBag>
+        </bindingTemplate>
+		<bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publisher-ws-ssl" serviceKey="uddi:juddi.apache.org:services-publisher">
+          <description>jUDDI Publisher Service API V3 SSL</description>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publisher?wsdl</accessPoint>
+		  <tModelInstanceDetails>
+            <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+          </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.soap.SOAPFault;
@@ -30,8 +31,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
+import static org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.tckBusiness;
+import static org.apache.juddi.v3.tck.UDDI_140_NegativePublicationIntegrationTest.tckTModel;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.*;
@@ -58,6 +62,8 @@ public class UDDI_141_JIRAIntegrationTest {
     static UDDISubscriptionPortType subscription = null;
     static UDDIInquiryPortType inquiry = null;
     static UDDIPublicationPortType publication = null;
+        static TckTModel tckTModel               = null;
+        static TckBusiness tckBusiness      = null;
     protected static String authInfoJoe = null;
     protected static String authInfoSam = null;
     private static UDDIClient manager;
@@ -92,15 +98,18 @@ public class UDDI_141_JIRAIntegrationTest {
         try {
             Transport transport = manager.getTransport();
             security = transport.getUDDISecurityService();
+            publication = transport.getUDDIPublishService();
+            inquiry = transport.getUDDIInquiryService();
+
             subscription = transport.getUDDISubscriptionService();
+              tckTModel  = new TckTModel(publication, inquiry);
+                  	 tckBusiness = new TckBusiness(publication, inquiry);
             authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
             authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
             Assert.assertNotNull(authInfoJoe);
             Assert.assertNotNull(authInfoSam);
 
-            publication = transport.getUDDIPublishService();
-            inquiry = transport.getUDDIInquiryService();
-
+            
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -1009,8 +1018,353 @@ public class UDDI_141_JIRAIntegrationTest {
 
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //once more without any relationship
-    //TODO binding template tmodel instance info
+            //binding template tmodel instance info
+        @Test
+        public void JIRA_575_BT() throws Exception {
+                System.out.println("JIRA_575_BT");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_BT business");
+                be.setBusinessServices(new BusinessServices());
+                BusinessService bs = new BusinessService();
+                bs.getName().add(new Name());
+                bs.getName().get(0).setValue("Joe's JIRA_575_BT service");
+                bs.setBindingTemplates(new BindingTemplates());
+                BindingTemplate bt = new BindingTemplate();
+                bt.setAccessPoint(new AccessPoint());
+                bt.getAccessPoint().setValue("http://JIRA_575_BT/UDDI_CALLBACK");
+                bt.getAccessPoint().setUseType("endPoint");
+
+                TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
+                instanceInfo.setTModelKey(madeupTmodel);
+                bt.setTModelInstanceDetails(new TModelInstanceDetails());
+                bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
+
+                bs.getBindingTemplates().getBindingTemplate().add(bt);
+                be.getBusinessServices().getBusinessService().add(bs);
+                sb.getBusinessEntity().add(be);
+                logger.info("setting up joe's callback business");
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+
+
+        }
+
+        
+        @Test
+        public void JIRA_575_KR_Biz() throws Exception {
+                System.out.println("JIRA_575_KR_Biz");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_KR_Biz business");
+                be.setBusinessServices(new BusinessServices());
+                be.setCategoryBag(new CategoryBag());
+                be.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                sb.getBusinessEntity().add(be);
+                
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+
+        }
+        
+        
+        @Test
+        public void JIRA_575_IDENT_Biz() throws Exception {
+                System.out.println("JIRA_575_IDENT_Biz");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_IDENT_Biz business");
+                be.setBusinessServices(new BusinessServices());
+                be.setIdentifierBag(new IdentifierBag());
+                be.getIdentifierBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                sb.getBusinessEntity().add(be);
+                
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+
+        }
+        
+        
+        
+        @Test
+        public void JIRA_575_KR_TMODEL() throws Exception {
+                System.out.println("JIRA_575_KR_TMODEL");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+               SaveTModel stm = new SaveTModel();
+               stm.setAuthInfo(authInfoJoe);
+               TModel tm = new TModel();
+               tm.setName(new Name("JIRA_575_KR_TMODEL",null));
+               tm.setCategoryBag(new CategoryBag());
+               tm.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                try {
+                        publication.saveTModel(stm);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+        }
+
+        @Test
+        public void JIRA_575_KRGRP_TMODEL() throws Exception {
+                System.out.println("JIRA_575_KRGRP_TMODEL");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveTModel stm = new SaveTModel();
+                stm.setAuthInfo(authInfoJoe);
+                TModel tm = new TModel();
+                tm.setName(new Name("JIRA_575_KRGRP_TMODEL", null));
+                tm.setCategoryBag(new CategoryBag());
+                tm.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
+                tm.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
+                try {
+                        publication.saveTModel(stm);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+        }
+
+                
+        @Test
+        public void JIRA_575_KRGRP_Biz() throws Exception {
+                System.out.println("JIRA_575_KRGRP_Biz");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_KRGRP_Biz business");
+                be.setBusinessServices(new BusinessServices());
+                be.setCategoryBag(new CategoryBag());
+                //be.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                be.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
+                be.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
+                
+                sb.getBusinessEntity().add(be);
+                
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+
+        }
+
+        
+        
+        
+        
+        @Test
+        public void JIRA_575_KRGRP_PA() throws Exception {
+                System.out.println("JIRA_575_KRGRP_PA");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                
+                tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                tckTModel.saveSamSyndicatorTmodel(authInfoSam);
+                
+                tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+                
+               AddPublisherAssertions apa = new AddPublisherAssertions();
+               apa.setAuthInfo(madeupTmodel);
+               PublisherAssertion pa = new PublisherAssertion();
+               pa.setKeyedReference(new KeyedReference(madeupTmodel, "name", "val"));
+               pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
+               pa.setToKey(TckBusiness.SAM_BUSINESS_KEY);
+               apa.getPublisherAssertion().add(pa);
+                try {
+                        publication.addPublisherAssertions(apa);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+        }
+
+                
+
+        
+        
+        
+                @Test
+        public void JIRA_575_SVC_KR() throws Exception {
+                System.out.println("JIRA_575_SVC_KR");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_SVC_KR business");
+                be.setBusinessServices(new BusinessServices());
+                BusinessService bs = new BusinessService();
+                bs.getName().add(new Name());
+                bs.getName().get(0).setValue("Joe's JIRA_575_SVC_KR service");
+                bs.setBindingTemplates(new BindingTemplates());
+                bs.setCategoryBag(new CategoryBag());
+                bs.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                
+                be.getBusinessServices().getBusinessService().add(bs);
+                sb.getBusinessEntity().add(be);
+                
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+        }
+
+                
+                                @Test
+        public void JIRA_575_SVC_KRGRP() throws Exception {
+                System.out.println("JIRA_575_SVC_KRGRP");
+                String madeupTmodel = "uddi" + UUID.randomUUID().toString();
+                GetTModelDetail gtm = new GetTModelDetail();
+                gtm.setAuthInfo(authInfoJoe);
+                gtm.getTModelKey().add(madeupTmodel);
+                TModelDetail tModelDetail = null;
+                try {
+                        tModelDetail = inquiry.getTModelDetail(gtm);
+                } catch (Exception ex) {
+                }
+                Assume.assumeTrue(tModelDetail == null);
+
+                SaveBusiness sb = new SaveBusiness();
+                sb.setAuthInfo(authInfoJoe);
+                BusinessEntity be = new BusinessEntity();
+                be.getName().add(new Name());
+                be.getName().get(0).setValue("Joe's JIRA_575_SVC_KRGRP business");
+                be.setBusinessServices(new BusinessServices());
+                BusinessService bs = new BusinessService();
+                bs.getName().add(new Name());
+                bs.getName().get(0).setValue("Joe's JIRA_575_SVC_KRGRP service");
+                bs.setBindingTemplates(new BindingTemplates());
+                bs.setCategoryBag(new CategoryBag());
+                bs.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
+                bs.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
+                
+                
+                be.getBusinessServices().getBusinessService().add(bs);
+                sb.getBusinessEntity().add(be);
+                
+                try {
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        Assert.fail("unexpected success");
+                } catch (Exception ex) {
+                        logger.error(ex.getMessage());
+                }
+        }
+    
     //TODO tmodel tests
     //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
     //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">

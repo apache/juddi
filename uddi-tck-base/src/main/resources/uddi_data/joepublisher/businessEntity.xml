@@ -53,16 +53,16 @@
     </contact>
   </contacts>
   <categoryBag>
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="apples" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:fruit" keyName="category" keyValue="oranges" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:sports" keyName="category" keyValue="football" />
-    <keyedReference tModelKey="uddi:tmodelkey:categories:music" keyName="category" keyValue="blues" />
-    <keyedReferenceGroup tModelKey="uddi:tmodelkey:group">
-      <keyedReference tModelKey="uddi:tmodelKey:blank" keyName="blank" keyValue="blank" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="apples" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="oranges" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="football" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="category" keyValue="blues" />
+    <keyedReferenceGroup tModelKey="uddi:uddi.org:categorization:types">
+      <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="blank" keyValue="blank" />
     </keyedReferenceGroup>
   </categoryBag>
   <identifierBag>
-    <keyedReference tModelKey="uddi:tmodelkey:identifier" keyName="identify" keyValue="identity" />
+    <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="identify" keyValue="identity" />
   </identifierBag>
   <ns2:Signature>
         <ns2:SignedInfo>
