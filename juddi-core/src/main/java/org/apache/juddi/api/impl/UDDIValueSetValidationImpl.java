@@ -61,10 +61,14 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
         public DispositionReport validateValues(ValidateValues body)
                 throws DispositionReportFaultMessage {
                 long startTime = System.currentTimeMillis();
-                long procTime = System.currentTimeMillis() - startTime;
-                serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,
-                        QueryStatus.SUCCESS, procTime);
 
+                if (body == null) {
+                        long procTime = System.currentTimeMillis() - startTime;
+                        serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,
+                                QueryStatus.FAILED, procTime);
+
+                        throw new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.noinput"));
+                }
                 /*
                  * The UDDI node that is calling validate_values MUST pass one 
                  * or more businessEntity elements, one or more businessService 
@@ -87,6 +91,10 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 
                 DispositionReport r = new DispositionReport();
                 r.getResult().add(new Result());
+                long procTime = System.currentTimeMillis() - startTime;
+                serviceCounter.update(ValueSetValidationQuery.VALIDATE_VALUES,
+                        QueryStatus.SUCCESS, procTime);
+
                 return r;
         }
 
@@ -173,7 +181,7 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
          * @param tModelkey
          * @return
          */
-        private List<String> getValidValues(String tModelKey) {
+        public static List<String> getValidValues(String tModelKey) {
                 List<String> ret = null;
                 EntityManager em = PersistenceManager.getEntityManager();
                 EntityTransaction tx = em.getTransaction();
@@ -233,31 +241,31 @@ public class UDDIValueSetValidationImpl extends AuthenticatedService implements
 
         private void validateTmodelInstanceDetails(List<TModelInstanceInfo> tModelInstanceInfo, String xpath) throws DispositionReportFaultMessage {
                 /*
-                if (tModelInstanceInfo == null) {
-                        return;
-                }
-                String err = "";
-                for (int i = 0; i < tModelInstanceInfo.size(); i++) {
-                        List<String> validValues = getValidValues(tModelInstanceInfo.get(i).getTModelKey());
-                        if (validValues != null) {
-                                //compare against the instance info
-                                if (tModelInstanceInfo.get(i).getInstanceDetails() == null) {
-                                        err += xpath + ".(" + i + ").instanceDetails=null ";
-                                } else {
-                                        boolean ok = false;
-                                        for (int k = 0; k < validValues.size(); k++) {
-                                                if (validValues.get(k).equals(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms())) {
-                                                        ok = true;
-                                                }
-                                        }
-                                        if (!ok) {
-                                                err += xpath + ".(" + i + ").instanceDetails.instanceParams ";
-                                        }
-                                }
-                        }
-                }
-                if (err.length() > 0) {
-                        throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
-                }*/
+                 if (tModelInstanceInfo == null) {
+                 return;
+                 }
+                 String err = "";
+                 for (int i = 0; i < tModelInstanceInfo.size(); i++) {
+                 List<String> validValues = getValidValues(tModelInstanceInfo.get(i).getTModelKey());
+                 if (validValues != null) {
+                 //compare against the instance info
+                 if (tModelInstanceInfo.get(i).getInstanceDetails() == null) {
+                 err += xpath + ".(" + i + ").instanceDetails=null ";
+                 } else {
+                 boolean ok = false;
+                 for (int k = 0; k < validValues.size(); k++) {
+                 if (validValues.get(k).equals(tModelInstanceInfo.get(i).getInstanceDetails().getInstanceParms())) {
+                 ok = true;
+                 }
+                 }
+                 if (!ok) {
+                 err += xpath + ".(" + i + ").instanceDetails.instanceParams ";
+                 }
+                 }
+                 }
+                 }
+                 if (err.length() > 0) {
+                 throw new InvalidValueException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", err));
+                 }*/
         }
 }

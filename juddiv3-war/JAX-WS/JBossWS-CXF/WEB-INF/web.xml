@@ -102,6 +102,15 @@
     </init-param>
   </servlet>  
   
+    <servlet>
+    <servlet-name>UDDIValueSetCachingWS</servlet-name>
+    <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
+    <init-param>
+      <param-name>jboss.ws.endpoint</param-name>
+      <param-value>org.apache.juddi.api.impl.UDDIValueSetCachingImpl</param-value>
+    </init-param>
+  </servlet>  
+  
   <servlet>
     <servlet-name>JUDDIApiWS</servlet-name>
     <servlet-class>org.jboss.wsf.stack.cxf.CXFServletExt</servlet-class>
@@ -134,6 +143,20 @@
     <servlet-name>UDDICustodyTransferWS</servlet-name>
     <url-pattern>/services/custody-transfer/*</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIValueSetCachingWS</servlet-name>
+    <url-pattern>/services/valueset-caching/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UDDIValueSetWS</servlet-name>
+    <url-pattern>/services/valueset-validation/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>UDDIReplicationWS</servlet-name>
+    <url-pattern>/services/replication/*</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>JUDDIApiWS</servlet-name>
     <url-pattern>/services/juddi-api/*</url-pattern>

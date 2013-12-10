@@ -67,8 +67,8 @@ public class ValidateValueSetValidation extends ValidateUDDIApi {
                                 throw new ValueNotAllowedException(new ErrorMessage("errors.invalidkey.TModelNotFound", key));
                         }
                         //ensure caller owns the tModel
-                        if (this.publisher.isOwner(tm)) {
-                                throw new ValueNotAllowedException(new ErrorMessage("errors.usermismatch.InvalidOwner", key));
+                        if (!this.publisher.isOwner(tm)) {
+                                throw new ValueNotAllowedException(new ErrorMessage("errors.usermismatch.InvalidOwner", key ));
                         }
 
                         //if we have no values, it may be to simply unset any values

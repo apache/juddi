@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.juddi.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,8 +22,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,20 +34,32 @@ import javax.persistence.Table;
 @Table(name = "j3_valuesetval")
 public class ValueSetValue implements java.io.Serializable {
 
-        private static final long serialVersionUID = 7767275374035531912L;
+        private static final long serialVersionUID = 7767275374037531912L;
         private Long id;
         private String tmodelKey;
         private String value = null;
+        private ValueSetValues parent = null;
+
 
         public ValueSetValue() {
         }
 
         public ValueSetValue(String tmodelkey, String value) {
-                
-                this.value=(value);
+
+                this.value = (value);
                 this.tmodelKey = tmodelkey;
         }
 
+        @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = ValueSetValues.class)
+        @JoinColumn(name="OWNER_ID")
+        public ValueSetValues getParent() {
+                return parent;
+        }
+
+        public void setParent(ValueSetValues parent) {
+                this.parent = parent;
+        }
+      
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         public Long getId() {
@@ -61,7 +70,8 @@ public class ValueSetValue implements java.io.Serializable {
                 this.id = id;
         }
         
-        @Column(name="j3_tmodelkey", nullable=false, length=255)
+        //@Id
+        @Column(name = "j3_tmodelkey", nullable = false, length = 255)
         public String getTModelKey() {
                 return this.tmodelKey;
         }
@@ -70,12 +80,13 @@ public class ValueSetValue implements java.io.Serializable {
                 this.tmodelKey = key;
         }
 
-        @Column(name="j3_value", nullable=false, length=255)
+        //@OneToMany()
+        @Column(name = "j3_value", nullable = false, length = 255)
         public String getValue() {
                 return this.value;
         }
 
-        public void setValues(String values) {
+        public void setValue(String values) {
                 this.value = values;
         }
 }

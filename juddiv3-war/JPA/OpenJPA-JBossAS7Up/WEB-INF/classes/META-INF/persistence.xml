@@ -69,6 +69,9 @@
     <class>org.apache.juddi.model.TransferTokenKey</class>
     <class>org.apache.juddi.model.UddiEntity</class>
     <class>org.apache.juddi.model.UddiEntityPublisher</class>
+	<class>org.apache.juddi.model.ValueSetValues</class>
+	<class>org.apache.juddi.model.ValueSetValue</class>
+
     <properties>
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(SchemaAction='add')"/>
       <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>

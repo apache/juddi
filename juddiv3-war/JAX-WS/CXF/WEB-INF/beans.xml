@@ -83,13 +83,13 @@
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
-<!--
+
   <jaxws:endpoint id="valueset-caching" implementor="org.apache.juddi.api.impl.UDDIValueSetCachingImpl" address="/valueset-caching">
     <jaxws:properties>
       <entry key="schema-validation-enabled" value="true"/>
     </jaxws:properties>
   </jaxws:endpoint>
--->
+
 
    <jaxws:endpoint id="juddi-api" implementor="org.apache.juddi.api.impl.JUDDIApiImpl" address="/juddi-api">
     <jaxws:properties>

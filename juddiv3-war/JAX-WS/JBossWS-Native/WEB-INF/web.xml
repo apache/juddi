@@ -86,6 +86,11 @@
 		<servlet-name>ValueSetService</servlet-name>
 		<servlet-class>org.apache.juddi.api.impl.UDDIValueSetValidationImpl</servlet-class>
 	</servlet>
+	
+		<servlet>
+		<servlet-name>ValueSetCaching</servlet-name>
+		<servlet-class>org.apache.juddi.api.impl.UDDIValueSetCachingImpl</servlet-class>
+	</servlet>
 
 	<servlet>
 		<servlet-name>JUDDIApiService</servlet-name>
@@ -139,6 +144,11 @@
 	<servlet-mapping>
 		<servlet-name>ValueSetService</servlet-name>
 		<url-pattern>/services/valueset-validation</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ValueSetCachine</servlet-name>
+		<url-pattern>/services/valueset-caching</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
