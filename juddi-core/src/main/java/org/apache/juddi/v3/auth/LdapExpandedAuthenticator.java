@@ -114,6 +114,24 @@ public class LdapExpandedAuthenticator implements Authenticator {
         }
 
         boolean isLdapUser = false;
+        
+        int MaxBindingsPerService = -1;
+        int MaxServicesPerBusiness = -1;
+        int MaxTmodels = -1;
+        int MaxBusinesses = -1;
+        try {
+                MaxBindingsPerService = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BINDINGS_PER_SERVICE, -1);
+                MaxServicesPerBusiness = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_SERVICES_PER_BUSINESS, -1);
+                MaxTmodels = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_TMODELS_PER_PUBLISHER, -1);
+                MaxBusinesses = AppConfig.getConfiguration().getInt(Property.JUDDI_MAX_BUSINESSES_PER_PUBLISHER, -1);
+        } catch (Exception ex) {
+                MaxBindingsPerService = -1;
+                MaxServicesPerBusiness = -1;
+                MaxTmodels = -1;
+                MaxBusinesses = -1;
+                logger.error("config exception! " + authorizedName, ex);
+        }
+
         try {
             env = new Hashtable<String, String>();
             env.put(Context.INITIAL_CONTEXT_FACTORY, AppConfig.getConfiguration().getString(Property.JUDDI_AUTHENTICATOR_INITIAL_CONTEXT, "com.sun.jndi.ldap.LdapCtxFactory"));
@@ -155,10 +173,10 @@ public class LdapExpandedAuthenticator implements Authenticator {
                     publisher.setAuthorizedName(authorizedName);
                     publisher.setIsAdmin("false");
                     publisher.setIsEnabled("true");
-                    publisher.setMaxBindingsPerService(199);
-                    publisher.setMaxBusinesses(100);
-                    publisher.setMaxServicesPerBusiness(100);
-                    publisher.setMaxTmodels(100);
+                    publisher.setMaxBindingsPerService(MaxBindingsPerService);
+                    publisher.setMaxBusinesses(MaxBusinesses);
+                    publisher.setMaxServicesPerBusiness(MaxServicesPerBusiness);
+                    publisher.setMaxTmodels(MaxTmodels);
                     publisher.setPublisherName("Unknown");
                     em.persist(publisher);
                     tx.commit();
