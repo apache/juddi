@@ -81,7 +81,7 @@ public class UddiSubscribeValidate {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
 
             DatatypeFactory df = DatatypeFactory.newInstance();
             GregorianCalendar gcal = new GregorianCalendar();

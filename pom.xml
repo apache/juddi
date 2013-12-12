@@ -281,6 +281,7 @@
 		<module>juddi-gui</module>
 		<module>juddi-tomcat</module>
 		<module>uddi-tck</module>
+		<module>juddi-tck-runner</module>
         
   </modules>
 	<distributionManagement>

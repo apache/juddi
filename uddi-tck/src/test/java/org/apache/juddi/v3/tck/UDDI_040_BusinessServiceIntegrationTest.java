@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,119 +31,144 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UDDI_040_BusinessServiceIntegrationTest 
-{
-	 
-	private static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
-	
-	protected static TckTModel tckTModel               = null;
-	protected static TckBusiness tckBusiness           = null;
-	protected static TckBusinessService tckBusinessService  = null;
-	
-	protected static String authInfoJoe                = null;
-	protected static String authInfoSam                = null;
-    private static UDDIClient manager;
-	
-	@AfterClass
-	public static void stopManager() throws ConfigurationException {
-		manager.stop();
-	}
-	
-	@BeforeClass
-	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClient();
-		manager.start();
-		
-		logger.debug("Getting auth tokens..");
-		try {
-			 Transport transport = manager.getTransport();
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
- 			 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
-        	 Assert.assertNotNull(authInfoJoe);
-        	 Assert.assertNotNull(authInfoSam);
-        	 
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        	 tckTModel  = new TckTModel(publication, inquiry);
-        	 tckBusiness = new TckBusiness(publication, inquiry);
-        	 tckBusinessService = new TckBusinessService(publication, inquiry);
- 			 String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
- 			 tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
- 			 tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
-	}
-	
-	@Test
-	public void joepublisher() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-		} finally {
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
-	
-	@Test
-	public void samsyndicator() {
-		try {
-			
-			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusinessService.saveSamSyndicatorService(authInfoSam);
-			tckBusinessService.deleteSamSyndicatorService(authInfoSam);
-		} finally {
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-		}
-	}
-	
-	/**
-	 * 5.2.16.3 paragraph 4
-	 * Data contained within businessEntity structures can be rearranged with 
-	 * this API call. This can be done by redefining parent container relationships 
-	 * for other registered information. For instance, if a new businessEntity 
-	 * is saved with information about a businessService that is registered 
-	 * already as part of a different businessEntity, this results in the 
-	 * businessService being moved from its current container to the new businessEntity.	
-	 * This condition occurs when the businessKey of the businessService being 
-	 * saved matches the businessKey of the businessEntity being saved. 
-	 * An attempt to delete or move a businessService in this manner by 
-	 * a party who is not the publisher of the businessService MUST be 
-	 * rejected with an error E_userMismatch.
-	 */
-	@Test
-	public void joepublisherMoveBusinessService() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBusiness.checkServicesBusinessOne(1);
-			tckBusiness.saveJoePublisherBusiness3(authInfoJoe);
-			//check that this business has no services
-			tckBusiness.checkServicesBusinessThree(0);
-			//Now move the service from one to three
-			tckBusiness.saveJoePublisherBusiness1to3(authInfoJoe);
-			tckBusiness.checkServicesBusinessOne(0);
-			tckBusiness.checkServicesBusinessThree(1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		} finally {
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness3(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
-	
-	
+public class UDDI_040_BusinessServiceIntegrationTest {
 
+        private static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
+        protected static TckTModel tckTModelJoe = null;
+        protected static TckBusiness tckBusinessJoe = null;
+        protected static TckBusinessService tckBusinessServiceJoe = null;
+        protected static TckTModel tckTModelSam = null;
+        protected static TckBusiness tckBusinessSam = null;
+        protected static TckBusinessService tckBusinessServiceSam = null;
+        protected static String authInfoJoe = null;
+        protected static String authInfoSam = null;
+        private static UDDIClient manager;
+
+        @AfterClass
+        public static void stopManager() throws ConfigurationException {
+                manager.stop();
+        }
+
+        @BeforeClass
+        public static void startManager() throws ConfigurationException {
+                manager = new UDDIClient();
+                manager.start();
+
+                logger.debug("Getting auth tokens..");
+                try {
+                        Transport transport = manager.getTransport();
+                        UDDISecurityPortType security = transport.getUDDISecurityService();
+                        authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        //Assert.assertNotNull(authInfoSam);
+
+
+                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
+                        tckTModelJoe = new TckTModel(publication, inquiry);
+                        tckBusinessJoe = new TckBusiness(publication, inquiry);
+                        tckBusinessServiceJoe = new TckBusinessService(publication, inquiry);
+
+                        transport = manager.getTransport();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        }
+                        tckTModelSam = new TckTModel(publication, inquiry);
+                        tckBusinessSam = new TckBusiness(publication, inquiry);
+                        tckBusinessServiceSam = new TckBusinessService(publication, inquiry);
+                        
+                        
+                        transport = manager.getTransport();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        }
+                        
+                        TckTModel tckTModel = new TckTModel(publication, inquiry);
+                        tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+                        tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
+
+        @Test
+        public void joepublisher() {
+                try {
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                } finally {
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
+
+        @Test
+        public void samsyndicator() {
+                try {
+
+                        tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+                        tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);
+                        tckBusinessServiceSam.saveSamSyndicatorService(authInfoSam);
+                        tckBusinessServiceSam.deleteSamSyndicatorService(authInfoSam);
+                } finally {
+                        tckBusinessSam.deleteSamSyndicatorBusiness(authInfoSam);
+                        tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
+                }
+        }
+
+        /**
+         * 5.2.16.3 paragraph 4 Data contained within businessEntity structures
+         * can be rearranged with this API call. This can be done by redefining
+         * parent container relationships for other registered information. For
+         * instance, if a new businessEntity is saved with information about a
+         * businessService that is registered already as part of a different
+         * businessEntity, this results in the businessService being moved from
+         * its current container to the new businessEntity. This condition
+         * occurs when the businessKey of the businessService being saved
+         * matches the businessKey of the businessEntity being saved. An attempt
+         * to delete or move a businessService in this manner by a party who is
+         * not the publisher of the businessService MUST be rejected with an
+         * error E_userMismatch.
+         */
+        @Test
+        public void joepublisherMoveBusinessService() {
+                try {
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.checkServicesBusinessOne(1);
+                        tckBusinessJoe.saveJoePublisherBusiness3(authInfoJoe);
+                        //check that this business has no services
+                        tckBusinessJoe.checkServicesBusinessThree(0);
+                        //Now move the service from one to three
+                        tckBusinessJoe.saveJoePublisherBusiness1to3(authInfoJoe);
+                        tckBusinessJoe.checkServicesBusinessOne(0);
+                        tckBusinessJoe.checkServicesBusinessThree(1);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        Assert.fail(e.getMessage());
+                } finally {
+                        tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness3(authInfoJoe);
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
 }

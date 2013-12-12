@@ -76,10 +76,10 @@ public class UddiRelatedBusinesses {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
 
             AuthToken UDDIAuthToken = security.getAuthToken(getAuthTokenUDDI);
-            System.out.println("UDDI AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("UDDI AUTHTOKEN = " + "***** don't log auth tokens");
 
 
 

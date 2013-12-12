@@ -16,6 +16,7 @@ package org.apache.juddi.v3.tck;
  */
 
 import java.util.List;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
@@ -42,6 +43,7 @@ import org.uddi.v3_service.UDDISecurityPortType;
  * Expected result is one returned businessEntity with a businessKey of uddi:uddi.tompublisher.com:businesstest04
  * 
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest 
 {
@@ -90,9 +92,15 @@ public class UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest
 			Transport transport = manager.getTransport();
 			UDDISecurityPortType security = transport.getUDDISecurityService();
 			authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-			Assert.assertNotNull(authInfoJoe);
+			//Assert.assertNotNull(authInfoJoe);
+                        
 			UDDIPublicationPortType publication = transport.getUDDIPublishService();
 			inquiry = transport.getUDDIInquiryService();
+                        
+                        if (!TckPublisher.isUDDIAuthMode()){
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
 
 			tckTModel   = new TckTModel(publication, inquiry);
 			tckBusiness = new TckBusiness(publication, inquiry);

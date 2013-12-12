@@ -114,7 +114,7 @@ public class UddiSubscribe {
 
         // Making API call that retrieves the authentication token for the 'root' user.
         AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-        System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+        System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
 
 
         getAuthTokenRoot = new GetAuthToken();
@@ -123,7 +123,7 @@ public class UddiSubscribe {
 
         // Making API call that retrieves the authentication token for the 'root' user.
         AuthToken uddiAuthToken = security.getAuthToken(getAuthTokenRoot);
-        System.out.println("uddi AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+        System.out.println("uddi AUTHTOKEN = " + "***** don't log auth tokens");
 
         //first publish a business user the user uddi
         BusinessEntity myBusEntity = new BusinessEntity();

@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,91 +31,109 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UDDI_050_BindingTemplateIntegrationTest 
-{
-	private static Log logger = LogFactory.getLog(UDDI_050_BindingTemplateIntegrationTest.class);
-	
-	private static TckTModel tckTModel                    = null;
-	private static TckBusiness tckBusiness                = null;
-	private static TckBusinessService tckBusinessService  = null;
-	private static TckBindingTemplate tckBindingTemplate  = null;
-	private static TckFindEntity tckFindEntity            = null;
-	private static String authInfoJoe                     = null;
-    private static UDDIClient manager;
-	
-	@AfterClass
-	public static void stopManager() throws ConfigurationException {
-		manager.stop();
-	}
-	
-	@BeforeClass
-	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClient();
-		manager.start();
-		
-		logger.debug("Getting auth tokens..");
-		try {
-			 Transport transport = manager.getTransport();
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
-        	 Assert.assertNotNull(authInfoJoe);
-        	 
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        	 tckTModel  = new TckTModel(publication, inquiry);
-        	 tckBusiness = new TckBusiness(publication, inquiry);
-        	 tckBusinessService = new TckBusinessService(publication, inquiry);
-        	 tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
-        	 tckFindEntity      = new TckFindEntity(inquiry);
- 			 String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
- 			 tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
- 			 tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
-	}
-	
-	@Test
-	public void joepublisher() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-		} finally {
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
-	
-	@Test
-	public void findService() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckBusinessService.saveJoePublisherService(authInfoJoe);
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			tckBindingTemplate.deleteBinding(authInfoJoe, "uddi:uddi.joepublisher.com:bindingone");
-			String serviceKey = tckFindEntity.findService(null);
-			tckFindEntity.findServiceDetail(serviceKey);
-			
-			tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
-			
-			serviceKey = tckFindEntity.findService(null);
-			tckFindEntity.findServiceDetail(serviceKey);
-			
-			tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
-			
-			tckFindEntity.findService(null);
-			tckFindEntity.findServiceDetail(serviceKey);
-		} finally {
-			tckBusinessService.deleteJoePublisherService(authInfoJoe);
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
+public class UDDI_050_BindingTemplateIntegrationTest {
+
+        private static Log logger = LogFactory.getLog(UDDI_050_BindingTemplateIntegrationTest.class);
+        private static TckTModel tckTModel = null;
+        private static TckBusiness tckBusiness = null;
+        private static TckBusinessService tckBusinessService = null;
+        private static TckBindingTemplate tckBindingTemplate = null;
+        private static TckFindEntity tckFindEntity = null;
+        private static String authInfoJoe = null;
+        private static UDDIClient manager;
+
+        @AfterClass
+        public static void stopManager() throws ConfigurationException {
+                manager.stop();
+        }
+
+        @BeforeClass
+        public static void startManager() throws ConfigurationException {
+                manager = new UDDIClient();
+                manager.start();
+
+                logger.debug("Getting auth tokens..");
+                try {
+                        Transport transport = manager.getTransport();
+                        UDDISecurityPortType security = transport.getUDDISecurityService();
+                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+                        authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
+
+
+                        tckTModel = new TckTModel(publication, inquiry);
+                        tckBusiness = new TckBusiness(publication, inquiry);
+                        tckBusinessService = new TckBusinessService(publication, inquiry);
+                        tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
+                        tckFindEntity = new TckFindEntity(inquiry);
+
+
+                        transport = manager.getTransport();
+                        security = transport.getUDDISecurityService();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        }
+
+
+                        tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
+                        tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
+
+        @Test
+        public void joepublisher() {
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+                        tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
+
+        @Test
+        public void findService() {
+                try {
+                        tckTModel.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                        tckBusinessService.saveJoePublisherService(authInfoJoe);
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+                        tckBindingTemplate.deleteBinding(authInfoJoe, "uddi:uddi.joepublisher.com:bindingone");
+                        String serviceKey = tckFindEntity.findService(null);
+                        tckFindEntity.findServiceDetail(serviceKey);
+
+                        tckBindingTemplate.saveJoePublisherBinding(authInfoJoe);
+
+                        serviceKey = tckFindEntity.findService(null);
+                        tckFindEntity.findServiceDetail(serviceKey);
+
+                        tckBindingTemplate.deleteJoePublisherBinding(authInfoJoe);
+
+                        tckFindEntity.findService(null);
+                        tckFindEntity.findServiceDetail(serviceKey);
+                } finally {
+                        tckBusinessService.deleteJoePublisherService(authInfoJoe);
+                        tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+                        tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
 }

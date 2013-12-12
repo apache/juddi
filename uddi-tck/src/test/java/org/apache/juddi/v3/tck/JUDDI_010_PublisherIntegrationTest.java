@@ -36,6 +36,7 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.uddi.api_v3.AuthToken;
@@ -44,7 +45,9 @@ import org.uddi.v3_service.DispositionReportFaultMessage;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
+ * jUDDI specific tests
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class JUDDI_010_PublisherIntegrationTest {
 	
@@ -56,7 +59,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
 	@BeforeClass
 	public static void startManager() throws ConfigurationException {
-		
+		Assume.assumeTrue(TckPublisher.isJUDDI());
 		manager  = new UDDIClient();
 		manager.start();
 
@@ -85,6 +88,7 @@ public class JUDDI_010_PublisherIntegrationTest {
 	
      @Test
      public void testAuthToken() {
+             Assume.assumeTrue(TckPublisher.isUDDIAuthMode());
 	     try {
 	    	 Transport transport = manager.getTransport();
         	 
@@ -103,6 +107,7 @@ public class JUDDI_010_PublisherIntegrationTest {
      
      @Test
  	public void testJoePublisher() {
+             Assume.assumeTrue(TckPublisher.isJUDDI());
  		//We can only test this if the publisher is not there already.
  		//If it already there is probably has foreign key relationships.
  		//This test should really only run on an empty database. Seed
@@ -115,6 +120,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	
  	@Test
  	public void testSamSyndicator() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
  		//We can only test this if the publisher is not there already.
  		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
  			saveSamSyndicator();
@@ -124,6 +130,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	
  	@Test
  	public void testGetAllPublishers(){
+                Assume.assumeTrue(TckPublisher.isJUDDI());
 		GetAllPublisherDetail gp = new GetAllPublisherDetail();
 		gp.setAuthInfo(authInfo);
 		try {
@@ -140,6 +147,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * 		   - false in all other cases.
  	 */
  	public boolean saveJoePublisher() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
  		if (!isExistPublisher(TckPublisher.getJoePublisherId())) {
  			savePublisher(TckPublisher.getJoePublisherId(), TckPublisher.JOE_PUBLISHER_XML);
  			return true;
@@ -152,6 +160,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * are child objects attached; think Services etc.
  	 */
  	public void deleteJoePublisher() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
  		deletePublisher(TckPublisher.getJoePublisherId());
  	}
  	/**
@@ -159,6 +168,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * @return publisherId
  	 */
  	public String saveSamSyndicator() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
  		if (!isExistPublisher(TckPublisher.getSamPublisherId())) {
  			savePublisher(TckPublisher.getSamPublisherId(), TckPublisher.SAM_SYNDICATOR_XML);
  		}
@@ -169,6 +179,7 @@ public class JUDDI_010_PublisherIntegrationTest {
  	 * are child objects attached; think Services etc.
  	 */
  	public void deleteSamSyndicator() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
  		deletePublisher(TckPublisher.getSamPublisherId());
  	}
  	

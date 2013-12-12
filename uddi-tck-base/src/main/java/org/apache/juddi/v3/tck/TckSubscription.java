@@ -66,12 +66,12 @@ public class TckSubscription
 	
 	private Log logger = LogFactory.getLog(this.getClass());
     UDDISubscriptionPortType subscription = null;
-	UDDISecurityPortType security = null;
+//	UDDISecurityPortType security = null;
 	
-	public TckSubscription(UDDISubscriptionPortType subscription, UDDISecurityPortType security) {
+	public TckSubscription(UDDISubscriptionPortType subscription) {
 		super();
 		this.subscription = subscription;
-		this.security = security;
+	//	this.security = security;
 	}
 
 	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,String subscriptionKey) {

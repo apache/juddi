@@ -57,16 +57,14 @@ public class ValidateValuesFromWebService {
                 UDDIValueSetValidationPortType vsv = svc.getUDDIValueSetValidationPort();
 
                 if (url == null || url.trim().length() == 0) {
-                        log.error("VSV Validation Failed: Cannot locate class from url null");
+                        log.error("VSV Validation Failed: Calling Url is null");
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidurl"));
                         throw x;
-                }
-                if (url.startsWith(Property.DEFAULT_BASE_URL)
+                } else if (url.startsWith(Property.DEFAULT_BASE_URL)
                         || url.startsWith(Property.DEFAULT_BASE_URL_SECURE)) {
                         vsv = new UDDIValueSetValidationImpl();
 
-                }
-                if (url.startsWith("classpath:")) {
+                } else if (url.startsWith("classpath:/")) {
                         try {
                                 String clz = url.substring(11);
                                 Class<UDDIValueSetValidationPortType> forName = (Class<UDDIValueSetValidationPortType>) Class.forName(clz);
@@ -74,17 +72,23 @@ public class ValidateValuesFromWebService {
                         } catch (Exception ex) {
                                 log.error("VSV Validation Failed: Cannot locate class from url " + url, ex);
                         }
-                } else {
+                } else if (url.toLowerCase().startsWith("http")){
                         //external service, stick with 
                         log.info("Calling External VSV Service");
                         ((BindingProvider) vsv).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url);
                 }
+                else
+                {
+                        log.warn("Unable to figure out how to use the URL " + url  + " as a Value Set Validation Service transport mechanism.");
+                        ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidurl", url));
+                }
+                
                 return vsv;
         }
 
         public static void Validate(String url, BusinessEntity obj) throws ValueNotAllowedException {
 
-                UDDIValueSetValidationPortType vsv=getPort(url);
+                UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getBusinessEntity().add(obj);
 
@@ -92,14 +96,15 @@ public class ValidateValuesFromWebService {
                         DispositionReport validateValues = vsv.validateValues(req);
                         //TODO parse
                 } catch (Exception ex) {
-                        log.error("VSV Validation Failed: Cannot locate class from url " + url, ex);
+                        log.error("VSV Validation Failed: From external service at " + url + ". Reason: " + ex.getMessage());
+                        log.debug("VSV Validation Failed: From external service at " + url + ". Reason: ", ex);
                         ValueNotAllowedException x = new ValueNotAllowedException(new ErrorMessage("errors.valuesetvalidation.invalidcontent", ex.getMessage()));
                         throw x;
                 }
         }
 
         public static void Validate(String url, TModel obj) throws ValueNotAllowedException {
-                UDDIValueSetValidationPortType vsv=getPort(url);
+                UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getTModel().add(obj);
 
@@ -112,7 +117,7 @@ public class ValidateValuesFromWebService {
         }
 
         public static void Validate(String url, BusinessService obj) throws ValueNotAllowedException {
-                UDDIValueSetValidationPortType vsv=getPort(url);
+                UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getBusinessService().add(obj);
 
@@ -125,7 +130,7 @@ public class ValidateValuesFromWebService {
         }
 
         public static void Validate(String url, BindingTemplate obj) throws ValueNotAllowedException {
-                UDDIValueSetValidationPortType vsv=getPort(url);
+                UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getBindingTemplate().add(obj);
 
@@ -138,7 +143,7 @@ public class ValidateValuesFromWebService {
         }
 
         public static void Validate(String url, PublisherAssertion obj) throws ValueNotAllowedException {
-                UDDIValueSetValidationPortType vsv=getPort(url);
+                UDDIValueSetValidationPortType vsv = getPort(url);
                 ValidateValues req = new ValidateValues();
                 req.getPublisherAssertion().add(obj);
                 try {

@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,85 +31,114 @@ import org.uddi.v3_service.UDDISecurityPortType;
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_030_BusinessEntityIntegrationTest {
-	
-	private static Log logger = LogFactory.getLog(UDDI_030_BusinessEntityIntegrationTest.class);
-	
-	protected static TckTModel tckTModel          = null;
-	protected static TckBusiness tckBusiness      = null;
-	protected static TckFindEntity tckFindEntity  = null;
-	protected static String authInfoJoe           = null;
-	protected static String authInfoSam           = null;
-	private static UDDIClient manager;
-	
-	@AfterClass
-	public static void stopManager() throws ConfigurationException {
-		manager.stop();
-	}
-	
-	@BeforeClass
-	public static void startManager() throws ConfigurationException {
-		manager  = new UDDIClient();
-		manager.start();
-		
-		logger.debug("Getting auth tokens..");
-		try {
-			 Transport transport = manager.getTransport();
-        	 UDDISecurityPortType security = transport.getUDDISecurityService();
-        	 authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(),  TckPublisher.getJoePassword());
- 			 authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(),  TckPublisher.getSamPassword());
-        	 Assert.assertNotNull(authInfoJoe);
-        	 Assert.assertNotNull(authInfoSam);
-        	 
-        	 UDDIPublicationPortType publication = transport.getUDDIPublishService();
-        	 UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
-        	 tckTModel  = new TckTModel(publication, inquiry);
-        	 tckBusiness = new TckBusiness(publication, inquiry);
-        	 tckFindEntity = new TckFindEntity(inquiry);
- 			String authInfoUDDI  = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(),  TckPublisher.getUDDIPassword());
- 			tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
- 			tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-	     } catch (Exception e) {
-	    	 logger.error(e.getMessage(), e);
-				Assert.fail("Could not obtain authInfo token.");
-	     } 
-	}
-	
-	@Test
-	public void testJoePublisherBusinessEntitySignature() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusinessX509Signature(authInfoJoe);
-			tckFindEntity.findAllBusiness();
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-		} finally {
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
-	
-	@Test
-	public void testJoePublisherBusinessEntity() {
-		try {
-			tckTModel.saveJoePublisherTmodel(authInfoJoe);
-			tckBusiness.saveJoePublisherBusiness(authInfoJoe);
-			tckFindEntity.findAllBusiness();
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-		} finally {
-			tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-		}
-	}
-	
-	@Test
-	public void testSamSyndicatorBusiness() {
-		try {
-			tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-			tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
-			tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-		} finally {
-			tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-		}
-	}
-	
-	
+
+        private static Log logger = LogFactory.getLog(UDDI_030_BusinessEntityIntegrationTest.class);
+        protected static TckTModel tckTModelJoe = null;
+        protected static TckBusiness tckBusinessJoe = null;
+        protected static TckFindEntity tckFindEntityJoe = null;
+        protected static TckTModel tckTModelSam = null;
+        protected static TckBusiness tckBusinessSam = null;
+        protected static TckFindEntity tckFindEntitySam = null;
+        protected static String authInfoJoe = null;
+        protected static String authInfoSam = null;
+        private static UDDIClient manager;
+
+        @AfterClass
+        public static void stopManager() throws ConfigurationException {
+                manager.stop();
+        }
+
+        @BeforeClass
+        public static void startManager() throws ConfigurationException {
+                manager = new UDDIClient();
+                manager.start();
+
+                logger.debug("Getting auth tokens..");
+                try {
+                        Transport transport = manager.getTransport();
+                        UDDISecurityPortType security = transport.getUDDISecurityService();
+
+                        authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        //Assert.assertNotNull(authInfoJoe);
+                        //Assert.assertNotNull(authInfoSam);
+
+                        UDDIPublicationPortType publication = transport.getUDDIPublishService();
+                        UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                        }
+                        tckTModelJoe = new TckTModel(publication, inquiry);
+                        tckBusinessJoe = new TckBusiness(publication, inquiry);
+                        tckFindEntityJoe = new TckFindEntity(inquiry);
+
+                        transport = manager.getTransport();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        }
+                        tckTModelSam = new TckTModel(publication, inquiry);
+                        tckBusinessSam = new TckBusiness(publication, inquiry);
+                        tckFindEntitySam = new TckFindEntity(inquiry);
+
+
+                        String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        transport = manager.getTransport();
+                        publication = transport.getUDDIPublishService();
+                        inquiry = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publication, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
+                        }
+                        TckTModel tckTModelUddi = new TckTModel(publication, inquiry);
+                        tckTModelUddi.saveUDDIPublisherTmodel(authInfoUDDI);
+                        tckTModelUddi.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
+                        
+                        
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("Could not obtain authInfo token.");
+                }
+        }
+
+        @Test
+        public void testJoePublisherBusinessEntitySignature() {
+                try {
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusinessJoe.saveJoePublisherBusinessX509Signature(authInfoJoe);
+                        tckFindEntityJoe.findAllBusiness();
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                } finally {
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
+
+        @Test
+        public void testJoePublisherBusinessEntity() {
+                try {
+                        tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                        tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
+                        tckFindEntityJoe.findAllBusiness();
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                } finally {
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                }
+        }
+
+        @Test
+        public void testSamSyndicatorBusiness() {
+                try {
+                        tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+                        tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);
+                        tckBusinessSam.deleteSamSyndicatorBusiness(authInfoSam);
+                } finally {
+                        tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
+                }
+        }
 }

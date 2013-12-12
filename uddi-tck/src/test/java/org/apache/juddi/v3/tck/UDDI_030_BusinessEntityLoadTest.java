@@ -20,42 +20,44 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_030_BusinessEntityLoadTest extends UDDI_030_BusinessEntityIntegrationTest {
-	
-	int numberOfBusinesses=1100;
-	
-	@BeforeClass
-	public static void setup() throws ConfigurationException {
-		UDDI_030_BusinessEntityIntegrationTest.startManager();
-	}
-	
-	@Test @Override
-	public void testJoePublisherBusinessEntity() {
-		tckTModel.saveJoePublisherTmodel(authInfoJoe);
-		long startSave = System.currentTimeMillis();
-		tckBusiness.saveJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
-		long saveDuration = System.currentTimeMillis() - startSave;
-		System.out.println("Save " + numberOfBusinesses + " Joes Duration=" + saveDuration);
-		long startDelete = System.currentTimeMillis();
-		tckBusiness.deleteJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
-		long deleteDuration = System.currentTimeMillis() - startDelete;
-	    System.out.println("Delete " + numberOfBusinesses + " Joes Duration= " + deleteDuration);
-	    tckTModel.deleteJoePublisherTmodel(authInfoJoe);
-	}
-	
-	@Test @Override
-	public void testSamSyndicatorBusiness() {
-		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-		long startSave = System.currentTimeMillis();
-		tckBusiness.saveSamSyndicatorBusinesses(authInfoSam, numberOfBusinesses);
-		long saveDuration = System.currentTimeMillis() - startSave;
-		System.out.println("Save " + numberOfBusinesses + " Sams Duration=" + saveDuration);
-		long startDelete = System.currentTimeMillis();
-		tckBusiness.deleteSamSyndicatorBusinesses(authInfoSam, numberOfBusinesses);
-		long deleteDuration = System.currentTimeMillis() - startDelete;
-	    System.out.println("Delete " + numberOfBusinesses + " Sams Duration= " + deleteDuration);
-	    tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
-	}
-	
+
+        int numberOfBusinesses = 1100;
+
+        @BeforeClass
+        public static void setup() throws ConfigurationException {
+                UDDI_030_BusinessEntityIntegrationTest.startManager();
+        }
+
+        @Test
+        @Override
+        public void testJoePublisherBusinessEntity() {
+                tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+                long startSave = System.currentTimeMillis();
+                tckBusinessJoe.saveJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
+                long saveDuration = System.currentTimeMillis() - startSave;
+                System.out.println("Save " + numberOfBusinesses + " Joes Duration=" + saveDuration);
+                long startDelete = System.currentTimeMillis();
+                tckBusinessJoe.deleteJoePublisherBusinesses(authInfoJoe, numberOfBusinesses);
+                long deleteDuration = System.currentTimeMillis() - startDelete;
+                System.out.println("Delete " + numberOfBusinesses + " Joes Duration= " + deleteDuration);
+                tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+        }
+
+        @Test
+        @Override
+        public void testSamSyndicatorBusiness() {
+                tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+                long startSave = System.currentTimeMillis();
+                tckBusinessSam.saveSamSyndicatorBusinesses(authInfoSam, numberOfBusinesses);
+                long saveDuration = System.currentTimeMillis() - startSave;
+                System.out.println("Save " + numberOfBusinesses + " Sams Duration=" + saveDuration);
+                long startDelete = System.currentTimeMillis();
+                tckBusinessSam.deleteSamSyndicatorBusinesses(authInfoSam, numberOfBusinesses);
+                long deleteDuration = System.currentTimeMillis() - startDelete;
+                System.out.println("Delete " + numberOfBusinesses + " Sams Duration= " + deleteDuration);
+                tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
+        }
 }

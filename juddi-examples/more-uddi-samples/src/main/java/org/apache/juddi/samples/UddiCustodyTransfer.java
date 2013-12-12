@@ -88,7 +88,7 @@ public class UddiCustodyTransfer {
 
         // Making API call that retrieves the authentication token for the 'root' user.
         AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-        System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+        System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
 
 
         getAuthTokenRoot = new GetAuthToken();

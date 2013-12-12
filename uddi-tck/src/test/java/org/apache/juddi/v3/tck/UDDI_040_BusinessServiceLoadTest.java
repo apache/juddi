@@ -18,40 +18,43 @@ import org.junit.Test;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class UDDI_040_BusinessServiceLoadTest extends UDDI_040_BusinessServiceIntegrationTest
 {	
 	int numberOfServices=1100;
 	@Test @Override
 	public void joepublisher() {
-		tckTModel.saveJoePublisherTmodel(authInfoJoe);
-		tckBusiness.saveJoePublisherBusiness(authInfoJoe);
+                numberOfServices = TckPublisher.getMaxLoadServices();
+		tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
+		tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
 		long startSave = System.currentTimeMillis();
-		tckBusinessService.saveJoePublisherServices(authInfoJoe, 0, numberOfServices);
+		tckBusinessServiceJoe.saveJoePublisherServices(authInfoJoe, 0, numberOfServices);
 		long saveDuration = System.currentTimeMillis() - startSave;
 		System.out.println("Save " + numberOfServices + " Joes Services Duration=" + saveDuration);
 		long startDelete = System.currentTimeMillis();
-		tckBusinessService.deleteJoePublisherServices(authInfoJoe, 0, numberOfServices);
+		tckBusinessServiceJoe.deleteJoePublisherServices(authInfoJoe, 0, numberOfServices);
 		long deleteDuration = System.currentTimeMillis() - startDelete;
 		System.out.println("Delete " + numberOfServices + " Joes Services Duration= " + deleteDuration);
-		tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
-		tckTModel.deleteJoePublisherTmodel(authInfoJoe);
+		tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+		tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
 	}
 	
 	@Test @Override
 	public void samsyndicator() {
-		tckTModel.saveSamSyndicatorTmodel(authInfoSam);
-		tckBusiness.saveSamSyndicatorBusiness(authInfoSam);
+                numberOfServices = TckPublisher.getMaxLoadServices();
+		tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
+		tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);
 		long startSave = System.currentTimeMillis();
-		tckBusinessService.saveSamSyndicatorServices(authInfoSam, 0, numberOfServices);
+		tckBusinessServiceSam.saveSamSyndicatorServices(authInfoSam, 0, numberOfServices);
 		long saveDuration = System.currentTimeMillis() - startSave;
 		System.out.println("Save " + numberOfServices + " Sams Services Duration=" + saveDuration);
 		long startDelete = System.currentTimeMillis();
-		tckBusinessService.deleteSamSyndicatorServices(authInfoSam, 0, numberOfServices);
+		tckBusinessServiceSam.deleteSamSyndicatorServices(authInfoSam, 0, numberOfServices);
 		long deleteDuration = System.currentTimeMillis() - startDelete;
 		System.out.println("Delete " + numberOfServices + " Sams Services Duration= " + deleteDuration);
-		tckBusiness.deleteSamSyndicatorBusiness(authInfoSam);
-		tckTModel.deleteSamSyndicatorTmodel(authInfoSam);
+		tckBusinessSam.deleteSamSyndicatorBusiness(authInfoSam);
+		tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
 	}
 	
 }

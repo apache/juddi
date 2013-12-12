@@ -193,7 +193,7 @@ public class UDDIInquiryJAXRS {
 
         @GET
         @Path("/XML/getDetail")
-        @Produces("application/json")
+        @Produces("application/xml")
         @org.apache.cxf.jaxrs.model.wadl.Description("Returns the details of a UDDI entity in XML, use query parameters"
                 + "serviceKey,businessKey,tModelKey, bindingKey")
         public Object getDetailXML(@QueryParam("serviceKey") String serviceKey,

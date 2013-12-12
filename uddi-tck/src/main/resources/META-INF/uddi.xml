@@ -25,14 +25,20 @@
 				-->
 				<!-- JAX-WS Transport -->
 				<proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>
+				
 				<custodyTransferUrl>http://${serverName}:${serverPort}/juddiv3/services/custody-transfer</custodyTransferUrl>
-				<inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
-				<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest</inquiryRESTUrl>
-		        <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
-		        <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
-				<subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
-				<subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
-				<juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api</juddiApiUrl>
+                <inquiryUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiry</inquiryUrl>
+				<!-- optional API -->
+				<inquiryRESTUrl>http://${serverName}:${serverPort}/juddiv3/services/inquiryRest/XML/</inquiryRESTUrl>
+                <publishUrl>http://${serverName}:${serverPort}/juddiv3/services/publish</publishUrl>
+                <securityUrl>http://${serverName}:${serverPort}/juddiv3/services/security</securityUrl>
+                <subscriptionUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription</subscriptionUrl>
+                <subscriptionListenerUrl>http://${serverName}:${serverPort}/juddiv3/services/subscription-listener</subscriptionListenerUrl>
+				<replicationUrl>http://${serverName}:${serverPort}/juddiv3/services/replication?wsdl</replicationUrl>
+				<valueSetValidationUrl>http://${serverName}:${serverPort}/juddiv3/services/valueset-validation</valueSetValidationUrl>
+				<valueSetCachingUrl>http://${serverName}:${serverPort}/juddiv3/services/valueset-caching</valueSetCachingUrl>
+				<!-- optional -->
+                <juddiApiUrl>http://${serverName}:${serverPort}/juddiv3/services/juddi-api?wsdl</juddiApiUrl>
 				
 				<!-- AXIS JAX-WS Transport 
                 <proxyTransport>org.apache.juddi.v3.client.transport.JAXWSTransport</proxyTransport>

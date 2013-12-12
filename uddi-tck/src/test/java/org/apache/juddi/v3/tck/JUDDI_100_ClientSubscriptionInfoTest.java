@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import javax.xml.ws.BindingProvider;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,13 +30,15 @@ import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.uddi.api_v3.GetAuthToken;
 import org.uddi.v3_service.UDDISecurityPortType;
 
 /**
+ * jUDDI specific tests
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class JUDDI_100_ClientSubscriptionInfoTest {
 
@@ -57,12 +60,13 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
  			Transport transport = manager.getTransport();
 			
 			security = transport.getUDDISecurityService();
-			GetAuthToken getAuthToken = new GetAuthToken();
-			getAuthToken.setUserID(TckPublisher.getRootPublisherId());
-			getAuthToken.setCred(TckPublisher.getRootPassword());
-			authInfo = security.getAuthToken(getAuthToken).getAuthInfo();
+			authInfo = TckSecurity.getAuthToken(security, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
 			
 			publisher = transport.getJUDDIApiService();
+                        if (!TckPublisher.isUDDIAuthMode())
+                        {
+                                TckSecurity.setCredentials((BindingProvider)publisher, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
+                        }
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			Assert.fail("Could not obtain authInfo token.");
@@ -76,6 +80,7 @@ public class JUDDI_100_ClientSubscriptionInfoTest {
 
 	@Test
 	public void addClientSubscriptionInfo() {
+                Assume.assumeTrue(TckPublisher.isJUDDI());
 		ClientSubscriptionInfo clientSubscriptionInfo = new ClientSubscriptionInfo();
 
 		Node node = new Node();

@@ -57,8 +57,8 @@ public class ReadWSDLTest {
             System.out.println("Connectivity failed " + e.getMessage());
             return false;
         }
-        System.out.println("Connectivity passed" );
-        return true;
+        //System.out.println("Connectivity passed" );
+        return false;
 
     }
 

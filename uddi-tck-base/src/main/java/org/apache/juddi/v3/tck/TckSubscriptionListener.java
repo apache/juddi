@@ -125,7 +125,7 @@ public class TckSubscriptionListener
 		
 	}
 	
-	public void saveService(String authInfo, String listenerService, Integer port) {
+	public void saveService(String authInfo, String listenerService, Integer port, String hostname) {
 		try {
 			// First save the entity
 			ss = new SaveService();
@@ -136,6 +136,7 @@ public class TckSubscriptionListener
 				for (BindingTemplate btIn: bsIn.getBindingTemplates().getBindingTemplate()) {
 					String value = btIn.getAccessPoint().getValue();
 					value = value.replace("{randomPort}", port.toString());
+                                        value = value.replace("{hostname}", hostname);
 					btIn.getAccessPoint().setValue(value);
 				}
 			}

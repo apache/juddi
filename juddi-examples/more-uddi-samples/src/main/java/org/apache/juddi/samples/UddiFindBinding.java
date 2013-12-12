@@ -69,8 +69,8 @@ public class UddiFindBinding {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
-
+            
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
             FindService fs = new FindService();
             fs.getName().add(new Name());
             fs.getName().get(0).setValue("%");

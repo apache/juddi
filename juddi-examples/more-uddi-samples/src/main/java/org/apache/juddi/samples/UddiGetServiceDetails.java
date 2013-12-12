@@ -70,7 +70,7 @@ public class UddiGetServiceDetails {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
 
             GetServiceDetail fs = new GetServiceDetail();
             fs.setAuthInfo(rootAuthToken.getAuthInfo());

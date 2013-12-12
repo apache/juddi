@@ -78,7 +78,7 @@ public class UddiSubscribeGet {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
             List<Subscription> subscriptions = uddiSubscriptionService.getSubscriptions((rootAuthToken.getAuthInfo()));
             for (int i = 0; i < subscriptions.size(); i++) {
                 System.out.println("===============================");

@@ -154,7 +154,7 @@ public class UddiDigitalSignatureService {
 
             // Making API call that retrieves the authentication token for the 'root' user.
             AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-            System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+            System.out.println("root AUTHTOKEN = " + "***** don't log auth tokens");
             return rootAuthToken.getAuthInfo();
         } catch (Exception ex) {
             System.out.println("Could not authenticate with the provided credentials " + ex.getMessage());
