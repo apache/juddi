@@ -60,7 +60,7 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 public class UDDI_160_RESTIntergrationTest {
 
         private static UDDIInquiryPortType inquiry = null;
-        private static Log logger = LogFactory.getLog(JUDDI_100_ClientSubscriptionInfoTest.class);
+        private static Log logger = LogFactory.getLog(UDDI_160_RESTIntergrationTest.class);
         private static String authInfo = null;
         private static UDDIClient manager;
 
@@ -113,7 +113,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assume.assumeNotNull(url);
                 HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(url + "businessKey?" + findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
+                HttpGet httpGet = new HttpGet(url + "?businessKey=" + findBusiness.getBusinessInfos().getBusinessInfo().get(0).getBusinessKey());
                 HttpResponse response = client.execute(httpGet);
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 BusinessEntity unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessEntity.class);
@@ -140,7 +140,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assume.assumeNotNull(url);
                 HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(url + "tModelKey?" + findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
+                HttpGet httpGet = new HttpGet(url + "?tModelKey=" + findTModel.getTModelInfos().getTModelInfo().get(0).getTModelKey());
                 HttpResponse response = client.execute(httpGet);
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 TModel unmarshal = JAXB.unmarshal(response.getEntity().getContent(), TModel.class);
@@ -167,7 +167,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assume.assumeNotNull(url);
                 HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(url + "tModelKey?" + findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
+                HttpGet httpGet = new HttpGet(url + "?serviceKey=" + findService.getServiceInfos().getServiceInfo().get(0).getServiceKey());
                 HttpResponse response = client.execute(httpGet);
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 BusinessService unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BusinessService.class);
@@ -231,7 +231,7 @@ public class UDDI_160_RESTIntergrationTest {
 
                 Assume.assumeNotNull(url);
                 HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(url + "bindingKey?" + bt.getBindingKey());
+                HttpGet httpGet = new HttpGet(url + "?bindingKey=" + bt.getBindingKey());
                 HttpResponse response = client.execute(httpGet);
                 Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
                 BindingTemplate unmarshal = JAXB.unmarshal(response.getEntity().getContent(), BindingTemplate.class);

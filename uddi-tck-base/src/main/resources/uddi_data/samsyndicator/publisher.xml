@@ -21,7 +21,7 @@
   <isAdmin>false</isAdmin>
   <isEnabled>True</isEnabled>
   <maxBindingsPerService>199</maxBindingsPerService>
-  <maxBusinesses>100</maxBusinesses>
-  <maxServicePerBusiness>100</maxServicePerBusiness>
-  <maxTModels>100</maxTModels>
+  <maxBusinesses>1500</maxBusinesses>
+  <maxServicePerBusiness>1500</maxServicePerBusiness>
+  <maxTModels>1500</maxTModels>
 </publisher>

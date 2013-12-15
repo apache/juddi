@@ -12,15 +12,17 @@ import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
 import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
-import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
-import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SaveClerkInfo;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
@@ -223,14 +225,14 @@ public interface JUDDIApiPortType {
      * 
      * @param authInfo
      * @return
-     *     returns java.util.List<org.apache.juddi.api_v3.Node>
+     *     returns org.apache.juddi.api_v3.NodeList
      * @throws DispositionReportFaultMessage
      */
     @WebMethod(operationName = "get_AllNodes", action = "get_AllNodes")
-    @WebResult(name = "node", targetNamespace = "urn:juddi-apache-org:api_v3")
+    @WebResult(name = "nodeList", targetNamespace = "urn:juddi-apache-org:api_v3")
     @RequestWrapper(localName = "get_AllNodes", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.GetAllNodes")
     @ResponseWrapper(localName = "get_AllNodesResponse", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.GetAllNodesResponse")
-    public List<Node> getAllNodes(
+    public NodeList getAllNodes(
         @WebParam(name = "authInfo", targetNamespace = "urn:juddi-apache-org:api_v3")
         String authInfo)
         throws DispositionReportFaultMessage
@@ -244,14 +246,14 @@ public interface JUDDIApiPortType {
      * 
      * @param authInfo
      * @return
-     *     returns java.util.List<org.apache.juddi.api_v3.Clerk>
+     *     returns org.apache.juddi.api_v3.ClerkList
      * @throws DispositionReportFaultMessage
      */
     @WebMethod(operationName = "get_AllClerks", action = "get_AllClerks")
-    @WebResult(name = "clerk", targetNamespace = "urn:juddi-apache-org:api_v3")
+    @WebResult(name = "clerkList", targetNamespace = "urn:juddi-apache-org:api_v3")
     @RequestWrapper(localName = "get_AllClerks", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.GetAllClerks")
     @ResponseWrapper(localName = "get_AllClerksResponse", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.GetAllClerksResponse")
-    public List<Clerk> getAllClerks(
+    public ClerkList getAllClerks(
         @WebParam(name = "authInfo", targetNamespace = "urn:juddi-apache-org:api_v3")
         String authInfo)
         throws DispositionReportFaultMessage
@@ -264,21 +266,14 @@ public interface JUDDIApiPortType {
      * 		@since 3.3
      * 	  
      * 
-     * @param nodeID
-     * @param authInfo
-     * @return
-     *     returns org.uddi.api_v3.DispositionReport
+     * @param body
      * @throws DispositionReportFaultMessage
      */
     @WebMethod(operationName = "delete_Node", action = "delete_Node")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:juddi-apache-org:api_v3")
-    @RequestWrapper(localName = "delete_Node", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.DeleteNode")
-    @ResponseWrapper(localName = "delete_NodeResponse", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.DeleteNodeResponse")
-    public DispositionReport deleteNode(
-        @WebParam(name = "authInfo", targetNamespace = "urn:juddi-apache-org:api_v3")
-        String authInfo,
-        @WebParam(name = "nodeID", targetNamespace = "urn:juddi-apache-org:api_v3")
-        String nodeID)
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public void deleteNode(
+        @WebParam(name = "delete_Node", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "body")
+        DeleteNode body)
         throws DispositionReportFaultMessage
     ;
 
@@ -288,21 +283,14 @@ public interface JUDDIApiPortType {
      * 		@since 3.3
      * 	  
      * 
-     * @param authInfo
-     * @param clerkID
-     * @return
-     *     returns org.uddi.api_v3.DispositionReport
+     * @param request
      * @throws DispositionReportFaultMessage
      */
     @WebMethod(operationName = "delete_Clerk", action = "delete_Clerk")
-    @WebResult(name = "dispositionReport", targetNamespace = "urn:juddi-apache-org:api_v3")
-    @RequestWrapper(localName = "delete_Clerk", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.DeleteClerk")
-    @ResponseWrapper(localName = "delete_ClerkResponse", targetNamespace = "urn:juddi-apache-org:api_v3", className = "org.apache.juddi.api_v3.DeleteClerkResponse")
-    public DispositionReport deleteClerk(
-        @WebParam(name = "authInfo", targetNamespace = "urn:juddi-apache-org:api_v3")
-        String authInfo,
-        @WebParam(name = "clerkID", targetNamespace = "urn:juddi-apache-org:api_v3")
-        String clerkID)
+    @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+    public void deleteClerk(
+        @WebParam(name = "delete_Clerk", targetNamespace = "urn:juddi-apache-org:api_v3", partName = "request")
+        DeleteClerk request)
         throws DispositionReportFaultMessage
     ;
 

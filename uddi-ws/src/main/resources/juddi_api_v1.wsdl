@@ -134,7 +134,13 @@ xmlns:uddi="urn:uddi-org:api_v3">
   
     <xs:complexType name="get_AllNodesResponse">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
+      <xs:element  name="nodeList" nillable="true" type="tns:nodeList"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="nodeList">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="node" type="tns:node"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -146,6 +152,12 @@ xmlns:uddi="urn:uddi-org:api_v3">
   </xs:complexType>
   
     <xs:complexType name="get_AllClerksResponse">
+    <xs:sequence>
+      <xs:element  name="clerkList" nillable="true" type="tns:clerkList"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="clerkList">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="clerk" nillable="true" type="tns:clerk"/>
     </xs:sequence>
@@ -159,11 +171,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
     </xs:sequence>
   </xs:complexType>
   
-    <xs:complexType name="delete_NodeResponse">
-    <xs:sequence>
-		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>
-    </xs:sequence>
-  </xs:complexType>
   
   <xs:complexType name="delete_Clerk">
     <xs:sequence>
@@ -172,11 +179,6 @@ xmlns:uddi="urn:uddi-org:api_v3">
     </xs:sequence>
   </xs:complexType>
   
-    <xs:complexType name="delete_ClerkResponse">
-    <xs:sequence>
-		<xs:element name="dispositionReport" type="uddi:dispositionReport"/>
-    </xs:sequence>
-  </xs:complexType>
 
   
   
@@ -355,7 +357,7 @@ xmlns:uddi="urn:uddi-org:api_v3">
   
   
   <xs:element name="delete_Clerk" nillable="true" type="tns:delete_Clerk"/>
-  <xs:element name="delete_ClerkResponse" nillable="true" type="tns:delete_ClerkResponse"/>
+  <!--<xs:element name="delete_ClerkResponse" nillable="true" type="tns:delete_ClerkResponse"/>-->
   
   <xs:element name="get_AllNodes" nillable="true" type="tns:get_AllNodes"/>
   <xs:element name="get_AllNodesResponse" nillable="true" type="tns:get_AllNodesResponse"/>
@@ -363,7 +365,7 @@ xmlns:uddi="urn:uddi-org:api_v3">
   <xs:element name="get_AllClerksResponse" nillable="true" type="tns:get_AllClerksResponse"/>
   
     <xs:element name="delete_Node" nillable="true" type="tns:delete_Node"/>
-  <xs:element name="delete_NodeResponse" nillable="true" type="tns:delete_NodeResponse"/>
+  <!--<xs:element name="delete_NodeResponse" nillable="true" type="tns:delete_NodeResponse"/>-->
  
     <xs:element name="get_ReplicationNodes" nillable="true" type="tns:get_ReplicationNodes"/>
   <xs:element name="get_ReplicationNodesResponse" nillable="true" type="tns:get_ReplicationNodesResponse"/>
@@ -535,14 +537,14 @@ xmlns:uddi="urn:uddi-org:api_v3">
     <wsdl:part element="ns1:delete_Node" name="body"></wsdl:part>
   </wsdl:message>
   <wsdl:message name="delete_NodeResponse">
-    <wsdl:part element="ns1:delete_NodeResponse" name="response"></wsdl:part>
+    <!--<wsdl:part element="ns1:delete_NodeResponse" name="response"></wsdl:part>-->
   </wsdl:message>
   
     <wsdl:message name="delete_Clerk">
     <wsdl:part element="ns1:delete_Clerk" name="request"></wsdl:part>
   </wsdl:message>
   <wsdl:message name="delete_ClerkResponse">
-    <wsdl:part element="ns1:delete_ClerkResponse" name="response"></wsdl:part>
+<!--    <wsdl:part element="ns1:delete_ClerkResponse" name="response"></wsdl:part>-->
   </wsdl:message>
   
   <wsdl:message name="get_ReplicationNodes">

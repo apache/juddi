@@ -203,7 +203,7 @@ public class API_090_SubscriptionListenerIntegrationTest
             //Changing the service we subscribed to "JoePublisherService"
 			Thread.sleep(1000);
 			logger.info("Deleting Business ********** ");
-			tckBusiness.deleteJoePublisherBusiness(authInfoJoe);
+			tckBusiness.updateJoePublisherBusiness(authInfoJoe);
 			
             //waiting up to 100 seconds for the listener to notice the change.
 			String test="";

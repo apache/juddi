@@ -36,6 +36,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api_v3.AccessPointType;
+import org.apache.juddi.api_v3.DeleteClerk;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.SavePublisher;
 import org.apache.juddi.config.AppConfig;
@@ -2263,8 +2265,40 @@ public class ValidatePublish extends ValidateUDDIApi {
         private String Rectify(String url, Configuration config) {
                 //${juddi.server.baseurl}
                 Properties p = new Properties();
-                p.put("juddi.server.baseurl", config.getString("juddi.server.baseurl",Property.DEFAULT_BASE_URL));
-                
+                p.put("juddi.server.baseurl", config.getString("juddi.server.baseurl", Property.DEFAULT_BASE_URL));
+
                 return TokenResolver.replaceTokens(url, p);
+        }
+
+        public void validateDeleteNode(EntityManager em, DeleteNode nodeID) throws DispositionReportFaultMessage {
+                if (nodeID==null){
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+                if (nodeID.getNodeID() == null || nodeID.getNodeID().trim().equalsIgnoreCase("")) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NoInput"));
+                }
+
+        }
+
+        public void validateDeleteClerk(EntityManager em, DeleteClerk clerkID) throws DispositionReportFaultMessage {
+                if (clerkID==null){
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
+                if (clerkID.getClerkID() == null || clerkID.getClerkID().trim().equalsIgnoreCase("")) {
+                        throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NoInput"));
+                }
+
+        }
+
+        public void validateGetAllNodes() throws DispositionReportFaultMessage {
+                if (!((Publisher) publisher).isAdmin()) {
+                        throw new UserMismatchException(new ErrorMessage("errors.deletepublisher.AdminReqd"));
+                }
         }
 }

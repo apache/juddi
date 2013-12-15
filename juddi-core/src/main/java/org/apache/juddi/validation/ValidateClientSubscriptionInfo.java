@@ -86,7 +86,7 @@ public class ValidateClientSubscriptionInfo extends ValidateUDDIApi {
 			throw new ValueNotAllowedException(new ErrorMessage("errors.saveclientsubscriptioninfo.NoInput"));
 		
 		for (ClientSubscriptionInfo clientSubscriptionInfo : body.getClientSubscriptionInfo()) {
-			if (clientSubscriptionInfo.getSubscriptionKey()==null || clientSubscriptionInfo.getSubscriptionKey().equals("")) {
+			if (clientSubscriptionInfo.getSubscriptionKey()==null || clientSubscriptionInfo.getSubscriptionKey().trim().equals("")) {
 				throw new ValueNotAllowedException(new ErrorMessage("errors.saveclientsubscriptionKey.NoInput"));
 			}
 			validateClerk(em, clientSubscriptionInfo.getFromClerk());

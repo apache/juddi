@@ -34,6 +34,11 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class DeleteClerk {
 
+        public DeleteClerk(){}
+        public DeleteClerk(String auth, String clerkid){
+                this.authInfo=auth;
+                this.clerkID = clerkid;
+        }
     @XmlElement(required = true)
     protected String authInfo;
     @XmlElement(required = true)

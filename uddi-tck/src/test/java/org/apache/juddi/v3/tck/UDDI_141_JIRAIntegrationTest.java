@@ -876,6 +876,8 @@ public class UDDI_141_JIRAIntegrationTest {
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
+                List<String> deleteme=new ArrayList<String>();
+                deleteme.add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                 //ok Joe's callback is setup
 
                 //Setup a business to subscribe to
@@ -887,6 +889,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness1 = publicationSam.saveBusiness(sb);
 
+                
                 //ok Joe now needs to subscribe for Sam's business
                 Holder<List<Subscription>> list = new Holder<List<Subscription>>();
                 list.value = new ArrayList<Subscription>();
@@ -921,6 +924,10 @@ public class UDDI_141_JIRAIntegrationTest {
                         maxwait = maxwait - 1000;
                 }
                 removeAllExistingSubscriptions(subscriptionJoe,authInfoJoe);
+                this.DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
+                deleteme.clear();
+                deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
+                this.DeleteBusinesses(deleteme, authInfoSam, publicationSam);
                 ep.stop();
                 if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
                         Assert.fail("no callbacks were recieved.");
@@ -982,6 +989,8 @@ public class UDDI_141_JIRAIntegrationTest {
                 logger.info("setting up joe's callback business");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
+                List<String>deleteme = new ArrayList<String>();
+                deleteme.add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                 //ok Joe's callback is setup
 
                 //Setup a business to subscribe to
@@ -1031,6 +1040,10 @@ public class UDDI_141_JIRAIntegrationTest {
                         maxwait = maxwait - 1000;
                 }
                 removeAllExistingSubscriptions(subscriptionJoe,authInfoJoe);
+                DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
+                deleteme.clear();
+                deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
+                DeleteBusinesses(deleteme, authInfoSam, publicationSam);
                 ep.stop();
                 if (UDDISubscriptionListenerImpl.notifcationMap.isEmpty()) {
                         logger.error("no callbacks were recieved");
@@ -1110,7 +1123,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name());
                 be.getName().get(0).setValue("Joe's JIRA_575_KR_Biz business");
-                be.setBusinessServices(new BusinessServices());
+                //be.setBusinessServices(new BusinessServices());
                 be.setCategoryBag(new CategoryBag());
                 be.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
                 sb.getBusinessEntity().add(be);
@@ -1143,7 +1156,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name());
                 be.getName().get(0).setValue("Joe's JIRA_575_IDENT_Biz business");
-                be.setBusinessServices(new BusinessServices());
+                //be.setBusinessServices(new BusinessServices());
                 be.setIdentifierBag(new IdentifierBag());
                 be.getIdentifierBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
                 sb.getBusinessEntity().add(be);
@@ -1177,6 +1190,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 tm.setName(new Name("JIRA_575_KR_TMODEL", null));
                 tm.setCategoryBag(new CategoryBag());
                 tm.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
+                stm.getTModel().add(tm);
                 try {
                         publicationJoe.saveTModel(stm);
                         Assert.fail("unexpected success");
@@ -1206,6 +1220,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 tm.setCategoryBag(new CategoryBag());
                 tm.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
                 tm.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
+                stm.getTModel().add(tm);
                 try {
                         publicationJoe.saveTModel(stm);
                         Assert.fail("unexpected success");
@@ -1233,7 +1248,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name());
                 be.getName().get(0).setValue("Joe's JIRA_575_KRGRP_Biz business");
-                be.setBusinessServices(new BusinessServices());
+               // be.setBusinessServices(new BusinessServices());
                 be.setCategoryBag(new CategoryBag());
                 //be.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
                 be.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
@@ -1309,7 +1324,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessService bs = new BusinessService();
                 bs.getName().add(new Name());
                 bs.getName().get(0).setValue("Joe's JIRA_575_SVC_KR service");
-                bs.setBindingTemplates(new BindingTemplates());
+                //bs.setBindingTemplates(new BindingTemplates());
                 bs.setCategoryBag(new CategoryBag());
                 bs.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
 
@@ -1347,7 +1362,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessService bs = new BusinessService();
                 bs.getName().add(new Name());
                 bs.getName().get(0).setValue("Joe's JIRA_575_SVC_KRGRP service");
-                bs.setBindingTemplates(new BindingTemplates());
+               // bs.setBindingTemplates(new BindingTemplates());
                 bs.setCategoryBag(new CategoryBag());
                 bs.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
                 bs.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);

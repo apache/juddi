@@ -8,8 +8,8 @@
 <%@page import="org.apache.juddi.api_v3.Publisher"%>
 <%@page import="org.apache.juddi.api_v3.SavePublisher"%>
 <%@page import="org.apache.juddi.api_v3.Clerk"%>
-<%@page import="org.apache.juddi.api_v3.SaveClerk"%>
-<%@page import="org.apache.juddi.api_v3.SyncSubscription"%>
+
+
 <%@page import="org.apache.juddi.api_v3.GetPublisherDetail"%>
 <%@page import="org.apache.juddi.api_v3.GetAllPublisherDetail"%>
 <%@page import="org.apache.juddi.api_v3.DeletePublisher"%>

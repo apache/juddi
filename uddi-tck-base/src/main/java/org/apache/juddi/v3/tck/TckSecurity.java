@@ -38,7 +38,7 @@ public class TckSecurity {
 		return token.getAuthInfo();
 	}
 
-        static void setCredentials(BindingProvider bindingProvider, String rootPublisherId, String rootPassword) {
+        public static void setCredentials(BindingProvider bindingProvider, String rootPublisherId, String rootPassword) {
                 bindingProvider.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, rootPublisherId);
                 bindingProvider.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, rootPassword);
         }

@@ -34,6 +34,11 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class DeleteNode {
 
+        public DeleteNode(){}
+        public DeleteNode(String auth, String nodeid){
+                authInfo=auth;
+                nodeID = nodeid;
+        }
     @XmlElement(required = true)
     protected String authInfo;
     @XmlElement(required = true)

@@ -14,8 +14,9 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
@@ -25,7 +26,6 @@ import javax.xml.ws.Endpoint;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.v3.client.Release;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -33,19 +33,21 @@ import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.Locale;
 import javax.xml.ws.BindingProvider;
-import org.apache.commons.codec.language.bm.Rule;
+import org.apache.commons.net.PrintCommandListener;
+import org.apache.commons.net.pop3.POP3Client;
+import org.apache.commons.net.pop3.POP3MessageInfo;
+import org.apache.commons.net.pop3.POP3SClient;
 import org.apache.juddi.v3.client.UDDIConstants;
 import static org.apache.juddi.v3.tck.TckBusiness.MARY_BUSINESS_XML;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.Name;
@@ -57,16 +59,16 @@ import org.uddi.sub_v3.Subscription;
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
-public class UDDI_090_SubscriptionListenerIntegrationTest {
+public class UDDI_090_SubscriptionListenerExternalTest {
 
-        public UDDI_090_SubscriptionListenerIntegrationTest() {
+        public UDDI_090_SubscriptionListenerExternalTest() {
                 serialize = false;
                 if (System.getProperty("debug") != null
                         && System.getProperty("debug").equalsIgnoreCase("true")) {
                         serialize = true;
                 }
         }
-        private static Log logger = LogFactory.getLog(UDDI_090_SubscriptionListenerIntegrationTest.class);
+        private static Log logger = LogFactory.getLog(UDDI_090_SubscriptionListenerExternalTest.class);
         private static UDDISubscriptionPortType subscriptionMary = null;
         private static UDDIInquiryPortType inquiryMary = null;
         private static TckTModel tckTModelMary = null;
@@ -84,8 +86,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
         private static String authInfoJoe = null;
         private static String authInfoMary = null;
         private static UDDIClient manager;
-        private static SimpleSmtpServer mailServer;
-        private static Integer smtpPort = 25;
+        private static String email = null;
         private static Integer httpPort = 80;
         private static boolean serialize = false;
 
@@ -96,30 +97,11 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 endPoint.stop();
                 endPoint = null;
         }
-        
+
         @BeforeClass
         public static void startManager() throws ConfigurationException {
                 try {
-                        smtpPort = 9700 + new Random().nextInt(99);
                         httpPort = 9600 + new Random().nextInt(99);
-                        Properties properties = new Properties();
-                        properties.setProperty("juddi.mail.smtp.host", "localhost");
-                        properties.setProperty("juddi.mail.smtp.port", String.valueOf(smtpPort));
-                        properties.setProperty("juddi.mail.smtp.from", "jUDDI@example.org");
-                        String version = Release.getRegistryVersion().replaceAll(".SNAPSHOT", "-SNAPSHOT");
-                        String curDir = System.getProperty("user.dir");
-                        if (!curDir.endsWith("uddi-tck")) {
-                                curDir += "/uddi-tck";
-                        }
-                        String path = curDir + "/target/juddi-tomcat-" + version + "/temp/";
-                        System.out.println("Saving jUDDI email properties to " + path);
-                        File tmpDir = new File(path);
-                        File tmpFile = new File(tmpDir + "/juddi-mail.properties");
-                        if (!tmpFile.createNewFile()) {
-                                tmpFile.delete();
-                                tmpFile.createNewFile();
-                        }
-                        properties.store(new FileOutputStream(tmpFile), "tmp email settings");
 
                         hostname = InetAddress.getLocalHost().getHostName();
                         //bring up the TCK SubscriptionListener
@@ -173,6 +155,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessMary = new TckBusiness(publication, inquiryMary);
                         tckBusinessServiceMary = new TckBusinessService(publication, inquiryMary);
                         tckSubscriptionListenerMary = new TckSubscriptionListener(subscriptionMary, publication);
+
+                        email = TckPublisher.getProperties().getProperty("mail.to");
 
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -248,22 +232,139 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 }
         }
 
+        public static final void printMessageInfo(BufferedReader reader, int id) throws IOException {
+                String from = "";
+                String subject = "";
+                String line;
+                while ((line = reader.readLine()) != null) {
+                        String lower = line.toLowerCase(Locale.ENGLISH);
+                        if (lower.startsWith("from: ")) {
+                                from = line.substring(6).trim();
+                        } else if (lower.startsWith("subject: ")) {
+                                subject = line.substring(9).trim();
+                        }
+                }
+
+                System.out.println(Integer.toString(id) + " From: " + from + "  Subject: " + subject);
+        }
+
+        /**
+         * gets all current messages from the mail server and returns return
+         * String is the body of each message
+         */
+        private static int fetchMail(String contains) {
+                /*if (args.length < 3)
+                 {
+                 System.err.println(
+                 "Usage: POP3Mail <pop3 server hostname> <username> <password> [TLS [true=implicit]]");
+                 System.exit(1);
+                 }*/
+                Properties properties = TckPublisher.getProperties();
+
+                String server = properties.getProperty("mail.host");
+                String username = properties.getProperty("mail.username");
+                String password = properties.getProperty("mail.password");
+
+                String proto = properties.getProperty("mail.secureProtocol");
+                boolean implicit = false;
+                try {
+                        implicit = Boolean.parseBoolean(properties.getProperty("mail.secureProtocol"));
+                } catch (Exception ex) {
+                }
+                POP3Client pop3;
+
+                if (proto != null) {
+                        System.out.println("Using secure protocol: " + proto);
+                        pop3 = new POP3SClient(proto, implicit);
+                } else {
+                        pop3 = new POP3Client();
+                }
+                System.out.println("Connecting to server " + server + " on " + pop3.getDefaultPort());
+
+                // We want to timeout if a response takes longer than 60 seconds
+                pop3.setDefaultTimeout(60000);
+
+                // suppress login details
+                pop3.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
+
+                try {
+                        pop3.connect(server);
+                } catch (IOException e) {
+                        logger.error(e);
+                        Assert.fail("Could not connect to mail server." + e.getMessage());
+                }
+
+                try {
+                        if (!pop3.login(username, password)) {
+                                System.err.println("Could not login to server.  Check password.");
+                                pop3.disconnect();
+
+                                Assert.fail("Could not connect to mail server. check password");
+                        }
+
+                        POP3MessageInfo[] messages = pop3.listMessages();
+
+                        if (messages == null) {
+                                logger.warn("Could not retrieve message list.");
+                                pop3.disconnect();
+                                return 0;
+                        } else if (messages.length == 0) {
+                                logger.info("No messages");
+                                pop3.logout();
+                                pop3.disconnect();
+                                return 0;
+                        }
+
+                        int ret = 0;
+                        for (POP3MessageInfo msginfo : messages) {
+                                /*BufferedReader reader = (BufferedReader) pop3.retrieveMessageTop(msginfo.number, 0);
+
+                                 if (reader == null) {
+                                 logger.error("Could not retrieve message header.");
+                                 pop3.disconnect();
+                                 return 0;
+                                 }*/
+                                //printMessageInfo(reader, msginfo.number);
+                                BufferedReader reader = (BufferedReader) pop3.retrieveMessage(msginfo.number);
+                                String line = "";
+                                StringBuilder sb = new StringBuilder();
+                                while ((line = reader.readLine()) != null) {
+                                        String lower = line.toLowerCase(Locale.ENGLISH);
+                                        sb.append(lower);
+                                }
+
+
+                                if (serialize) {
+                                        logger.info("Email contents: " + sb.toString());
+                                }
+                                if (sb.toString().contains(contains.toLowerCase())) {
+                                        ret++;
+                                        pop3.deleteMessage(msginfo.number);
+                                }
+                        }
+
+                        pop3.logout();
+                        pop3.disconnect();
+                        return ret;
+                } catch (IOException e) {
+                        logger.error(e);
+                        return 0;
+                }
+        }
+
         @Test
         public void joePublisherUpdateService_SMTP_FIND_SERVICE() {
+                Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateService_SMTP_FIND_SERVICE");
                 try {
                         removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
-                        //    if (mailServer != null && !mailServer.isStopped()) {
-                        //        mailServer.stop();
-                        //    }
-                        mailServer = SimpleSmtpServer.start(smtpPort);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
-                        //Saving the binding template that will be called by the server for a subscription event
+
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the SMTP Listener Service
-                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_XML, 0, hostname);
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_EXTERNAL_XML, 0, email);
                         //Saving the SMTP Subscription
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION_SMTP_XML);
                         //Changing the service we subscribed to "JoePublisherService"
@@ -272,27 +373,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessServiceJoe.updateJoePublisherService(authInfoJoe, "foo");
 
                         //waiting up to 100 seconds for the listener to notice the change.
+                        boolean received = false;
                         for (int i = 0; i < 200; i++) {
                                 Thread.sleep(500);
                                 System.out.print(".");
-                                if (mailServer.getReceivedEmailSize() > 0) {
+                                if (fetchMail("Service One") > 0) {
                                         logger.info("Received Email Notification");
+                                        received = true;
                                         break;
                                 }
                         }
-                        if (mailServer.getReceivedEmailSize() == 0) {
-                                Assert.fail("No SmtpNotification was sent");
-                        }
-                        @SuppressWarnings("rawtypes")
-                        Iterator emailIter = mailServer.getReceivedEmail();
-                        SmtpMessage email = (SmtpMessage) emailIter.next();
-                        if (serialize) {
-                                System.out.println("Subject:" + email.getHeaderValue("Subject"));
-                                System.out.println("Body:" + email.getBody());
-                        }
-                        if (!email.getBody().replace("=", "").contains("Service One")) {
-                                Assert.fail("Notification does not contain the correct service");
-                        }
+                        Assert.assertTrue("No email was received", received);
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
@@ -304,7 +395,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);
                         tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
                         tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
-                        mailServer.stop();
                 }
         }
 
@@ -398,18 +488,16 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
         //@Test
         public void joePublisherUpdateBusiness_SMTP_FIND_BUSINESS() {
+                Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateBusiness_SMTP_FIND_BUSINESS");
                 try {
                         removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
-                        //  if (mailServer != null && !mailServer.isStopped()) {
-                        //      mailServer.stop();
-                        //  }
-                        mailServer = SimpleSmtpServer.start(smtpPort);
+
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the Listener Service
-                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_XML, 0, hostname);
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_EXTERNAL_XML, 0, email);
                         //tckSubscriptionListener.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_HTTP_SERVICE_XML, httpPort);
                         //Saving the Subscription
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION2_SMTP_XML);
@@ -419,28 +507,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         logger.info("Saving Mary's Business ********** ");
                         tckBusinessMary.saveBusiness(authInfoMary, MARY_BUSINESS_XML, "uddi:uddi.marypublisher.com:marybusinessone");
 
+                        boolean received = false;
                         for (int i = 0; i < 200; i++) {
                                 Thread.sleep(500);
                                 System.out.print(".");
-                                if (mailServer.getReceivedEmailSize() > 0) {
+                                if (fetchMail("uddi:uddi.marypublisher.com:marybusinessone") > 0) {
                                         logger.info("Received Email Notification");
+                                        received = true;
                                         break;
                                 }
                         }
-                        if (mailServer.getReceivedEmailSize() == 0) {
-                                Assert.fail("No SmtpNotification was sent");
-                        }
-                        @SuppressWarnings("rawtypes")
-                        Iterator emailIter = mailServer.getReceivedEmail();
-                        SmtpMessage email = (SmtpMessage) emailIter.next();
-                        if (serialize) {
-                                System.out.println("Subject:" + email.getHeaderValue("Subject"));
-                                System.out.println("Body:" + email.getBody());
-                        }
-                        if (!email.getBody().replaceAll("=", "").contains("uddi:uddi.marypublisher.com:marybusinessone")) {
-                                DumpAllBusinesses();
-                                Assert.fail("Notification does not contain the correct service");
-                        }
+                        Assert.assertTrue("No email was received", received);
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
@@ -454,7 +531,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
                         //      tckTModel.deleteJoePublisherTmodel(authInfoJoe);
                         tckBusinessMary.deleteMaryPublisherBusiness(authInfoMary);
-                        mailServer.stop();
                 }
         }
 
@@ -514,20 +590,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
 
         //@Test
         public void joePublisherUpdateBusiness_SMTP_FIND_TMODEL() {
+                Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateBusiness_SMTP_FIND_TMODEL");
                 removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 try {
-                        if (mailServer != null && !mailServer.isStopped()) {
-                                mailServer.stop();
-                        }
-                        mailServer = SimpleSmtpServer.start(smtpPort);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessServiceJoe.saveJoePublisherService(authInfoJoe);
                         //Saving the Listener Service
-                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_XML, 0, hostname);
+                        tckSubscriptionListenerJoe.saveService(authInfoJoe, TckSubscriptionListener.LISTENER_SMTP_SERVICE_EXTERNAL_XML, 0, email);
                         //Saving the Subscription
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, TckSubscriptionListener.SUBSCRIPTION3_SMTP_XML);
                         //Changing the service we subscribed to "JoePublisherService"
@@ -535,28 +608,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         logger.info("Deleting tModel ********** ");
                         tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY);
 
-
+                        boolean received = false;
                         for (int i = 0; i < 200; i++) {
                                 Thread.sleep(500);
                                 System.out.print(".");
-                                if (mailServer.getReceivedEmailSize() > 0) {
+                                if (fetchMail("tModel One") > 0) {
                                         logger.info("Received Email Notification");
+                                        received = true;
                                         break;
                                 }
                         }
-                        if (mailServer.getReceivedEmailSize() == 0) {
-                                Assert.fail("No SmtpNotification was sent");
-                        }
-                        @SuppressWarnings("rawtypes")
-                        Iterator emailIter = mailServer.getReceivedEmail();
-                        SmtpMessage email = (SmtpMessage) emailIter.next();
-                        if (serialize) {
-                                System.out.println("Subject:" + email.getHeaderValue("Subject"));
-                                System.out.println("Body:" + email.getBody());
-                        }
-                        if (!email.getBody().contains("tModel One")) {
-                                Assert.fail("Notification does not contain the correct service");
-                        }
+                        Assert.assertTrue("No email was received", received);
 
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
@@ -569,7 +631,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
                         tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
                         tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
-                        mailServer.stop();
                 }
         }
         //TODO If a subscriber specifies a maximum number of entries to be returned with a subscription and the amount of data to be returned exceeds this limit, or if the node determines based on its policy that there are too many entries to be returned in a single group, then the node SHOULD provide a chunkToken with results.  

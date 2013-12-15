@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using org.uddi.apiv3;
+using org.uddi.repl_v3;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,1866 +23,3083 @@ using System.Xml.Serialization;
 namespace org.apache.juddi.apiv3
 {
 
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Web.Services.WebServiceBindingAttribute(Name="JUDDIApiServiceSoapBinding", Namespace="urn:juddi-apache-org:v3_service")]
+public partial class JUDDIApiService : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    
+    private System.Threading.SendOrPostCallback get_publisherDetailOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback delete_ClientSubscriptionInfoOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback save_ClerkOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback get_allPublisherDetailOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback delete_publisherOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback save_publisherOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback save_NodeOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback adminDelete_tModelOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback save_ClientSubscriptionInfoOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback invoke_SyncSubscriptionOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback get_AllNodesOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback get_AllClerksOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback delete_NodeOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback delete_ClerkOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback adminSave_BusinessOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback adminSave_tModelOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback get_ReplicationNodesOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback set_ReplicationNodesOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback get_allClientSubscriptionInfoOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback set_allValidValuesOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback adminDelete_SubscriptionOperationCompleted;
+    
+    private System.Threading.SendOrPostCallback adminSave_SubscriptionOperationCompleted;
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Web.Services.WebServiceBindingAttribute(Name = "JUDDIApiServiceSoapBinding", Namespace = "urn:juddi-apache-org:v3_service")]
-    public partial class JUDDIApiService : System.Web.Services.Protocols.SoapHttpClientProtocol
-    {
-
-        private System.Threading.SendOrPostCallback get_publisherDetailOperationCompleted;
-
-        private System.Threading.SendOrPostCallback delete_ClientSubscriptionInfoOperationCompleted;
-
-        private System.Threading.SendOrPostCallback save_ClerkOperationCompleted;
-
-        private System.Threading.SendOrPostCallback get_allPublisherDetailOperationCompleted;
-
-        private System.Threading.SendOrPostCallback delete_publisherOperationCompleted;
-
-        private System.Threading.SendOrPostCallback save_publisherOperationCompleted;
-
-        private System.Threading.SendOrPostCallback save_NodeOperationCompleted;
-
-        private System.Threading.SendOrPostCallback adminDelete_tmodelOperationCompleted;
-
-        private System.Threading.SendOrPostCallback save_ClientSubscriptionInfoOperationCompleted;
-
-        private System.Threading.SendOrPostCallback invoke_SyncSubscriptionOperationCompleted;
-
-        /// <remarks/>
-        public JUDDIApiService()
-        {
-            this.Url = "http://uddi-jbossoverlord.rhcloud.com/services/juddi-api";
+    public JUDDIApiService() {
+        this.Url = "http://localhost/juddiv3/services/juddi-api";
+    }
+    
+    /// <remarks/>
+    public event get_publisherDetailCompletedEventHandler get_publisherDetailCompleted;
+    
+    /// <remarks/>
+    public event delete_ClientSubscriptionInfoCompletedEventHandler delete_ClientSubscriptionInfoCompleted;
+    
+    /// <remarks/>
+    public event save_ClerkCompletedEventHandler save_ClerkCompleted;
+    
+    /// <remarks/>
+    public event get_allPublisherDetailCompletedEventHandler get_allPublisherDetailCompleted;
+    
+    /// <remarks/>
+    public event delete_publisherCompletedEventHandler delete_publisherCompleted;
+    
+    /// <remarks/>
+    public event save_publisherCompletedEventHandler save_publisherCompleted;
+    
+    /// <remarks/>
+    public event save_NodeCompletedEventHandler save_NodeCompleted;
+    
+    /// <remarks/>
+    public event adminDelete_tModelCompletedEventHandler adminDelete_tModelCompleted;
+    
+    /// <remarks/>
+    public event save_ClientSubscriptionInfoCompletedEventHandler save_ClientSubscriptionInfoCompleted;
+    
+    /// <remarks/>
+    public event invoke_SyncSubscriptionCompletedEventHandler invoke_SyncSubscriptionCompleted;
+    
+    /// <remarks/>
+    public event get_AllNodesCompletedEventHandler get_AllNodesCompleted;
+    
+    /// <remarks/>
+    public event get_AllClerksCompletedEventHandler get_AllClerksCompleted;
+    
+    /// <remarks/>
+    public event delete_NodeCompletedEventHandler delete_NodeCompleted;
+    
+    /// <remarks/>
+    public event delete_ClerkCompletedEventHandler delete_ClerkCompleted;
+    
+    /// <remarks/>
+    public event adminSave_BusinessCompletedEventHandler adminSave_BusinessCompleted;
+    
+    /// <remarks/>
+    public event adminSave_tModelCompletedEventHandler adminSave_tModelCompleted;
+    
+    /// <remarks/>
+    public event get_ReplicationNodesCompletedEventHandler get_ReplicationNodesCompleted;
+    
+    /// <remarks/>
+    public event set_ReplicationNodesCompletedEventHandler set_ReplicationNodesCompleted;
+    
+    /// <remarks/>
+    public event get_allClientSubscriptionInfoCompletedEventHandler get_allClientSubscriptionInfoCompleted;
+    
+    /// <remarks/>
+    public event set_allValidValuesCompletedEventHandler set_allValidValuesCompleted;
+    
+    /// <remarks/>
+    public event adminDelete_SubscriptionCompletedEventHandler adminDelete_SubscriptionCompleted;
+    
+    /// <remarks/>
+    public event adminSave_SubscriptionCompletedEventHandler adminSave_SubscriptionCompleted;
+    
+    /// <remarks/>
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_publisherDetail", RequestNamespace="urn:juddi-apache-org:api_v3", ResponseElementName="publisherDetail", ResponseNamespace="urn:juddi-apache-org:api_v3", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+    [return: System.Xml.Serialization.XmlElementAttribute("publisher", IsNullable=true)]
+    public publisher[] get_publisherDetail(string authInfo, [System.Xml.Serialization.XmlElementAttribute("publisherId")] string[] publisherId, [System.Xml.Serialization.XmlAttributeAttribute()] out bool truncated, [System.Xml.Serialization.XmlAttributeAttribute()] [System.Xml.Serialization.XmlIgnoreAttribute()] out bool truncatedSpecified) {
+        object[] results = this.Invoke("get_publisherDetail", new object[] {
+                    authInfo,
+                    publisherId});
+        truncated = ((bool)(results[1]));
+        truncatedSpecified = ((bool)(results[2]));
+        return ((publisher[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginget_publisherDetail(string authInfo, string[] publisherId, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_publisherDetail", new object[] {
+                    authInfo,
+                    publisherId}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public publisher[] Endget_publisherDetail(System.IAsyncResult asyncResult, out bool truncated, out bool truncatedSpecified) {
+        object[] results = this.EndInvoke(asyncResult);
+        truncated = ((bool)(results[1]));
+        truncatedSpecified = ((bool)(results[2]));
+        return ((publisher[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_publisherDetailAsync(string authInfo, string[] publisherId) {
+        this.get_publisherDetailAsync(authInfo, publisherId, null);
+    }
+    
+    /// <remarks/>
+    public void get_publisherDetailAsync(string authInfo, string[] publisherId, object userState) {
+        if ((this.get_publisherDetailOperationCompleted == null)) {
+            this.get_publisherDetailOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_publisherDetailOperationCompleted);
         }
-
-        /// <remarks/>
-        public event get_publisherDetailCompletedEventHandler get_publisherDetailCompleted;
-
-        /// <remarks/>
-        public event delete_ClientSubscriptionInfoCompletedEventHandler delete_ClientSubscriptionInfoCompleted;
-
-        /// <remarks/>
-        public event save_ClerkCompletedEventHandler save_ClerkCompleted;
-
-        /// <remarks/>
-        public event get_allPublisherDetailCompletedEventHandler get_allPublisherDetailCompleted;
-
-        /// <remarks/>
-        public event delete_publisherCompletedEventHandler delete_publisherCompleted;
-
-        /// <remarks/>
-        public event save_publisherCompletedEventHandler save_publisherCompleted;
-
-        /// <remarks/>
-        public event save_NodeCompletedEventHandler save_NodeCompleted;
-
-        /// <remarks/>
-        public event adminDelete_tmodelCompletedEventHandler adminDelete_tmodelCompleted;
-
-        /// <remarks/>
-        public event save_ClientSubscriptionInfoCompletedEventHandler save_ClientSubscriptionInfoCompleted;
-
-        /// <remarks/>
-        public event invoke_SyncSubscriptionCompletedEventHandler invoke_SyncSubscriptionCompleted;
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_publisherDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlElementAttribute("publisherDetail", Namespace = "urn:juddi-apache-org:api_v3")]
-        public publisherDetail get_publisherDetail([System.Xml.Serialization.XmlElementAttribute("get_publisherDetail", Namespace = "urn:juddi-apache-org:api_v3")] get_publisher_detail get_publisherDetail1)
-        {
-            object[] results = this.Invoke("get_publisherDetail", new object[] {
-						get_publisherDetail1});
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginget_publisherDetail(get_publisher_detail get_publisherDetail1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("get_publisherDetail", new object[] {
-						get_publisherDetail1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public publisherDetail Endget_publisherDetail(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public void get_publisherDetailAsync(get_publisher_detail get_publisherDetail1)
-        {
-            this.get_publisherDetailAsync(get_publisherDetail1, null);
-        }
-
-        /// <remarks/>
-        public void get_publisherDetailAsync(get_publisher_detail get_publisherDetail1, object userState)
-        {
-            if ((this.get_publisherDetailOperationCompleted == null))
-            {
-                this.get_publisherDetailOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_publisherDetailOperationCompleted);
-            }
-            this.InvokeAsync("get_publisherDetail", new object[] {
-						get_publisherDetail1}, this.get_publisherDetailOperationCompleted, userState);
-        }
-
-        private void Onget_publisherDetailOperationCompleted(object arg)
-        {
-            if ((this.get_publisherDetailCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.get_publisherDetailCompleted(this, new get_publisherDetailCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_ClientSubscriptionInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("delete_ClientSubscriptionInfo", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1)
-        {
-            this.Invoke("delete_ClientSubscriptionInfo", new object[] {
-						delete_ClientSubscriptionInfo1});
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Begindelete_ClientSubscriptionInfo(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("delete_ClientSubscriptionInfo", new object[] {
-						delete_ClientSubscriptionInfo1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public void Enddelete_ClientSubscriptionInfo(System.IAsyncResult asyncResult)
-        {
-            this.EndInvoke(asyncResult);
-        }
-
-        /// <remarks/>
-        public void delete_ClientSubscriptionInfoAsync(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1)
-        {
-            this.delete_ClientSubscriptionInfoAsync(delete_ClientSubscriptionInfo1, null);
-        }
-
-        /// <remarks/>
-        public void delete_ClientSubscriptionInfoAsync(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1, object userState)
-        {
-            if ((this.delete_ClientSubscriptionInfoOperationCompleted == null))
-            {
-                this.delete_ClientSubscriptionInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_ClientSubscriptionInfoOperationCompleted);
-            }
-            this.InvokeAsync("delete_ClientSubscriptionInfo", new object[] {
-						delete_ClientSubscriptionInfo1}, this.delete_ClientSubscriptionInfoOperationCompleted, userState);
-        }
-
-        private void Ondelete_ClientSubscriptionInfoOperationCompleted(object arg)
-        {
-            if ((this.delete_ClientSubscriptionInfoCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.delete_ClientSubscriptionInfoCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Clerk", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClerkResponse", Namespace = "urn:juddi-apache-org:v3_service", IsNullable = true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-        public clerk[] save_Clerk([System.Xml.Serialization.XmlElementAttribute("save_Clerk", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] save_clerkInfo save_Clerk1)
-        {
-            object[] results = this.Invoke("save_Clerk", new object[] {
-						save_Clerk1});
-            return ((clerk[])(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginsave_Clerk(save_clerkInfo save_Clerk1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("save_Clerk", new object[] {
-						save_Clerk1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public clerk[] Endsave_Clerk(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((clerk[])(results[0]));
-        }
-
-        /// <remarks/>
-        public void save_ClerkAsync(save_clerkInfo save_Clerk1)
-        {
-            this.save_ClerkAsync(save_Clerk1, null);
-        }
-
-        /// <remarks/>
-        public void save_ClerkAsync(save_clerkInfo save_Clerk1, object userState)
-        {
-            if ((this.save_ClerkOperationCompleted == null))
-            {
-                this.save_ClerkOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_ClerkOperationCompleted);
-            }
-            this.InvokeAsync("save_Clerk", new object[] {
-						save_Clerk1}, this.save_ClerkOperationCompleted, userState);
-        }
-
-        private void Onsave_ClerkOperationCompleted(object arg)
-        {
-            if ((this.save_ClerkCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.save_ClerkCompleted(this, new save_ClerkCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_allPublisherDetail", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlElementAttribute("publisherDetail", Namespace = "urn:juddi-apache-org:api_v3")]
-        public publisherDetail get_allPublisherDetail([System.Xml.Serialization.XmlElementAttribute("get_allPublisherDetail", Namespace = "urn:juddi-apache-org:api_v3")] get_allPublisherDetail get_allPublisherDetail1)
-        {
-            object[] results = this.Invoke("get_allPublisherDetail", new object[] {
-						get_allPublisherDetail1});
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginget_allPublisherDetail(get_allPublisherDetail get_allPublisherDetail1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("get_allPublisherDetail", new object[] {
-						get_allPublisherDetail1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public publisherDetail Endget_allPublisherDetail(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public void get_allPublisherDetailAsync(get_allPublisherDetail get_allPublisherDetail1)
-        {
-            this.get_allPublisherDetailAsync(get_allPublisherDetail1, null);
-        }
-
-        /// <remarks/>
-        public void get_allPublisherDetailAsync(get_allPublisherDetail get_allPublisherDetail1, object userState)
-        {
-            if ((this.get_allPublisherDetailOperationCompleted == null))
-            {
-                this.get_allPublisherDetailOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_allPublisherDetailOperationCompleted);
-            }
-            this.InvokeAsync("get_allPublisherDetail", new object[] {
-						get_allPublisherDetail1}, this.get_allPublisherDetailOperationCompleted, userState);
-        }
-
-        private void Onget_allPublisherDetailOperationCompleted(object arg)
-        {
-            if ((this.get_allPublisherDetailCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.get_allPublisherDetailCompleted(this, new get_allPublisherDetailCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_publisher", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void delete_publisher([System.Xml.Serialization.XmlElementAttribute("delete_publisher", Namespace = "urn:juddi-apache-org:api_v3")] delete_publisher delete_publisher1)
-        {
-            this.Invoke("delete_publisher", new object[] {
-						delete_publisher1});
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Begindelete_publisher(delete_publisher delete_publisher1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("delete_publisher", new object[] {
-						delete_publisher1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public void Enddelete_publisher(System.IAsyncResult asyncResult)
-        {
-            this.EndInvoke(asyncResult);
-        }
-
-        /// <remarks/>
-        public void delete_publisherAsync(delete_publisher delete_publisher1)
-        {
-            this.delete_publisherAsync(delete_publisher1, null);
-        }
-
-        /// <remarks/>
-        public void delete_publisherAsync(delete_publisher delete_publisher1, object userState)
-        {
-            if ((this.delete_publisherOperationCompleted == null))
-            {
-                this.delete_publisherOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_publisherOperationCompleted);
-            }
-            this.InvokeAsync("delete_publisher", new object[] {
-						delete_publisher1}, this.delete_publisherOperationCompleted, userState);
-        }
-
-        private void Ondelete_publisherOperationCompleted(object arg)
-        {
-            if ((this.delete_publisherCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.delete_publisherCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_publisher", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlElementAttribute("save_publisherResponse", Namespace = "urn:juddi-apache-org:v3_service", IsNullable = true)]
-        public publisherDetail save_publisher([System.Xml.Serialization.XmlElementAttribute("save_publisher", Namespace = "urn:juddi-apache-org:api_v3")] save_publisher save_publisher1)
-        {
-            object[] results = this.Invoke("save_publisher", new object[] {
-						save_publisher1});
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginsave_publisher(save_publisher save_publisher1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("save_publisher", new object[] {
-						save_publisher1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public publisherDetail Endsave_publisher(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((publisherDetail)(results[0]));
-        }
-
-        /// <remarks/>
-        public void save_publisherAsync(save_publisher save_publisher1)
-        {
-            this.save_publisherAsync(save_publisher1, null);
-        }
-
-        /// <remarks/>
-        public void save_publisherAsync(save_publisher save_publisher1, object userState)
-        {
-            if ((this.save_publisherOperationCompleted == null))
-            {
-                this.save_publisherOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_publisherOperationCompleted);
-            }
-            this.InvokeAsync("save_publisher", new object[] {
-						save_publisher1}, this.save_publisherOperationCompleted, userState);
-        }
-
-        private void Onsave_publisherOperationCompleted(object arg)
-        {
-            if ((this.save_publisherCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.save_publisherCompleted(this, new save_publisherCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Node", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_NodeResponse", Namespace = "urn:juddi-apache-org:v3_service", IsNullable = true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-        public node[] save_Node([System.Xml.Serialization.XmlElementAttribute("save_Node", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] save_nodeInfo save_Node1)
-        {
-            object[] results = this.Invoke("save_Node", new object[] {
-						save_Node1});
-            return ((node[])(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginsave_Node(save_nodeInfo save_Node1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("save_Node", new object[] {
-						save_Node1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public node[] Endsave_Node(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((node[])(results[0]));
-        }
-
-        /// <remarks/>
-        public void save_NodeAsync(save_nodeInfo save_Node1)
-        {
-            this.save_NodeAsync(save_Node1, null);
-        }
-
-        /// <remarks/>
-        public void save_NodeAsync(save_nodeInfo save_Node1, object userState)
-        {
-            if ((this.save_NodeOperationCompleted == null))
-            {
-                this.save_NodeOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_NodeOperationCompleted);
-            }
-            this.InvokeAsync("save_Node", new object[] {
-						save_Node1}, this.save_NodeOperationCompleted, userState);
-        }
-
-        private void Onsave_NodeOperationCompleted(object arg)
-        {
-            if ((this.save_NodeCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.save_NodeCompleted(this, new save_NodeCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminDelete_tmodel", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        public void adminDelete_tmodel([System.Xml.Serialization.XmlElementAttribute("adminDelete_tmodel", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] delete_tModel adminDelete_tmodel1)
-        {
-            this.Invoke("adminDelete_tmodel", new object[] {
-						adminDelete_tmodel1});
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult BeginadminDelete_tmodel(delete_tModel adminDelete_tmodel1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("adminDelete_tmodel", new object[] {
-						adminDelete_tmodel1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public void EndadminDelete_tmodel(System.IAsyncResult asyncResult)
-        {
-            this.EndInvoke(asyncResult);
-        }
-
-        /// <remarks/>
-        public void adminDelete_tmodelAsync(delete_tModel adminDelete_tmodel1)
-        {
-            this.adminDelete_tmodelAsync(adminDelete_tmodel1, null);
-        }
-
-        /// <remarks/>
-        public void adminDelete_tmodelAsync(delete_tModel adminDelete_tmodel1, object userState)
-        {
-            if ((this.adminDelete_tmodelOperationCompleted == null))
-            {
-                this.adminDelete_tmodelOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminDelete_tmodelOperationCompleted);
-            }
-            this.InvokeAsync("adminDelete_tmodel", new object[] {
-						adminDelete_tmodel1}, this.adminDelete_tmodelOperationCompleted, userState);
-        }
-
-        private void OnadminDelete_tmodelOperationCompleted(object arg)
-        {
-            if ((this.adminDelete_tmodelCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.adminDelete_tmodelCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_ClientSubscriptionInfo", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("save_ClientSubscriptionInfoResponse", Namespace = "urn:juddi-apache-org:v3_service", IsNullable = true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-        public clientSubscriptionInfo[] save_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("save_ClientSubscriptionInfo", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] save_clientSubscriptionInfo save_ClientSubscriptionInfo1)
-        {
-            object[] results = this.Invoke("save_ClientSubscriptionInfo", new object[] {
-						save_ClientSubscriptionInfo1});
-            return ((clientSubscriptionInfo[])(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Beginsave_ClientSubscriptionInfo(save_clientSubscriptionInfo save_ClientSubscriptionInfo1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("save_ClientSubscriptionInfo", new object[] {
-						save_ClientSubscriptionInfo1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public clientSubscriptionInfo[] Endsave_ClientSubscriptionInfo(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((clientSubscriptionInfo[])(results[0]));
-        }
-
-        /// <remarks/>
-        public void save_ClientSubscriptionInfoAsync(save_clientSubscriptionInfo save_ClientSubscriptionInfo1)
-        {
-            this.save_ClientSubscriptionInfoAsync(save_ClientSubscriptionInfo1, null);
-        }
-
-        /// <remarks/>
-        public void save_ClientSubscriptionInfoAsync(save_clientSubscriptionInfo save_ClientSubscriptionInfo1, object userState)
-        {
-            if ((this.save_ClientSubscriptionInfoOperationCompleted == null))
-            {
-                this.save_ClientSubscriptionInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_ClientSubscriptionInfoOperationCompleted);
-            }
-            this.InvokeAsync("save_ClientSubscriptionInfo", new object[] {
-						save_ClientSubscriptionInfo1}, this.save_ClientSubscriptionInfoOperationCompleted, userState);
-        }
-
-        private void Onsave_ClientSubscriptionInfoOperationCompleted(object arg)
-        {
-            if ((this.save_ClientSubscriptionInfoCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.save_ClientSubscriptionInfoCompleted(this, new save_ClientSubscriptionInfoCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("invoke_SyncSubscription", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Bare)]
-        [return: System.Xml.Serialization.XmlArrayAttribute("invoke_SyncSubscriptionResponse", Namespace = "urn:juddi-apache-org:v3_service", IsNullable = true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute("list", Namespace = "urn:juddi-apache-org:api_v3")]
-        public subscriptionResultsList[] invoke_SyncSubscription([System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscription", Namespace = "urn:juddi-apache-org:api_v3", IsNullable = true)] syncSubscription invoke_SyncSubscription1)
-        {
-            object[] results = this.Invoke("invoke_SyncSubscription", new object[] {
-						invoke_SyncSubscription1});
-            return ((subscriptionResultsList[])(results[0]));
-        }
-
-        /// <remarks/>
-        public System.IAsyncResult Begininvoke_SyncSubscription(syncSubscription invoke_SyncSubscription1, System.AsyncCallback callback, object asyncState)
-        {
-            return this.BeginInvoke("invoke_SyncSubscription", new object[] {
-						invoke_SyncSubscription1}, callback, asyncState);
-        }
-
-        /// <remarks/>
-        public subscriptionResultsList[] Endinvoke_SyncSubscription(System.IAsyncResult asyncResult)
-        {
-            object[] results = this.EndInvoke(asyncResult);
-            return ((subscriptionResultsList[])(results[0]));
-        }
-
-        /// <remarks/>
-        public void invoke_SyncSubscriptionAsync(syncSubscription invoke_SyncSubscription1)
-        {
-            this.invoke_SyncSubscriptionAsync(invoke_SyncSubscription1, null);
-        }
-
-        /// <remarks/>
-        public void invoke_SyncSubscriptionAsync(syncSubscription invoke_SyncSubscription1, object userState)
-        {
-            if ((this.invoke_SyncSubscriptionOperationCompleted == null))
-            {
-                this.invoke_SyncSubscriptionOperationCompleted = new System.Threading.SendOrPostCallback(this.Oninvoke_SyncSubscriptionOperationCompleted);
-            }
-            this.InvokeAsync("invoke_SyncSubscription", new object[] {
-						invoke_SyncSubscription1}, this.invoke_SyncSubscriptionOperationCompleted, userState);
-        }
-
-        private void Oninvoke_SyncSubscriptionOperationCompleted(object arg)
-        {
-            if ((this.invoke_SyncSubscriptionCompleted != null))
-            {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.invoke_SyncSubscriptionCompleted(this, new invoke_SyncSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
-
-        /// <remarks/>
-        public new void CancelAsync(object userState)
-        {
-            base.CancelAsync(userState);
+        this.InvokeAsync("get_publisherDetail", new object[] {
+                    authInfo,
+                    publisherId}, this.get_publisherDetailOperationCompleted, userState);
+    }
+    
+    private void Onget_publisherDetailOperationCompleted(object arg) {
+        if ((this.get_publisherDetailCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_publisherDetailCompleted(this, new get_publisherDetailCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class get_publisher_detail
-    {
-
-        private string authInfoField;
-
-        private string[] publisherIdField;
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        /// <remarks/>
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_ClientSubscriptionInfo", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    public void delete_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("delete_ClientSubscriptionInfo", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1) {
+        this.Invoke("delete_ClientSubscriptionInfo", new object[] {
+                    delete_ClientSubscriptionInfo1});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Begindelete_ClientSubscriptionInfo(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("delete_ClientSubscriptionInfo", new object[] {
+                    delete_ClientSubscriptionInfo1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void Enddelete_ClientSubscriptionInfo(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    public void delete_ClientSubscriptionInfoAsync(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1) {
+        this.delete_ClientSubscriptionInfoAsync(delete_ClientSubscriptionInfo1, null);
+    }
+    
+    /// <remarks/>
+    public void delete_ClientSubscriptionInfoAsync(delete_clientSubscriptionInfo delete_ClientSubscriptionInfo1, object userState) {
+        if ((this.delete_ClientSubscriptionInfoOperationCompleted == null)) {
+            this.delete_ClientSubscriptionInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_ClientSubscriptionInfoOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisherId")]
-        public string[] publisherId
-        {
-            get
-            {
-                return this.publisherIdField;
-            }
-            set
-            {
-                this.publisherIdField = value;
-            }
+        this.InvokeAsync("delete_ClientSubscriptionInfo", new object[] {
+                    delete_ClientSubscriptionInfo1}, this.delete_ClientSubscriptionInfoOperationCompleted, userState);
+    }
+    
+    private void Ondelete_ClientSubscriptionInfoOperationCompleted(object arg) {
+        if ((this.delete_ClientSubscriptionInfoCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.delete_ClientSubscriptionInfoCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
-
-
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class syncSubscription
-    {
-
-        private string authInfoField;
-
-        private get_subscriptionResults[] listField;
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Clerk", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlArrayAttribute("save_ClerkResponse", Namespace="urn:juddi-apache-org:v3_service", IsNullable=true)]
+    [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+    public clerk[] save_Clerk([System.Xml.Serialization.XmlElementAttribute(Namespace="urn:juddi-apache-org:api_v3")] save_clerkInfo save_ClerkRequest) {
+        object[] results = this.Invoke("save_Clerk", new object[] {
+                    save_ClerkRequest});
+        return ((clerk[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginsave_Clerk(save_clerkInfo save_ClerkRequest, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("save_Clerk", new object[] {
+                    save_ClerkRequest}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public clerk[] Endsave_Clerk(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((clerk[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void save_ClerkAsync(save_clerkInfo save_ClerkRequest) {
+        this.save_ClerkAsync(save_ClerkRequest, null);
+    }
+    
+    /// <remarks/>
+    public void save_ClerkAsync(save_clerkInfo save_ClerkRequest, object userState) {
+        if ((this.save_ClerkOperationCompleted == null)) {
+            this.save_ClerkOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_ClerkOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("list", IsNullable = true)]
-        public get_subscriptionResults[] list
-        {
-            get
-            {
-                return this.listField;
-            }
-            set
-            {
-                this.listField = value;
-            }
+        this.InvokeAsync("save_Clerk", new object[] {
+                    save_ClerkRequest}, this.save_ClerkOperationCompleted, userState);
+    }
+    
+    private void Onsave_ClerkOperationCompleted(object arg) {
+        if ((this.save_ClerkCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.save_ClerkCompleted(this, new save_ClerkCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class clientSubscriptionInfo
-    {
-
-        private string subscriptionKeyField;
-
-        private clerk fromClerkField;
-
-        private clerk toClerkField;
-
-        private System.DateTime lastModifiedField;
-
-        private bool lastModifiedFieldSpecified;
-
-        /// <remarks/>
-        public string subscriptionKey
-        {
-            get
-            {
-                return this.subscriptionKeyField;
-            }
-            set
-            {
-                this.subscriptionKeyField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_allPublisherDetail", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("publisherDetail", Namespace="urn:juddi-apache-org:api_v3")]
+    public object[] get_allPublisherDetail([System.Xml.Serialization.XmlElementAttribute("get_allPublisherDetail", Namespace="urn:juddi-apache-org:api_v3")] get_allPublisherDetail get_allPublisherDetail1) {
+        object[] results = this.Invoke("get_allPublisherDetail", new object[] {
+                    get_allPublisherDetail1});
+        return ((object[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginget_allPublisherDetail(get_allPublisherDetail get_allPublisherDetail1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_allPublisherDetail", new object[] {
+                    get_allPublisherDetail1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public object[] Endget_allPublisherDetail(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((object[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_allPublisherDetailAsync(get_allPublisherDetail get_allPublisherDetail1) {
+        this.get_allPublisherDetailAsync(get_allPublisherDetail1, null);
+    }
+    
+    /// <remarks/>
+    public void get_allPublisherDetailAsync(get_allPublisherDetail get_allPublisherDetail1, object userState) {
+        if ((this.get_allPublisherDetailOperationCompleted == null)) {
+            this.get_allPublisherDetailOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_allPublisherDetailOperationCompleted);
         }
-
-        /// <remarks/>
-        public clerk fromClerk
-        {
-            get
-            {
-                return this.fromClerkField;
-            }
-            set
-            {
-                this.fromClerkField = value;
-            }
-        }
-
-        /// <remarks/>
-        public clerk toClerk
-        {
-            get
-            {
-                return this.toClerkField;
-            }
-            set
-            {
-                this.toClerkField = value;
-            }
-        }
-
-        /// <remarks/>
-        public System.DateTime lastModified
-        {
-            get
-            {
-                return this.lastModifiedField;
-            }
-            set
-            {
-                this.lastModifiedField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool lastModifiedSpecified
-        {
-            get
-            {
-                return this.lastModifiedFieldSpecified;
-            }
-            set
-            {
-                this.lastModifiedFieldSpecified = value;
-            }
+        this.InvokeAsync("get_allPublisherDetail", new object[] {
+                    get_allPublisherDetail1}, this.get_allPublisherDetailOperationCompleted, userState);
+    }
+    
+    private void Onget_allPublisherDetailOperationCompleted(object arg) {
+        if ((this.get_allPublisherDetailCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_allPublisherDetailCompleted(this, new get_allPublisherDetailCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class clerk
-    {
-
-        private string nameField;
-
-        private node nodeField;
-
-        private string publisherField;
-
-        private string passwordField;
-
-        /// <remarks/>
-        public string name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_publisher", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    public void delete_publisher([System.Xml.Serialization.XmlElementAttribute("delete_publisher", Namespace="urn:juddi-apache-org:api_v3")] delete_publisher delete_publisher1) {
+        this.Invoke("delete_publisher", new object[] {
+                    delete_publisher1});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Begindelete_publisher(delete_publisher delete_publisher1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("delete_publisher", new object[] {
+                    delete_publisher1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void Enddelete_publisher(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    public void delete_publisherAsync(delete_publisher delete_publisher1) {
+        this.delete_publisherAsync(delete_publisher1, null);
+    }
+    
+    /// <remarks/>
+    public void delete_publisherAsync(delete_publisher delete_publisher1, object userState) {
+        if ((this.delete_publisherOperationCompleted == null)) {
+            this.delete_publisherOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_publisherOperationCompleted);
         }
-
-        /// <remarks/>
-        public node node
-        {
-            get
-            {
-                return this.nodeField;
-            }
-            set
-            {
-                this.nodeField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string publisher
-        {
-            get
-            {
-                return this.publisherField;
-            }
-            set
-            {
-                this.publisherField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string password
-        {
-            get
-            {
-                return this.passwordField;
-            }
-            set
-            {
-                this.passwordField = value;
-            }
+        this.InvokeAsync("delete_publisher", new object[] {
+                    delete_publisher1}, this.delete_publisherOperationCompleted, userState);
+    }
+    
+    private void Ondelete_publisherOperationCompleted(object arg) {
+        if ((this.delete_publisherCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.delete_publisherCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class node
-    {
-
-        private string nameField;
-
-        private string clientNameField;
-
-        private string descriptionField;
-
-        private string custodyTransferUrlField;
-
-        private string inquiryUrlField;
-
-        private string publishUrlField;
-
-        private string securityUrlField;
-
-        private string subscriptionUrlField;
-
-        private string subscriptionListenerUrlField;
-		
-		private string replicationUrlField;
-
-        private string juddiApiUrlField;
-
-        private string proxyTransportField;
-
-        private string factoryInitialField;
-
-        private string factoryURLPkgsField;
-
-        private string factoryNamingProviderField;
-
-        /// <remarks/>
-        public string name
-        {
-            get
-            {
-                return this.nameField;
-            }
-            set
-            {
-                this.nameField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_publisher", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("save_publisherResponse", Namespace="urn:juddi-apache-org:v3_service", IsNullable=true)]
+    public publisherDetail save_publisher([System.Xml.Serialization.XmlElementAttribute("save_publisher", Namespace="urn:juddi-apache-org:api_v3")] save_publisher save_publisher1) {
+        object[] results = this.Invoke("save_publisher", new object[] {
+                    save_publisher1});
+        return ((publisherDetail)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginsave_publisher(save_publisher save_publisher1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("save_publisher", new object[] {
+                    save_publisher1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public publisherDetail Endsave_publisher(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((publisherDetail)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void save_publisherAsync(save_publisher save_publisher1) {
+        this.save_publisherAsync(save_publisher1, null);
+    }
+    
+    /// <remarks/>
+    public void save_publisherAsync(save_publisher save_publisher1, object userState) {
+        if ((this.save_publisherOperationCompleted == null)) {
+            this.save_publisherOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_publisherOperationCompleted);
         }
-
-        /// <remarks/>
-        public string clientName
-        {
-            get
-            {
-                return this.clientNameField;
-            }
-            set
-            {
-                this.clientNameField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string description
-        {
-            get
-            {
-                return this.descriptionField;
-            }
-            set
-            {
-                this.descriptionField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string custodyTransferUrl
-        {
-            get
-            {
-                return this.custodyTransferUrlField;
-            }
-            set
-            {
-                this.custodyTransferUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string inquiryUrl
-        {
-            get
-            {
-                return this.inquiryUrlField;
-            }
-            set
-            {
-                this.inquiryUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string publishUrl
-        {
-            get
-            {
-                return this.publishUrlField;
-            }
-            set
-            {
-                this.publishUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string securityUrl
-        {
-            get
-            {
-                return this.securityUrlField;
-            }
-            set
-            {
-                this.securityUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string subscriptionUrl
-        {
-            get
-            {
-                return this.subscriptionUrlField;
-            }
-            set
-            {
-                this.subscriptionUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string subscriptionListenerUrl
-        {
-            get
-            {
-                return this.subscriptionListenerUrlField;
-            }
-            set
-            {
-                this.subscriptionListenerUrlField = value;
-            }
-        }
-
-		/// <remarks/>
-		public string replicationUrl {
-			get {
-				return this.replicationUrlField;
-			}
-			set {
-				this.replicationUrlField = value;
-			}
-		}
-
-        /// <remarks/>
-        public string juddiApiUrl
-        {
-            get
-            {
-                return this.juddiApiUrlField;
-            }
-            set
-            {
-                this.juddiApiUrlField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string proxyTransport
-        {
-            get
-            {
-                return this.proxyTransportField;
-            }
-            set
-            {
-                this.proxyTransportField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string factoryInitial
-        {
-            get
-            {
-                return this.factoryInitialField;
-            }
-            set
-            {
-                this.factoryInitialField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string factoryURLPkgs
-        {
-            get
-            {
-                return this.factoryURLPkgsField;
-            }
-            set
-            {
-                this.factoryURLPkgsField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string factoryNamingProvider
-        {
-            get
-            {
-                return this.factoryNamingProviderField;
-            }
-            set
-            {
-                this.factoryNamingProviderField = value;
-            }
+        this.InvokeAsync("save_publisher", new object[] {
+                    save_publisher1}, this.save_publisherOperationCompleted, userState);
+    }
+    
+    private void Onsave_publisherOperationCompleted(object arg) {
+        if ((this.save_publisherCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.save_publisherCompleted(this, new save_publisherCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class save_clientSubscriptionInfo
-    {
-
-        private string authInfoField;
-
-        private clientSubscriptionInfo[] clientSubscriptionInfoField;
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        /// <remarks/>
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_Node", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlArrayAttribute("save_NodeResponse", Namespace="urn:juddi-apache-org:v3_service", IsNullable=true)]
+    [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+    public node[] save_Node([System.Xml.Serialization.XmlElementAttribute(Namespace="urn:juddi-apache-org:api_v3")] save_nodeInfo save_NodeRequest) {
+        object[] results = this.Invoke("save_Node", new object[] {
+                    save_NodeRequest});
+        return ((node[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginsave_Node(save_nodeInfo save_NodeRequest, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("save_Node", new object[] {
+                    save_NodeRequest}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public node[] Endsave_Node(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((node[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void save_NodeAsync(save_nodeInfo save_NodeRequest) {
+        this.save_NodeAsync(save_NodeRequest, null);
+    }
+    
+    /// <remarks/>
+    public void save_NodeAsync(save_nodeInfo save_NodeRequest, object userState) {
+        if ((this.save_NodeOperationCompleted == null)) {
+            this.save_NodeOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_NodeOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("clientSubscriptionInfo")]
-        public clientSubscriptionInfo[] clientSubscriptionInfo
-        {
-            get
-            {
-                return this.clientSubscriptionInfoField;
-            }
-            set
-            {
-                this.clientSubscriptionInfoField = value;
-            }
+        this.InvokeAsync("save_Node", new object[] {
+                    save_NodeRequest}, this.save_NodeOperationCompleted, userState);
+    }
+    
+    private void Onsave_NodeOperationCompleted(object arg) {
+        if ((this.save_NodeCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.save_NodeCompleted(this, new save_NodeCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:uddi-org:api_v3")]
-    public partial class delete_tModel
-    {
-
-        private string authInfoField;
-
-        private string[] tModelKeyField;
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        /// <remarks/>
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminDelete_tmodel", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    public void adminDelete_tModel([System.Xml.Serialization.XmlElementAttribute("adminDelete_tmodel", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] delete_tModel adminDelete_tmodel1) {
+        this.Invoke("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginadminDelete_tModel(delete_tModel adminDelete_tmodel1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void EndadminDelete_tModel(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1) {
+        this.adminDelete_tModelAsync(adminDelete_tmodel1, null);
+    }
+    
+    /// <remarks/>
+    public void adminDelete_tModelAsync(delete_tModel adminDelete_tmodel1, object userState) {
+        if ((this.adminDelete_tModelOperationCompleted == null)) {
+            this.adminDelete_tModelOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminDelete_tModelOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("tModelKey")]
-        public string[] tModelKey
-        {
-            get
-            {
-                return this.tModelKeyField;
-            }
-            set
-            {
-                this.tModelKeyField = value;
-            }
+        this.InvokeAsync("adminDelete_tModel", new object[] {
+                    adminDelete_tmodel1}, this.adminDelete_tModelOperationCompleted, userState);
+    }
+    
+    private void OnadminDelete_tModelOperationCompleted(object arg) {
+        if ((this.adminDelete_tModelCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.adminDelete_tModelCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class save_nodeInfo
-    {
-
-        private string authInfoField;
-
-        private node[] nodeField;
-
-        /// <remarks/>
-        /// 
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("save_ClientSubscriptionInfo", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlArrayAttribute("save_ClientSubscriptionInfoResponse", Namespace="urn:juddi-apache-org:v3_service", IsNullable=true)]
+    [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+    public clientSubscriptionInfo[] save_ClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute(Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest) {
+        object[] results = this.Invoke("save_ClientSubscriptionInfo", new object[] {
+                    save_ClientSubscriptionInfoRequest});
+        return ((clientSubscriptionInfo[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginsave_ClientSubscriptionInfo(save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("save_ClientSubscriptionInfo", new object[] {
+                    save_ClientSubscriptionInfoRequest}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public clientSubscriptionInfo[] Endsave_ClientSubscriptionInfo(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((clientSubscriptionInfo[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void save_ClientSubscriptionInfoAsync(save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest) {
+        this.save_ClientSubscriptionInfoAsync(save_ClientSubscriptionInfoRequest, null);
+    }
+    
+    /// <remarks/>
+    public void save_ClientSubscriptionInfoAsync(save_clientSubscriptionInfo save_ClientSubscriptionInfoRequest, object userState) {
+        if ((this.save_ClientSubscriptionInfoOperationCompleted == null)) {
+            this.save_ClientSubscriptionInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.Onsave_ClientSubscriptionInfoOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("node")]
-        public node[] node
-        {
-            get
-            {
-                return this.nodeField;
-            }
-            set
-            {
-                this.nodeField = value;
-            }
+        this.InvokeAsync("save_ClientSubscriptionInfo", new object[] {
+                    save_ClientSubscriptionInfoRequest}, this.save_ClientSubscriptionInfoOperationCompleted, userState);
+    }
+    
+    private void Onsave_ClientSubscriptionInfoOperationCompleted(object arg) {
+        if ((this.save_ClientSubscriptionInfoCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.save_ClientSubscriptionInfoCompleted(this, new save_ClientSubscriptionInfoCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class save_publisher
-    {
-
-        private string authInfoField;
-
-        private publisher[] publisherField;
-
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("invoke_SyncSubscription", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscriptionResponse", Namespace="urn:juddi-apache-org:v3_service", IsNullable=true)]
+    public syncSubscriptionDetailResponse invoke_SyncSubscription([System.Xml.Serialization.XmlElementAttribute("invoke_SyncSubscription", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] syncSubscriptionRequest invoke_SyncSubscription1) {
+        object[] results = this.Invoke("invoke_SyncSubscription", new object[] {
+                    invoke_SyncSubscription1});
+        return ((syncSubscriptionDetailResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Begininvoke_SyncSubscription(syncSubscriptionRequest invoke_SyncSubscription1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("invoke_SyncSubscription", new object[] {
+                    invoke_SyncSubscription1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public syncSubscriptionDetailResponse Endinvoke_SyncSubscription(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((syncSubscriptionDetailResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void invoke_SyncSubscriptionAsync(syncSubscriptionRequest invoke_SyncSubscription1) {
+        this.invoke_SyncSubscriptionAsync(invoke_SyncSubscription1, null);
+    }
+    
+    /// <remarks/>
+    public void invoke_SyncSubscriptionAsync(syncSubscriptionRequest invoke_SyncSubscription1, object userState) {
+        if ((this.invoke_SyncSubscriptionOperationCompleted == null)) {
+            this.invoke_SyncSubscriptionOperationCompleted = new System.Threading.SendOrPostCallback(this.Oninvoke_SyncSubscriptionOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisher")]
-        public publisher[] publisher
-        {
-            get
-            {
-                return this.publisherField;
-            }
-            set
-            {
-                this.publisherField = value;
-            }
+        this.InvokeAsync("invoke_SyncSubscription", new object[] {
+                    invoke_SyncSubscription1}, this.invoke_SyncSubscriptionOperationCompleted, userState);
+    }
+    
+    private void Oninvoke_SyncSubscriptionOperationCompleted(object arg) {
+        if ((this.invoke_SyncSubscriptionCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.invoke_SyncSubscriptionCompleted(this, new invoke_SyncSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class publisher
-    {
-
-        private string publisherNameField;
-
-        private string emailAddressField;
-
-        private string isAdminField;
-
-        private string isEnabledField;
-
-        private int maxBindingsPerServiceField;
-
-        private bool maxBindingsPerServiceFieldSpecified;
-
-        private int maxBusinessesField;
-
-        private bool maxBusinessesFieldSpecified;
-
-        private int maxServicePerBusinessField;
-
-        private bool maxServicePerBusinessFieldSpecified;
-
-        private int maxTModelsField;
-
-        private bool maxTModelsFieldSpecified;
-
-        private SignatureType[] signatureField;
-
-        private string authorizedNameField;
-
-        /// <remarks/>
-        public string publisherName
-        {
-            get
-            {
-                return this.publisherNameField;
-            }
-            set
-            {
-                this.publisherNameField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_AllNodes", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("get_AllNodesResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public get_AllNodesResponse get_AllNodes([System.Xml.Serialization.XmlElementAttribute("get_AllNodes", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] get_AllNodes get_AllNodes1) {
+        object[] results = this.Invoke("get_AllNodes", new object[] {
+                    get_AllNodes1});
+        return ((get_AllNodesResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginget_AllNodes(get_AllNodes get_AllNodes1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_AllNodes", new object[] {
+                    get_AllNodes1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public get_AllNodesResponse Endget_AllNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((get_AllNodesResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_AllNodesAsync(get_AllNodes get_AllNodes1) {
+        this.get_AllNodesAsync(get_AllNodes1, null);
+    }
+    
+    /// <remarks/>
+    public void get_AllNodesAsync(get_AllNodes get_AllNodes1, object userState) {
+        if ((this.get_AllNodesOperationCompleted == null)) {
+            this.get_AllNodesOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_AllNodesOperationCompleted);
         }
-
-        /// <remarks/>
-        public string emailAddress
-        {
-            get
-            {
-                return this.emailAddressField;
-            }
-            set
-            {
-                this.emailAddressField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string isAdmin
-        {
-            get
-            {
-                return this.isAdminField;
-            }
-            set
-            {
-                this.isAdminField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string isEnabled
-        {
-            get
-            {
-                return this.isEnabledField;
-            }
-            set
-            {
-                this.isEnabledField = value;
-            }
-        }
-
-        /// <remarks/>
-        public int maxBindingsPerService
-        {
-            get
-            {
-                return this.maxBindingsPerServiceField;
-            }
-            set
-            {
-                this.maxBindingsPerServiceField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool maxBindingsPerServiceSpecified
-        {
-            get
-            {
-                return this.maxBindingsPerServiceFieldSpecified;
-            }
-            set
-            {
-                this.maxBindingsPerServiceFieldSpecified = value;
-            }
-        }
-
-        /// <remarks/>
-        public int maxBusinesses
-        {
-            get
-            {
-                return this.maxBusinessesField;
-            }
-            set
-            {
-                this.maxBusinessesField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool maxBusinessesSpecified
-        {
-            get
-            {
-                return this.maxBusinessesFieldSpecified;
-            }
-            set
-            {
-                this.maxBusinessesFieldSpecified = value;
-            }
-        }
-
-        /// <remarks/>
-        public int maxServicePerBusiness
-        {
-            get
-            {
-                return this.maxServicePerBusinessField;
-            }
-            set
-            {
-                this.maxServicePerBusinessField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool maxServicePerBusinessSpecified
-        {
-            get
-            {
-                return this.maxServicePerBusinessFieldSpecified;
-            }
-            set
-            {
-                this.maxServicePerBusinessFieldSpecified = value;
-            }
-        }
-
-        /// <remarks/>
-        public int maxTModels
-        {
-            get
-            {
-                return this.maxTModelsField;
-            }
-            set
-            {
-                this.maxTModelsField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool maxTModelsSpecified
-        {
-            get
-            {
-                return this.maxTModelsFieldSpecified;
-            }
-            set
-            {
-                this.maxTModelsFieldSpecified = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
-        public SignatureType[] Signature
-        {
-            get
-            {
-                return this.signatureField;
-            }
-            set
-            {
-                this.signatureField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string authorizedName
-        {
-            get
-            {
-                return this.authorizedNameField;
-            }
-            set
-            {
-                this.authorizedNameField = value;
-            }
+        this.InvokeAsync("get_AllNodes", new object[] {
+                    get_AllNodes1}, this.get_AllNodesOperationCompleted, userState);
+    }
+    
+    private void Onget_AllNodesOperationCompleted(object arg) {
+        if ((this.get_AllNodesCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_AllNodesCompleted(this, new get_AllNodesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class delete_publisher
-    {
-
-        private string authInfoField;
-
-        private string[] publisherIdField;
-
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_AllClerks", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("get_AllClerksResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public get_AllClerksResponse get_AllClerks([System.Xml.Serialization.XmlElementAttribute("get_AllClerks", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] get_AllClerks get_AllClerks1) {
+        object[] results = this.Invoke("get_AllClerks", new object[] {
+                    get_AllClerks1});
+        return ((get_AllClerksResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Beginget_AllClerks(get_AllClerks get_AllClerks1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_AllClerks", new object[] {
+                    get_AllClerks1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public get_AllClerksResponse Endget_AllClerks(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((get_AllClerksResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_AllClerksAsync(get_AllClerks get_AllClerks1) {
+        this.get_AllClerksAsync(get_AllClerks1, null);
+    }
+    
+    /// <remarks/>
+    public void get_AllClerksAsync(get_AllClerks get_AllClerks1, object userState) {
+        if ((this.get_AllClerksOperationCompleted == null)) {
+            this.get_AllClerksOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_AllClerksOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisherId")]
-        public string[] publisherId
-        {
-            get
-            {
-                return this.publisherIdField;
-            }
-            set
-            {
-                this.publisherIdField = value;
-            }
+        this.InvokeAsync("get_AllClerks", new object[] {
+                    get_AllClerks1}, this.get_AllClerksOperationCompleted, userState);
+    }
+    
+    private void Onget_AllClerksOperationCompleted(object arg) {
+        if ((this.get_AllClerksCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_AllClerksCompleted(this, new get_AllClerksCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class get_allPublisherDetail
-    {
-
-        private string authInfoField;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_Node", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    public void delete_Node([System.Xml.Serialization.XmlElementAttribute("delete_Node", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] delete_Node delete_Node1) {
+        this.Invoke("delete_Node", new object[] {
+                    delete_Node1});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Begindelete_Node(delete_Node delete_Node1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("delete_Node", new object[] {
+                    delete_Node1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void Enddelete_Node(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    public void delete_NodeAsync(delete_Node delete_Node1) {
+        this.delete_NodeAsync(delete_Node1, null);
+    }
+    
+    /// <remarks/>
+    public void delete_NodeAsync(delete_Node delete_Node1, object userState) {
+        if ((this.delete_NodeOperationCompleted == null)) {
+            this.delete_NodeOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_NodeOperationCompleted);
+        }
+        this.InvokeAsync("delete_Node", new object[] {
+                    delete_Node1}, this.delete_NodeOperationCompleted, userState);
+    }
+    
+    private void Ondelete_NodeOperationCompleted(object arg) {
+        if ((this.delete_NodeCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.delete_NodeCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class save_clerkInfo
-    {
-
-        private string authInfoField;
-
-        private clerk[] clerkField;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("delete_Clerk", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    public void delete_Clerk([System.Xml.Serialization.XmlElementAttribute("delete_Clerk", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] delete_Clerk delete_Clerk1) {
+        this.Invoke("delete_Clerk", new object[] {
+                    delete_Clerk1});
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult Begindelete_Clerk(delete_Clerk delete_Clerk1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("delete_Clerk", new object[] {
+                    delete_Clerk1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public void Enddelete_Clerk(System.IAsyncResult asyncResult) {
+        this.EndInvoke(asyncResult);
+    }
+    
+    /// <remarks/>
+    public void delete_ClerkAsync(delete_Clerk delete_Clerk1) {
+        this.delete_ClerkAsync(delete_Clerk1, null);
+    }
+    
+    /// <remarks/>
+    public void delete_ClerkAsync(delete_Clerk delete_Clerk1, object userState) {
+        if ((this.delete_ClerkOperationCompleted == null)) {
+            this.delete_ClerkOperationCompleted = new System.Threading.SendOrPostCallback(this.Ondelete_ClerkOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("clerk")]
-        public clerk[] clerk
-        {
-            get
-            {
-                return this.clerkField;
-            }
-            set
-            {
-                this.clerkField = value;
-            }
+        this.InvokeAsync("delete_Clerk", new object[] {
+                    delete_Clerk1}, this.delete_ClerkOperationCompleted, userState);
+    }
+    
+    private void Ondelete_ClerkOperationCompleted(object arg) {
+        if ((this.delete_ClerkCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.delete_ClerkCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class delete_clientSubscriptionInfo
-    {
-
-        private string authInfoField;
-
-        private string[] subscriptionKeyField;
-
-        /// <remarks/>
-        /// 
-        [System.Xml.Serialization.XmlElement(Namespace = "urn:uddi-org:api_v3")]
-        public string authInfo
-        {
-            get
-            {
-                return this.authInfoField;
-            }
-            set
-            {
-                this.authInfoField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminSave_Business", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("adminSave_BusinessResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public adminSave_BusinessResponse adminSave_Business([System.Xml.Serialization.XmlElementAttribute("adminSave_Business", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] adminSave_Business adminSave_Business1) {
+        object[] results = this.Invoke("adminSave_Business", new object[] {
+                    adminSave_Business1});
+        return ((adminSave_BusinessResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginadminSave_Business(adminSave_Business adminSave_Business1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("adminSave_Business", new object[] {
+                    adminSave_Business1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public adminSave_BusinessResponse EndadminSave_Business(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((adminSave_BusinessResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void adminSave_BusinessAsync(adminSave_Business adminSave_Business1) {
+        this.adminSave_BusinessAsync(adminSave_Business1, null);
+    }
+    
+    /// <remarks/>
+    public void adminSave_BusinessAsync(adminSave_Business adminSave_Business1, object userState) {
+        if ((this.adminSave_BusinessOperationCompleted == null)) {
+            this.adminSave_BusinessOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminSave_BusinessOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("subscriptionKey")]
-        public string[] subscriptionKey
-        {
-            get
-            {
-                return this.subscriptionKeyField;
-            }
-            set
-            {
-                this.subscriptionKeyField = value;
-            }
+        this.InvokeAsync("adminSave_Business", new object[] {
+                    adminSave_Business1}, this.adminSave_BusinessOperationCompleted, userState);
+    }
+    
+    private void OnadminSave_BusinessOperationCompleted(object arg) {
+        if ((this.adminSave_BusinessCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.adminSave_BusinessCompleted(this, new adminSave_BusinessCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:juddi-apache-org:api_v3")]
-    public partial class publisherDetail
-    {
-
-        private publisher[] publisherField;
-
-        private bool truncatedField;
-
-        private bool truncatedFieldSpecified;
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("publisher", IsNullable = true)]
-        public publisher[] publisher
-        {
-            get
-            {
-                return this.publisherField;
-            }
-            set
-            {
-                this.publisherField = value;
-            }
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminSave_tModel", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("adminSave_tModelResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public adminSave_tModelResponse adminSave_tModel([System.Xml.Serialization.XmlElementAttribute("adminSave_tModel", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] adminSave_tModel adminSave_tModel1) {
+        object[] results = this.Invoke("adminSave_tModel", new object[] {
+                    adminSave_tModel1});
+        return ((adminSave_tModelResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public System.IAsyncResult BeginadminSave_tModel(adminSave_tModel adminSave_tModel1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("adminSave_tModel", new object[] {
+                    adminSave_tModel1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public adminSave_tModelResponse EndadminSave_tModel(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((adminSave_tModelResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void adminSave_tModelAsync(adminSave_tModel adminSave_tModel1) {
+        this.adminSave_tModelAsync(adminSave_tModel1, null);
+    }
+    
+    /// <remarks/>
+    public void adminSave_tModelAsync(adminSave_tModel adminSave_tModel1, object userState) {
+        if ((this.adminSave_tModelOperationCompleted == null)) {
+            this.adminSave_tModelOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminSave_tModelOperationCompleted);
         }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool truncated
-        {
-            get
-            {
-                return this.truncatedField;
-            }
-            set
-            {
-                this.truncatedField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool truncatedSpecified
-        {
-            get
-            {
-                return this.truncatedFieldSpecified;
-            }
-            set
-            {
-                this.truncatedFieldSpecified = value;
-            }
+        this.InvokeAsync("adminSave_tModel", new object[] {
+                    adminSave_tModel1}, this.adminSave_tModelOperationCompleted, userState);
+    }
+    
+    private void OnadminSave_tModelOperationCompleted(object arg) {
+        if ((this.adminSave_tModelCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.adminSave_tModelCompleted(this, new adminSave_tModelCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void get_publisherDetailCompletedEventHandler(object sender, get_publisherDetailCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_ReplicationNodes", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("get_ReplicationNodesResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public get_ReplicationNodesResponse get_ReplicationNodes([System.Xml.Serialization.XmlElementAttribute("get_ReplicationNodes", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] get_ReplicationNodes get_ReplicationNodes1) {
+        object[] results = this.Invoke("get_ReplicationNodes", new object[] {
+                    get_ReplicationNodes1});
+        return ((get_ReplicationNodesResponse)(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class get_publisherDetailCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal get_publisherDetailCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public System.IAsyncResult Beginget_ReplicationNodes(get_ReplicationNodes get_ReplicationNodes1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_ReplicationNodes", new object[] {
+                    get_ReplicationNodes1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public get_ReplicationNodesResponse Endget_ReplicationNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((get_ReplicationNodesResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_ReplicationNodesAsync(get_ReplicationNodes get_ReplicationNodes1) {
+        this.get_ReplicationNodesAsync(get_ReplicationNodes1, null);
+    }
+    
+    /// <remarks/>
+    public void get_ReplicationNodesAsync(get_ReplicationNodes get_ReplicationNodes1, object userState) {
+        if ((this.get_ReplicationNodesOperationCompleted == null)) {
+            this.get_ReplicationNodesOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_ReplicationNodesOperationCompleted);
         }
-
-        /// <remarks/>
-        public publisherDetail Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((publisherDetail)(this.results[0]));
-            }
+        this.InvokeAsync("get_ReplicationNodes", new object[] {
+                    get_ReplicationNodes1}, this.get_ReplicationNodesOperationCompleted, userState);
+    }
+    
+    private void Onget_ReplicationNodesOperationCompleted(object arg) {
+        if ((this.get_ReplicationNodesCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_ReplicationNodesCompleted(this, new get_ReplicationNodesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void delete_ClientSubscriptionInfoCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("set_ReplicationNodes", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("set_ReplicationNodesResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public set_ReplicationNodesResponse set_ReplicationNodes([System.Xml.Serialization.XmlElementAttribute("set_ReplicationNodes", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] set_ReplicationNodes set_ReplicationNodes1) {
+        object[] results = this.Invoke("set_ReplicationNodes", new object[] {
+                    set_ReplicationNodes1});
+        return ((set_ReplicationNodesResponse)(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void save_ClerkCompletedEventHandler(object sender, save_ClerkCompletedEventArgs e);
-
+    public System.IAsyncResult Beginset_ReplicationNodes(set_ReplicationNodes set_ReplicationNodes1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("set_ReplicationNodes", new object[] {
+                    set_ReplicationNodes1}, callback, asyncState);
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class save_ClerkCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal save_ClerkCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public set_ReplicationNodesResponse Endset_ReplicationNodes(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((set_ReplicationNodesResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void set_ReplicationNodesAsync(set_ReplicationNodes set_ReplicationNodes1) {
+        this.set_ReplicationNodesAsync(set_ReplicationNodes1, null);
+    }
+    
+    /// <remarks/>
+    public void set_ReplicationNodesAsync(set_ReplicationNodes set_ReplicationNodes1, object userState) {
+        if ((this.set_ReplicationNodesOperationCompleted == null)) {
+            this.set_ReplicationNodesOperationCompleted = new System.Threading.SendOrPostCallback(this.Onset_ReplicationNodesOperationCompleted);
         }
-
-        /// <remarks/>
-        public clerk[] Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((clerk[])(this.results[0]));
-            }
+        this.InvokeAsync("set_ReplicationNodes", new object[] {
+                    set_ReplicationNodes1}, this.set_ReplicationNodesOperationCompleted, userState);
+    }
+    
+    private void Onset_ReplicationNodesOperationCompleted(object arg) {
+        if ((this.set_ReplicationNodesCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.set_ReplicationNodesCompleted(this, new set_ReplicationNodesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void get_allPublisherDetailCompletedEventHandler(object sender, get_allPublisherDetailCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("get_allClientSubscriptionInfo", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlArrayAttribute("get_allClientSubscriptionInfoResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    [return: System.Xml.Serialization.XmlArrayItemAttribute("subscriptions", IsNullable=false)]
+    public subscriptionWrapper[] get_allClientSubscriptionInfo([System.Xml.Serialization.XmlElementAttribute("get_allClientSubscriptionInfo", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] get_allClientSubscriptionInfo get_allClientSubscriptionInfo1) {
+        object[] results = this.Invoke("get_allClientSubscriptionInfo", new object[] {
+                    get_allClientSubscriptionInfo1});
+        return ((subscriptionWrapper[])(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class get_allPublisherDetailCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal get_allPublisherDetailCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public System.IAsyncResult Beginget_allClientSubscriptionInfo(get_allClientSubscriptionInfo get_allClientSubscriptionInfo1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("get_allClientSubscriptionInfo", new object[] {
+                    get_allClientSubscriptionInfo1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public subscriptionWrapper[] Endget_allClientSubscriptionInfo(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((subscriptionWrapper[])(results[0]));
+    }
+    
+    /// <remarks/>
+    public void get_allClientSubscriptionInfoAsync(get_allClientSubscriptionInfo get_allClientSubscriptionInfo1) {
+        this.get_allClientSubscriptionInfoAsync(get_allClientSubscriptionInfo1, null);
+    }
+    
+    /// <remarks/>
+    public void get_allClientSubscriptionInfoAsync(get_allClientSubscriptionInfo get_allClientSubscriptionInfo1, object userState) {
+        if ((this.get_allClientSubscriptionInfoOperationCompleted == null)) {
+            this.get_allClientSubscriptionInfoOperationCompleted = new System.Threading.SendOrPostCallback(this.Onget_allClientSubscriptionInfoOperationCompleted);
         }
-
-        /// <remarks/>
-        public publisherDetail Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((publisherDetail)(this.results[0]));
-            }
+        this.InvokeAsync("get_allClientSubscriptionInfo", new object[] {
+                    get_allClientSubscriptionInfo1}, this.get_allClientSubscriptionInfoOperationCompleted, userState);
+    }
+    
+    private void Onget_allClientSubscriptionInfoOperationCompleted(object arg) {
+        if ((this.get_allClientSubscriptionInfoCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.get_allClientSubscriptionInfoCompleted(this, new get_allClientSubscriptionInfoCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void delete_publisherCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("set_allValidValues", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("set_allValidValuesResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public set_allValidValuesResponse set_allValidValues([System.Xml.Serialization.XmlElementAttribute("set_allValidValues", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] set_allValidValues set_allValidValues1) {
+        object[] results = this.Invoke("set_allValidValues", new object[] {
+                    set_allValidValues1});
+        return ((set_allValidValuesResponse)(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void save_publisherCompletedEventHandler(object sender, save_publisherCompletedEventArgs e);
-
+    public System.IAsyncResult Beginset_allValidValues(set_allValidValues set_allValidValues1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("set_allValidValues", new object[] {
+                    set_allValidValues1}, callback, asyncState);
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class save_publisherCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal save_publisherCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public set_allValidValuesResponse Endset_allValidValues(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((set_allValidValuesResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void set_allValidValuesAsync(set_allValidValues set_allValidValues1) {
+        this.set_allValidValuesAsync(set_allValidValues1, null);
+    }
+    
+    /// <remarks/>
+    public void set_allValidValuesAsync(set_allValidValues set_allValidValues1, object userState) {
+        if ((this.set_allValidValuesOperationCompleted == null)) {
+            this.set_allValidValuesOperationCompleted = new System.Threading.SendOrPostCallback(this.Onset_allValidValuesOperationCompleted);
         }
-
-        /// <remarks/>
-        public publisherDetail Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((publisherDetail)(this.results[0]));
-            }
+        this.InvokeAsync("set_allValidValues", new object[] {
+                    set_allValidValues1}, this.set_allValidValuesOperationCompleted, userState);
+    }
+    
+    private void Onset_allValidValuesOperationCompleted(object arg) {
+        if ((this.set_allValidValuesCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.set_allValidValuesCompleted(this, new set_allValidValuesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void save_NodeCompletedEventHandler(object sender, save_NodeCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminDelete_Subscription", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("adminDelete_SubscriptionResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public adminDelete_SubscriptionResponse adminDelete_Subscription([System.Xml.Serialization.XmlElementAttribute("adminDelete_Subscription", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] adminDelete_SubscriptionRequest adminDelete_Subscription1) {
+        object[] results = this.Invoke("adminDelete_Subscription", new object[] {
+                    adminDelete_Subscription1});
+        return ((adminDelete_SubscriptionResponse)(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class save_NodeCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal save_NodeCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public System.IAsyncResult BeginadminDelete_Subscription(adminDelete_SubscriptionRequest adminDelete_Subscription1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("adminDelete_Subscription", new object[] {
+                    adminDelete_Subscription1}, callback, asyncState);
+    }
+    
+    /// <remarks/>
+    public adminDelete_SubscriptionResponse EndadminDelete_Subscription(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((adminDelete_SubscriptionResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void adminDelete_SubscriptionAsync(adminDelete_SubscriptionRequest adminDelete_Subscription1) {
+        this.adminDelete_SubscriptionAsync(adminDelete_Subscription1, null);
+    }
+    
+    /// <remarks/>
+    public void adminDelete_SubscriptionAsync(adminDelete_SubscriptionRequest adminDelete_Subscription1, object userState) {
+        if ((this.adminDelete_SubscriptionOperationCompleted == null)) {
+            this.adminDelete_SubscriptionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminDelete_SubscriptionOperationCompleted);
         }
-
-        /// <remarks/>
-        public node[] Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((node[])(this.results[0]));
-            }
+        this.InvokeAsync("adminDelete_Subscription", new object[] {
+                    adminDelete_Subscription1}, this.adminDelete_SubscriptionOperationCompleted, userState);
+    }
+    
+    private void OnadminDelete_SubscriptionOperationCompleted(object arg) {
+        if ((this.adminDelete_SubscriptionCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.adminDelete_SubscriptionCompleted(this, new adminDelete_SubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void adminDelete_tmodelCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
-
+    [System.Web.Services.Protocols.SoapDocumentMethodAttribute("adminSave_Subscription", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Bare)]
+    [return: System.Xml.Serialization.XmlElementAttribute("adminSave_SubscriptionResponse", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)]
+    public adminSave_SubscriptionResponse adminSave_Subscription([System.Xml.Serialization.XmlElementAttribute("adminSave_Subscription", Namespace="urn:juddi-apache-org:api_v3", IsNullable=true)] adminSave_SubscriptionRequest adminSave_Subscription1) {
+        object[] results = this.Invoke("adminSave_Subscription", new object[] {
+                    adminSave_Subscription1});
+        return ((adminSave_SubscriptionResponse)(results[0]));
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void save_ClientSubscriptionInfoCompletedEventHandler(object sender, save_ClientSubscriptionInfoCompletedEventArgs e);
-
+    public System.IAsyncResult BeginadminSave_Subscription(adminSave_SubscriptionRequest adminSave_Subscription1, System.AsyncCallback callback, object asyncState) {
+        return this.BeginInvoke("adminSave_Subscription", new object[] {
+                    adminSave_Subscription1}, callback, asyncState);
+    }
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class save_ClientSubscriptionInfoCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal save_ClientSubscriptionInfoCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public adminSave_SubscriptionResponse EndadminSave_Subscription(System.IAsyncResult asyncResult) {
+        object[] results = this.EndInvoke(asyncResult);
+        return ((adminSave_SubscriptionResponse)(results[0]));
+    }
+    
+    /// <remarks/>
+    public void adminSave_SubscriptionAsync(adminSave_SubscriptionRequest adminSave_Subscription1) {
+        this.adminSave_SubscriptionAsync(adminSave_Subscription1, null);
+    }
+    
+    /// <remarks/>
+    public void adminSave_SubscriptionAsync(adminSave_SubscriptionRequest adminSave_Subscription1, object userState) {
+        if ((this.adminSave_SubscriptionOperationCompleted == null)) {
+            this.adminSave_SubscriptionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnadminSave_SubscriptionOperationCompleted);
         }
-
-        /// <remarks/>
-        public clientSubscriptionInfo[] Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((clientSubscriptionInfo[])(this.results[0]));
-            }
+        this.InvokeAsync("adminSave_Subscription", new object[] {
+                    adminSave_Subscription1}, this.adminSave_SubscriptionOperationCompleted, userState);
+    }
+    
+    private void OnadminSave_SubscriptionOperationCompleted(object arg) {
+        if ((this.adminSave_SubscriptionCompleted != null)) {
+            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            this.adminSave_SubscriptionCompleted(this, new adminSave_SubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
-
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    public delegate void invoke_SyncSubscriptionCompletedEventHandler(object sender, invoke_SyncSubscriptionCompletedEventArgs e);
+    public new void CancelAsync(object userState) {
+        base.CancelAsync(userState);
+    }
+}
 
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class publisher {
+    
+    private string publisherNameField;
+    
+    private string emailAddressField;
+    
+    private string isAdminField;
+    
+    private string isEnabledField;
+    
+    private int maxBindingsPerServiceField;
+    
+    private bool maxBindingsPerServiceFieldSpecified;
+    
+    private int maxBusinessesField;
+    
+    private bool maxBusinessesFieldSpecified;
+    
+    private int maxServicePerBusinessField;
+    
+    private bool maxServicePerBusinessFieldSpecified;
+    
+    private int maxTModelsField;
+    
+    private bool maxTModelsFieldSpecified;
+    
+    private SignatureType[] signatureField;
+    
+    private string authorizedNameField;
+    
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class invoke_SyncSubscriptionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
-    {
-
-        private object[] results;
-
-        internal invoke_SyncSubscriptionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-            base(exception, cancelled, userState)
-        {
-            this.results = results;
+    public string publisherName {
+        get {
+            return this.publisherNameField;
         }
-
-        /// <remarks/>
-        public subscriptionResultsList[] Result
-        {
-            get
-            {
-                this.RaiseExceptionIfNecessary();
-                return ((subscriptionResultsList[])(this.results[0]));
-            }
+        set {
+            this.publisherNameField = value;
         }
     }
+    
+    /// <remarks/>
+    public string emailAddress {
+        get {
+            return this.emailAddressField;
+        }
+        set {
+            this.emailAddressField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string isAdmin {
+        get {
+            return this.isAdminField;
+        }
+        set {
+            this.isAdminField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string isEnabled {
+        get {
+            return this.isEnabledField;
+        }
+        set {
+            this.isEnabledField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public int maxBindingsPerService {
+        get {
+            return this.maxBindingsPerServiceField;
+        }
+        set {
+            this.maxBindingsPerServiceField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool maxBindingsPerServiceSpecified {
+        get {
+            return this.maxBindingsPerServiceFieldSpecified;
+        }
+        set {
+            this.maxBindingsPerServiceFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    public int maxBusinesses {
+        get {
+            return this.maxBusinessesField;
+        }
+        set {
+            this.maxBusinessesField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool maxBusinessesSpecified {
+        get {
+            return this.maxBusinessesFieldSpecified;
+        }
+        set {
+            this.maxBusinessesFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    public int maxServicePerBusiness {
+        get {
+            return this.maxServicePerBusinessField;
+        }
+        set {
+            this.maxServicePerBusinessField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool maxServicePerBusinessSpecified {
+        get {
+            return this.maxServicePerBusinessFieldSpecified;
+        }
+        set {
+            this.maxServicePerBusinessFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    public int maxTModels {
+        get {
+            return this.maxTModelsField;
+        }
+        set {
+            this.maxTModelsField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool maxTModelsSpecified {
+        get {
+            return this.maxTModelsFieldSpecified;
+        }
+        set {
+            this.maxTModelsFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Signature", Namespace="http://www.w3.org/2000/09/xmldsig#")]
+    public SignatureType[] Signature {
+        get {
+            return this.signatureField;
+        }
+        set {
+            this.signatureField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string authorizedName {
+        get {
+            return this.authorizedNameField;
+        }
+        set {
+            this.authorizedNameField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_SubscriptionResponse {
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_SubscriptionRequest {
+    
+    private string authInfoField;
+    
+    private string publisherOrUsernameField;
+    
+    private subscription[] subscriptionsField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string publisherOrUsername {
+        get {
+            return this.publisherOrUsernameField;
+        }
+        set {
+            this.publisherOrUsernameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("subscriptions")]
+    public subscription[] subscriptions {
+        get {
+            return this.subscriptionsField;
+        }
+        set {
+            this.subscriptionsField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminDelete_SubscriptionResponse {
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminDelete_SubscriptionRequest {
+    
+    private string authInfoField;
+    
+    private string[] subscriptionKeyField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("subscriptionKey")]
+    public string[] subscriptionKey {
+        get {
+            return this.subscriptionKeyField;
+        }
+        set {
+            this.subscriptionKeyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class set_allValidValuesResponse {
+    
+    private dispositionReport dispositionReportField;
+    
+    /// <remarks/>
+    public dispositionReport dispositionReport {
+        get {
+            return this.dispositionReportField;
+        }
+        set {
+            this.dispositionReportField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class validValues {
+    
+    private string tModekKeyField;
+    
+    private string[] valueField;
+    
+    /// <remarks/>
+    public string tModekKey {
+        get {
+            return this.tModekKeyField;
+        }
+        set {
+            this.tModekKeyField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("value")]
+    public string[] value {
+        get {
+            return this.valueField;
+        }
+        set {
+            this.valueField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class set_allValidValues {
+    
+    private string authInfoField;
+    
+    private validValues[] valuesField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("values")]
+    public validValues[] values {
+        get {
+            return this.valuesField;
+        }
+        set {
+            this.valuesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class subscriptionWrapper {
+    
+    private string publisherIdOrUsernameField;
+    
+    private subscription[] subscriptionField;
+    
+    /// <remarks/>
+    public string publisherIdOrUsername {
+        get {
+            return this.publisherIdOrUsernameField;
+        }
+        set {
+            this.publisherIdOrUsernameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("subscription", Namespace="urn:uddi-org:sub_v3")]
+    public subscription[] subscription {
+        get {
+            return this.subscriptionField;
+        }
+        set {
+            this.subscriptionField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_allClientSubscriptionInfo {
+    
+    private string authInfoField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class set_ReplicationNodesResponse {
+    
+    private dispositionReport dispositionReportField;
+    
+    /// <remarks/>
+    public dispositionReport dispositionReport {
+        get {
+            return this.dispositionReportField;
+        }
+        set {
+            this.dispositionReportField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class set_ReplicationNodes {
+    
+    private string authInfoField;
+    
+    private replicationConfiguration replicationConfigurationField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Namespace="urn:uddi-org:repl_v3")]
+    public replicationConfiguration replicationConfiguration {
+        get {
+            return this.replicationConfigurationField;
+        }
+        set {
+            this.replicationConfigurationField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_ReplicationNodesResponse {
+    
+    private replicationConfiguration replicationConfigurationField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Namespace="urn:uddi-org:repl_v3")]
+    public replicationConfiguration replicationConfiguration {
+        get {
+            return this.replicationConfigurationField;
+        }
+        set {
+            this.replicationConfigurationField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_ReplicationNodes {
+    
+    private string authInfoField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_tModelResponse {
+    
+    private dispositionReport dispositionReportField;
+    
+    /// <remarks/>
+    public dispositionReport dispositionReport {
+        get {
+            return this.dispositionReportField;
+        }
+        set {
+            this.dispositionReportField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_tModelWrapper {
+    
+    private string publisherIDField;
+    
+    private tModel[] tModelField;
+    
+    /// <remarks/>
+    public string publisherID {
+        get {
+            return this.publisherIDField;
+        }
+        set {
+            this.publisherIDField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("tModel", IsNullable=true)]
+    public tModel[] tModel {
+        get {
+            return this.tModelField;
+        }
+        set {
+            this.tModelField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_tModel {
+    
+    private string authInfoField;
+    
+    private adminSave_tModelWrapper[] valuesField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("values")]
+    public adminSave_tModelWrapper[] values {
+        get {
+            return this.valuesField;
+        }
+        set {
+            this.valuesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_BusinessResponse {
+    
+    private dispositionReport dispositionReportField;
+    
+    /// <remarks/>
+    public dispositionReport dispositionReport {
+        get {
+            return this.dispositionReportField;
+        }
+        set {
+            this.dispositionReportField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_BusinessWrapper {
+    
+    private string publisherIDField;
+    
+    private businessEntity[] businessEntityField;
+    
+    /// <remarks/>
+    public string publisherID {
+        get {
+            return this.publisherIDField;
+        }
+        set {
+            this.publisherIDField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("businessEntity", Namespace="urn:uddi-org:api_v3")]
+    public businessEntity[] businessEntity {
+        get {
+            return this.businessEntityField;
+        }
+        set {
+            this.businessEntityField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class adminSave_Business {
+    
+    private string authInfoField;
+    
+    private adminSave_BusinessWrapper[] valuesField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("values")]
+    public adminSave_BusinessWrapper[] values {
+        get {
+            return this.valuesField;
+        }
+        set {
+            this.valuesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class delete_Clerk {
+    
+    private string authInfoField;
+    
+    private string clerkIDField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string clerkID {
+        get {
+            return this.clerkIDField;
+        }
+        set {
+            this.clerkIDField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class delete_Node {
+    
+    private string authInfoField;
+    
+    private string nodeIDField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string nodeID {
+        get {
+            return this.nodeIDField;
+        }
+        set {
+            this.nodeIDField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_AllClerksResponse {
+    
+    private clerk[] clerkListField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
+    public clerk[] clerkList {
+        get {
+            return this.clerkListField;
+        }
+        set {
+            this.clerkListField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class clerk {
+    
+    private string nameField;
+    
+    private node nodeField;
+    
+    private string publisherField;
+    
+    private string passwordField;
+    
+    /// <remarks/>
+    public string name {
+        get {
+            return this.nameField;
+        }
+        set {
+            this.nameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public node node {
+        get {
+            return this.nodeField;
+        }
+        set {
+            this.nodeField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string publisher {
+        get {
+            return this.publisherField;
+        }
+        set {
+            this.publisherField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string password {
+        get {
+            return this.passwordField;
+        }
+        set {
+            this.passwordField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class node {
+    
+    private string nameField;
+    
+    private string clientNameField;
+    
+    private string descriptionField;
+    
+    private string custodyTransferUrlField;
+    
+    private string inquiryUrlField;
+    
+    private string publishUrlField;
+    
+    private string securityUrlField;
+    
+    private string subscriptionUrlField;
+    
+    private string subscriptionListenerUrlField;
+    
+    private string replicationUrlField;
+    
+    private string juddiApiUrlField;
+    
+    private string proxyTransportField;
+    
+    private string factoryInitialField;
+    
+    private string factoryURLPkgsField;
+    
+    private string factoryNamingProviderField;
+    
+    /// <remarks/>
+    public string name {
+        get {
+            return this.nameField;
+        }
+        set {
+            this.nameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string clientName {
+        get {
+            return this.clientNameField;
+        }
+        set {
+            this.clientNameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string description {
+        get {
+            return this.descriptionField;
+        }
+        set {
+            this.descriptionField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string custodyTransferUrl {
+        get {
+            return this.custodyTransferUrlField;
+        }
+        set {
+            this.custodyTransferUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string inquiryUrl {
+        get {
+            return this.inquiryUrlField;
+        }
+        set {
+            this.inquiryUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string publishUrl {
+        get {
+            return this.publishUrlField;
+        }
+        set {
+            this.publishUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string securityUrl {
+        get {
+            return this.securityUrlField;
+        }
+        set {
+            this.securityUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string subscriptionUrl {
+        get {
+            return this.subscriptionUrlField;
+        }
+        set {
+            this.subscriptionUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string subscriptionListenerUrl {
+        get {
+            return this.subscriptionListenerUrlField;
+        }
+        set {
+            this.subscriptionListenerUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string replicationUrl {
+        get {
+            return this.replicationUrlField;
+        }
+        set {
+            this.replicationUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string juddiApiUrl {
+        get {
+            return this.juddiApiUrlField;
+        }
+        set {
+            this.juddiApiUrlField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string proxyTransport {
+        get {
+            return this.proxyTransportField;
+        }
+        set {
+            this.proxyTransportField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string factoryInitial {
+        get {
+            return this.factoryInitialField;
+        }
+        set {
+            this.factoryInitialField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string factoryURLPkgs {
+        get {
+            return this.factoryURLPkgsField;
+        }
+        set {
+            this.factoryURLPkgsField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string factoryNamingProvider {
+        get {
+            return this.factoryNamingProviderField;
+        }
+        set {
+            this.factoryNamingProviderField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_AllClerks {
+    
+    private string authInfoField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_AllNodesResponse {
+    
+    private node[] nodeListField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
+    [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
+    public node[] nodeList {
+        get {
+            return this.nodeListField;
+        }
+        set {
+            this.nodeListField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_AllNodes {
+    
+    private string authInfoField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class syncSubscriptionDetailResponse {
+    
+    private subscriptionResultsList[] syncSubscriptionDetailField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
+    [System.Xml.Serialization.XmlArrayItemAttribute("list")]
+    public subscriptionResultsList[] syncSubscriptionDetail {
+        get {
+            return this.syncSubscriptionDetailField;
+        }
+        set {
+            this.syncSubscriptionDetailField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class syncSubscription {
+    
+    private string authInfoField;
+    
+    private get_subscriptionResults[] listField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("list", IsNullable=true)]
+    public get_subscriptionResults[] list {
+        get {
+            return this.listField;
+        }
+        set {
+            this.listField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class syncSubscriptionRequest {
+    
+    private syncSubscription syncSubscriptionField;
+    
+    /// <remarks/>
+    public syncSubscription syncSubscription {
+        get {
+            return this.syncSubscriptionField;
+        }
+        set {
+            this.syncSubscriptionField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class clientSubscriptionInfo {
+    
+    private string subscriptionKeyField;
+    
+    private clerk fromClerkField;
+    
+    private clerk toClerkField;
+    
+    private System.DateTime lastModifiedField;
+    
+    private bool lastModifiedFieldSpecified;
+    
+    private System.DateTime lastNotifiedField;
+    
+    private bool lastNotifiedFieldSpecified;
+    
+    /// <remarks/>
+    public string subscriptionKey {
+        get {
+            return this.subscriptionKeyField;
+        }
+        set {
+            this.subscriptionKeyField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public clerk fromClerk {
+        get {
+            return this.fromClerkField;
+        }
+        set {
+            this.fromClerkField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public clerk toClerk {
+        get {
+            return this.toClerkField;
+        }
+        set {
+            this.toClerkField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public System.DateTime lastModified {
+        get {
+            return this.lastModifiedField;
+        }
+        set {
+            this.lastModifiedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool lastModifiedSpecified {
+        get {
+            return this.lastModifiedFieldSpecified;
+        }
+        set {
+            this.lastModifiedFieldSpecified = value;
+        }
+    }
+    
+    /// <remarks/>
+    public System.DateTime lastNotified {
+        get {
+            return this.lastNotifiedField;
+        }
+        set {
+            this.lastNotifiedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool lastNotifiedSpecified {
+        get {
+            return this.lastNotifiedFieldSpecified;
+        }
+        set {
+            this.lastNotifiedFieldSpecified = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class save_clientSubscriptionInfo {
+    
+    private string authInfoField;
+    
+    private clientSubscriptionInfo[] clientSubscriptionInfoField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("clientSubscriptionInfo")]
+    public clientSubscriptionInfo[] clientSubscriptionInfo {
+        get {
+            return this.clientSubscriptionInfoField;
+        }
+        set {
+            this.clientSubscriptionInfoField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class save_nodeInfo {
+    
+    private string authInfoField;
+    
+    private node[] nodeField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("node")]
+    public node[] node {
+        get {
+            return this.nodeField;
+        }
+        set {
+            this.nodeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class publisherDetail {
+    
+    private publisher[] publisherField;
+    
+    private bool truncatedField;
+    
+    private bool truncatedFieldSpecified;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("publisher", IsNullable=true)]
+    public publisher[] publisher {
+        get {
+            return this.publisherField;
+        }
+        set {
+            this.publisherField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public bool truncated {
+        get {
+            return this.truncatedField;
+        }
+        set {
+            this.truncatedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool truncatedSpecified {
+        get {
+            return this.truncatedFieldSpecified;
+        }
+        set {
+            this.truncatedFieldSpecified = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class save_publisher {
+    
+    private string authInfoField;
+    
+    private publisher[] publisherField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("publisher")]
+    public publisher[] publisher {
+        get {
+            return this.publisherField;
+        }
+        set {
+            this.publisherField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class delete_publisher {
+    
+    private string authInfoField;
+    
+    private string[] publisherIdField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("publisherId")]
+    public string[] publisherId {
+        get {
+            return this.publisherIdField;
+        }
+        set {
+            this.publisherIdField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class get_allPublisherDetail {
+    
+    private string authInfoField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute(Namespace="urn:uddi-org:api_v3")]
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class save_clerkInfo {
+    
+    private string authInfoField;
+    
+    private clerk[] clerkField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("clerk")]
+    public clerk[] clerk {
+        get {
+            return this.clerkField;
+        }
+        set {
+            this.clerkField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:juddi-apache-org:api_v3")]
+public partial class delete_clientSubscriptionInfo {
+    
+    private string authInfoField;
+    
+    private string[] subscriptionKeyField;
+    
+    /// <remarks/>
+    public string authInfo {
+        get {
+            return this.authInfoField;
+        }
+        set {
+            this.authInfoField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("subscriptionKey")]
+    public string[] subscriptionKey {
+        get {
+            return this.subscriptionKeyField;
+        }
+        set {
+            this.subscriptionKeyField = value;
+        }
+    }
+}
+
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_publisherDetailCompletedEventHandler(object sender, get_publisherDetailCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_publisherDetailCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_publisherDetailCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public publisher[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((publisher[])(this.results[0]));
+        }
+    }
+    
+    /// <remarks/>
+    public bool truncated {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((bool)(this.results[1]));
+        }
+    }
+    
+    /// <remarks/>
+    public bool truncatedSpecified {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((bool)(this.results[2]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void delete_ClientSubscriptionInfoCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void save_ClerkCompletedEventHandler(object sender, save_ClerkCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class save_ClerkCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal save_ClerkCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public clerk[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((clerk[])(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_allPublisherDetailCompletedEventHandler(object sender, get_allPublisherDetailCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_allPublisherDetailCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_allPublisherDetailCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public object[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((object[])(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void delete_publisherCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void save_publisherCompletedEventHandler(object sender, save_publisherCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class save_publisherCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal save_publisherCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public publisherDetail Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((publisherDetail)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void save_NodeCompletedEventHandler(object sender, save_NodeCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class save_NodeCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal save_NodeCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public node[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((node[])(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void adminDelete_tModelCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void save_ClientSubscriptionInfoCompletedEventHandler(object sender, save_ClientSubscriptionInfoCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class save_ClientSubscriptionInfoCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal save_ClientSubscriptionInfoCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public clientSubscriptionInfo[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((clientSubscriptionInfo[])(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void invoke_SyncSubscriptionCompletedEventHandler(object sender, invoke_SyncSubscriptionCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class invoke_SyncSubscriptionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal invoke_SyncSubscriptionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public syncSubscriptionDetailResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((syncSubscriptionDetailResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_AllNodesCompletedEventHandler(object sender, get_AllNodesCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_AllNodesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_AllNodesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public get_AllNodesResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((get_AllNodesResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_AllClerksCompletedEventHandler(object sender, get_AllClerksCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_AllClerksCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_AllClerksCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public get_AllClerksResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((get_AllClerksResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void delete_NodeCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void delete_ClerkCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void adminSave_BusinessCompletedEventHandler(object sender, adminSave_BusinessCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class adminSave_BusinessCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal adminSave_BusinessCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public adminSave_BusinessResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((adminSave_BusinessResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void adminSave_tModelCompletedEventHandler(object sender, adminSave_tModelCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class adminSave_tModelCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal adminSave_tModelCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public adminSave_tModelResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((adminSave_tModelResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_ReplicationNodesCompletedEventHandler(object sender, get_ReplicationNodesCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_ReplicationNodesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_ReplicationNodesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public get_ReplicationNodesResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((get_ReplicationNodesResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void set_ReplicationNodesCompletedEventHandler(object sender, set_ReplicationNodesCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class set_ReplicationNodesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal set_ReplicationNodesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public set_ReplicationNodesResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((set_ReplicationNodesResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void get_allClientSubscriptionInfoCompletedEventHandler(object sender, get_allClientSubscriptionInfoCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class get_allClientSubscriptionInfoCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal get_allClientSubscriptionInfoCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public subscriptionWrapper[] Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((subscriptionWrapper[])(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void set_allValidValuesCompletedEventHandler(object sender, set_allValidValuesCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class set_allValidValuesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal set_allValidValuesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public set_allValidValuesResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((set_allValidValuesResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void adminDelete_SubscriptionCompletedEventHandler(object sender, adminDelete_SubscriptionCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class adminDelete_SubscriptionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal adminDelete_SubscriptionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public adminDelete_SubscriptionResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((adminDelete_SubscriptionResponse)(this.results[0]));
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+public delegate void adminSave_SubscriptionCompletedEventHandler(object sender, adminSave_SubscriptionCompletedEventArgs e);
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.17929")]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class adminSave_SubscriptionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    
+    private object[] results;
+    
+    internal adminSave_SubscriptionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+            base(exception, cancelled, userState) {
+        this.results = results;
+    }
+    
+    /// <remarks/>
+    public adminSave_SubscriptionResponse Result {
+        get {
+            this.RaiseExceptionIfNecessary();
+            return ((adminSave_SubscriptionResponse)(this.results[0]));
+        }
+    }
+}
 }

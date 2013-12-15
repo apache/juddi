@@ -18,7 +18,6 @@
 package org.apache.juddi.api.impl;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
@@ -28,14 +27,11 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.api.util.InquiryQuery;
-import org.apache.juddi.api.util.PublicationQuery;
 import org.apache.juddi.api.util.QueryStatus;
 import org.apache.juddi.config.AppConfig;
 import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
 import org.apache.juddi.mapping.MappingModelToApi;
-import org.apache.juddi.model.TempKey;
-import org.apache.juddi.query.util.FindQualifiers;
 import org.apache.juddi.v3.error.ErrorMessage;
 import org.apache.juddi.v3.error.InvalidKeyPassedException;
 import org.apache.juddi.validation.ValidateInquiry;

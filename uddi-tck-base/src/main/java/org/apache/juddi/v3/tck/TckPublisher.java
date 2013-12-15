@@ -19,18 +19,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
+ * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
  */
 public class TckPublisher {
 
         private static Properties tckProperties = new Properties();
         public final static String JOE_PUBLISHER_XML = "uddi_data/joepublisher/publisher.xml";
-        public final static String TMODEL_PUBLISHER_XML = "uddi_data/tmodels/publisher.xml";
+        //public final static String TMODEL_PUBLISHER_XML = "uddi_data/tmodels/publisher.xml";
         public final static String SAM_SYNDICATOR_XML = "uddi_data/samsyndicator/publisher.xml";
         public final static String MARY_PUBLISHER_XML = "uddi_data/marypublisher/publisher.xml";
 
@@ -113,7 +112,7 @@ public class TckPublisher {
                 return tckProperties.getProperty(Property.RIFTSAW_PASSWORD);
         }
 
-        static boolean isUDDIAuthMode() {
+        public static boolean isUDDIAuthMode() {
                 String x = tckProperties.getProperty("auth_mode");
                 if (x != null && x.equalsIgnoreCase("uddi")) {
                         return true;
@@ -121,7 +120,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isReplicationEnabled() {
+        public static boolean isReplicationEnabled() {
                 String x = tckProperties.getProperty("replication.enabled");
                 if (x != null && x.equalsIgnoreCase("true")) {
                         return true;
@@ -129,7 +128,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isInquiryRestEnabled() {
+        public static boolean isInquiryRestEnabled() {
                 String x = tckProperties.getProperty("rest.enabled");
                 if (x != null && x.equalsIgnoreCase("true")) {
                         return true;
@@ -137,7 +136,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isValueSetAPIEnabled() {
+        public static boolean isValueSetAPIEnabled() {
                 String x = tckProperties.getProperty("vsv.enabled");
                 if (x != null && x.equalsIgnoreCase("true")) {
                         return true;
@@ -145,7 +144,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isSubscriptionEnabled() {
+        public static boolean isSubscriptionEnabled() {
                 String x = tckProperties.getProperty("sub.enabled");
                 if (x != null && x.equalsIgnoreCase("true")) {
                         return true;
@@ -153,7 +152,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isCustodyTransferEnabled() {
+        public static boolean isCustodyTransferEnabled() {
                 String x = tckProperties.getProperty("transfer.enabled");
                 if (x != null && x.equalsIgnoreCase("true")) {
                         return true;
@@ -161,7 +160,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isJUDDI() {
+        public static boolean isJUDDI() {
                 String x = tckProperties.getProperty("isJuddi");
                 if (x.equalsIgnoreCase("true")) {
                         return true;
@@ -169,7 +168,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static boolean isRMI() {
+        public static boolean isRMI() {
                 String x = tckProperties.getProperty("rmi.enabled");
                 if (x.equalsIgnoreCase("true")) {
                         return true;
@@ -177,7 +176,7 @@ public class TckPublisher {
                 return false;
         }
 
-        static int getMaxLoadServices() {
+        public static int getMaxLoadServices() {
                 String x = tckProperties.getProperty("loadtest.maxbusinesses");
                 if (x != null) {
                         try {
@@ -188,5 +187,9 @@ public class TckPublisher {
                 }
 
                 return 1100;
+        }
+        
+        public static Properties getProperties(){
+                return tckProperties;
         }
 }

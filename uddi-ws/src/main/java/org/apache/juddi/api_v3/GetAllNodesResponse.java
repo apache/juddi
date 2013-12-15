@@ -1,8 +1,6 @@
 
 package org.apache.juddi.api_v3;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -19,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="node" type="{urn:juddi-apache-org:api_v3}node" maxOccurs="unbounded"/>
+ *         &lt;element name="nodeList" type="{urn:juddi-apache-org:api_v3}nodeList"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,40 +28,35 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "get_AllNodesResponse", propOrder = {
-    "node"
+    "nodeList"
 })
 public class GetAllNodesResponse {
 
-    @XmlElement(required = true)
-    protected List<Node> node;
+    @XmlElement(required = true, nillable = true)
+    protected NodeList nodeList;
 
     /**
-     * Gets the value of the node property.
+     * Gets the value of the nodeList property.
      * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the node property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getNode().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Node }
-     * 
-     * 
+     * @return
+     *     possible object is
+     *     {@link NodeList }
+     *     
      */
-    public List<Node> getNode() {
-        if (node == null) {
-            node = new ArrayList<Node>();
-        }
-        return this.node;
+    public NodeList getNodeList() {
+        return nodeList;
+    }
+
+    /**
+     * Sets the value of the nodeList property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link NodeList }
+     *     
+     */
+    public void setNodeList(NodeList value) {
+        this.nodeList = value;
     }
 
 }

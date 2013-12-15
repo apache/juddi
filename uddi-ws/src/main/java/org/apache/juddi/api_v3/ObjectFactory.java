@@ -1,19 +1,3 @@
-/*
- * Copyright 2001-2008 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
 
 package org.apache.juddi.api_v3;
 
@@ -61,7 +45,6 @@ public class ObjectFactory {
     private final static QName _GetAllClerks_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllClerks");
     private final static QName _GetPublisherDetail_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_publisherDetail");
     private final static QName _SavePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "save_publisher");
-    private final static QName _DeleteClerkResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_ClerkResponse");
     private final static QName _SetAllValidValuesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_allValidValuesResponse");
     private final static QName _DeletePublisher_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_publisher");
     private final static QName _AdminDeleteSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminDelete_Subscription");
@@ -71,7 +54,6 @@ public class ObjectFactory {
     private final static QName _GetAllNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllNodesResponse");
     private final static QName _GetAllClerksResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_AllClerksResponse");
     private final static QName _AdminSaveBusiness_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_Business");
-    private final static QName _DeleteNodeResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "delete_NodeResponse");
     private final static QName _GetReplicationNodes_QNAME = new QName("urn:juddi-apache-org:api_v3", "get_ReplicationNodes");
     private final static QName _AdminSaveSubscription_QNAME = new QName("urn:juddi-apache-org:api_v3", "adminSave_Subscription");
     private final static QName _SetReplicationNodesResponse_QNAME = new QName("urn:juddi-apache-org:api_v3", "set_ReplicationNodesResponse");
@@ -296,14 +278,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DeleteClerkResponse }
-     * 
-     */
-    public DeleteClerkResponse createDeleteClerkResponse() {
-        return new DeleteClerkResponse();
-    }
-
-    /**
      * Create an instance of {@link GetReplicationNodesResponse }
      * 
      */
@@ -341,14 +315,6 @@ public class ObjectFactory {
      */
     public SetAllValidValues createSetAllValidValues() {
         return new SetAllValidValues();
-    }
-
-    /**
-     * Create an instance of {@link DeleteNodeResponse }
-     * 
-     */
-    public DeleteNodeResponse createDeleteNodeResponse() {
-        return new DeleteNodeResponse();
     }
 
     /**
@@ -397,6 +363,22 @@ public class ObjectFactory {
      */
     public SubscriptionWrapper createSubscriptionWrapper() {
         return new SubscriptionWrapper();
+    }
+
+    /**
+     * Create an instance of {@link ClerkList }
+     * 
+     */
+    public ClerkList createClerkList() {
+        return new ClerkList();
+    }
+
+    /**
+     * Create an instance of {@link NodeList }
+     * 
+     */
+    public NodeList createNodeList() {
+        return new NodeList();
     }
 
     /**
@@ -652,15 +634,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link DeleteClerkResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "delete_ClerkResponse")
-    public JAXBElement<DeleteClerkResponse> createDeleteClerkResponse(DeleteClerkResponse value) {
-        return new JAXBElement<DeleteClerkResponse>(_DeleteClerkResponse_QNAME, DeleteClerkResponse.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SetAllValidValuesResponse }{@code >}}
      * 
      */
@@ -739,15 +712,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "adminSave_Business")
     public JAXBElement<AdminSaveBusiness> createAdminSaveBusiness(AdminSaveBusiness value) {
         return new JAXBElement<AdminSaveBusiness>(_AdminSaveBusiness_QNAME, AdminSaveBusiness.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link DeleteNodeResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "urn:juddi-apache-org:api_v3", name = "delete_NodeResponse")
-    public JAXBElement<DeleteNodeResponse> createDeleteNodeResponse(DeleteNodeResponse value) {
-        return new JAXBElement<DeleteNodeResponse>(_DeleteNodeResponse_QNAME, DeleteNodeResponse.class, null, value);
     }
 
     /**

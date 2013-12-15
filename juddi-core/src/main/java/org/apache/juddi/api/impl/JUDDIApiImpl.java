@@ -37,13 +37,17 @@ import org.apache.juddi.api_v3.AdminSaveBusinessWrapper;
 import org.apache.juddi.api_v3.AdminSaveTModelWrapper;
 import org.apache.juddi.api_v3.Clerk;
 import org.apache.juddi.api_v3.ClerkDetail;
+import org.apache.juddi.api_v3.ClerkList;
 import org.apache.juddi.api_v3.ClientSubscriptionInfoDetail;
+import org.apache.juddi.api_v3.DeleteClerk;
 import org.apache.juddi.api_v3.DeleteClientSubscriptionInfo;
+import org.apache.juddi.api_v3.DeleteNode;
 import org.apache.juddi.api_v3.DeletePublisher;
 import org.apache.juddi.api_v3.GetAllPublisherDetail;
 import org.apache.juddi.api_v3.GetPublisherDetail;
 import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.api_v3.NodeDetail;
+import org.apache.juddi.api_v3.NodeList;
 import org.apache.juddi.api_v3.PublisherDetail;
 import org.apache.juddi.api_v3.SaveClerkInfo;
 import org.apache.juddi.api_v3.SaveClientSubscriptionInfo;
@@ -633,43 +637,151 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
         }
 
         @Override
-        public List<Node> getAllNodes(String authInfo) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public NodeList getAllNodes(String authInfo) throws DispositionReportFaultMessage {
+
+                NodeList r = new NodeList();
+
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+
+                        new ValidatePublish(publisher).validateGetAllNodes();
+
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("select distinct c from Node c ");
+                        sql.toString();
+                        Query qry = em.createQuery(sql.toString());
+                        List<org.apache.juddi.model.Node> resultList = qry.getResultList();
+                        for (int i = 0; i < resultList.size(); i++) {
+                                Node api = new Node();
+                                MappingModelToApi.mapNode(resultList.get(i), api);
+                                r.getNode().add(api);
+
+                        }
+
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                return r;
         }
 
         @Override
-        public List<Clerk> getAllClerks(String authInfo) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public ClerkList getAllClerks(String authInfo) throws DispositionReportFaultMessage {
+
+                ClerkList ret = new ClerkList();
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, authInfo);
+
+                        new ValidatePublish(publisher).validateGetAllNodes();
+
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("select distinct c from Clerk c ");
+                        sql.toString();
+                        Query qry = em.createQuery(sql.toString());
+                        List<org.apache.juddi.model.Clerk> resultList = qry.getResultList();
+                        for (int i = 0; i < resultList.size(); i++) {
+                                Clerk api = new Clerk();
+                                MappingModelToApi.mapClerk(resultList.get(i), api);
+                                ret.getClerk().add(api);
+
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                return ret;
+
         }
 
         @Override
-        public DispositionReport deleteNode(String authInfo, String nodeID) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public void deleteNode(DeleteNode req) throws DispositionReportFaultMessage {
+                boolean found = false;
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
+
+                        
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
+                        new ValidatePublish(publisher).validateDeleteNode(em, req);
+                        
+
+
+                        org.apache.juddi.model.Node existingUddiEntity = em.find(org.apache.juddi.model.Node.class, req.getNodeID());
+                        if (existingUddiEntity != null) {
+
+                                //TODO cascade delete all clerks tied to this node
+
+                                em.remove(existingUddiEntity);
+                                found = true;
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                if (!found) {
+                        
+                   
+                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteNode.NotFound"));
+                }
         }
 
         @Override
-        public DispositionReport deleteClerk(String authInfo, String clerkID) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+        public void deleteClerk(DeleteClerk req) throws DispositionReportFaultMessage {
 
-        @Override
-        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+                boolean found = false;
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = em.getTransaction();
+                try {
+                        tx.begin();
 
-        @Override
-        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+                        UddiEntityPublisher publisher = this.getEntityPublisher(em, req.getAuthInfo());
 
-        @Override
-        public ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+                        new ValidatePublish(publisher).validateDeleteClerk(em, req);
 
-        @Override
-        public DispositionReport setReplicationNodes(String authInfo, ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        org.apache.juddi.model.Clerk existingUddiEntity = em.find(org.apache.juddi.model.Clerk.class, req.getClerkID());
+                        if (existingUddiEntity != null) { 
+                                em.remove(existingUddiEntity);
+                                found = true;
+                        }
+                        tx.commit();
+
+                } finally {
+                        if (tx.isActive()) {
+                                tx.rollback();
+                        }
+                        em.close();
+                }
+
+                if (!found) {
+                throw new InvalidKeyPassedException(new ErrorMessage("errors.deleteClerk.NotFound"));      
+                }
+                
+
         }
 
         /**
@@ -693,7 +805,7 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
                 EntityTransaction tx = em.getTransaction();
                 try {
 
-                        //TODO is this tModel used anywhere, if so, validate all instances against the new rule?
+                        //TODO is this tModel used anywhere?, if so, validate all instances against the new rule?
 
                         tx.begin();
 
@@ -770,6 +882,26 @@ public class JUDDIApiImpl extends AuthenticatedService implements JUDDIApiPortTy
 
         @Override
         public void adminSaveSubscription(String authInfo, String publisherOrUsername, List<Subscription> subscriptions) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport adminSaveBusiness(String authInfo, List<AdminSaveBusinessWrapper> values) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport adminSaveTModel(String authInfo, List<AdminSaveTModelWrapper> values) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public ReplicationConfiguration getReplicationNodes(String authInfo) throws DispositionReportFaultMessage {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DispositionReport setReplicationNodes(String authInfo, ReplicationConfiguration replicationConfiguration) throws DispositionReportFaultMessage {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 }
