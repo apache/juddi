@@ -848,9 +848,11 @@ public class UDDI_141_JIRAIntegrationTest {
                 boolean ok = false;
                 do {
                         try {
+                                logger.info("Attempting to bring up endpoint at " + "http://" + hostname + ":" + port + "/UDDI_CALLBACK");
                                 ep = Endpoint.publish("http://" + hostname + ":" + port + "/UDDI_CALLBACK", impl);
                                 ok = true;
                         } catch (Exception ex) {
+                                logger.warn("Trouble starting endpoint: " + ex.getMessage());
                                 port++;
                         }
                 } while (!ok);
