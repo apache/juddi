@@ -17,7 +17,7 @@
    </appender>
    
     <logger name="org">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
     
     <logger name="org.hibernate">

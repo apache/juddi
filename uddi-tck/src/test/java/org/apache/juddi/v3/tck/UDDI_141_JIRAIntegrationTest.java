@@ -14,6 +14,7 @@
  */
 package org.apache.juddi.v3.tck;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -107,7 +108,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         inquiryJoe = transport.getUDDIInquiryService();
 
                         subscriptionJoe = transport.getUDDISubscriptionService();
-                        
+
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         authInfoSam = TckSecurity.getAuthToken(security, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         //Assert.assertNotNull(authInfoJoe);
@@ -121,7 +122,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         tckTModelJoe = new TckTModel(publicationJoe, inquiryJoe);
                         tckBusinessJoe = new TckBusiness(publicationJoe, inquiryJoe);
 
-                        
+
                         transport = manager.getTransport();
 
                         publicationSam = transport.getUDDIPublishService();
@@ -834,7 +835,11 @@ public class UDDI_141_JIRAIntegrationTest {
                 System.out.println("JIRA_597");
 
                 int port = 4444;
-                String localhostname = java.net.InetAddress.getLocalHost().getHostName();
+                String hostname = TckPublisher.getProperties().getProperty("bindaddress");
+                if (hostname == null) {
+                        hostname = InetAddress.getLocalHost().getHostName();
+                }
+
                 UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
                 removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
@@ -843,7 +848,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 boolean ok = false;
                 do {
                         try {
-                                ep = Endpoint.publish("http://" + localhostname + ":" + port + "/UDDI_CALLBACK", impl);
+                                ep = Endpoint.publish("http://" + hostname + ":" + port + "/UDDI_CALLBACK", impl);
                                 ok = true;
                         } catch (Exception ex) {
                                 port++;
@@ -861,7 +866,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 bs.setBindingTemplates(new BindingTemplates());
                 BindingTemplate bt = new BindingTemplate();
                 bt.setAccessPoint(new AccessPoint());
-                bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
+                bt.getAccessPoint().setValue("http://" + hostname + ":" + port + "/UDDI_CALLBACK");
                 bt.getAccessPoint().setUseType("endPoint");
                 //Added per Kurt
                 TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
@@ -876,7 +881,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
-                List<String> deleteme=new ArrayList<String>();
+                List<String> deleteme = new ArrayList<String>();
                 deleteme.add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                 //ok Joe's callback is setup
 
@@ -889,7 +894,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 sb.getBusinessEntity().add(be);
                 BusinessDetail saveBusiness1 = publicationSam.saveBusiness(sb);
 
-                
+
                 //ok Joe now needs to subscribe for Sam's business
                 Holder<List<Subscription>> list = new Holder<List<Subscription>>();
                 list.value = new ArrayList<Subscription>();
@@ -923,7 +928,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                removeAllExistingSubscriptions(subscriptionJoe,authInfoJoe);
+                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
                 this.DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -947,8 +952,15 @@ public class UDDI_141_JIRAIntegrationTest {
         public void JIRA_596() throws Exception {
                 System.out.println("JIRA_596");
                 int port = 4444;
-                String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
-                removeAllExistingSubscriptions(subscriptionJoe,authInfoJoe);
+                
+                String hostname = TckPublisher.getProperties().getProperty("bindaddress");
+                if (hostname == null) {
+                        hostname = InetAddress.getLocalHost().getHostName();
+                }
+
+                
+               // String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
+                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
                 UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -957,7 +969,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 boolean ok = false;
                 do {
                         try {
-                                ep = Endpoint.publish("http://" + localhostname + ":" + port + "/UDDI_CALLBACK", impl);
+                                ep = Endpoint.publish("http://" + hostname + ":" + port + "/UDDI_CALLBACK", impl);
                                 ok = true;
                         } catch (Exception ex) {
                                 port++;
@@ -975,7 +987,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 bs.setBindingTemplates(new BindingTemplates());
                 BindingTemplate bt = new BindingTemplate();
                 bt.setAccessPoint(new AccessPoint());
-                bt.getAccessPoint().setValue("http://" + localhostname + ":" + port + "/UDDI_CALLBACK");
+                bt.getAccessPoint().setValue("http://" + hostname + ":" + port + "/UDDI_CALLBACK");
                 bt.getAccessPoint().setUseType("endPoint");
                 //obmitted as part of the jira test case
         /*TModelInstanceInfo instanceInfo = new TModelInstanceInfo();
@@ -989,7 +1001,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 logger.info("setting up joe's callback business");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
-                List<String>deleteme = new ArrayList<String>();
+                List<String> deleteme = new ArrayList<String>();
                 deleteme.add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
                 //ok Joe's callback is setup
 
@@ -1039,7 +1051,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                removeAllExistingSubscriptions(subscriptionJoe,authInfoJoe);
+                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
                 DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -1248,7 +1260,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 be.getName().add(new Name());
                 be.getName().get(0).setValue("Joe's JIRA_575_KRGRP_Biz business");
-               // be.setBusinessServices(new BusinessServices());
+                // be.setBusinessServices(new BusinessServices());
                 be.setCategoryBag(new CategoryBag());
                 //be.getCategoryBag().getKeyedReference().add(new KeyedReference(madeupTmodel, "name", "val"));
                 be.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
@@ -1362,7 +1374,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 BusinessService bs = new BusinessService();
                 bs.getName().add(new Name());
                 bs.getName().get(0).setValue("Joe's JIRA_575_SVC_KRGRP service");
-               // bs.setBindingTemplates(new BindingTemplates());
+                // bs.setBindingTemplates(new BindingTemplates());
                 bs.setCategoryBag(new CategoryBag());
                 bs.getCategoryBag().getKeyedReferenceGroup().add(new KeyedReferenceGroup());
                 bs.getCategoryBag().getKeyedReferenceGroup().get(0).setTModelKey(madeupTmodel);
@@ -1524,8 +1536,6 @@ public class UDDI_141_JIRAIntegrationTest {
                 }
         }
         //</editor-fold>
-
-      
 
         private void DeleteBusinesses(List<String> businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
 

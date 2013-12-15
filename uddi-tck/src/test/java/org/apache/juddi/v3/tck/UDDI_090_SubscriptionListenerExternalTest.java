@@ -103,7 +103,10 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 try {
                         httpPort = 9600 + new Random().nextInt(99);
 
-                        hostname = InetAddress.getLocalHost().getHostName();
+                        hostname = TckPublisher.getProperties().getProperty("bindaddress");
+                        if (hostname==null)
+                                hostname=InetAddress.getLocalHost().getHostName();
+
                         //bring up the TCK SubscriptionListener
                         String httpEndpoint = "http://" + hostname + ":" + httpPort + "/tcksubscriptionlistener";
                         System.out.println("Bringing up SubscriptionListener endpoint at " + httpEndpoint);
