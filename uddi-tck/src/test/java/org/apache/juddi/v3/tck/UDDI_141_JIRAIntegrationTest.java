@@ -923,6 +923,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 sb.getBusinessEntity().add(be);
                 publicationSam.saveBusiness(sb);
                 int maxwait = 30000;
+                logger.info("waiting for callbacks");
                 while (maxwait > 0) {
                         if (UDDISubscriptionListenerImpl.notifcationMap.size() > 0) {
                                 break;
