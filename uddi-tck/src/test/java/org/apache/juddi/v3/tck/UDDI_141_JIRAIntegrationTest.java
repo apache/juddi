@@ -15,6 +15,7 @@
 package org.apache.juddi.v3.tck;
 
 import java.net.InetAddress;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -57,6 +58,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UDDI_141_JIRAIntegrationTest {
 
+        public UDDI_141_JIRAIntegrationTest() throws RemoteException{}
         private static Log logger = LogFactory.getLog(UDDI_141_JIRAIntegrationTest.class);
         static UDDISecurityPortType security = null;
         static UDDISubscriptionPortType subscriptionJoe = null;
@@ -824,8 +826,10 @@ public class UDDI_141_JIRAIntegrationTest {
                 }
         }
 
+        UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+        
         /**
-         *  //testing upper case subscription callbacks
+         *  testing upper case subscription callbacks
          *
          * @throws Exception
          */
@@ -834,13 +838,13 @@ public class UDDI_141_JIRAIntegrationTest {
 
                 System.out.println("JIRA_597");
 
-                int port = 4444;
+                int port = 7000;
                 String hostname = TckPublisher.getProperties().getProperty("bindaddress");
                 if (hostname == null) {
                         hostname = InetAddress.getLocalHost().getHostName();
                 }
 
-                UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+                
                 removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -954,7 +958,7 @@ public class UDDI_141_JIRAIntegrationTest {
         @Test
         public void JIRA_596() throws Exception {
                 System.out.println("JIRA_596");
-                int port = 4444;
+                int port = 9000;
                 
                 String hostname = TckPublisher.getProperties().getProperty("bindaddress");
                 if (hostname == null) {
@@ -964,7 +968,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 
                // String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
                 removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
-                UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
+                //UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
 
