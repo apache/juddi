@@ -19,50 +19,57 @@ import javax.servlet.http.HttpSession;
  */
 public class ResourceLoader {
 
-    private static Map map = new HashMap();
+        private static Map map = new HashMap();
 
-    /**
-     * returns a localized string in the locale defined within
-     * session.getAttribute("locale") or in the default locale, en
-     *
-     * @param session
-     * @param key
-     * @return a localized string
-     * @throws IllegalArgumentException if the key is null
-     * @throws MissingResourceException if the resource bundle can't be found
-     */
-    public static String GetResource(HttpSession session, String key) throws MissingResourceException {
-        if (key == null) {
-            throw new IllegalArgumentException("key");
-        }
-        String locale = (String) session.getAttribute("locale");
-        return GetResource(locale, key);
-    }
-
-    /**
-     * returns a localized string in the locale defined within locale or in the
-     * default locale, en
-     *
-     * @param session
-     * @param key
-     * @return a localized string
-     * @throws IllegalArgumentException if the key is null
-     * @throws MissingResourceException if the resource bundle can't be found
-     */
-    public static String GetResource(String locale, String key) throws MissingResourceException {
-        if (key == null) {
-            throw new IllegalArgumentException("key");
+        /**
+         * returns a localized string in the locale defined within
+         * session.getAttribute("locale") or in the default locale, en
+         *
+         * @param session
+         * @param key
+         * @return a localized string
+         * @throws IllegalArgumentException if the key is null
+         * @throws MissingResourceException if the resource bundle can't be
+         * found
+         */
+        public static String GetResource(HttpSession session, String key) throws MissingResourceException {
+                if (key == null) {
+                        throw new IllegalArgumentException("key");
+                }
+                String locale = "en";
+                if (session != null) {
+                        locale = (String) session.getAttribute("locale");
+                }
+                if (locale==null)
+                        locale = "en";
+                return GetResource(locale, key);
         }
 
-        ResourceBundle bundle = (ResourceBundle) map.get(locale);
-        if (bundle == null) {
-            bundle = ResourceBundle.getBundle("org.apache.juddi.webconsole.resources.web", new Locale(locale));
-            map.put(locale, bundle);
+        /**
+         * returns a localized string in the locale defined within locale or in
+         * the default locale, en
+         *
+         * @param session
+         * @param key
+         * @return a localized string
+         * @throws IllegalArgumentException if the key is null
+         * @throws MissingResourceException if the resource bundle can't be
+         * found
+         */
+        public static String GetResource(String locale, String key) throws MissingResourceException {
+                if (key == null) {
+                        throw new IllegalArgumentException("key");
+                }
+
+                ResourceBundle bundle = (ResourceBundle) map.get(locale);
+                if (bundle == null) {
+                        bundle = ResourceBundle.getBundle("org.apache.juddi.webconsole.resources.web", new Locale(locale));
+                        map.put(locale, bundle);
+                }
+                try {
+                        return bundle.getString(key.trim());
+                } catch (Exception ex) {
+                        return "key " + key + " not found " + ex.getMessage();
+                }
         }
-        try {
-            return bundle.getString(key.trim());
-        } catch (Exception ex) {
-            return "key " + key + " not found " + ex.getMessage();
-        }
-    }
 }
