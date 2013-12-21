@@ -50,3 +50,5 @@ nunit-console.exe juddi-client.net-integration.test\bin\Debug\juddi-client.net-i
 
 UPGRADING
 Note: one or more of the database columns names have changed.
+
+OpenJDK users: please install icedtea-plugin if you run into trouble with the juddi-gui-dsig project
