@@ -98,10 +98,10 @@ public class JUDDI_010_PublisherIntegrationTest {
                         getAuthToken.setUserID("root");
                         getAuthToken.setCred("");
                         AuthToken authToken = securityService.getAuthToken(getAuthToken);
-                        System.out.println(authToken.getAuthInfo());
+                        logger.info("don't log auth tokens!!!");
                         Assert.assertNotNull(authToken);
                 } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                         Assert.fail();
                 }
         }
@@ -138,6 +138,7 @@ public class JUDDI_010_PublisherIntegrationTest {
                         PublisherDetail publisherDetail = publisher.getAllPublisherDetail(gp);
                         Assert.assertTrue(publisherDetail.getPublisher().size() > 1);
                 } catch (Exception e) {
+                        logger.error(e);
                         Assert.fail();
                 }
         }
@@ -192,7 +193,7 @@ public class JUDDI_010_PublisherIntegrationTest {
         private void savePublisher(String publisherId, String publisherXML) {
                 try {
                         authInfo = TckSecurity.getAuthToken(security, TckPublisher.getRootPublisherId(), TckPublisher.getRootPassword());
-                        logger.debug("Saving new publisher: " + publisherXML);
+                        logger.info("Saving new publisher: " + publisherXML);
                         SavePublisher sp = new SavePublisher();
                         sp.setAuthInfo(authInfo);
                         Publisher pubIn = (Publisher) EntityCreator.buildFromDoc(publisherXML, "org.apache.juddi.api_v3");
@@ -225,6 +226,7 @@ public class JUDDI_010_PublisherIntegrationTest {
                                 pdBeforeDelete = publisher.getPublisherDetail(gp);
                                 Assert.assertNotNull(pdBeforeDelete);
                         } catch (Exception e) {
+                                logger.error(e);
                                 Assert.fail("We expected to find publisher " + publisherXML);
                         }
 

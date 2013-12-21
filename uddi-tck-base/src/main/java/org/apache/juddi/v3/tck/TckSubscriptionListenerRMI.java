@@ -23,6 +23,7 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class TckSubscriptionListenerRMI extends TckSubscriptionListener
 {
+        
 	public final String LISTENER_SERVICE_XML_RMI   = "uddi_data/subscriptionnotifier/listenerServiceRMI.xml";
     public final String LISTENER_SERVICE_KEY_RMI   = "uddi:uddi.joepublisher.com:listeneronermi";
 
@@ -35,10 +36,10 @@ public class TckSubscriptionListenerRMI extends TckSubscriptionListener
 			UDDIPublicationPortType publication) {
     	
 		super(subscription, publication);
-		this.LISTENER_SERVICE_KEY = LISTENER_SERVICE_KEY_RMI;
-    	this.LISTENER_HTTP_SERVICE_XML = LISTENER_SERVICE_XML_RMI;
-    	this.SUBSCRIPTION_KEY     = SUBSCRIPTION_KEY_RMI;
-    	this.SUBSCRIPTION_XML     = SUBSCRIPTION_XML_RMI;
+//		this.LISTENER_SERVICE_KEY = LISTENER_SERVICE_KEY_RMI;
+//    	this.LISTENER_HTTP_SERVICE_XML = LISTENER_SERVICE_XML_RMI;
+//    	this.SUBSCRIPTION_KEY     = SUBSCRIPTION_KEY_RMI;
+ //   	this.SUBSCRIPTION_XML     = SUBSCRIPTION_XML_RMI;
     	
 	}
 	

@@ -46,6 +46,8 @@ public class UDDI_050_BindingTemplateIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
+                
                 manager.stop();
         }
 

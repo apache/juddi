@@ -15,10 +15,12 @@
 package org.apache.juddi.v3.tck;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Set;
+import javax.xml.bind.JAXB;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,10 +42,10 @@ import org.uddi.v3_service.UDDIPublicationPortType;
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
 public class TckTModel {
-        
-        final static String JOE_PUBLISHER_TMODEL_XML = "uddi_data/joepublisher/tModelKeyGen.xml";
-        public static String JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3 = "uddi_data/joepublisher/FindTmodelTest.xml";
-        public static String JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY = "uddi:uddi.joepublisher.com:tmodelone";
+
+        public static final String JOE_PUBLISHER_TMODEL_XML = "uddi_data/joepublisher/tModelKeyGen.xml";
+        public static final String JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3 = "uddi_data/joepublisher/FindTmodelTest.xml";
+        public static final String JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY = "uddi:uddi.joepublisher.com:tmodelone";
         /**
          * "uddi:uddi.joepublisher.com:"
          */
@@ -89,9 +91,9 @@ public class TckTModel {
                 // Add tModels
                 try {
                         SaveTModel st = (org.uddi.api_v3.SaveTModel) EntityCreator.buildFromDoc(tModelXml, "org.uddi.api_v3");
-                        
+
                         for (int i = 0; i < st.getTModel().size(); i++) {
-                                saveTModel(authInfo, st.getTModel().get(i), false);                                
+                                saveTModel(authInfo, st.getTModel().get(i), false);
                         }
                         //st.setAuthInfo(authInfo);
                         //publication.saveTModel(st);
@@ -101,8 +103,8 @@ public class TckTModel {
                         Assert.fail("No exception should be thrown");
                 }
         }
-        
-        private void saveTModel(String authInfo, TModel tmIn,boolean force) {
+
+        private void saveTModel(String authInfo, TModel tmIn, boolean force) {
                 boolean exists = false;
                 GetTModelDetail gt1 = new GetTModelDetail();
                 gt1.getTModelKey().add(tmIn.getTModelKey());
@@ -113,16 +115,16 @@ public class TckTModel {
                         }
                 } catch (Exception ex) {
                 }
-                
+
                 if (!exists || force) // Add the tModel
                 {
                         try {
                                 SaveTModel st = new SaveTModel();
                                 st.setAuthInfo(authInfo);
-                                
+
                                 st.getTModel().add(tmIn);
                                 publication.saveTModel(st);
-                                
+
                                 keyscreated.add(tmIn.getTModelKey());
                                 // Now get the entity and check the values
                                 GetTModelDetail gt = new GetTModelDetail();
@@ -130,7 +132,7 @@ public class TckTModel {
                                 TModelDetail td = inquiry.getTModelDetail(gt);
                                 List<org.uddi.api_v3.TModel> tmOutList = td.getTModel();
                                 org.uddi.api_v3.TModel tmOut = tmOutList.get(0);
-                                
+
                                 assertEquals(tmIn.getTModelKey().toLowerCase(), tmOut.getTModelKey());
                                 assertEquals(tmIn.getName().getLang(), tmOut.getName().getLang());
                                 assertEquals(tmIn.getName().getValue(), tmOut.getName().getValue());
@@ -139,19 +141,26 @@ public class TckTModel {
                                 for (OverviewDoc overviewDoc : tmIn.getOverviewDoc()) {
                                         TckValidator.checkOverviewDocs(overviewDoc, tmOut.getOverviewDoc());
                                 }
-                                
+                                logger.info("The TModel " + tmIn.getTModelKey() + " saved");
+
+                                if (TckCommon.isDebug()) {
+                                        JAXB.marshal(tmOut, System.out);
+                                }
+
                         } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
                                 Assert.fail("No exception should be thrown");
                         }
-                        
+
                 } else {
                         logger.info("The TModel " + tmIn.getTModelKey() + " exists already, skipping");
                 }
         }
+
         public void saveTModel(String authInfo, String tModelXml, String tModelKey) {
                 saveTModel(authInfo, tModelXml, tModelKey, false);
         }
+
         public void saveTModel(String authInfo, String tModelXml, String tModelKey, boolean force) {
                 logger.info("Loading tModel from " + tModelXml);
                 org.uddi.api_v3.TModel tmIn = null;
@@ -163,37 +172,41 @@ public class TckTModel {
                 if (tmIn == null) {
                         Assert.fail("unable to load tmodel from file!");
                 }
-                saveTModel(authInfo, tmIn,force);
+                saveTModel(authInfo, tmIn, force);
         }
-        
-        public void deleteTModel(String authInfo, String tModelXml, String tModelKey) {
-                
+
+        public synchronized void deleteTModel(String authInfo, String tModelXml, String tModelKey) {
+
                 if (keyscreated.contains(tModelKey)) {
                         try {
+                                keyscreated.remove(tModelKey);
                                 //Now deleting the TModel
                                 // Delete the entity and make sure it is removed
                                 DeleteTModel dt = new DeleteTModel();
                                 dt.setAuthInfo(authInfo);
-                                
+
+                                logger.info("deleting tmodel " + tModelKey);
                                 dt.getTModelKey().add(tModelKey);
                                 publication.deleteTModel(dt);
-                                
+
                         } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
                                 Assert.fail("No exception should be thrown");
                         }
+                } else {
+                        logger.info("skipping the deletion of tmodel " + tModelKey + " since it wasn't created by the tck");
                 }
         }
-        
+
         public TModelDetail getTModelDetail(String authInfo, String tModelXml, String tModelKey) {
                 try {
                         //Try to get the TModel
                         GetTModelDetail tmodelDetail = new GetTModelDetail();
                         tmodelDetail.setAuthInfo(authInfo);
                         tmodelDetail.getTModelKey().add(tModelKey);
-                        
+
                         return inquiry.getTModelDetail(tmodelDetail);
-                        
+
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("No exception should be thrown");
@@ -201,15 +214,15 @@ public class TckTModel {
                 Assert.fail("We should already have returned");
                 return null;
         }
-        
+
         public TModelList findJoeTModelDetail() {
                 try {
-                        
+
                         FindTModel body = (FindTModel) EntityCreator.buildFromDoc(FIND_TMODEL_XML, "org.uddi.api_v3");
                         TModelList result = inquiry.findTModel(body);
-                        
+
                         return result;
-                        
+
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("No exception should be thrown");
@@ -217,15 +230,15 @@ public class TckTModel {
                 Assert.fail("We should already have returned");
                 return null;
         }
-        
+
         public TModelList findJoeTModelDetailByCategoryBag() {
                 try {
-                        
+
                         FindTModel body = (FindTModel) EntityCreator.buildFromDoc(FIND_TMODEL_XML_BY_CAT, "org.uddi.api_v3");
                         TModelList result = inquiry.findTModel(body);
-                        
+
                         return result;
-                        
+
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("No exception should be thrown");
@@ -233,47 +246,75 @@ public class TckTModel {
                 Assert.fail("We should already have returned");
                 return null;
         }
-        
+
         public void saveJoePublisherTmodel(String authInfoJoe) {
-                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY,false);
+                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, false);
         }
+
         public void saveJoePublisherTmodel(String authInfoJoe, boolean force) {
-                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY,force);
+                saveTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY, force);
         }
-        
+
         public void saveUDDIPublisherTmodel(String authInfoTM) {
-                saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY,false);
+                saveTModel(authInfoTM, TMODEL_PUBLISHER_TMODEL_XML, TMODEL_PUBLISHER_TMODEL_KEY, false);
         }
-        
+
         public void saveTmodels(String authInfoJoe) {
                 saveTModels(authInfoJoe, TMODELS_XML);
         }
-        
+
         public void deleteJoePublisherTmodel(String authInfoJoe) {
                 deleteTModel(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
         }
-        
+
         public TModelDetail getJoePublisherTmodel(String authInfoJoe) {
                 return getTModelDetail(authInfoJoe, JOE_PUBLISHER_TMODEL_XML, JOE_PUBLISHER_TMODEL_KEY);
         }
-        
+
         public TModelList findJoePublisherTmodel(String authInfoJoe) {
                 return findJoeTModelDetail();
         }
-        
+
         public void saveMaryPublisherTmodel(String authInfoMary) {
-                saveTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY,false);
+                saveTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY, false);
         }
-        
+
         public void deleteMaryPublisherTmodel(String authInfoMary) {
                 deleteTModel(authInfoMary, MARY_PUBLISHER_TMODEL_XML, MARY_PUBLISHER_TMODEL_KEY);
         }
-        
+
         public void saveSamSyndicatorTmodel(String authInfoSam) {
-                saveTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY,false);
+                saveTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY, false);
         }
-        
+
         public void deleteSamSyndicatorTmodel(String authInfoSam) {
                 deleteTModel(authInfoSam, SAM_SYNDICATOR_TMODEL_XML, SAM_SYNDICATOR_TMODEL_KEY);
+        }
+
+        /**
+         * deletes at tmodels created usign the tck tool, tmodels that were
+         * previously present (before running) are not deleted no exception is
+         * thrown if an error occurs, but it will be logged
+         *
+         * @param authinfo
+         */
+        public void deleteCreatedTModels(String authinfo) {
+                if (this.keyscreated != null) {
+                        Iterator<String> iterator = keyscreated.iterator();
+                        while (iterator.hasNext()) {
+                                DeleteTModel dtm = new DeleteTModel();
+                                dtm.setAuthInfo(authinfo);
+                                String s = iterator.next();
+                                logger.info("cleanup tModel " + s);
+                                dtm.getTModelKey().add(s);
+                                try {
+                                        publication.deleteTModel(dtm);
+                                } catch (Exception ex) {
+                                        logger.warn("failed to delete tmodel " + s + " " + ex.getMessage());
+                                        logger.debug("failed to delete tmodel " + s + " " + ex.getMessage(), ex);
+                                }
+                        }
+                }
+
         }
 }

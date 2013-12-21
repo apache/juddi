@@ -58,7 +58,8 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class UDDI_141_JIRAIntegrationTest {
 
-        public UDDI_141_JIRAIntegrationTest() throws RemoteException{}
+        public UDDI_141_JIRAIntegrationTest() throws RemoteException {
+        }
         private static Log logger = LogFactory.getLog(UDDI_141_JIRAIntegrationTest.class);
         static UDDISecurityPortType security = null;
         static UDDISubscriptionPortType subscriptionJoe = null;
@@ -93,11 +94,14 @@ public class UDDI_141_JIRAIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
         }
 
         @BeforeClass
         public static void startManager() throws ConfigurationException {
+                logger.info("UDDI_141_JIRAIntegrationTest");
                 manager = new UDDIClient();
                 manager.start();
 
@@ -806,30 +810,10 @@ public class UDDI_141_JIRAIntegrationTest {
 
 
         }
-
-        private void removeAllExistingSubscriptions(UDDISubscriptionPortType sub, String authinfo) {
-                List<Subscription> subscriptions;
-                try {
-                        subscriptions = sub.getSubscriptions(authinfo);
-
-                        DeleteSubscription ds = new DeleteSubscription();
-                        ds.setAuthInfo(authinfo);
-                        for (int i = 0; i < subscriptions.size(); i++) {
-                                ds.getSubscriptionKey().add(subscriptions.get(i).getSubscriptionKey());
-                        }
-                        if (!subscriptions.isEmpty()) {
-                                logger.info("Purging " + subscriptions.size() + " old subscriptions");
-                                sub.deleteSubscription(ds);
-                        }
-                } catch (Exception ex) {
-                        logger.warn("error clearing subscriptions", ex);
-                }
-        }
-
         UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
-        
+
         /**
-         *  testing upper case subscription callbacks
+         * testing upper case subscription callbacks
          *
          * @throws Exception
          */
@@ -844,8 +828,8 @@ public class UDDI_141_JIRAIntegrationTest {
                         hostname = InetAddress.getLocalHost().getHostName();
                 }
 
-                
-                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
+
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
                 Endpoint ep = null;
@@ -935,7 +919,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
                 this.DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -959,15 +943,15 @@ public class UDDI_141_JIRAIntegrationTest {
         public void JIRA_596() throws Exception {
                 System.out.println("JIRA_596");
                 int port = 9000;
-                
+
                 String hostname = TckPublisher.getProperties().getProperty("bindaddress");
                 if (hostname == null) {
                         hostname = InetAddress.getLocalHost().getHostName();
                 }
 
-                
-               // String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
-                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
+
+                // String localhostname = "localhost";//java.net.InetAddress.getLocalHost().getHostName();
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
                 //UDDISubscriptionListenerImpl impl = new UDDISubscriptionListenerImpl();
                 UDDISubscriptionListenerImpl.notifcationMap.clear();
                 UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -1058,7 +1042,7 @@ public class UDDI_141_JIRAIntegrationTest {
                         Thread.sleep(1000);
                         maxwait = maxwait - 1000;
                 }
-                removeAllExistingSubscriptions(subscriptionJoe, authInfoJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe,subscriptionJoe);
                 DeleteBusinesses(deleteme, authInfoJoe, publicationJoe);
                 deleteme.clear();
                 deleteme.add(saveBusiness1.getBusinessEntity().get(0).getBusinessKey());
@@ -1306,7 +1290,7 @@ public class UDDI_141_JIRAIntegrationTest {
                 tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);
 
                 AddPublisherAssertions apa = new AddPublisherAssertions();
-                apa.setAuthInfo(madeupTmodel);
+                apa.setAuthInfo(authInfoJoe);
                 PublisherAssertion pa = new PublisherAssertion();
                 pa.setKeyedReference(new KeyedReference(madeupTmodel, "name", "val"));
                 pa.setFromKey(TckBusiness.JOE_BUSINESS_KEY);
@@ -1317,6 +1301,11 @@ public class UDDI_141_JIRAIntegrationTest {
                         Assert.fail("unexpected success");
                 } catch (Exception ex) {
                         logger.error(ex.getMessage());
+                } finally {
+                        tckBusinessJoe.deleteJoePublisherBusiness(authInfoJoe);
+                        tckBusinessSam.deleteSamSyndicatorBusiness(authInfoSam);
+                        tckTModelJoe.deleteJoePublisherTmodel(authInfoJoe);
+                        tckTModelSam.deleteSamSyndicatorTmodel(authInfoSam);
                 }
         }
 
@@ -1400,153 +1389,7 @@ public class UDDI_141_JIRAIntegrationTest {
 
         //TODO tmodel tests
         //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
-        //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
-        /**
-         * Converts category bags of tmodels to a readable string
-         *
-         * @param categoryBag
-         * @return
-         */
-        public static String CatBagToString(CategoryBag categoryBag) {
-                StringBuilder sb = new StringBuilder();
-                if (categoryBag == null) {
-                        return "no data";
-                }
-                for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
-                        sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i)));
-                }
-                for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
-                        sb.append("Key Ref Grp: TModelKey=");
-                        for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k)));
-                        }
-                }
-                return sb.toString();
-        }
-
-        public static String KeyedReferenceToString(KeyedReference item) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Key Ref: Name=").
-                        append(item.getKeyName()).
-                        append(" Value=").
-                        append(item.getKeyValue()).
-                        append(" tModel=").
-                        append(item.getTModelKey()).
-                        append(System.getProperty("line.separator"));
-                return sb.toString();
-        }
-
-        public static void PrintContacts(Contacts contacts) {
-                if (contacts == null) {
-                        return;
-                }
-                for (int i = 0; i < contacts.getContact().size(); i++) {
-                        System.out.println("Contact " + i + " type:" + contacts.getContact().get(i).getUseType());
-                        for (int k = 0; k < contacts.getContact().get(i).getPersonName().size(); k++) {
-                                System.out.println("Name: " + contacts.getContact().get(i).getPersonName().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getEmail().size(); k++) {
-                                System.out.println("Email: " + contacts.getContact().get(i).getEmail().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getAddress().size(); k++) {
-                                System.out.println("Address sort code " + contacts.getContact().get(i).getAddress().get(k).getSortCode());
-                                System.out.println("Address use type " + contacts.getContact().get(i).getAddress().get(k).getUseType());
-                                System.out.println("Address tmodel key " + contacts.getContact().get(i).getAddress().get(k).getTModelKey());
-                                for (int x = 0; x < contacts.getContact().get(i).getAddress().get(k).getAddressLine().size(); x++) {
-                                        System.out.println("Address line value " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getValue());
-                                        System.out.println("Address line key name " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyName());
-                                        System.out.println("Address line key value " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyValue());
-                                }
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getDescription().size(); k++) {
-                                System.out.println("Desc: " + contacts.getContact().get(i).getDescription().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getPhone().size(); k++) {
-                                System.out.println("Phone: " + contacts.getContact().get(i).getPhone().get(k).getValue());
-                        }
-                }
-
-        }
-
-        /**
-         * This function is useful for translating UDDI's somewhat complex data
-         * format to something that is more useful.
-         *
-         * @param bindingTemplates
-         */
-        public static void PrintBindingTemplates(BindingTemplates bindingTemplates) {
-                if (bindingTemplates == null) {
-                        return;
-                }
-                for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
-                        System.out.println("Binding Key: " + bindingTemplates.getBindingTemplate().get(i).getBindingKey());
-
-                        if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
-                                System.out.println("Access Point: " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue() + " type " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType());
-                        }
-
-                        if (bindingTemplates.getBindingTemplate().get(i).getHostingRedirector() != null) {
-                                System.out.println("Hosting Redirection: " + bindingTemplates.getBindingTemplate().get(i).getHostingRedirector().getBindingKey());
-                        }
-                }
-        }
-
-        public static void PrintBusinessInfo(BusinessInfos businessInfos) {
-                if (businessInfos == null) {
-                        System.out.println("No data returned");
-                } else {
-                        for (int i = 0; i < businessInfos.getBusinessInfo().size(); i++) {
-                                System.out.println("===============================================");
-                                System.out.println("Business Key: " + businessInfos.getBusinessInfo().get(i).getBusinessKey());
-                                System.out.println("Name: " + ListToString(businessInfos.getBusinessInfo().get(i).getName()));
-
-                                System.out.println("Name: " + ListToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
-                                System.out.println("Services:");
-                                PrintServiceInfo(businessInfos.getBusinessInfo().get(i).getServiceInfos());
-                        }
-                }
-        }
-
-        public static String ListToString(List<Name> name) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < name.size(); i++) {
-                        sb.append(name.get(i).getValue()).append(" ");
-                }
-                return sb.toString();
-        }
-
-        public static String ListToDescString(List<Description> name) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < name.size(); i++) {
-                        sb.append(name.get(i).getValue()).append(" ");
-                }
-                return sb.toString();
-        }
-
-        public static void PrintServiceInfo(ServiceInfos serviceInfos) {
-                for (int i = 0; i < serviceInfos.getServiceInfo().size(); i++) {
-                        System.out.println("-------------------------------------------");
-                        System.out.println("Service Key: " + serviceInfos.getServiceInfo().get(i).getServiceKey());
-                        System.out.println("Owning Business Key: " + serviceInfos.getServiceInfo().get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(serviceInfos.getServiceInfo().get(i).getName()));
-                }
-        }
-
-        public static void PrintBusinessDetails(List<BusinessEntity> businessDetail) throws Exception {
-
-
-                for (int i = 0; i < businessDetail.size(); i++) {
-                        System.out.println("Business Detail - key: " + businessDetail.get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(businessDetail.get(i).getName()));
-                        System.out.println("CategoryBag: " + CatBagToString(businessDetail.get(i).getCategoryBag()));
-                        PrintContacts(businessDetail.get(i).getContacts());
-                }
-        }
-        //</editor-fold>
-
         private void DeleteBusinesses(List<String> businesskeysToDelete, String authinfo, UDDIPublicationPortType pub) {
-
-
                 //cleanup
                 try {
                         DeleteBusiness db = new DeleteBusiness();

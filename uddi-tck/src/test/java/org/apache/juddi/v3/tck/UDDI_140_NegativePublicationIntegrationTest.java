@@ -82,9 +82,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
         static UDDIInquiryPortType inquiryJoe = null;
         static UDDIPublicationPortType publicationJoe = null;
         static TckTModel tckTModelJoe = null;
-        
         protected static String authInfoJoe = null;
-        
         private static UDDIClient manager;
         static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
         static final String str255 = "uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
@@ -105,6 +103,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 
@@ -118,7 +117,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                         Transport transport = manager.getTransport();
                         security = transport.getUDDISecurityService();
                         authInfoJoe = TckSecurity.getAuthToken(security, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
-        
+
 
                         publicationJoe = transport.getUDDIPublishService();
                         inquiryJoe = transport.getUDDIInquiryService();
@@ -134,19 +133,19 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                         String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
 
                         transport = manager.getTransport();
-                         UDDIPublicationPortType publicationJoe= transport.getUDDIPublishService();
-                         UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
+                        UDDIPublicationPortType publicationJoe = transport.getUDDIPublishService();
+                        UDDIInquiryPortType inquiry = transport.getUDDIInquiryService();
 
                         if (!TckPublisher.isUDDIAuthMode()) {
                                 TckSecurity.setCredentials((BindingProvider) publicationJoe, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                                 TckSecurity.setCredentials((BindingProvider) inquiry, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         }
-                      
+
 
                         TckTModel uddi = new TckTModel(publicationJoe, inquiry);
                         uddi.saveUDDIPublisherTmodel(authInfoUDDI);
                         uddi.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-                        
+
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
@@ -182,7 +181,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("Hello Nurse");
+                n.setValue("BusinessKeyTooLongTest -Hello Nurse");
                 be.getName().add(n);
                 be.setBusinessKey(strkey256_1);
                 sb.getBusinessEntity().add(be);
@@ -290,7 +289,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessNameLangTooLongTest A Test business");
                 //27
                 n.setLang(str27);
                 be.getName().add(n);
@@ -317,7 +316,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessNameLangMaxLengthTest A Test business");
                 n.setLang(str26);
 
                 be.getName().add(n);
@@ -337,7 +336,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDescriptionLangTooLongTest A Test business");
                 Description d = new Description();
                 d.setValue("a description");
                 //27
@@ -367,7 +366,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDescriptionLangMaxLengthTest A Test business");
                 Description d = new Description();
                 d.setValue("a description");
                 //26
@@ -390,7 +389,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDescriptionMaxLengthTest A Test business");
                 Description d = new Description();
                 d.setValue(str255);
                 be.getDescription().add(d);
@@ -412,7 +411,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDescriptionTooLongLengthTest A Test business");
                 Description d = new Description();
                 d.setValue(str256);
                 be.getDescription().add(d);
@@ -440,7 +439,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDiscoveryURLTooLongTest A Test business");
                 be.getName().add(n);
                 be.setDiscoveryURLs(new DiscoveryURLs());
                 DiscoveryURL d = new DiscoveryURL();
@@ -469,7 +468,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDiscoveryURLMaxLengthTest A Test business");
                 be.getName().add(n);
                 be.setDiscoveryURLs(new DiscoveryURLs());
                 DiscoveryURL d = new DiscoveryURL();
@@ -492,7 +491,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDiscoveryURLMaxLengthMaxUseTypeTest A Test business");
                 be.getName().add(n);
                 be.setDiscoveryURLs(new DiscoveryURLs());
                 DiscoveryURL d = new DiscoveryURL();
@@ -516,7 +515,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
 
-                n.setValue("A Test business");
+                n.setValue("BusinessDiscoveryURLMaxLengthToolongUseTypeTest A Test business");
                 be.getName().add(n);
                 be.setDiscoveryURLs(new DiscoveryURLs());
                 DiscoveryURL d = new DiscoveryURL();
@@ -544,7 +543,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxEmailMaxUseTypeTest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactMaxEmailMaxUseType());
                 sb.getBusinessEntity().add(be);
@@ -769,7 +768,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactTooLongEmailMaxUseTypeTest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactTooLongEmailMaxUseType());
                 sb.getBusinessEntity().add(be);
@@ -794,7 +793,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxEmailToolongUseTypeTest A Test business");
                 be.getName().add(n);
 
                 be.setContacts(ContactEmailUseTypeToolong());
@@ -822,7 +821,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactDescriptionMaxLangMaxtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactMaxDescription());
                 sb.getBusinessEntity().add(be);
@@ -842,7 +841,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactDescriptionTooLongtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactDescriptionTooLong());
                 sb.getBusinessEntity().add(be);
@@ -867,7 +866,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactDescriptionLangTooLongTest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactDescriptionLangTooLong());
                 sb.getBusinessEntity().add(be);
@@ -892,7 +891,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactPhoneMaxLentest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactPhoneMaxLength());
                 sb.getBusinessEntity().add(be);
@@ -912,7 +911,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactPhoneTooLongtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactPhoneTooLong());
                 sb.getBusinessEntity().add(be);
@@ -936,7 +935,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactPhoneMaxLongtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactPhoneMaxLength());
                 sb.getBusinessEntity().add(be);
@@ -954,7 +953,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactPhoneMaxLongMaxUseTypetest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactPhoneUseTypeMaxLen());
                 sb.getBusinessEntity().add(be);
@@ -973,7 +972,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactPhoneUseTypeTooLongtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactPhoneUseTypeTooLong());
                 sb.getBusinessEntity().add(be);
@@ -997,7 +996,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFFFFFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, false, false, false, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1017,7 +1016,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressTFFFFFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(true, false, false, false, false, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1042,7 +1041,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFTFFFFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, true, false, false, false, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1067,7 +1066,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFTFFFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, true, false, false, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1092,7 +1091,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFFTFFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, false, true, false, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1116,7 +1115,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFFFTFFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, false, false, true, false, false));
                 sb.getBusinessEntity().add(be);
@@ -1141,7 +1140,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFFFFTFtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, false, false, false, true, false));
                 sb.getBusinessEntity().add(be);
@@ -1166,7 +1165,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ContactMaxAddressFFFFFFTtest A Test business");
                 be.getName().add(n);
                 be.setContacts(ContactAddressAllMax(false, false, false, false, false, false, true));
                 sb.getBusinessEntity().add(be);
@@ -1191,7 +1190,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("KeyReferenceMax A Test business");
                 be.getName().add(n);
                 be.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -1215,7 +1214,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("KeyReferenceKeyTooLong A Test business");
                 be.getName().add(n);
                 be.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -1245,7 +1244,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("KeyReferenceNameTooLong A Test business");
                 be.getName().add(n);
                 be.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -1275,7 +1274,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("KeyReferenceValueTooLong A Test business");
                 be.getName().add(n);
                 be.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -1305,7 +1304,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceNameTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1336,7 +1335,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceNameMaxLenTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1361,7 +1360,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceNameMaxLangLenTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1387,7 +1386,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceNameTooLongLangTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1419,7 +1418,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceDescTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1453,7 +1452,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceDescLangTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1488,7 +1487,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceDescMaxLangTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1518,7 +1517,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceDescMaxLangTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1553,7 +1552,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("ServiceMaxCatBagTooBigTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1594,7 +1593,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateNoAccessPointTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1630,7 +1629,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointMaxUseTypeTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1664,7 +1663,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointUseTypeTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1704,7 +1703,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointValueTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1744,7 +1743,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointMaxValueTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1778,7 +1777,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateNoAccessPointNoRedirectorTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1816,7 +1815,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointAndRedirectorTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1860,7 +1859,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateHostRedirectorReferencalIntegritytest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1884,7 +1883,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 System.out.println("Saving the business with the first service");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
-                PrintBusinessDetails(saveBusiness.getBusinessEntity());
+                TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
                 //setup the next one
                 bs = new BusinessService();
@@ -1905,7 +1904,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 //This SHOULD be allowed
                 System.out.println("Saving the business with the first and second service as a host redirect");
                 saveBusiness = publicationJoe.saveBusiness(sb);
-                PrintBusinessDetails(saveBusiness.getBusinessEntity());
+                TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
                 DeleteBusiness db = new DeleteBusiness();
                 db.setAuthInfo(authInfoJoe);
@@ -1922,7 +1921,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointAsBindingTemplateReferencalIntegritytest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -1945,7 +1944,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 System.out.println("Saving the business with the first service");
                 BusinessDetail saveBusiness = publicationJoe.saveBusiness(sb);
 
-                PrintBusinessDetails(saveBusiness.getBusinessEntity());
+                TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
                 //setup the next one
                 bs = new BusinessService();
@@ -1967,7 +1966,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 //This SHOULD be allowed
                 System.out.println("Saving the business with the first and second service as a host redirect");
                 saveBusiness = publicationJoe.saveBusiness(sb);
-                PrintBusinessDetails(saveBusiness.getBusinessEntity());
+                TckCommon.PrintBusinessDetails(saveBusiness.getBusinessEntity());
 
                 DeleteBusiness db = new DeleteBusiness();
                 db.setAuthInfo(authInfoJoe);
@@ -1987,7 +1986,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
 
                         BusinessEntity be = new BusinessEntity();
                         Name bsn = new Name();
-                        bsn.setValue("A bogus business");
+                        bsn.setValue("BindingTemplateAccessPointAsBindingTemplateINVALIDReferencalIntegritytest A bogus business");
                         be.getName().add(bsn);
 
                         BusinessService bs = new BusinessService();
@@ -2024,7 +2023,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateHostRedirectorTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -2063,7 +2062,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointMaxLengthTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -2096,7 +2095,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 sb.setAuthInfo(authInfoJoe);
                 BusinessEntity be = new BusinessEntity();
                 Name n = new Name();
-                n.setValue("A Test business");
+                n.setValue("BindingTemplateAccessPointTooLongTest A Test business");
                 be.getName().add(n);
                 be.setBusinessServices(new BusinessServices());
                 BusinessService bs = new BusinessService();
@@ -2141,7 +2140,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("My Cool Company Keymodel generator");
+                tm.getName().setValue("CreateKeyGenMaxLengthTest My Cool Company Keymodel generator");
                 tm.getName().setLang("en");
                 tm.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -2170,7 +2169,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("My Cool Company Keymodel generator");
+                tm.getName().setValue("CreateKeyGenTooLongTest My Cool Company Keymodel generator");
                 tm.getName().setLang("en");
                 tm.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -2200,7 +2199,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("Key gen name");
+                tm.getName().setValue("CreateKeyGenKeyDescriptionTooLongTest Key gen name");
                 tm.getName().setLang("en");
                 Description d = new Description();
                 d.setValue(str256);
@@ -2231,7 +2230,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("Key gen name");
+                tm.getName().setValue("CreateKeyGenKeyDescriptionTooLongTest Key gen name");
                 tm.getName().setLang("en");
                 Description d = new Description();
                 d.setValue("A description");
@@ -2266,7 +2265,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("hello world");
+                tm.getName().setValue("CreateKeyGenNameLangTooLongTest hello world");
                 tm.getName().setLang(str27);
                 tm.setCategoryBag(new CategoryBag());
                 KeyedReference kr = new KeyedReference();
@@ -2286,9 +2285,15 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 }
         }
 
-        //create a tmodel with a key gen defined valid, regular tmodel,
-        //then a business, service, binding template, tmodel instance infos, attach tmodel with some data, success
-        //create a tmodel without a key gen defined- fail
+        /**
+         * //create a tmodel with a key gen defined valid, regular tmodel,
+         * //then a business, service, binding template, tmodel instance infos,
+         * attach tmodel with some data, success //create a tmodel without a key
+         * gen defined- fail
+         *
+         * @throws DispositionReportFaultMessage
+         * @throws RemoteException
+         */
         @Test(expected = SOAPFaultException.class)
         public void CreateTmodelnoKeyGen() throws DispositionReportFaultMessage, RemoteException {
                 System.out.println("CreateTmodelnoKeyGen");
@@ -2297,7 +2302,7 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 st.setAuthInfo(authInfoJoe);
                 TModel tm = new TModel();
                 tm.setName(new Name());
-                tm.getName().setValue("My Cool Company's tmodel");
+                tm.getName().setValue("CreateTmodelnoKeyGen My Cool Company's tmodel");
                 tm.getName().setLang("en");
 
                 tm.setTModelKey("uddi:uddi.joepublisher.com:nokeygenerator:customkey");
@@ -2321,150 +2326,8 @@ public class UDDI_140_NegativePublicationIntegrationTest {
                 //create a business, service, binding with tmodel instance infos
 
         }
-
+        
         //TODO binding template tmodel instance info
         //TODO tmodel tests
         //TODO create tests for enforcing ref integrity of tmodel keys, after enforcing this, the tests in this class will need to be heavily revised
-        //<editor-fold defaultstate="collapsed" desc="Some basic util functions to print out the data structure">
-        /**
-         * Converts category bags of tmodels to a readable string
-         *
-         * @param categoryBag
-         * @return
-         */
-        public static String CatBagToString(CategoryBag categoryBag) {
-                StringBuilder sb = new StringBuilder();
-                if (categoryBag == null) {
-                        return "no data";
-                }
-                for (int i = 0; i < categoryBag.getKeyedReference().size(); i++) {
-                        sb.append(KeyedReferenceToString(categoryBag.getKeyedReference().get(i)));
-                }
-                for (int i = 0; i < categoryBag.getKeyedReferenceGroup().size(); i++) {
-                        sb.append("Key Ref Grp: TModelKey=");
-                        for (int k = 0; k < categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().size(); k++) {
-                                sb.append(KeyedReferenceToString(categoryBag.getKeyedReferenceGroup().get(i).getKeyedReference().get(k)));
-                        }
-                }
-                return sb.toString();
-        }
-
-        public static String KeyedReferenceToString(KeyedReference item) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Key Ref: Name=").
-                        append(item.getKeyName()).
-                        append(" Value=").
-                        append(item.getKeyValue()).
-                        append(" tModel=").
-                        append(item.getTModelKey()).
-                        append(System.getProperty("line.separator"));
-                return sb.toString();
-        }
-
-        public static void PrintContacts(Contacts contacts) {
-                if (contacts == null) {
-                        return;
-                }
-                for (int i = 0; i < contacts.getContact().size(); i++) {
-                        System.out.println("Contact " + i + " type:" + contacts.getContact().get(i).getUseType());
-                        for (int k = 0; k < contacts.getContact().get(i).getPersonName().size(); k++) {
-                                System.out.println("Name: " + contacts.getContact().get(i).getPersonName().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getEmail().size(); k++) {
-                                System.out.println("Email: " + contacts.getContact().get(i).getEmail().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getAddress().size(); k++) {
-                                System.out.println("Address sort code " + contacts.getContact().get(i).getAddress().get(k).getSortCode());
-                                System.out.println("Address use type " + contacts.getContact().get(i).getAddress().get(k).getUseType());
-                                System.out.println("Address tmodel key " + contacts.getContact().get(i).getAddress().get(k).getTModelKey());
-                                for (int x = 0; x < contacts.getContact().get(i).getAddress().get(k).getAddressLine().size(); x++) {
-                                        System.out.println("Address line value " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getValue());
-                                        System.out.println("Address line key name " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyName());
-                                        System.out.println("Address line key value " + contacts.getContact().get(i).getAddress().get(k).getAddressLine().get(x).getKeyValue());
-                                }
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getDescription().size(); k++) {
-                                System.out.println("Desc: " + contacts.getContact().get(i).getDescription().get(k).getValue());
-                        }
-                        for (int k = 0; k < contacts.getContact().get(i).getPhone().size(); k++) {
-                                System.out.println("Phone: " + contacts.getContact().get(i).getPhone().get(k).getValue());
-                        }
-                }
-
-        }
-
-        /**
-         * This function is useful for translating UDDI's somewhat complex data
-         * format to something that is more useful.
-         *
-         * @param bindingTemplates
-         */
-        public static void PrintBindingTemplates(BindingTemplates bindingTemplates) {
-                if (bindingTemplates == null) {
-                        return;
-                }
-                for (int i = 0; i < bindingTemplates.getBindingTemplate().size(); i++) {
-                        System.out.println("Binding Key: " + bindingTemplates.getBindingTemplate().get(i).getBindingKey());
-
-                        if (bindingTemplates.getBindingTemplate().get(i).getAccessPoint() != null) {
-                                System.out.println("Access Point: " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getValue() + " type " + bindingTemplates.getBindingTemplate().get(i).getAccessPoint().getUseType());
-                        }
-
-                        if (bindingTemplates.getBindingTemplate().get(i).getHostingRedirector() != null) {
-                                System.out.println("Hosting Redirection: " + bindingTemplates.getBindingTemplate().get(i).getHostingRedirector().getBindingKey());
-                        }
-                }
-        }
-
-        public static void PrintBusinessInfo(BusinessInfos businessInfos) {
-                if (businessInfos == null) {
-                        System.out.println("No data returned");
-                } else {
-                        for (int i = 0; i < businessInfos.getBusinessInfo().size(); i++) {
-                                System.out.println("===============================================");
-                                System.out.println("Business Key: " + businessInfos.getBusinessInfo().get(i).getBusinessKey());
-                                System.out.println("Name: " + ListToString(businessInfos.getBusinessInfo().get(i).getName()));
-
-                                System.out.println("Name: " + ListToDescString(businessInfos.getBusinessInfo().get(i).getDescription()));
-                                System.out.println("Services:");
-                                PrintServiceInfo(businessInfos.getBusinessInfo().get(i).getServiceInfos());
-                        }
-                }
-        }
-
-        public static String ListToString(List<Name> name) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < name.size(); i++) {
-                        sb.append(name.get(i).getValue()).append(" ");
-                }
-                return sb.toString();
-        }
-
-        public static String ListToDescString(List<Description> name) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < name.size(); i++) {
-                        sb.append(name.get(i).getValue()).append(" ");
-                }
-                return sb.toString();
-        }
-
-        public static void PrintServiceInfo(ServiceInfos serviceInfos) {
-                for (int i = 0; i < serviceInfos.getServiceInfo().size(); i++) {
-                        System.out.println("-------------------------------------------");
-                        System.out.println("Service Key: " + serviceInfos.getServiceInfo().get(i).getServiceKey());
-                        System.out.println("Owning Business Key: " + serviceInfos.getServiceInfo().get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(serviceInfos.getServiceInfo().get(i).getName()));
-                }
-        }
-
-        public static void PrintBusinessDetails(List<BusinessEntity> businessDetail) {
-
-
-                for (int i = 0; i < businessDetail.size(); i++) {
-                        System.out.println("Business Detail - key: " + businessDetail.get(i).getBusinessKey());
-                        System.out.println("Name: " + ListToString(businessDetail.get(i).getName()));
-                        System.out.println("CategoryBag: " + CatBagToString(businessDetail.get(i).getCategoryBag()));
-                        PrintContacts(businessDetail.get(i).getContacts());
-                }
-        }
 }

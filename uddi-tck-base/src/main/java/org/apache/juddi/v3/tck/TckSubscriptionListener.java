@@ -14,7 +14,7 @@ package org.apache.juddi.v3.tck;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static junit.framework.Assert.assertEquals;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,42 +40,45 @@ import org.uddi.v3_service.UDDISubscriptionPortType;
  */
 public class TckSubscriptionListener {
 
-        public static String LISTENER_HTTP_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerService.xml";
-        public static String LISTENER_SMTP_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerServiceSMTP.xml";
-        public static String LISTENER_SMTP_SERVICE_EXTERNAL_XML = "uddi_data/subscriptionnotifier/listenerServiceSMTP-external.xml";
-        public static String LISTENER_RMI_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerServiceRMI.xml";
-        public static String LISTENER_SERVICE_KEY = "uddi:uddi.joepublisher.com:listenerone";
+        /**
+         * uddi_data/subscriptionnotifier/listenerService.xml
+         */
+        public static final String LISTENER_HTTP_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerService.xml";
+        public static final String LISTENER_SMTP_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerServiceSMTP.xml";
+        public static final String LISTENER_SMTP_SERVICE_EXTERNAL_XML = "uddi_data/subscriptionnotifier/listenerServiceSMTP-external.xml";
+        public static final String LISTENER_RMI_SERVICE_XML = "uddi_data/subscriptionnotifier/listenerServiceRMI.xml";
+        public static final String LISTENER_SERVICE_KEY = "uddi:uddi.joepublisher.com:listenerone";
         /**
          * find service http note that the subscription1.xml contains the
          * binding template for the UDDI server to call back into
          * "uddi_data/subscriptionnotifier/subscription1.xml"
          */
-        public static String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
+        public static final String SUBSCRIPTION_XML = "uddi_data/subscriptionnotifier/subscription1.xml";
         /**
          * find business http note that the subscription1.xml contains the
          * binding template for the UDDI server to call back into
          */
-        public static String SUBSCRIPTION2_XML = "uddi_data/subscriptionnotifier/subscription2.xml";
+        public static final String SUBSCRIPTION2_XML = "uddi_data/subscriptionnotifier/subscription2.xml";
         /**
          * find business smtp
          */
-        public static String SUBSCRIPTION2_SMTP_XML = "uddi_data/subscriptionnotifier/subscription2SMTP.xml";
+        public static final String SUBSCRIPTION2_SMTP_XML = "uddi_data/subscriptionnotifier/subscription2SMTP.xml";
         /**
          * find service smtp
          * "uddi_data/subscriptionnotifier/subscription1SMTP.xml"
          */
-        public static String SUBSCRIPTION_SMTP_XML = "uddi_data/subscriptionnotifier/subscription1SMTP.xml";
+        public static final String SUBSCRIPTION_SMTP_XML = "uddi_data/subscriptionnotifier/subscription1SMTP.xml";
         /**
          * find tmodel http note that the subscription1.xml contains the binding
          * template for the UDDI server to call back into
          */
-        public static String SUBSCRIPTION3_XML = "uddi_data/subscriptionnotifier/subscription3.xml";
+        public static final String SUBSCRIPTION3_XML = "uddi_data/subscriptionnotifier/subscription3.xml";
         /**
          * find tmodel smtp
          */
-        public static String SUBSCRIPTION3_SMTP_XML = "uddi_data/subscriptionnotifier/subscription3SMTP.xml";
-        public static String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
-        public static String SUBSCRIPTION_SMTP_KEY = "uddi:uddi.joepublisher.com:subscriptiononesmtp";
+        public static final String SUBSCRIPTION3_SMTP_XML = "uddi_data/subscriptionnotifier/subscription3SMTP.xml";
+        public static final String SUBSCRIPTION_KEY = "uddi:uddi.joepublisher.com:subscriptionone";
+        public static final String SUBSCRIPTION_SMTP_KEY = "uddi:uddi.joepublisher.com:subscriptiononesmtp";
         private Log logger = LogFactory.getLog(this.getClass());
         private UDDIPublicationPortType publication = null;
         private UDDISubscriptionPortType subscription = null;
@@ -171,6 +174,7 @@ public class TckSubscriptionListener {
 
         public void saveSubscription(String authInfo, String subscriptionXML, String subscriptionKey, String bindingkey) {
                 try {
+                        logger.info("saving subscription " + subscriptionKey + " " + subscriptionXML + " " + bindingkey);
                         Subscription subIn = (Subscription) EntityCreator.buildFromDoc(subscriptionXML, "org.uddi.sub_v3");
                         List<Subscription> subscriptionList = new ArrayList<Subscription>();
                         subscriptionList.add(subIn);
@@ -180,18 +184,17 @@ public class TckSubscriptionListener {
                         subscription.saveSubscription(authInfo, subscriptionHolder);
 
                         Subscription subDirectOut = subscriptionHolder.value.get(0);
-                        assertEquals(subIn.getSubscriptionKey(), subDirectOut.getSubscriptionKey());
+                        Assert.assertEquals(subIn.getSubscriptionKey(), subDirectOut.getSubscriptionKey());
 
                         List<Subscription> outSubscriptionList = subscription.getSubscriptions(authInfo);
                         Assert.assertNotNull(outSubscriptionList);
                         Subscription subOut = outSubscriptionList.get(0);
 
 
-                        //TODO this is invalid
 
-                        assertEquals(subDirectOut.getExpiresAfter().getMonth(), subOut.getExpiresAfter().getMonth());
-                        assertEquals(subDirectOut.getExpiresAfter().getDay(), subOut.getExpiresAfter().getDay());
-                        assertEquals(subDirectOut.getExpiresAfter().getYear(), subOut.getExpiresAfter().getYear());
+                        Assert.assertEquals(subDirectOut.getExpiresAfter().getMonth(), subOut.getExpiresAfter().getMonth());
+                        Assert.assertEquals(subDirectOut.getExpiresAfter().getDay(), subOut.getExpiresAfter().getDay());
+                        Assert.assertEquals(subDirectOut.getExpiresAfter().getYear(), subOut.getExpiresAfter().getYear());
 
                         //assertEquals(subIn.getSubscriptionFilter().getFindService().getName().get(0).getValue(), 
                         //			 subOut.getSubscriptionFilter().getFindService().getName().get(0).getValue());

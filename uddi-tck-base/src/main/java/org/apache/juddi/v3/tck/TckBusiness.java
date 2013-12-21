@@ -44,362 +44,358 @@ import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
  */
-public class TckBusiness 
-{
-    public final static String JOE_BUSINESS_XML = "uddi_data/joepublisher/businessEntity.xml";
-    public final static String JOE_BUSINESS_KEY = "uddi:uddi.joepublisher.com:businessone";
-    public final static String JOE_BUSINESS3_XML = "uddi_data/joepublisher/businessEntity3.xml";
-    public final static String JOE_BUSINESS3_KEY = "uddi:uddi.joepublisher.com:businessthree.com";
-    public final static String JOE_BUSINESS_MOVE_XML = "uddi_data/joepublisher/moveBusinessService1to3.xml";
-    public final static String MARY_BUSINESS_XML = "uddi_data/marypublisher/businessEntity.xml";
-    public final static String MARY_BUSINESS_KEY = "uddi:uddi.marypublisher.com:marybusinessone";
-    public final static String SAM_BUSINESS_XML = "uddi_data/samsyndicator/businessEntity.xml";
-    public final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
-    public final static String SAM_BUSINESS_KEY = "uddi:www.samco.com:samco";
-    public final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
-    public final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
-    public final static String RIFTSAW_BUSINESS_KEY = "uddi:riftsaw.jboss.org:business_redhat-jboss";
-    public final static String RIFTSAW_BUSINESS_XML = "uddi_data/bpel/riftsaw/businessEntity.xml";
+public class TckBusiness {
 
-    final static String SIGNATURE_KEYSTORE = "uddi_data/signature/signature.jks";
-    final static String SIGNATURE_KEYSTORE_TYPE = "JKS";
-    final static String SIGNATURE_KEYSTORE_PASSWORD = "changeit";
-    final static String SIGNATURE_KEYSTORE_ALIAS = "mykey";
-    
-    private Log logger = LogFactory.getLog(this.getClass());
-	private UDDIPublicationPortType publication = null;
-    private UDDIInquiryPortType inquiry = null;
-	private boolean serialize=false;
-	public TckBusiness(UDDIPublicationPortType publication, 
-				  UDDIInquiryPortType inquiry) {
-		super();
-		this.publication = publication;
-		this.inquiry = inquiry;
-                serialize = false;
-                if (System.getProperty("debug")!=null &&
-                        System.getProperty("debug").equalsIgnoreCase("true"))
-                    serialize=true;
-	}
-	
-	public void saveSamSyndicatorBusiness(String authInfoSam) {
-		saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
-	}
+        public final static String JOE_BUSINESS_XML = "uddi_data/joepublisher/businessEntity.xml";
+        public final static String JOE_BUSINESS_KEY = "uddi:uddi.joepublisher.com:businessone";
+        public final static String JOE_BUSINESS3_XML = "uddi_data/joepublisher/businessEntity3.xml";
+        public final static String JOE_BUSINESS3_KEY = "uddi:uddi.joepublisher.com:businessthree.com";
+        public final static String JOE_BUSINESS_MOVE_XML = "uddi_data/joepublisher/moveBusinessService1to3.xml";
+        public final static String MARY_BUSINESS_XML = "uddi_data/marypublisher/businessEntity.xml";
+        public final static String MARY_BUSINESS_KEY = "uddi:uddi.marypublisher.com:marybusinessone";
+        public final static String SAM_BUSINESS_XML = "uddi_data/samsyndicator/businessEntity.xml";
+        public final static String SAM_BUSINESS_WITHPROJECTION_XML = "uddi_data/samsyndicator/businessEntity_withProjection.xml";
+        public final static String SAM_BUSINESS_KEY = "uddi:www.samco.com:samco";
+        public final static String COMBINE_CATBAGS_BIZ_XML = "uddi_data/joepublisher/combineCatBagsBusinessServices.xml";
+        public final static String COMBINE_CATBAGS_BIZ_KEY = "uddi:uddi.joepublisher.com:business01";
+        public final static String RIFTSAW_BUSINESS_KEY = "uddi:riftsaw.jboss.org:business_redhat-jboss";
+        public final static String RIFTSAW_BUSINESS_XML = "uddi_data/bpel/riftsaw/businessEntity.xml";
+        final static String SIGNATURE_KEYSTORE = "uddi_data/signature/signature.jks";
+        final static String SIGNATURE_KEYSTORE_TYPE = "JKS";
+        final static String SIGNATURE_KEYSTORE_PASSWORD = "changeit";
+        final static String SIGNATURE_KEYSTORE_ALIAS = "mykey";
+        private Log logger = LogFactory.getLog(this.getClass());
+        private UDDIPublicationPortType publication = null;
+        private UDDIInquiryPortType inquiry = null;
+        
 
-	public void saveSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
-		saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
-	}
-	
-	public void saveSamSyndicatorBusinessWithProjection(String authInfoSam) {
-		saveBusiness(authInfoSam, SAM_BUSINESS_WITHPROJECTION_XML, SAM_BUSINESS_KEY);
-	}
-	
-	public void deleteSamSyndicatorBusiness(String authInfoSam) {
-		deleteBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
-	}
-	
-	public void deleteSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
-		deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
-	}
-	
+        public TckBusiness(UDDIPublicationPortType publication,
+                UDDIInquiryPortType inquiry) {
+                super();
+                this.publication = publication;
+                this.inquiry = inquiry;
+        }
+
+        public void saveSamSyndicatorBusiness(String authInfoSam) {
+                saveBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+        }
+
+        public void saveSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
+                saveBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
+        }
+
+        public void saveSamSyndicatorBusinessWithProjection(String authInfoSam) {
+                saveBusiness(authInfoSam, SAM_BUSINESS_WITHPROJECTION_XML, SAM_BUSINESS_KEY);
+        }
+
+        public void deleteSamSyndicatorBusiness(String authInfoSam) {
+                deleteBusiness(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY);
+        }
+
+        public void deleteSamSyndicatorBusinesses(String authInfoSam, int numberOfCopies) {
+                deleteBusinesses(authInfoSam, SAM_BUSINESS_XML, SAM_BUSINESS_KEY, numberOfCopies);
+        }
+
         public void saveJoePublisherBusinessX509Signature(String authInfoJoe) {
-            saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
-            signBusiness(authInfoJoe, JOE_BUSINESS_KEY);
-            verifyBusinessSignature(authInfoJoe, JOE_BUSINESS_KEY);
+                saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+                signBusiness(authInfoJoe, JOE_BUSINESS_KEY);
+                verifyBusinessSignature(authInfoJoe, JOE_BUSINESS_KEY);
         }
-        
-	public void saveJoePublisherBusiness(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, serialize);
-    }
-	
-	public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
-		saveBusiness(authInfoJoe, COMBINE_CATBAGS_BIZ_XML, COMBINE_CATBAGS_BIZ_KEY);
-    }
-	
-	public void saveJoePublisherBusiness3(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
-    }
-	
-	public void saveJoePublisherBusiness1to3(String authInfoJoe) {
-		saveBusiness(authInfoJoe, JOE_BUSINESS_MOVE_XML, JOE_BUSINESS3_KEY);
-    }
-	
-	public void saveMaryPublisherBusiness(String authInfoMary) {
-		saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
-    }
-	
-	public void updateJoePublisherBusiness(String authInfoJoe) {
-		updateBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
-    }
-	
-	public void saveJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
-    	saveBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
-    }
-    
-	public void deleteJoePublisherBusiness(String authInfoJoe) {
-    	deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
-    }
-	
-	public void deleteJoePublisherBusiness3(String authInfoJoe) {
-    	deleteBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
-    }
-	
-	public void deleteMaryPublisherBusiness(String authInfoMary) {
-    	deleteBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
-    }
-	
-	public void deleteJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
-    	deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
-    }
-	
-	public void checkServicesBusinessOne(int expectedNumberOfServices) {
-		checkNumberOfServices(JOE_BUSINESS_KEY,expectedNumberOfServices);
-	}
-	
-	public void checkServicesBusinessThree(int expectedNumberOfServices) {
-		checkNumberOfServices(JOE_BUSINESS3_KEY,expectedNumberOfServices);
-	}
-	 
-	public void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
-		try {			
-			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
-			String businessName = beIn.getName().get(0).getValue();
-			for (int i=0; i<numberOfCopies; i++) {
-				SaveBusiness sb = new SaveBusiness();
-				sb.setAuthInfo(authInfo);
-				beIn.getName().get(0).setValue(businessName + "-" + i);
-				beIn.setBusinessKey(businessKey + "-" + i);
-				sb.getBusinessEntity().add(beIn);
-				publication.saveBusiness(sb);
-				logger.debug("Saved business with key " + businessName + "-" + i);
-			}
-			
-		} catch(Throwable e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
-	}
-	
-	public void checkNumberOfServices(String businessKey, int expectedServices) {
-		
-		try {
-			GetBusinessDetail gb = new GetBusinessDetail();
-			gb.getBusinessKey().add(businessKey);
-			BusinessDetail bd;
-			bd = inquiry.getBusinessDetail(gb);
-			List<BusinessEntity> beOutList = bd.getBusinessEntity();
-			BusinessEntity beOut = beOutList.get(0);
-			if (expectedServices > 0) {
-				assertEquals(expectedServices, beOut.getBusinessServices().getBusinessService().size());
-			} else {
-				Assert.assertNull(beOut.getBusinessServices());
-			}
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
-	}
-	
+
+        public void saveJoePublisherBusiness(String authInfoJoe) {
+                saveBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, TckCommon.isDebug());
+        }
+
+        public void saveCombineCatBagsPublisherBusiness(String authInfoJoe) {
+                saveBusiness(authInfoJoe, COMBINE_CATBAGS_BIZ_XML, COMBINE_CATBAGS_BIZ_KEY);
+        }
+
+        public void saveJoePublisherBusiness3(String authInfoJoe) {
+                saveBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
+        }
+
+        public void saveJoePublisherBusiness1to3(String authInfoJoe) {
+                saveBusiness(authInfoJoe, JOE_BUSINESS_MOVE_XML, JOE_BUSINESS3_KEY);
+        }
+
+        public void saveMaryPublisherBusiness(String authInfoMary) {
+                saveBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
+        }
+
+        public void updateJoePublisherBusiness(String authInfoJoe) {
+                updateBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+        }
+
+        public void saveJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
+                saveBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
+        }
+
+        public void deleteJoePublisherBusiness(String authInfoJoe) {
+                deleteBusiness(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY);
+        }
+
+        public void deleteJoePublisherBusiness3(String authInfoJoe) {
+                deleteBusiness(authInfoJoe, JOE_BUSINESS3_XML, JOE_BUSINESS3_KEY);
+        }
+
+        public void deleteMaryPublisherBusiness(String authInfoMary) {
+                deleteBusiness(authInfoMary, MARY_BUSINESS_XML, MARY_BUSINESS_KEY);
+        }
+
+        public void deleteJoePublisherBusinesses(String authInfoJoe, int numberOfCopies) {
+                deleteBusinesses(authInfoJoe, JOE_BUSINESS_XML, JOE_BUSINESS_KEY, numberOfCopies);
+        }
+
+        public void checkServicesBusinessOne(int expectedNumberOfServices) {
+                checkNumberOfServices(JOE_BUSINESS_KEY, expectedNumberOfServices);
+        }
+
+        public void checkServicesBusinessThree(int expectedNumberOfServices) {
+                checkNumberOfServices(JOE_BUSINESS3_KEY, expectedNumberOfServices);
+        }
+
+        public void saveBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+                try {
+                        BusinessEntity beIn = (BusinessEntity) EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
+                        String businessName = beIn.getName().get(0).getValue();
+                        for (int i = 0; i < numberOfCopies; i++) {
+                                SaveBusiness sb = new SaveBusiness();
+                                sb.setAuthInfo(authInfo);
+                                beIn.getName().get(0).setValue(businessName + "-" + i);
+                                beIn.setBusinessKey(businessKey + "-" + i);
+                                sb.getBusinessEntity().add(beIn);
+                                publication.saveBusiness(sb);
+                                logger.debug("Saved business with key " + businessName + "-" + i);
+                        }
+
+                } catch (Throwable e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+        }
+
+        public void checkNumberOfServices(String businessKey, int expectedServices) {
+
+                try {
+                        GetBusinessDetail gb = new GetBusinessDetail();
+                        gb.getBusinessKey().add(businessKey);
+                        BusinessDetail bd;
+                        bd = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                        BusinessEntity beOut = beOutList.get(0);
+                        if (expectedServices > 0) {
+                                assertEquals(expectedServices, beOut.getBusinessServices().getBusinessService().size());
+                        } else {
+                                Assert.assertNull(beOut.getBusinessServices());
+                        }
+                } catch (RemoteException e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+        }
+
         public void signBusiness(String authInfo, String businessKey) {
-            try {
-                GetBusinessDetail gb = new GetBusinessDetail();
-                gb.getBusinessKey().add(businessKey);
-                BusinessDetail bd = inquiry.getBusinessDetail(gb);
-                List<BusinessEntity> beOutList = bd.getBusinessEntity();
-                BusinessEntity bizEntity = beOutList.get(0);
-                bizEntity.getSignature().clear();
-                BusinessEntity bizEntitySigned = signJAXBObject(bizEntity);
-                        
-                SaveBusiness sb = new SaveBusiness();
-                sb.setAuthInfo(authInfo);
-                sb.getBusinessEntity().add(bizEntitySigned);
-                publication.saveBusiness(sb);
-            } catch(Throwable e) {
-                logger.error(e.getMessage(),e);
-                Assert.fail("No exception should be thrown");
-            }
+                try {
+                        GetBusinessDetail gb = new GetBusinessDetail();
+                        gb.getBusinessKey().add(businessKey);
+                        BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                        BusinessEntity bizEntity = beOutList.get(0);
+                        bizEntity.getSignature().clear();
+                        BusinessEntity bizEntitySigned = signJAXBObject(bizEntity);
+
+                        SaveBusiness sb = new SaveBusiness();
+                        sb.setAuthInfo(authInfo);
+                        sb.getBusinessEntity().add(bizEntitySigned);
+                        publication.saveBusiness(sb);
+                } catch (Throwable e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
         }
-        
+
         public void verifyBusinessSignature(String authInfo, String businessKey) {
-            try {
-                GetBusinessDetail gb = new GetBusinessDetail();
-                gb.getBusinessKey().add(businessKey);
-                BusinessDetail bd = inquiry.getBusinessDetail(gb);
-                List<BusinessEntity> beOutList = bd.getBusinessEntity();
-                BusinessEntity bizEntity = beOutList.get(0);
-                        
-                boolean sigOk = verifySignedJAXBObject(bizEntity);
-                assertTrue("Signature invalid!", sigOk);
-            } catch(Throwable e) {
-                logger.error(e.getMessage(),e);
-                Assert.fail("No exception should be thrown");
-            }
+                try {
+                        GetBusinessDetail gb = new GetBusinessDetail();
+                        gb.getBusinessKey().add(businessKey);
+                        BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                        BusinessEntity bizEntity = beOutList.get(0);
+
+                        boolean sigOk = verifySignedJAXBObject(bizEntity);
+                        assertTrue("Signature invalid!", sigOk);
+                } catch (Throwable e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
         }
-        
+
         private <T> T signJAXBObject(T jaxbObj) {
-            DOMResult domResult = new DOMResult();
-            JAXB.marshal(jaxbObj, domResult);
-            Document doc = ((Document)domResult.getNode());
-            Element docElement = doc.getDocumentElement();
-
-            try {            
-                KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
-                URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
-                ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
-                KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
-                PrivateKey privateKey = keyEntry.getPrivateKey();
-                Certificate origCert = keyEntry.getCertificate();
-                PublicKey validatingKey = origCert.getPublicKey();
-                TckSigningUtil.signDOM(docElement, privateKey, origCert);
-
-                DOMSource domSource = new DOMSource(doc);
-                T result = (T)JAXB.unmarshal(domSource, jaxbObj.getClass());
-                return result;
-            } catch (Exception e) {
-                throw new RuntimeException("Signature failure due to: " + e.getMessage(), e);
-            }
-        }
-        
-        private boolean verifySignedJAXBObject(Object obj) {
-            try {
                 DOMResult domResult = new DOMResult();
-                JAXB.marshal(obj, domResult);
-                Document doc = ((Document)domResult.getNode());
+                JAXB.marshal(jaxbObj, domResult);
+                Document doc = ((Document) domResult.getNode());
                 Element docElement = doc.getDocumentElement();
 
-                KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
-                URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
-                ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
-                KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry)ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
-                PrivateKey privateKey = keyEntry.getPrivateKey();
-                Certificate origCert = keyEntry.getCertificate();
-                PublicKey validatingKey = origCert.getPublicKey();
-                return TckSigningUtil.verifySignature(docElement, validatingKey);
-            } catch (Exception e) {
-                throw new RuntimeException (e);
-            }
+                try {
+                        KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
+                        URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
+                        ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
+                        KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
+                        PrivateKey privateKey = keyEntry.getPrivateKey();
+                        Certificate origCert = keyEntry.getCertificate();
+                        PublicKey validatingKey = origCert.getPublicKey();
+                        TckSigningUtil.signDOM(docElement, privateKey, origCert);
+
+                        DOMSource domSource = new DOMSource(doc);
+                        T result = (T) JAXB.unmarshal(domSource, jaxbObj.getClass());
+                        return result;
+                } catch (Exception e) {
+                        throw new RuntimeException("Signature failure due to: " + e.getMessage(), e);
+                }
         }
-        
+
+        private boolean verifySignedJAXBObject(Object obj) {
+                try {
+                        DOMResult domResult = new DOMResult();
+                        JAXB.marshal(obj, domResult);
+                        Document doc = ((Document) domResult.getNode());
+                        Element docElement = doc.getDocumentElement();
+
+                        KeyStore ks = KeyStore.getInstance(SIGNATURE_KEYSTORE_TYPE);
+                        URL url = Thread.currentThread().getContextClassLoader().getResource(SIGNATURE_KEYSTORE);
+                        ks.load(url.openStream(), SIGNATURE_KEYSTORE_PASSWORD.toCharArray());
+                        KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(SIGNATURE_KEYSTORE_ALIAS, new KeyStore.PasswordProtection(SIGNATURE_KEYSTORE_PASSWORD.toCharArray()));
+                        PrivateKey privateKey = keyEntry.getPrivateKey();
+                        Certificate origCert = keyEntry.getCertificate();
+                        PublicKey validatingKey = origCert.getPublicKey();
+                        return TckSigningUtil.verifySignature(docElement, validatingKey);
+                } catch (Exception e) {
+                        throw new RuntimeException(e);
+                }
+        }
+
         public void saveBusiness(String authInfo, String businessXML, String businessKey) {
-            saveBusiness(authInfo, businessXML, businessKey, false);
+                saveBusiness(authInfo, businessXML, businessKey, false);
         }
-	public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
-            logger.info("attempting to save business " + businessKey + " from " + businessXML);
-		try {
-			SaveBusiness sb = new SaveBusiness();
-			sb.setAuthInfo(authInfo);
 
-			BusinessEntity beIn = (BusinessEntity)EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
-                        if (beIn==null)
-                            throw new Exception("Unload to load source xml document from " + businessXML);
-			sb.getBusinessEntity().add(beIn);
-                    BusinessDetail saveBusiness = publication.saveBusiness(sb);
-                    logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
-                    if (serialize)
-                        JAXB.marshal(saveBusiness, System.out);
-	
-			// Now get the entity and check the values
-			GetBusinessDetail gb = new GetBusinessDetail();
-			gb.getBusinessKey().add(businessKey);
-			BusinessDetail bd = inquiry.getBusinessDetail(gb);
-			List<BusinessEntity> beOutList = bd.getBusinessEntity();
-			BusinessEntity beOut = beOutList.get(0);
+        public void saveBusiness(String authInfo, String businessXML, String businessKey, boolean serialize) {
+                logger.info("attempting to save business " + businessKey + " from " + businessXML);
+                try {
+                        SaveBusiness sb = new SaveBusiness();
+                        sb.setAuthInfo(authInfo);
 
-            if (serialize) {
-                JAXB.marshal(beOut, new File("target/aftersave.xml"));
-            }
-            
-			assertEquals(beIn.getBusinessKey(), beOut.getBusinessKey());
-			
-			TckValidator.checkNames(beIn.getName(), beOut.getName());
-			TckValidator.checkDescriptions(beIn.getDescription(), beOut.getDescription());
-			TckValidator.checkDiscoveryUrls(beIn.getDiscoveryURLs(), beOut.getDiscoveryURLs());
-			TckValidator.checkContacts(beIn.getContacts(), beOut.getContacts());
-			TckValidator.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
-			TckValidator.checkSignatures(beIn.getSignature(), beOut.getSignature());
-		} catch(Throwable e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
+                        BusinessEntity beIn = (BusinessEntity) EntityCreator.buildFromDoc(businessXML, "org.uddi.api_v3");
+                        if (beIn == null) {
+                                throw new Exception("Unload to load source xml document from " + businessXML);
+                        }
+                        sb.getBusinessEntity().add(beIn);
+                        BusinessDetail saveBusiness = publication.saveBusiness(sb);
+                        logger.info("Business saved with key " + saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+                        if (serialize) {
+                                JAXB.marshal(saveBusiness, System.out);
+                        }
 
-	}
-	
-	public void updateBusiness(String authInfo, String businessXML, String businessKey) {
-		try {
-			
-			// Now get the entity and check the values
-			GetBusinessDetail gb = new GetBusinessDetail();
-			gb.getBusinessKey().add(businessKey);
-			BusinessDetail bd = inquiry.getBusinessDetail(gb);
-			List<BusinessEntity> beOutList = bd.getBusinessEntity();
-			BusinessEntity beOut = beOutList.get(0);
-			//We are expecting 2 services
-			assertEquals(2,beOut.getBusinessServices().getBusinessService().size());
-			
-			//Now updating the business by adding another description
-			SaveBusiness sb = new SaveBusiness();
-			sb.setAuthInfo(authInfo);
-			BusinessEntity beIn = beOut;
-			Description desc2= new Description();
-			desc2.setLang("nl");
-			desc2.setValue("Omschrijving");
-			beIn.getDescription().add(desc2);
-			sb.getBusinessEntity().add(beIn);
-			publication.saveBusiness(sb);
-	
-			// Now get the entity and check the values
-			BusinessDetail bdnew = inquiry.getBusinessDetail(gb);
-			List<BusinessEntity> beOutListNew = bdnew.getBusinessEntity();
-			BusinessEntity beOutNew = beOutListNew.get(0);
+                        // Now get the entity and check the values
+                        GetBusinessDetail gb = new GetBusinessDetail();
+                        gb.getBusinessKey().add(businessKey);
+                        BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                        BusinessEntity beOut = beOutList.get(0);
 
-			assertEquals(beIn.getBusinessKey(), beOutNew.getBusinessKey());
-			// After the update we still are supposed to see two services.
-			assertNotNull(beOutNew.getBusinessServices());
-			assertEquals(2,beOutNew.getBusinessServices().getBusinessService().size());
-			
-			
-		} catch(Throwable e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
+                        if (serialize) {
+                                JAXB.marshal(beOut, new File("target/aftersave.xml"));
+                        }
 
-	}
-	
-	public void deleteBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
-		try {
-			for (int i=0; i<numberOfCopies; i++) {
-				// Delete the entity and make sure it is removed
-				String key = businessKey + "-" + i;
-				DeleteBusiness db = new DeleteBusiness();
-				db.setAuthInfo(authInfo);
-				db.getBusinessKey().add(key);
-				publication.deleteBusiness(db);
-				logger.debug("Deleted business with key " + key);
-			}
-			
-		} catch(Exception e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
-	}
-	
-	
-	public void deleteBusiness(String authInfo, String businessXML, String businessKey) {
-		try {
-			// Delete the entity and make sure it is removed
-			DeleteBusiness db = new DeleteBusiness();
-			db.setAuthInfo(authInfo);
-			db.getBusinessKey().add(businessKey);
-			publication.deleteBusiness(db);
-			
-		} catch(Exception e) {
-			logger.error(e.getMessage(),e);
-			Assert.fail("No exception should be thrown");
-		}
-	}
-	
+                        assertEquals(beIn.getBusinessKey(), beOut.getBusinessKey());
 
+                        TckValidator.checkNames(beIn.getName(), beOut.getName());
+                        TckValidator.checkDescriptions(beIn.getDescription(), beOut.getDescription());
+                        TckValidator.checkDiscoveryUrls(beIn.getDiscoveryURLs(), beOut.getDiscoveryURLs());
+                        TckValidator.checkContacts(beIn.getContacts(), beOut.getContacts());
+                        TckValidator.checkCategories(beIn.getCategoryBag(), beOut.getCategoryBag());
+                        TckValidator.checkSignatures(beIn.getSignature(), beOut.getSignature());
+                } catch (Throwable e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+
+        }
+
+        public void updateBusiness(String authInfo, String businessXML, String businessKey) {
+                try {
+
+                        // Now get the entity and check the values
+                        GetBusinessDetail gb = new GetBusinessDetail();
+                        gb.getBusinessKey().add(businessKey);
+                        BusinessDetail bd = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutList = bd.getBusinessEntity();
+                        BusinessEntity beOut = beOutList.get(0);
+                        //We are expecting 2 services
+                        assertEquals(2, beOut.getBusinessServices().getBusinessService().size());
+
+                        //Now updating the business by adding another description
+                        SaveBusiness sb = new SaveBusiness();
+                        sb.setAuthInfo(authInfo);
+                        BusinessEntity beIn = beOut;
+                        Description desc2 = new Description();
+                        desc2.setLang("nl");
+                        desc2.setValue("Omschrijving");
+                        beIn.getDescription().add(desc2);
+                        sb.getBusinessEntity().add(beIn);
+                        publication.saveBusiness(sb);
+
+                        // Now get the entity and check the values
+                        BusinessDetail bdnew = inquiry.getBusinessDetail(gb);
+                        List<BusinessEntity> beOutListNew = bdnew.getBusinessEntity();
+                        BusinessEntity beOutNew = beOutListNew.get(0);
+
+                        assertEquals(beIn.getBusinessKey(), beOutNew.getBusinessKey());
+                        // After the update we still are supposed to see two services.
+                        assertNotNull(beOutNew.getBusinessServices());
+                        assertEquals(2, beOutNew.getBusinessServices().getBusinessService().size());
+
+
+                } catch (Throwable e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+
+        }
+
+        public void deleteBusinesses(String authInfo, String businessXML, String businessKey, int numberOfCopies) {
+                try {
+                        for (int i = 0; i < numberOfCopies; i++) {
+                                // Delete the entity and make sure it is removed
+                                String key = businessKey + "-" + i;
+                                DeleteBusiness db = new DeleteBusiness();
+                                db.setAuthInfo(authInfo);
+                                db.getBusinessKey().add(key);
+                                publication.deleteBusiness(db);
+                                logger.debug("Deleted business with key " + key);
+                        }
+
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+        }
+
+        public void deleteBusiness(String authInfo, String businessXML, String businessKey) {
+                try {
+                        // Delete the entity and make sure it is removed
+                        DeleteBusiness db = new DeleteBusiness();
+                        db.setAuthInfo(authInfo);
+                        db.getBusinessKey().add(businessKey);
+                        publication.deleteBusiness(db);
+
+                } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        Assert.fail("No exception should be thrown");
+                }
+        }
 }

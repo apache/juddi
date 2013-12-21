@@ -48,6 +48,8 @@ public class UDDI_040_BusinessServiceIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
         }
 
@@ -162,7 +164,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         tckBusinessJoe.checkServicesBusinessOne(0);
                         tckBusinessJoe.checkServicesBusinessThree(1);
                 } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                         Assert.fail(e.getMessage());
                 } finally {
                         tckBusinessServiceJoe.deleteJoePublisherService(authInfoJoe);

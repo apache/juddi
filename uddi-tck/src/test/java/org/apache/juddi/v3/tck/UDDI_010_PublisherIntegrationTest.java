@@ -55,7 +55,7 @@ public class UDDI_010_PublisherIntegrationTest {
         	 getAuthToken.setUserID(TckPublisher.getRootPublisherId());
         	 getAuthToken.setCred(TckPublisher.getRootPassword());
         	 AuthToken authToken = securityService.getAuthToken(getAuthToken);
-        	 System.out.println(authToken.getAuthInfo());
+        	 System.out.println("Don't log auth tokens!");
         	 Assert.assertNotNull(authToken);
 	     } catch (Exception e) {
 	         e.printStackTrace();

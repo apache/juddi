@@ -47,6 +47,7 @@ public class UDDI_070_FindEntityIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 

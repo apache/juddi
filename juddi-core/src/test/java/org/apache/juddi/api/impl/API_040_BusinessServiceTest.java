@@ -50,7 +50,9 @@ public class API_040_BusinessServiceTest
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
 		Registry.start();
+                logger.info("API_040_BusinessServiceTest");
 		logger.debug("Getting auth tokens..");
+                
 		try {
 			api010.saveJoePublisher();
 			api010.saveSamSyndicator();
@@ -68,6 +70,7 @@ public class API_040_BusinessServiceTest
 
 	@AfterClass
 	public static void stopRegistry() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
 		Registry.stop();
 	}
 	

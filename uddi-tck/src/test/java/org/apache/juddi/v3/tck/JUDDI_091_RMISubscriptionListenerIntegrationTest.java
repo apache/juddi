@@ -139,15 +139,13 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         tckBusinessService.updateJoePublisherService(authInfoJoe, "foo");
 
                         //waiting up to 100 seconds for the listener to notice the change.
-                        String test = "";
+                        
                         for (int i = 0; i < 200; i++) {
                                 Thread.sleep(500);
                                 System.out.print(".");
                                 if (UDDISubscriptionListenerImpl.notificationCount > 0) {
                                         break;
-                                } else {
-                                        System.out.print(test);
-                                }
+                                } 
                         }
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
                                 Assert.fail("No Notification was sent");

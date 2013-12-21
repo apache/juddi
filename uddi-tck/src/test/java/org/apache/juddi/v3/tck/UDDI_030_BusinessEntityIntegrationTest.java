@@ -48,6 +48,8 @@ public class UDDI_030_BusinessEntityIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
         }
 
@@ -55,7 +57,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
         public static void startManager() throws ConfigurationException {
                 manager = new UDDIClient();
                 manager.start();
-
+                logger.info("UDDI_030_BusinessEntityIntegrationTest");
                 logger.debug("Getting auth tokens..");
                 try {
                         Transport transport = manager.getTransport();
@@ -99,8 +101,8 @@ public class UDDI_030_BusinessEntityIntegrationTest {
                         TckTModel tckTModelUddi = new TckTModel(publication, inquiry);
                         tckTModelUddi.saveUDDIPublisherTmodel(authInfoUDDI);
                         tckTModelUddi.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
-                        
-                        
+
+
                 } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                         Assert.fail("Could not obtain authInfo token.");

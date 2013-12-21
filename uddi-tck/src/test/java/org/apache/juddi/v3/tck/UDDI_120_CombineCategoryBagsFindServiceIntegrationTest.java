@@ -74,6 +74,7 @@ public class UDDI_120_CombineCategoryBagsFindServiceIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 

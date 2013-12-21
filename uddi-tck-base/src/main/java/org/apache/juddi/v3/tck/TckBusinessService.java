@@ -150,6 +150,7 @@ public class TckBusinessService
 	
 	public String saveService(String authInfo, String serviceXML, String serviceKey, String description) {
 		try {
+                        logger.info("saving service key " + serviceKey + " from " + serviceXML);
 			// First save the entity
 			SaveService ss = new SaveService();
 			ss.setAuthInfo(authInfo);

@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
+import static org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.tckTModelJoe;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -86,6 +87,8 @@ public class UDDI_020_TmodelIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
                 manager.stop();
         }
 

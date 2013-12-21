@@ -55,6 +55,9 @@ public class UDDI_060_PublisherAssertionIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelSam.deleteCreatedTModels(authInfoSam);
+                tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
         }
 

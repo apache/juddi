@@ -43,6 +43,8 @@ import org.apache.juddi.v3.tck.TckBusinessService;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,6 +68,7 @@ public class BPEL_020_IntegrationTest {
         @BeforeClass
         public static void startManager() throws ConfigurationException {
 
+                logger.info("BPEL_020_IntegrationTest");
                 manager = new UDDIClient();
                 manager.start();
 
@@ -94,11 +97,22 @@ public class BPEL_020_IntegrationTest {
                 }
                 rw = new ReadWSDL();
         }
+        @AfterClass
+        public static void cleanup() throws ConfigurationException{
+                tckTModel.deleteCreatedTModels(authInfoRiftSaw);
+                manager.stop();
+        }
 
         @Before //jUDDI only to add the keygenerator and business
         public void saveRiftSawKeyGenerator() {
                 tckTModel.saveTModel(authInfoRiftSaw, TckTModel.RIFTSAW_PUBLISHER_TMODEL_XML, TckTModel.RIFTSAW_PUBLISHER_TMODEL_KEY);
                 tckBusiness.saveBusiness(authInfoRiftSaw, TckBusiness.RIFTSAW_BUSINESS_XML, TckBusiness.RIFTSAW_BUSINESS_KEY);
+        }
+        
+        @After //jUDDI only to add the keygenerator and business
+        public void saveRiftSawKeyGeneratorAfter() {
+                tckBusiness.deleteBusiness(authInfoRiftSaw, TckBusiness.RIFTSAW_BUSINESS_XML, TckBusiness.RIFTSAW_BUSINESS_KEY);
+                tckTModel.deleteTModel(authInfoRiftSaw, TckTModel.RIFTSAW_PUBLISHER_TMODEL_XML, TckTModel.RIFTSAW_PUBLISHER_TMODEL_KEY);
         }
 
         @Test

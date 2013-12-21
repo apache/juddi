@@ -28,10 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.transport.Transport;
-import org.apache.juddi.v3.tck.TckPublisher;
-import org.apache.juddi.v3.tck.TckSecurity;
-import org.apache.juddi.v3.tck.TckTModel;
-import static org.apache.juddi.v3.tck.UDDI_141_JIRAIntegrationTest.publicationJoe;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -77,25 +73,12 @@ public class UDDI_150_CustodyTransferIntegrationTest {
         protected static String authInfoJoe = null;
         protected static String authInfoSam = null;
         private static UDDIClient manager;
-        static final String str256 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-        static final String str255 = "uddi:tmodelkey:categories:1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-        static final String strkey256 = "uddi:tmodelkey:categories:11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-        static final String strkey256_1 = "uddi:org.apache:omething.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.something.somethi.com";
-        static final String str26 = "11111111111111111111111111";
-        static final String str27 = "111111111111111111111111110";
-        static final String str10 = "0123456789";
-        static final String str11 = "01234567890";
-        static final String str80 = "01234567890123456789012345678901234567890123456789012345678901234567890123456789";
-        static final String str81 = "012345678901234567890123456789012345678901234567890123456789012345678901234567891";
         static final String TRANS = "The transaction has been rolled back";
-        static final String str4096 = "12345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000XXXXXXXX";
-        static final String str4097 = "12345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000123456700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012345670000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001234567000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000XXXXXXXXZ";
-        static final String str51 = "111111111111111111111111111111111111111111111111111";
-        static final String str50 = "11111111111111111111111111111111111111111111111111";
         static final String MISSING_RESOURCE = "Can't find resource for bundle";
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 
@@ -119,7 +102,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         custodyTransferPortTypeJoe = transport.getUDDICustodyTransferService();
 
                         if (!TckPublisher.isUDDIAuthMode()) {
-                                TckSecurity.setCredentials((BindingProvider) publicationJoe, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
+                                TckSecurity.setCredentials((BindingProvider) publishJoe, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                                 TckSecurity.setCredentials((BindingProvider) inquiryJoe, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                                 TckSecurity.setCredentials((BindingProvider) custodyTransferPortTypeJoe, TckPublisher.getJoePublisherId(), TckPublisher.getJoePassword());
                         }
@@ -131,21 +114,21 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         inquirySam = transport.getUDDIInquiryService();
                         custodyTransferPortTypeSam = transport.getUDDICustodyTransferService();
                         if (!TckPublisher.isUDDIAuthMode()) {
-                                TckSecurity.setCredentials((BindingProvider) publicationJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                                TckSecurity.setCredentials((BindingProvider) inquiryJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                                TckSecurity.setCredentials((BindingProvider) custodyTransferPortTypeJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
-                        }
-                        
-                        transport = manager.getTransport();
-                        UDDIPublicationPortType uddiPublishService = transport.getUDDIPublishService();
-                        UDDIInquiryPortType uddiInquiryService = transport.getUDDIInquiryService();
-                        if (!TckPublisher.isUDDIAuthMode()) {
-                                TckSecurity.setCredentials((BindingProvider) publicationJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) publishJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                                 TckSecurity.setCredentials((BindingProvider) inquiryJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                                 TckSecurity.setCredentials((BindingProvider) custodyTransferPortTypeJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
                         }
 
-                        TckTModel tckTModelUDDI= new TckTModel(uddiPublishService, uddiInquiryService);
+                        transport = manager.getTransport();
+                        UDDIPublicationPortType uddiPublishService = transport.getUDDIPublishService();
+                        UDDIInquiryPortType uddiInquiryService = transport.getUDDIInquiryService();
+                        if (!TckPublisher.isUDDIAuthMode()) {
+                                TckSecurity.setCredentials((BindingProvider) publishJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) inquiryJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                                TckSecurity.setCredentials((BindingProvider) custodyTransferPortTypeJoe, TckPublisher.getSamPublisherId(), TckPublisher.getSamPassword());
+                        }
+
+                        TckTModel tckTModelUDDI = new TckTModel(uddiPublishService, uddiInquiryService);
                         String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         tckTModelUDDI.saveUDDIPublisherTmodel(authInfoUDDI);
                         tckTModelUDDI.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);
@@ -179,6 +162,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
          */
         @Test
         public void ValidTransfer() throws Exception {
+                System.out.println("ValidTransfer");
                 DatatypeFactory df = DatatypeFactory.newInstance();
                 GregorianCalendar gcal = new GregorianCalendar();
                 gcal.setTimeInMillis(System.currentTimeMillis());
@@ -188,7 +172,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                 BusinessEntity myBusEntity = new BusinessEntity();
                 Name myBusName = new Name();
                 myBusName.setLang("en");
-                myBusName.setValue("UDDI's Business" + " " + xcal.toString());
+                myBusName.setValue("ValidTransfer UDDI's Business" + " " + xcal.toString());
                 myBusEntity.getName().add(myBusName);
                 myBusEntity.setBusinessServices(new BusinessServices());
                 myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("UDDI"));
@@ -205,7 +189,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                 myBusEntity = new BusinessEntity();
                 myBusName = new Name();
                 myBusName.setLang("en");
-                myBusName.setValue("Root's Business" + " " + xcal.toString());
+                myBusName.setValue("ValidTransfer Root's Business" + " " + xcal.toString());
                 myBusEntity.getName().add(myBusName);
                 myBusEntity.setBusinessServices(new BusinessServices());
                 myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("root"));
@@ -244,7 +228,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                 go.getEntityKey().add(keySamBiz);
                 go.getEntityKey().add(keyJoeBiz);
                 OperationalInfos operationalInfo = inquirySam.getOperationalInfo(go);
-                boolean ok = false;
+
                 for (int i = 0; i < operationalInfo.getOperationalInfo().size(); i++) {
                         if (operationalInfo.getOperationalInfo().get(i).getEntityKey().equalsIgnoreCase(keyJoeBiz)) {
                                 Assert.assertEquals(operationalInfo.getOperationalInfo().get(i).getAuthorizedName(), (TckPublisher.getSamPublisherId()));
@@ -252,6 +236,10 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         }
                 }
                 System.out.println("Business Entity transfered successfull");
+
+                //note, we transfered ownership here so sam has to delete both of them
+                TckCommon.DeleteBusiness(keyJoeBiz, authInfoSam, publishSam);
+                TckCommon.DeleteBusiness(keySamBiz, authInfoSam, publishSam);
 
 
         }
@@ -281,7 +269,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         custodyTransferPortTypeJoe.getTransferToken(authInfoJoe, kb, nodeidOUT, expiresOUT, tokenOUT);
                         Assert.fail();
                 } catch (Exception ex) {
-                        //        HandleException(ex);
+                        logger.info("Expected exception: " + ex.getMessage());
                 }
 
         }
@@ -300,13 +288,14 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
                         Assert.fail();
                 } catch (Exception ex) {
-                        //      HandleException(ex);
+                        logger.info("Expected exception: " + ex.getMessage());
                 }
 
         }
 
         @Test
         public void InvalidTransferTokenEmptyNullAuthToken() {
+                String keyJoeBiz = null;
                 try {
                         DatatypeFactory df = DatatypeFactory.newInstance();
                         GregorianCalendar gcal = new GregorianCalendar();
@@ -317,7 +306,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         BusinessEntity myBusEntity = new BusinessEntity();
                         Name myBusName = new Name();
                         myBusName.setLang("en");
-                        myBusName.setValue("UDDI's Business" + " " + xcal.toString());
+                        myBusName.setValue("InvalidTransferTokenEmptyNullAuthToken UDDI's Business" + " " + xcal.toString());
                         myBusEntity.getName().add(myBusName);
                         myBusEntity.setBusinessServices(new BusinessServices());
                         myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("UDDI"));
@@ -326,7 +315,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         sb.setAuthInfo(authInfoJoe);
                         BusinessDetail bd = publishJoe.saveBusiness(sb);
 
-                        String keyJoeBiz = bd.getBusinessEntity().get(0).getBusinessKey();
+                        keyJoeBiz = bd.getBusinessEntity().get(0).getBusinessKey();
 
                         //transfers from Joe to Sam
                         KeyBag kb = new KeyBag();
@@ -339,13 +328,23 @@ public class UDDI_150_CustodyTransferIntegrationTest {
 
                         Assert.fail();
                 } catch (Exception ex) {
-                        //    HandleException(ex);
+                        logger.info("Expected exception: " + ex.getMessage());
+
+                } finally {
+                        TckCommon.DeleteBusiness(keyJoeBiz, authInfoJoe, publishJoe);
+
                 }
 
         }
 
+        /**
+         * a valid transfer token issued, then modified out of band, this should
+         * fail
+         */
         @Test
         public void InvalidTransferTokenModified() {
+                String keySamBiz = null;
+                String keyJoeBiz = null;
                 try {
                         DatatypeFactory df = DatatypeFactory.newInstance();
                         GregorianCalendar gcal = new GregorianCalendar();
@@ -356,7 +355,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         BusinessEntity myBusEntity = new BusinessEntity();
                         Name myBusName = new Name();
                         myBusName.setLang("en");
-                        myBusName.setValue("UDDI's Business" + " " + xcal.toString());
+                        myBusName.setValue("InvalidTransferTokenModified UDDI's Business" + " " + xcal.toString());
                         myBusEntity.getName().add(myBusName);
                         myBusEntity.setBusinessServices(new BusinessServices());
                         myBusEntity.getBusinessServices().getBusinessService().add(CreateBusiness("UDDI"));
@@ -365,8 +364,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         sb.setAuthInfo(authInfoJoe);
                         BusinessDetail bd = publishJoe.saveBusiness(sb);
 
-                        String keyJoeBiz = bd.getBusinessEntity().get(0).getBusinessKey();
-                        //String keyJoeBizSvc = bd.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getServiceKey();
+                        keyJoeBiz = bd.getBusinessEntity().get(0).getBusinessKey();
 
 
 
@@ -382,7 +380,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         sb.setAuthInfo(authInfoSam);
                         bd = publishSam.saveBusiness(sb);
 
-                        String keySamBiz = bd.getBusinessEntity().get(0).getBusinessKey();
+                        keySamBiz = bd.getBusinessEntity().get(0).getBusinessKey();
                         //String keySamBizSvc = bd.getBusinessEntity().get(0).getBusinessServices().getBusinessService().get(0).getServiceKey();
 
                         //transfers from Joe to Sam
@@ -410,6 +408,10 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         Assert.fail();
                 } catch (Exception ex) {
                         //  HandleException(ex);
+                        logger.info("Expected exception: " + ex.getMessage());
+                } finally {
+                        TckCommon.DeleteBusiness(keyJoeBiz, authInfoJoe, publishJoe);
+                        TckCommon.DeleteBusiness(keySamBiz, authInfoSam, publishSam);
                 }
 
         }
@@ -428,6 +430,7 @@ public class UDDI_150_CustodyTransferIntegrationTest {
                         Assert.fail();
                 } catch (Exception ex) {
                         //HandleException(ex);
+                        logger.info("Expected exception: " + ex.getMessage());
                 }
         }
 

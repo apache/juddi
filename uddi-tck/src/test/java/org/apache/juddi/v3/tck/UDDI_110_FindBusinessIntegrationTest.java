@@ -64,6 +64,9 @@ public class UDDI_110_FindBusinessIntegrationTest {
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModel.deleteCreatedTModels(authInfoJoe);
+                tckTModel01.deleteCreatedTModels(authInfoJoe);
+                tckTModel02.deleteCreatedTModels(authInfoJoe);
                 manager.stop();
         }
 

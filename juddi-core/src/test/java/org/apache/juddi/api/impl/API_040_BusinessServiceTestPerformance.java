@@ -26,6 +26,7 @@ import org.apache.juddi.v3.tck.TckBusinessService;
 import org.apache.juddi.v3.tck.TckPublisher;
 import org.apache.juddi.v3.tck.TckSecurity;
 import org.apache.juddi.v3.tck.TckTModel;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,6 +60,7 @@ public class API_040_BusinessServiceTestPerformance
 	@BeforeClass
 	public static void setup() throws ConfigurationException {
 		Registry.start();
+                logger.info("API_040_BusinessServiceTestPerformance");
 		logger.debug("Getting auth tokens..");
 		try {
 			api010.saveJoePublisher();
@@ -72,6 +74,13 @@ public class API_040_BusinessServiceTestPerformance
 			Assert.fail("Could not obtain authInfo token.");
 		}
 	}
+        
+        @AfterClass
+        public static void shutdown() throws ConfigurationException{
+                tckTModel.deleteCreatedTModels(authInfoJoe);
+                Registry.stop();
+        }
+        
 	@Test
 	public void find20Businesses() throws DispositionReportFaultMessage {
 		tckTModel.saveJoePublisherTmodel(authInfoJoe);

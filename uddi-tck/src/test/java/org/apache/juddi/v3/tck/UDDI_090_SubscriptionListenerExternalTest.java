@@ -61,13 +61,7 @@ import org.uddi.sub_v3.Subscription;
  */
 public class UDDI_090_SubscriptionListenerExternalTest {
 
-        public UDDI_090_SubscriptionListenerExternalTest() {
-                serialize = false;
-                if (System.getProperty("debug") != null
-                        && System.getProperty("debug").equalsIgnoreCase("true")) {
-                        serialize = true;
-                }
-        }
+        
         private static Log logger = LogFactory.getLog(UDDI_090_SubscriptionListenerExternalTest.class);
         private static UDDISubscriptionPortType subscriptionMary = null;
         private static UDDIInquiryPortType inquiryMary = null;
@@ -88,10 +82,12 @@ public class UDDI_090_SubscriptionListenerExternalTest {
         private static UDDIClient manager;
         private static String email = null;
         private static Integer httpPort = 80;
-        private static boolean serialize = false;
+        
 
         @AfterClass
         public static void stopManager() throws ConfigurationException {
+                tckTModelJoe.deleteCreatedTModels(authInfoJoe);
+                tckTModelMary.deleteCreatedTModels(authInfoMary);
                 manager.stop();
                 //shutting down the TCK SubscriptionListener
                 endPoint.stop();
@@ -167,30 +163,12 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 }
         }
 
-        public static void removeAllExistingSubscriptions(String authinfo, UDDISubscriptionPortType sub) {
-                List<Subscription> subscriptions;
-                try {
-                        subscriptions = sub.getSubscriptions(authinfo);
-
-                        DeleteSubscription ds = new DeleteSubscription();
-                        ds.setAuthInfo(authinfo);
-                        for (int i = 0; i < subscriptions.size(); i++) {
-                                ds.getSubscriptionKey().add(subscriptions.get(i).getSubscriptionKey());
-                        }
-                        if (!subscriptions.isEmpty()) {
-                                logger.info("Purging " + subscriptions.size() + " old subscriptions");
-                                sub.deleteSubscription(ds);
-                        }
-                } catch (Exception ex) {
-                        logger.warn("error clearing subscriptions", ex);
-                }
-        }
-
+  
         @Test
         public void joePublisherUpdateService_HTTP_FIND_SERVICE() {
                 logger.info("joePublisherUpdateService_HTTP_FIND_SERVICE");
                 try {
-                        removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
@@ -337,7 +315,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                                 }
 
 
-                                if (serialize) {
+                                if (TckCommon.isDebug()) {
                                         logger.info("Email contents: " + sb.toString());
                                 }
                                 if (sb.toString().contains(contains.toLowerCase())) {
@@ -360,7 +338,7 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateService_SMTP_FIND_SERVICE");
                 try {
-                        removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -401,11 +379,11 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 }
         }
 
-        //   @Test
+        @Test
         public void joePublisherUpdateBusiness_HTTP_FIND_BUSINESS() {
                 logger.info("joePublisherUpdateBusiness_HTTP_FIND_BUSINESS");
                 try {
-                        removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                         DumpAllBusinesses();
                         Thread.sleep(5000);
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
@@ -489,12 +467,12 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 }
         }
 
-        //@Test
+        @Test
         public void joePublisherUpdateBusiness_SMTP_FIND_BUSINESS() {
                 Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateBusiness_SMTP_FIND_BUSINESS");
                 try {
-                        removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -538,10 +516,10 @@ public class UDDI_090_SubscriptionListenerExternalTest {
         }
 
         //tmodel tests
-        //@Test
+        @Test
         public void joePublisherUpdateBusiness_HTTP_FIND_TMODEL() {
                 logger.info("joePublisherUpdateBusiness_HTTP_FIND_TMODEL");
-                removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 try {
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -591,11 +569,11 @@ public class UDDI_090_SubscriptionListenerExternalTest {
                 }
         }
 
-        //@Test
+        @Test
         public void joePublisherUpdateBusiness_SMTP_FIND_TMODEL() {
                 Assume.assumeNotNull(email);
                 logger.info("joePublisherUpdateBusiness_SMTP_FIND_TMODEL");
-                removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                 try {
 
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
