@@ -176,6 +176,22 @@ public class TckPublisher {
                 return false;
         }
 
+        public static boolean isLoadTest() {
+                String x = tckProperties.getProperty("loadtest.enable");
+                if (x.equalsIgnoreCase("true")) {
+                        return true;
+                }
+                return false;
+        }
+
+        public static boolean isBPEL() {
+                String x = tckProperties.getProperty("bpel.enable");
+                if (x.equalsIgnoreCase("true")) {
+                        return true;
+                }
+                return false;
+        }
+
         public static int getMaxLoadServices() {
                 String x = tckProperties.getProperty("loadtest.maxbusinesses");
                 if (x != null) {
@@ -188,8 +204,26 @@ public class TckPublisher {
 
                 return 1100;
         }
-        
-        public static Properties getProperties(){
+
+        public static Properties getProperties() {
                 return tckProperties;
+        }
+
+        /**
+         * time in seconds, default is 60
+         *
+         * @return
+         */
+        public static int getSubscriptionTimeout() {
+                String x = tckProperties.getProperty("sub.timeout");
+                if (x != null) {
+                        try {
+                                return Integer.parseInt(x);
+                        } catch (Exception ex) {
+                                ex.printStackTrace();
+                        }
+                }
+
+                return 60;
         }
 }

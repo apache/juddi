@@ -35,13 +35,15 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UDDI_040_BusinessServiceIntegrationTest {
 
-        private static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
+        protected static Log logger = LogFactory.getLog(UDDI_040_BusinessServiceIntegrationTest.class);
         protected static TckTModel tckTModelJoe = null;
         protected static TckBusiness tckBusinessJoe = null;
         protected static TckBusinessService tckBusinessServiceJoe = null;
         protected static TckTModel tckTModelSam = null;
         protected static TckBusiness tckBusinessSam = null;
         protected static TckBusinessService tckBusinessServiceSam = null;
+        protected static UDDIInquiryPortType inquiryJoe=null;
+        protected static UDDIInquiryPortType inquirySam=null;
         protected static String authInfoJoe = null;
         protected static String authInfoSam = null;
         private static UDDIClient manager;
@@ -77,6 +79,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         tckTModelJoe = new TckTModel(publication, inquiry);
                         tckBusinessJoe = new TckBusiness(publication, inquiry);
                         tckBusinessServiceJoe = new TckBusinessService(publication, inquiry);
+                        inquiryJoe = inquiry;
 
                         transport = manager.getTransport();
                         publication = transport.getUDDIPublishService();
@@ -88,7 +91,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
                         tckTModelSam = new TckTModel(publication, inquiry);
                         tckBusinessSam = new TckBusiness(publication, inquiry);
                         tckBusinessServiceSam = new TckBusinessService(publication, inquiry);
-                        
+                        inquirySam = inquiry;
                         
                         transport = manager.getTransport();
                         publication = transport.getUDDIPublishService();
@@ -109,7 +112,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
         }
 
         @Test
-        public void joepublisher() {
+        public void joepublisher() throws Exception {
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -122,7 +125,7 @@ public class UDDI_040_BusinessServiceIntegrationTest {
         }
 
         @Test
-        public void samsyndicator() {
+        public void samsyndicator() throws Exception {
                 try {
 
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);

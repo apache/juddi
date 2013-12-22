@@ -21,15 +21,23 @@ import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.BindingTemplates;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessInfos;
+import org.uddi.api_v3.BusinessList;
 import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.Contacts;
 import org.uddi.api_v3.DeleteBusiness;
 import org.uddi.api_v3.Description;
+import org.uddi.api_v3.FindBusiness;
+import org.uddi.api_v3.FindQualifiers;
+import org.uddi.api_v3.FindService;
+import org.uddi.api_v3.FindTModel;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.ServiceInfos;
+import org.uddi.api_v3.ServiceList;
+import org.uddi.api_v3.TModelList;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
+import org.uddi.v3_service.UDDIInquiryPortType;
 import org.uddi.v3_service.UDDIPublicationPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 
@@ -242,4 +250,79 @@ public class TckCommon {
                 }
                 return serialize;
         }
+        
+        
+         public static String DumpAllServices(String authinfo, UDDIInquiryPortType inquiry) {
+                StringBuilder sb = new StringBuilder();
+                FindService fs = new FindService();
+                fs.setAuthInfo(authinfo);
+                fs.setFindQualifiers(new FindQualifiers());
+                fs.getFindQualifiers().getFindQualifier().add("approximateMatch");
+                fs.getName().add(new Name("%", null));
+                try {
+                        ServiceList findService = inquiry.findService(fs);
+                        if (findService.getServiceInfos() == null) {
+                                return ("NO SERVICES RETURNED!");
+                        } else {
+                                for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
+                                        sb.append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue()).append(" lang=").append(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getLang()).append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getServiceKey()).append(" ").append(findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey()).append(
+                                                System.getProperty("line.separator"));
+                                }
+                        }
+                } catch (Exception ex) {
+                        sb.append(ex.getMessage());
+                }
+                return sb.toString();
+        }
+
+         
+        public static String DumpAllTModels(String authinfo, UDDIInquiryPortType inquriy) {
+                StringBuilder sb = new StringBuilder();
+                FindTModel fs = new FindTModel();
+                fs.setAuthInfo(authinfo);
+                fs.setFindQualifiers(new FindQualifiers());
+                fs.getFindQualifiers().getFindQualifier().add("approximateMatch");
+                fs.setName(new Name("%", null));
+                try {
+                        TModelList findService = inquriy.findTModel(fs);
+                        if (findService.getTModelInfos()== null) {
+                                return ("NO TMODELS RETURNED!");
+                        } else {
+                                for (int i = 0; i < findService.getTModelInfos().getTModelInfo().size(); i++) {
+                                        sb.append(findService.getTModelInfos().getTModelInfo().get(i).getName().getValue()).
+                                                append(" lang=").append(findService.getTModelInfos().getTModelInfo().get(i).getName().getLang()).
+                                                append(" ").append(findService.getTModelInfos().getTModelInfo().get(i).getTModelKey())
+                                                .append(System.getProperty("line.separator"));
+                                }
+                        }
+                } catch (Exception ex) {
+                        return ex.getMessage();
+                }
+                return sb.toString();
+        }         
+        public static String DumpAllBusinesses(String authinfo, UDDIInquiryPortType inquriy) {
+                StringBuilder sb = new StringBuilder();
+                FindBusiness fs = new FindBusiness();
+                fs.setAuthInfo(authinfo);
+                fs.setFindQualifiers(new FindQualifiers());
+                fs.getFindQualifiers().getFindQualifier().add("approximateMatch");
+                fs.getName().add(new Name("%", null));
+                try {
+                        BusinessList findService = inquriy.findBusiness(fs);
+                        if (findService.getBusinessInfos() == null) {
+                                return ("NO BUSINESSES RETURNED!");
+                        } else {
+                                for (int i = 0; i < findService.getBusinessInfos().getBusinessInfo().size(); i++) {
+                                        sb.append(findService.getBusinessInfos().getBusinessInfo().get(i).getName().get(0).getValue()).
+                                                append(" lang=").append(findService.getBusinessInfos().getBusinessInfo().get(i).getName().get(0).getLang()).
+                                                append(" ").append(findService.getBusinessInfos().getBusinessInfo().get(i).getBusinessKey())
+                                                .append(System.getProperty("line.separator"));
+                                }
+                        }
+                } catch (Exception ex) {
+                        return ex.getMessage();
+                }
+                return sb.toString();
+        }
+
 }

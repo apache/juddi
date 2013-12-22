@@ -18,7 +18,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 
@@ -44,19 +46,31 @@ public class App {
                         System.out.println("tck.properties was not found! I give up!");
                         System.exit(1);
                 }
+                String s = System.getProperty("uddi.client.xml");
+                if (s == null || !new File(s).exists()) {
+                        System.out.println("The value for option -Duddi.client.xml=" + s + " is either null or the file doesn't exist! I give up!");
+                        System.exit(1);
+                }
+                
                 JUnitCore junit = new JUnitCore();
-                Result result = junit.run(org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
+                List<Class> items = new ArrayList<Class>();
+                items.add(null);
+                Result result = junit.run(
                         //the bpel tests really only test wsdl to uddi
-                        // org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
-                        // org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
+                        org.apache.juddi.v3.bpel.BPEL_010_IntegrationTest.class,
+                        org.apache.juddi.v3.bpel.BPEL_020_IntegrationTest.class,
+                        
 
                         org.apache.juddi.v3.tck.JUDDI_010_PublisherIntegrationTest.class,
+                        
                         org.apache.juddi.v3.tck.UDDI_010_PublisherIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_020_TmodelIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_030_BusinessEntityIntegrationTest.class,
-                        //org.apache.juddi.v3.tck.UDDI_030_BusinessEntityLoadTest.class,
+                        
+                        org.apache.juddi.v3.tck.UDDI_030_BusinessEntityLoadIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_040_BusinessServiceIntegrationTest.class,
-                        //org.apache.juddi.v3.tck.UDDI_040_BusinessServiceLoadTest.class,
+                        org.apache.juddi.v3.tck.UDDI_040_BusinessServiceLoadIntegrationTest.class,
+                        
                         org.apache.juddi.v3.tck.UDDI_050_BindingTemplateIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_060_PublisherAssertionIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_070_FindEntityIntegrationTest.class,
@@ -66,6 +80,7 @@ public class App {
                         org.apache.juddi.v3.tck.UDDI_090_SubscriptionListenerExternalTest.class,
                         org.apache.juddi.v3.tck.JUDDI_091_RMISubscriptionListenerIntegrationTest.class,
                         org.apache.juddi.v3.tck.JUDDI_100_ClientSubscriptionInfoIntegrationTest.class,
+                        
                         org.apache.juddi.v3.tck.UDDI_110_FindBusinessIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_120_CombineCategoryBagsFindServiceIntegrationTest.class,
                         org.apache.juddi.v3.tck.UDDI_130_CombineCategoryBagsFindBusinessIntegrationTest.class,

@@ -50,9 +50,10 @@ import org.uddi.api_v3.ServiceList;
 
 /**
  * Used during the Maven build process for testing against jUDDI
+ *
  * @author <a href="mailto:tcunning@apache.org">Tom Cunningham</a>
  * @author <a href="mailto:alexoree@apache.org">Alex O'Ree</a>
- * @see UDDI_090_SubscriptionListenerExternalTest       
+ * @see UDDI_090_SubscriptionListenerExternalTest
  */
 public class UDDI_090_SubscriptionListenerIntegrationTest {
 
@@ -192,6 +193,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 logger.info("joePublisherUpdate_HTTP_FIND_SERVICE");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        String before = TckCommon.DumpAllServices(authInfoJoe, inquiryJoe);
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
@@ -209,21 +211,29 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessServiceJoe.updateJoePublisherService(authInfoJoe, "foo");
 
                         //waiting up to 100 seconds for the listener to notice the change.
-                        for (int i = 0; i < 200; i++) {
-                                Thread.sleep(500);
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
                                 System.out.print(".");
                                 if (UDDISubscriptionListenerImpl.notificationCount > 0) {
                                         logger.info("Received HTTP Notification");
                                         break;
                                 }
                         }
-                        if (UDDISubscriptionListenerImpl.notificationCount == 0) {
-                                Assert.fail("No HttpNotification was sent");
+                        Iterator<String> iterator = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                        boolean found = false;
+                        while (iterator.hasNext()) {
+                                String test = iterator.next();
+                                if (test.toLowerCase().contains("service one")) {
+                                        found = true;
+                                }
                         }
-                        if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+                        if (!found) {
+                                logger.warn("Test failed, dumping service list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllServices(authInfoJoe, inquiryJoe));
+                                //if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
                                 Assert.fail("Notification does not contain the correct service");
                         }
-
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
@@ -242,12 +252,11 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 logger.info("joePublisherUpdate_SMTP_FIND_SERVICE");
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
+                        String before = TckCommon.DumpAllServices(authInfoJoe, inquiryJoe);
                         if (mailServer != null && !mailServer.isStopped()) {
                                 mailServer.stop();
                         }
                         mailServer = SimpleSmtpServer.start(smtpPort);
-
-
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
                         //Saving the binding template that will be called by the server for a subscription event
@@ -262,7 +271,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckBusinessServiceJoe.updateJoePublisherService(authInfoJoe, "foo");
 
                         //waiting up to 30 seconds for the listener to notice the change.
-                        for (int i = 0; i < 60; i++) {
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
                                 Thread.sleep(1000);
                                 System.out.print(mailServer.getReceivedEmailSize() + ",");
                                 if (mailServer.getReceivedEmailSize() > 0) {
@@ -275,13 +284,22 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         }
                         @SuppressWarnings("rawtypes")
                         Iterator emailIter = mailServer.getReceivedEmail();
-                        SmtpMessage email = (SmtpMessage) emailIter.next();
-                        if (TckCommon.isDebug()) {
-                                System.out.println("Subject:" + email.getHeaderValue("Subject"));
-                                System.out.println("Body:" + email.getBody());
+                        boolean found = false;
+                        while (emailIter.hasNext()) {
+                                SmtpMessage email = (SmtpMessage) emailIter.next();
+                                if (TckCommon.isDebug()) {
+                                        System.out.println("Subject:" + email.getHeaderValue("Subject"));
+                                        System.out.println("Body:" + email.getBody());
+                                }
+                                if (email.getBody().replace("=", "").contains("Service One")) {
+                                        found = true;
+                                }
                         }
-                        if (!email.getBody().replace("=", "").contains("Service One")) {
-                                Assert.fail("Notification does not contain the correct service");
+                        if (!found) {
+                                logger.warn("Test failed, dumping service list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllServices(authInfoJoe, inquiryJoe));
+                                Assert.fail("Notification NOT received. Emails received " + mailServer.getReceivedEmailSize());
                         }
 
                 } catch (Exception e) {
@@ -304,9 +322,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 try {
                         TckCommon.removeAllExistingSubscriptions(authInfoJoe, subscriptionJoe);
                         TckCommon.DeleteBusiness(TckBusiness.MARY_BUSINESS_KEY, authInfoMary, publicationMary);
-                        if (TckCommon.isDebug()) {
-                                DumpAllBusinesses();
-                        }
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
                         Thread.sleep(5000);
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
@@ -321,17 +337,17 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         logger.info("Saving Joe's subscription********** ");
                         tckSubscriptionListenerJoe.saveNotifierSubscription(authInfoJoe, "uddi_data/subscriptionnotifier/subscription2.xml");
                         //Changing the service we subscribed to "JoePublisherService"
-                        DumpAllBusinesses();
+
                         logger.info("Clearing the inbox********** ");
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
                         Thread.sleep(2000);
                         logger.info("Saving Mary's Business ********** ");
                         tckBusinessMary.saveMaryPublisherBusiness(authInfoMary);
-                        DumpAllBusinesses();
+
                         //waiting up to 10 seconds for the listener to notice the change.
 
-                        for (int i = 0; i < 60; i++) {
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
                                 Thread.sleep(1000);
                                 System.out.print(".");
                                 //if (UDDISubscriptionListenerImpl.notificationCount > 0) {
@@ -351,14 +367,18 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                                 }
 
                         }
-                        DumpAllBusinesses();
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
                                 Assert.fail("No Notification was sent");
                         }
                         if (!found) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
                                 Assert.fail("Notification does not contain the correct service");
                         }
-
                 } catch (Exception e) {
                         logger.error("No exceptions please.");
                         e.printStackTrace();
@@ -373,29 +393,6 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 }
         }
 
-        private static void DumpAllBusinesses() {
-                logger.warn("Dumping the business/service list for debugging");
-                FindService fs = new FindService();
-                fs.setFindQualifiers(new FindQualifiers());
-                fs.getFindQualifiers().getFindQualifier().add(UDDIConstants.APPROXIMATE_MATCH);
-                fs.getName().add(new Name("%", null));
-                try {
-                        ServiceList findService = inquiryJoe.findService(fs);
-                        if (findService.getServiceInfos() == null) {
-                                logger.warn("NO SERVICES RETURNED!");
-                        } else {
-                                for (int i = 0; i < findService.getServiceInfos().getServiceInfo().size(); i++) {
-                                        logger.warn(findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getValue() + " lang="
-                                                + findService.getServiceInfos().getServiceInfo().get(i).getName().get(0).getLang() + " "
-                                                + findService.getServiceInfos().getServiceInfo().get(i).getServiceKey() + " "
-                                                + findService.getServiceInfos().getServiceInfo().get(i).getBusinessKey());
-                                }
-                        }
-                } catch (Exception ex) {
-                        ex.printStackTrace();
-                }
-        }
-
         @Test
         public void joePublisherUpdate_SMTP_FIND_BUSINESS() {
                 logger.info("joePublisherUpdate_SMTP_FIND_BUSINESS");
@@ -405,6 +402,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         if (mailServer != null && !mailServer.isStopped()) {
                                 mailServer.stop();
                         }
+                        String before = TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe);
                         mailServer = SimpleSmtpServer.start(smtpPort);
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -421,7 +419,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         //"uddi:uddi.marypublisher.com:marybusinessone"
                         tckBusinessMary.saveBusiness(authInfoMary, TckBusiness.MARY_BUSINESS_XML, TckBusiness.MARY_BUSINESS_KEY);
 
-                        for (int i = 0; i < 60; i++) {
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
                                 Thread.sleep(1000);
                                 System.out.println(mailServer.getReceivedEmailSize() + " message received.");
                                 if (mailServer.getReceivedEmailSize() > 0) {
@@ -447,7 +445,9 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                                 }
                         }
                         if (!found) {
-                                DumpAllBusinesses();
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllBusinesses(authInfoJoe, inquiryJoe));
                                 logger.fatal("Notification does not contain the correct service");
                                 Assert.fail("Notification does not contain the correct service");
                         }
@@ -477,6 +477,7 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                 try {
                         UDDISubscriptionListenerImpl.notifcationMap.clear();
                         UDDISubscriptionListenerImpl.notificationCount = 0;
+                        String before=TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe);
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckTModelJoe.saveTModels(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -492,18 +493,20 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY);
 
                         //waiting up to 100 seconds for the listener to notice the change.
-                        String test = "";
-                        for (int i = 0; i < 200; i++) {
-                                Thread.sleep(500);
+
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
                                 System.out.print(".");
                                 if (UDDISubscriptionListenerImpl.notificationCount > 0) {
                                         logger.info("Received Notification");
                                         break;
-                                } else {
-                                        System.out.print(test);
                                 }
                         }
+                        
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
+                                logger.warn("Test failed, dumping business list");
+                                logger.warn("BEFORE " + before);
+                                logger.warn("After " + TckCommon.DumpAllTModels(authInfoJoe, inquiryJoe));
                                 Assert.fail("No Notification was sent");
                         }
                         if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">tModel One</name>")) {
@@ -548,8 +551,8 @@ public class UDDI_090_SubscriptionListenerIntegrationTest {
                         tckTModelJoe.deleteTModel(authInfoJoe, TckTModel.JOE_PUBLISHER_TMODEL_XML_SUBSCRIPTION3, TckTModel.JOE_PUBLISHER_TMODEL_SUBSCRIPTION3_TMODEL_KEY);
 
 
-                        for (int i = 0; i < 200; i++) {
-                                Thread.sleep(500);
+                        for (int i = 0; i < TckPublisher.getSubscriptionTimeout(); i++) {
+                                Thread.sleep(1000);
                                 System.out.print(".");
                                 if (mailServer.getReceivedEmailSize() > 0) {
                                         logger.info("Received Email Notification");

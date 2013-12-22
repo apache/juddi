@@ -25,7 +25,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 
 @Embeddable
-class TempKeyPK implements java.io.Serializable {
+public class TempKeyPK implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 790951819871694597L;
 	private String entityKey;

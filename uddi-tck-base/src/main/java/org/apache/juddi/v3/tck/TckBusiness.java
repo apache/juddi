@@ -170,7 +170,7 @@ public class TckBusiness {
                                 beIn.setBusinessKey(businessKey + "-" + i);
                                 sb.getBusinessEntity().add(beIn);
                                 publication.saveBusiness(sb);
-                                logger.debug("Saved business with key " + businessName + "-" + i);
+                                logger.info("Saved business with key " + businessName + "-" + i);
                         }
 
                 } catch (Throwable e) {

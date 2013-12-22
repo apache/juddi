@@ -35,13 +35,15 @@ import org.uddi.v3_service.UDDISecurityPortType;
  */
 public class UDDI_030_BusinessEntityIntegrationTest {
 
-        private static Log logger = LogFactory.getLog(UDDI_030_BusinessEntityIntegrationTest.class);
+        protected static Log logger = LogFactory.getLog(UDDI_030_BusinessEntityIntegrationTest.class);
         protected static TckTModel tckTModelJoe = null;
         protected static TckBusiness tckBusinessJoe = null;
         protected static TckFindEntity tckFindEntityJoe = null;
         protected static TckTModel tckTModelSam = null;
         protected static TckBusiness tckBusinessSam = null;
         protected static TckFindEntity tckFindEntitySam = null;
+        protected static UDDIInquiryPortType inquiryJoe = null;
+        protected static UDDIInquiryPortType inquirySam = null;
         protected static String authInfoJoe = null;
         protected static String authInfoSam = null;
         private static UDDIClient manager;
@@ -77,6 +79,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
                         tckTModelJoe = new TckTModel(publication, inquiry);
                         tckBusinessJoe = new TckBusiness(publication, inquiry);
                         tckFindEntityJoe = new TckFindEntity(inquiry);
+                        inquiryJoe = inquiry;
 
                         transport = manager.getTransport();
                         publication = transport.getUDDIPublishService();
@@ -88,7 +91,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
                         tckTModelSam = new TckTModel(publication, inquiry);
                         tckBusinessSam = new TckBusiness(publication, inquiry);
                         tckFindEntitySam = new TckFindEntity(inquiry);
-
+                        inquirySam = inquiry;
 
                         String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
                         transport = manager.getTransport();
@@ -122,7 +125,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
         }
 
         @Test
-        public void testJoePublisherBusinessEntity() {
+        public void testJoePublisherBusinessEntity() throws Exception{
                 try {
                         tckTModelJoe.saveJoePublisherTmodel(authInfoJoe);
                         tckBusinessJoe.saveJoePublisherBusiness(authInfoJoe);
@@ -134,7 +137,7 @@ public class UDDI_030_BusinessEntityIntegrationTest {
         }
 
         @Test
-        public void testSamSyndicatorBusiness() {
+        public void testSamSyndicatorBusiness() throws Exception{
                 try {
                         tckTModelSam.saveSamSyndicatorTmodel(authInfoSam);
                         tckBusinessSam.saveSamSyndicatorBusiness(authInfoSam);
