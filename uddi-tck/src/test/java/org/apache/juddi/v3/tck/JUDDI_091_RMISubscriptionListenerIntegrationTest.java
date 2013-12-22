@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Iterator;
 import java.util.Random;
 import javax.xml.ws.BindingProvider;
 
@@ -129,6 +130,8 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                 Assume.assumeTrue(TckPublisher.isRMI());
                 Assume.assumeTrue(TckPublisher.isSubscriptionEnabled());
                 try {
+                        UDDISubscriptionListenerImpl.notifcationMap.clear();
+                        UDDISubscriptionListenerImpl.notificationCount=0;
                         tckTModel.saveJoePublisherTmodel(authInfoJoe);
                         tckBusiness.saveJoePublisherBusiness(authInfoJoe);
                         tckBusinessService.saveJoePublisherService(authInfoJoe);
@@ -140,9 +143,9 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
 
                         //waiting up to 100 seconds for the listener to notice the change.
                         
-                        for (int i = 0; i < 200; i++) {
-                                Thread.sleep(500);
-                                System.out.print(".");
+                        for (int i = 0; i < 60; i++) {
+                                Thread.sleep(1000);
+                                
                                 if (UDDISubscriptionListenerImpl.notificationCount > 0) {
                                         break;
                                 } 
@@ -150,7 +153,15 @@ public class JUDDI_091_RMISubscriptionListenerIntegrationTest {
                         if (UDDISubscriptionListenerImpl.notificationCount == 0) {
                                 Assert.fail("No Notification was sent");
                         }
-                        if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
+                        Iterator<String> it = UDDISubscriptionListenerImpl.notifcationMap.values().iterator();
+                        boolean found=false;
+                        while (it.hasNext()){
+                                String test = it.next();
+                                if (test.toLowerCase().contains("service one"))
+                                        found = true;
+                        }
+                        if (!found){
+                        //if (!UDDISubscriptionListenerImpl.notifcationMap.get(0).contains("<name xml:lang=\"en\">Service One</name>")) {
                                 Assert.fail("Notification does not contain the correct service");
                         }
 

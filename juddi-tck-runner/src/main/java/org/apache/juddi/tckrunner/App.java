@@ -82,6 +82,7 @@ public class App {
                 bw.write("UDDI-TCK Test Results generated " + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
                 bw.newLine();
                 bw.write("____________________________________________");
+                bw.newLine();
                 bw.write("Summary");
                 bw.newLine();
                 bw.write("Failed Test Cases: " + result.getFailureCount());
@@ -110,6 +111,7 @@ public class App {
                         bw.write(result.getFailures().get(i).getTrace());
                         bw.newLine();
                         bw.write("____________________________________________");
+                        bw.newLine();
                 }
                 System.out.println("____________________________________________");
                 System.out.println("Summary");
