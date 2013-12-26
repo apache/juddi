@@ -40,7 +40,7 @@ public class ReadWSDL {
         private boolean IgnoreSSLErrors = false;
 	private final Log log = LogFactory.getLog(this.getClass());
 	
-	public Definition readWSDL(String fileName) throws Exception {
+	public Definition readWSDL(String fileName) throws WSDLException  {
             
 		Definition wsdlDefinition = null;
 		WSDLFactory factory = WSDLFactoryImpl.newInstance();

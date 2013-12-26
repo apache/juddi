@@ -15,20 +15,18 @@
 package org.apache.juddi.v3.client.mapping;
 
 import java.lang.management.ManagementFactory;
+import java.net.BindException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
-import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -43,90 +41,168 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
-import org.apache.juddi.v3.client.subscription.SubscriptionCallbackListener;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.Name;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.sub_v3.SubscriptionFilter;
+import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 /**
+ * The UDDIServiceCache maintains a cache of the service bindingTemplates of all service
+ * the lookupService method is called for. 
+ * 
+ * To prevent the cache from going stale it
+ * registers an Subscription with the UDDI server. The subscription matches any update
+ * on any service. When the subscription is matched, the UDDI server will callback to
+ * the UDDIClientSubscriptionListenerService which is a WebService Endpoint brought
+ * up by this cache.
+ * 
+ * The Cache also registers an MBean which allows the 
+ * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class UDDIServiceCache implements UDDIServiceCacheMBean {
 	
-	private Endpoint endpoint = null;
-	private String bindingKey = null;
-	private String subscriptionKey = null;
+	public static String UDDI_ORG_NS                       = "urn:uddi-org:v3_service";
+	public static String UDDI_CLIENT_SUBSCRIPTION_LISTENER = "UDDIClientSubscriptionListenerService";
+	public static QName  SUBSCRIPTION_LISTENER_SERVICE_NAME= new QName(UDDI_ORG_NS, UDDI_CLIENT_SUBSCRIPTION_LISTENER);
+	public static String SUBSCRIPTION_LISTENER_PORT_NAME   = "UDDIClientSubscriptionListenerImplPort";
+	public static String DEFAULT_SUBSCRIPTION_LISTENER_URL = "http://localhost:8080/subscriptionlistener_uddi_client";
+	
 	private Log log = LogFactory.getLog(this.getClass());
+	
 	private UDDIClerk clerk = null;
 	private URLLocalizer urlLocalizer = null;
 	private Properties properties = null;
-	URL serviceUrl = null;
-	private ConcurrentHashMap<String, Topology> serviceLocationMap = new ConcurrentHashMap<String, Topology>();
-	private static List<String> endpoints = new ArrayList<String>();
+	
+	private String subscriptionKey = null;
+	private Endpoint listenerEndpoint = null;
+	private URL listenerServiceUrl = null;
 	private ObjectName mbeanName = null;
 	
-	public UDDIClerk getClerk() {
-		return clerk;
+	
+	private ConcurrentHashMap<String, Topology> serviceLocationMap = new ConcurrentHashMap<String, Topology>();
+	
+	public UDDIServiceCache() {
+		super();
 	}
-
-	public void setClerk(UDDIClerk clerk) {
+	
+	public UDDIServiceCache(UDDIClerk clerk) throws MalformedURLException {
+		super();
 		this.clerk = clerk;
+		this.urlLocalizer = new URLLocalizerDefaultImpl(null);
+		this.properties = clerk.getUDDINode().getProperties();
+	}
+	
+	public UDDIServiceCache(UDDIClerk clerk, URL callbackBaseUrl) {
+		super();
+		this.clerk = clerk;
+		this.urlLocalizer = new URLLocalizerDefaultImpl(callbackBaseUrl);
+        this.properties = clerk.getUDDINode().getProperties();
 	}
 
 	public UDDIServiceCache(UDDIClerk clerk, URLLocalizer urlLocalizer, Properties properties) throws DatatypeConfigurationException, MalformedURLException, RemoteException, ConfigurationException, WSDLException, TransportException, Exception {
 		super();
 		this.clerk = clerk;
 		this.urlLocalizer = urlLocalizer;
-		this.properties = properties;
-		this.subscriptionKey = UDDIKeyConvention.getSubscriptionKey(properties);
-		if (clerk!=null) {
-			mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + clerk.getManagerName() + "-" + clerk.getName());
+		
+		Properties properties2 = clerk.getUDDINode().getProperties();
+		if (properties2!=null) {
+			properties2.putAll(properties);
 		} else {
-			mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + this);
+			properties2 = properties;
 		}
-		getServer().registerMBean(this, mbeanName);
-		init();
-		
+		this.properties = properties2;
 	}
-
-	private void init() throws DatatypeConfigurationException, MalformedURLException, WSDLException, RemoteException, ConfigurationException, TransportException, Exception {
-		
-		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
-		String portName = "UDDIClientSubscriptionListenerImplPort";
-		//Overriding the baseUrl with info obtained from the URLLocalizer.
-		String url = urlLocalizer.rewrite(new URL("http://localhost:8080/subscriptionlistener_" + clerk.getManagerName()));
-		
-		if (!endpoints.contains(url)) {
-			endpoints.add(url);
-			serviceUrl = new URL(url);
-			log.info("Bring up Subscription Listener for manager " + clerk.getManagerName() 
-					+ " with endpoint " + url);
-			bindingKey = UDDIKeyConvention.getBindingKey(properties, serviceQName, portName, serviceUrl);
-                        endpoint = Endpoint.create(new SubscriptionCallbackListener());
-                        
-			//endpoint = Endpoint.create(new UDDIClientSubscriptionListenerImpl(bindingKey,this));
-			endpoint.publish(serviceUrl.toExternalForm());
-			
-			WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-			Definition wsdlDefinition = new ReadWSDL().readWSDL("juddi_client_subscriptionlistener.wsdl");
-			bindingKey = wsdl2UDDI.registerBusinessService(serviceQName, portName, serviceUrl, wsdlDefinition).getBindingKey();
-			
-			registerSubscription();
+	
+	public UDDIClerk getClerk() {
+		return clerk;
+	}
+	
+	public void publishAndRegisterHttpCallbackEndpoint() throws BindException {
+		if (clerk!=null && listenerEndpoint==null) {
+			try {
+				listenerServiceUrl = new URL(urlLocalizer.rewrite(new URL(DEFAULT_SUBSCRIPTION_LISTENER_URL)));
+				WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
+				Definition wsdlDefinition = new ReadWSDL().readWSDL("org/apache/juddi/v3/client/mapping/UDDIClientSubscriptionListener.wsdl");
+				
+				String bindingKey = wsdl2UDDI.registerBusinessService(
+						SUBSCRIPTION_LISTENER_SERVICE_NAME, 
+						SUBSCRIPTION_LISTENER_PORT_NAME, listenerServiceUrl, wsdlDefinition).getBindingKey();
+				UDDISubscriptionListenerPortType subscriptionListener = new UDDIClientSubscriptionListenerImpl(bindingKey, this);
+				log.info("Bringing up a UDDIClientSubscriptionListenerImpl on Endpoint " + listenerServiceUrl.toExternalForm());
+				listenerEndpoint = Endpoint.create(subscriptionListener);
+				listenerEndpoint.publish(listenerServiceUrl.toExternalForm());
+				
+				log.info("Registering a CallbackSubscription to this endpoint using bindingKey " + bindingKey);
+				registerSubscription(bindingKey);
+				
+			} catch (RuntimeException t) {
+				listenerEndpoint = null;
+				if (t.getCause() instanceof BindException) {
+					throw new BindException(t.getCause().getMessage());
+				} else {
+					throw t;
+				}
+			} catch (Exception e) {
+				log.error("Cannot publish or register the CallbackEndpoint " + e.getMessage(),e);
+			}
 		}
 	}
 	
-	public void shutdown() throws RemoteException, ConfigurationException, TransportException {
-		unRegisterSubscription();
-		QName serviceQName = new QName("urn:uddi-org:v3_service", "UDDIClientSubscriptionListenerService");
-		String portName = "UDDIClientSubscriptionListenerImplPort";
-		WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-		wsdl2UDDI.unRegisterBusinessService(serviceQName, portName, serviceUrl);
-		endpoint.stop();
-		endpoints.remove(serviceUrl.toExternalForm());
-		UDDIClientSubscriptionListenerImpl.getServiceCacheMap().remove(bindingKey);
+	public boolean hasListener() {
+		if (listenerEndpoint==null) return false;
+		return listenerEndpoint.isPublished();
+	}
+	
+	public void registerAsMBean() {
+		try {
+			if (clerk!=null) {
+				mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + clerk.getManagerName() + "-" + clerk.getName());
+			} else {
+				mbeanName = new ObjectName("apache.juddi.client:type=UDDIServerCache-" + this);
+			}
+			MBeanServer mbeanServer = getMBeanServer();
+			if (mbeanServer!=null) {
+				mbeanServer.registerMBean(this, mbeanName);
+			} else {
+				mbeanServer=null;
+			}
+		} catch (Exception e) {
+			log.error("Not able to register the UDDIServiceCache MBean " + e.getMessage(),e);
+		}
+	}
+	
+	public void shutdown() {
+		if (subscriptionKey!=null) {
+			clerk.unRegisterSubscription(subscriptionKey);
+		}
+		if (listenerEndpoint!=null) {
+			listenerEndpoint.stop();
+			WSDL2UDDI wsdl2UDDI;
+			try {
+				wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
+				wsdl2UDDI.unRegisterBusinessService(
+						SUBSCRIPTION_LISTENER_SERVICE_NAME, 
+						SUBSCRIPTION_LISTENER_PORT_NAME, listenerServiceUrl);
+			} catch (Exception e) {
+				/* we did our best*/
+				log.debug(e.getMessage(),e);
+			}
+		}
+		if (mbeanName!=null) {
+			try {
+				MBeanServer mbeanServer = getMBeanServer();
+				if (mbeanServer!=null) {
+					mbeanServer.unregisterMBean(mbeanName);
+				}
+			} catch (Exception e) {
+				/* we did our best*/
+				log.debug(e.getMessage(),e);
+			}
+		}
 	}
 	
 	public void removeAll() {
@@ -156,8 +232,9 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
          * Create a subscription for changes in any Service in the Registry
          * @throws DatatypeConfigurationException 
          */
-	public void registerSubscription() throws DatatypeConfigurationException {
+	public void registerSubscription(String bindingKey) throws DatatypeConfigurationException {
 		
+		String subscriptionKey = UDDIKeyConvention.getSubscriptionKey(properties);
 		//Create a subscription for changes in any Service in the Registry
 		FindService findAllServices = new FindService();
 		FindQualifiers qualifiers = new FindQualifiers();
@@ -180,54 +257,14 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
 		subscription.setNotificationInterval(oneMinute);
 		subscription.setSubscriptionKey(subscriptionKey);
 		clerk.register(subscription);
-	}
-	
-	public void unRegisterSubscription() {
-		clerk.unRegisterSubscription(subscriptionKey);
+		this.subscriptionKey = subscriptionKey;
 	}
 
-	@Override
-	public int getServiceCacheSize() {
-		return serviceLocationMap.size();
-	}
-
-	@Override
-	public Set<String> getCacheEntries() {
-		return serviceLocationMap.keySet();
-	}
-
-	@Override
-	public void resetCache() {
-		serviceLocationMap.clear();
+	public Map<String, Topology> getServiceCacheMap() {
+		return serviceLocationMap;
 	}
 	
-	protected void registerMBean() {
-        MBeanServer mbeanServer = null;
-        
-        mbeanServer = getServer();
-        if (mbeanServer == null) {
-            try {
-//                mbeanServer = MBeanServerLocator.locateJBoss();
-            } catch (IllegalStateException ise) {
-                // If we can't find a JBoss MBeanServer, just return
-                // Needed for unit tests
-                return;
-            }            
-        }
-        
-        try {
-        	if (mbeanServer!=null && ! mbeanServer.isRegistered(mbeanName))
-        		mbeanServer.registerMBean(this, mbeanName);
-        } catch (InstanceAlreadyExistsException e) {
-            log.warn("", e);
-        } catch (MBeanRegistrationException e) {
-            log.warn("", e);
-        } catch (NotCompliantMBeanException e) {
-            log.warn("", e);
-        }   
-    }
-	
-	private MBeanServer getServer() {
+	private MBeanServer getMBeanServer() {
         MBeanServer mbserver = null;
         ArrayList<MBeanServer> mbservers = MBeanServerFactory.findMBeanServer(null);
         if (mbservers.size() > 0) {
@@ -240,6 +277,26 @@ public class UDDIServiceCache implements UDDIServiceCacheMBean {
         }
         return mbserver;
     }
+
+	/** Method callable from the mbean */
+	@Override
+	public int getServiceCacheSize() {
+		return serviceLocationMap.size();
+	}
+
+	/** Method callable from the mbean */
+	@Override
+	public Set<String> getCacheEntries() {
+		return serviceLocationMap.keySet();
+	}
+
+	/** Method callable from the mbean */
+	@Override
+	public void resetCache() {
+		serviceLocationMap.clear();
+	}
+	
+	
 	
 	
 }

@@ -14,12 +14,11 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

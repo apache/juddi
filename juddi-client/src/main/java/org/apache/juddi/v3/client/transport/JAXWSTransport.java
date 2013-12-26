@@ -18,8 +18,6 @@ package org.apache.juddi.v3.client.transport;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.ws.BindingProvider;
 
@@ -32,7 +30,6 @@ import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.cryptor.CryptorFactory;
-import org.apache.juddi.v3.client.mapping.WADL2UDDI;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.v3_service.UDDICustodyTransferPortType;
 import org.uddi.v3_service.UDDIInquiryPortType;
@@ -72,119 +69,116 @@ public class JAXWSTransport extends Transport {
 	}
 	
 	public UDDIInquiryPortType getUDDIInquiryService(String endpointURL) throws TransportException {
-
-		if (inquiryService==null) {
-			try {
+		try {
+			if (inquiryService==null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getInquiryUrl();
 				}
 				UDDIService service = new UDDIService();
 				inquiryService = service.getUDDIInquiryPort();
-				Map<String, Object> requestContext = ((BindingProvider) inquiryService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) inquiryService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return inquiryService;
 	}
 	
 	public UDDISecurityPortType getUDDISecurityService(String endpointURL) throws TransportException {
-
-		if (securityService==null) {
-			try {
+		try {
+			if (securityService==null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSecurityUrl();
 				}
 				UDDIService service = new UDDIService();
 				securityService = service.getUDDISecurityPort();
-				Map<String, Object> requestContext = ((BindingProvider) securityService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) securityService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return securityService;
 	}
 	
 	public UDDIPublicationPortType getUDDIPublishService(String endpointURL) throws TransportException {
-
-		if (publishService==null) {
-			try {
+		try {
+			if (publishService==null) {
+			
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getPublishUrl();
 				}
 				UDDIService service = new UDDIService();
 				publishService = service.getUDDIPublicationPort();
-				Map<String, Object> requestContext = ((BindingProvider) publishService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) publishService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return publishService;
 	}
 	
 	public UDDISubscriptionPortType getUDDISubscriptionService(String endpointURL) throws TransportException {
-
-		if (subscriptionService==null) {
-			try {
+		try {
+			if (subscriptionService==null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionUrl();
 				}
 				UDDIService service = new UDDIService();
 				subscriptionService = service.getUDDISubscriptionPort();
-				Map<String, Object> requestContext = ((BindingProvider) subscriptionService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) subscriptionService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return subscriptionService;
 	}
 	
 	public UDDISubscriptionListenerPortType getUDDISubscriptionListenerService(String endpointURL) throws TransportException {
-		if (subscriptionListenerService == null) {
-			try {
+		try {
+			if (subscriptionListenerService == null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getSubscriptionListenerUrl();
 				}
 				UDDIService service = new UDDIService();
 				subscriptionListenerService = service.getUDDISubscriptionListenerPort();
-				Map<String, Object> requestContext = ((BindingProvider) subscriptionListenerService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) subscriptionListenerService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return subscriptionListenerService;
 	}
 	
 	public UDDICustodyTransferPortType getUDDICustodyTransferService(String endpointURL) throws TransportException {
-		if (custodyTransferService == null) {
-			try {
+		try {
+			if (custodyTransferService == null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getCustodyTransferUrl();
 				}
 				UDDIService service = new UDDIService();
 				custodyTransferService = service.getUDDICustodyPort();
-				Map<String, Object> requestContext = ((BindingProvider) custodyTransferService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) custodyTransferService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return custodyTransferService;
 	}
@@ -193,20 +187,20 @@ public class JAXWSTransport extends Transport {
 	 * This is a jUDDI specific API
 	 */
 	public JUDDIApiPortType getJUDDIApiService(String endpointURL) throws TransportException {
-		if (publisherService == null) {
-			try {
+		try {
+			if (publisherService == null) {
 				if (endpointURL==null)  {
 					UDDIClient client = UDDIClientContainer.getUDDIClient(clientName);
 					endpointURL = client.getClientConfig().getUDDINode(nodeName).getJuddiApiUrl();
 				}
 				JUDDIApiService service = new JUDDIApiService();
 				publisherService = (JUDDIApiPortType) service.getPort(JUDDIApiPortType.class);
-				Map<String, Object> requestContext = ((BindingProvider) publisherService).getRequestContext();
-				requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
-				setCredentials(requestContext);
-			} catch (Exception e) {
-				throw new TransportException(e.getMessage(), e);
 			}
+			Map<String, Object> requestContext = ((BindingProvider) publisherService).getRequestContext();
+			requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointURL);
+			setCredentials(requestContext);
+		} catch (Exception e) {
+			throw new TransportException(e.getMessage(), e);
 		}
 		return publisherService;
 	}

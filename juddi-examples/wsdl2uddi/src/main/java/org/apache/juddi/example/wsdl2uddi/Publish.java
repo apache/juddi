@@ -16,7 +16,11 @@
  */
 package org.apache.juddi.example.wsdl2uddi;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
+
+import javax.xml.ws.Endpoint;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.juddi.api_v3.Publisher;
@@ -48,28 +52,35 @@ public class Publish {
 		Name myBusName = new Name();
 		myBusName.setValue("WSDL-Business");
 		myBusEntity.getName().add(myBusName);
-		myBusEntity.setBusinessKey("uddi:uddi.joepublisher.com:business-for-wsdl");
+		myBusEntity.setBusinessKey("uddi:uddi.joepublisher.com:business_WSDL-Business");
 		clerk.register(myBusEntity);
 	}	
 	
-	public void publishWSDL(UDDIClerk clerk) {
+	public void publishWSDL(UDDIClerk clerk) throws MalformedURLException {
 		// Register the wsdls for this clerk, referenced in the wsdl2uddi-uddi.xml
-		clerk.registerWsdls();
+		clerk.registerWsdls(new URL("http://localhost:18080"));
 	}
 
 	public static void main (String args[]) {
 		
+		System.out.println("1. Bring up the hello world endpoint at port 18080");
+		Endpoint helloWorldEndPoint = Endpoint.create(new HelloWorldImpl());
+		helloWorldEndPoint.publish("http://localhost:18080/services/helloworld");
+		
+		System.out.println("2. Programmatically publish the endpoint to UDDI");
 		Publish sp = new Publish();
 		try {
 			uddiClient = new UDDIClient("META-INF/wsdl2uddi-uddi.xml");
 			UDDIClerk clerk = uddiClient.getClerk("joe");
 			
-			//setting up the publisher
+			System.out.println("setting up the publisher");
 			sp.setupJoePublisher(clerk);
-			//publish the business
+			System.out.println("publish the business");
 			sp.publishBusiness(clerk);
-			//and the wsdl
+			System.out.println("and the wsdl");
 			sp.publishWSDL(clerk);
+			
+			System.out.println("waiting for calls into the HelloWorldImpl...");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +98,7 @@ public class Publish {
 		getAuthTokenRoot.setCred("");
 		// Making API call that retrieves the authentication token for the 'root' user.
 		AuthToken rootAuthToken = security.getAuthToken(getAuthTokenRoot);
-		System.out.println ("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
+		System.out.println("root AUTHTOKEN = " + rootAuthToken.getAuthInfo());
 		//Creating joe publisher
 		JUDDIApiPortType juddiApi = uddiClient.getTransport("default").getJUDDIApiService();
 		Publisher p = new Publisher();
@@ -99,7 +110,7 @@ public class Publish {
 		sp.setAuthInfo(rootAuthToken.getAuthInfo());
 		juddiApi.savePublisher(sp);
 		
-		//Joe should have a keyGenerator
+		//Every publisher should have a keyGenerator, Joe has his:
 		TModel keyGenerator = new TModel();
 		keyGenerator.setTModelKey("uddi:uddi.joepublisher.com:keygenerator");
 		Name name = new Name();

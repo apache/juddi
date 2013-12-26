@@ -47,7 +47,7 @@
   <wsdl:service name="HelloWorld">
     <wsdl:documentation>The Hello World Service registered using WSDL2UDDI</wsdl:documentation>
     <wsdl:port binding="tns:HelloWorldSoapBinding" name="HelloWorldImplPort">
-      <soap:address location="http://localhost:8080/uddi-annotations/services/helloworld"/>
+      <soap:address location="http://localhost:8080/services/helloworld"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -149,8 +149,12 @@ public class UDDIClerk implements Serializable {
     public void setManagerName(String managerName) {
         this.managerName = managerName;
     }
-
+    
     public void registerWsdls() {
+    	registerWsdls(null);
+    }
+
+    public void registerWsdls(URL localizerBaseUrl) {
         if (this.getWsdls() != null) {
             Properties properties = new Properties();
             properties.putAll(this.getUDDINode().getProperties());
@@ -166,8 +170,8 @@ public class UDDIClerk implements Serializable {
                     if (wsdl.businessKey != null) {
                         properties.setProperty("businessKey", wsdl.getBusinessKey());
                     }
-
-                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(), properties);
+                    
+                    WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(this, new URLLocalizerDefaultImpl(localizerBaseUrl), properties);
                     wsdl2UDDI.registerBusinessServices(wsdlDefinition);
                 } catch (Exception e) {
                     log.error("Unable to register wsdl " + wsdl.getFileName() + " ." + e.getMessage(), e);

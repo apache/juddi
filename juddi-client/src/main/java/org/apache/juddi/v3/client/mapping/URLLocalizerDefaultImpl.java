@@ -16,15 +16,55 @@
  */
 package org.apache.juddi.v3.client.mapping;
 
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class URLLocalizerDefaultImpl implements URLLocalizer {
 
+	URL baseUrl;
+	
+	public URLLocalizerDefaultImpl() {
+		super();
+	}
+	public URLLocalizerDefaultImpl(URL baseUrl) {
+		super();
+		this.baseUrl = baseUrl;
+	}
+
+	private Log log = LogFactory.getLog(this.getClass());
+	
 	public String rewrite (URL urlIn) {
-		return urlIn.toExternalForm();
+		return rewriteURL(urlIn).toExternalForm();
 	}
 	
 	public String rewriteToWSDLURL (URL urlIn) {
-		return urlIn.toExternalForm() + "?wsdl";
+		URL url = rewriteURL(urlIn);
+		return url.toExternalForm() + "?wsdl";
 	}
+	
+	public URL rewriteURL(URL urlIn) {
+		URL url = null;
+		if (baseUrl!=null && url == null) {
+			try {
+				url = new URL(baseUrl.getProtocol(),
+							baseUrl.getHost(),
+							baseUrl.getPort(),
+							urlIn.getPath());
+			} catch (MalformedURLException e) {
+				log.error(e.getMessage(),e);
+			}
+		} else {
+			url = urlIn;
+		}
+		return url;
+	}
+
+	public void setBaseUrl(URL baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+
 }

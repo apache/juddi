@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
-<uddi>
+<uddi xmlns="urn:juddi-apache-org:v3_client" xsi:schemaLocation="classpath:/xsd/uddi-client.xsd">
     <reloadDelay>5000</reloadDelay>
-    <client name="example-client">
+    <client name="example-client" callbackUrl="http://localhost:8079/subscriptionlistener_uddi_client">
 		<nodes>
 			<node>
 			    <!-- required 'default' node -->
@@ -10,6 +10,8 @@
                 <properties>
                     <property name="serverName" value="localhost"/>
                     <property name="serverPort" value="8080"/>
+                    <property name="keyDomain" value="uddi.joepublisher.com"/>
+                    <property name="businessName" value="WSDL-Business"/>
 					<!-- for UDDI nodes that use HTTP u/p, using the following 
 					<property name="basicAuthUsername" value="root" />
 					<property name="basicAuthPassword" value="password" />
@@ -31,7 +33,7 @@
 		</nodes>
 		<clerks registerOnStartup="false">
            <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher" isPasswordEncrypted="false" cryptoProvider="">
-              <wsdl businessKey="uddi:uddi.joepublisher.com:business-for-wsdl">wsdl/helloworld.wsdl</wsdl>
+              <wsdl businessName="WSDL-Business">wsdl/helloworld.wsdl</wsdl>
            </clerk>
         </clerks>
 	</client>

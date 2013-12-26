@@ -143,7 +143,7 @@ public class WSDL2UDDI {
         this.lang = properties.getProperty(Property.LANG, Property.DEFAULT_LANG);
     }
 
-    public BusinessServices registerBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException {
+    public BusinessServices registerBusinessServices(Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException, MalformedURLException {
 
         BusinessServices businessServices = new BusinessServices();
 
@@ -168,7 +168,7 @@ public class WSDL2UDDI {
     }
 
     @SuppressWarnings("unchecked")
-    public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException {
+    public ServiceRegistrationResponse registerBusinessService(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws RemoteException, ConfigurationException, TransportException, WSDLException, MalformedURLException {
 
         String genericWSDLURL = wsdlDefinition.getDocumentBaseURI();   //TODO maybe point to repository version
         ServiceRegistrationResponse response = new ServiceRegistrationResponse();
@@ -752,9 +752,10 @@ public class WSDL2UDDI {
      * </pre>
      * @param wsdlDefinition must not be null
      * @return a business service
+     * @throws MalformedURLException 
      * @throws IllegalArgumentException if the wsdlDefinition is null
      */
-    public BusinessServices createBusinessServices(Definition wsdlDefinition) {
+    public BusinessServices createBusinessServices(Definition wsdlDefinition) throws MalformedURLException {
         if (wsdlDefinition == null) {
             throw new IllegalArgumentException();
         }
@@ -835,7 +836,7 @@ public class WSDL2UDDI {
         return service;
     }
 
-    protected BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) {
+    protected BindingTemplate createWSDLBinding(QName serviceQName, String portName, URL serviceUrl, Definition wsdlDefinition) throws MalformedURLException {
 
         BindingTemplate bindingTemplate = new BindingTemplate();
         // Set BusinessService Key
@@ -863,15 +864,15 @@ public class WSDL2UDDI {
                     	String location = null;
                         if (element instanceof SOAPAddress) {
                             SOAPAddress address = (SOAPAddress) element;
-                            location = address.getLocationURI();
+                            location = urlLocalizer.rewrite(new URL(address.getLocationURI()));
                         } 
                         else if (element instanceof HTTPAddress) {
                         	HTTPAddress address = (HTTPAddress) element;
-                            location = address.getLocationURI();
+                        	urlLocalizer.rewrite(new URL(location = address.getLocationURI()));
                         }
                         else if (element instanceof SOAP12Address) {
                         	SOAP12Address address = (SOAP12Address) element;
-                            location = address.getLocationURI();
+                            location = urlLocalizer.rewrite(new URL(address.getLocationURI()));
                         }
                         if (location != null ) {
                             try {

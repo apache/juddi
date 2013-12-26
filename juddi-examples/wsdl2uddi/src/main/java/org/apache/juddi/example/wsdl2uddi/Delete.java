@@ -25,7 +25,7 @@ public class Delete {
 	
 	public void deleteBusiness(UDDIClerk clerk) {
 		// Deleting the parent business entity that contains our service.
-		clerk.unRegisterBusiness("uddi:uddi.joepublisher.com:business-for-wsdl");
+		clerk.unRegisterBusiness("uddi:uddi.joepublisher.com:business_wsdl-business");
 	}	
 	
 	public void deleteWSDL(UDDIClerk clerk) {

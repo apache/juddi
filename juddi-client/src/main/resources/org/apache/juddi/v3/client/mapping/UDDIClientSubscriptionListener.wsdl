@@ -834,7 +834,7 @@
  </binding>
  <service name='UDDIClientSubscriptionListenerService'>
   <port binding='tns:UDDI_SubscriptionListener_PortTypeBinding' name='UDDIClientSubscriptionListenerImplPort'>
-   <soap:address location='http://localhost:8080/subscriptionlistener_riftsaw-manager'/>
+   <soap:address location='http://localhost:8080/subscriptionlistener_uddi_client'/>
   </port>
  </service>
 </definitions>

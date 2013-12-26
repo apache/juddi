@@ -23,8 +23,6 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
-import org.uddi.api_v3.BindingTemplate;
-import org.uddi.api_v3.BusinessService;
 
 public class AsyncRegistration implements Runnable {
 
@@ -59,19 +57,17 @@ public class AsyncRegistration implements Runnable {
 			}
 			if (RegistrationType.WSDL.equals(registrationInfo.getRegistrationType())) {
 				WSDL2UDDI wsdl2UDDI = new WSDL2UDDI(clerk, urlLocalizer, properties);
-				BusinessService service = wsdl2UDDI.registerBusinessService(registrationInfo.getServiceQName(), 
+				wsdl2UDDI.registerBusinessService(registrationInfo.getServiceQName(), 
 								   registrationInfo.getPortName(),
 								   registrationInfo.getServiceUrl(),
 								   registrationInfo.getWsdlDefinition()).getBusinessService();
-				serviceLocator.addService(service.getServiceKey());
 				
 			} else if (RegistrationType.BPEL.equals(registrationInfo.getRegistrationType())) {
 				BPEL2UDDI bpel2UDDI = new BPEL2UDDI(clerk, urlLocalizer, properties);
-				BindingTemplate binding = bpel2UDDI.register(registrationInfo.getServiceQName(), 
+				bpel2UDDI.register(registrationInfo.getServiceQName(), 
 								   registrationInfo.getPortName(),
 								   registrationInfo.getServiceUrl(),
 								   registrationInfo.getWsdlDefinition());
-				serviceLocator.addService(binding.getServiceKey());
 			} else {
 				log.error("Registration error, due to unsupported registration type of " + registrationInfo.getRegistrationType());
 			}

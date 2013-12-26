@@ -18,7 +18,6 @@ package org.apache.juddi.example.wsdl2uddi;
 
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
@@ -30,8 +29,10 @@ public class Find {
 			UDDIClient uddiClient = new UDDIClient("META-INF/wsdl2uddi-uddi.xml");
 			UDDIClerk clerk = uddiClient.getClerk("joe");
         	
-        	BusinessEntity businessEntity = clerk.findBusiness("uddi:uddi.joepublisher.com:business-for-wsdl");
+			System.out.println("Do a find business using the businessKey uddi:uddi.joepublisher.com:business_wsdl-business");
+        	BusinessEntity businessEntity = clerk.findBusiness("uddi:uddi.joepublisher.com:business_wsdl-business");
         	//
+        	
         	if (businessEntity!=null) {
 	        	System.out.println("Found business with name " + businessEntity.getName().get(0).getValue());
 	        	System.out.println("Number of services: " + businessEntity.getBusinessServices().getBusinessService().size());
@@ -52,8 +53,7 @@ public class Find {
 	        		}
 	        	}
         	}
-	        		
-        	businessEntity.getBusinessServices();
+	        
         	
         	//TODO JUDDI-610
 			//FindTModel findBindingTModel = WSDL2UDDI.createFindBindingTModelForPortType(portType, namespace);

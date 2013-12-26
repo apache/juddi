@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2011 The Apache Software Foundation.
+ * Copyright 2001-2010 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,21 @@
  * limitations under the License.
  *
  */
-package org.apache.juddi.v3.client.mapping;
+package org.apache.juddi.example.wsdl2uddi;
 
-import java.net.URL;
+import javax.jws.WebService;
 
-public interface URLLocalizer {
+import org.apache.juddi.samples.HelloWorld;
 
-	public String rewrite (URL urlIn);
-	public URL rewriteURL(URL urlIn);
-	public String rewriteToWSDLURL (URL urlIn);
+@WebService(
+		endpointInterface = "org.apache.juddi.samples.HelloWorld",
+        serviceName = "HelloWorld")
+
+public class HelloWorldImpl implements HelloWorld {
+    
+    public String sayHi(String text) {
+        System.out.println("sayHi called");
+        return "Hello " + text;
+    }
+	
 }

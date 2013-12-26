@@ -18,6 +18,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Data structure to store a list of Endpoint References (ERPs). 
+ * Given a certain Policy an EPR is selected from the list.
+ * The Policy implementation can use the Pointer to keep track
+ * of which EPR was used last.
+ * 
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>
  */
 public class Topology implements Serializable{
@@ -27,8 +32,11 @@ public class Topology implements Serializable{
 		this.eprs = eprs;
 	}
 	private static final long serialVersionUID = 3884817160534937195L;
+	/** List of Endpoint References (EPRs) for a certain service Key */
 	private List<String> eprs;
+	/** pointer to the last selected EPR from the list */
 	private int pointer = 0;
+	/** can be set by a policy if for instance local first is important */
 	private Boolean hasLocal = null;
 	
 	

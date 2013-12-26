@@ -331,6 +331,10 @@ public class UDDIClient {
     public String getName() {
         return clientConfig.getClientName();
     }
+    
+    public String getClientCallbackUrl() {
+        return clientConfig.getClientCallbackUrl();
+    }
 
     /**
      * @deprecated, use the getTransport(String nodeName) instead. Returns the

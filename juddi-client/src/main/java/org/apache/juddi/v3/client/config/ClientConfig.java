@@ -53,6 +53,7 @@ public class ClientConfig
 	private Set<XRegistration> xBusinessRegistrations = null;
 	private Set<XRegistration> xServiceBindingRegistrations = null;
 	private String clientName = null;
+	private String clientCallbackUrl = null;
 	private String configurationFile=null;
 	
 	/**
@@ -136,6 +137,7 @@ public class ClientConfig
 	private Map<String,UDDIClerk> readClerkConfig(Configuration config, Map<String,UDDINode> uddiNodes) 
 	throws ConfigurationException {
 		clientName = config.getString("client[@name]");
+		clientCallbackUrl = config.getString("client[@callbackUrl]");
 		Map<String,UDDIClerk> clerks = new HashMap<String,UDDIClerk>();
 		if (config.containsKey("client.clerks.clerk[@name]")) {
 			String[] names = config.getStringArray("client.clerks.clerk[@name]");
@@ -333,8 +335,12 @@ public class ClientConfig
         }
 
         public String getClientName() {
-                    return clientName;
-            }
+            return clientName;
+        }
+        
+        public String getClientCallbackUrl() {
+        	return clientCallbackUrl;
+        }
 
         public String getConfigurationFile() {
             return configurationFile;
