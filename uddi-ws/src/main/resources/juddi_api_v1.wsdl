@@ -86,17 +86,6 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:bindingKey"/>
     </xs:sequence>
   </xs:complexType>
-<xs:complexType name="get_subscriptions">
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="ns1:authInfo"/>
-    </xs:sequence>
-  </xs:complexType>
-<xs:complexType name="delete_subscription">
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="ns1:authInfo"/>
-      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
 <xs:complexType name="save_subscription">
     <xs:sequence>
       <xs:element minOccurs="0" ref="ns1:authInfo"/>
@@ -106,6 +95,17 @@
 <xs:complexType name="subscriptions">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="subscription" nillable="true" type="tns:subscription"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="get_subscriptions">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="delete_subscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
+      <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
@@ -849,21 +849,28 @@
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:api_v3" xmlns:ns3="urn:uddi-org:sub_v3" xmlns:ns2="urn:uddi-org:api_v3" xmlns:ns1="http://www.w3.org/2000/09/xmldsig#" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:api_v3">
-  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:api_v3" xmlns:ns3="urn:uddi-org:sub_v3" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" xmlns:ns1="urn:uddi-org:api_v3" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:api_v3">
   <xs:import namespace="urn:uddi-org:api_v3"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"/>
   <xs:import namespace="urn:uddi-org:sub_v3"/>
+  <xs:element name="clerkDetail" type="tns:clerkDetail"/>
+  <xs:element name="clientSubscriptionInfoDetail" type="tns:clientSubscriptionInfoDetail"/>
+  <xs:element name="delete_clientSubscriptionInfo" type="tns:delete_clientSubscriptionInfo"/>
   <xs:element name="delete_publisher" type="tns:delete_publisher"/>
   <xs:element name="get_allPublisherDetail" type="tns:get_allPublisherDetail"/>
-  <xs:element name="get_publisherDetail" type="tns:get_publisher_detail"/>
+  <xs:element name="get_publisherDetail" type="tns:get_publisherDetail"/>
+  <xs:element name="nodeDetail" type="tns:nodeDetail"/>
   <xs:element name="publisher" type="tns:publisher"/>
   <xs:element name="publisherDetail" type="tns:publisherDetail"/>
+  <xs:element name="save_clerk" type="tns:save_clerk"/>
+  <xs:element name="save_clientSubscriptionInfo" type="tns:save_clientSubscriptionInfo"/>
+  <xs:element name="save_node" type="tns:save_nodeInfo"/>
   <xs:element name="save_publisher" type="tns:save_publisher"/>
   <xs:element name="sync_subscription" type="tns:syncSubscription"/>
   <xs:element name="sync_subscriptionDetail" type="tns:syncSubscriptionDetail"/>
-  <xs:complexType name="get_publisher_detail">
+  <xs:complexType name="get_publisherDetail">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -883,19 +890,19 @@
       <xs:element minOccurs="0" name="maxBusinesses" type="xs:int"/>
       <xs:element minOccurs="0" name="maxServicePerBusiness" type="xs:int"/>
       <xs:element minOccurs="0" name="maxTModels" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Signature"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns2:Signature"/>
     </xs:sequence>
     <xs:attribute name="authorizedName" type="xs:string" use="required"/>
   </xs:complexType>
   <xs:complexType name="delete_clientSubscriptionInfo">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="subscriptionKey" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="save_clerkInfo">
+  <xs:complexType name="save_clerk">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="clerk" type="tns:clerk"/>
     </xs:sequence>
   </xs:complexType>
@@ -918,7 +925,7 @@
       <xs:element minOccurs="0" name="securityUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="subscriptionUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="subscriptionListenerUrl" type="xs:string"/>
-	  <xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
+      <xs:element minOccurs="0" name="replicationUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="juddiApiUrl" type="xs:string"/>
       <xs:element minOccurs="0" name="proxyTransport" type="xs:string"/>
       <xs:element minOccurs="0" name="factoryInitial" type="xs:string"/>
@@ -933,24 +940,24 @@
   </xs:complexType>
   <xs:complexType name="get_allPublisherDetail">
     <xs:sequence>
-      <xs:element minOccurs="0" ref="ns2:authInfo"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="delete_publisher">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="publisherId" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="save_publisher">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="publisher" type="tns:publisher"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="save_nodeInfo">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="node" type="tns:node"/>
     </xs:sequence>
   </xs:complexType>
@@ -961,7 +968,7 @@
   </xs:complexType>
   <xs:complexType name="save_clientSubscriptionInfo">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" name="clientSubscriptionInfo" type="tns:clientSubscriptionInfo"/>
     </xs:sequence>
   </xs:complexType>
@@ -980,7 +987,7 @@
   </xs:complexType>
   <xs:complexType name="syncSubscription">
     <xs:sequence>
-      <xs:element minOccurs="0" name="authInfo" type="xs:string"/>
+      <xs:element minOccurs="0" ref="ns1:authInfo"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="list" nillable="true" type="ns3:get_subscriptionResults"/>
     </xs:sequence>
   </xs:complexType>
@@ -990,11 +997,12 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="delete_ClientSubscriptionInfo" nillable="true" type="tns:delete_clientSubscriptionInfo"/>
-  <xs:element name="save_Clerk" nillable="true" type="tns:save_clerkInfo"/>
+  <xs:element name="save_Clerk" nillable="true" type="tns:save_clerk"/>
   <xs:element name="save_Node" nillable="true" type="tns:save_nodeInfo"/>
-  <xs:element name="adminDelete_tmodel" nillable="true" type="ns2:delete_tModel"/>
+  <xs:element name="adminDelete_tmodel" nillable="true" type="ns1:delete_tModel"/>
   <xs:element name="save_ClientSubscriptionInfo" nillable="true" type="tns:save_clientSubscriptionInfo"/>
   <xs:element name="invoke_SyncSubscription" nillable="true" type="tns:syncSubscription"/>
+  <xs:element name="syncSubcriptionDetail" nillable="true" type="tns:syncSubscriptionDetail"/>
 </xs:schema>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.w3.org/XML/1998/namespace" version="1.0">
 <xs:attribute name="lang" type="xs:string"/>
@@ -1047,35 +1055,13 @@
     </xs:sequence>
     <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
   </xs:complexType>
-<xs:complexType name="ReferenceType">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Transforms" type="tns:TransformsType"/>
-      <xs:element name="DigestMethod" type="tns:DigestMethodType"/>
-      <xs:element name="DigestValue" type="xs:base64Binary"/>
-    </xs:sequence>
-    <xs:attribute name="Id" type="xs:ID"/>
-    <xs:attribute name="URI" type="xs:anyURI"/>
-    <xs:attribute name="Type" type="xs:anyURI"/>
-  </xs:complexType>
-<xs:complexType name="TransformsType">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" name="Transform" type="tns:TransformType"/>
-    </xs:sequence>
-  </xs:complexType>
-<xs:complexType mixed="true" name="TransformType">
-    <xs:sequence>
-      <xs:choice maxOccurs="unbounded" minOccurs="0">
-        <xs:element name="XPath" type="xs:string"/>
-        <xs:any namespace="##other" processContents="lax"/>
-      </xs:choice>
-    </xs:sequence>
-    <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
-  </xs:complexType>
-<xs:complexType mixed="true" name="DigestMethodType">
+<xs:complexType mixed="true" name="ObjectType">
     <xs:sequence>
       <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
     </xs:sequence>
-    <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
+    <xs:attribute name="Id" type="xs:ID"/>
+    <xs:attribute name="MimeType" type="xs:string"/>
+    <xs:attribute name="Encoding" type="xs:anyURI"/>
   </xs:complexType>
 <xs:complexType mixed="true" name="KeyValueType">
     <xs:sequence>
@@ -1092,6 +1078,36 @@
         <xs:element name="HMACOutputLength" type="xs:integer"/>
         <xs:any namespace="##other" processContents="lax"/>
       </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+<xs:complexType name="TransformsType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Transform" type="tns:TransformType"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType mixed="true" name="TransformType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="XPath" type="xs:string"/>
+        <xs:any namespace="##other" processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+<xs:complexType name="ReferenceType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Transforms" type="tns:TransformsType"/>
+      <xs:element name="DigestMethod" type="tns:DigestMethodType"/>
+      <xs:element name="DigestValue" type="xs:base64Binary"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:ID"/>
+    <xs:attribute name="URI" type="xs:anyURI"/>
+    <xs:attribute name="Type" type="xs:anyURI"/>
+  </xs:complexType>
+<xs:complexType mixed="true" name="DigestMethodType">
+    <xs:sequence>
+      <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
     </xs:sequence>
     <xs:attribute name="Algorithm" type="xs:anyURI" use="required"/>
   </xs:complexType>
@@ -1136,14 +1152,6 @@
       <xs:element maxOccurs="unbounded" name="Reference" type="tns:ReferenceType"/>
     </xs:sequence>
     <xs:attribute name="Id" type="xs:ID"/>
-  </xs:complexType>
-<xs:complexType mixed="true" name="ObjectType">
-    <xs:sequence>
-      <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
-    </xs:sequence>
-    <xs:attribute name="Id" type="xs:ID"/>
-    <xs:attribute name="MimeType" type="xs:string"/>
-    <xs:attribute name="Encoding" type="xs:anyURI"/>
   </xs:complexType>
 <xs:complexType name="RSAKeyValueType">
     <xs:sequence>
@@ -1204,25 +1212,17 @@
     </xs:simpleContent>
   </xs:complexType>
 </xs:schema>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:ns0="urn:juddi-apache-org:api_v3" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:juddi-apache-org:v3_service">
-  <xsd:import namespace="urn:juddi-apache-org:api_v3"/>
-  <xsd:element name="save_ClerkResponse" nillable="true" type="ns0:clerkDetail"/>
-  <xsd:element name="save_publisherResponse" nillable="true" type="ns0:publisherDetail"/>
-  <xsd:element name="save_NodeResponse" nillable="true" type="ns0:nodeDetail"/>
-  <xsd:element name="save_ClientSubscriptionInfoResponse" nillable="true" type="ns0:clientSubscriptionInfoDetail"/>
-  <xsd:element name="invoke_SyncSubscriptionResponse" nillable="true" type="ns0:syncSubscriptionDetail"/>
-</xsd:schema>
   </wsdl:types>
   <wsdl:message name="get_allPublisherDetail">
     <wsdl:part element="ns1:get_allPublisherDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="save_ClientSubscriptionInfoResponse">
-    <wsdl:part element="tns:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse">
+    <wsdl:part element="ns1:clientSubscriptionInfoDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="save_NodeResponse">
-    <wsdl:part element="tns:save_NodeResponse" name="save_NodeResponse">
+    <wsdl:part element="ns1:nodeDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="get_publisherDetail">
@@ -1234,7 +1234,7 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="save_ClerkResponse">
-    <wsdl:part element="tns:save_ClerkResponse" name="save_ClerkResponse">
+    <wsdl:part element="ns1:clerkDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="save_Clerk">
@@ -1262,11 +1262,11 @@
   <wsdl:message name="delete_publisherResponse">
   </wsdl:message>
   <wsdl:message name="save_publisherResponse">
-    <wsdl:part element="tns:save_publisherResponse" name="save_publisherResponse">
+    <wsdl:part element="ns1:publisherDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="invoke_SyncSubscriptionResponse">
-    <wsdl:part element="tns:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse">
+    <wsdl:part element="ns1:syncSubcriptionDetail" name="body">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="invoke_SyncSubscription">
@@ -1444,7 +1444,7 @@
   </wsdl:binding>
   <wsdl:service name="JUDDIApiService">
     <wsdl:port binding="tns:JUDDIApiServiceSoapBinding" name="JUDDIApiImplPort">
-      <soap:address location="http://uddi-jbossoverlord.rhcloud.com/services/juddi-api"/>
+      <soap:address location="http://localhost:8080/juddiv3/services/juddi-api"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
