@@ -1,4 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="urn:juddi-apache-org:api_v3" name="JUDDIApiService" targetNamespace="urn:juddi-apache-org:v3_service">
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:juddi-apache-org:v3_service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="urn:juddi-apache-org:api_v3" name="JUDDIApiService" targetNamespace="urn:juddi-apache-org:v3_service"
+xmlns:uddiport="urn:uddi-org:api_v3_portType"
+>
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:uddi-org:sub_v3" xmlns:ns1="urn:uddi-org:api_v3" elementFormDefault="qualified" targetNamespace="urn:uddi-org:sub_v3" version="1.0">
 <xs:import namespace="urn:uddi-org:api_v3"/>
@@ -966,6 +968,7 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="node" nillable="true" type="tns:node"/>
     </xs:sequence>
   </xs:complexType>
+ 
   <xs:complexType name="save_clientSubscriptionInfo">
     <xs:sequence>
       <xs:element minOccurs="0" ref="ns1:authInfo"/>
@@ -1292,61 +1295,72 @@
       <wsdl:input message="tns:get_publisherDetail" name="get_publisherDetail">
     </wsdl:input>
       <wsdl:output message="tns:get_publisherDetailResponse" name="get_publisherDetailResponse">
+
     </wsdl:output>
+		<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="delete_ClientSubscriptionInfo">
       <wsdl:input message="tns:delete_ClientSubscriptionInfo" name="delete_ClientSubscriptionInfo">
     </wsdl:input>
       <wsdl:output message="tns:delete_ClientSubscriptionInfoResponse" name="delete_ClientSubscriptionInfoResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="save_Clerk">
       <wsdl:input message="tns:save_Clerk" name="save_Clerk">
     </wsdl:input>
       <wsdl:output message="tns:save_ClerkResponse" name="save_ClerkResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="get_allPublisherDetail">
       <wsdl:input message="tns:get_allPublisherDetail" name="get_allPublisherDetail">
     </wsdl:input>
       <wsdl:output message="tns:get_allPublisherDetailResponse" name="get_allPublisherDetailResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="delete_publisher">
       <wsdl:input message="tns:delete_publisher" name="delete_publisher">
     </wsdl:input>
       <wsdl:output message="tns:delete_publisherResponse" name="delete_publisherResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="save_publisher">
       <wsdl:input message="tns:save_publisher" name="save_publisher">
     </wsdl:input>
       <wsdl:output message="tns:save_publisherResponse" name="save_publisherResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="save_Node">
       <wsdl:input message="tns:save_Node" name="save_Node">
     </wsdl:input>
       <wsdl:output message="tns:save_NodeResponse" name="save_NodeResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="adminDelete_tmodel">
       <wsdl:input message="tns:adminDelete_tmodel" name="adminDelete_tmodel">
     </wsdl:input>
       <wsdl:output message="tns:adminDelete_tmodelResponse" name="adminDelete_tmodelResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="save_ClientSubscriptionInfo">
       <wsdl:input message="tns:save_ClientSubscriptionInfo" name="save_ClientSubscriptionInfo">
     </wsdl:input>
       <wsdl:output message="tns:save_ClientSubscriptionInfoResponse" name="save_ClientSubscriptionInfoResponse">
     </wsdl:output>
+	<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
     <wsdl:operation name="invoke_SyncSubscription">
       <wsdl:input message="tns:invoke_SyncSubscription" name="invoke_SyncSubscription">
     </wsdl:input>
       <wsdl:output message="tns:invoke_SyncSubscriptionResponse" name="invoke_SyncSubscriptionResponse">
     </wsdl:output>
+		<wsdl:fault name="error" message="uddiport:dispositionReportFaultMessage"/>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="JUDDIApiServiceSoapBinding" type="tns:JUDDI_Api_PortType">
@@ -1359,6 +1373,7 @@
       <wsdl:output name="get_publisherDetailResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="delete_ClientSubscriptionInfo">
       <soap:operation soapAction="delete_ClientSubscriptionInfo" style="document"/>
@@ -1368,6 +1383,7 @@
       <wsdl:output name="delete_ClientSubscriptionInfoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="get_allPublisherDetail">
       <soap:operation soapAction="get_allPublisherDetail" style="document"/>
@@ -1377,6 +1393,7 @@
       <wsdl:output name="get_allPublisherDetailResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="save_Clerk">
       <soap:operation soapAction="save_Clerk" style="document"/>
@@ -1386,6 +1403,7 @@
       <wsdl:output name="save_ClerkResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="delete_publisher">
       <soap:operation soapAction="delete_publisher" style="document"/>
@@ -1395,6 +1413,7 @@
       <wsdl:output name="delete_publisherResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="save_Node">
       <soap:operation soapAction="save_Node" style="document"/>
@@ -1404,6 +1423,7 @@
       <wsdl:output name="save_NodeResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="save_publisher">
       <soap:operation soapAction="save_publisher" style="document"/>
@@ -1413,6 +1433,7 @@
       <wsdl:output name="save_publisherResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="adminDelete_tmodel">
       <soap:operation soapAction="adminDelete_tmodel" style="document"/>
@@ -1422,6 +1443,7 @@
       <wsdl:output name="adminDelete_tmodelResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="save_ClientSubscriptionInfo">
       <soap:operation soapAction="save_ClientSubscriptionInfo" style="document"/>
@@ -1431,6 +1453,7 @@
       <wsdl:output name="save_ClientSubscriptionInfoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="invoke_SyncSubscription">
       <soap:operation soapAction="invoke_SyncSubscription" style="document"/>
@@ -1440,9 +1463,11 @@
       <wsdl:output name="invoke_SyncSubscriptionResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+<wsdl:fault name="error"><soap:fault name="error" use="literal"/></wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="JUDDIApiService">
+  <wsdl:documentation>This service implements the jUDDI API service</wsdl:documentation> 
     <wsdl:port binding="tns:JUDDIApiServiceSoapBinding" name="JUDDIApiImplPort">
       <soap:address location="http://localhost:8080/juddiv3/services/juddi-api"/>
     </wsdl:port>
