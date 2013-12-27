@@ -37,24 +37,12 @@ public class HelloWorld_Service
         super(__getWsdlLocation(), HELLOWORLD_QNAME);
     }
 
-    public HelloWorld_Service(WebServiceFeature... features) {
-        super(__getWsdlLocation(), HELLOWORLD_QNAME, features);
-    }
-
     public HelloWorld_Service(URL wsdlLocation) {
         super(wsdlLocation, HELLOWORLD_QNAME);
     }
 
-    public HelloWorld_Service(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, HELLOWORLD_QNAME, features);
-    }
-
     public HelloWorld_Service(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
-    }
-
-    public HelloWorld_Service(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
     }
 
     /**
