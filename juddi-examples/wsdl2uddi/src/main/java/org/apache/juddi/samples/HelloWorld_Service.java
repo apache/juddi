@@ -7,7 +7,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebEndpoint;
 import javax.xml.ws.WebServiceClient;
-import javax.xml.ws.WebServiceFeature;
 
 import org.apache.juddi.v3.client.ClassUtil;
 
@@ -53,18 +52,6 @@ public class HelloWorld_Service
     @WebEndpoint(name = "HelloWorldImplPort")
     public HelloWorld getHelloWorldImplPort() {
         return super.getPort(new QName("http://samples.juddi.apache.org/", "HelloWorldImplPort"), HelloWorld.class);
-    }
-
-    /**
-     * 
-     * @param features
-     *     A list of {@link javax.xml.ws.WebServiceFeature} to configure on the proxy.  Supported features not in the <code>features</code> parameter will have their default values.
-     * @return
-     *     returns HelloWorld
-     */
-    @WebEndpoint(name = "HelloWorldImplPort")
-    public HelloWorld getHelloWorldImplPort(WebServiceFeature... features) {
-        return super.getPort(new QName("http://samples.juddi.apache.org/", "HelloWorldImplPort"), HelloWorld.class, features);
     }
 
     private static URL __getWsdlLocation() {
