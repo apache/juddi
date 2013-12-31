@@ -24,6 +24,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -68,4 +69,23 @@ public class KeyInfo implements java.io.Serializable {
     public void setXmlID(String xmlID) {
         this.xmlID = xmlID;
     }
+    
+    private CommunicationGraph comgraph;
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY,targetEntity = CommunicationGraph.class)
+    public CommunicationGraph getCommunicationGraph(){
+            return this.comgraph;
+    }
+    
+    public void setCommunicationGraph(CommunicationGraph v){
+            this.comgraph=v;
+    }
+    
+   /*  private KeyInfo ki;
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY, targetEntity = KeyInfo.class)
+    public KeyInfo getKeyInfo(){
+            return this.ki;
+    }
+    public void setKeyInfo(KeyInfo value){
+            this.ki=value;
+    }*/
 }

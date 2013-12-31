@@ -16,28 +16,31 @@
  */
 package org.apache.juddi.replication;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.xml.ws.BindingProvider;
 
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.juddi.api.impl.ServiceCounterLifecycleResource;
-import org.apache.juddi.api.impl.UDDIReplicationImpl;
-import org.apache.juddi.api.impl.UDDIServiceCounter;
+import org.apache.juddi.api_v3.Node;
 import org.apache.juddi.config.AppConfig;
+import org.apache.juddi.config.PersistenceManager;
 import org.apache.juddi.config.Property;
+import org.apache.juddi.mapping.MappingModelToApi;
+import org.apache.juddi.model.ReplicationConfiguration;
+
 import org.apache.juddi.v3.client.UDDIService;
 import org.uddi.repl_v3.ChangeRecordIDType;
+import org.uddi.repl_v3.CommunicationGraph;
 import org.uddi.repl_v3.HighWaterMarkVectorType;
 import org.uddi.repl_v3.NotifyChangeRecordsAvailable;
 import org.uddi.v3_service.UDDIReplicationPortType;
@@ -54,14 +57,6 @@ public class ReplicationNotifier extends TimerTask {
         private long startBuffer = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_START_BUFFER, 20000l); // 20s startup delay default 
         private long interval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_INTERVAL, 300000l); //5 min default
         private long acceptableLagTime = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_ACCEPTABLE_LAGTIME, 1000l); //1000 milliseconds
-        private int maxTries = AppConfig.getConfiguration().getInt(Property.JUDDI_NOTIFICATION_MAX_TRIES, 3);
-        private long badListResetInterval = AppConfig.getConfiguration().getLong(Property.JUDDI_NOTIFICATION_LIST_RESET_INTERVAL, 1000l * 3600); //one hour
-        private Boolean alwaysNotify = false;
-        private Date desiredDate = null;
-        private int lastUpdateCounter;
-        private UDDIServiceCounter serviceCounter = ServiceCounterLifecycleResource.getServiceCounter(UDDIReplicationImpl.class);
-        private static Map<String, Integer> badNotifications = new ConcurrentHashMap<String, Integer>();
-        private static Date lastBadNotificationReset = new Date();
 
         /**
          * default constructor
@@ -91,36 +86,109 @@ public class ReplicationNotifier extends TimerTask {
         static Queue queue;
 
         public synchronized void run() {
-                //TODO stuff
-                log.info("Replication thread trigger");
-                if (queue==null)
+                log.debug("Replication thread triggered");
+                if (queue == null) {
                         queue = new ConcurrentLinkedQueue();
+                }
                 while (!queue.isEmpty()) {
-                        log.info("Notifying nodes of change records");
+                        log.info("Notifying nodes of change records " + queue.size());
+                        //TODO identify chnage set format
                         Object j = queue.poll();
-                        List<String> endpoints = new ArrayList<String>(); //TODO getReplicationEndpoints
-                        for (int i = 0; i < endpoints.size(); i++) {
+                        org.uddi.repl_v3.ReplicationConfiguration repcfg = FetchEdges();
+                        if (repcfg == null) {
+                                log.debug("No replication configuration is defined!");
+                                queue.clear();
+                                break;
+                        }
+                        Iterator<CommunicationGraph.Edge> it = repcfg.getCommunicationGraph().getEdge().iterator();
+
+                        while (it.hasNext()) {
+
+                                //for (int i = 0; i < endpoints.size(); i++) {
                                 UDDIReplicationPortType x = new UDDIService().getUDDIReplicationPort();
-                                ((BindingProvider)x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoints.get(i));
-                                NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
-                                String node="UNKNOWN";
-                                try {
-                                        node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
-                                } catch (ConfigurationException ex) {
-                                        log.fatal(ex);
-                                }
-                                req.setNotifyingNode(node);
-                                HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
-                                String nextWatermark = ""; //TODO get current watermark + 1 toString()
-                                //TODO save watermark
-                                highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, 1L));
-                                req.setChangesAvailable(highWaterMarkVectorType);
-                                try {
-                                        x.notifyChangeRecordsAvailable(req);
-                                } catch (Exception ex) {
-                                        log.warn("Unable to send change notification to ");
+                                CommunicationGraph.Edge next = it.next();
+                                next.getMessageReceiver(); //Node ID
+                                Node destinationNode = getNode(next.getMessageSender());
+                                if (destinationNode == null) {
+                                        log.warn(next.getMessageSender() + " node was not found, cannot deliver replication messages");
+                                } else {
+                                        ((BindingProvider) x).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, destinationNode.getReplicationUrl());
+                                        NotifyChangeRecordsAvailable req = new NotifyChangeRecordsAvailable();
+                                        String node = "UNKNOWN";
+                                        try {
+                                                node = AppConfig.getConfiguration().getString(Property.JUDDI_NODE_ID);
+                                        } catch (ConfigurationException ex) {
+                                                log.fatal(ex);
+                                        }
+                                        req.setNotifyingNode(node);
+                                        HighWaterMarkVectorType highWaterMarkVectorType = new HighWaterMarkVectorType();
+                                        String nextWatermark = ""; //TODO get current watermark + 1 toString()
+                                        //TODO save watermark along with change set
+
+                                        highWaterMarkVectorType.getHighWaterMark().add(new ChangeRecordIDType(node, 1L));
+                                        req.setChangesAvailable(highWaterMarkVectorType);
+                                        try {
+                                                x.notifyChangeRecordsAvailable(req);
+                                        } catch (Exception ex) {
+                                                log.warn("Unable to send change notification to " + next.getMessageSender(), ex);
+                                        }
                                 }
                         }
                 }
+        }
+
+        private org.uddi.repl_v3.ReplicationConfiguration FetchEdges() {
+
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = null;
+                org.uddi.repl_v3.ReplicationConfiguration item = new org.uddi.repl_v3.ReplicationConfiguration();
+                try {
+                        tx = em.getTransaction();
+                        tx.begin();
+                        Query q = em.createQuery("SELECT item FROM ReplicationConfiguration item");
+                        q.setMaxResults(1);
+                        List<ReplicationConfiguration> results = (List<ReplicationConfiguration>) q.getResultList();
+                        //   ReplicationConfiguration find = em.find(ReplicationConfiguration.class, null);
+                        if (results != null && !results.isEmpty()) {
+                                MappingModelToApi.mapReplicationConfiguration(results.get(0), item);
+                        } else {
+                                item = null;
+                        }
+                        tx.commit();
+                        return item;
+                } catch (Exception ex) {
+                        log.error("error", ex);
+                        if (tx != null && tx.isActive()) {
+                                tx.rollback();
+                        }
+                } finally {
+                        em.close();
+                }
+                return null;
+        }
+
+        private Node getNode(String messageSender) {
+                EntityManager em = PersistenceManager.getEntityManager();
+                EntityTransaction tx = null;
+                org.uddi.repl_v3.ReplicationConfiguration item = new org.uddi.repl_v3.ReplicationConfiguration();
+                try {
+                        tx = em.getTransaction();
+                        tx.begin();
+                        Node api = new Node();
+                        org.apache.juddi.model.Node find = em.find(org.apache.juddi.model.Node.class, messageSender);
+                        if (find != null) {
+                                MappingModelToApi.mapNode(find, api);
+                        }
+                        tx.commit();
+                        return api;
+                } catch (Exception ex) {
+                        log.error("error", ex);
+                        if (tx != null && tx.isActive()) {
+                                tx.rollback();
+                        }
+                } finally {
+                        em.close();
+                }
+                return null;
         }
 }

@@ -120,8 +120,6 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                 } catch (ConfigurationException ex) {
                         log.fatal("Unable to load configuration!", ex);
                 }
-                DispositionReport f = new DispositionReport();
-                f.getResult().add(new Result());
                 throw new FatalErrorException(new ErrorMessage("errors.configuration.Retrieval"));
         }
 
@@ -136,6 +134,8 @@ public class UDDIReplicationImpl extends AuthenticatedService implements UDDIRep
                         QueryStatus.SUCCESS, procTime);
 
                 //TODO fetch all records that have changed since changesAlreadySeen
+                ChangeRecord r = new ChangeRecord();
+                
                 ValidateReplication.unsupportedAPICall();
                 return null;
         }

@@ -46,6 +46,7 @@ public class Signature implements java.io.Serializable {
     private BusinessService businessService;
     private Publisher publisher;
     private BindingTemplate bindingTemplate;
+    private ReplicationConfiguration replConfig;
     private Tmodel tmodel;
     private String xmlID;
 
@@ -68,6 +69,18 @@ public class Signature implements java.io.Serializable {
     public void setBindingTemplate(BindingTemplate bindingTemplate) {
         this.bindingTemplate = bindingTemplate;
     }
+    
+    
+     @ManyToOne
+    @JoinColumn(name = "repl_config_key", nullable = true)
+    public ReplicationConfiguration getReplicationConfiguration() {
+        return replConfig;
+    }
+
+    public void setReplicationConfiguration(ReplicationConfiguration bindingTemplate) {
+        this.replConfig = bindingTemplate;
+    }
+    
 
     @ManyToOne
     @JoinColumn(name = "tmodel_key", nullable = true)

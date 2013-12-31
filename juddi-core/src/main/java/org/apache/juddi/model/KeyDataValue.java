@@ -142,6 +142,9 @@ public class KeyDataValue implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "KeyDataValue{" + "id=" + id + ", keyDataType=" + keyDataType + ", keyDataName=" + keyDataName + ", keyDataValueBytes=" + keyDataValueBytes + ", keyDataValueString=" + keyDataValueString + ", keyDataValueList=" + keyDataValueList + '}';
+        return "KeyDataValue{" + "id=" +getId() + ", keyDataType=" +getKeyDataType()  +
+                ", keyDataName=" + getKeyDataName() + ", keyDataValueBytes=" + 
+                getKeyDataValueBytes() + ", keyDataValueString=" + getKeyDataValueString() 
+                + ", keyDataValueList=" + getKeyDataValueList() + '}';
     }
 }
