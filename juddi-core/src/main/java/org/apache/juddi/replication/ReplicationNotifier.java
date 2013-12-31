@@ -81,6 +81,9 @@ public class ReplicationNotifier extends TimerTask {
 
         //ReplicationNotifier.Enqueue(this);
         public synchronized static void Enqueue(Object change) {
+                if (queue == null) {
+                        queue = new ConcurrentLinkedQueue();
+                }
                 queue.add(change);
         }
         static Queue queue;
