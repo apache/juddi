@@ -53,6 +53,7 @@ public class App {
         options.addOption("myItemsOnly", false, "Export option, Only export items owned by yourself");
         options.addOption("preserveOwnership", false, "Im/Export option, saves owership data to the 'mappings' file");
         options.addOption("credFile", true, "Import option with -preserveOwnership, this is a properties file mapping with user=pass");
+        options.addOption("stripSignatures", false, "Im/Export option, removes digital signatures from all signed items, default is false");
 
 
         // create the parser
@@ -71,6 +72,7 @@ public class App {
                 return;
             }
             String config = line.getOptionValue("config", "uddi.xml");
+            boolean stripSig = line.hasOption("stripSignatures");
             String node = line.getOptionValue("node", "default");
 
             String pass = line.getOptionValue("pass", null);
@@ -90,7 +92,7 @@ public class App {
             if (line.hasOption("export")) //CommandLine cmd = parser.parse(options, args);
             {
                 System.out.println("Exporting...");
-                new Export().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, myItemsOnly, mappings, preserveOwnership, credFile);
+                new Export().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, myItemsOnly, mappings, preserveOwnership, credFile,stripSig);
                 System.out.println();
                 if (preserveOwnership) {
                     System.out.println("Next step(s), Edit the " + credFile + " and make any adjustments that are necessary.");
@@ -101,7 +103,7 @@ public class App {
             if (line.hasOption("import")) //CommandLine cmd = parser.parse(options, args);
             {
                 System.out.println("Importing...");
-                new Import().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, preserveOwnership, mappings, credFile);
+                new Import().Execute(config, node, user, pass, tmodel, business, juddi, safe, publishers, preserveOwnership, mappings, credFile,stripSig);
             }
 
 
