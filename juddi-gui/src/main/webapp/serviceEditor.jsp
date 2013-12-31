@@ -91,7 +91,7 @@
 
                 <i class="icon-lock icon-large"></i>
 
-                <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b>-
+                <b><%=ResourceLoader.GetResource(session, "pages.businesskey")%></b> -
                 <%=ResourceLoader.GetResource(session, "pages.businesskey.description")%>
                 <a href="javascript:ShowKeyHelp();"><i class="icon-question-sign icon-large"></i> <%=ResourceLoader.GetResource(session, "navbar.help")%></a>
                 <br>
