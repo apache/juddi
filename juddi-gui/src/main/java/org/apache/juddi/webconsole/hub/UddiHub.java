@@ -207,7 +207,7 @@ public class UddiHub implements Serializable {
     private void EnsureConfig() {
         if (clientConfig == null) {
             try {
-                UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+                UDDIClient client = new UDDIClient();
                 clientConfig = client.getClientConfig();
                 try {
                     style = AuthStyle.valueOf(clientConfig.getConfiguration().getString(PROP_AUTH_TYPE));
@@ -305,7 +305,7 @@ public class UddiHub implements Serializable {
      */
     public Properties GetDigitalSignatureConfig() {
         try {
-            return UDDIClientContainer.getUDDIClient(null).getClientConfig().getDigitalSignatureConfiguration();
+            return GetJuddiClientConfig().getDigitalSignatureConfiguration();
         } catch (Exception ex) {
             log.error("error fetching uddi.xml", ex);
         }

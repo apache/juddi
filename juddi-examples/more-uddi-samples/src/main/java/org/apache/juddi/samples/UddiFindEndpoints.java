@@ -53,13 +53,11 @@ public class UddiFindEndpoints {
             // create a manager and read the config in the archive; 
             // you can use your config file name
             UDDIClient clerkManager = new UDDIClient("META-INF/simple-publish-uddi.xml");
-            // register the clerkManager with the client side container
-            UDDIClientContainer.addClient(clerkManager);
             clerk = clerkManager.getClerk("default");
             // a ClerkManager can be a client to multiple UDDI nodes, so 
             // supply the nodeName (defined in your uddi.xml.
             // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-            Transport transport = clerkManager.getTransport("default");
+            Transport transport = clerkManager.getTransport();
             // Now you create a reference to the UDDI API
             security = transport.getUDDISecurityService();
             inquiry = transport.getUDDIInquiryService();

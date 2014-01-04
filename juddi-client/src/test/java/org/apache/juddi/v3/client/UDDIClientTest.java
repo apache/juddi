@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.juddi.v3.annotations.AnnotationProcessor;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
-import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.uddi.api_v3.BusinessService;
@@ -34,7 +33,7 @@ public class UDDIClientTest {
      @Test
      public void testReadingTheConfig() {
 	     try {
-	    	 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+	    	 UDDIClient client = new UDDIClient();
 	    	 client.start();
 	    	 client.getClientConfig().getUDDINode("default");
 	    	 assertEquals(2,client.getClientConfig().getUDDIClerks().size());
@@ -93,7 +92,7 @@ public class UDDIClientTest {
     		 //This is a special case where the client in the META-INF/uddi.xml file is 
     		 //instantiated and started simply by getting it.
     		 //This functionality was add for backwards compatibility. 
-    		 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+    		 UDDIClient client = new UDDIClient();
     		 client.start();
 			 assertEquals("test-client", client.getName());
 			 assertEquals("default", client.getClientConfig().getHomeNode().getName());
@@ -111,7 +110,7 @@ public class UDDIClientTest {
      @Test
      public void testReadingAnnotations() {
     	 try {
-    		 UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+    		 UDDIClient client = new UDDIClient();
 	    	 Map<String,UDDIClerk> clerks = client.getClientConfig().getUDDIClerks();
 	 		 AnnotationProcessor ap = new AnnotationProcessor();
 	 		 if (clerks.containsKey("default")) {

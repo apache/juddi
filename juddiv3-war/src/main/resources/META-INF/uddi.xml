@@ -21,7 +21,7 @@
             <node>
                 <name>default</name> 
                 <description>This server</description>
-                <!-- JAX-WS Transport -->
+                <!-- InVM Transport -->
                <proxyTransport>org.apache.juddi.v3.client.transport.InVMTransport</proxyTransport>
                <custodyTransferUrl>org.apache.juddi.api.impl.UDDICustodyTransferImpl</custodyTransferUrl>
                <inquiryUrl>org.apache.juddi.api.impl.UDDIInquiryImpl</inquiryUrl>

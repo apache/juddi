@@ -16,7 +16,6 @@
  */
 package org.apache.juddi.v3.client.config;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,25 +24,17 @@ public class BackGroundRegistration implements Runnable {
 	private UDDIClient uddiClient = null;
 	private static Log log = LogFactory.getLog(BackGroundRegistration.class);
 	
-	public BackGroundRegistration(UDDIClient manager) {
+	public BackGroundRegistration(UDDIClient uddiClient) {
 		super();
-		this.uddiClient = manager;
+		this.uddiClient = uddiClient;
 	}
 
 	public void run() {
-		try {
-			if (UDDIClientContainer.getUDDIClient(uddiClient.getName())!=null && uddiClient.getClientConfig().isRegisterOnStartup()) {
-				log.debug("Starting UDDI Clerks for uddiClient " + uddiClient.getClientConfig().getClientName() + "...");
-				uddiClient.saveClerkAndNodeInfo();
-				uddiClient.registerAnnotatedServices();
-				uddiClient.registerWSDLs();
-				uddiClient.xRegister();
-				log.debug("Clerks started succesfully for uddiClient " + uddiClient.getClientConfig().getClientName());
-			} else {
-				log.debug(uddiClient.getName() + " already registered to the UDDIClientContainer.");
-			}
-		} catch (ConfigurationException e) {
-			log.error(e.getMessage(),e);
-		}
+			log.debug("Starting UDDI Clerks for uddiClient " + uddiClient.getClientConfig().getClientName() + "...");
+			uddiClient.saveClerkAndNodeInfo();
+			uddiClient.registerAnnotatedServices();
+			uddiClient.registerWSDLs();
+			uddiClient.xRegister();
+			log.debug("Clerks started succesfully for uddiClient " + uddiClient.getClientConfig().getClientName());	
 	}
 }

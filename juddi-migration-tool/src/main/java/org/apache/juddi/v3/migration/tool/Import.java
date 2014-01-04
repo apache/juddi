@@ -93,8 +93,6 @@ public class Import {
                 UDDIClient clerkManager = new UDDIClient(config);
                 clerkManager.start();
                 UDDIClerk clerk = clerkManager.getClerk(name);
-                // register the clerkManager with the client side container
-                UDDIClientContainer.addClient(clerkManager);            // a ClerkManager can be a client to multiple UDDI nodes, so 
                 // a ClerkManager can be a client to multiple UDDI nodes, so 
                 // supply the nodeName (defined in your uddi.xml.
                 // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml

@@ -37,16 +37,7 @@ public class UDDIClientContainer {
 				throw new ConfigurationException("No client by name " + clientName + " was found. " +
 						" Please check your client uddi.xml files, and make sure this client was started");
 			}
-		} else if (clients.size()==1 && clientName==null) {
-			log.warn("Deprecated, please specify a client name");
-			return clients.values().iterator().next();
-		} else {
-			log.warn("Deprecated, please specify a client name");
-			UDDIClient client = new UDDIClient(null);
-			addClient(client);
-			client.start();
-			return client;
-		}
+		} else throw new IllegalArgumentException("clientName is a required argument");
 	}
 	
 	public static boolean addClient(UDDIClient manager) {

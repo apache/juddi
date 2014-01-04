@@ -198,7 +198,7 @@ public class UddiAdminHub {
     private void EnsureConfig() {
         if (clientConfig == null) {
             try {
-                UDDIClient client = UDDIClientContainer.getUDDIClient(null);
+                UDDIClient client = new UDDIClient();
                 clientConfig = client.getClientConfig();
                 try {
                     style = AuthStyle.valueOf(clientConfig.getConfiguration().getString(PROP_AUTH_TYPE));

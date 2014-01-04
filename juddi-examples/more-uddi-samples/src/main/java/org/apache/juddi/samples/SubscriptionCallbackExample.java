@@ -61,19 +61,7 @@ public class SubscriptionCallbackExample implements ISubscriptionCallback {
             clerk = c.getClerk("default");
             TModel createKeyGenator = UDDIClerk.createKeyGenator("uddi:org.apache.juddi:test:keygenerator", "Test domain", "en");
             clerk.register(createKeyGenator);
-
-
-
-
-
-            // create a manager and read the config in the archive; 
-            // you can use your config file name
-
-            // register the clerkManager with the client side container
-            UDDIClientContainer.addClient(c);            // a ClerkManager can be a client to multiple UDDI nodes, so 
-            // supply the nodeName (defined in your uddi.xml.
-            // The transport can be WS, inVM, RMI etc which is defined in the uddi.xml
-            Transport transport = c.getTransport("default");
+            Transport transport = c.getTransport();
             // Now you create a reference to the UDDI API
             security = transport.getUDDISecurityService();
             juddiApi = transport.getJUDDIApiService();
