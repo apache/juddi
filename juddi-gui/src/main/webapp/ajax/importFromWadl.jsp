@@ -1,7 +1,7 @@
 <%-- 
     Document   : importFromWadl
     Created on : July 11, 2013, 3:26:42 PM
-    Author     : Alex O'Ree
+    Author     : Alex O'Ree 
 --%>
 <%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
 <%@page import="org.uddi.api_v3.BusinessService"%>
@@ -53,9 +53,9 @@
                     //String domain = url.getHost();
                     //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
 
-                    Application app = WADL2UDDI.ParseWadl(url, username, password, ignoreSSL);
+                    Application app = WADL2UDDI.parseWadl(url, username, password, ignoreSSL);
 
-                    List<URL> urls = WADL2UDDI.GetBaseAddresses(app);
+                    List<URL> urls = WADL2UDDI.getBaseAddresses(app);
                     URL baseurl = urls.get(0);
 
                     //TModel keygen = UDDIClerk.createKeyGenator("uddi:" + domain + ":keygenerator", domain, "en");
@@ -73,7 +73,9 @@
                     Set<TModel> portTypeTModels = wadl2UDDI.createWADLPortTypeTModels(uri, app);
                     List<TModel> tmodels = new ArrayList<TModel>();
                     tmodels.addAll(portTypeTModels);
+                    Set<TModel> bindings = wadl2UDDI.createWADLTModels(uri, app);
 
+                    tmodels.addAll(bindings);
                     boolean createKeyGen = false;
                     TModel keygen = UDDIClerk.createKeyGenator("uddi:" + keydomain + ":keygenerator", 
                             keydomain + " Key Generator Partition", (String) session.getAttribute("locale"));
@@ -82,7 +84,10 @@
                     }
                     out.write("<i class=\"icon-thumbs-up icon-large\"></i> WADL successfully parsed! This will create " 
                             + portTypeTModels.size()
-                            + "tModels, " + ((createKeyGen == true) ? "one tModel Key Generator, " : "")
+                            + " Port tModels, " 
+                            + bindings.size()
+                            + " Binding tModels, " 
+                            + ((createKeyGen == true) ? "one tModel Key Generator, " : "")
                             + "1 binding, and 1 service(s) attached to the business with "
                             + "the key " + StringEscapeUtils.escapeHtml(businessname) + " .<br>");
                     out.write("Services:<br><ul>");

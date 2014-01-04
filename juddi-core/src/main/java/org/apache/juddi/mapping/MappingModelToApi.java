@@ -20,10 +20,15 @@ package org.apache.juddi.mapping;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBElement;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -1068,7 +1073,13 @@ public class MappingModelToApi {
 				throws DispositionReportFaultMessage {
 		
 		apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());
-		apiClientSubscriptionInfo.setLastModified(modelClientSubscriptionInfo.getLastNotified());
+                GregorianCalendar gcal = new GregorianCalendar();
+                gcal.setTimeInMillis(modelClientSubscriptionInfo.getLastNotified().getTime());
+                try {
+                        apiClientSubscriptionInfo.setLastModified( DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal));
+                } catch (DatatypeConfigurationException ex) {
+                        logger.warn("unable to create DatatypeFactory",ex);
+                }
 		
 		if (modelClientSubscriptionInfo.getFromClerk()!=null) {
 			org.apache.juddi.api_v3.Clerk apiFromClerk = new org.apache.juddi.api_v3.Clerk();
