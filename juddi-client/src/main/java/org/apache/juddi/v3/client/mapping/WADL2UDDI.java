@@ -175,7 +175,37 @@ public class WADL2UDDI {
 
     public Set<TModel> createWADLTModels(String wadlURL, Application app) throws Exception {
         Set<TModel> tModels = new HashSet<TModel>();
+        TModel binding = new TModel();
+        binding.setTModelKey(keyDomainURI + "binding");
+        
+        Name sName = new Name();
+        sName.setLang(lang);
+        if (!app.getDoc().isEmpty()) {
+            sName.setValue(app.getDoc().get(0).getTitle());
+        }
+        if (sName.getValue() == null) {
+            sName.setValue(keyDomainURI + " Binding tModel");
+        }
+        binding.setName(sName);
+        tModels.add(binding);
+        
+        
+         binding = new TModel();
+        binding.setTModelKey(keyDomainURI + "rest");
+        
+        sName = new Name();
+        sName.setLang(lang);
+        if (!app.getDoc().isEmpty()) {
+            sName.setValue(app.getDoc().get(0).getTitle());
+        }
+        if (sName.getValue() == null) {
+            sName.setValue(keyDomainURI + " Rest tModel");
+        }
+        binding.setName(sName);
+        tModels.add(binding);
+        
 
+        //keyDomainURI + "binding"
         return tModels;
     }
 
