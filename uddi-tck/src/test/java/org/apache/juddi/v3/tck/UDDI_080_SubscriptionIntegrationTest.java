@@ -129,6 +129,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
 
     @Test
     public void joePublisher() {
+            logger.info("UDDI_080_SubscriptionIntegrationTest joePublisher");
         try {
             tckTModel.saveJoePublisherTmodel(authInfoJoe);
             tckBusiness.saveJoePublisherBusiness(authInfoJoe);
