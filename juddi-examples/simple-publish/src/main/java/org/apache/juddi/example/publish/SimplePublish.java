@@ -109,7 +109,10 @@ public class SimplePublish {
             accessPoint.setValue("http://example.org/services/myservice?wsdl");
             myBindingTemplate.setAccessPoint(accessPoint);
             BindingTemplates myBindingTemplates = new BindingTemplates();
+            //optional but recommended step, this annotations our binding with all the standard SOAP tModel instance infos
+            myBindingTemplate = UDDIClient.addSOAPtModels(myBindingTemplate);
             myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
+            
             myService.setBindingTemplates(myBindingTemplates);
 
             // Adding the service to the "save" structure, using our publisher's authentication info and saving away.

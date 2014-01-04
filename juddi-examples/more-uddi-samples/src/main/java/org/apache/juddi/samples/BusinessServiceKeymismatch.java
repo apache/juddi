@@ -88,6 +88,7 @@ public class BusinessServiceKeymismatch {
         bs.setBindingTemplates(new BindingTemplates());
         BindingTemplate bt = new BindingTemplate();
         bt.setAccessPoint(new AccessPoint("http://localhost", "wsdlDeployment"));
+        bt = UDDIClient.addSOAPtModels(bt);
         bs.getBindingTemplates().getBindingTemplate().add(bt);
         be.getBusinessServices().getBusinessService().add(bs);
         sb.getBusinessEntity().add(be);

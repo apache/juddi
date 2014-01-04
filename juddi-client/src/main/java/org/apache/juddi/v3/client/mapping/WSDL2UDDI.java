@@ -47,6 +47,7 @@ import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.Property;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.AccessPoint;
@@ -247,7 +248,10 @@ public class WSDL2UDDI {
                             //delete all tModels assuming they are the portType and Binding tModels.
                             if (tModelDetail.getTModel() != null && tModelDetail.getTModel().size() > 0) {
                                 for (TModel tModel : tModelDetail.getTModel()) {
-                                    clerk.unRegisterTModel(tModel.getTModelKey());
+                                        if (!tModel.getTModelKey().startsWith("uddi:uddi.org:"))
+                                                clerk.unRegisterTModel(tModel.getTModelKey());
+                                        else
+                                                log.info("Skipping the removal of " + tModel.getTModelKey() + " because it starts with uddi.org");
                                 }
                             }
                         }
@@ -941,7 +945,8 @@ public class WSDL2UDDI {
             log.error("Could not find Service with serviceName: " + serviceQName.getLocalPart());
         }
 
-        return bindingTemplate;
+        
+        return UDDIClient.addSOAPtModels(bindingTemplate);
     }
 
     /**

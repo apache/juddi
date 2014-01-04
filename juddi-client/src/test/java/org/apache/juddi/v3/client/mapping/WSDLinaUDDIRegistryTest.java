@@ -199,7 +199,7 @@ public class WSDLinaUDDIRegistryTest {
 		Assert.assertEquals(specBindingTemplate.getBindingKey(), bindingTemplate.getBindingKey());
 		Assert.assertEquals(specBindingTemplate.getServiceKey(), bindingTemplate.getServiceKey());
 		Assert.assertEquals(specBindingTemplate.getAccessPoint().getValue(), bindingTemplate.getAccessPoint().getValue());
-		Assert.assertEquals(2,bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().size());
+		Assert.assertTrue(2 <= bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().size());
 		//first binding/tmodelInstanceDetails
 		Assert.assertEquals(specBindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().get(0).getTModelKey(), 
 				bindingTemplate.getTModelInstanceDetails().getTModelInstanceInfo().get(0).getTModelKey());

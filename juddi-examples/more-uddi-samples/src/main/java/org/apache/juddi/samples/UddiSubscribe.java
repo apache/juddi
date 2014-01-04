@@ -174,6 +174,7 @@ public class UddiSubscribe {
         bt.setTModelInstanceDetails(new TModelInstanceDetails());
         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(instanceInfo);
 
+        bt = UDDIClient.addSOAPtModels(bt);
         bs.getBindingTemplates().getBindingTemplate().add(bt);
 
 

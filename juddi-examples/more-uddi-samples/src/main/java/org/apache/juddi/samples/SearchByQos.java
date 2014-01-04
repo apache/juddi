@@ -302,6 +302,7 @@ public class SearchByQos {
 
         tii.setInstanceDetails(new InstanceDetails());
         tii.getInstanceDetails().setInstanceParms("400");
+        bt = UDDIClient.addSOAPtModels(bt);
         bt.getTModelInstanceDetails().getTModelInstanceInfo().add(tii);
         bs.getBindingTemplates().getBindingTemplate().add(bt);
         be.getBusinessServices().getBusinessService().add(bs);

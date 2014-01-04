@@ -182,6 +182,7 @@ public class UddiCustodyTransfer {
         bt.setAccessPoint(new AccessPoint());
         bt.getAccessPoint().setValue("http://localhost:9999/" + user);
         bt.getAccessPoint().setUseType("endPoint");
+        bt = UDDIClient.addSOAPtModels(bt);
         bs.getBindingTemplates().getBindingTemplate().add(bt);
         return bs;
     }

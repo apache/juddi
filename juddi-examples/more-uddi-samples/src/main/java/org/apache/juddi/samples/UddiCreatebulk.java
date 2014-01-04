@@ -166,6 +166,7 @@ public class UddiCreatebulk {
 
 
                     BindingTemplates myBindingTemplates = new BindingTemplates();
+                    myBindingTemplate = UDDIClient.addSOAPtModels(myBindingTemplate);
                     myBindingTemplates.getBindingTemplate().add(myBindingTemplate);
                     myService.setBindingTemplates(myBindingTemplates);
                     try {
