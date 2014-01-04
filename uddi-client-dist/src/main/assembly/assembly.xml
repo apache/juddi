@@ -52,6 +52,7 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </dependencySet>
+
          <!--  wars -->
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
