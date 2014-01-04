@@ -1073,13 +1073,7 @@ public class MappingModelToApi {
 				throws DispositionReportFaultMessage {
 		
 		apiClientSubscriptionInfo.setSubscriptionKey(modelClientSubscriptionInfo.getSubscriptionKey());
-                GregorianCalendar gcal = new GregorianCalendar();
-                gcal.setTimeInMillis(modelClientSubscriptionInfo.getLastNotified().getTime());
-                try {
-                        apiClientSubscriptionInfo.setLastModified( DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal));
-                } catch (DatatypeConfigurationException ex) {
-                        logger.warn("unable to create DatatypeFactory",ex);
-                }
+		apiClientSubscriptionInfo.setLastModified(modelClientSubscriptionInfo.getLastNotified());
 		
 		if (modelClientSubscriptionInfo.getFromClerk()!=null) {
 			org.apache.juddi.api_v3.Clerk apiFromClerk = new org.apache.juddi.api_v3.Clerk();
