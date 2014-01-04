@@ -100,7 +100,7 @@ public class UDDI_080_SubscriptionIntegrationTest {
             tckBusinessService = new TckBusinessService(publication, inquiry);
             tckBindingTemplate = new TckBindingTemplate(publication, inquiry);
 
-            tckSubscription = new TckSubscription(subscription, security);
+            tckSubscription = new TckSubscription(subscription, security,inquiry);
             String authInfoUDDI = TckSecurity.getAuthToken(security, TckPublisher.getUDDIPublisherId(), TckPublisher.getUDDIPassword());
             tckTModel.saveUDDIPublisherTmodel(authInfoUDDI);
             tckTModel.saveTModels(authInfoUDDI, TckTModel.TMODELS_XML);

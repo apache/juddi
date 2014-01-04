@@ -77,6 +77,9 @@
                 </instanceParms>
               </instanceDetails>
             </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -87,7 +90,7 @@
           <description>UDDI Inquiry API V3 SSL</description>
           <!-- This should be changed to the WSDL URL of the inquiry API.  An access point inside a bindingTemplate will be found for every service
           in this file.  They all must point to their API's WSDL URL -->
-          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/inquiry?wsdl</accessPoint>
+          <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/inquiry?wsdl</accessPoint> 
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_inquiry">
               <instanceDetails>
@@ -104,6 +107,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
 			 <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			 <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -129,6 +135,11 @@
 		  <accessPoint useType="wadlDeployment">${juddi.server.baseurlsecure}/services/inquiryRest?_wadl</accessPoint>
 		  <tModelInstanceDetails>
 			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
+			
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:rest" />
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wadl" keyValue="wadlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -157,6 +168,9 @@
                 </instanceParms>
               </instanceDetails>
             </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -180,6 +194,10 @@
               </instanceDetails>
             </tModelInstanceInfo>
 			<tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -197,6 +215,10 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/security?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -207,6 +229,10 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/security?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_security" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -234,7 +260,11 @@
                 ]]>
                 </instanceParms>
               </instanceDetails>
+			  
             </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -260,6 +290,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
 			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -291,6 +324,9 @@
                 </instanceParms>
               </instanceDetails>
             </tModelInstanceInfo>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -316,6 +352,9 @@
               </instanceDetails>
             </tModelInstanceInfo>
 			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -334,7 +373,9 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
-			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -346,6 +387,10 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/subscription-listener?wsdl</accessPoint>
           <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:v3_subscriptionlistener" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
@@ -362,6 +407,10 @@
         <bindingTemplate bindingKey="uddi:juddi.apache.org:servicebindings-publisher-ws" serviceKey="uddi:juddi.apache.org:services-publisher">
           <description>jUDDI Publisher Service API V3</description>
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurl}/services/publisher?wsdl</accessPoint>
+		  <tModelInstanceDetails>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+          </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>
           </categoryBag>
@@ -371,6 +420,9 @@
           <accessPoint useType="wsdlDeployment">${juddi.server.baseurlsecure}/services/publisher?wsdl</accessPoint>
 		  <tModelInstanceDetails>
             <tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:serverauthenticatedssl3"/>
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:protocol:soap" />
+			<tModelInstanceInfo tModelKey="uddi:uddi.org:transport:http" />
+			
           </tModelInstanceDetails>
           <categoryBag>
             <keyedReference keyName="uddi-org:types:wsdl" keyValue="wsdlDeployment" tModelKey="uddi:uddi.org:categorization:types"/>

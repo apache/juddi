@@ -38,6 +38,10 @@ import org.uddi.sub_v3.SubscriptionResultsList;
 import org.uddi.v3_service.UDDISecurityPortType;
 import org.uddi.v3_service.UDDISubscriptionPortType;
 import static junit.framework.Assert.assertEquals;
+import org.uddi.api_v3.CategoryBag;
+import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.KeyedReference;
+import org.uddi.v3_service.UDDIInquiryPortType;
 
 /**
  * @author <a href="mailto:jfaath@apache.org">Jeff Faath</a>
@@ -58,7 +62,10 @@ public class TckSubscription
 	final static String SAM_SUBSCRIPTION2_XML = "uddi_data/subscription/subscription3.xml";
     final static String SAM_SUBSCRIPTION2_KEY = "uddi:www.samco.com:subscriptiontwo";
 	final static String SAM_SUBSCRIPTIONRESULTS2_XML = "uddi_data/subscription/subscriptionresults3.xml";
-	final static int FINDQUALIFIER_TMODEL_TOTAL = 22;
+        /**
+         * this represents how many find qualifiers are present in the juddi install_data
+         */
+	 static int FINDQUALIFIER_TMODEL_TOTAL = 23;
 
 	final static String SAM_SUBSCRIPTION3_XML = "uddi_data/subscription/subscription4.xml";
     final static String SAM_SUBSCRIPTION3_KEY = "uddi:www.samco.com:subscriptionthree";
@@ -66,12 +73,14 @@ public class TckSubscription
 	
 	private Log logger = LogFactory.getLog(this.getClass());
     UDDISubscriptionPortType subscription = null;
+        UDDIInquiryPortType inquiry = null;
 	UDDISecurityPortType security = null;
 	
-	public TckSubscription(UDDISubscriptionPortType subscription, UDDISecurityPortType security) {
+	public TckSubscription(UDDISubscriptionPortType subscription, UDDISecurityPortType security, UDDIInquiryPortType inquiry) {
 		super();
 		this.subscription = subscription;
 		this.security = security;
+                this.inquiry = inquiry;
 	}
 
 	public void saveJoePublisherSubscription(String authInfoJoe, String subscriptionXML,String subscriptionKey) {
@@ -188,14 +197,26 @@ public class TckSubscription
 	
 	public void getSamSyndicatorSubscriptionResultsWithChunkingOnFind(String authInfoSam) {		
 		try {
+                        
 			GetSubscriptionResults getSubResultsIn = (GetSubscriptionResults)EntityCreator.buildFromDoc(SAM_SUBSCRIPTIONRESULTS2_XML, "org.uddi.sub_v3");
 			getSubResultsIn.setAuthInfo(authInfoSam);
+                        FindTModel ftm = new FindTModel();
+                        ftm.setAuthInfo(authInfoSam);
+                        ftm.setCategoryBag(new CategoryBag());
+                        ftm.getCategoryBag().getKeyedReference().add(new KeyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:findQualifier", "findQualifier"));
+                        TModelList findTModel = inquiry.findTModel(ftm);
 			
+                        FINDQUALIFIER_TMODEL_TOTAL = findTModel.getListDescription().getActualCount();
+                        
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION2_XML, "org.uddi.sub_v3");
 			
 			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
-			if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
+                        if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
 				expectedIterations++;
+			
+                        
+                        logger.info("getSamSyndicatorSubscriptionResultsWithChunkingOnFind loading from " + SAM_SUBSCRIPTION2_XML + " expecting " + FINDQUALIFIER_TMODEL_TOTAL + " find qualifier tmodels. Fetching "
+                        + subIn.getMaxEntities() + " at a time, expected iterations " + expectedIterations);
 			
 			String chunkToken = "";
 			int iterations = 0;
@@ -209,7 +230,7 @@ public class TckSubscription
 					Assert.fail("Null result from getSubscriptionResults operation");
 				Assert.assertNotNull("Chunk token should either be not null or '0'",result.getChunkToken());
 				TModelList tmodelList = result.getTModelList();
-				if (tmodelList == null)
+				if (tmodelList == null || tmodelList.getTModelInfos()==null)
 					Assert.fail("No result from getSubscriptionResults operation on chunk attempt " + iterations);
 
 				int resultSize = tmodelList.getTModelInfos().getTModelInfo().size();
@@ -243,6 +264,8 @@ public class TckSubscription
 					
 			Subscription subIn = (Subscription)EntityCreator.buildFromDoc(SAM_SUBSCRIPTION3_XML, "org.uddi.sub_v3");
 			
+                        FINDQUALIFIER_TMODEL_TOTAL = 22;
+                        
 			int expectedIterations = FINDQUALIFIER_TMODEL_TOTAL / subIn.getMaxEntities();
 			if (FINDQUALIFIER_TMODEL_TOTAL % subIn.getMaxEntities() >0)
 				expectedIterations++;

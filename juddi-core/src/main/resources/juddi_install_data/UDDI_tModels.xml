@@ -6,7 +6,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 * 
-*      http://www.apache.org/licenses/LICENSE-2.0
+*      http://www.apache.org/licenses/LICenSE-2.0
 * 
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,15 @@
 * limitations under the License.
 *
 */ -->
+
+<!-- Important notes on editing this file 
+
+1) if you add a new find qualifier item, you must then increase the count in 
+	org.apache.juddi.v3.tck.TckSubscription.FINDQUALIFIER_TMODEL_TOTAL
+
+-->
+
+
 <save_tModel xmlns="urn:uddi-org:api_v3">
     <tModel tModelKey="uddi:uddi.org:keygenerator" xmlns="urn:uddi-org:api_v3">
         <name>uddi-org:keyGenerator</name>
@@ -1079,23 +1088,7 @@
         </categoryBag>
     </tModel>
   
-    <tModel tModelKey="uddi:uddi.org:ubr:postaladdress">
-	  <name>ubr-uddi-org:postalAddress</name>
-	  <description xml:lang="EN">Postal address structure</description>
-	  <overviewDoc>
-	    <overviewURL useType="text">
-	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#postal
-	    </overviewURL>
-	  </overviewDoc>
-	  <categoryBag>
-	    <keyedReference keyName="uddi-org:types:postalAddress"
-	      keyValue="postalAddress"
-	      tModelKey="uddi:uddi.org:categorization:types"/>
-	    <keyedReference keyName="uddi-org:types:unchecked"
-	      keyValue="unchecked"
-	      tModelKey="uddi:uddi.org:categorization:types"/>
-	   </categoryBag>
-	</tModel>
+   
   
   
     <tModel tModelKey="uddi:tmodelkey:keygenerator" xmlns="urn:uddi-org:api_v3">
@@ -1352,5 +1345,318 @@
             <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
         </categoryBag>
     </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:iso3166">
+        <name>ISO 3166 Country Codes</name>
+        <description xml:lang="en">When used in a Category Bag for a Business or Service, it can indicate the physical or logically location of the Business or Service.</description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.iso.org/iso/country_codes
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationGroup:wgs84">
+        <name>World Geodetic System</name>
+        <description xml:lang="en">Standard for use in cartography, geodesy, and navigation. </description>
+       <overviewDoc>
+            <overviewURL>
+               http://www.ngs.noaa.gov/PUBS_LIB/Geodesy4Layman/TR80003E.HTM#ZZ11
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:checked" keyValue="checked" tModelKey="uddi:uddi.org:categorization:types" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:keygenerator">
+        <name>Universal Business Registry Key Generator</name>
+        <description>UBR domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	<tModel tModelKey="uddi:uddi.org:ubr:categorizationgroup:keygenerator">
+        <name>Universal Business Registry Categorization Group Key Generator</name>
+        <description>UBR Categorization Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:keygenerator">
+        <name>Universal Business Registry Categorization Key Generator</name>
+        <description>UBR Categorization domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+    </tModel>
+	
+	 <tModel tModelKey="uddi:uddi.org:ubr:postaladdress">
+	  <name>ubr-uddi-org:postalAddress</name>
+	  <description xml:lang="en">Postal address structure</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm#postal
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:postalAddress"
+	      keyValue="postalAddress"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:relationships">
+	  <name>ubr-uddi-org:relationships</name>
+	  <description xml:lang="en">relationships in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:keygenerator">
+	  <name>ubr-uddi-org:identifier key generator</name>
+	  <description>UBR Identifier Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:owningbusiness">
+	  <name>UBR Identifier Owning Business</name>
+	  <description xml:lang="en">Identifier for an Owning Business in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:unspsc">
+	  <name>UBR Categorization Unspecified</name>
+	  <description xml:lang="en">Unspecified Categorization in a UBR</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      http://uddi.org/taxonomies/UDDI_Taxonomy_tModels.htm
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:keygenerator">
+	  <name>North American Industry Classification System Key Generator</name>
+	  <description xml:lang="en">North American Industry Classification System Key Generator.</description>
+	  <description xml:lang="en">The North American Industry Classification System (NAICS) is the standard used by Federal statistical agencies in classifying business establishments for the purpose of collecting, analyzing, and publishing statistical data in the U.S. business economy</description>
+	  <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+			<overviewURL useType="text">
+                https://www.census.gov/eos/www/naics/index.html
+            </overviewURL>
+			
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:1997">
+	  <name>North American Industry Classification System 1997</name>
+	  <description xml:lang="en">North American Industry Classification System 1997</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/eos/www/naics/reference_files_tools/1997/1997.html
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2012">
+	  <name>North American Industry Classification System 2012</name>
+	  <description xml:lang="en">North American Industry Classification System 2012</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2012
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2002">
+	  <name>North American Industry Classification System 2002</name>
+	  <description xml:lang="en">North American Industry Classification System 2002</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2002
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:categorization:naics:2007">
+	  <name>North American Industry Classification System 2007</name>
+	  <description xml:lang="en">North American Industry Classification System 2007</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2007
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:taxonomy:keygenerator">
+	  <name>UBR Taxonomies</name>
+	  <description xml:lang="en">Universal Business Registry Taxonomy Key Generator.</description>
+	  <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+
+	<tModel tModelKey="uddi:uddi.org:ubr:taxonomy:naics">
+	  <name>North American Industry Classification System Taxonomy</name>
+	  <description xml:lang="en">North American Industry Classification System Taxonomy</description>
+	  <overviewDoc>
+	    <overviewURL useType="text">
+	      https://www.census.gov/eos/www/naics/index.html
+	    </overviewURL>
+	  </overviewDoc>
+	  <categoryBag>
+	    <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+	   </categoryBag>
+	</tModel>
+	
+	
+	
+	<tModel tModelKey="uddi:uddi.org:sortorder:jis-x4061">
+	  <name>uddi-org:JIS-X4061</name>
+	  <description>UDDI JIS X 4061 Japanese
+				   collation sequence find qualifier
+	  </description>
+	  <overviewDoc typeURI="text">
+		<overviewURL>
+		   http://uddi.org/pubs/uddi-v3.0.2-20041019.htm#_Toc42047570
+		</overviewURL> 
+	  </overviewDoc> 
+	  <categoryBag>
+		<keyedReference keyName="uddi-org:types:categorization"
+		  keyValue="sortOrder" 
+		  tModelKey="uddi:uddi.org:categorization:types"/> 
+		<keyedReference keyName="uddi-org:types:categorization"
+		  keyValue="findQualifier" 
+		  tModelKey="uddi:uddi.org:categorization:types"/> 
+	   </categoryBag>
+	</tModel>
+	
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:dnb.com:keygenerator">
+	  <name>ubr-uddi-org:identifier for dnb.com</name>
+	  <description>UBR Identifier dnb.com Group domain key generator</description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://uddi.org/pubs/uddi_v3.htm#keyGen
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference tModelKey="uddi:uddi.org:categorization:types" keyName="uddi-org:types:keyGenerator"
+                      keyValue="keyGenerator" />
+        </categoryBag>
+	</tModel>
+	
+	<tModel tModelKey="uddi:uddi.org:ubr:identifier:dnb.com:d-u-n-s">
+	  <name>Dun and Bradstreet D-U-N-S® Number</name>
+	  <description>A unique nine digit identification number, for each physical location of your business. </description>
+        <overviewDoc>
+            <overviewURL useType="text">
+                http://fedgov.dnb.com/webform/pages/dunsnumber.jsp
+            </overviewURL>
+        </overviewDoc>
+        <categoryBag>
+            <keyedReference keyName="uddi-org:types:unchecked"
+	      keyValue="unchecked"
+	      tModelKey="uddi:uddi.org:categorization:types"/>
+        </categoryBag>
+	</tModel>
+	
+	
 	
 </save_tModel>

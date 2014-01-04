@@ -424,6 +424,23 @@ public class UDDIClient {
      * @return 
      */
         public static BindingTemplate addSOAPtModels(BindingTemplate bt) {
+                if (bt.getCategoryBag() == null) {
+                        bt.setCategoryBag(new CategoryBag());
+                }
+                boolean found = false;
+                for (int i = 0; i < bt.getCategoryBag().getKeyedReference().size(); i++) {
+                        if (bt.getCategoryBag().getKeyedReference().get(i).getTModelKey() != null
+                                && bt.getCategoryBag().getKeyedReference().get(i).getTModelKey().equalsIgnoreCase("uddi:uddi.org:categorization:types")) {
+                                if (bt.getCategoryBag().getKeyedReference().get(i).getKeyName() != null
+                                        && bt.getCategoryBag().getKeyedReference().get(i).getKeyName().equalsIgnoreCase("uddi-org:types:wsdl")) {
+                                        found = true;
+                                }
+                        }
+                }
+                if (!found)
+                         bt.getCategoryBag().getKeyedReference().add(new KeyedReference( "uddi:uddi.org:categorization:types","uddi-org:types:wsdl", "wsdlDeployment" ));
+                if (bt.getCategoryBag().getKeyedReference().isEmpty() && bt.getCategoryBag().getKeyedReferenceGroup().isEmpty())
+                        bt.setCategoryBag(null);
                 if (bt.getTModelInstanceDetails() == null) {
                         bt.setTModelInstanceDetails(new TModelInstanceDetails());
                 }

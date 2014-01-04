@@ -373,6 +373,213 @@ namespace org.apache.juddi.v3.client
         }
 
 
-       
+        /**
+      * adds the typical SOAP tmodel references, but only if they aren't already present
+      * @param bt
+      * @return 
+      */
+        public static bindingTemplate addSOAPtModels(bindingTemplate bt)
+        {
+            bool found = false;
+            List<object> cbags = new List<object>();
+            if (bt.categoryBag != null)
+                cbags.AddRange(bt.categoryBag.Items);
+
+            for (int i = 0; i < cbags.Count; i++)
+            {
+                if (cbags[i] is keyedReference)
+                {
+                    keyedReference kr = (keyedReference)cbags[i];
+                    if (kr.tModelKey!=null
+                            && kr.tModelKey.Equals("uddi:uddi.org:categorization:types", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (kr.keyName != null
+                                && kr.keyName.Equals("uddi-org:types:wsdl", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (!found)
+                cbags.Add(new keyedReference("uddi:uddi.org:categorization:types", "uddi-org:types:wsdl", "wsdlDeployment"));
+            if (cbags.Count > 0)
+            {
+                if (bt.categoryBag == null)
+                    bt.categoryBag = new categoryBag();
+                bt.categoryBag.Items = cbags.ToArray();
+            }
+
+            List<tModelInstanceInfo> data = new List<tModelInstanceInfo>();
+            if (bt.tModelInstanceDetails != null)
+            {
+                data.AddRange(bt.tModelInstanceDetails);
+            }
+            accessPoint ap=null;
+            if (bt.Item is accessPoint)
+            {
+                ap = (accessPoint)bt.Item;
+            }
+            tModelInstanceInfo tModelInstanceInfo;
+            if (!Exists(data, UDDIConstants.PROTOCOL_SOAP))
+            {
+                tModelInstanceInfo = new tModelInstanceInfo();
+                tModelInstanceInfo.tModelKey=(UDDIConstants.PROTOCOL_SOAP);
+                data.Add(tModelInstanceInfo);
+            }
+
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("http:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_HTTP))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_HTTP);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("jms:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_JMS))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_JMS);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("rmi:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_RMI))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_RMI);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("udp:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_UDP))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_UDP);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("amqp:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_AMQP))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_AMQP);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("mailto:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_EMAIL))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_EMAIL);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("ftp:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_FTP))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_FTP);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("https:"))
+            {
+                if (!Exists(data, UDDIConstants.PROTOCOL_SSLv3))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.PROTOCOL_SSLv3);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("ftps:"))
+            {
+                if (!Exists(data, UDDIConstants.PROTOCOL_SSLv3))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.PROTOCOL_SSLv3);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("jndi:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_JNDI_RMI))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey=(UDDIConstants.TRANSPORT_JNDI_RMI);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            bt.tModelInstanceDetails = data.ToArray();
+            return bt;
+        }
+
+        /**
+         * adds the typical REST tmodel references, but only if they aren't already present
+         * @param bt
+         * @return 
+         */
+        public static bindingTemplate addRESTtModels(bindingTemplate bt)
+        {
+            List<tModelInstanceInfo> data = new List<tModelInstanceInfo>();
+            if (bt.tModelInstanceDetails != null)
+            {
+                data.AddRange(bt.tModelInstanceDetails);
+            }
+            accessPoint ap = null;
+            if (bt.Item is accessPoint)
+            {
+                ap = (accessPoint)bt.Item;
+            }
+            tModelInstanceInfo tModelInstanceInfo;
+            if (!Exists(data, UDDIConstants.PROTOCOL_REST))
+            {
+                tModelInstanceInfo = new tModelInstanceInfo();
+                tModelInstanceInfo.tModelKey = (UDDIConstants.PROTOCOL_REST);
+                data.Add(tModelInstanceInfo);
+            }
+
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("http:"))
+            {
+                if (!Exists(data, UDDIConstants.TRANSPORT_HTTP))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey = (UDDIConstants.TRANSPORT_HTTP);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            if (ap != null && ap.Value!=null && ap.Value.StartsWith("https:"))
+            {
+                if (!Exists(data, UDDIConstants.PROTOCOL_SSLv3))
+                {
+                    tModelInstanceInfo = new tModelInstanceInfo();
+                    tModelInstanceInfo.tModelKey = (UDDIConstants.PROTOCOL_SSLv3);
+                    data.Add(tModelInstanceInfo);
+                }
+            }
+            bt.tModelInstanceDetails = data.ToArray();
+            return bt;
+        }
+
+        private static bool Exists(List<tModelInstanceInfo> items, String key)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].tModelKey != null
+                        && items[i].tModelKey.Equals(key, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
