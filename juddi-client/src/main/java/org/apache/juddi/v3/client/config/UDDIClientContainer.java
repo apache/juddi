@@ -22,6 +22,12 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Internal jUDDI class to handle multiple clients on the same classloader.
+ * 
+ * @author kstam
+ *
+ */
 public class UDDIClientContainer {
 
 	private static Log log = LogFactory.getLog(UDDIClientContainer.class);
