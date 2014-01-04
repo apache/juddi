@@ -807,7 +807,7 @@ namespace org.apache.juddi.v3.client.config
             try
             {
                 log.debug("Sending Clerk " + senderClerk.getName() + " info to jUDDI " + getUDDINode().getName());
-                save_clerkInfo saveClerk = new save_clerkInfo();
+                save_clerk saveClerk = new save_clerk();
                 saveClerk.authInfo = (getAuthToken(senderClerk.getUDDINode().getSecurityUrl()));
                 saveClerk.clerk = new clerk[] { (getApiClerk()) };
                 clerkDetail = getUDDINode().getTransport().getJUDDIApiService(senderClerk.getUDDINode().getJuddiApiUrl()).save_Clerk(saveClerk);
@@ -988,7 +988,7 @@ namespace org.apache.juddi.v3.client.config
             try
             {
                 log.info("Sending Node " + node.name + " info to jUDDI " + getUDDINode().getName());
-                save_nodeInfo saveNode = new save_nodeInfo();
+                save_node saveNode = new save_node();
                 saveNode.authInfo = (getAuthToken(this.getUDDINode().getSecurityUrl()));
                 saveNode.node = new node[] { (node) };
                 nodeDetail = getUDDINode().getTransport().getJUDDIApiService(this.getUDDINode().getJuddiApiUrl()).save_Node(saveNode);

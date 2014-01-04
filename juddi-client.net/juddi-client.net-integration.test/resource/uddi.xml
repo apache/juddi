@@ -34,7 +34,6 @@
 
     <clerks registerOnStartup="false">
       <clerk name="default" node="default" publisher="uddi" password="uddi"  isPasswordEncrypted="false" cryptoProvider="">
-<class 
       </clerk>
       
     </clerks>

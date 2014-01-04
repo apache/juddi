@@ -65,10 +65,10 @@ namespace org.apache.juddi.client.sample.juddi
                 n1.subscriptionListenerUrl = "http://uddi-jbossoverlord.rhcloud.com/services/subscription-listener";
                 n1.name = "juddicloud";
                 n1.description = "juddicloud";
-                save_nodeInfo saveNode = new save_nodeInfo();
+                save_node saveNode = new save_node();
                 saveNode.authInfo = (clerk.getAuthToken(clerk.getUDDINode().getSecurityUrl()));
                 saveNode.node = new node[] { (n1) };
-                PrintJUDDI<save_nodeInfo> p = new PrintJUDDI<save_nodeInfo>();
+                PrintJUDDI<save_node> p = new PrintJUDDI<save_node>();
                 Console.Out.WriteLine("Before sending");
                 Console.Out.WriteLine(p.print(saveNode));
 
