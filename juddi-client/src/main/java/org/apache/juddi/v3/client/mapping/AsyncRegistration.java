@@ -23,6 +23,8 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
+import org.apache.juddi.v3.client.mapping.wsdl.BPEL2UDDI;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 
 public class AsyncRegistration implements Runnable {
 

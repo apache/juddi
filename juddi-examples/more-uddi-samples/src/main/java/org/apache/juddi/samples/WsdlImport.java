@@ -20,16 +20,18 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
+
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;

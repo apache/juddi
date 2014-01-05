@@ -36,7 +36,6 @@ import org.uddi.v3_service.UDDISubscriptionListenerPortType;
  * the UDDI registry when any change to a Service or BindingTemplate
  * call in to it.
  * 
- * @deprecated Use SubscriptionCallbackListener instead
  * @author kstam
  * @see SubscriptionCallbackListener
  *

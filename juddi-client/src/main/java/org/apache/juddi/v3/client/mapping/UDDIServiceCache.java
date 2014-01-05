@@ -41,6 +41,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIKeyConvention;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;

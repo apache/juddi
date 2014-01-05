@@ -16,19 +16,9 @@ package org.apache.juddi.v3.client.mapping;
 
 import java.net.BindException;
 import java.net.URL;
-import java.util.Map;
-
-import javax.wsdl.Definition;
-import javax.wsdl.Port;
-import javax.wsdl.extensions.http.HTTPAddress;
-import javax.wsdl.extensions.soap.SOAPAddress;
-import javax.wsdl.extensions.soap12.SOAP12Address;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Endpoint;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.uddi.v3_service.UDDISubscriptionListenerPortType;
 
 /**
  * @author <a href="mailto:kstam@apache.org">Kurt T Stam</a>

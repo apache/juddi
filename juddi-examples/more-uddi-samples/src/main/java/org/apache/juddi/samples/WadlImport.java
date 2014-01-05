@@ -21,14 +21,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.namespace.QName;
+
 import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.WADL2UDDI;
-import org.apache.juddi.v3.client.mappings.wadl.Application;
+import org.apache.juddi.v3.client.mapping.wadl.Application;
+import org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3_service.JUDDIApiPortType;
 import org.uddi.api_v3.AuthToken;

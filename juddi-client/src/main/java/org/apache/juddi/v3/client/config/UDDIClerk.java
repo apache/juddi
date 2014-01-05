@@ -45,9 +45,9 @@ import org.apache.juddi.api_v3.SaveClerk;
 import org.apache.juddi.api_v3.SaveNode;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.cryptor.CryptorFactory;
-import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.TransportException;
 import org.uddi.api_v3.BindingDetail;
 import org.uddi.api_v3.BindingTemplate;
@@ -1187,7 +1187,7 @@ public class UDDIClerk implements Serializable {
 
         if (value.startsWith("http://") || value.startsWith("https://")) {
             //here, we need an HTTP Get for WSDLs
-            org.apache.juddi.v3.client.mapping.ReadWSDL r = new ReadWSDL();
+            org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL r = new ReadWSDL();
             r.setIgnoreSSLErrors(true);
             try {
                 Definition wsdlDefinition = r.readWSDL(new URL(value));

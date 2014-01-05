@@ -22,14 +22,16 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.wsdl.Definition;
+
 import org.apache.juddi.api_v3.AccessPointType;
 import org.apache.juddi.v3.client.config.UDDIClerk;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.config.UDDIClientContainer;
-import org.apache.juddi.v3.client.mapping.ReadWSDL;
 import org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl;
-import org.apache.juddi.v3.client.mapping.WSDL2UDDI;
+import org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL;
+import org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.uddi.api_v3.*;
 import org.uddi.v3_service.UDDIInquiryPortType;

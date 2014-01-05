@@ -5,8 +5,8 @@
 --%>
 <%@page import="org.apache.juddi.jaxb.PrintUDDI"%>
 <%@page import="org.uddi.api_v3.BusinessService"%>
-<%@page import="org.apache.juddi.v3.client.mappings.wadl.Application"%>
-<%@page import="org.apache.juddi.v3.client.mapping.WADL2UDDI"%>
+<%@page import="org.apache.juddi.v3.client.mapping.wadl.Application"%>
+<%@page import="org.apache.juddi.v3.client.mapping.wadl.WADL2UDDI"%>
 <%@page import="java.io.File"%>
 <%@page import="org.apache.juddi.v3.client.config.TokenResolver"%>
 <%@page import="org.uddi.api_v3.Name"%>
@@ -20,11 +20,11 @@
 <%@page import="javax.wsdl.PortType"%>
 <%@page import="java.util.Map"%>
 <%@page import="org.uddi.api_v3.BusinessServices"%>
-<%@page import="org.apache.juddi.v3.client.mapping.WSDL2UDDI"%>
+<%@page import="org.apache.juddi.v3.client.mapping.wsdl.WSDL2UDDI"%>
 <%@page import="org.apache.juddi.v3.client.mapping.URLLocalizerDefaultImpl"%>
 <%@page import="java.util.Properties"%>
 <%@page import="javax.wsdl.Definition"%>
-<%@page import="org.apache.juddi.v3.client.mapping.ReadWSDL"%>
+<%@page import="org.apache.juddi.v3.client.mapping.wsdl.ReadWSDL"%>
 <%@page import="org.apache.juddi.v3.client.config.UDDIClerk"%>
 <%@page import="org.uddi.api_v3.TModel"%>
 <%@page import="java.net.URL"%>
