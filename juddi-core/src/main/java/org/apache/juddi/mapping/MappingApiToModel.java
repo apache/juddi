@@ -55,6 +55,7 @@ import org.w3._2000._09.xmldsig_.SPKIDataType;
 import org.w3._2000._09.xmldsig_.TransformType;
 import org.w3._2000._09.xmldsig_.TransformsType;
 import org.w3._2000._09.xmldsig_.X509DataType;
+import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1136,6 +1137,11 @@ public class MappingApiToModel {
                                 modelKeyInfoValue.setKeyDataValueBytes((byte[]) x509IssuerSerialOrX509SKIOrX509SubjectName);
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof String) {
                                 modelKeyInfoValue.setKeyDataValueString((String) x509IssuerSerialOrX509SKIOrX509SubjectName);
+                        } else if (x509IssuerSerialOrX509SKIOrX509SubjectName instanceof X509IssuerSerialType) {
+                        	modelX509KeyData.setKeyDataType(X509IssuerSerialType.class.getSimpleName());
+                        	X509IssuerSerialType x509IssuerSerialType = (X509IssuerSerialType) x509IssuerSerialOrX509SKIOrX509SubjectName;
+                        	modelX509KeyData.setKeyDataValueString(x509IssuerSerialType.getX509IssuerName());
+                        	modelX509KeyData.setKeyDataValueBytes(x509IssuerSerialType.getX509SerialNumber().toByteArray());
                         } else if (x509IssuerSerialOrX509SKIOrX509SubjectName != null) {
                                 throw new RuntimeException("Unrecognized Value for Element: " + tagName + ": " + x509IssuerSerialOrX509SKIOrX509SubjectName.getClass().getCanonicalName());
                         }

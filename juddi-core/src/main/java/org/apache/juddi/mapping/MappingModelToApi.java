@@ -18,14 +18,15 @@
 package org.apache.juddi.mapping;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBElement;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -73,6 +74,7 @@ import org.w3._2000._09.xmldsig_.SignedInfoType;
 import org.w3._2000._09.xmldsig_.TransformType;
 import org.w3._2000._09.xmldsig_.TransformsType;
 import org.w3._2000._09.xmldsig_.X509DataType;
+import org.w3._2000._09.xmldsig_.X509IssuerSerialType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -222,7 +224,7 @@ public class MappingModelToApi {
                         mapModelKeyDataValue(modelKeyDataValue.getKeyDataValueList(), childKeyDataList);
                         x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().addAll(childKeyDataList);
                         JAXBElement dataJAXB = new JAXBElement(new QName("http://www.w3.org/2000/09/xmldsig#", tagName), X509DataType.class, x509DataType);
-                        parentKeyDataList.add(dataJAXB);   
+                        parentKeyDataList.add(dataJAXB);
                     } else if (dataType.equals(RetrievalMethodType.class.getSimpleName())) {
                         RetrievalMethodType retrievalMethodType = new RetrievalMethodType();
                         TransformsType transformsType = new TransformsType();
@@ -330,8 +332,16 @@ public class MappingModelToApi {
                         throw new RuntimeException("Unrecognized type: " + dataType);
                     }
                 } else {
-                    JAXBElement dataJAXB = new JAXBElement(new QName("http://www.w3.org/2000/09/xmldsig#", tagName), contents.getClass(), contents);
-                    parentKeyDataList.add(dataJAXB);
+                	 if (dataType!=null && dataType.equals(X509IssuerSerialType.class.getSimpleName())) {
+                     	X509IssuerSerialType x509IssuerSerialType = new X509IssuerSerialType();
+                     	x509IssuerSerialType.setX509IssuerName(contentStr);
+                     	x509IssuerSerialType.setX509SerialNumber(new BigInteger(contentBytes));
+                        JAXBElement dataJAXB = new JAXBElement(new QName("http://www.w3.org/2000/09/xmldsig#", tagName), X509IssuerSerialType.class, x509IssuerSerialType);
+                        parentKeyDataList.add(dataJAXB);
+                	 } else {
+                		JAXBElement dataJAXB = new JAXBElement(new QName("http://www.w3.org/2000/09/xmldsig#", tagName), contents.getClass(), contents);
+                		parentKeyDataList.add(dataJAXB);
+                	 }
                 }
             }
         }

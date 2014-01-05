@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import org.w3c.dom.Element;
 
@@ -60,6 +61,7 @@ import org.w3c.dom.Element;
 @XmlType(name = "X509DataType", propOrder = {
     "x509IssuerSerialOrX509SKIOrX509SubjectName"
 })
+@XmlSeeAlso({X509IssuerSerialType.class})
 public class X509DataType {
 
     @XmlElementRefs({

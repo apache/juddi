@@ -17,6 +17,7 @@ package org.apache.juddi.api.impl;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.xml.soap.SOAPFault;
 
@@ -24,6 +25,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.Registry;
+import org.apache.juddi.jaxb.PrintUDDI;
 import org.apache.juddi.v3.client.UDDIConstants;
 import org.apache.juddi.v3.client.config.UDDIClient;
 import org.apache.juddi.v3.client.cryptor.DigSigUtil;
@@ -55,6 +57,7 @@ import org.uddi.api_v3.FindBusiness;
 import org.uddi.api_v3.FindQualifiers;
 import org.uddi.api_v3.FindService;
 import org.uddi.api_v3.FindTModel;
+import org.uddi.api_v3.GetBusinessDetail;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.Name;
 import org.uddi.api_v3.SaveBinding;
@@ -912,7 +915,7 @@ public class API_141_JIRATest {
             BusinessDetail saveBusiness = publication.saveBusiness(sb);
             Assert.fail("unexpected success");
         } catch (Exception ex) {
-            logger.info("Expected failure: "+ ex.getMessage());
+            logger.info("Expected failure: " + ex.getMessage());
             throw ex;
         }
     }
@@ -1090,28 +1093,26 @@ public class API_141_JIRATest {
             logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
-    
+
     @Test()
     public void JUDDI_712_SaveTModelWithSignature() throws CertificateException {
         SaveTModel sb = new SaveTModel();
         sb.setAuthInfo(authInfoJoe);
         DigSigUtil ds = GetDigSig();
         TModel bs = new TModel();
-        bs.setName(new Name("Joe's Tmodel",null));
+        bs.setName(new Name("Joe's Tmodel", null));
         bs = ds.signUddiEntity(bs);
-        
+
 
         sb.getTModel().add(bs);
         try {
             publication.saveTModel(sb);
             Assert.fail("unexpected success");
         } catch (Exception ex) {
-            logger.info("Expected failure: "+ ex.getMessage());
+            logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
-    
+
     @Test()
     public void JUDDI_712_SaveService4BTWithSignature() throws CertificateException {
         SaveBusiness sb = new SaveBusiness();
@@ -1139,7 +1140,7 @@ public class API_141_JIRATest {
         bt.setBindingKey(TckBusinessService.JOE_BINDING_KEY_1);
         bt.setServiceKey(null);
         bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
-        
+
         bs.getName().add(new Name("Joe's bs", null));
         DigSigUtil ds = GetDigSig();
         bt = ds.signUddiEntity(bt);
@@ -1156,7 +1157,7 @@ public class API_141_JIRATest {
             logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
+
     @Test()
     public void JUDDI_712_SaveService5BTWithSignature() throws CertificateException {
         SaveBusiness sb = new SaveBusiness();
@@ -1184,7 +1185,7 @@ public class API_141_JIRATest {
         bt.setBindingKey(null);
         bt.setServiceKey(null);
         bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
-        
+
         bs.getName().add(new Name("Joe's bs", null));
         DigSigUtil ds = GetDigSig();
         bt = ds.signUddiEntity(bt);
@@ -1201,7 +1202,7 @@ public class API_141_JIRATest {
             logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
+
     @Test()
     public void JUDDI_712_SaveService6BTWithSignature() throws CertificateException {
         SaveBusiness sb = new SaveBusiness();
@@ -1229,7 +1230,7 @@ public class API_141_JIRATest {
         bt.setBindingKey(null);
         bt.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
         bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
-        
+
         bs.getName().add(new Name("Joe's bs", null));
         DigSigUtil ds = GetDigSig();
         bt = ds.signUddiEntity(bt);
@@ -1246,11 +1247,9 @@ public class API_141_JIRATest {
             logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
-    
-    
+
     @Test()
-    public void JUDDI_712_SaveBindingWithSignature() throws CertificateException {
+    public void JUDDI_712_SaveBusinessWithSignature() throws CertificateException {
         SaveBusiness sb = new SaveBusiness();
         sb.setAuthInfo(authInfoJoe);
         BusinessEntity be = new BusinessEntity();
@@ -1271,46 +1270,77 @@ public class API_141_JIRATest {
         BusinessService bs = new BusinessService();
         bs.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
         bs.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
-        bs.getName().add(new Name("joe's service",null));
-        
-        
+        bs.getName().add(new Name("joe's service", null));
+
+
         be.setBusinessServices(new BusinessServices());
         be.getBusinessServices().getBusinessService().add(bs);
 
 
         sb.getBusinessEntity().add(be);
-        ServiceDetail saveService=null;
+        ServiceDetail saveService = null;
         ss.getBusinessService().add(bs);
         try {
-             saveService = publication.saveService(ss);
+            saveService = publication.saveService(ss);
         } catch (Exception ex) {
             //logger.error("unExpected failure: ",ex);
             Assert.fail("unexpected failure " + ex.getMessage() + ex.toString());
         }
-        
-        
+
+
         bs = saveService.getBusinessService().get(0);
         bs.setBindingTemplates(new BindingTemplates());
         BindingTemplate bt = new BindingTemplate();
         bt.setBindingKey(null);
         bt.setServiceKey(TckBusinessService.JOE_SERVICE_KEY);
         bt.setAccessPoint(new AccessPoint("http://localhost", "wsdl"));
-        
+
         bs.getName().add(new Name("Joe's bs", null));
         DigSigUtil ds = GetDigSig();
         bt = ds.signUddiEntity(bt);
         bs.getBindingTemplates().getBindingTemplate().add(bt);
-        
-         try {
-             SaveBinding sb1 = new SaveBinding();
-             sb1.setAuthInfo(authInfoJoe);
-             sb1.getBindingTemplate().add(bt);
-             publication.saveBinding(sb1);
-             Assert.fail("unexpected success");
+
+        try {
+            SaveBinding sb1 = new SaveBinding();
+            sb1.setAuthInfo(authInfoJoe);
+            sb1.getBindingTemplate().add(bt);
+            publication.saveBinding(sb1);
+            Assert.fail("unexpected success");
         } catch (Exception ex) {
             logger.info("Expected failure: " + ex.getMessage());
         }
     }
-    
-    
+
+    @Test()
+    public void JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial() throws CertificateException {
+        SaveBusiness sb = new SaveBusiness();
+        sb.setAuthInfo(authInfoJoe);
+        BusinessEntity be = new BusinessEntity();
+        be.setBusinessKey(TckBusiness.JOE_BUSINESS_KEY);
+                
+        Name n = new Name();
+        n.setValue("JUDDI_716_SaveBusinessWithSignatureX509IssuerSerial");
+        be.getName().add(n);
+        DigSigUtil ds = GetDigSig();
+        ds.put(DigSigUtil.SIGNATURE_OPTION_CERT_INCLUSION_SERIAL, "true");
+        be = ds.signUddiEntity(be);
+        sb.getBusinessEntity().add(be);
+        try {
+            BusinessDetail saveBusiness = publication.saveBusiness(sb);
+            GetBusinessDetail gsb=new GetBusinessDetail();
+            gsb.setAuthInfo(authInfoJoe);
+            gsb.getBusinessKey().add(saveBusiness.getBusinessEntity().get(0).getBusinessKey());
+            BusinessDetail businessDetail = inquiry.getBusinessDetail(gsb);
+            PrintUDDI<BusinessEntity> printer = new PrintUDDI<BusinessEntity>();
+            System.out.println(printer.print(businessDetail.getBusinessEntity().get(0)));
+            AtomicReference<String> msg = new AtomicReference<String>();
+            boolean b=ds.verifySignedUddiEntity(businessDetail.getBusinessEntity().get(0), msg);
+            Assert.assertTrue(msg.get(),b );
+            Assert.assertTrue(msg.get()==null || msg.get().length()==0);
+
+        } catch (Exception ex) {
+            logger.error("unExpected failure: ", ex);
+            Assert.fail("unexpected failure");
+        }
+    }
 }
