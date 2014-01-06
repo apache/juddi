@@ -14,7 +14,7 @@ Notes:
 -If you are running this against jUDDI and want to setup a temporary mail server, try hMail. A sample server config is provided
 
 
-Exexcute using the following command
+Execute using the following command
 
 java -Duddi.client.xml=uddi.xml -jar juddi-tck-runner-3.3-SNAPSHOT-jar-with-dependencies.jar
 

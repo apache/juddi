@@ -22,15 +22,35 @@
 	<dependencySets>
 		<!-- binary artifacts -->
 		<dependencySet>
-		    
             <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>org.apache.juddi:juddi-client:jar</include>
+                <include>org.apache.juddi:uddi-ws:jar</include>
+				<include>org.apache.juddi:juddi-migration-tool:jar</include>
+            </includes>
+            <excludes>
+                <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
+                <exclude>org.apache.juddi:uddi-ws:jar:sources</exclude>
+                <exclude>org.apache.juddi:juddi-client:jar:javadoc</exclude>
+                <exclude>org.apache.juddi:uddi-ws:jar:javadoc</exclude>
+            </excludes>
+            
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+        <!-- tck artifacts -->
+        <dependencySet>
+            <outputDirectory>tck</outputDirectory>
             <includes>
                 <include>org.apache.juddi:juddi-client:jar</include>
                 <include>org.apache.juddi:uddi-tck:jar</include>
                 <include>org.apache.juddi:uddi-tck:test-jar</include>
                 <include>org.apache.juddi:uddi-tck-base:jar</include>
                 <include>org.apache.juddi:uddi-ws:jar</include>
-				<include>org.apache.juddi:juddi-migration-tool:jar</include>
             </includes>
             <excludes>
                 <exclude>org.apache.juddi:juddi-client:jar:sources</exclude>
@@ -52,7 +72,6 @@
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
         </dependencySet>
-
          <!--  wars -->
         <dependencySet>
             <outputDirectory>bin</outputDirectory>
@@ -74,6 +93,7 @@
 			<includes>
 				<include>org.apache.juddi:juddi-client:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck:jar:sources</include>
+				<include>org.apache.juddi:uddi-tck-runner:jar:sources</include>
 				<include>org.apache.juddi:uddi-tck:jar:test-sources</include>
 				<include>org.apache.juddi:uddi-tck-base:jar:sources</include>
 				<include>org.apache.juddi:uddi-ws:jar:sources</include>
@@ -109,6 +129,7 @@
                 <include>org.apache.juddi:juddi-client:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck-base:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck:jar:javadoc</include>
+                <include>org.apache.juddi:uddi-tck-runner:jar:javadoc</include>
                 <include>org.apache.juddi:uddi-tck:jar:test-javadoc</include>
                 <include>org.apache.juddi:uddi-ws:jar:javadoc</include>
             </includes>

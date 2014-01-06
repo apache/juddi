@@ -41,6 +41,11 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck-runner</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>juddi-migration-tool</artifactId>
 			<version>${project.parent.version}</version>
@@ -89,17 +94,17 @@
 			<classifier>sources</classifier>
 		</dependency>
 		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck-runner</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck</artifactId>
 			<version>${project.parent.version}</version>
 			<type>jar</type>
 			<classifier>test-sources</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.juddi</groupId>
-			<artifactId>uddi-tck</artifactId>
-			<version>${project.parent.version}</version>
-			<classifier>sources</classifier>
 		</dependency>
 		<!-- javadoc archives -->
 		<dependency>
@@ -126,6 +131,12 @@
 			<version>${project.parent.version}</version>
 			<classifier>javadoc</classifier>
 		</dependency>
+		<dependency>
+            <groupId>org.apache.juddi</groupId>
+            <artifactId>uddi-tck-runner</artifactId>
+            <version>${project.parent.version}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.juddi</groupId>
 			<artifactId>uddi-tck</artifactId>
