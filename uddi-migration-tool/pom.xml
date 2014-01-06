@@ -9,7 +9,7 @@
 	</parent>
 	
 	<groupId>org.apache.juddi</groupId>
-	<artifactId>juddi-migration-tool</artifactId>
+	<artifactId>uddi-migration-tool</artifactId>
 	
 	<name>UDDI Migration tool</name>
 	<packaging>bundle</packaging>

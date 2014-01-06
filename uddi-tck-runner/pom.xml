@@ -8,7 +8,7 @@
     <version>3.2.0-SNAPSHOT</version>
   </parent>
   <groupId>org.apache.juddi</groupId>
-  <artifactId>juddi-tck-runner</artifactId>
+  <artifactId>uddi-tck-runner</artifactId>
   <version>3.2-SNAPSHOT</version>
   <name>UDDI TCK Test Runner</name>
   <url>http://maven.apache.org</url>
