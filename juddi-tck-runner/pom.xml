@@ -10,7 +10,7 @@
   <groupId>org.apache.juddi</groupId>
   <artifactId>juddi-tck-runner</artifactId>
   <version>3.2-SNAPSHOT</version>
-  <name>juddi-tck-runner</name>
+  <name>UDDI TCK Test Runner</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
