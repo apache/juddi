@@ -33,8 +33,16 @@ import org.uddi.subr_v3.NotifySubscriptionListener;
 import org.uddi.v3_service.DispositionReportFaultMessage;
 
 /**
- * This class sends Email alerts when a specific subscription is tripped
- * @author probably Kurt Stam
+ * This class sends Email alerts when a specific subscription is tripped. 
+ * The following properties can be set in the juddiv3.xml, or as System params.
+ * 
+ * "mail.smtp.from", "mail.smtp.host", "mail.smtp.port", 
+ * "mail.smtp.socketFactory.class", "mail.smtp.socketFactory.fallback", "mail.smtp.starttls.enable",
+ * "mail.smtp.socketFactory.port","mail.smtp.auth","mail.smtp.user","mail.smtp.password"
+ *		
+ * The following properties can be set juddiv3.xml.
+ * 
+ * @author Kurt Stam
  */
 public class SMTPNotifier implements Notifier {
 
