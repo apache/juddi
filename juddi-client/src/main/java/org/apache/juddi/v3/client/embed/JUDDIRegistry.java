@@ -21,7 +21,15 @@ import java.lang.reflect.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.juddi.v3.client.ClassUtil;
-
+/**
+ * Implementation of the EmbeddedRegistry to start and stop a inVM jUDDI server.
+ * 
+ * The implementation is using Reflection to avoid adding a compile time dependency since 
+ * it would create a circular dependency as the server already depends on the client.
+ * 
+ * @author kstam
+ *
+ */
 public class JUDDIRegistry implements EmbeddedRegistry {
 
 	private Log logger = LogFactory.getLog(this.getClass());

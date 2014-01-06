@@ -16,6 +16,12 @@
  */
 package org.apache.juddi.v3.client.embed;
 
+/**
+ * Interface for the jUDDI Client to start and stop an embedded registry.
+ * 
+ * @author kstam
+ *
+ */
 public interface EmbeddedRegistry {
 
 	public void start();

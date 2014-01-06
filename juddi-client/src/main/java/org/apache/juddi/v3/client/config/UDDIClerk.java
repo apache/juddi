@@ -89,7 +89,40 @@ import org.uddi.api_v3.TModelList;
 import org.uddi.sub_v3.DeleteSubscription;
 import org.uddi.sub_v3.Subscription;
 import org.uddi.v3_service.DispositionReportFaultMessage;
-
+/**
+ * The UDDIClerk provides an easy way to access a UDDI service. The clerk
+ * can be configured programmatically, but it is recommended to specify the
+ * server endpoint and access credentials in a uddi.xml file.
+ * 
+ * Recommended use:
+ * <pre>
+ * {@code
+ * UDDIClient uddiClient = new UDDIClient();
+ * UDDIClerk clerk = uddiClient.getClerk(clerkName);
+ * }
+ * </pre>
+ * where the clerkName "MyClerk" is defined as attribute on the clerk element
+ * <pre>
+ * {@code
+ *  <clerks registerOnStartup="true">
+ *    <clerk name="MyClerk" node="default" publisher="root" password="root" isPasswordEncrypted="false" cryptoProvider="">
+ *      <class>org.apache.juddi.example.HelloWorldImpl</class>
+ *    </clerk>
+ *  </clerks>
+ * }
+ * </pre>
+ * Credentials:
+ * In the clerk section you need to specify the publisher to be used, as well the password.
+ * The password can be encrypted and a cryptoProvider class can be set.
+ * 
+ * UDDI Annotations:
+ * If you want to register classes containing UDDIAnnotations, then you need to set registerOnStartup="true"
+ * and you can list the classes with the annotations as subelements. See the HelloWorldImpl class
+ * above, as well as the uddi-annotations example.
+ * 
+ * @author kstam
+ *
+ */
 public class UDDIClerk implements Serializable {
 
     private static final long serialVersionUID = -8597375975981358134L;
@@ -154,6 +187,20 @@ public class UDDIClerk implements Serializable {
     	registerWsdls(null);
     }
 
+    /**
+     * Registers the WSDL files referenced in the clerk onto the UDDI node referenced by the clerk.
+     * <pre>
+     * {@code
+     * <clerks registerOnStartup="false">
+     *     <clerk name="joe" node="default" publisher="joepublisher" password="joepublisher" isPasswordEncrypted="false" cryptoProvider="">
+     *        <wsdl businessName="WSDL-Business">wsdl/helloworld.wsdl</wsdl>
+     *     </clerk>
+     *  </clerks>
+     * }
+     * </pre>
+     * 
+     * @param localizerBaseUrl - The baseUrl part which will be used when building the bindingTemplate.
+     */
     public void registerWsdls(URL localizerBaseUrl) {
         if (this.getWsdls() != null) {
             Properties properties = new Properties();
@@ -182,12 +229,20 @@ public class UDDIClerk implements Serializable {
         }
     }
 
+    /**
+     * Registers a WSDL Definition onto the UDDI node referenced by the clerk.
+     * 
+     * @param wsdlDefinition - the WSDL Definition
+     * @param keyDomain - the keyDomain which will be used to construct the UDDI key IDs.
+     * If left null the keyDomain defined in the node's properties will be used.
+     * @param businessKey - the key of the business to which this service belongs. If left null
+     * the businessKey defined in the node's properties will be used.
+     */
     public void registerWsdls(Definition wsdlDefinition, String keyDomain, String businessKey) {
 
         try {
             Properties properties = new Properties();
             properties.putAll(this.getUDDINode().getProperties());
-            //Definition wsdlDefinition = rw.readWSDL(wsdlUrl);
             if (keyDomain != null) {
                 properties.setProperty("keyDomain", keyDomain);
             }
@@ -203,7 +258,9 @@ public class UDDIClerk implements Serializable {
             log.error("Unable to register wsdl " + " ." + t.getMessage(), t);
         }
     }
-
+    /**
+     * Removes the UDDI data structures belonging to the WSDLs for this clerk from the UDDI node.
+     */
     public void unRegisterWsdls() {
         if (this.getWsdls() != null) {
             Properties properties = new Properties();
@@ -232,12 +289,18 @@ public class UDDIClerk implements Serializable {
         }
     }
 
+    /**
+     * Registers the Subscription that is passed in to the UDDI node for this clerk.
+     * @param subscription
+     * @return
+     */
     public Subscription register(Subscription subscription) {
         return register(subscription, this.getUDDINode().getApiNode());
     }
 
     /**
-     * Register a Subscription.
+     * Register a Subscription to UDDI node passed in. Make sure you use a clerk that
+     * has credentials for this node.
      */
     public Subscription register(Subscription subscription, Node node) {
 

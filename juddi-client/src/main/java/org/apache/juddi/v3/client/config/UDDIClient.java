@@ -45,7 +45,27 @@ import org.uddi.api_v3.CategoryBag;
 import org.uddi.api_v3.KeyedReference;
 import org.uddi.api_v3.TModelInstanceDetails;
 import org.uddi.api_v3.TModelInstanceInfo;
-
+/**
+ * <p>The UDDIClient is the main entry point for using the jUDDI client. The UDDICLient
+ * provides a simple way to get interact with a UDDI registry using the UDDI v3 API.</p>
+ * 
+ * <h3>Note:</h3>
+ * <p>It is also possible to use the Java API for XML Registries (JAXR). Apache Scout is
+ * an implementation of this API that can be configured to -behind the scenes- use the
+ * jUDDI Client code to access either UDDIv2 or UDDIv3 registry. The advantage of using
+ * JAXR is that your code can be configured to interact with any XML Registry (such as UDDI
+ * or ebXML). The downside is that JAXR has not evolved beyond the 1.0 release and is
+ * tightly coupled to the ebXML data structures, which being mapped to the UDDI data structures.
+ * For more information on JAXR see the Apache Scout project, which is a sub project of Apache jUDDI.
+ * If programmatic acess to a UDDIv3 registry is what you want, we recommend using the UDDIv3 
+ * API with the UDDIClient.</p>
+ * 
+ * <p>The UDDIClient uses a XML formatted configuration file, which by default is loaded from the classpath
+ * from location META-INF/uddi.xml.</p>
+ * 
+ * @author kstam
+ *
+ */
 public class UDDIClient {
 
     private static Log log = LogFactory.getLog(UDDIClient.class);

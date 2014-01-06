@@ -24,6 +24,12 @@ import org.apache.juddi.v3.client.ClassUtil;
 import org.apache.juddi.v3.client.transport.Transport;
 import org.apache.juddi.v3.client.transport.TransportException;
 
+/**
+ * Connection information to a UDDI node.
+ * 
+ * @author kstam
+ *
+ */
 public class UDDINode implements Serializable {
 
 	private static final long serialVersionUID = 5721040459195558161L;
@@ -36,7 +42,7 @@ public class UDDINode implements Serializable {
 	private String description;
 	private String custodyTransferUrl;
 	private String inquiryUrl;
-        private String inquiryRESTUrl;
+	private String inquiryRESTUrl;
 	private String publishUrl;
 	private String securityUrl;
 	private String subscriptionUrl;

@@ -21,7 +21,12 @@ import org.apache.commons.logging.LogFactory;
 import org.uddi.api_v3.BindingTemplate;
 import org.uddi.api_v3.BusinessEntity;
 import org.uddi.api_v3.BusinessService;
-
+/**
+ * Is used to exchange UDDI data between UDDI nodes; for example when Subscriptions are uses.
+ * 
+ * @author kstam
+ *
+ */
 public class XRegistration {
 
 	private Log log = LogFactory.getLog(this.getClass());
